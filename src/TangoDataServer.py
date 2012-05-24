@@ -120,8 +120,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_TheJSONRecord_read = "Current JSON String"
-		attr.set_value(attr_TheJSONRecord_read)
+		attr.set_value(self.tdw.getJSON())
 
 
 #------------------------------------------------------------------
@@ -132,6 +131,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		data=[]
 		attr.get_write_value(data)
 		print "Attribute value = ", data
+		self.tdw.setJSON(data[0])
 
 		#	Add your own code here
 
@@ -152,6 +152,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def Record(self):
 		print "In ", self.get_name(), "::Record()"
 		#	Add your own code here
+		self.tdw.record()
 
 
 #------------------------------------------------------------------
@@ -163,6 +164,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def Open(self):
 		print "In ", self.get_name(), "::Open()"
 		#	Add your own code here
+		self.tdw.open()
 
 
 #------------------------------------------------------------------
@@ -174,6 +176,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def Close(self):
 		print "In ", self.get_name(), "::Close()"
 		#	Add your own code here
+		self.tdw.close()
 
 
 #==================================================================

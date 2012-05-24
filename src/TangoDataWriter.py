@@ -5,20 +5,30 @@ class TangoDataWriter:
         self.json=""
 
     def open(self):
-        pass
+        print 'open'
 
     def setXML(self,xml):
         self.xml=xml
+        print 'setXML'
 
     def getXML(self):
+        print 'getXML'
         return self.xml
 
+    def setJSON(self,json):
+        self.json=json
+        print 'setXML'
+
+    def getJSON(self):
+        print 'getXML'
+        return self.json
+
     def record(self):
-        pass
+        print 'record'
 
 
     def close(self):
-        pass
+        print 'close'
 
 
 
