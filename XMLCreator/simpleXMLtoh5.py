@@ -277,10 +277,6 @@ class SimpleHandler(sax.ContentHandler):
 
 if __name__ == "__main__":
 
-    
-
-    fname='result-0'
-    
     if  len(sys.argv) <3:
         print "usage: simpleXMLtoh5.py  <XMLinput>  <h5output>"
         

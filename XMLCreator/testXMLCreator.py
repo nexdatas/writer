@@ -1,4 +1,4 @@
-from simplyXML import *
+from simpleXML import *
 
 if __name__ == "__main__":
 	df=XMLDevice("MNI.xml")
