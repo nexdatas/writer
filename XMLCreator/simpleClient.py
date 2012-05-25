@@ -3,12 +3,6 @@
 @file simpleXMLtoh5.py
 An example of SAX Nexus parser
 """
-                                                                      
-import pni.nx.h5 as nx
-
-from numpy  import * 
-from xml import sax
-
 import sys,os
 import time
 
