@@ -24,7 +24,7 @@ dA={"signal":"NX_INT","axis":"NX_INT","primary":"NX_INT32","offset":"NX_INT","st
 
 
 
-class Element():
+class Element:
     """A tag element stored on our stack  """
     def __init__(self,name,attrs):
         """ Constructor """
