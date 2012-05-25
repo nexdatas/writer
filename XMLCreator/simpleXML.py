@@ -145,21 +145,18 @@ class NDSource(NTag):
 	def __init__(self,parent,gStrategy,gHost,gPort):
 		NTag.__init__(self,parent,"datasource")
 		self.elem.attrib["strategy"]=gStrategy
-		hs=NTag(self.elem,"hostname")
-		hs.setText(gHost);
-		pr=NTag(self.elem,"port")
-		pr.setText(gPort);
+		self.elem.attrib["hostname"]=gHost
+		self.elem.attrib["port"]=gPort
 		
 	def initDBase(self,gDBname,gQuery):
 		self.elem.attrib["type"]="DB"
-		qu=NTag(self.elem,"query")
-		qu.setText(gQuery)
+		self.elem.attrib["dbname"]=gDBname
+		self.elem.attrib["query"]=gQuery
 
 	def initTango(self,gDevice,gDType,gDName):
 		self.elem.attrib["type"]="TANGO"
-		dv=NTag(self.elem,"device")
-		dv.setText(gDevice)
-		da=NTag(self.elem,"data")
+		self.elem.attrib["device"]=gDevice
+		da=NTag(self.elem,"record")
 		da.addTagAttr("type", gDType)
 		da.addTagAttr("name", gDName)
 
@@ -170,8 +167,7 @@ class NDSource(NTag):
 
 	def initSardana(self,gDoor,gDName):
 		self.elem.attrib["type"]="SARDANA"
-		dv=NTag(self.elem,"door")
-		dv.setText(gDoor)
+		self.elem.attrib["door"]=gDoor
 		da=NTag(self.elem,"record")
 		da.addTagAttr("name", gDName)
 

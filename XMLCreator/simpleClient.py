@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """@package docstring
-@file simpleXMLtoh5.py
-An example of SAX Nexus parser
+@file simpleClient.py
 """
 import sys,os
 import time

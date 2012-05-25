@@ -1,34 +1,62 @@
+#!/usr/bin/env python
+"""@package docstring
+@file TangoDataWriter.py
+Nexus H5 Writer
+"""
+
+from NeXusXMLHandler import *
+
+import pni.nx.h5 as nx
+
+from numpy  import * 
+from xml import sax
+
+import sys,os
+from H5Elements import *
+
+
+
 class TangoDataWriter:
     def __init__(self,name):
         self.name=name
-        self.xml=""
+        self.xmlSettings=""
         self.json=""
+        self.handler = None
 
     def open(self):
-        print 'open'
+        print 'open:'
+        if len(self.xmlSettings)>0:
+            parser = sax.make_parser()
+        
+            self.handler = NexusXMLHandler(self.name)
+            sax.parseString(self.xmlSettings,self.handler)
+        
 
-    def setXML(self,xml):
-        self.xml=xml
+    def setXML(self,xmlSettings):
+        self.xmlSettings=xmlSettings
         print 'setXML'
 
     def getXML(self):
         print 'getXML'
-        return self.xml
+        return self.xmlSettings
 
     def setJSON(self,json):
         self.json=json
-        print 'setXML'
+        print 'setJSON'
 
     def getJSON(self):
-        print 'getXML'
+        print 'getJSON'
         return self.json
 
     def record(self):
-        print 'record'
+        print 'record:'
 
 
     def close(self):
-        print 'close'
+        print 'close:'
+        if self.handler:
+            self.handler.closeFile()
+        
 
 
 

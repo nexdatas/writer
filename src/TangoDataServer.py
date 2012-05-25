@@ -54,7 +54,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def __init__(self,cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
 		TangoDataServer.init_device(self)
-		self.tdw=TDW("name")
+		self.tdw=TDW("name.h5")
 #------------------------------------------------------------------
 #	Device destructor
 #------------------------------------------------------------------
