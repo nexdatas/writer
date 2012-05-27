@@ -1,11 +1,7 @@
 from PyTango import *
 import sys, os, time
 import xml.etree.ElementTree as ET
- 
-from xml.dom.ext.reader import Sax2
-from xml.dom.ext import PrettyPrint
-from StringIO import StringIO
-
+import xml.dom.minidom
 
 tTypes=["DevVoid",
         "DevBoolean",
@@ -222,11 +218,9 @@ class XMLDevice:
 		self.root=ET.Element("definition")
 		
 	def prettyPrintET(self,etNode):
-		reader = Sax2.Reader()
-		docNode = reader.fromString(ET.tostring(etNode))
-		tmpStream = StringIO()
-		PrettyPrint(docNode, stream=tmpStream)
-		return tmpStream.getvalue()
+		mxml = xml.dom.minidom.parseString(ET.tostring(etNode))
+		return mxml.toprettyxml()
+
 
 	def dump(self):
 		
