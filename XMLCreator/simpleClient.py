@@ -30,12 +30,12 @@ if __name__ == "__main__":
             print "recording H5 file"
             dpx.record()
             
-            print "sleeping for 5s"
-            time.sleep(5)
+            print "sleeping for 1s"
+            time.sleep(1)
             print "recording H5 file"
             dpx.record()
-            print "sleeping for 5s"
-            time.sleep(5)
+            print "sleeping for 1s"
+            time.sleep(1)
             print "recording H5 file"
             dpx.record()
             print "closing H5 file"

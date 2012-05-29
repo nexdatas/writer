@@ -13,8 +13,13 @@ class DataSource(Element):
         self.hostname=None
         self.port=None
         self.name=None
+
     def getData(self):
         pass
+
+    def isValid(self):
+        return True
+#        return False
 
 
 class TangoSource(DataSource):

@@ -12,13 +12,10 @@ from DataSource import *
 
 from Element import *
 
-from threading import Thread
-
-class FElement(Thread,Element):
+class FElement(Element):
     """A tag element corresponding to one of H5 objects """
 
     def __init__(self,obj,name,attrs):
-        Thread.__init__(self)
         """ Constructor """
         Element.__init__(self,name,attrs)
         ## Stored tag object 

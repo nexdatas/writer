@@ -12,6 +12,7 @@ from xml import sax
 import sys,os
 from H5Elements import *
 
+from ThreadPool import *
 
 # A map of NEXUS : pninx types 
 mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
@@ -47,6 +48,14 @@ class NexusXMLHandler(sax.ContentHandler):
                           'doc':self.addDoc, 'symbol':self.addSymbol}
 
         self.symbols={}
+
+
+        self.initPool=ThreadPool()
+        self.stepPool=ThreadPool()
+        self.finalPool=ThreadPool()
+
+        self.poolMap={'INIT':self.initPool,'STEP':self.stepPool,'FINAL':self.finalPool}
+
         
     def nWS(text):
         """  cleans whitespaces  """
@@ -236,6 +245,12 @@ class NexusXMLHandler(sax.ContentHandler):
 
     def storeFieldContent(self,name):
         print "Storing field"
+        if self.last().source and self.last().source.isValid() :
+            strategy=self.last().source.strategy
+            if strategy in self.poolMap.keys():
+                self.poolMap[strategy].append(self.last())
+        else:
+            print "invalid dataSource"
         
     def storeAttributeContent(self,name):
         print "Storing Attributes:", "".join(self.last().content)
@@ -270,9 +285,13 @@ class NexusXMLHandler(sax.ContentHandler):
             print "poping"
             self.stack.pop()
 
+    def getNXFile(self):
+        return self.nxFile            
+
     def closeFile(self):
         """  closes the H5 file """
         if self.nxFile:
+            print "nxClosing"
             self.nxFile.close()
 
 

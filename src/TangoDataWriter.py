@@ -21,17 +21,28 @@ class TangoDataWriter:
         self.name=name
         self.xmlSettings=""
         self.json=""
-        self.handler = None
+#        self.handler = None
+        self.initPool=None
+        self.stepPool=None
+        self.finalPool=None
+        self.nxFile=None
 
     def open(self):
         print 'open:'
         if len(self.xmlSettings)>0:
             parser = sax.make_parser()
         
-            self.handler = NexusXMLHandler(self.name)
-            sax.parseString(self.xmlSettings,self.handler)
-        
+            handler = NexusXMLHandler(self.name)
+            sax.parseString(self.xmlSettings,handler)
+            
+            self.initPool=handler.initPool
+            self.stepPool=handler.stepPool
+            self.finalPool=handler.finalPool
+            
+            self.initPool.runAndWait()
+            self.nxFile=handler.getNXFile()
 
+            
     def setXML(self,xmlSettings):
         self.xmlSettings=xmlSettings
         print 'setXML'
@@ -50,12 +61,32 @@ class TangoDataWriter:
 
     def record(self):
         print 'record:'
+        if self.stepPool:
+            self.stepPool.runAndWait()
 
 
     def close(self):
         print 'close:'
-        if self.handler:
-            self.handler.closeFile()
+
+
+        if self.finalPool:
+            self.finalPool.runAndWait()
+
+        if self.initPool:
+            self.initPool.close()
+            
+
+        if self.stepPool:
+            self.stepPool.close()
+                
+        if self.finalPool: 
+            self.finalPool.close()
+
+
+        if self.nxFile:
+            self.nxFile.close()
+
+        
         
 
 
