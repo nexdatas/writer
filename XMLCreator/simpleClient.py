@@ -10,21 +10,35 @@ from PyTango import *
 if __name__ == "__main__":
 
     if  len(sys.argv) <2:
-        print "usage: simpleClient.py  <XMLfile>  <tangoServer>"
+        print "usage: simpleClient.py  <XMLfile>  <H5file>  <tangoServer>"
         
     else:
         xmlf=sys.argv[1]
         if os.path.exists(xmlf):
 
 
-            device="p09/tdw/r228"
             if len(sys.argv)>3:
-                device=sys.argv[2]
+                fname=sys.argv[2]
+            else:
+                sp=xmlf.split(".")
+                print sp
+                if sp[-1] == 'xml' :
+                    fname=''.join(sp[0:-1])
+                else:
+                    fname=xmlf
+                fname = fname.strip() + ".h5"
+            print "storing in ", fname 
+    
+            device="p09/tdw/r228"
+            if len(sys.argv)>4:
+                device=sys.argv[3]
             
             dpx=DeviceProxy(device)
             print " Connected to: ", device
             xml = open(xmlf, 'r').read()
             dpx.TheXMLSettings=xml
+            dpx.FileName=fname
+
             print "opening H5 file"
             dpx.open()
 

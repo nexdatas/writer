@@ -17,8 +17,8 @@ from H5Elements import *
 
 
 class TangoDataWriter:
-    def __init__(self,name):
-        self.name=name
+    def __init__(self,fName):
+        self.fileName=fName
         self.xmlSettings=""
         self.json=""
 #        self.handler = None
@@ -32,7 +32,7 @@ class TangoDataWriter:
         if len(self.xmlSettings)>0:
             parser = sax.make_parser()
         
-            handler = NexusXMLHandler(self.name)
+            handler = NexusXMLHandler(self.fileName)
             sax.parseString(self.xmlSettings,handler)
             
             self.initPool=handler.initPool

@@ -55,6 +55,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		PyTango.Device_4Impl.__init__(self,cl,name)
 		TangoDataServer.init_device(self)
 		self.tdw=TDW("name.h5")
+
 #------------------------------------------------------------------
 #	Device destructor
 #------------------------------------------------------------------
@@ -109,7 +110,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 		attr.get_write_value(data)
 		print "Attribute value = ", data
 		self.tdw.setXML(data[0])
-#	Add your own code here
 
 
 #------------------------------------------------------------------
@@ -132,6 +132,29 @@ class TangoDataServer(PyTango.Device_4Impl):
 		attr.get_write_value(data)
 		print "Attribute value = ", data
 		self.tdw.setJSON(data[0])
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read FileName attribute
+#------------------------------------------------------------------
+	def read_FileName(self, attr):
+		print "In ", self.get_name(), "::read_FileName()"
+		
+		#	Add your own code here
+		
+		attr.set_value(self.tdw.fileName)
+
+#------------------------------------------------------------------
+#	Write FileName attribute
+#------------------------------------------------------------------
+	def write_FileName(self, attr):
+		print "In ", self.get_name(), "::write_FileName()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+		self.tdw.fileName=data[0]
 
 		#	Add your own code here
 
@@ -217,6 +240,10 @@ class TangoDataServerClass(PyTango.DeviceClass):
 			PyTango.SCALAR,
 			PyTango.READ_WRITE]],
 		'TheJSONRecord':
+			[[PyTango.DevString,
+			PyTango.SCALAR,
+			PyTango.READ_WRITE]],
+		'FileName':
 			[[PyTango.DevString,
 			PyTango.SCALAR,
 			PyTango.READ_WRITE]],
