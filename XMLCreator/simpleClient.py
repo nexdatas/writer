@@ -27,6 +27,7 @@ if __name__ == "__main__":
             dpx.TheXMLSettings=xml
             print "opening H5 file"
             dpx.open()
+
             print "recording H5 file"
             dpx.record()
             
@@ -40,6 +41,7 @@ if __name__ == "__main__":
             dpx.record()
             print "closing H5 file"
             dpx.close()
+            
                 
             
             

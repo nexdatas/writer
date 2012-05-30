@@ -72,6 +72,7 @@ class TangoDataWriter:
         if self.finalPool:
             self.finalPool.runAndWait()
 
+
         if self.initPool:
             self.initPool.close()
             
@@ -82,12 +83,16 @@ class TangoDataWriter:
         if self.finalPool: 
             self.finalPool.close()
 
+        self.initPool=None
+        self.stepPool=None
+        self.finalPool=None
+
+
 
         if self.nxFile:
             self.nxFile.close()
-
         
-        
+        self.nxFile=None
 
 
 

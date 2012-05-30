@@ -34,27 +34,28 @@ class NexusXMLHandler(sax.ContentHandler):
         self.groupTypes={"":""}
         ## An H5 file name
         self.fname=fname
-        self.nxFile=None
+        self.nxFile=nx.create_file(self.fname,overwrite=True)
         ## A stack with open tag elements
-        self.stack=[]
-        self.tagOpenCmd={'group':self.createGroup, 'field':self.createField, 'attribute':self.addAttribute,
-                         'link':self.createLink, 'doc':self.createDoc, 'definition':self.createDefinition, 
-                         'symbols':self.createSymbols, 'symbol':self.createSymbol, 
-                         'dimensions':self.createDimensions, 
-                         'dim':self.createDim, 'enumeration':self.createEnumeration, 'item':self.createItem, 
-                         'datasource':self.createDSource,'record':self.createRecord }
+        self.stack=[EFile("NXfile",[],None,self.nxFile)]
 
-        self.tagCloseCmd={'field':self.storeFieldContent, 'attribute':self.storeAttributeContent, 
-                          'doc':self.addDoc, 'symbol':self.addSymbol}
+
+        self.elementClass={'group':EGroup, 'field':EField, 'attribute':EAttribute,
+                           'link':ELink, 'doc':EDoc,
+                           'symbols':Element, 'symbol':ESymbol, 
+                           'dimensions':EDimensions, 
+                           'dim':EDim, 'enumeration':Element, 'item':Element,
+                           'datasource':DataSourceFactory,'record':ERecord }
+
+#                           'definition':Element, 
 
         self.symbols={}
-
 
         self.initPool=ThreadPool()
         self.stepPool=ThreadPool()
         self.finalPool=ThreadPool()
 
         self.poolMap={'INIT':self.initPool,'STEP':self.stepPool,'FINAL':self.finalPool}
+
 
         
     def nWS(text):
@@ -63,213 +64,42 @@ class NexusXMLHandler(sax.ContentHandler):
         
     def lastObject(self):
         """  returns an object from the last stack elements """
-        return self.stack[-1].fObject
+        if len(self.stack) > 0: 
+            return self.stack[-1].fObject
+        else:
+            return None
+        
 
     def last(self):
         """  returns the last stack elements """
-        return self.stack[-1]
+        if len(self.stack) > 0: 
+            return self.stack[-1]
+        else:
+            return None
 
     def beforeLast(self):
         """  returns the last stack elements """
-        return self.stack[-2]
-
-    def typesToNames(self,text):
-        """  converts NXclass types to names in a path string"""
-        sp= text.split("/")
-        print "TTN:", sp 
-        res="/"
-        for gr in sp[:-1]:
-            sgr=gr.split(":")
-            print sgr
-            if len(sgr)>1 :
-                res="/".join([res,sgr[1]])
-            else:
-                res="/".join([res,self.groupTypes[sgr[0]]])
-        res=res+"/"+sp[-1]
-        print "TTN:", res 
-
-        return res
-
-    def createDoc(self, name, attrs):
-        self.stack.append(EDoc(name,attrs))
-
-    def createSymbols(self, name, attrs):
-        self.stack.append(Element(name,attrs))
-
-    def createSymbol(self, name, attrs):
-        self.stack.append(Element(name,attrs))
-
-    def createEnumeration(self, name, attrs):
-        self.stack.append(Element(name,attrs))
-
-    def createItem(self, name, attrs):
-        self.stack.append(Element(name,attrs))
-
-    def createRecord(self, name, attrs):
-        if "type" in attrs.keys():
-            self.last().type=attrs["type"]
-        if "name" in attrs.keys():
-            self.last().type=attrs["name"]
-
-        self.stack.append(Element(name,attrs))
-        
-
-    def createDSource(self, name, attrs):
-        if "type" in attrs.keys():
-            if attrs["type"] == "DB" :
-                self.last().source=DBaseSource(name,attrs)
-                if "dbname" in attrs.keys():
-                    self.last().source.dbname=attrs["dbname"]
-                if "query" in attrs.keys():
-                    self.last().source.query=attrs["query"]
-            elif attrs["type"] == "TANGO" :
-                self.last().source=TangoSource(name,attrs)
-                if "device" in attrs.keys():
-                    self.last().source.device=attrs["device"]
-            elif attrs["type"] == "CLIENT" :
-                self.last().source=ClientSource(name,attrs)
-            elif attrs["type"] == "SARDANA" :
-                self.last().source=SardanaSource(name,attrs)
-                if "door" in attrs.keys():
-                    self.last().source.device=attrs["door"]
-            else:
-                print "Unknown data source"
-                self.last().source=DataSource(name,attrs)
+        if len(self.stack) > 0: 
+            return self.stack[-2]
         else:
-            print "Unknown data source"
-            self.last().source=DataSource(name,attrs)
-                    
-            
-        self.stack.append(self.last().source)
+            return None
 
 
-        if "strategy" in attrs.keys():
-            self.last().strategy=attrs["strategy"]
-
-        if "hostname" in attrs.keys():
-            self.last().hostname=attrs["hostname"]
-
-        if "port" in attrs.keys():
-            self.last().port=attrs["port"]
-
-
-
-        
-    def addDoc(self,name):
-        self.beforeLast().doc=self.beforeLast().doc + "".join(self.last().content)            
-        print "Added doc\n", self.beforeLast().doc
-
-    def addSymbol(self,name):
-        if "name" in self.last().attrs.keys():
-            self.symbols[self.last().attrs["name"]]=self.last().doc
-
-    def createDimensions(self, name, attrs):
-        if "rank" in attrs.keys():
-            self.last().rank=attrs["rank"]
-        self.stack.append(EDimensions(name,attrs))
-
-    def createDim(self, name, attrs):
-        if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
-            self.beforeLast().lengths[attrs["index"]]=attrs["value"]
-        self.stack.append(EDim(name,attrs))
-        ## @todo add support for ref, refindex and incr 
-       
-    def createDefinition(self, name, attrs):
-        self.nxFile=nx.create_file(self.fname,overwrite=True)
-        ## A stack with open tag elements
-        self.stack=[EFile(self.nxFile,"NXfile",attrs)]
-        
-
-    def createGroup(self, name, attrs):
-        """  creates the group in the H5 file """
-        if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            g=self.lastObject().create_group(attrs["name"].encode(),attrs["type"].encode())
-            self.groupTypes[attrs["type"]]=attrs["name"]
-        elif "type" in attrs.keys():
-            g=self.lastObject().create_group(attrs["type"][2:].encode(),attrs["type"].encode())
-            self.groupTypes[attrs["type"]]=attrs["type"][2:]
-        else:
-            raise "The group type not defined !!!"
-        self.stack.append(EGroup(g,name,attrs))
-        for key in attrs.keys() :
-            if key not in ["name","type"]:
-                if key in dA.keys():
-                    (self.lastObject().attr(key.encode(),mt[dA[key]].encode())).value=attrs[key].encode()
-                else:
-                    (self.lastObject().attr(key.encode(),"string")).value=attrs[key].encode()
-            
-
-    def createField(self, name, attrs):
-        """  creates the field in the H5 file """
-        if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            print attrs["name"],    mt[attrs["type"]]
-            f=self.lastObject().create_field(attrs["name"].encode(),mt[attrs["type"]].encode())
-        elif "name" in attrs.keys():
-            f=self.lastObject().create_field(attrs["name"].encode(),"string".encode())
-        else:
-            print "No name !!!"
-        self.stack.append(EField(f,name,attrs))
-        for key in attrs.keys():
-            if key not in ["name"]:
-                (self.lastObject().attr(key.encode(),"string")).value=attrs[key].encode()
-
-    def createLink(self, name, attrs):
-        """  creates the link in the H5 file """
-        if ("name" in attrs.keys()) and ("target" in attrs.keys()):
-            print "linking ",self.lastObject() ,attrs["name"].encode()
-            l=(self.lastObject()).link((self.typesToNames(attrs["target"])).encode(),attrs["name"].encode())
-            print self.typesToNames(attrs["target"])
-        else:
-            print "No name or type!!!"
-            return
-        self.stack.append(ELink(l,name,attrs))
-        for key in attrs.keys():
-            print "Attrs:", key.encode(), attrs[key].encode()
-
-
-    def addAttribute(self,name,attrs):
-        """  adds the Attribute in the H5 file """
-        if "name" in attrs.keys():
-            nm= attrs["name"]
-            if "type" in attrs.keys():
-                tp=attrs["type"]
-            else:
-                tp="NX_CHAR"
-            at=self.lastObject().attr(nm.encode(),mt[tp].encode())
-            self.stack.append(FElement(at,name,attrs))
-
-            
     def characters(self, ch):
         """  adds the tag content """
         self.last().content.append(ch)
 
-    def storeFieldContent(self,name):
-        print "Storing field"
-        if self.last().source and self.last().source.isValid() :
-            strategy=self.last().source.strategy
-            if strategy in self.poolMap.keys():
-                self.poolMap[strategy].append(self.last())
-        else:
-            print "invalid dataSource"
-        
-    def storeAttributeContent(self,name):
-        print "Storing Attributes:", "".join(self.last().content)
-        if "name" in self.last().tAttrs.keys(): 
-            if  self.last().tAttrs["name"] == "URL":
-                self.last().fObject.value=("".join(self.last().content)).encode()
-            elif "type" in self.last().tAttrs.keys():
-                if self.last().tAttrs["type"]== "NX_CHAR":
-                    self.last().fObject.value=("".join(self.last().content)).encode()
-            else:        
-                self.last().fObject.value=("".join(self.last().content)).encode()
-
-
     def startElement(self, name, attrs):
         """  parses an opening tag"""
         self.content=""
-        if name in self.tagOpenCmd:
+        if name in self.elementClass:
             print "Calling: ", name, attrs.keys()
-            self.tagOpenCmd[name](name, attrs)
+            print "MYType" , type(self.last())
+            self.stack.append(self.elementClass[name](name, attrs, self.last()))
+            if hasattr(self.last(),"fetchName"):
+                self.last().fetchName(self.groupTypes)
+            if hasattr(self.last(),"createLink"):
+                self.last().createLink(self.groupTypes)
         else:
             print 'Unsupported tag:', name, attrs.keys()
 
@@ -278,21 +108,37 @@ class NexusXMLHandler(sax.ContentHandler):
         """  parses an closing tag"""
         print 'End of element:', name , "last:" ,  self.last().tName
         if self.last().tName == name :
-            if name in self.tagCloseCmd:
+            if name in self.elementClass:
                 print "Closing: ", name
-                self.tagCloseCmd[name](name)
-            print 'Content:' , "".join(self.last().content)    
-            print "poping"
-            self.stack.pop()
+                strategy=self.last().store(name)
+                print "strategy", strategy
+                if strategy in self.poolMap.keys():
+                    self.poolMap[strategy].append(self.last())
+                print 'Content:' , "".join(self.last().content)    
+                print "poping"
+                self.stack.pop()
 
     def getNXFile(self):
         return self.nxFile            
 
-    def closeFile(self):
+    def closeStack(self):
         """  closes the H5 file """
+        for s in self.stack:
+            if isinstance(s, FElement):
+                if hasattr(s.lastObject(),"close"):
+                    s.lastObject().close()
         if self.nxFile:
             print "nxClosing"
             self.nxFile.close()
+
+
+    def closeFile(self):
+        """  closes the H5 file """
+        self.closeStack()
+        if self.nxFile:
+            print "nxClosing"
+            self.nxFile.close()
+
 
 
 if __name__ == "__main__":
