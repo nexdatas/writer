@@ -116,5 +116,6 @@ if __name__ == "__main__":
 
 
     # Create a TDW object
-    tdw = TangoDataWriter("TDW")
+    tdw = TangoDataWriter("test.h5")
+    
     

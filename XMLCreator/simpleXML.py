@@ -131,6 +131,35 @@ class NGroup(NTag):
 		if aContent != "":
 			at.setText(aContent)
 			pass
+
+
+class NLink(NTag):
+	def __init__(self,parent,gName,gTarget):
+		NTag.__init__(self,parent,"link",gName)
+		self.addTagAttr("target",gTarget)
+		self.doc=[]
+
+	def addDoc(self,gDoc):
+		self.doc.append(ET.SubElement(self.elem,"doc"))
+		self.doc[-1].text=gDoc
+
+
+class NDimensions(NTag):
+	def __init__(self,parent,gRank):
+		NTag.__init__(self,parent,"dimensions")
+		self.addTagAttr("rank",gRank)
+		self.dims={}
+		
+	def dim(self,gIndex,gValue):
+		self.dims[gIndex]=NDim(self.elem,gIndex,gValue)
+			
+		
+class NDim(NTag):
+	def __init__(self,parent,gIndex,gValue):
+		NTag.__init__(self,parent,"dim")
+		self.addTagAttr("index",gIndex)
+		self.addTagAttr("value",gValue)
+		
 		
 
 class NField(NTag):
@@ -153,6 +182,7 @@ class NField(NTag):
 		self.attr[aName]=NAttr(self.elem,aName,aType)
  		if aContent != '':
 			self.attr[aName].setText(aContent)
+
 
 
 class NDSource(NTag):
@@ -254,7 +284,8 @@ class XMLDevice:
 
 if __name__ == "__main__":
 	df=XMLDevice("test.xml")
-	ins = NGroup(df.root,"instrument","NXinstrument")
+	en = NGroup(df.root,"entry","NXentry")
+	ins = NGroup(en.elem,"instrument","NXinstrument")
 #	NXsource
 	src = NGroup(ins.elem,"source","NXsource")
 	f = NField(src.elem,"distance","NX_FLOAT")
@@ -307,7 +338,44 @@ if __name__ == "__main__":
 	f.setText("1")
 	f = NField(src.elem,"target_material","NX_CHAR")
 	f.setText("C")
-	
+
+#       NXcrystal	
+	cr = NGroup(ins.elem,"crystal","NXcrystal")
+	f = NField(cr.elem,"distance","NX_FLOAT")
+	f.setUnits("A")
+	f.addDoc("Optimum diffracted wavelength")
+	d=NDimensions(f.elem,"1")
+	d.dim("1","10")
+
+#       NXdetector	
+	de = NGroup(ins.elem,"detector","NXdetector")
+	f = NField(de.elem,"azimuthal_angle","NX_FLOAT")
+	f = NField(de.elem,"beam_center_x","NX_FLOAT")
+	f = NField(de.elem,"beam_center_y","NX_FLOAT")
+	f = NField(de.elem,"data","NX_FLOAT")
+	d=NDimensions(f.elem,"2")
+	d.dim("1","100")
+	d.dim("2","100")
+	f = NField(de.elem,"distance","NX_FLOAT")
+	f = NField(de.elem,"polar_angle","NX_FLOAT")
+	f.addDoc(""" Optional rotation angle for the case when the powder diagram has been obtained
+	  through an omega-2theta scan like from a traditional single detector powder
+	  diffractometer""")
+	d=NDimensions(f.elem,"1")
+	d.dim("1","100")
+	f = NField(de.elem,"rotation_angle","NX_FLOAT")
+	f = NField(de.elem,"x_pixel_size","NX_FLOAT")
+	f = NField(de.elem,"y_pixel_size","NX_FLOAT")
+
+
+#	NXdata
+	da = NGroup(en.elem,"data","NXdata")
+	l= NLink(da.elem,"polar_angle", "/NXentry/NXinstrument/NXdetector/polar_angle")
+	l.addDoc("Link to polar angle in /NXentry/NXinstrument/NXdetector")
+	l= NLink(da.elem,"data","/NXentry/NXinstrument/NXdetector/data")
+	l.addDoc("Link to data in /NXentry/NXinstrument/NXdetector")
+
+
 	df.dump()
 
  
