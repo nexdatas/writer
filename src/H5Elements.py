@@ -63,22 +63,59 @@ class EField(FElement):
         FElement.__init__(self,name,attrs,last)
         self.rank="0"
         self.lengths={}
+        self.tpAttrs={}
 
-        if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            print attrs["name"],    mt[attrs["type"]]
-            f=self.lastObject().create_field(attrs["name"].encode(),mt[attrs["type"]].encode())
-        elif "name" in attrs.keys():
-            f=self.lastObject().create_field(attrs["name"].encode(),"string".encode())
-        else:
-            print "No name !!!"
-            for key in attrs.keys():
-                if key not in ["name"]:
-                    (f.attr(key.encode(),"string")).value=attrs[key].encode()
-        self.fObject=f
 
     def store(self,name):
         print "Storing field"
-        if self.source :
+
+        extraD=False
+        if self.source and self.source.isValid() and self.source.strategy == "STEP":
+            extraD=True
+            
+        if "name" in self.tAttrs.keys():
+            nm=self.tAttrs["name"]
+            if "type" in self.tAttrs.keys():
+                tp=mt[self.tAttrs["type"]]
+            else:
+                tp="string"
+        else:
+            raise " Field without a name !!!"
+
+
+        shape=[]
+        if extraD:
+            shape.append(0)
+        for i in range(int(self.rank)):
+            si=str(i+1)
+            if si in self.lengths.keys():
+                shape.append(int(self.lengths[si]))
+            else:
+                raise "Wrongly defined shape"
+                
+        
+        print "shape:", shape
+
+
+        if len(shape)>0:
+            f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
+        else:
+            f=self.lastObject().create_field(nm.encode(),tp.encode())
+
+
+        for key in self.tAttrs.keys():
+            if key not in ["name"]:
+                (f.attr(key.encode(),"string")).value=self.tAttrs[key].strip().encode()
+
+
+        for key in self.tpAttrs.keys():
+            if key not in ["name"]:
+                (f.attr(key.encode(),mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].strip().encode()
+
+        self.fObject=f
+
+
+        if self.source:
             if  self.source.isValid() :
                 return self.source.strategy
         else:
@@ -90,6 +127,8 @@ class EField(FElement):
 class EGroup(FElement):        
     def __init__(self,name,attrs,last):
         FElement.__init__(self,name,attrs,last)
+
+        self.tpAttrs={}
 
         if ("type" in attrs.keys()) and ("name" in attrs.keys()):
             print "type", type(self.lastObject())
@@ -105,6 +144,13 @@ class EGroup(FElement):
                     (g.attr(key.encode(),mt[dA[key]].encode())).value=attrs[key].encode()
                 else:
                     (g.attr(key.encode(),"string")).value=attrs[key].encode()
+
+    def store(self,name):
+        for key in self.tpAttrs.keys() :
+            if key not in ["name","type"]:
+                (self.fObject.self.attr(key.encode(),mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
+
+
 
     def fetchName(self,groupTypes):
         print "fetching"
@@ -162,30 +208,23 @@ class ELink(FElement):
                 
 
 
-class EAttribute(FElement):        
+class EAttribute(Element):        
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
 
-        if "name" in attrs.keys():
-            nm= attrs["name"]
-            if "type" in attrs.keys():
-                tp=attrs["type"]
-            else:
-                tp="NX_CHAR"
-            at=self.lastObject().attr(nm.encode(),mt[tp].encode())
-            self.fObject=at
 
     def store(self,name):
         print "Storing Attributes:", "".join(self.content)
-        if "name" in self.tAttrs.keys(): 
-            if  self.tAttrs["name"] == "URL":
-                self.fObject.value=("".join(self.content)).encode()
-            elif "type" in self.tAttrs.keys() and   "type" in self.tAttrs.keys():
-                if self.tAttrs["type"]== "NX_CHAR":
-                    self.fObject.value=("".join(self.content)).encode()
-            else:        
-                self.fObject.value=("".join(self.content)).encode()
 
+
+        if "name" in self.tAttrs.keys(): 
+            nm = self.tAttrs["name"]
+            if "type" in self.tAttrs.keys() :
+                tp = self.tAttrs["type"]
+            else:        
+                tp = "NX_CHAR"
+                
+            self.last.tpAttrs[nm]=(tp,("".join(self.content)).strip().encode())
 
 
 
