@@ -31,6 +31,7 @@ class ThreadPool:
         self.threadList=[]
 
     def append(self,elem):
+        print "appending: ", elem
         self.elementList.append(elem)
         pass
 

@@ -228,13 +228,14 @@ class EDimensions(Element):
         Element.__init__(self,name,attrs,last)
         if "rank" in attrs.keys():
             self.last.rank=attrs["rank"]
-
+            print "setting rank to ", self.last.rank
 
 class EDim(Element):        
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
             self.beforeLast().lengths[attrs["index"]]=attrs["value"]
+            print "setting dim %s to %s " % (attrs["index"], attrs["value"])
 
 class ERecord(Element):        
     def __init__(self,name,attrs,last):

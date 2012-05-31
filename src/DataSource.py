@@ -106,12 +106,12 @@ class DataSourceFactory(Element):
 
 
         if "strategy" in attrs.keys():
-            self.last.strategy=attrs["strategy"]
+            self.last.source.strategy=attrs["strategy"]
 
         if "hostname" in attrs.keys():
-            self.last.hostname=attrs["hostname"]
+            self.last.source.hostname=attrs["hostname"]
 
         if "port" in attrs.keys():
-            self.last.port=attrs["port"]
+            self.last.source.port=attrs["port"]
 
 

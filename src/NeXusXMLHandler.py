@@ -118,8 +118,10 @@ class NexusXMLHandler(sax.ContentHandler):
             if name in self.elementClass:
                 print "Closing: ", name
                 strategy=self.last().store(name)
-                print "strategy", strategy
+                if strategy:
+                    print "strategy", strategy
                 if strategy in self.poolMap.keys():
+                    print "adding to pool"
                     self.poolMap[strategy].append(self.last())
                 print 'Content:' , "".join(self.last().content)    
                 print "poping"
