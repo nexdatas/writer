@@ -21,7 +21,9 @@
                                                                       
 from Element import *
 
+from PyTango import *
 
+from DataHolder import *
 
 class DataSource:
     def __init__(self):
@@ -35,7 +37,6 @@ class DataSource:
 
     def isValid(self):
         return True
-#        return False
 
 
 class TangoSource(DataSource):
@@ -43,10 +44,20 @@ class TangoSource(DataSource):
         DataSource.__init__(self)
         self.device=None
         self.type=None
+# @TODO
         self.data=None
-    def getData(self):
-        pass
 
+    def getData(self):
+        if self.device and self.type and self.name:
+            proxy=DeviceProxy(self.device.encode())
+            if self.type == "attribute":
+                alist=proxy.get_attribute_list()
+#                print alist
+                if self.name.encode() in alist:
+                    da=proxy.read_attribute( self.name.encode())
+#                    print "Atribute: ",da
+#                    print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
+                    return DataHolder(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
 
 class DBaseSource(DataSource):
     def __init__(self):
@@ -59,7 +70,11 @@ class DBaseSource(DataSource):
 class ClientSource(DataSource):
     def __init__(self):
         DataSource.__init__(self)
-        pass
+        self.myJSON="{}"
+        
+    def setJSON(self,json):
+        self.myJSON=json
+    
     def getData(self):
         pass
 

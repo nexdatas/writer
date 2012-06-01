@@ -304,7 +304,7 @@ if __name__ == "__main__":
 	f.setUnits("W")
 	f.setText("1")
 	sr=NDSource(f.elem,"INIT","haso228k.desy.de","10000")
-	sr.initTango("p09/motor/exp.01","attribute","power")
+	sr.initTango("p09/motor/exp.01","attribute","Position")
 	f = NField(src.elem,"emittance_x","NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")

@@ -35,6 +35,12 @@ class ThreadPool:
         self.elementList.append(elem)
         pass
 
+    def setJSON(self,mJSON):
+        for el in self.elementList :
+            if hasattr(el.source,"setJSON"):
+                el.source.setJSON(mJSON)
+        return self
+
     def run(self):
         self.threadList=[]
         

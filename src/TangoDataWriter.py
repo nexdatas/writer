@@ -36,7 +36,7 @@ class TangoDataWriter:
     def __init__(self,fName):
         self.fileName=fName
         self.xmlSettings=""
-        self.json=""
+        self.json="{}"
 #        self.handler = None
         self.initPool=None
         self.stepPool=None
@@ -51,9 +51,9 @@ class TangoDataWriter:
             handler = NexusXMLHandler(self.fileName)
             sax.parseString(self.xmlSettings,handler)
             
-            self.initPool=handler.initPool
-            self.stepPool=handler.stepPool
-            self.finalPool=handler.finalPool
+            self.initPool=handler.initPool.setJSON(self.json)
+            self.stepPool=handler.stepPool.setJSON(self.json)
+            self.finalPool=handler.finalPool.setJSON(self.json)
             
             self.initPool.runAndWait()
             self.nxFile=handler.getNXFile()

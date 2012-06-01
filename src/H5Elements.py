@@ -25,8 +25,73 @@ from numpy  import *
 
 from DataSource import *
 
+from DataHolder import *
+
 
 from Element import *
+
+
+
+tTypes=["DevVoid",
+        "DevBoolean",
+        "DevShort",
+        "DevLong",
+        "DevFloat",
+        "DevDouble",
+        "DevUShort",
+        "DevULong",
+        "DevString",
+        "DevVarCharArray",
+        "DevVarShortArray",
+        "DevVarLongArray",
+        "DevVarFloatArray",
+        "DevVarDoubleArray",
+        "DevVarUShortArray",
+        "DevVarULongArray",
+        "DevVarStringArray",
+        "DevVarLongStringArray",
+        "DevVarDoubleStringArray",
+        "DevState",
+        "ConstDevString",
+        "DevVarBooleanArray",
+        "DevUChar",
+        "DevLong64",
+        "DevULong64",
+        "DevVarLong64Array",
+        "DevVarULong64Array",
+        "DevInt",
+        "DevEncoded"]
+
+nTypes=["NX_CHAR",
+        "NX_BOOLEAN",
+        "NX_INT32",
+        "NX_INT32",
+        "NX_FLOAT32",
+        "NX_FLOAT64",
+        "NX_UINT32",
+        "NX_UINT32",
+	"NX_CHAR",
+        "NX_CHAR"
+        "NX_INT32",
+        "NX_INT64",
+        "NX_FLOAT32",
+        "NX_FLOAT64",
+        "NX_UINT32",
+        "NX_UINT64",
+	"NX_CHAR",
+        "NX_CHAR",
+        "NX_CHAR",
+        "NX_CHAR",
+        "NX_CHAR",
+        "NX_BOOLEAN",
+        "NX_CHAR",
+        "NX_INT64",
+        "NX_UINT64",
+        "NX_INT64",
+        "NX_UINT64",
+        "NX_INT",
+        "NX_CHAR"]
+
 
 
 # A map of NEXUS : pninx types 
@@ -64,14 +129,15 @@ class EField(FElement):
         self.rank="0"
         self.lengths={}
         self.tpAttrs={}
+        self.extraD=False
 
 
     def store(self,name):
         print "Storing field"
 
-        extraD=False
+        self.extraD=False
         if self.source and self.source.isValid() and self.source.strategy == "STEP":
-            extraD=True
+            self.extraD=True
             
         if "name" in self.tAttrs.keys():
             nm=self.tAttrs["name"]
@@ -84,17 +150,20 @@ class EField(FElement):
 
 
         shape=[]
-        if extraD:
+        if self.extraD:
             shape.append(0)
-        for i in range(int(self.rank)):
-            si=str(i+1)
-            if si in self.lengths.keys():
-                shape.append(int(self.lengths[si]))
-            else:
-                raise "Wrongly defined shape"
+        print "lengths" ,self.lengths  
+        print "len ", self.lengths["1"].encode()  
+        if int(self.rank)>1  or (int(self.rank)>0 and int(self.lengths["1"].encode())>1):
+            for i in range(int(self.rank)):
+                si=str(i+1)
+                if si in self.lengths.keys():
+                    shape.append(int(self.lengths[si]))
+                else:
+                    raise "Wrongly defined shape"
                 
         
-        print "shape:", shape
+#        print "shape:", shape
 
 
         if len(shape)>0:
@@ -114,14 +183,29 @@ class EField(FElement):
 
         self.fObject=f
 
-
         if self.source:
             if  self.source.isValid() :
                 return self.source.strategy
         else:
             print "invalid dataSource"
 
-
+    def run(self):
+        if self.source:
+            dh=self.source.getData()
+            if dh:
+#                print "shape", self.fObject.shape, dh.shape
+                if not self.extraD:
+                    self.fObject.write(dh.value)
+                else:
+#                    print "DH type", dh.type
+#                    print "DH format ",str(dh.format).split('.')[-1]
+                    if str(dh.format).split('.')[-1] == "SCALAR":
+                        self.fObject.grow()
+#                        self.fObject[-1]=dh.value
+                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+                            self.fObject[self.fObject.shape[0]-1]=str(dh.value)
+                        else:
+                            self.fObject[self.fObject.shape[0]-1]=dh.value
 
         
 class EGroup(FElement):        
@@ -148,7 +232,7 @@ class EGroup(FElement):
     def store(self,name):
         for key in self.tpAttrs.keys() :
             if key not in ["name","type"]:
-                (self.fObject.self.attr(key.encode(),mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
+                (self.fObject.attr(key.encode(),mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
 
 
 
@@ -258,10 +342,11 @@ class ERecord(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "type" in attrs.keys():
-            self.last.type=attrs["type"]
+            self.beforeLast().source.type=attrs["type"]
         if "name" in attrs.keys():
-            self.last.name=attrs["name"]
+            self.beforeLast().source.name=attrs["name"]
 
+ 
 class EDimensions(Element):        
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
@@ -276,7 +361,4 @@ class EDim(Element):
             self.beforeLast().lengths[attrs["index"]]=attrs["value"]
             print "setting dim %s to %s " % (attrs["index"], attrs["value"])
 
-class ERecord(Element):        
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
 
