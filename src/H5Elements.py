@@ -152,8 +152,6 @@ class EField(FElement):
         shape=[]
         if self.extraD:
             shape.append(0)
-        print "lengths" ,self.lengths  
-        print "len ", self.lengths["1"].encode()  
         if int(self.rank)>1  or (int(self.rank)>0 and int(self.lengths["1"].encode())>1):
             for i in range(int(self.rank)):
                 si=str(i+1)
