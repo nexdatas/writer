@@ -166,8 +166,9 @@ class EField(FElement):
 
 
         if len(shape)>0:
-            if tp.encode() =='string':
-                shape.append(None)
+#            if tp.encode() =='string':
+#                shape.append(None)
+                
             f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
         else:
             f=self.lastObject().create_field(nm.encode(),tp.encode())
