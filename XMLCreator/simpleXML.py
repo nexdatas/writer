@@ -243,15 +243,18 @@ class DevNGroup(NGroup):
 			print tTypes[cf.data_type]
 			print nTypes[cf.data_type]
 			print cf.data_type
+			
 
 			self.fields[at]=NField(self.elem,at,nTypes[cf.data_type])
 			if str(cf.data_format).split('.')[-1] == "SPECTRUM":
+				da=self.proxy.read_attribute(at)
 				d=NDimensions(self.fields[at].elem,"1")
-				d.dim("1",str(cf.max_dim_x))
+				d.dim("1",str(da.dim_x))
 			if str(cf.data_format).split('.')[-1] == "IMAGE":
+				da=self.proxy.read_attribute(at)
 				d=NDimensions(self.fields[at].elem,"2")
-				d.dim("1",str(cf.max_dim_x))
-				d.dim("2",str(cf.max_dim_y))
+				d.dim("1",str(da.dim_x))
+				d.dim("2",str(da.dim_y))
 				
 			if cf.unit != 'No unit':
 				self.fields[at].setUnits(cf.unit)

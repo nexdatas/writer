@@ -223,6 +223,8 @@ class EField(FElement):
                             print "ARRAY: ", arr
                             self.fObject[self.fObject.shape[0]-1,:]=arr
                         else:
+                            print "fO SHAPE:" , self.fObject.shape
+                            print "ARRAY SHAPE: ", dh.array().shape
                             self.fObject[self.fObject.shape[0]-1,:]=dh.array()
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.fObject.grow()
