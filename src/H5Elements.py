@@ -156,7 +156,8 @@ class EField(FElement):
             for i in range(int(self.rank)):
                 si=str(i+1)
                 if si in self.lengths.keys():
-                    shape.append(int(self.lengths[si]))
+                    if int(self.lengths[si]) >0:
+                        shape.append(int(self.lengths[si]))
                 else:
                     raise "Wrongly defined shape"
                 
@@ -165,6 +166,8 @@ class EField(FElement):
 
 
         if len(shape)>0:
+            if tp.encode() =='string':
+                shape.append(None)
             f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
         else:
             f=self.lastObject().create_field(nm.encode(),tp.encode())
@@ -193,7 +196,13 @@ class EField(FElement):
             if dh:
 #                print "shape", self.fObject.shape, dh.shape
                 if not self.extraD:
-                    self.fObject.write(dh.value)
+                    if str(dh.format).split('.')[-1] == "SCALAR":
+                        self.fObject.write(dh.value)
+                    if str(dh.format).split('.')[-1] == "SPECTRUM":
+                        self.fObject.write(dh.value)
+                        pass
+                    if str(dh.format).split('.')[-1] == "IMAGE":
+                        pass
                 else:
 #                    print "DH type", dh.type
 #                    print "DH format ",str(dh.format).split('.')[-1]
@@ -204,6 +213,25 @@ class EField(FElement):
                             self.fObject[self.fObject.shape[0]-1]=str(dh.value)
                         else:
                             self.fObject[self.fObject.shape[0]-1]=dh.value
+                    if str(dh.format).split('.')[-1] == "SPECTRUM":
+                        self.fObject.grow()
+                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+                            print "fO SHAPE:" , self.fObject.shape
+                            arr=numpy.array(list((str(el)) for el in dh.value))
+                            print "ARRAY SHAPE: ", arr.shape
+                            print "ARRAY: ", arr
+                            self.fObject[self.fObject.shape[0]-1,:]=arr
+                        else:
+                            self.fObject[self.fObject.shape[0]-1,:]=dh.array()
+                    if str(dh.format).split('.')[-1] == "IMAGE":
+                        self.fObject.grow()
+#                        self.fObject[-1]=dh.value
+#                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+#                            self.fObject[self.fObject.shape[0]-1]=str(dh.value)
+#                        else:
+#                            self.fObject[self.fObject.shape[0]-1]=dh.value
+
+
 
         
 class EGroup(FElement):        

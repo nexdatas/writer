@@ -245,6 +245,14 @@ class DevNGroup(NGroup):
 			print cf.data_type
 
 			self.fields[at]=NField(self.elem,at,nTypes[cf.data_type])
+			if str(cf.data_format).split('.')[-1] == "SPECTRUM":
+				d=NDimensions(self.fields[at].elem,"1")
+				d.dim("1",str(cf.max_dim_x))
+			if str(cf.data_format).split('.')[-1] == "IMAGE":
+				d=NDimensions(self.fields[at].elem,"2")
+				d.dim("1",str(cf.max_dim_x))
+				d.dim("2",str(cf.max_dim_y))
+				
 			if cf.unit != 'No unit':
 				self.fields[at].setUnits(cf.unit)
 			self.fields[at].setUnits(cf.unit)

@@ -57,6 +57,11 @@ class TangoSource(DataSource):
                     da=proxy.read_attribute( self.name.encode())
 #                    print "Atribute: ",da
 #                    print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
+                    if str(da.data_format).split('.')[-1] == "SPECTRUM":
+                        print "Device: ", self.device.encode()
+                        print "Atribute: ",da
+                        print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
+
                     return DataHolder(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
 
 class DBaseSource(DataSource):

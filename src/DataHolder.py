@@ -18,7 +18,8 @@
 """@package docstring
 @file DataHolder.py
 """
-                                                                      
+                         
+import numpy
 
 class DataHolder:
     """ A holder for passing data """
@@ -28,5 +29,10 @@ class DataHolder:
         self.value=dValue
         self.type=dType
         self.shape=dShape
+    def array(self):
+        if str(self.format).split('.')[-1] == "SPECTRUM":
+            return numpy.array(self.value)
+        if str(self.format).split('.')[-1] == "IMAGE":
+            return numpy.array(self.value)
 
 
