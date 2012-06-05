@@ -152,7 +152,7 @@ class EField(FElement):
         shape=[]
         if self.extraD:
             shape.append(0)
-        if int(self.rank)>1  or (int(self.rank)>0 and int(self.lengths["1"].encode())>1):
+        if int(self.rank)>1  or (int(self.rank)>0 and int(self.lengths["1"].encode())>=1):
             for i in range(int(self.rank)):
                 si=str(i+1)
                 if si in self.lengths.keys():
@@ -160,7 +160,6 @@ class EField(FElement):
                         shape.append(int(self.lengths[si]))
                 else:
                     raise "Wrongly defined shape"
-                
         
 #        print "shape:", shape
 
@@ -218,14 +217,22 @@ class EField(FElement):
                         self.fObject.grow()
                         if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
                             print "fO SHAPE:" , self.fObject.shape
-                            arr=numpy.array(list((str(el)) for el in dh.value))
-                            print "ARRAY SHAPE: ", arr.shape
+                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
+                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
                             print "ARRAY: ", arr
-                            self.fObject[self.fObject.shape[0]-1,:]=arr
+                            if len(arr.shape) == 1 and arr.shape[0] == 1:
+                                self.fObject[self.fObject.shape[0]-1,:]=arr[0]
+                            else:
+                                self.fObject[self.fObject.shape[0]-1,:]=arr
                         else:
-                            print "fO SHAPE:" , self.fObject.shape
-                            print "ARRAY SHAPE: ", dh.array().shape
-                            self.fObject[self.fObject.shape[0]-1,:]=dh.array()
+#                            print "fO SHAPE:" , self.fObject.shape
+                            arr=dh.array(self.fObject.dtype)
+#                            print "ARRAY SHAPE: ", dh.array(self.fObject.dtype).shape,len(arr.shape) 
+#                            print "ARRAY: ", arr
+                            if len(arr.shape) == 1 and arr.shape[0] == 1:
+                                self.fObject[self.fObject.shape[0]-1,:]=arr[0]
+                            else:                                
+                                self.fObject[self.fObject.shape[0]-1,:]=arr
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.fObject.grow()
 #                        self.fObject[-1]=dh.value

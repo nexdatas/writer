@@ -113,7 +113,7 @@ if __name__ == "__main__":
 	mot1.setText("My motor1")
 	mot2.setText("My motor1")
 
-#	KKK = DevNGroup(tst.elem,"p09/tst/exp.01","Tst","NXmonitor")
+	KKK = DevNGroup(tst.elem,"p09/tst/exp.01","Tst","NXmonitor")
 	
 	df.dump()
 

@@ -29,10 +29,18 @@ class DataHolder:
         self.value=dValue
         self.type=dType
         self.shape=dShape
-    def array(self):
+    def typeless_array(self):
         if str(self.format).split('.')[-1] == "SPECTRUM":
             return numpy.array(self.value)
+        
         if str(self.format).split('.')[-1] == "IMAGE":
             return numpy.array(self.value)
+
+    def array(self,tp):
+        if str(self.format).split('.')[-1] == "SPECTRUM":
+            return numpy.array(self.value,dtype=tp)
+        
+        if str(self.format).split('.')[-1] == "IMAGE":
+            return numpy.array(self.value,dtype=tp)
 
 
