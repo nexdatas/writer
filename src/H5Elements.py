@@ -235,11 +235,21 @@ class EField(FElement):
                                 self.fObject[self.fObject.shape[0]-1,:]=arr
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.fObject.grow()
-#                        self.fObject[-1]=dh.value
-#                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
-#                            self.fObject[self.fObject.shape[0]-1]=str(dh.value)
-#                        else:
-#                            self.fObject[self.fObject.shape[0]-1]=dh.value
+                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+#                            print "fO SHAPE:" , self.fObject.shape
+                            val=dh.value
+                            arr= numpy.array([ [ str(val[j][i]) for i in range(len(val[0])) ] 
+                                               for j in range(len(val)) ],self.fObject.dtype)
+#                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
+#                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
+#                            print "ARRAY: ", arr
+                            self.fObject[self.fObject.shape[0]-1,:,:]=arr
+                        else:
+#                            print "fO SHAPE:" , self.fObject.shape
+                            arr=dh.array(self.fObject.dtype)
+#                            print "ARRAY SHAPE: ", dh.array(self.fObject.dtype).shape,len(arr.shape) 
+#                            print "ARRAY: ", arr
+                            self.fObject[self.fObject.shape[0]-1,:,:]=arr
 
 
 

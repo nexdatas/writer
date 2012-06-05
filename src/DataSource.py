@@ -58,9 +58,12 @@ class TangoSource(DataSource):
 #                    print "Atribute: ",da
 #                    print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
                     if str(da.data_format).split('.')[-1] == "SPECTRUM":
-                        print "Device: ", self.device.encode()
+                        print "Spectrum Device: ", self.device.encode()
 #                        print "Atribute: ",da
 #                        print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
+                    if str(da.data_format).split('.')[-1] == "IMAGE":
+                        print "Image Device: ", self.device.encode()
+                        print "Atribute: ",da
 
                     return DataHolder(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
 
