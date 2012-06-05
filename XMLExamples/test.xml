@@ -5,7 +5,11 @@
 			<group name="source" type="NXsource">
 				<field name="distance" type="NX_FLOAT" units="m">
 					100.
-					<datasource dbname="door_db" hostname="door.desy.de" port="12345" query="SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = &quot;P03&quot;" strategy="STEP" type="DB"/>
+					<datasource dbname="door_db" hostname="door.desy.de" port="12345" strategy="STEP" type="DB">
+						<query>
+							SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'
+						</query>
+					</datasource>
 				</field>
 				<field name="type" type="NX_CHAR">
 					Synchrotron X-ray Source
@@ -95,7 +99,11 @@
 				</field>
 				<field name="rotation_angle" type="NX_FLOAT"/>
 				<field name="x_pixel_size" type="NX_FLOAT"/>
-				<field name="y_pixel_size" type="NX_FLOAT"/>
+				<field name="y_pixel_size" type="NX_FLOAT">
+					<datasource device="p09/motor/exp.01" hostname="haso228k.desy.de" port="10000" strategy="FINAL" type="TANGO">
+						<record name="Position" type="attribute"/>
+					</datasource>
+				</field>
 			</group>
 		</group>
 		<group name="data" type="NXdata">

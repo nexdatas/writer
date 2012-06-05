@@ -392,6 +392,13 @@ class ERecord(Element):
         if "name" in attrs.keys():
             self.beforeLast().source.name=attrs["name"]
 
+
+class EQuery(Element):        
+    def __init__(self,name,attrs,last):
+        Element.__init__(self,name,attrs,last)
+    def store(self,name):
+        self.beforeLast().source.query= ("".join(self.content)).strip()        
+
  
 class EDimensions(Element):        
     def __init__(self,name,attrs,last):

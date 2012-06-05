@@ -73,7 +73,7 @@ class DBaseSource(DataSource):
         self.query=None
         self.dbname=None
     def getData(self):
-        pass
+        print "QUERY: ", self.query
 
 class ClientSource(DataSource):
     def __init__(self):
@@ -84,7 +84,7 @@ class ClientSource(DataSource):
         self.myJSON=json
     
     def getData(self):
-        pass
+        print "JSON:", self.myJSON
 
 class SardanaSource(DataSource):
     def __init__(self):

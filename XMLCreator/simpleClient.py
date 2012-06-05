@@ -33,8 +33,10 @@ if __name__ == "__main__":
         if os.path.exists(xmlf):
 
 
-            if len(sys.argv)>3:
+            if len(sys.argv)>2:
+                
                 fname=sys.argv[2]
+                print fname
             else:
                 sp=xmlf.split(".")
                 print sp
@@ -46,7 +48,7 @@ if __name__ == "__main__":
             print "storing in ", fname 
     
             device="p09/tdw/r228"
-            if len(sys.argv)>4:
+            if len(sys.argv)>3:
                 device=sys.argv[3]
             
             dpx=DeviceProxy(device)

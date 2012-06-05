@@ -27,7 +27,7 @@ if __name__ == "__main__":
 	f.setUnits("m")
 	f.setText("100.")
 	sr=NDSource(f.elem,"STEP","door.desy.de","12345")
-	sr.initDBase("door_db",'SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = "P03"')
+	sr.initDBase("door_db","SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'")
 	f = NField(src.elem,"type","NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src.elem,"name","NX_CHAR")

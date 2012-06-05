@@ -195,7 +195,8 @@ class NDSource(NTag):
 	def initDBase(self,gDBname,gQuery):
 		self.elem.attrib["type"]="DB"
 		self.elem.attrib["dbname"]=gDBname
-		self.elem.attrib["query"]=gQuery
+		da=NTag(self.elem,"query")
+		da.elem.text=gQuery
 
 	def initTango(self,gDevice,gDType,gDName):
 		self.elem.attrib["type"]="TANGO"
@@ -303,7 +304,7 @@ if __name__ == "__main__":
 	f.setUnits("m")
 	f.setText("100.")
 	sr=NDSource(f.elem,"STEP","door.desy.de","12345")
-	sr.initDBase("door_db",'SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = "P03"')
+	sr.initDBase("door_db","SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'")
 	f = NField(src.elem,"type","NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src.elem,"name","NX_CHAR")
@@ -377,6 +378,8 @@ if __name__ == "__main__":
 	f = NField(de.elem,"rotation_angle","NX_FLOAT")
 	f = NField(de.elem,"x_pixel_size","NX_FLOAT")
 	f = NField(de.elem,"y_pixel_size","NX_FLOAT")
+	sr=NDSource(f.elem,"FINAL","haso228k.desy.de","10000")
+	sr.initTango("p09/motor/exp.01","attribute","Position")
 
 
 #	NXdata

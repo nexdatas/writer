@@ -5,7 +5,11 @@
 			My source
 			<field name="distance" type="NX_FLOAT" units="m">
 				100.
-				<datasource dbname="door_db" hostname="door.desy.de" port="12345" query="SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = &quot;P03&quot;" strategy="STEP" type="DB"/>
+				<datasource dbname="door_db" hostname="door.desy.de" port="12345" strategy="STEP" type="DB">
+					<query>
+						SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'
+					</query>
+				</datasource>
 			</field>
 			<field name="type" type="NX_CHAR">
 				Synchrotron X-ray Source
