@@ -6,9 +6,6 @@
 			<field name="distance" type="NX_FLOAT" units="m">
 				100.
 			</field>
-			<field name="distance" type="NX_FLOAT" units="m">
-				100.
-			</field>
 			<field name="db_devices" type="NX_CHAR">
 				<dimensions rank="2">
 					<dim index="1" value="151"/>
