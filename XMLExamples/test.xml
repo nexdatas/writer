@@ -5,9 +5,15 @@
 			<group name="source" type="NXsource">
 				<field name="distance" type="NX_FLOAT" units="m">
 					100.
-					<datasource hostname="door.desy.de" port="12345" strategy="STEP" type="DB">
-						<query dbname="door_db">
-							SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'
+				</field>
+				<field name="db_devices" type="NX_CHAR">
+					<dimensions rank="2">
+						<dim index="1" value="151"/>
+						<dim index="2" value="2"/>
+					</dimensions>
+					<datasource hostname="haso228k.desy.de" strategy="STEP" type="DB">
+						<query dbname="tango" format="IMAGE">
+							SELECT name,pid FROM device
 						</query>
 					</datasource>
 				</field>

@@ -52,6 +52,7 @@ if __name__ == "__main__":
                 device=sys.argv[3]
             
             dpx=DeviceProxy(device)
+            dpx.set_timeout_millis(25000)
             print " Connected to: ", device
             xml = open(xmlf, 'r').read()
             dpx.TheXMLSettings=xml

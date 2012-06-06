@@ -25,6 +25,9 @@ from PyTango import *
 
 from DataHolder import *
 
+import MySQLdb
+
+
 class DataSource:
     def __init__(self):
         self.strategy=None
@@ -72,8 +75,52 @@ class DBaseSource(DataSource):
         DataSource.__init__(self)
         self.query=None
         self.dbname=None
+        self.user=None
+        self.passwd=None
+        self.mycnf='/etc/my.cnf'
+        self.format=None
+
     def getData(self):
         print "QUERY: ", self.query
+        args={}
+        if self.mycnf:
+            args["read_default_file"]=self.mycnf.encode()
+        if self.dbname:
+            args["db"]=self.dbname.encode()
+        if self.user:
+            args["user"]=self.user.encode()
+        if self.passwd:
+            args["passwd"]=self.passwd.encode()
+        if self.hostname:
+            args["host"]=self.hostname.encode()
+        if self.port:
+            args["port"]=int(self.port)
+        
+        print "ARGS", args
+        print "FORMAT", self.format
+        db = MySQLdb.connect(**args)
+        if db:
+            cursor = db.cursor()
+            cursor.execute(self.query)
+            if not self.format or self.format == 'SCALAR':
+                data = cursor.fetchone()
+                dh=DataHolder("SCALAR",data[0],"DevString",[1,0])
+            elif self.format == 'SPECTRUM':
+                data = cursor.fetchall()
+                if len(data[0]) == 1:
+                    ldata=list(el[0] for el in data)
+                else:
+                    ldata=list(el for el in data[0])
+                    dh=DataHolder("SPECTRUM",ldata,"DevString",[len(ldata),0])
+            else:
+                data = cursor.fetchall()
+                ldata=list(list(el) for el in data)
+                dh=DataHolder("IMAGE",ldata,"DevString",[len(ldata),len(ldata[0])])
+                
+            cursor.close()
+            db.close()
+        print "DB DH:" , dh.value    
+        return dh
 
 class ClientSource(DataSource):
     def __init__(self):
@@ -111,16 +158,11 @@ class DataSourceFactory(Element):
         else:
             print "Typeless data source"
             self.last.source=DataSource()
-                    
-            
-
 
         if "strategy" in attrs.keys():
             self.last.source.strategy=attrs["strategy"]
-
         if "hostname" in attrs.keys():
             self.last.source.hostname=attrs["hostname"]
-
         if "port" in attrs.keys():
             self.last.source.port=attrs["port"]
 

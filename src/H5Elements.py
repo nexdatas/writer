@@ -235,11 +235,13 @@ class EField(FElement):
                                 self.fObject[self.fObject.shape[0]-1,:]=arr
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.fObject.grow()
-                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
-#                            print "fO SHAPE:" , self.fObject.shape
+                        if str(dh.type) not in tTypes or nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+                            #                            print "fO SHAPE:" , self.fObject.shape
                             val=dh.value
-                            arr= numpy.array([ [ str(val[j][i]) for i in range(len(val[0])) ] 
-                                               for j in range(len(val)) ],self.fObject.dtype)
+                            larr=[ [ str(val[j][i]) for i in range(len(val[0])) ] for j in range(len(val)) ]
+                            print self.fObject.dtype
+                            arr= numpy.array(larr)
+#                            arr= numpy.array(larr,self.fObject.dtype)
 #                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
 #                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
 #                            print "ARRAY: ", arr
@@ -409,7 +411,15 @@ class EQuery(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "dbname" in attrs.keys():
-            self.beforeLast().source.type=attrs["dbname"]
+            self.beforeLast().source.dbname=attrs["dbname"]
+        if "user" in attrs.keys():
+            self.beforeLast().source.user=attrs["user"]
+        if "passwd" in attrs.keys():
+            self.beforeLast().source.passwd=attrs["passwd"]
+        if "format" in attrs.keys():
+            self.beforeLast().source.format=attrs["format"]
+        if "mycnf" in attrs.keys():
+            self.beforeLast().source.mycnf=attrs["mycnf"]
     def store(self,name):
         self.beforeLast().source.query= ("".join(self.content)).strip()        
 

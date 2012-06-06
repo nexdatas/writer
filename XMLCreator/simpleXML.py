@@ -186,16 +186,25 @@ class NField(NTag):
 
 
 class NDSource(NTag):
-	def __init__(self,parent,gStrategy,gHost,gPort):
+	def __init__(self,parent,gStrategy,gHost,gPort=None):
 		NTag.__init__(self,parent,"datasource")
 		self.elem.attrib["strategy"]=gStrategy
 		self.elem.attrib["hostname"]=gHost
-		self.elem.attrib["port"]=gPort
+		if gPort:
+			self.elem.attrib["port"]=gPort
 		
-	def initDBase(self,gDBname,gQuery):
+	def initDBase(self,gDBname,gQuery, gFormat=None, gMycnf=None, gUser=None, gPasswd=None):
 		self.elem.attrib["type"]="DB"
 		da=NTag(self.elem,"query")
 		da.elem.attrib["dbname"]=gDBname
+		if gFormat:
+			da.elem.attrib["format"]=gFormat
+		if gUser:
+			da.elem.attrib["user"]=gUser
+		if gPasswd:
+			da.elem.attrib["passwd"]=gPasswd
+		if gMycnf:
+			da.elem.attrib["mycnf"]=gMycnf
 		da.elem.text=gQuery
 
 	def initTango(self,gDevice,gDType,gDName):
@@ -306,8 +315,12 @@ if __name__ == "__main__":
 	f = NField(src.elem,"distance","NX_FLOAT")
 	f.setUnits("m")
 	f.setText("100.")
-	sr=NDSource(f.elem,"STEP","door.desy.de","12345")
-	sr.initDBase("door_db","SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'")
+	f = NField(src.elem,"db_devices","NX_CHAR")
+	d=NDimensions(f.elem,"2")
+	d.dim("1","151")
+	d.dim("2","2")
+	sr=NDSource(f.elem,"STEP","haso228k.desy.de")
+	sr.initDBase("tango","SELECT name,pid FROM device","IMAGE")
 	f = NField(src.elem,"type","NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src.elem,"name","NX_CHAR")
