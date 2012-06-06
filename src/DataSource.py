@@ -97,32 +97,19 @@ class SardanaSource(DataSource):
 class DataSourceFactory(Element):        
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
+        self.sourceClass={"DB":DBaseSource,"TANGO":TangoSource,
+                          "CLIENT":ClientSource,"SARDANA":SardanaSource}
         self.createDSource(name,attrs)
-
         
     def createDSource(self, name, attrs):
         if "type" in attrs.keys():
-            if attrs["type"] == "DB" :
-                self.last.source=DBaseSource()
-                if "dbname" in attrs.keys():
-                    self.last.source.dbname=attrs["dbname"]
-                if "query" in attrs.keys():
-                    self.last.source.query=attrs["query"]
-            elif attrs["type"] == "TANGO" :
-                self.last.source=TangoSource()
-                if "device" in attrs.keys():
-                    self.last.source.device=attrs["device"]
-            elif attrs["type"] == "CLIENT" :
-                self.last.source=ClientSource()
-            elif attrs["type"] == "SARDANA" :
-                self.last.source=SardanaSource()
-                if "door" in attrs.keys():
-                    self.last.source.device=attrs["door"]
+            if attrs["type"] in self.sourceClass.keys():
+                self.last.source=self.sourceClass[attrs["type"]]()
             else:
                 print "Unknown data source"
                 self.last.source=DataSource()
         else:
-            print "Unknown data source"
+            print "Typeless data source"
             self.last.source=DataSource()
                     
             

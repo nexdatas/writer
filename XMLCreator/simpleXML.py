@@ -194,25 +194,28 @@ class NDSource(NTag):
 		
 	def initDBase(self,gDBname,gQuery):
 		self.elem.attrib["type"]="DB"
-		self.elem.attrib["dbname"]=gDBname
 		da=NTag(self.elem,"query")
+		da.elem.attrib["dbname"]=gDBname
 		da.elem.text=gQuery
 
 	def initTango(self,gDevice,gDType,gDName):
 		self.elem.attrib["type"]="TANGO"
-		self.elem.attrib["device"]=gDevice
+		dv=NTag(self.elem,"device")
+		dv.elem.attrib["name"]=gDevice
 		da=NTag(self.elem,"record")
 		da.addTagAttr("type", gDType)
 		da.addTagAttr("name", gDName)
 
 	def initClient(self,gDName):
+		self.elem.attrib["type"]="CLIENT"
 		da=NTag(self.elem,"record")
 		da.addTagAttr("name", gDName)
 		
 
 	def initSardana(self,gDoor,gDName):
 		self.elem.attrib["type"]="SARDANA"
-		self.elem.attrib["door"]=gDoor
+		do=NTag(self.elem,"door")
+		do.elem.attrib["name"]=gDoor
 		da=NTag(self.elem,"record")
 		da.addTagAttr("name", gDName)
 

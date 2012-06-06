@@ -5,8 +5,8 @@
 			<group name="source" type="NXsource">
 				<field name="distance" type="NX_FLOAT" units="m">
 					100.
-					<datasource dbname="door_db" hostname="door.desy.de" port="12345" strategy="STEP" type="DB">
-						<query>
+					<datasource hostname="door.desy.de" port="12345" strategy="STEP" type="DB">
+						<query dbname="door_db">
 							SELECT proposal_name FROM proposals WHERE date = TODAY AND beamline = 'P03'
 						</query>
 					</datasource>
@@ -25,19 +25,21 @@
 				</field>
 				<field name="power" type="NX_FLOAT" units="W">
 					1
-					<datasource device="p09/motor/exp.01" hostname="haso228k.desy.de" port="10000" strategy="INIT" type="TANGO">
+					<datasource hostname="haso228k.desy.de" port="10000" strategy="INIT" type="TANGO">
+						<device name="p09/motor/exp.01"/>
 						<record name="Position" type="attribute"/>
 					</datasource>
 				</field>
 				<field name="emittance_x" type="NX_FLOAT" units="nm rad">
 					0.2
-					<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP">
+					<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="CLIENT">
 						<record name="emitannce_x"/>
 					</datasource>
 				</field>
 				<field name="emittance_y" type="NX_FLOAT" units="nm rad">
 					0.2
-					<datasource door="door1" hostname="haso228k.desy.de" port="10000" strategy="STEP" type="SARDANA">
+					<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="SARDANA">
+						<door name="door1"/>
 						<record name="emitannce_y"/>
 					</datasource>
 				</field>
@@ -100,7 +102,8 @@
 				<field name="rotation_angle" type="NX_FLOAT"/>
 				<field name="x_pixel_size" type="NX_FLOAT"/>
 				<field name="y_pixel_size" type="NX_FLOAT">
-					<datasource device="p09/motor/exp.01" hostname="haso228k.desy.de" port="10000" strategy="FINAL" type="TANGO">
+					<datasource hostname="haso228k.desy.de" port="10000" strategy="FINAL" type="TANGO">
+						<device name="p09/motor/exp.01"/>
 						<record name="Position" type="attribute"/>
 					</datasource>
 				</field>

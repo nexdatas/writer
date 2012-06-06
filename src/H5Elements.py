@@ -377,7 +377,6 @@ class ESymbol(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
 
-
     def store(self,name):
 # @TODO
         if "name" in self.tAttrs.keys():
@@ -393,9 +392,24 @@ class ERecord(Element):
             self.beforeLast().source.name=attrs["name"]
 
 
+class EDevice(Element):        
+    def __init__(self,name,attrs,last):
+        Element.__init__(self,name,attrs,last)
+        if "name" in attrs.keys():
+            self.beforeLast().source.device=attrs["name"]
+
+class EDoor(Element):        
+    def __init__(self,name,attrs,last):
+        Element.__init__(self,name,attrs,last)
+        if "name" in attrs.keys():
+            self.beforeLast().source.door=attrs["name"]
+
+
 class EQuery(Element):        
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
+        if "dbname" in attrs.keys():
+            self.beforeLast().source.type=attrs["dbname"]
     def store(self,name):
         self.beforeLast().source.query= ("".join(self.content)).strip()        
 
