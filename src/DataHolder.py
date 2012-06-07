@@ -15,20 +15,33 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file DataHolder.py
-"""
+## \package nexdatas
+## \file DataHolder.py
+#
                          
 import numpy
 
+## Holder for passing data 
 class DataHolder:
-    """ A holder for passing data """
+
+    ## constructor
+    # \param dFormat format of the data, i.e. SCALAR, SPECTRUM, IMAGE
+    # \param dValue value of the data. It may be also 1D and 2D array
+    # \param dType type of the data
+    # \param dShape shape of the data
     def __init__(self,dFormat,dValue,dType,dShape):
-        """ Constructor """
+
+        ## data format
         self.format=dFormat
+        ## data value
         self.value=dValue
+        ## data type
         self.type=dType
+        ## data shape
         self.shape=dShape
+
+    ## typeless array   
+    # \returns numpy array when the data is not SCALAR
     def typeless_array(self):
         if str(self.format).split('.')[-1] == "SPECTRUM":
             return numpy.array(self.value)
@@ -36,6 +49,9 @@ class DataHolder:
         if str(self.format).split('.')[-1] == "IMAGE":
             return numpy.array(self.value)
 
+    ## array with a type    
+    # \param tp type of the data    
+    # \returns numpy array of defined type when the data is not SCALAR 
     def array(self,tp):
         if str(self.format).split('.')[-1] == "SPECTRUM":
             return numpy.array(self.value,dtype=tp)

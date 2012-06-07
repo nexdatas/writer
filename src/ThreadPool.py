@@ -15,32 +15,39 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file ThreadPool.py
-"""
+## \package nexdatas
+## \file ThreadPool.py
+# Thread Pool class
 
 from threading import *                                                                      
 from ElementThread import *
 
-
+## Pool with threads
 class ThreadPool:
-    """ Pool of Threads """
+    ## constructor
+    # \brief It cleans the member variables
     def __init__(self):
-        """ Constructor """
+        ## list of the appended elements
         self.elementList=[]
+        ## list of the threads related to the appended elements
         self.threadList=[]
 
+    ## appends the thread element
+    # \param elem the thread element
     def append(self,elem):
         print "appending: ", elem
         self.elementList.append(elem)
-        pass
 
+    ## sets the JSON string to threads
+    # \param mJSON the JSON string
     def setJSON(self,mJSON):
         for el in self.elementList :
             if hasattr(el.source,"setJSON"):
                 el.source.setJSON(mJSON)
         return self
 
+    ## runner
+    # \brief It runs the threads from the pool
     def run(self):
         self.threadList=[]
         
@@ -50,15 +57,21 @@ class ThreadPool:
             self.threadList.append(th)
             print "running ", th.name
 
+    ## waits for all thread from the pool
+    # \param timeout the maximal waiting time
     def join(self,timeout=None):
         for th in self.threadList:
             if th.isAlive():
                 th.join()
-
+                
+    ## runner with waiting
+    # \brief It runs and waits the threads from the pool 
     def runAndWait(self):
         self.run()
         self.join()
 
+    ## closer
+    # \brief It close the threads from the pool
     def close(self):
         for el in self.elementList:
             el.fObject.close()

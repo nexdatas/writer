@@ -15,10 +15,11 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file TangoDataWriter.py
-Nexus H5 Writer
-"""
+## \package nexdatas
+## \file TangoDataWriter.py
+# NeXuS H5 Data Writer
+#
+
 
 from NeXusXMLHandler import *
 
@@ -32,17 +33,29 @@ from H5Elements import *
 
 
 
+## NeXuS data writer
 class TangoDataWriter:
+    ## constructor
+    # \brief It initialize the data writer for the H5 output file
+    # \param fName name of the H5 output file
     def __init__(self,fName):
+        ## output file name
         self.fileName=fName
+        ## XML string with file settings
         self.xmlSettings=""
+        ## JSON string with data settings
         self.json="{}"
-#        self.handler = None
+        ## thread pool with INIT elements
         self.initPool=None
+        ## thread pool with STEP elements
         self.stepPool=None
+        ## thread pool with FINAL elements
         self.finalPool=None
+        ## H5 file handle
         self.nxFile=None
 
+    ##  opens the data writer
+    # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def open(self):
         print 'open:'
         if len(self.xmlSettings)>0:
@@ -59,28 +72,41 @@ class TangoDataWriter:
             self.nxFile=handler.getNXFile()
 
             
+    ## defines the XML string with settings
+    # \param xmlSettings XML string       
     def setXML(self,xmlSettings):
         self.xmlSettings=xmlSettings
         print 'setXML'
 
+    ## provides the XML setting string
+    # \returns the XML string with settings
     def getXML(self):
         print 'getXML'
         return self.xmlSettings
 
+    ## defines the JSON data string 
+    # \param json JSON data string 
     def setJSON(self,json):
         self.json=json
         print 'setJSON'
 
+    ## provides the JSON data string
+    # \returns the JSON data string 
     def getJSON(self):
         print 'getJSON'
         return self.json
 
+    ## close the data writer        
+    # \brief It runs threads from the STEP pool
     def record(self):
         print 'record:'
         if self.stepPool:
             self.stepPool.runAndWait()
 
 
+    ## closes the data writer        
+    # \brief It runs threads from the FINAL pool and
+    #  removes the thread pools 
     def close(self):
         print 'close:'
 
@@ -116,6 +142,7 @@ if __name__ == "__main__":
 
 
     # Create a TDW object
+    ## instance of TangoDataWriter
     tdw = TangoDataWriter("test.h5")
     
     

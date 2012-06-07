@@ -15,19 +15,24 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file ElementThread.py
-"""
+## \package nexdatas
+## \file ElementThread.py
+# ElementThread
 
 from threading import *                                                                       
 
+## Single Thread Element
 class ElementThread(Thread):
-    """ Pool of Threads """
+    ## constructor
+    # \brief It creates ElementThread from the runnable element
     def __init__(self,elem):
         Thread.__init__(self)
-        """ Constructor """
+        ## runnable element
         self.elem=elem
 
+    ## runner
+    # \brief It runs the defined thread
     def run(self):
-        self.elem.run()
+        if hasattr(self.elem,"run"):
+            self.elem.run()
 

@@ -15,9 +15,9 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file H5Elements.py
-"""
+## \package nexdatas
+## \file H5Elements.py
+# NeXus runnable elements
                                                                       
 import pni.nx.h5 as nx
 
@@ -31,7 +31,9 @@ from DataHolder import *
 from Element import *
 
 
+## type collenction
 class NTP:
+    ## Tango types
     tTypes=["DevVoid",
             "DevBoolean",
             "DevShort",
@@ -62,6 +64,7 @@ class NTP:
             "DevInt",
             "DevEncoded"]
     
+    ## NeXuS types corresponding to the Tango types
     nTypes=["NX_CHAR",
             "NX_BOOLEAN",
             "NX_INT32",
@@ -94,10 +97,10 @@ class NTP:
 
 
 
-# A map of NEXUS : pninx types 
+    ## map of NEXUS : pninx types 
     mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
 
-# A map of tag attribute types 
+    ## map of tag attribute types 
     dA={"signal":"NX_INT","axis":"NX_INT","primary":"NX_INT32","offset":"NX_INT","stride":"NX_INT","vector":"NX_FLOATVECTOR",
         "file_time":"NX_DATE_TIME","file_update_time":"NX_DATE_TIME","restricted":"NX_INT","ignoreExtraGroups":"NX_BOOLEAN",
         "ignoreExtraFields":"NX_BOOLEAN","ignoreExtraAttributes":"NX_BOOLEAN","minOccus":"NX_INT","maxOccus":"NX_INT"
@@ -106,33 +109,50 @@ class NTP:
 
 
 
+## NeXuS runnable tag element
+# tag element corresponding to one of H5 objects 
 class FElement(Element):
-    """A tag element corresponding to one of H5 objects """
-
+    
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    # \param obj H5 file object
     def __init__(self,name,attrs,last,obj=None):
-        """ Constructor """
         Element.__init__(self,name,attrs,last)
-        ## Stored tag object 
+        ## stored H5 file object 
+        self.fObject=None
         if obj:
             self.fObject=obj
+        ## data source    
         self.source=None
 
-
+    ## runner  
+    # \brief During its thread run it fetches the data from the source  
     def run(self):
         if self.source:
             self.source.getData()
 
 
-
+## field H5 tag element
 class EField(FElement):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         FElement.__init__(self,name,attrs,last)
+        ## rank of the field
         self.rank="0"
+        ## shape of the field
         self.lengths={}
+        ## dictionary with attribures from sepatare attribute tags
         self.tpAttrs={}
+        ## if field is stored in STEP mode
         self.extraD=False
 
-
+    ## stores the tag content
+    # \param name the tag name    
     def store(self,name):
         print "Storing field"
 
@@ -191,6 +211,8 @@ class EField(FElement):
         else:
             print "invalid dataSource"
 
+    ## runner  
+    # \brief During its thread run it fetches the data from the source  
     def run(self):
         if self.source:
             dh=self.source.getData()
@@ -220,7 +242,7 @@ class EField(FElement):
                             print "fO SHAPE:" , self.fObject.shape
                             arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
                             print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
-                            print "ARRAY: ", arr
+#                            print "ARRAY: ", arr
                             if len(arr.shape) == 1 and arr.shape[0] == 1:
                                 self.fObject[self.fObject.shape[0]-1,:]=arr[0]
                             else:
@@ -256,11 +278,16 @@ class EField(FElement):
 
 
 
-        
+## group H5 tag element        
 class EGroup(FElement):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         FElement.__init__(self,name,attrs,last)
 
+        ## dictionary with attribures from sepatare attribute tags
         self.tpAttrs={}
 
         if ("type" in attrs.keys()) and ("name" in attrs.keys()):
@@ -278,13 +305,16 @@ class EGroup(FElement):
                 else:
                     (g.attr(key.encode(),"string")).value=attrs[key].encode()
 
+    ## stores the tag content
+    # \param name the tag name    
     def store(self,name):
         for key in self.tpAttrs.keys() :
             if key not in ["name","type"]:
                 (self.fObject.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
 
 
-
+    ## fetches the type and the name of the current group            
+    # \param groupTypes dictionary with the group type:name pairs            
     def fetchName(self,groupTypes):
         print "fetching"
         if ("type" in self.tAttrs.keys()) and ("name" in self.tAttrs.keys()):
@@ -299,11 +329,20 @@ class EGroup(FElement):
         
 
 
+## link H5 tag element        
 class ELink(FElement):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         FElement.__init__(self,name,attrs,last)
         self.fObject=None
 
+    ## converts types to Names using groupTypes dictionary
+    # \param text original directory     
+    # \param groupTypes dictionary with type:name group pairs
+    # \returns directory defined by group namesS    
     def typesToNames(self,text,groupTypes):
         """  converts NXclass types to names in a path string"""
         sp= text.split("/")
@@ -326,6 +365,8 @@ class ELink(FElement):
         return res
 
         
+    ## creates the link the H5 file
+    # \param groupTypes dictionary with type:name group pairs
     def createLink(self,groupTypes):
         if ("name" in self.tAttrs.keys()) and ("target" in self.tAttrs.keys()):
             print "linking ",self.lastObject() ,self.tAttrs["name"].encode()
@@ -341,11 +382,18 @@ class ELink(FElement):
                 
 
 
+## attribute tag element        
 class EAttribute(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
 
 
+    ## stores the tag content
+    # \param name the tag name    
     def store(self,name):
         print "Storing Attributes:", "".join(self.content)
 
@@ -362,31 +410,57 @@ class EAttribute(Element):
 
 
 
+## file H5 element        
 class EFile(FElement):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    # \param obj H5 file object
     def __init__(self,name,attrs,last,obj):
         FElement.__init__(self,name,attrs,last,obj)
 
 
 
+## doc tag element        
 class EDoc(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
 
+    ## stores the tag content
+    # \param name the tag name    
     def store(self,name):
         self.last.doc=self.last.doc + "".join(self.content)            
         print "Added doc\n", self.last.doc
 
+## symbol tag element        
 class ESymbol(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
+        ## dictionary with symbols
+        self.symbols={}
 
+    ## stores the tag content
+    # \param name the tag name    
     def store(self,name):
-# @TODO
         if "name" in self.tAttrs.keys():
             self.symbols[self.tAttrs["name"]]=self.last().doc
 
 
+## record tag element        
 class ERecord(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "type" in attrs.keys():
@@ -395,20 +469,35 @@ class ERecord(Element):
             self.beforeLast().source.name=attrs["name"]
 
 
+## device tag element        
 class EDevice(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "name" in attrs.keys():
             self.beforeLast().source.device=attrs["name"]
 
+## door tag element        
 class EDoor(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "name" in attrs.keys():
             self.beforeLast().source.door=attrs["name"]
 
 
+## query tag element        
 class EQuery(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "dbname" in attrs.keys():
@@ -421,18 +510,31 @@ class EQuery(Element):
             self.beforeLast().source.format=attrs["format"]
         if "mycnf" in attrs.keys():
             self.beforeLast().source.mycnf=attrs["mycnf"]
+
+    ## stores the tag content
+    # \param name the tag name    
     def store(self,name):
         self.beforeLast().source.query= ("".join(self.content)).strip()        
 
  
+## dimensions tag element        
 class EDimensions(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "rank" in attrs.keys():
             self.last.rank=attrs["rank"]
             print "setting rank to ", self.last.rank
 
+## dim tag element        
 class EDim(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :

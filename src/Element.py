@@ -15,24 +15,33 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file Element.py
-"""
+## \package nexdatas
+## \file Element.py
+# Element
                                                                       
 
+## Tag element stored on our stack 
 class Element:
-    """A tag element stored on our stack  """
+
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
     def __init__(self,name,attrs,last=None):
-        """ Constructor """
         ## Stored tag name
         self.tName=name
+        ## tag attributes
         self.tAttrs=attrs
-        ## Stored tag content
-        self.doc=""
+        ## stored tag content
         self.content=[]
+        ## doc string
+        self.doc=""
+        ## the previous element
         self.last=last
 
 
+    ## last H5 file object
+    # \returns H5 file object of the previous element    
     def lastObject(self):
         if hasattr(self.last,"fObject"):
             return self.last.fObject
@@ -40,6 +49,9 @@ class Element:
             print "H5 Object not found  "
             None
 
+
+    ## before last stack element
+    # \returns  before last element placed on the stack
     def beforeLast(self):
         if self.last:
             return self.last.last
@@ -47,5 +59,7 @@ class Element:
             return None
 
         
+    ## stores the tag
+    # \brief abstract method to store the tag element    
     def store(self,name):
         pass

@@ -15,9 +15,9 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file DataSource.py
-"""
+## \package nexdatas
+# \file DataSource.py
+
                                                                       
 from Element import *
 
@@ -28,28 +28,43 @@ from DataHolder import *
 import MySQLdb
 
 
+## Data source
 class DataSource:
+    ## constructor
+    # \brief It cleans all member variables
     def __init__(self):
+        ## strategy, i.e. INIT, STEP of FINAL
         self.strategy=None
+        ## name of the host with the data source
         self.hostname=None
+        ## port related to the host
         self.port=None
+        ## name of data
         self.name=None
 
+    ## access to data
+    # \brief It is an abstract method providing data   
     def getData(self):
         pass
 
+    ## checks if the data is valid
+    # \returns if the data is valid
     def isValid(self):
         return True
 
-
+## Tango data source
 class TangoSource(DataSource):
+    ## constructor
+    # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
+        ## name of the tango device
         self.device=None
+        ## type of the data, i.e. attribute, property,...
         self.type=None
-# @TODO
-        self.data=None
 
+    ## data provider
+    # \returns DataHolder with collected data  
     def getData(self):
         if self.device and self.type and self.name:
             proxy=DeviceProxy(self.device.encode())
@@ -66,20 +81,32 @@ class TangoSource(DataSource):
 #                        print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
                     if str(da.data_format).split('.')[-1] == "IMAGE":
                         print "Image Device: ", self.device.encode()
-                        print "Atribute: ",da
+#                        print "Atribute: ",da
 
                     return DataHolder(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
 
+
+## DataBase data source
 class DBaseSource(DataSource):
+    ## constructor
+    # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
+        ## database query
         self.query=None
+        ## database name
         self.dbname=None
+        ## database user
         self.user=None
+        ## database password
         self.passwd=None
+        ## database configuration file
         self.mycnf='/etc/my.cnf'
+        ## record format, i.e. SCALAR, SPECTRUM, IMAGE
         self.format=None
 
+    ## provides access to the data    
+    # \returns  DataHolder with collected data   
     def getData(self):
         print "QUERY: ", self.query
         args={}
@@ -119,35 +146,57 @@ class DBaseSource(DataSource):
                 
             cursor.close()
             db.close()
-        print "DB DH:" , dh.value    
+#        print "DB DH:" , dh.value    
         return dh
 
+## Client data source
 class ClientSource(DataSource):
+    ## constructor
+    # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
+        ## the current JSON string
         self.myJSON="{}"
         
+    ## sets JSON string
+    # \brief It sets the currently used  JSON string
     def setJSON(self,json):
         self.myJSON=json
     
+    ## provides access to the data    
+    # \returns  DataHolder with collected data   
     def getData(self):
         print "JSON:", self.myJSON
 
+## Sardana data source
 class SardanaSource(DataSource):
+    ## constructor
+    # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
 
+    ## provides access to the data    
+    # \returns  DataHolder with collected data   
     def getData(self):
         pass
 
 
+## Data source creator
 class DataSourceFactory(Element):        
+    ## constructor
+    # \param name name of the tag
+    # \param attrs dictionary with the tag attributes
+    # \param last the last element on the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
+        ## dictionary with data source classes
         self.sourceClass={"DB":DBaseSource,"TANGO":TangoSource,
                           "CLIENT":ClientSource,"SARDANA":SardanaSource}
         self.createDSource(name,attrs)
-        
+
+    ## creates data source   
+    # \param name name of the tag
+    # \param attrs dictionary with the tag attributes
     def createDSource(self, name, attrs):
         if "type" in attrs.keys():
             if attrs["type"] in self.sourceClass.keys():

@@ -15,37 +15,43 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
-@file NexusXMLHandler.py
-An example of SAX Nexus parser
-"""
+## \package nexdatas
+## \file NexusXMLHandler.py
+# An example of SAX Nexus parser
+#
                                                                       
 import pni.nx.h5 as nx
-
-from numpy  import * 
 from xml import sax
 
 import sys,os
-from H5Elements import *
 
+from H5Elements import *
 from ThreadPool import *
 
 
     
+## SAX2 parser 
 class NexusXMLHandler(sax.ContentHandler):
-    """A SAX2 parser  """
+
+    ## constructor
+    # \brief It constructs parser and defines the H5 output file
+    # \param fname name of the H5 output file
     def __init__(self,fname):
-        """ Constructor """
         sax.ContentHandler.__init__(self)
-        ## A map of NXclass : name
+
+        ## map of NXclass : name
         self.groupTypes={"":""}
-        ## An H5 file name
+        ## H5 file name
         self.fname=fname
+        ## file handle
         self.nxFile=nx.create_file(self.fname,overwrite=True)
-        ## A stack with open tag elements
+        ## stack with open tag elements
         self.stack=[EFile("NXfile",[],None,self.nxFile)]
 
+        ## the current content of the tag 
+        self.content=""
 
+        ## map of tag names to related classes
         self.elementClass={'group':EGroup, 'field':EField, 'attribute':EAttribute,
                            'link':ELink, 'doc':EDoc,
                            'symbols':Element, 'symbol':ESymbol, 
@@ -54,51 +60,54 @@ class NexusXMLHandler(sax.ContentHandler):
                            'datasource':DataSourceFactory,'record':ERecord , 'query':EQuery, 
                            'device':EDevice, 'door':EDoor}
 
-#                           'definition':Element, 
 
-        self.symbols={}
 
+        ## thread pool with INIT elements
         self.initPool=ThreadPool()
+        ## thread pool with STEP elements
         self.stepPool=ThreadPool()
+        ## thread pool with FINAL elements
         self.finalPool=ThreadPool()
 
+        ## map of pool names to related classes
         self.poolMap={'INIT':self.initPool,'STEP':self.stepPool,'FINAL':self.finalPool}
 
-
-        
-    def nWS(text):
-        """  cleans whitespaces  """
-        return ' '.join(text.split())
-        
+    ## PNINX file object of the last stack element
+    # \returns an object from the last stack element 
+    #    
     def lastObject(self):
-        """  returns an object from the last stack elements """
         if len(self.stack) > 0: 
             return self.stack[-1].fObject
         else:
             return None
         
 
+    ## the last stack element 
+    # \returns the last stack element 
     def last(self):
-        """  returns the last stack elements """
         if len(self.stack) > 0: 
             return self.stack[-1]
         else:
             return None
 
+    ## the before last stack element 
+    # \returns the before last stack element 
     def beforeLast(self):
-        """  returns the last stack elements """
         if len(self.stack) > 0: 
             return self.stack[-2]
         else:
             return None
 
 
+    ## adds the tag content 
+    # \param ch partial content of the tag    
     def characters(self, ch):
-        """  adds the tag content """
         self.last().content.append(ch)
 
+    ##  parses the opening tag
+    # \param name tag name
+    # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        """  parses an opening tag"""
         self.content=""
         if name in self.elementClass:
             print "Calling: ", name, attrs.keys()
@@ -112,8 +121,9 @@ class NexusXMLHandler(sax.ContentHandler):
             print 'Unsupported tag:', name, attrs.keys()
 
 
+    ## parses an closing tag
+    # \param name tag name
     def endElement(self, name):
-        """  parses an closing tag"""
         print 'End of element:', name , "last:" ,  self.last().tName
         if self.last().tName == name :
             if name in self.elementClass:
@@ -127,11 +137,14 @@ class NexusXMLHandler(sax.ContentHandler):
                 print "poping"
                 self.stack.pop()
 
+    ## the H5 file handle 
+    # \returns the H5 file handle 
     def getNXFile(self):
         return self.nxFile            
 
+    ## closes the stack
+    # \brief It goes through all stack elements closing them
     def closeStack(self):
-        """  closes the H5 file """
         for s in self.stack:
             if isinstance(s, FElement):
                 if hasattr(s.lastObject(),"close"):
@@ -140,9 +153,10 @@ class NexusXMLHandler(sax.ContentHandler):
             print "nxClosing"
             self.nxFile.close()
 
-
+ 
+    ## the H5 file closing
+    # \brief It closes the H5 file       
     def closeFile(self):
-        """  closes the H5 file """
         self.closeStack()
         if self.nxFile:
             print "nxClosing"

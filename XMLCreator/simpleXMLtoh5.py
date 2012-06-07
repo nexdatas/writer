@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package docstring
+"""@package xmlcreator
 @file simpleXMLtoh5.py
 An example of SAX Nexus parser
 """

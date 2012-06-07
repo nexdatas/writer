@@ -209,17 +209,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 #==================================================================
 class TangoDataServerClass(PyTango.DeviceClass):
 
-	#	Class Properties
+	## Class Properties
 	class_property_list = {
 		}
 
 
-	#	Device Properties
+	## Device Properties
 	device_property_list = {
 		}
 
 
-	#	Command definitions
+	## Command definitions
 	cmd_list = {
 		'Record':
 			[[PyTango.DevVoid, ""],
@@ -233,7 +233,7 @@ class TangoDataServerClass(PyTango.DeviceClass):
 		}
 
 
-	#	Attribute definitions
+	## Attribute definitions
 	attr_list = {
 		'TheXMLSettings':
 			[[PyTango.DevString,
@@ -253,6 +253,8 @@ class TangoDataServerClass(PyTango.DeviceClass):
 #------------------------------------------------------------------
 #	TangoDataServerClass Constructor
 #------------------------------------------------------------------
+	## constructor
+	# \param name type name
 	def __init__(self, name):
 		PyTango.DeviceClass.__init__(self, name)
 		self.set_type(name);
