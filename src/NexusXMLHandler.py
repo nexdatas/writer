@@ -16,10 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ## \package nexdatas
-## \file NexusXMLHandler.py
+# \file NexusXMLHandler.py
 # An example of SAX Nexus parser
-#
-                                                                      
 import pni.nx.h5 as nx
 from xml import sax
 
@@ -170,13 +168,16 @@ if __name__ == "__main__":
         print "usage: simpleXMLtoh5.py  <XMLinput>  <h5output>"
         
     else:
+        ## input XML file
         fi=sys.argv[1]
         if os.path.exists(fi):
+            ## output h5 file
             fo=sys.argv[2]
 
-        # Create a parser object
+            ## a parser object
             parser = sax.make_parser()
             
+            ## a SAX2 handler object
             handler = NexusXMLHandler(fo)
             parser.setContentHandler( handler )
 
