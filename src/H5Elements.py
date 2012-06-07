@@ -31,77 +31,78 @@ from DataHolder import *
 from Element import *
 
 
-
-tTypes=["DevVoid",
-        "DevBoolean",
-        "DevShort",
-        "DevLong",
-        "DevFloat",
-        "DevDouble",
-        "DevUShort",
-        "DevULong",
-        "DevString",
-        "DevVarCharArray",
-        "DevVarShortArray",
-        "DevVarLongArray",
-        "DevVarFloatArray",
-        "DevVarDoubleArray",
-        "DevVarUShortArray",
-        "DevVarULongArray",
-        "DevVarStringArray",
-        "DevVarLongStringArray",
-        "DevVarDoubleStringArray",
-        "DevState",
-        "ConstDevString",
-        "DevVarBooleanArray",
-        "DevUChar",
-        "DevLong64",
-        "DevULong64",
-        "DevVarLong64Array",
-        "DevVarULong64Array",
-        "DevInt",
-        "DevEncoded"]
-
-nTypes=["NX_CHAR",
-        "NX_BOOLEAN",
-        "NX_INT32",
-        "NX_INT32",
-        "NX_FLOAT32",
-        "NX_FLOAT64",
-        "NX_UINT32",
-        "NX_UINT32",
-	"NX_CHAR",
-        "NX_CHAR"
-        "NX_INT32",
-        "NX_INT64",
-        "NX_FLOAT32",
-        "NX_FLOAT64",
-        "NX_UINT32",
-        "NX_UINT64",
-	"NX_CHAR",
-        "NX_CHAR",
-        "NX_CHAR",
-        "NX_CHAR",
-        "NX_CHAR",
-        "NX_BOOLEAN",
-        "NX_CHAR",
-        "NX_INT64",
-        "NX_UINT64",
-        "NX_INT64",
-        "NX_UINT64",
-        "NX_INT",
-        "NX_CHAR"]
+class NTP:
+    tTypes=["DevVoid",
+            "DevBoolean",
+            "DevShort",
+            "DevLong",
+            "DevFloat",
+            "DevDouble",
+            "DevUShort",
+            "DevULong",
+            "DevString",
+            "DevVarCharArray",
+            "DevVarShortArray",
+            "DevVarLongArray",
+            "DevVarFloatArray",
+            "DevVarDoubleArray",
+            "DevVarUShortArray",
+            "DevVarULongArray",
+            "DevVarStringArray",
+            "DevVarLongStringArray",
+            "DevVarDoubleStringArray",
+            "DevState",
+            "ConstDevString",
+            "DevVarBooleanArray",
+            "DevUChar",
+            "DevLong64",
+            "DevULong64",
+            "DevVarLong64Array",
+            "DevVarULong64Array",
+            "DevInt",
+            "DevEncoded"]
+    
+    nTypes=["NX_CHAR",
+            "NX_BOOLEAN",
+            "NX_INT32",
+            "NX_INT32",
+            "NX_FLOAT32",
+            "NX_FLOAT64",
+            "NX_UINT32",
+            "NX_UINT32",
+            "NX_CHAR",
+            "NX_CHAR"
+            "NX_INT32",
+            "NX_INT64",
+            "NX_FLOAT32",
+            "NX_FLOAT64",
+            "NX_UINT32",
+            "NX_UINT64",
+            "NX_CHAR",
+            "NX_CHAR",
+            "NX_CHAR",
+            "NX_CHAR",
+            "NX_CHAR",
+            "NX_BOOLEAN",
+            "NX_CHAR",
+            "NX_INT64",
+            "NX_UINT64",
+            "NX_INT64",
+            "NX_UINT64",
+            "NX_INT",
+            "NX_CHAR"]
 
 
 
 # A map of NEXUS : pninx types 
-mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
+    mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
 
 # A map of tag attribute types 
-dA={"signal":"NX_INT","axis":"NX_INT","primary":"NX_INT32","offset":"NX_INT","stride":"NX_INT","vector":"NX_FLOATVECTOR",
-       "file_time":"NX_DATE_TIME","file_update_time":"NX_DATE_TIME","restricted":"NX_INT","ignoreExtraGroups":"NX_BOOLEAN",
-    "ignoreExtraFields":"NX_BOOLEAN","ignoreExtraAttributes":"NX_BOOLEAN","minOccus":"NX_INT","maxOccus":"NX_INT"
-    }
+    dA={"signal":"NX_INT","axis":"NX_INT","primary":"NX_INT32","offset":"NX_INT","stride":"NX_INT","vector":"NX_FLOATVECTOR",
+        "file_time":"NX_DATE_TIME","file_update_time":"NX_DATE_TIME","restricted":"NX_INT","ignoreExtraGroups":"NX_BOOLEAN",
+        "ignoreExtraFields":"NX_BOOLEAN","ignoreExtraAttributes":"NX_BOOLEAN","minOccus":"NX_INT","maxOccus":"NX_INT"
+        }
+
 
 
 
@@ -142,7 +143,7 @@ class EField(FElement):
         if "name" in self.tAttrs.keys():
             nm=self.tAttrs["name"]
             if "type" in self.tAttrs.keys():
-                tp=mt[self.tAttrs["type"]]
+                tp=NTP.mt[self.tAttrs["type"]]
             else:
                 tp="string"
         else:
@@ -180,7 +181,7 @@ class EField(FElement):
 
         for key in self.tpAttrs.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].strip().encode()
+                (f.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].strip().encode()
 
         self.fObject=f
 
@@ -209,13 +210,13 @@ class EField(FElement):
                     if str(dh.format).split('.')[-1] == "SCALAR":
                         self.fObject.grow()
 #                        self.fObject[-1]=dh.value
-                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+                        if NTP.nTypes[NTP.tTypes.index(str(dh.type))] == "NX_CHAR":
                             self.fObject[self.fObject.shape[0]-1]=str(dh.value)
                         else:
                             self.fObject[self.fObject.shape[0]-1]=dh.value
                     if str(dh.format).split('.')[-1] == "SPECTRUM":
                         self.fObject.grow()
-                        if nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+                        if NTP.nTypes[NTP.tTypes.index(str(dh.type))] == "NX_CHAR":
                             print "fO SHAPE:" , self.fObject.shape
                             arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
                             print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
@@ -235,7 +236,7 @@ class EField(FElement):
                                 self.fObject[self.fObject.shape[0]-1,:]=arr
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.fObject.grow()
-                        if str(dh.type) not in tTypes or nTypes[tTypes.index(str(dh.type))] == "NX_CHAR":
+                        if str(dh.type) not in NTP.tTypes or NTP.nTypes[NTP.tTypes.index(str(dh.type))] == "NX_CHAR":
                             #                            print "fO SHAPE:" , self.fObject.shape
                             val=dh.value
                             larr=[ [ str(val[j][i]) for i in range(len(val[0])) ] for j in range(len(val)) ]
@@ -272,15 +273,15 @@ class EGroup(FElement):
         self.fObject=g
         for key in attrs.keys() :
             if key not in ["name","type"]:
-                if key in dA.keys():
-                    (g.attr(key.encode(),mt[dA[key]].encode())).value=attrs[key].encode()
+                if key in NTP.dA.keys():
+                    (g.attr(key.encode(),NTP.mt[NTP.dA[key]].encode())).value=attrs[key].encode()
                 else:
                     (g.attr(key.encode(),"string")).value=attrs[key].encode()
 
     def store(self,name):
         for key in self.tpAttrs.keys() :
             if key not in ["name","type"]:
-                (self.fObject.attr(key.encode(),mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
+                (self.fObject.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
 
 
 
