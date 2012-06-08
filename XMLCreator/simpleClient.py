@@ -17,7 +17,7 @@
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 # \package  ndtstools tools for ndts
 # \file simpleClient.py
-"""
+
 import sys,os
 import time
 
