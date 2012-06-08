@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-## \package nexdatas
+## \package ndts nexdatas
 # \file NexusXMLHandler.py
 # An example of SAX Nexus parser
 import pni.nx.h5 as nx

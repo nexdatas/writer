@@ -15,10 +15,9 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-"""@package xmlcreator
-@file simpleXMLtoh5.py
-An example of SAX Nexus parser
-"""
+## \package ndtstools tools for ndts
+## \file  simpleXMLtoh5.py
+# Deprecated XML to h5 converted
                                                                       
 import pni.nx.h5 as nx
 
@@ -28,10 +27,10 @@ from xml import sax
 import sys,os
 
 
-# A map of NEXUS : pninx types 
+## map of NEXUS : pninx types 
 mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
 
-# A map of tag attribute types 
+## map of tag attribute types 
 dA={"signal":"NX_INT","axis":"NX_INT","primary":"NX_INT32","offset":"NX_INT","stride":"NX_INT","vector":"NX_FLOATVECTOR",
        "file_time":"NX_DATE_TIME","file_update_time":"NX_DATE_TIME","restricted":"NX_INT","ignoreExtraGroups":"NX_BOOLEAN",
     "ignoreExtraFields":"NX_BOOLEAN","ignoreExtraAttributes":"NX_BOOLEAN","minOccus":"NX_INT","maxOccus":"NX_INT"
@@ -297,13 +296,16 @@ if __name__ == "__main__":
         print "usage: simpleXMLtoh5.py  <XMLinput>  <h5output>"
         
     else:
+        ## input file 
         fi=sys.argv[1]
         if os.path.exists(fi):
+            ## output file 
             fo=sys.argv[2]
 
-        # Create a parser object
+            ## parser object
             parser = sax.make_parser()
             
+            ## SAX2 handler
             handler = SimpleHandler(fo)
             parser.setContentHandler( handler )
 
