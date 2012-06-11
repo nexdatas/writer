@@ -161,7 +161,6 @@ if __name__ == "__main__":
     xml = open(xmlf, 'r').read()
     tdw.setXML(xml)
 
-
     tdw.open()
     
     print "recording H5 file"

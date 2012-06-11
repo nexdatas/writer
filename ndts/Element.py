@@ -46,8 +46,7 @@ class Element:
         if hasattr(self.last,"fObject"):
             return self.last.fObject
         else:
-            print "H5 Object not found  "
-            None
+            print "H5 Object not found :", self.tName
 
 
     ## before last stack element

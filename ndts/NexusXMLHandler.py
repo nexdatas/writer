@@ -145,19 +145,18 @@ class NexusXMLHandler(sax.ContentHandler):
     def closeStack(self):
         for s in self.stack:
             if isinstance(s, FElement):
-                if hasattr(s.lastObject(),"close"):
-                    s.lastObject().close()
+                if hasattr(s.fObject,"close"):
+                    s.fObject.close()
         if self.nxFile:
-            print "nxClosing"
+            print "nxClosing the stack"
             self.nxFile.close()
-
  
     ## the H5 file closing
     # \brief It closes the H5 file       
     def closeFile(self):
         self.closeStack()
         if self.nxFile:
-            print "nxClosing"
+            print "nxClosing NXFile"
             self.nxFile.close()
 
 
