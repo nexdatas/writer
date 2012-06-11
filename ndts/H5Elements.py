@@ -222,10 +222,9 @@ class EField(FElement):
                     if str(dh.format).split('.')[-1] == "SCALAR":
                         self.fObject.write(dh.value)
                     if str(dh.format).split('.')[-1] == "SPECTRUM":
-                        self.fObject.write(dh.value)
-                        pass
+                        self.fObject.write(dh.array(self.fObject.dtype))
                     if str(dh.format).split('.')[-1] == "IMAGE":
-                        pass
+                        self.fObject.write(dh.array(self.fObject.dtype))
                 else:
 #                    print "DH type", dh.type
 #                    print "DH format ",str(dh.format).split('.')[-1]
