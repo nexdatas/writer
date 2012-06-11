@@ -88,11 +88,15 @@
 				<field name="azimuthal_angle" type="NX_FLOAT"/>
 				<field name="beam_center_x" type="NX_FLOAT"/>
 				<field name="beam_center_y" type="NX_FLOAT"/>
-				<field name="data" type="NX_FLOAT">
+				<field name="data" type="NX_UINT32">
 					<dimensions rank="2">
-						<dim index="1" value="100"/>
-						<dim index="2" value="100"/>
+						<dim index="1" value="2"/>
+						<dim index="2" value="2"/>
 					</dimensions>
+					<datasource hostname="haso228k.desy.de" port="10000" strategy="FINAL" type="TANGO">
+						<device name="p09/tst/exp.01"/>
+						<record name="MyImageAttribute" type="attribute"/>
+					</datasource>
 				</field>
 				<field name="distance" type="NX_FLOAT"/>
 				<field name="polar_angle" type="NX_FLOAT">

@@ -345,6 +345,10 @@ class DevNGroup(NGroup):
 		print "PROP",self.prop
 		for pr in self.prop:
 			self.addAttr(pr,"NX_CHAR",str(self.proxy.get_property(pr)[pr][0]))
+			if pr not in self.fields:
+				self.fields[pr]=NField(self.elem,pr,"NX_CHAR")
+				sr=NDSource(self.fields[pr].elem,"STEP","haso228k.desy.de","10000")
+				sr.initTango(devName,"property",pr)
 
                 ## device attirbutes			
 		self.attr=self.proxy.get_attribute_list()
@@ -362,30 +366,46 @@ class DevNGroup(NGroup):
 			print nTypes[cf.data_type]
 			print cf.data_type
 			
-
-			self.fields[at]=NField(self.elem,at,nTypes[cf.data_type])
-			if str(cf.data_format).split('.')[-1] == "SPECTRUM":
-				da=self.proxy.read_attribute(at)
-				d=NDimensions(self.fields[at].elem,"1")
-				d.dim("1",str(da.dim_x))
-			if str(cf.data_format).split('.')[-1] == "IMAGE":
-				da=self.proxy.read_attribute(at)
-				d=NDimensions(self.fields[at].elem,"2")
-				d.dim("1",str(da.dim_x))
-				d.dim("2",str(da.dim_y))
-				
-			if cf.unit != 'No unit':
-				self.fields[at].setUnits(cf.unit)
-			self.fields[at].setUnits(cf.unit)
-			      
-			if cf.description != 'No description':
-				self.fields[at].addDoc(cf.description)
-			self.addAttr('URL',"NX_CHAR","tango://"+devName)
 			
-			sr=NDSource(self.fields[at].elem,"STEP","haso228k.desy.de","10000")
-			sr.initTango(devName,"attribute",at)
+			if at not in self.fields:
+				self.fields[at]=NField(self.elem,at,nTypes[cf.data_type])
+				if str(cf.data_format).split('.')[-1] == "SPECTRUM":
+					da=self.proxy.read_attribute(at)
+					d=NDimensions(self.fields[at].elem,"1")
+					d.dim("1",str(da.dim_x))
+				if str(cf.data_format).split('.')[-1] == "IMAGE":
+					da=self.proxy.read_attribute(at)
+					d=NDimensions(self.fields[at].elem,"2")
+					d.dim("1",str(da.dim_x))
+					d.dim("2",str(da.dim_y))
 				
+				if cf.unit != 'No unit':
+					self.fields[at].setUnits(cf.unit)
+					self.fields[at].setUnits(cf.unit)
+			      
+				if cf.description != 'No description':
+					self.fields[at].addDoc(cf.description)
+				self.addAttr('URL',"NX_CHAR","tango://"+devName)
+			
+				sr=NDSource(self.fields[at].elem,"STEP","haso228k.desy.de","10000")
+				sr.initTango(devName,"attribute",at)
+
 #		print self.proxy.attribute_list_query()
+
+                ## list of the device commands
+		self.cmd=self.proxy.command_list_query()
+		print "COMMANDS",self.cmd
+		for cd in self.cmd:
+			if str(cd.in_type).split(".")[-1] == "DevVoid" and str(cd.out_type).split(".")[-1] != "DevVoid" :
+				if str(cd.out_type).split(".")[-1] in tTypes:
+					if cd.cmd_name not in self.fields:
+						self.fields[cd.cmd_name]=NField(self.elem,cd.cmd_name,
+								       nTypes[tTypes.index(str(cd.out_type).split(".")[-1])])
+						sr=NDSource(self.fields[cd.cmd_name].elem,"STEP","haso228k.desy.de","10000")
+						sr.initTango(devName,"command",cd.cmd_name)
+				
+			
+				
 			
 			
 ## XML file object

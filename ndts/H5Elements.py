@@ -181,13 +181,8 @@ class EField(FElement):
                         shape.append(int(self.lengths[si]))
                 else:
                     raise "Wrongly defined shape"
-        
-#        print "shape:", shape
-
-
+                
         if len(shape)>0:
-#            if tp.encode() =='string':
-#                shape.append(None)
                 
             f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
         else:
@@ -197,7 +192,6 @@ class EField(FElement):
         for key in self.tAttrs.keys():
             if key not in ["name"]:
                 (f.attr(key.encode(),"string")).value=self.tAttrs[key].strip().encode()
-
 
         for key in self.tpAttrs.keys():
             if key not in ["name"]:
