@@ -30,6 +30,7 @@ from DataHolder import *
 
 from Element import *
 
+from FieldArray import *
 
 ## type collenction
 class NTP:
@@ -184,11 +185,11 @@ class EField(FElement):
                 else:
                     raise "Wrongly defined shape"
                 
-        if len(share)> 1 and tp.encode() == "string":
-            splitArray=True
+        if len(shape)> 1 and tp.encode() == "string":
+            self.splitArray=True
 
         if len(shape)>0:
-            if splitArray:
+            if self.splitArray:
                 f=FieldArray(self.lastObject(),nm.encode(),tp.encode(),shape)
             else:
                 f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)

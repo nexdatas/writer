@@ -26,12 +26,13 @@ class AttributeArray:
     # \param fName name of the field array
     # \param fType type of the field array
     def __init__(self, parents, aName , aType):
-        ## parent
-        self.parent = parent
+        ## parents
+        
+        self.parents = parents
         ## name of the attribute array
         self.name = aName
         ## name of the array type
-        self.type = fType
+        self.type = aType
         ## shape
         self.aObject=[]
         for f in parents:
@@ -44,6 +45,7 @@ class AttributeArray:
         if name == 'value':
             return self.aObject[0].value
         else:
+            print "getattr: ", name 
             raise AttributeError
 
     ##  sets the attribute
@@ -54,7 +56,9 @@ class AttributeArray:
             for a in self.aObject:
                 a.value=value
         else:
-            raise AttributeError
+            self.__dict__[name] = value        
+            print "setattr: ", name , value
+#            raise AttributeError
         
                                                                   
 
@@ -87,7 +91,7 @@ class FieldArray:
     # \param aType type of the attribute
     def attr(self,aName,aType):
         if not self.aArray:
-            self.aArray=AttributeArray(self.fList, fName , fType, fShape)
+            self.aArray=AttributeArray(self.fList, aName , aType)
         return self.aArray
 
     ## gets item
@@ -109,14 +113,14 @@ class FieldArray:
     ## growing method
     # \brief It enlage the field
     def grow(self,ln=1,dim=0):
-        for f in fList:
+        for f in self.fList:
             f.grow(ln,dim)
     
 
     ## closing method
     # \brief It closes all fields from the array    
     def close(self):
-        for f in fList:
+        for f in self.fList:
             f.close()
 
         
