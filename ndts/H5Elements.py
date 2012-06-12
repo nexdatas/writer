@@ -150,6 +150,8 @@ class EField(FElement):
         self.tpAttrs={}
         ## if field is stored in STEP mode
         self.extraD=False
+        ## if field array is splitted into columns
+        self.splitArray=False
 
     ## stores the tag content
     # \param name the tag name    
@@ -182,9 +184,14 @@ class EField(FElement):
                 else:
                     raise "Wrongly defined shape"
                 
+        if len(share)> 1 and tp.encode() == "string":
+            splitArray=True
+
         if len(shape)>0:
-                
-            f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
+            if splitArray:
+                f=FieldArray(self.lastObject(),nm.encode(),tp.encode(),shape)
+            else:
+                f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
         else:
             f=self.lastObject().create_field(nm.encode(),tp.encode())
 
@@ -427,8 +434,8 @@ class EDoc(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self.last.doc=self.last.doc + "".join(self.content)            
-        print "Added doc\n", self.last.doc
+        self.beforeLast().doc=self.beforeLast().doc + "".join(self.content)            
+        print "Added doc\n", self.beforeLast().doc
 
 ## symbol tag element        
 class ESymbol(Element):        
