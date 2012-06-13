@@ -269,6 +269,7 @@ class EField(FElement):
 #                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
 #                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
 #                            print "ARRAY: ", arr
+                            print "my shape:", self.fObject.shape
                             self.fObject[self.fObject.shape[0]-1,:,:]=arr
                         else:
 #                            print "fO SHAPE:" , self.fObject.shape

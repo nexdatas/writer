@@ -19,12 +19,14 @@
 ## \file FieldArray.py
 # FieldArray
 
+from numpy import *
+
 ## Array of the attributes
 class AttributeArray:
     ## constructor
-    # \param parent parent object
-    # \param fName name of the field array
-    # \param fType type of the field array
+    # \param parents parent object
+    # \param aName name of the field array
+    # \param aType type of the field array
     def __init__(self, parents, aName , aType):
         ## parents
         
@@ -44,6 +46,8 @@ class AttributeArray:
     def __getattr__(self, name):
         if name == 'value':
             return self.aObject[0].value
+        elif name in self.__dict__.keys():
+            return self.__dict__[name]
         else:
             print "getattr: ", name 
             raise AttributeError
@@ -83,6 +87,21 @@ class FieldArray:
         self.fList = []
         ## attribute array
         self.aArray = None
+        ## flatten dimensions
+        self.fdim=len(fShape)-1
+        if self.fdim < 1:
+            self.fList.append(parent.create_field(fName.encode(),fType.encode(),self.shape))
+        elif self.fdim == 1:
+            for i in range(self.shape[1]):
+                self.fList.append(parent.create_field(fName.encode()+"_"+str(i),
+                                                      fType.encode(),[self.shape[0]]))
+        elif self.fdim == 2:
+            for i in range(self.shape[1]):
+                for j in range(self.shape[2]):
+                    self.fList.append(parent.create_field(fName.encode()+"_"+str(i)+"_"+str(j),
+                                                     fType.encode(),[self.shape[0]]))
+        
+            
         
 
     
@@ -97,24 +116,136 @@ class FieldArray:
     ## gets item
     # \param key slice object
     def __getitem__(self, key):
-        pass
+        if len(self.shape) >0 :
+            kr=(range(self.shape[0])[key[0]])
+            if isinstance(kr,int):  kr =[kr]
+        if len(self.shape) >1 :
+            ir=(range(self.shape[1])[key[1]])
+            if isinstance(ir,int):  ir =[ir]
+        if len(self.shape) >2 :
+            jr=(range(self.shape[2])[key[2]])
+            if isinstance(jr,int):  ir =[jr]
 
+
+        if len(kr) == 1:
+            return self.fList[kr[0]].__getitem__(key[1:-1])            
+        else:
+            return numpy.array([self.fList[kr[k]].__getitem__(key[1:-1]) for k in kr])
+            
     ## sets item
     # \param key slice object
     # \param value assigning value
     def __setitem__(self, key, value):
-        pass
+#        print "key:", key 
+#        print "value:", value 
+#        print "fdim:", self.fdim
+#        print "shape", self.shape
+#        print "len fList", len(self.fList)
+        
+
+
+        rank=0
+        arlist=(list,tuple,ndarray)
+ #       print "first type:", type(value)
+        if isinstance(value,arlist):
+            rank=rank+1
+ #           print "secound type:", type(value[0])
+            if len(value) > 0 and isinstance(value[0],arlist):
+                rank=rank+1
+                if len(value[0]) > 0 and isinstance(value[0,0],arlist):
+                    rank=rank+1
+ #       print "rank: ", rank
+
+        if len(self.shape) >0 :
+            kr=(range(self.shape[0])[key[0]])
+            if isinstance(kr,int):  kr =[kr]
+        if len(self.shape) >1 :
+            ir=(range(self.shape[1])[key[1]])
+            if isinstance(ir,int):  ir =[ir]
+        if len(self.shape) >2 :
+            jr=(range(self.shape[2])[key[2]])
+            if isinstance(jr,int):  ir =[jr]
+            print "kr:", kr
+            print "ir:", ir
+            print "jr:", jr
+         
+        
+        
+        if self.fdim < 1:
+            self.fList[0].__setitem__(key,value)
+        elif self.fdim == 1:
+            if rank == 2:
+                for i in range[len(value[0])]:
+                    self.fList[ir[i]].__setitem__([key[0]],value[:][i])
+            elif rank == 1 :
+                if len(ir) == 1:
+                    self.fList[ir[0]].__setitem__([key[0]],value[:])
+                if len(kr) == 1:
+                    for i in range[len(value[0])]:
+                        self.fList[ir[i]].__setitem__([key[0]],value[i])
+            elif rank == 0 and len(ir) == 1 and len(kr) == 1:
+                self.fList[ir[0]].__setitem__([key[0]],value)
+        
+        elif self.fdim == 2:
+            if rank == 3:
+                for i in range(len(value[0])):
+                    for j in range(len(value[0,0])):
+                        self.fList[ir[i]*self.shape[2]+jr[j]].__setitem__([key[0]],value[:][i][j])
+
+            elif rank == 2:
+                if len(kr) == 1:
+                    for i in range(len(value)):
+                        for j in range(len(value[0])):
+
+                            print "fL index: ",ir[i]*self.shape[2]+jr[j]
+                            print "key: " ,key[0]
+                            print "range",range(self.shape[0])
+                            print "key shape: " , (range(self.shape[0])[key[0]])
+                            print "value: " ,value[i][j]
+                            
+                            self.fList[ir[i]*self.shape[2]+jr[j]].__setitem__([key[0]],value[i][j])
+                elif len(ir) == 1 :        
+                    for j in range(len(value[0])):
+                        self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__([key[0]],value[:][j])
+                elif len(jr) == 1 :        
+                    for i in range(len(value[0])):
+                        self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__([key[0]],value[:][i])
+
+            elif rank == 1:            
+                if len(kr) == 1 and len(ir) == 1:
+                        for j in range(len(value )):
+                            self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__([key[0]],value[j])
+                if len(kr) == 1 and len(jr) == 1:
+                        for i in range(len(value )):
+                            self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__([key[0]],value[i])
+                if len(ir) == 1 and len(jr) == 1:
+                    self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__([key[0]],value[:])
+            elif rank == 0:
+                    self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__([key[0]],value)
+
+                    
+
+                    
         
     ## stores the field value
     # \param value the stored value
     def write(self,value):
-        pass
-    
+        if self.fdim < 1:
+            self.fList[0].write(value)
+        elif self.fdim == 1:
+            for i in range(self.shape[1]):
+                self.fList[i].write(value[:][i])
+        elif self.fdim == 2:
+            for i in range(self.shape[1]):
+                for j in range(self.shape[2]):
+                    self.fList[i*self.shape[2]+j].write(value[:][i][j])
+                    
     ## growing method
     # \brief It enlage the field
-    def grow(self,ln=1,dim=0):
+    def grow(self,dim=0,ln=1):
         for f in self.fList:
-            f.grow(ln,dim)
+            f.grow(dim,ln)
+        self.shape[dim]=self.shape[dim]+ln
     
 
     ## closing method
