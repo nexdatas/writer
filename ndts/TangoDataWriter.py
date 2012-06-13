@@ -21,7 +21,7 @@
 #
 
 
-from NeXusXMLHandler import *
+from NexusXMLHandler import *
 
 import pni.nx.h5 as nx
 
