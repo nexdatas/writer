@@ -19,7 +19,7 @@
 from simpleXML import *
 
 if __name__ == "__main__":
-	df=XMLDevice("MNI.xml")
+	df=XMLFile("MNI.xml")
 	ins = NGroup(df.root,"instrument","NXinstrument")
 #	NXsource
 	src = NGroup(ins.elem,"source","NXsource")

@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-## \package nexdatas
+## \package ndts nexdatas
 # \file DataSource.py
 
                                                                       
@@ -68,23 +68,35 @@ class TangoSource(DataSource):
     def getData(self):
         if self.device and self.type and self.name:
             proxy=DeviceProxy(self.device.encode())
+            da=None
             if self.type == "attribute":
                 alist=proxy.get_attribute_list()
-#                print alist
+
                 if self.name.encode() in alist:
                     da=proxy.read_attribute( self.name.encode())
-#                    print "Atribute: ",da
-#                    print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
                     if str(da.data_format).split('.')[-1] == "SPECTRUM":
                         print "Spectrum Device: ", self.device.encode()
-#                        print "Atribute: ",da
-#                        print "Atribute: ",(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
                     if str(da.data_format).split('.')[-1] == "IMAGE":
                         print "Image Device: ", self.device.encode()
-#                        print "Atribute: ",da
-
                     return DataHolder(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
 
+            elif self.type == "property":
+                print "getting the property: ", self.name
+                plist=proxy.get_property_list('*')
+                if self.name.encode() in plist:
+                    da=proxy.get_property(self.name.encode())[self.name.encode()][0]
+                    return DataHolder("SCALAR",da,"DevString",[1,0])
+            elif self.type == "command":
+                print "calling the command: ", self.name
+		clist=[cm.cmd_name for cm in proxy.command_list_query()]
+#                print clist
+                if self.name in clist:
+                    cd = proxy.command_query(self.name.encode())
+                    da=proxy.command_inout(self.name.encode())
+#                    print "COMMAND", da
+                    return DataHolder("SCALAR",da,cd.out_type,[1,0])
+                    
+                        
 
 ## DataBase data source
 class DBaseSource(DataSource):

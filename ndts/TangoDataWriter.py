@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-## \package nexdatas
+## \package ndts nexdatas
 ## \file TangoDataWriter.py
 # NeXuS H5 Data Writer
 #
@@ -140,9 +140,42 @@ class TangoDataWriter:
 
 if __name__ == "__main__":
 
+    import time
 
     # Create a TDW object
     ## instance of TangoDataWriter
     tdw = TangoDataWriter("test.h5")
+
+    ## xml file name
+#    xmlf="../XMLExamples/test.xml"
+    xmlf="../XMLExamples/MNI.xml"
+
+    print "usage: TangoDataWriter.py  <XMLfile>  <H5file>"
+
+    if len(sys.argv)>2:
+        tdw.fileName=sys.argv[2]
+    if len(sys.argv)>1:
+        xmlf=sys.argv[1]
+
+    ## xml string    
+    xml = open(xmlf, 'r').read()
+    tdw.setXML(xml)
+
+    tdw.open()
     
+    print "recording H5 file"
+    tdw.record()
+    
+    print "sleeping for 1s"
+    time.sleep(1)
+    print "recording H5 file"
+    tdw.record()
+    print "sleeping for 1s"
+    time.sleep(1)
+    print "recording H5 file"
+    tdw.record()
+    print "closing H5 file"
+    tdw.close()
+            
+                
     

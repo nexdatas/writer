@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-## \package nexdatas
+## \package ndts nexdatas
 ## \file H5Elements.py
 # NeXus runnable elements
                                                                       
@@ -30,6 +30,7 @@ from DataHolder import *
 
 from Element import *
 
+from FieldArray import *
 
 ## type collenction
 class NTP:
@@ -150,6 +151,8 @@ class EField(FElement):
         self.tpAttrs={}
         ## if field is stored in STEP mode
         self.extraD=False
+        ## if field array is splitted into columns
+        self.splitArray=False
 
     ## stores the tag content
     # \param name the tag name    
@@ -181,15 +184,15 @@ class EField(FElement):
                         shape.append(int(self.lengths[si]))
                 else:
                     raise "Wrongly defined shape"
-        
-#        print "shape:", shape
-
+                
+        if len(shape)> 1 and tp.encode() == "string":
+            self.splitArray=True
 
         if len(shape)>0:
-#            if tp.encode() =='string':
-#                shape.append(None)
-                
-            f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
+            if self.splitArray:
+                f=FieldArray(self.lastObject(),nm.encode(),tp.encode(),shape)
+            else:
+                f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
         else:
             f=self.lastObject().create_field(nm.encode(),tp.encode())
 
@@ -197,7 +200,6 @@ class EField(FElement):
         for key in self.tAttrs.keys():
             if key not in ["name"]:
                 (f.attr(key.encode(),"string")).value=self.tAttrs[key].strip().encode()
-
 
         for key in self.tpAttrs.keys():
             if key not in ["name"]:
@@ -222,10 +224,9 @@ class EField(FElement):
                     if str(dh.format).split('.')[-1] == "SCALAR":
                         self.fObject.write(dh.value)
                     if str(dh.format).split('.')[-1] == "SPECTRUM":
-                        self.fObject.write(dh.value)
-                        pass
+                        self.fObject.write(dh.array(self.fObject.dtype))
                     if str(dh.format).split('.')[-1] == "IMAGE":
-                        pass
+                        self.fObject.write(dh.array(self.fObject.dtype))
                 else:
 #                    print "DH type", dh.type
 #                    print "DH format ",str(dh.format).split('.')[-1]
@@ -268,6 +269,7 @@ class EField(FElement):
 #                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
 #                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
 #                            print "ARRAY: ", arr
+                            print "my shape:", self.fObject.shape
                             self.fObject[self.fObject.shape[0]-1,:,:]=arr
                         else:
 #                            print "fO SHAPE:" , self.fObject.shape
@@ -434,8 +436,8 @@ class EDoc(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self.last.doc=self.last.doc + "".join(self.content)            
-        print "Added doc\n", self.last.doc
+        self.beforeLast().doc=self.beforeLast().doc + "".join(self.content)            
+        print "Added doc\n", self.beforeLast().doc
 
 ## symbol tag element        
 class ESymbol(Element):        

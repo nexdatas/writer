@@ -15,7 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-## \package nexdatas
+## \package ndts nexdatas
 ## \file Element.py
 # Element
                                                                       
@@ -46,8 +46,7 @@ class Element:
         if hasattr(self.last,"fObject"):
             return self.last.fObject
         else:
-            print "H5 Object not found  "
-            None
+            print "H5 Object not found :", self.tName
 
 
     ## before last stack element
