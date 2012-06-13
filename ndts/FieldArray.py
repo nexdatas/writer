@@ -124,7 +124,7 @@ class FieldArray:
             if isinstance(ir,int):  ir =[ir]
         if len(self.shape) >2 :
             jr=(range(self.shape[2])[key[2]])
-            if isinstance(jr,int):  ir =[jr]
+            if isinstance(jr,int):  jr =[jr]
             
         if len(key)>0:    
             if len(kr) == 1:
@@ -146,6 +146,8 @@ class FieldArray:
 #        print "shape", self.shape
 #        print "len fList", len(self.fList)
         
+        if len(self.fList)<1:
+            raise "array Field without elements"
 
 
         rank=0
@@ -168,64 +170,68 @@ class FieldArray:
             if isinstance(ir,int):  ir =[ir]
         if len(self.shape) >2 :
             jr=(range(self.shape[2])[key[2]])
-            if isinstance(jr,int):  ir =[jr]
-            print "kr:", kr
-            print "ir:", ir
-            print "jr:", jr
+            if isinstance(jr,int):  jr =[jr]
+#            print "kr:", kr
+#            print "ir:", ir
+#            print "jr:", jr
          
         
         
-        if self.fdim < 1:
+        if self.fdim < 1 :
             self.fList[0].__setitem__(key,value)
         elif self.fdim == 1:
             if rank == 2:
-                for i in range[len(value[0])]:
-                    self.fList[ir[i]].__setitem__([key[0]],value[:][i])
+                for i in range(len(value[0])):
+                    for k in range(len(value)):
+                        self.fList[ir[i]].__setitem__(kr[k],value[k][i])
             elif rank == 1 :
                 if len(ir) == 1:
-                    self.fList[ir[0]].__setitem__([key[0]],value[:])
+                    for k in range(len(value)):
+                        self.fList[ir[0]].__setitem__(kr[k],value[k])
                 if len(kr) == 1:
-                    for i in range[len(value[0])]:
-                        self.fList[ir[i]].__setitem__([key[0]],value[i])
+                    for i in range(len(value)):
+                        self.fList[ir[i]].__setitem__(kr[0],value[i])
             elif rank == 0 and len(ir) == 1 and len(kr) == 1:
-                self.fList[ir[0]].__setitem__([key[0]],value)
+                self.fList[ir[0]].__setitem__(kr[0],value)
         
         elif self.fdim == 2:
             if rank == 3:
-                for i in range(len(value[0])):
-                    for j in range(len(value[0,0])):
-                        self.fList[ir[i]*self.shape[2]+jr[j]].__setitem__([key[0]],value[:][i][j])
+                for k in range(len(value)):
+                    for i in range(len(value[0])):
+                        for j in range(len(value[0,0])):
+                            self.fList[ir[i]*self.shape[2]+jr[j]].__setitem__([kr[k]],value[k][i][j])
 
             elif rank == 2:
                 if len(kr) == 1:
-                    for i in range(len(value)):
-                        for j in range(len(value[0])):
-
-                            print "fL index: ",ir[i]*self.shape[2]+jr[j]
-                            print "key: " ,key[0]
-                            print "range",range(self.shape[0])
-                            print "key shape: " , (range(self.shape[0])[key[0]])
-                            print "value: " ,value[i][j]
-                            
-                            self.fList[ir[i]*self.shape[2]+jr[j]].__setitem__([key[0]],value[i][j])
+                        for i in range(len(value)):
+                            for j in range(len(value[0])):
+#                                print "fL index: ",ir[i]*self.shape[2]+jr[j]
+#                                print "key: " ,key[0]
+#                                print "range",range(self.shape[0])
+#                                print "key shape: " , (range(self.shape[0])[key[0]])
+#                                print "value: " ,value[i][j]
+                                self.fList[ir[i]*self.shape[2]+jr[j]][kr[0]]=value[i][j].encode()
                 elif len(ir) == 1 :        
-                    for j in range(len(value[0])):
-                        self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__([key[0]],value[:][j])
+                    for k in range(len(value)):
+                        for j in range(len(value[0])):
+                            self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[k],value[k][j])
                 elif len(jr) == 1 :        
-                    for i in range(len(value[0])):
-                        self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__([key[0]],value[:][i])
+                    for k in range(len(value)):
+                        for i in range(len(value[0])):
+                            self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k][i])
 
             elif rank == 1:            
                 if len(kr) == 1 and len(ir) == 1:
                         for j in range(len(value )):
-                            self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__([key[0]],value[j])
+                            self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0],value[j])
                 if len(kr) == 1 and len(jr) == 1:
                         for i in range(len(value )):
-                            self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__([key[0]],value[i])
+                            self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0],value[i])
                 if len(ir) == 1 and len(jr) == 1:
-                    self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__([key[0]],value[:])
+                    for k in range(len(value)):
+                        self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k])
             elif rank == 0:
-                    self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__([key[0]],value)
+                    self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[0],value)
 
                     
 
@@ -243,6 +249,13 @@ class FieldArray:
             for i in range(self.shape[1]):
                 for j in range(self.shape[2]):
                     self.fList[i*self.shape[2]+j].write(value[:][i][j])
+
+
+    ## reads the field value
+    # \returns read value
+    def read(self,value):
+        return None
+    
                     
     ## growing method
     # \brief It enlage the field
