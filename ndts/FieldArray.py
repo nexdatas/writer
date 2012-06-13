@@ -125,12 +125,16 @@ class FieldArray:
         if len(self.shape) >2 :
             jr=(range(self.shape[2])[key[2]])
             if isinstance(jr,int):  ir =[jr]
-
-
-        if len(kr) == 1:
-            return self.fList[kr[0]].__getitem__(key[1:-1])            
+            
+        if len(key)>0:    
+            if len(kr) == 1:
+                return self.fList[kr[0]].__getitem__(key[1:])            
+            else:
+                return numpy.array([self.fList[kr[k]].__getitem__(key[1:]) for k in kr])
         else:
-            return numpy.array([self.fList[kr[k]].__getitem__(key[1:-1]) for k in kr])
+            return self.fList[kr[0]].__getitem__(key)            
+        
+           
             
     ## sets item
     # \param key slice object
