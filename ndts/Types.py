@@ -105,7 +105,6 @@ class NTP:
     ## array rank
     # \brief It calculates the rank of the array
     # \param array given array
-    # \param cls the current class 
     def arrayRank(self,array):        
         rank=0
         print "array:",array
@@ -117,7 +116,6 @@ class NTP:
     ## array rank ,inverse shape and type
     # \brief It calculates the rank, inverse shape and type of the first element of the array
     # \param array given array
-    # \param cls the current class 
     def arrayRankRShape(self,array):        
         rank=0
         shape=[]
