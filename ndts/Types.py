@@ -105,10 +105,10 @@ class NTP:
     ## array rank
     # \brief It calculates the rank of the array
     # \param array given array
-    def arrayRank(self,array):        
+    def arrayRank(self,array) :
         rank=0
         print "array:",array
-        if isinstance(array,Iterable):
+        if isinstance(array,Iterable) and not isinstance(array,str):       
             rank=1+self.arrayRank(array[0])
         return rank            
 
@@ -120,7 +120,7 @@ class NTP:
         rank=0
         shape=[]
         dtype=None
-        if isinstance(array,Iterable):
+        if isinstance(array,Iterable) and not isinstance(array,str):
             rank,shape,dtype=self.arrayRankRShape(array[0])
             shape.append(len(array))
             rank=rank+1

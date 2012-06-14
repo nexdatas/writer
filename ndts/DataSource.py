@@ -189,7 +189,7 @@ class ClientSource(DataSource):
 
         if self.name in self.JSON['data']:
             rec=self.JSON['data'][self.name]
-            ntp=NTP.NTP()
+            ntp=NTP()
             rank,rshape,dtype=ntp.arrayRankRShape(rec)
             if rank in NTP.rTF:
                 return DataHolder(NTP.rTF[rank],rec,dtype.__name__,shape.reverse())

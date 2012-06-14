@@ -174,7 +174,7 @@ class FieldArray:
         while mkey < len(self.shape):
             mkey.append(slice(0,self.shape[len(mkey)],1))
 
-        ntp=NTP.NTP()    
+        ntp=NTP()    
         rank=ntp.arrayRank(value)            
 
         if len(self.shape) >0 :
