@@ -346,7 +346,9 @@ class DevNGroup(NGroup):
 		self.fields={}
 		## if we call the commands
 		self.commands=commands
+		## blacklist for Attributes
 		self.blackAttrs=blackAttrs
+		## the device name
 		self.devName=devName
 
 		self.fetchProperties()	
@@ -414,7 +416,7 @@ class DevNGroup(NGroup):
 #		print self.proxy.attribute_list_query()
 
 	## fetches commands
-	# \bried It collects results of the device commands
+	# \brief It collects results of the device commands
 	def fetchCommands(self):	
 		if self.commands:		
                         ## list of the device commands
