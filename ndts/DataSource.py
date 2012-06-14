@@ -25,8 +25,11 @@ from PyTango import *
 
 from DataHolder import *
 
+from Types import *
+
 import MySQLdb
 
+import json
 
 ## Data source
 class DataSource:
@@ -167,18 +170,32 @@ class ClientSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## the current JSON string
-        self.myJSON="{}"
+        ## the current JSON object
+        self.JSON=None
         
     ## sets JSON string
     # \brief It sets the currently used  JSON string
-    def setJSON(self,json):
-        self.myJSON=json
+    # \param sJSON JSON string    
+    def setJSON(self,sJSON):
+        self.JSON=json.loads(sJSON)
     
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):
-        print "JSON:", self.myJSON
+        print "JSON:", json.dumps(self.JSON)
+        if 'type' not in self.JSON.keys() \
+                or 'name' not in self.JSON.keys() or self.JSON['type'] != "record_data":
+            return None
+
+        if self.name in self.JSON['data']:
+            rec=self.JSON['data'][self.name]
+            ntp=NTP.NTP()
+            rank,rshape,dtype=ntp.arrayRankRShape(rec)
+            if rank in NTP.rTF:
+                return DataHolder(NTP.rTF[rank],rec,dtype.__name__,shape.reverse())
+            
+
+
 
 ## Sardana data source
 class SardanaSource(DataSource):

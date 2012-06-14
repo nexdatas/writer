@@ -22,6 +22,7 @@
 from numpy import * 
 from collections import Iterable
 
+from Types import *
 
 ## Array of the attributes
 class AttributeArray:
@@ -173,18 +174,8 @@ class FieldArray:
         while mkey < len(self.shape):
             mkey.append(slice(0,self.shape[len(mkey)],1))
 
-
-        rank=0
-        arlist=(list,tuple,ndarray)
- #       print "first type:", type(value)
-        if isinstance(value,arlist):
-            rank=rank+1
- #           print "secound type:", type(value[0])
-            if len(value) > 0 and isinstance(value[0],arlist):
-                rank=rank+1
-                if len(value[0]) > 0 and isinstance(value[0,0],arlist):
-                    rank=rank+1
- #       print "rank: ", rank
+        ntp=NTP.NTP()    
+        rank=ntp.arrayRank(value)            
 
         if len(self.shape) >0 :
             kr=(range(self.shape[0])[mkey[0]])
