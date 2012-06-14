@@ -25,7 +25,7 @@ from collections import Iterable
 from Types import *
 
 ## Array of the attributes
-class AttributeArray:
+class AttributeArray(object):
     ## constructor
     # \param parents parent object
     # \param aName name of the field array
@@ -43,29 +43,21 @@ class AttributeArray:
         for f in parents:
             self.aObject.append(f.attr(aName,aType))
         
-    
-    ##  gets the attribute
-    # \param name attribute name    
-    def __getattr__(self, name):
-        if name == 'value':
+    ## gets the value
+    # \returns the value from the first attribute object        
+    def getvalue(self):
+        if len(self.aObject)>0:
             return self.aObject[0].value
-        elif name in self.__dict__.keys():
-            return self.__dict__[name]
-        else:
-            print "getattr: ", name 
-            raise AttributeError
 
-    ##  sets the attribute
-    # \param name attribute name    
-    # \param value attribute value
-    def __setattr__(self, name, value):
-        if name == 'value':
-            for a in self.aObject:
-                a.value=value
-        else:
-            self.__dict__[name] = value        
-            print "setattr: ", name , value
-#            raise AttributeError
+    ## sets the value
+    # \param value value to be set to all attribute objects
+    def setvalue(self,value):
+        for a in self.aObject:
+            a.value=value
+
+    value=property(getvalue,setvalue)            
+
+    
         
                                                                   
 
