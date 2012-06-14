@@ -687,19 +687,6 @@ unitCalibration, see the explanation there
 			<attribute name="URL" type="NX_CHAR">
 				tango://p09/motor/exp.01
 			</attribute>
-			<field name="PositionEncoder" type="NX_FLOAT64">
-				<doc>
-					the motor postition calculated from the encoder reading,
-the encoder conversion and the encoder home position
-				</doc>
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="PositionEncoder" type="attribute"/>
-				</datasource>
-			</field>
-			<attribute name="URL" type="NX_CHAR">
-				tango://p09/motor/exp.01
-			</attribute>
 			<field name="FlagUseEncoderPosition" type="NX_INT32" units="flag">
 				<doc>
 					if 1, the server returns the encoder position when asked 
@@ -708,19 +695,6 @@ for the motor position
 				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
 					<device name="p09/motor/exp.01"/>
 					<record name="FlagUseEncoderPosition" type="attribute"/>
-				</datasource>
-			</field>
-			<attribute name="URL" type="NX_CHAR">
-				tango://p09/motor/exp.01
-			</attribute>
-			<field name="PositionEncoderRaw" type="NX_FLOAT64">
-				<doc>
-					the raw value from the encoder, does not involve a home position,
-a homing procedure, etc.
-				</doc>
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="PositionEncoderRaw" type="attribute"/>
 				</datasource>
 			</field>
 			<attribute name="URL" type="NX_CHAR">
@@ -875,72 +849,6 @@ recent write operations to the server.
 			<attribute name="URL" type="NX_CHAR">
 				tango://p09/motor/exp.01
 			</attribute>
-			<field name="CheckMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="CheckMove" type="command"/>
-				</datasource>
-			</field>
-			<field name="CompleteMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="CompleteMove" type="command"/>
-				</datasource>
-			</field>
-			<field name="GetPosition" type="NX_FLOAT64">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="GetPosition" type="command"/>
-				</datasource>
-			</field>
-			<field name="GetRegister" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="GetRegister" type="command"/>
-				</datasource>
-			</field>
-			<field name="GetStepPosition" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="GetStepPosition" type="command"/>
-				</datasource>
-			</field>
-			<field name="MoveHome" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="MoveHome" type="command"/>
-				</datasource>
-			</field>
-			<field name="MoveToCcwLimit" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="MoveToCcwLimit" type="command"/>
-				</datasource>
-			</field>
-			<field name="MoveToCwLimit" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="MoveToCwLimit" type="command"/>
-				</datasource>
-			</field>
-			<field name="ResetMotor" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="ResetMotor" type="command"/>
-				</datasource>
-			</field>
-			<field name="StartMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="StartMove" type="command"/>
-				</datasource>
-			</field>
-			<field name="StopMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.01"/>
-					<record name="StopMove" type="command"/>
-				</datasource>
-			</field>
 		</group>
 		<group name="motor2" type="NXpositioner">
 			My motor1
@@ -1534,19 +1442,6 @@ unitCalibration, see the explanation there
 			<attribute name="URL" type="NX_CHAR">
 				tango://p09/motor/exp.02
 			</attribute>
-			<field name="PositionEncoder" type="NX_FLOAT64">
-				<doc>
-					the motor postition calculated from the encoder reading,
-the encoder conversion and the encoder home position
-				</doc>
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="PositionEncoder" type="attribute"/>
-				</datasource>
-			</field>
-			<attribute name="URL" type="NX_CHAR">
-				tango://p09/motor/exp.02
-			</attribute>
 			<field name="FlagUseEncoderPosition" type="NX_INT32" units="flag">
 				<doc>
 					if 1, the server returns the encoder position when asked 
@@ -1555,19 +1450,6 @@ for the motor position
 				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
 					<device name="p09/motor/exp.02"/>
 					<record name="FlagUseEncoderPosition" type="attribute"/>
-				</datasource>
-			</field>
-			<attribute name="URL" type="NX_CHAR">
-				tango://p09/motor/exp.02
-			</attribute>
-			<field name="PositionEncoderRaw" type="NX_FLOAT64">
-				<doc>
-					the raw value from the encoder, does not involve a home position,
-a homing procedure, etc.
-				</doc>
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="PositionEncoderRaw" type="attribute"/>
 				</datasource>
 			</field>
 			<attribute name="URL" type="NX_CHAR">
@@ -1722,72 +1604,6 @@ recent write operations to the server.
 			<attribute name="URL" type="NX_CHAR">
 				tango://p09/motor/exp.02
 			</attribute>
-			<field name="CheckMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="CheckMove" type="command"/>
-				</datasource>
-			</field>
-			<field name="CompleteMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="CompleteMove" type="command"/>
-				</datasource>
-			</field>
-			<field name="GetPosition" type="NX_FLOAT64">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="GetPosition" type="command"/>
-				</datasource>
-			</field>
-			<field name="GetRegister" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="GetRegister" type="command"/>
-				</datasource>
-			</field>
-			<field name="GetStepPosition" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="GetStepPosition" type="command"/>
-				</datasource>
-			</field>
-			<field name="MoveHome" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="MoveHome" type="command"/>
-				</datasource>
-			</field>
-			<field name="MoveToCcwLimit" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="MoveToCcwLimit" type="command"/>
-				</datasource>
-			</field>
-			<field name="MoveToCwLimit" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="MoveToCwLimit" type="command"/>
-				</datasource>
-			</field>
-			<field name="ResetMotor" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="ResetMotor" type="command"/>
-				</datasource>
-			</field>
-			<field name="StartMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="StartMove" type="command"/>
-				</datasource>
-			</field>
-			<field name="StopMove" type="NX_INT32">
-				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
-					<device name="p09/motor/exp.02"/>
-					<record name="StopMove" type="command"/>
-				</datasource>
-			</field>
 		</group>
 		<group name="mca2" type="NXdetector">
 			<attribute name="Base" type="NX_CHAR">
@@ -2034,6 +1850,15 @@ recent write operations to the server.
 				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
 					<device name="p09/dac/exp.02"/>
 					<record name="SimulationMode" type="property"/>
+				</datasource>
+			</field>
+			<attribute name="__SubDevices" type="NX_CHAR">
+				p09/dac/exp.02
+			</attribute>
+			<field name="__SubDevices" type="NX_CHAR">
+				<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="TANGO">
+					<device name="p09/dac/exp.02"/>
+					<record name="__SubDevices" type="property"/>
 				</datasource>
 			</field>
 			<field name="Voltage" type="NX_FLOAT64">

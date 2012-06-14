@@ -334,25 +334,46 @@ class DevNGroup(NGroup):
 	# \param devName tango device name
 	# \param gName name attribute
 	# \param gType type attribute
-	def __init__(self,parent,devName,gName,gType=""):
+	# \param commands if we call the commands
+	# \param blackAttrs list of excluded attributes
+	def __init__(self,parent,devName,gName,gType="",commands=True, blackAttrs=[]):
 		NGroup.__init__(self,parent,gName,gType)
+		## if we call the commands
+		self.commands=commands
 		## device proxy
 		self.proxy=DeviceProxy(devName)
-		## list of device properties
-		self.prop=self.proxy.get_property_list('*')
 		## fields of the device
 		self.fields={}
-		print "PROP",self.prop
-		for pr in self.prop:
+		## if we call the commands
+		self.commands=commands
+		self.blackAttrs=blackAttrs
+		self.devName=devName
+
+		self.fetchProperties()	
+		self.fetchAttributes()	
+		self.fetchCommands()
+	
+
+	## fetches properties	
+	# \brief It collects the device properties
+	def fetchProperties(self):	
+		prop=self.proxy.get_property_list('*')
+		print "PROP",prop
+		for pr in prop:
 			self.addAttr(pr,"NX_CHAR",str(self.proxy.get_property(pr)[pr][0]))
 			if pr not in self.fields:
 				self.fields[pr]=NField(self.elem,pr,"NX_CHAR")
 				sr=NDSource(self.fields[pr].elem,"STEP","haso228k.desy.de","10000")
-				sr.initTango(devName,"property",pr)
+				sr.initTango(self.devName,"property",pr)
+
+	## fetches Attributes
+	# \brief collects the device attributes
+	def fetchAttributes(self):	
 
                 ## device attirbutes			
-		self.attr=self.proxy.get_attribute_list()
-		for at in self.attr:
+		attr=self.proxy.get_attribute_list()
+		for at in attr:
+			
 			print at
 			cf=self.proxy.attribute_query(at)
 			print "QUERY"
@@ -367,7 +388,7 @@ class DevNGroup(NGroup):
 			print cf.data_type
 			
 			
-			if at not in self.fields:
+			if at not in self.fields and  at not in self.blackAttrs:
 				self.fields[at]=NField(self.elem,at,nTypes[cf.data_type])
 				if str(cf.data_format).split('.')[-1] == "SPECTRUM":
 					da=self.proxy.read_attribute(at)
@@ -385,26 +406,33 @@ class DevNGroup(NGroup):
 			      
 				if cf.description != 'No description':
 					self.fields[at].addDoc(cf.description)
-				self.addAttr('URL',"NX_CHAR","tango://"+devName)
+				self.addAttr('URL',"NX_CHAR","tango://"+self.devName)
 			
 				sr=NDSource(self.fields[at].elem,"STEP","haso228k.desy.de","10000")
-				sr.initTango(devName,"attribute",at)
+				sr.initTango(self.devName,"attribute",at)
 
 #		print self.proxy.attribute_list_query()
 
-                ## list of the device commands
-		self.cmd=self.proxy.command_list_query()
-		print "COMMANDS",self.cmd
-		for cd in self.cmd:
-			if str(cd.in_type).split(".")[-1] == "DevVoid" and str(cd.out_type).split(".")[-1] != "DevVoid" :
-				if str(cd.out_type).split(".")[-1] in tTypes:
-					if cd.cmd_name not in self.fields:
-						self.fields[cd.cmd_name]=NField(self.elem,cd.cmd_name,
-								       nTypes[tTypes.index(str(cd.out_type).split(".")[-1])])
-						sr=NDSource(self.fields[cd.cmd_name].elem,"STEP","haso228k.desy.de","10000")
-						sr.initTango(devName,"command",cd.cmd_name)
+	## fetches commands
+	# \bried It collects results of the device commands
+	def fetchCommands(self):	
+		if self.commands:		
+                        ## list of the device commands
+			cmd=self.proxy.command_list_query()
+			print "COMMANDS",cmd
+			for cd in cmd:
+				if str(cd.in_type).split(".")[-1] == "DevVoid" \
+					    and str(cd.out_type).split(".")[-1] != "DevVoid" \
+					    and str(cd.out_type).split(".")[-1] in tTypes \
+					    and cd.cmd_name not in self.fields:
+					self.fields[cd.cmd_name] = \
+					    NField(self.elem,cd.cmd_name, \
+							   nTypes[tTypes.index(str(cd.out_type).split(".")[-1])])
+					sr=NDSource(self.fields[cd.cmd_name].elem,"STEP", \
+							    "haso228k.desy.de","10000")
+					sr.initTango(self.devName,"command",cd.cmd_name)
 				
-			
+						
 				
 			
 			
