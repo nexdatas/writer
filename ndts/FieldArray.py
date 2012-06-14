@@ -19,7 +19,9 @@
 ## \file FieldArray.py
 # FieldArray
 
-from numpy import *
+from numpy import * 
+from collections import Iterable
+
 
 ## Array of the attributes
 class AttributeArray:
@@ -116,24 +118,36 @@ class FieldArray:
     ## gets item
     # \param key slice object
     def __getitem__(self, key):
+
+        mkey=key
+        
+        if isinstance(key, Iterable):
+            mkey=key
+        else:
+            mkey=[key]
+
+        while mkey < len(self.shape):
+            mkey.append(slice(0,self.shape[len(mkey)],1))
+
         if len(self.shape) >0 :
-            kr=(range(self.shape[0])[key[0]])
+            kr=(range(self.shape[0])[mkey[0]])
             if isinstance(kr,int):  kr =[kr]
         if len(self.shape) >1 :
-            ir=(range(self.shape[1])[key[1]])
+            ir=(range(self.shape[1])[mkey[1]])
             if isinstance(ir,int):  ir =[ir]
         if len(self.shape) >2 :
-            jr=(range(self.shape[2])[key[2]])
+            jr=(range(self.shape[2])[mkey[2]])
             if isinstance(jr,int):  jr =[jr]
             
-        if len(key)>0:    
-            if len(kr) == 1:
-                return self.fList[kr[0]].__getitem__(key[1:])            
-            else:
-                return numpy.array([self.fList[kr[k]].__getitem__(key[1:]) for k in kr])
-        else:
-            return self.fList[kr[0]].__getitem__(key)            
-        
+        if self.fdim == 0:
+            return numpy.array([self.fList[0].__getitem__(k) for k in kr])
+        elif self.fdim == 1:
+            return numpy.array([[self.fList[k].__getitem__(i) for i  in ir] for k in kr])
+        elif self.fdim == 2:
+            return numpy.array([[[self.fList[i*len(self.shape(2))+j].__getitem__(k)  
+                                for j  in jr] for i  in ir] for k in kr])
+        else: 
+            return None
            
             
     ## sets item
@@ -149,6 +163,16 @@ class FieldArray:
         if len(self.fList)<1:
             raise "array Field without elements"
 
+        mkey=key
+        
+        if isinstance(key, Iterable):
+            mkey=key
+        else:
+            mkey=[key]
+
+        while mkey < len(self.shape):
+            mkey.append(slice(0,self.shape[len(mkey)],1))
+
 
         rank=0
         arlist=(list,tuple,ndarray)
@@ -163,13 +187,13 @@ class FieldArray:
  #       print "rank: ", rank
 
         if len(self.shape) >0 :
-            kr=(range(self.shape[0])[key[0]])
+            kr=(range(self.shape[0])[mkey[0]])
             if isinstance(kr,int):  kr =[kr]
         if len(self.shape) >1 :
-            ir=(range(self.shape[1])[key[1]])
+            ir=(range(self.shape[1])[mkey[1]])
             if isinstance(ir,int):  ir =[ir]
         if len(self.shape) >2 :
-            jr=(range(self.shape[2])[key[2]])
+            jr=(range(self.shape[2])[mkey[2]])
             if isinstance(jr,int):  jr =[jr]
 #            print "kr:", kr
 #            print "ir:", ir
@@ -178,7 +202,8 @@ class FieldArray:
         
         
         if self.fdim < 1 :
-            self.fList[0].__setitem__(key,value)
+            for k in range(len(value)):
+                self.fList[0].__setitem__(kr[k],value[k])
         elif self.fdim == 1:
             if rank == 2:
                 for i in range(len(value[0])):
@@ -240,21 +265,23 @@ class FieldArray:
     ## stores the field value
     # \param value the stored value
     def write(self,value):
-        if self.fdim < 1:
-            self.fList[0].write(value)
-        elif self.fdim == 1:
-            for i in range(self.shape[1]):
-                self.fList[i].write(value[:][i])
-        elif self.fdim == 2:
-            for i in range(self.shape[1]):
-                for j in range(self.shape[2]):
-                    self.fList[i*self.shape[2]+j].write(value[:][i][j])
+        key=[]
+        for k in range(len(self.shape)):
+            key.append(slice(0,self.shape[k],1))
+
+        if len(key)>0:
+            elf.__setitem__(key,value)
 
 
     ## reads the field value
-    # \returns read value
-    def read(self,value):
-        return None
+    # \brief It reads the whole field array
+    def read(self):
+        key=[]
+        for k in range(len(self.shape)):
+            key.append(slice(0,self.shape[k],1))
+
+        if len(key)>0:
+            return self.__getitem__(key)
     
                     
     ## growing method
