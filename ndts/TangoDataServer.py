@@ -42,6 +42,14 @@ from TangoDataWriter import TangoDataWriter as TDW
 #         Tango Server to store data in H5 files
 #
 #==================================================================
+# 	Device States Description:
+#
+#   DevState.ON :       NeXuS Data Server is switch on
+#   DevState.OFF :      NeXuS Data Writer is switch off
+#   DevState.OPEN :     H5 file is open
+#   DevState.INIT :     XML configuration is initialzed
+#   DevState.RUNNING :  NeXus Data Server is writting
+#==================================================================
 
 
 class TangoDataServer(PyTango.Device_4Impl):
@@ -61,6 +69,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def delete_device(self):
 		print "[Device delete_device method] for device",self.get_name()
+		self.set_state(PyTango.DevState.OFF)
 
 
 #------------------------------------------------------------------
@@ -110,6 +119,18 @@ class TangoDataServer(PyTango.Device_4Impl):
 		attr.get_write_value(data)
 		print "Attribute value = ", data
 		self.tdw.setXML(data[0])
+		self.set_state(PyTango.DevState.INIT)
+
+
+#---- TheXMLSettings attribute State Machine -----------------
+	def is_TheXMLSettings_allowed(self, req_type):
+		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
 
 
 #------------------------------------------------------------------
@@ -136,6 +157,16 @@ class TangoDataServer(PyTango.Device_4Impl):
 		#	Add your own code here
 
 
+#---- TheJSONRecord attribute State Machine -----------------
+	def is_TheJSONRecord_allowed(self, req_type):
+		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
 #------------------------------------------------------------------
 #	Read FileName attribute
 #------------------------------------------------------------------
@@ -145,6 +176,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		
 		attr.set_value(self.tdw.fileName)
+
 
 #------------------------------------------------------------------
 #	Write FileName attribute
@@ -157,6 +189,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.tdw.fileName=data[0]
 
 		#	Add your own code here
+
+
+#---- FileName attribute State Machine -----------------
+	def is_FileName_allowed(self, req_type):
+		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
 
 
 
@@ -173,9 +216,23 @@ class TangoDataServer(PyTango.Device_4Impl):
 #                
 #------------------------------------------------------------------
 	def Record(self):
+		self.set_state(PyTango.DevState.RUNNING)
 		print "In ", self.get_name(), "::Record()"
 		#	Add your own code here
 		self.tdw.record()
+		self.set_state(PyTango.DevState.OPEN)
+
+
+#---- Record command State Machine -----------------
+	def is_Record_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
 
 
 #------------------------------------------------------------------
@@ -188,6 +245,19 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::Open()"
 		#	Add your own code here
 		self.tdw.open()
+		self.set_state(PyTango.DevState.OPEN)
+
+
+#---- Open command State Machine -----------------
+	def is_Open_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
 
 
 #------------------------------------------------------------------
@@ -200,6 +270,19 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::Close()"
 		#	Add your own code here
 		self.tdw.close()
+		self.set_state(PyTango.DevState.INIT)
+
+
+#---- Close command State Machine -----------------
+	def is_Close_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
 
 
 #==================================================================
@@ -209,17 +292,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 #==================================================================
 class TangoDataServerClass(PyTango.DeviceClass):
 
-	## Class Properties
+	#	Class Properties
 	class_property_list = {
 		}
 
 
-	## Device Properties
+	#	Device Properties
 	device_property_list = {
 		}
 
 
-	## Command definitions
+	#	Command definitions
 	cmd_list = {
 		'Record':
 			[[PyTango.DevVoid, ""],
@@ -233,7 +316,7 @@ class TangoDataServerClass(PyTango.DeviceClass):
 		}
 
 
-	## Attribute definitions
+	#	Attribute definitions
 	attr_list = {
 		'TheXMLSettings':
 			[[PyTango.DevString,
@@ -253,8 +336,6 @@ class TangoDataServerClass(PyTango.DeviceClass):
 #------------------------------------------------------------------
 #	TangoDataServerClass Constructor
 #------------------------------------------------------------------
-	## constructor
-	# \param name type name
 	def __init__(self, name):
 		PyTango.DeviceClass.__init__(self, name)
 		self.set_type(name);
