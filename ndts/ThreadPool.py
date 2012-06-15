@@ -21,16 +21,21 @@
 
 from threading import *                                                                      
 from ElementThread import *
+import Queue
 
 ## Pool with threads
 class ThreadPool:
     ## constructor
     # \brief It cleans the member variables
-    def __init__(self):
+    def __init__(self,numThreads=10):
+        ## queue of the appended elements
+        self.elementQueue=Queue.Queue()
         ## list of the appended elements
         self.elementList=[]
         ## list of the threads related to the appended elements
         self.threadList=[]
+        ## maximal number of threads
+        self.numThreads=-1
 
     ## appends the thread element
     # \param elem the thread element
@@ -50,12 +55,20 @@ class ThreadPool:
     # \brief It runs the threads from the pool
     def run(self):
         self.threadList=[]
+        self.elementQueue=Queue.Queue()
         
         for eth in self.elementList:
-            th=ElementThread(eth)
-            th.start()
+            self.elementQueue.put(eth)
+
+        if self.numThreads <1:
+            self.numThreads=len(self.elementList)
+
+        for  i in range(min(self.numThreads,len(self.elementList))):
+            th=ElementThread(i,self.elementQueue)
             self.threadList.append(th)
-            print "running ", th.name
+            th.start()
+
+#            print "running ", th.name
 
     ## waits for all thread from the pool
     # \param timeout the maximal waiting time
@@ -63,6 +76,8 @@ class ThreadPool:
         for th in self.threadList:
             if th.isAlive():
                 th.join()
+        print "All threads have finished their jobs"
+
                 
     ## runner with waiting
     # \brief It runs and waits the threads from the pool 
@@ -76,4 +91,5 @@ class ThreadPool:
         for el in self.elementList:
             el.fObject.close()
         self.threadList=[]
-        
+        self.elementList=[]
+        self.elementQueue=None

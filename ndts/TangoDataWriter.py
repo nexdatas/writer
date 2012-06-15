@@ -53,6 +53,8 @@ class TangoDataWriter:
         self.finalPool=None
         ## H5 file handle
         self.nxFile=None
+        ## H5 file handle
+        self.numThreads=100
 
     ##  opens the data writer
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
@@ -68,6 +70,10 @@ class TangoDataWriter:
             self.stepPool=handler.stepPool.setJSON(self.json)
             self.finalPool=handler.finalPool.setJSON(self.json)
             
+            self.initPool.numThreads=self.numThreads
+            self.stepPool.numThreads=self.numThreads
+            self.finalPool.numThreads=self.numThreads
+           
             self.initPool.runAndWait()
             self.nxFile=handler.getNXFile()
 

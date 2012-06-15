@@ -20,19 +20,47 @@
 # ElementThread
 
 from threading import *                                                                       
+import Queue
+import thread
+import time
+
 
 ## Single Thread Element
 class ElementThread(Thread):
     ## constructor
     # \brief It creates ElementThread from the runnable element
-    def __init__(self,elem):
+    # \param index the current thread index
+    # \param queue queue with tasks
+    def __init__(self,index,queue):
         Thread.__init__(self)
-        ## runnable element
-        self.elem=elem
+        ## thread index
+        self.index=index
+        ## queue with runnable elements
+        self.queue=queue
+        self.safeprint=thread.allocate_lock()
 
     ## runner
     # \brief It runs the defined thread
     def run(self):
-        if hasattr(self.elem,"run"):
-            self.elem.run()
+        with self.safeprint:
+            print "Running THREAD: %s" % self.index
+        full=True    
+        while full:
+            time.sleep(0.0001)
+#            with self.safeprint:
+#                print( "loop THREAD: ", self.index)
+            try:
+                elem=self.queue.get(block=False)
+#                with self.safeprint:
+#                    print " THREAD fetched: ", elem.name, " with ", elem.tAttrs
+                if hasattr(elem,"run"):
+                    elem.run()
+                    
+            except Queue.Empty:
+#                with self.safeprint:
+#                    print " THREAD empty: ", self.index
+                full=False    
+                pass
+                
+
 

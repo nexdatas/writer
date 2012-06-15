@@ -105,6 +105,7 @@ if __name__ == "__main__":
 	
 	
 	src.setText("My source")
+#	mot1 = DevNGroup(ins.elem,"p09/motor/exp.01","motor1","NXpositioner", commands=False)
 	mot1 = DevNGroup(ins.elem,"p09/motor/exp.01","motor1","NXpositioner", commands=False,\
 				 blackAttrs=["PositionEncoder","PositionEncoderRaw"])
 	mot2 = DevNGroup(ins.elem,"p09/motor/exp.02","motor2","NXpositioner", commands=False,\
