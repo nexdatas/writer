@@ -12,7 +12,8 @@
 					<dim index="2" value="2"/>
 				</dimensions>
 				<datasource hostname="haso228k.desy.de" strategy="STEP" type="DB">
-					<query dbname="tango" format="IMAGE">
+					<database dbname="tango" dbtype="MYSQL"/>
+					<query format="IMAGE">
 						SELECT name,pid FROM device
 					</query>
 				</datasource>

@@ -56,6 +56,7 @@ class NexusXMLHandler(sax.ContentHandler):
                            'dimensions':EDimensions, 
                            'dim':EDim, 'enumeration':Element, 'item':Element,
                            'datasource':DataSourceFactory,'record':ERecord , 'query':EQuery, 
+                           'database':EDatabase, 
                            'device':EDevice, 'door':EDoor}
 
 

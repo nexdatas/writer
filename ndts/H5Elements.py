@@ -427,21 +427,40 @@ class EQuery(Element):
     # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
+        if "format" in attrs.keys():
+            self.beforeLast().source.format=attrs["format"]
+
+    ## stores the tag content
+    # \param name the tag name    
+    def store(self,name):
+        self.beforeLast().source.query= ("".join(self.content)).strip()        
+
+
+## Database tag element        
+class EDatabase(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    def __init__(self,name,attrs,last):
+        Element.__init__(self,name,attrs,last)
         if "dbname" in attrs.keys():
             self.beforeLast().source.dbname=attrs["dbname"]
+        if "dbtype" in attrs.keys():
+            self.beforeLast().source.dbtype=attrs["dbtype"]
         if "user" in attrs.keys():
             self.beforeLast().source.user=attrs["user"]
         if "passwd" in attrs.keys():
             self.beforeLast().source.passwd=attrs["passwd"]
-        if "format" in attrs.keys():
-            self.beforeLast().source.format=attrs["format"]
+        if "mode" in attrs.keys():
+            self.beforeLast().source.format=attrs["mode"]
         if "mycnf" in attrs.keys():
             self.beforeLast().source.mycnf=attrs["mycnf"]
 
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self.beforeLast().source.query= ("".join(self.content)).strip()        
+        self.beforeLast().source.dsn= ("".join(self.content)).strip()        
 
  
 ## dimensions tag element        

@@ -37,6 +37,7 @@ class ElementThread(Thread):
         self.index=index
         ## queue with runnable elements
         self.queue=queue
+        ## lock for safe printing messeges
         self.safeprint=thread.allocate_lock()
 
     ## runner

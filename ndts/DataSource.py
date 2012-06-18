@@ -28,6 +28,9 @@ from DataHolder import *
 from Types import *
 
 import MySQLdb
+import psycopg2
+import cx_Oracle
+
 
 import json
 
@@ -109,21 +112,31 @@ class DBaseSource(DataSource):
         DataSource.__init__(self)
         ## database query
         self.query=None
+        ## DSN string
+        self.dsn=None
+        ## database type, i.e. MYSQL, PGSQL, ORACLE
+        self.dbtype=None
+        ## oracle database mode
+        self.mode=None
         ## database name
         self.dbname=None
         ## database user
         self.user=None
         ## database password
         self.passwd=None
-        ## database configuration file
+        ## mysql database configuration file
         self.mycnf='/etc/my.cnf'
         ## record format, i.e. SCALAR, SPECTRUM, IMAGE
         self.format=None
 
-    ## provides access to the data    
-    # \returns  DataHolder with collected data   
-    def getData(self):
-        print "QUERY: ", self.query
+        ## map 
+        self.dbConnect={"MYSQL":self.connectMYSQL, 
+                        "PGSQL":self.connectPGSQL,
+                        "ORACLE":self.connectORACLE}
+
+    ## connects to MYSQL database    
+    # \returns open database object
+    def connectMYSQL(self):
         args={}
         if self.mycnf:
             args["read_default_file"]=self.mycnf.encode()
@@ -137,10 +150,54 @@ class DBaseSource(DataSource):
             args["host"]=self.hostname.encode()
         if self.port:
             args["port"]=int(self.port)
-        
-        print "ARGS", args
-        print "FORMAT", self.format
-        db = MySQLdb.connect(**args)
+            
+        return MySQLdb.connect(**args)
+
+    ## connects to PGSQL database    
+    # \returns open database object
+    def connectPGSQL(self):
+        args={}
+
+        if self.dbname:
+            args["database"]=self.dbname.encode()
+        if self.user:
+            args["user"]=self.user.encode()
+        if self.passwd:
+            args["password"]=self.passwd.encode()
+        if self.hostname:
+            args["host"]=self.hostname.encode()
+        if self.port:
+            args["port"]=int(self.port)
+            
+        return psycopg2.connect(**args)
+
+    ## connects to ORACLE database    
+    # \returns open database object
+    def connectORACLE(self):
+        args={}
+        if self.user:
+            args["user"]=self.user.encode()
+        if self.passwd:
+            args["password"]=self.passwd.encode()
+        if self.dsn:
+            args["dsn"]=self.dsn.encode()
+        if self.mode:
+            args["mode"]=self.mode.encode()
+            
+        return  cx_Oracle.connect(**args)
+
+    ## provides access to the data    
+    # \returns  DataHolder with collected data   
+    def getData(self):
+        print "QUERY: ", self.query
+
+
+        db=None
+
+        if self.dbtype in self.dbConnect.keys():
+            db=self.dbConnect[self.dbtype]()
+                
+
         if db:
             cursor = db.cursor()
             cursor.execute(self.query)
@@ -158,7 +215,6 @@ class DBaseSource(DataSource):
                 data = cursor.fetchall()
                 ldata=list(list(el) for el in data)
                 dh=DataHolder("IMAGE",ldata,"DevString",[len(ldata),len(ldata[0])])
-                
             cursor.close()
             db.close()
 #        print "DB DH:" , dh.value    

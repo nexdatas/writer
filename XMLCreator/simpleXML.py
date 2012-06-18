@@ -266,32 +266,47 @@ class NDSource(NTag):
 	# \param gStrategy strategy of data writing, i.e. INIT, STEP, FINAL
 	# \param gHost host name
 	# \param gPort port
-	def __init__(self,parent,gStrategy,gHost,gPort=None):
+	def __init__(self,parent,gStrategy,gHost=None,gPort=None):
 		NTag.__init__(self,parent,"datasource")
 		self.elem.attrib["strategy"]=gStrategy
-		self.elem.attrib["hostname"]=gHost
+		if gHost:
+			self.elem.attrib["hostname"]=gHost
 		if gPort:
 			self.elem.attrib["port"]=gPort
 
 	## sets parameters of DataBase		
 	# \param gDBname name of used DataBase
 	# \param gQuery database query
+	# \param gDBtype type of the database, i.e. MYSQL, PGSQL, ORACLE
 	# \param gFormat format of the query output, i.e. SCALAR, SPECTRUM, IMAGE
-	# \param gMycnf mysql config file
+	# \param gMycnf MYSQL config file
 	# \param gUser database user name
 	# \param gPasswd database user password
-	def initDBase(self,gDBname,gQuery, gFormat=None, gMycnf=None, gUser=None, gPasswd=None):
+	# \param gDsn DSN string to initialize ORACLE and PGSQL databases
+	# \param gMode mode for ORACLE databases, i.e. SYSDBA or SYSOPER		
+	def initDBase(self,gDBtype,gQuery,gDBname=None, gFormat=None, gMycnf=None, gUser=None, 
+		      gPasswd=None, gDsn=None, gMode=None):
 		self.elem.attrib["type"]="DB"
-		da=NTag(self.elem,"query")
-		da.elem.attrib["dbname"]=gDBname
-		if gFormat:
-			da.elem.attrib["format"]=gFormat
+		da=NTag(self.elem,"database")
+		da.elem.attrib["dbtype"]=gDBtype
+
+		if gDBname:
+			da.elem.attrib["dbname"]=gDBname
 		if gUser:
 			da.elem.attrib["user"]=gUser
 		if gPasswd:
 			da.elem.attrib["passwd"]=gPasswd
 		if gMycnf:
 			da.elem.attrib["mycnf"]=gMycnf
+		if gMode:
+			da.elem.attrib["mode"]=gMode
+		if gDsn:
+			da.elem.text=gDsn
+		
+
+		da=NTag(self.elem,"query")
+		if gFormat:
+			da.elem.attrib["format"]=gFormat
 		da.elem.text=gQuery
 
         ## sets paramters for Tango device
@@ -481,14 +496,35 @@ if __name__ == "__main__":
 	f = NField(src.elem,"distance","NX_FLOAT")
 	f.setUnits("m")
 	f.setText("100.")
-	f = NField(src.elem,"db_devices","NX_CHAR")
+
+	f = NField(src.elem,"mysql_record","NX_CHAR")
 	## dimensions
 	d=NDimensions(f.elem,"2")
 	d.dim("1","151")
 	d.dim("2","2")
 	## source
 	sr=NDSource(f.elem,"STEP","haso228k.desy.de")
-	sr.initDBase("tango","SELECT name,pid FROM device","IMAGE")
+	sr.initDBase("MYSQL","SELECT name,pid FROM device","tango","IMAGE")
+
+
+	f = NField(src.elem,"pgsql_record","NX_CHAR")
+	## dimensions
+	d=NDimensions(f.elem,"2")
+	d.dim("1","3")
+	d.dim("2","5")
+	## source
+	sr=NDSource(f.elem,"STEP")
+	sr.initDBase("PGSQL","SELECT * FROM weather","mydb","IMAGE")
+
+ 
+	f = NField(src.elem,"oracle_record","NX_CHAR")
+	## dimensions
+	d=NDimensions(f.elem,"1")
+	d.dim("1","19")
+	## source
+	sr=NDSource(f.elem,"STEP","haso228k.desy.de")
+	sr.initDBase("ORACLE","select * from telefonbuch",gUser='read',gPasswd='****',gFormat="SPECTRUM",gDsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))')
+
 	f = NField(src.elem,"type","NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src.elem,"name","NX_CHAR")
