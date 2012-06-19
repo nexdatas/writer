@@ -71,7 +71,7 @@ if __name__ == "__main__":
                 
                 print "sleeping for 1s"
                 time.sleep(1)
-                print "recording the 5 file"
+                print "recording the H5 file"
                 dpx.record()
                 print "sleeping for 1s"
                 time.sleep(1)
