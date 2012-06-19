@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <definition>
-	<group name="entry" type="NXentry">
+	<group name="entry1" type="NXentry">
 		<group name="instrument" type="NXinstrument">
 			<group name="source" type="NXsource">
 				<field name="distance" type="NX_FLOAT" units="m">

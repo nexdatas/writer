@@ -61,7 +61,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def __init__(self,cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
-		TangoDataServer.init_device(self)
 		self.tdw=TDW("name.h5")
 
 #------------------------------------------------------------------
@@ -85,6 +84,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def always_executed_hook(self):
 		print "In ", self.get_name(), "::always_excuted_hook()"
+
+
 
 #==================================================================
 #
@@ -195,6 +196,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def is_FileName_allowed(self, req_type):
 		if self.get_state() in [PyTango.DevState.OFF,
 		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.INIT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -236,20 +238,75 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
-#	Open command:
+#	OpenFile command:
 #
 #	Description: Open the H5 file
 #                
 #------------------------------------------------------------------
-	def Open(self):
-		print "In ", self.get_name(), "::Open()"
+	def OpenFile(self):
+		print "In ", self.get_name(), "::OpenFile()"
 		#	Add your own code here
-		self.tdw.open()
+		self.set_state(PyTango.DevState.RUNNING)
+		self.tdw.openNXFile()
+		self.set_state(PyTango.DevState.INIT)
+
+
+#---- OpenFile command State Machine -----------------
+	def is_OpenFile_allowed(self):
+		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
+#	CloseFile command:
+#
+#	Description: Close the H5 file
+#                
+#------------------------------------------------------------------
+	def CloseFile(self):
+		print "In ", self.get_name(), "::CloseFile()"
+		#	Add your own code here
+		if self.get_state() in [PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			self.CloseEntry()
+		self.set_state(PyTango.DevState.RUNNING)
+		self.tdw.closeNXFile()
+		self.set_state(PyTango.DevState.ON)
+
+
+#---- CloseFile command State Machine -----------------
+	def is_CloseFile_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
+#	OpenEntry command:
+#
+#	Description: Creating the new entry
+#                
+#------------------------------------------------------------------
+	def OpenEntry(self):
+		print "In ", self.get_name(), "::OpenEntry()"
+		#	Add your own code here
+		self.set_state(PyTango.DevState.RUNNING)
+		self.tdw.openEntry()
 		self.set_state(PyTango.DevState.OPEN)
 
 
-#---- Open command State Machine -----------------
-	def is_Open_allowed(self):
+#---- OpenEntry command State Machine -----------------
+	def is_OpenEntry_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
 		                        PyTango.DevState.OPEN,
@@ -261,20 +318,21 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
-#	Close command:
+#	CloseEntry command:
 #
-#	Description: Close the H5 file
+#	Description: Closing the entry
 #                
 #------------------------------------------------------------------
-	def Close(self):
-		print "In ", self.get_name(), "::Close()"
+	def CloseEntry(self):
+		print "In ", self.get_name(), "::CloseEntry()"
 		#	Add your own code here
-		self.tdw.close()
+		self.set_state(PyTango.DevState.RUNNING)
+		self.tdw.closeEntry()
 		self.set_state(PyTango.DevState.INIT)
 
 
-#---- Close command State Machine -----------------
-	def is_Close_allowed(self):
+#---- CloseEntry command State Machine -----------------
+	def is_CloseEntry_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
 		                        PyTango.DevState.INIT,
@@ -307,10 +365,16 @@ class TangoDataServerClass(PyTango.DeviceClass):
 		'Record':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevVoid, ""]],
-		'Open':
+		'OpenFile':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevVoid, ""]],
-		'Close':
+		'CloseFile':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevVoid, ""]],
+		'OpenEntry':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevVoid, ""]],
+		'CloseEntry':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevVoid, ""]],
 		}

@@ -487,7 +487,7 @@ if __name__ == "__main__":
 	## handler to XML file
 	df=XMLFile("test.xml")
 	## entry
-	en = NGroup(df.root,"entry","NXentry")
+	en = NGroup(df.root,"entry1","NXentry")
 	## instrument
 	ins = NGroup(en.elem,"instrument","NXinstrument")
 	##	NXsource

@@ -25,37 +25,28 @@ from PyTango import *
 
 if __name__ == "__main__":
 
-    if  len(sys.argv) <2:
-        print "usage: simpleClient.py  <XMLfile>  <H5file>  <tangoServer>"
+    argc=len(sys.argv)
+
+    if  argc < 4:
+        print "usage: simpleClient.py   <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>  <device_name>"
         
     else:
         xmlf=sys.argv[1]
         if os.path.exists(xmlf):
 
 
-            if len(sys.argv)>2:
                 
-                fname=sys.argv[2]
-                print fname
-            else:
-                sp=xmlf.split(".")
-                print sp
-                if sp[-1] == 'xml' :
-                    fname=''.join(sp[0:-1])
-                else:
-                    fname=xmlf
-                fname = fname.strip() + ".h5"
+            fname=sys.argv[argc-2]
+            print fname
+
             print "storing in ", fname 
     
-            device="p09/tdw/r228"
-            if len(sys.argv)>3:
-                device=sys.argv[3]
+#            device="p09/tdw/r228"
+            device=sys.argv[argc-1]
             
             dpx=DeviceProxy(device)
             dpx.set_timeout_millis(25000)
             print " Connected to: ", device
-    
-            xml = open(xmlf, 'r').read()
 
 
             dpx.FileName=fname
@@ -63,26 +54,36 @@ if __name__ == "__main__":
             print "opening the H5 file"
             dpx.OpenFile()
 
-            dpx.TheXMLSettings=xml
 
-            print "opening the entry"
-            dpx.OpenEntry()
-
-            print "recording the H5 file"
-            dpx.record()
             
-            print "sleeping for 1s"
-            time.sleep(1)
-            print "recording the 5 file"
-            dpx.record()
-            print "sleeping for 1s"
-            time.sleep(1)
-            print "recording the H5 file"
-            dpx.record()
-            print "closing the  entry"
-            dpx.closeEntry()
+            for i in range(1,argc-2):
+                xmlf=sys.argv[i]
+                
+                xml = open(xmlf, 'r').read()
+
+                dpx.TheXMLSettings=xml
+                
+                print "opening the entry"
+                dpx.OpenEntry()
+                
+                print "recording the H5 file"
+                dpx.record()
+                
+                print "sleeping for 1s"
+                time.sleep(1)
+                print "recording the 5 file"
+                dpx.record()
+                print "sleeping for 1s"
+                time.sleep(1)
+                print "recording the H5 file"
+                dpx.record()
+                print "closing the  entry"
+                dpx.closeEntry()
+
             print "closing the H5 file"
             dpx.closeFile()
+
+
             
                 
             

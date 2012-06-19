@@ -34,17 +34,13 @@ class NexusXMLHandler(sax.ContentHandler):
     ## constructor
     # \brief It constructs parser and defines the H5 output file
     # \param fname name of the H5 output file
-    def __init__(self,fname):
+    def __init__(self,efile):
         sax.ContentHandler.__init__(self)
 
         ## map of NXclass : name
         self.groupTypes={"":""}
-        ## H5 file name
-        self.fname=fname
-        ## file handle
-        self.nxFile=nx.create_file(self.fname,overwrite=True)
         ## stack with open tag elements
-        self.stack=[EFile("NXfile",[],None,self.nxFile)]
+        self.stack=[efile]
 
         ## the current content of the tag 
         self.content=""
@@ -136,29 +132,15 @@ class NexusXMLHandler(sax.ContentHandler):
                 print "poping"
                 self.stack.pop()
 
-    ## the H5 file handle 
-    # \returns the H5 file handle 
-    def getNXFile(self):
-        return self.nxFile            
 
     ## closes the stack
     # \brief It goes through all stack elements closing them
     def closeStack(self):
         for s in self.stack:
-            if isinstance(s, FElement):
+            if isinstance(s, FElement) and not isinstance(s, EFile):
                 if hasattr(s.fObject,"close"):
                     s.fObject.close()
-        if self.nxFile:
-            print "nxClosing the stack"
-            self.nxFile.close()
  
-    ## the H5 file closing
-    # \brief It closes the H5 file       
-    def closeFile(self):
-        self.closeStack()
-        if self.nxFile:
-            print "nxClosing NXFile"
-            self.nxFile.close()
 
 
 
@@ -177,10 +159,15 @@ if __name__ == "__main__":
             ## a parser object
             parser = sax.make_parser()
             
+            ## file  handle
+            nxFile=nx.create_file(self.self.fileName,overwrite=True)
+            ## element file objects
+            eFile=EFile("NXfile",[],None,self.nxFile)
             ## a SAX2 handler object
-            handler = NexusXMLHandler(fo)
+            handler = NexusXMLHandler(eFile)
             parser.setContentHandler( handler )
 
             parser.parse(open(fi))
-            handler.closeFile()
+            handler.closeStack()
+            nxFile.close()
     

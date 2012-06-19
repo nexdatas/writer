@@ -20,7 +20,10 @@ from simpleXML import *
 
 if __name__ == "__main__":
 	df=XMLFile("MNI.xml")
-	ins = NGroup(df.root,"instrument","NXinstrument")
+	
+	en = NGroup(df.root,"entry2","NXentry")
+
+	ins = NGroup(en.elem,"instrument","NXinstrument")
 #	NXsource
 	src = NGroup(ins.elem,"source","NXsource")
 	f = NField(src.elem,"distance","NX_FLOAT")
@@ -116,7 +119,7 @@ if __name__ == "__main__":
 	adc = DevNGroup(ins.elem,"p09/adc/exp.02","adc","NXsensor")
 	vfc = DevNGroup(ins.elem,"p09/vfc/exp.02","vfcadc","NXsensor")
 	dgg2 = DevNGroup(ins.elem,"p09/dgg2/exp.01","dgg2","NXmonitor")
-	tst = NGroup(df.root,"tst","NXinstrument")
+	tst = NGroup(en.elem,"tst","NXinstrument")
 	mot1.setText("My motor1")
 	mot2.setText("My motor1")
 
