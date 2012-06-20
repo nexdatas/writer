@@ -11,8 +11,8 @@
 						<dim index="1" value="151"/>
 						<dim index="2" value="2"/>
 					</dimensions>
-					<datasource hostname="haso228k.desy.de" strategy="STEP" type="DB">
-						<database dbname="tango" dbtype="MYSQL"/>
+					<datasource strategy="STEP" type="DB">
+						<database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
 						<query format="IMAGE">
 							SELECT name,pid FROM device
 						</query>
@@ -34,8 +34,8 @@
 					<dimensions rank="1">
 						<dim index="1" value="19"/>
 					</dimensions>
-					<datasource hostname="haso228k.desy.de" strategy="STEP" type="DB">
-						<database dbtype="ORACLE" passwd="****" user="read">
+					<datasource strategy="STEP" type="DB">
+						<database dbtype="ORACLE" hostname="haso228k.desy.de" passwd="****" user="read">
 							(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))
 						</database>
 						<query format="SPECTRUM">
@@ -57,21 +57,21 @@
 				</field>
 				<field name="power" type="NX_FLOAT" units="W">
 					1
-					<datasource hostname="haso228k.desy.de" port="10000" strategy="INIT" type="TANGO">
-						<device name="p09/motor/exp.01"/>
+					<datasource strategy="INIT" type="TANGO">
+						<device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
 						<record name="Position" type="attribute"/>
 					</datasource>
 				</field>
 				<field name="emittance_x" type="NX_FLOAT" units="nm rad">
 					0.2
-					<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="CLIENT">
+					<datasource strategy="STEP" type="CLIENT">
 						<record name="emitannce_x"/>
 					</datasource>
 				</field>
 				<field name="emittance_y" type="NX_FLOAT" units="nm rad">
 					0.2
-					<datasource hostname="haso228k.desy.de" port="10000" strategy="STEP" type="SARDANA">
-						<door name="door1"/>
+					<datasource strategy="STEP" type="SARDANA">
+						<door hostname="haso228k.desy.de" name="door1" port="10000"/>
 						<record name="emitannce_y"/>
 					</datasource>
 				</field>
@@ -119,8 +119,8 @@
 						<dim index="1" value="2"/>
 						<dim index="2" value="2"/>
 					</dimensions>
-					<datasource hostname="haso228k.desy.de" port="10000" strategy="FINAL" type="TANGO">
-						<device name="p09/tst/exp.01"/>
+					<datasource strategy="FINAL" type="TANGO">
+						<device hostname="haso228k.desy.de" name="p09/tst/exp.01" port="10000"/>
 						<record name="MyImageAttribute" type="attribute"/>
 					</datasource>
 				</field>
@@ -138,8 +138,8 @@
 				<field name="rotation_angle" type="NX_FLOAT"/>
 				<field name="x_pixel_size" type="NX_FLOAT"/>
 				<field name="y_pixel_size" type="NX_FLOAT">
-					<datasource hostname="haso228k.desy.de" port="10000" strategy="FINAL" type="TANGO">
-						<device name="p09/motor/exp.01"/>
+					<datasource strategy="FINAL" type="TANGO">
+						<device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
 						<record name="Position" type="attribute"/>
 					</datasource>
 				</field>

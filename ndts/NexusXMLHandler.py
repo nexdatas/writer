@@ -33,7 +33,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
     ## constructor
     # \brief It constructs parser and defines the H5 output file
-    # \param fname name of the H5 output file
+    # \param efile file element
     def __init__(self,efile):
         sax.ContentHandler.__init__(self)
 

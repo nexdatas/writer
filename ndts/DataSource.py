@@ -233,7 +233,8 @@ class ClientSource(DataSource):
         
     ## sets JSON string
     # \brief It sets the currently used  JSON string
-    # \param sJSON JSON string    
+    # \param sJSON static JSON string    
+    # \param lJSON dynamic JSON string    
     def setJSON(self,sJSON,lJSON=None):
         self.JSON=json.loads(sJSON)
         if lJSON:
@@ -323,9 +324,5 @@ class DataSourceFactory(Element):
 
         if "strategy" in attrs.keys():
             self.last.source.strategy=attrs["strategy"]
-        if "hostname" in attrs.keys():
-            self.last.source.hostname=attrs["hostname"]
-        if "port" in attrs.keys():
-            self.last.source.port=attrs["port"]
 
 

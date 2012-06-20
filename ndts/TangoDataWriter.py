@@ -187,6 +187,7 @@ if __name__ == "__main__":
 
     print "usage: TangoDataWriter.py  <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>"
 
+    ## No arguments
     argc=len(sys.argv)
     if argc>2:
         tdw.fileName=sys.argv[argc-1]

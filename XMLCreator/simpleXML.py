@@ -264,15 +264,9 @@ class NDSource(NTag):
 	## constructor
 	# \param parent parent ET tag element
 	# \param gStrategy strategy of data writing, i.e. INIT, STEP, FINAL
-	# \param gHost host name
-	# \param gPort port
-	def __init__(self,parent,gStrategy,gHost=None,gPort=None):
+	def __init__(self,parent,gStrategy):
 		NTag.__init__(self,parent,"datasource")
 		self.elem.attrib["strategy"]=gStrategy
-		if gHost:
-			self.elem.attrib["hostname"]=gHost
-		if gPort:
-			self.elem.attrib["port"]=gPort
 
 	## sets parameters of DataBase		
 	# \param gDBname name of used DataBase
@@ -284,11 +278,19 @@ class NDSource(NTag):
 	# \param gPasswd database user password
 	# \param gDsn DSN string to initialize ORACLE and PGSQL databases
 	# \param gMode mode for ORACLE databases, i.e. SYSDBA or SYSOPER		
+	# \param gHost host name
+	# \param gPort port
 	def initDBase(self,gDBtype,gQuery,gDBname=None, gFormat=None, gMycnf=None, gUser=None, 
-		      gPasswd=None, gDsn=None, gMode=None):
+		      gPasswd=None, gDsn=None, gMode=None,gHost=None,gPort=None):
 		self.elem.attrib["type"]="DB"
 		da=NTag(self.elem,"database")
 		da.elem.attrib["dbtype"]=gDBtype
+
+
+		if gHost:
+			da.elem.attrib["hostname"]=gHost
+		if gPort:
+			da.elem.attrib["port"]=gPort
 
 		if gDBname:
 			da.elem.attrib["dbname"]=gDBname
@@ -313,10 +315,18 @@ class NDSource(NTag):
 	# \param gDevice device name
 	# \param gDType type of the data object, i.e. attribute, property, command	
 	# \param gDName name of the data object
-	def initTango(self,gDevice,gDType,gDName):
+	# \param gHost host name
+	# \param gPort port
+	def initTango(self,gDevice,gDType,gDName,gHost=None,gPort=None):
 		self.elem.attrib["type"]="TANGO"
 		dv=NTag(self.elem,"device")
 		dv.elem.attrib["name"]=gDevice
+
+		if gHost:
+			dv.elem.attrib["hostname"]=gHost
+		if gPort:
+			dv.elem.attrib["port"]=gPort
+
 		da=NTag(self.elem,"record")
 		da.addTagAttr("type", gDType)
 		da.addTagAttr("name", gDName)
@@ -332,10 +342,16 @@ class NDSource(NTag):
         ## sets paramters for Sardana data
 	# \param gDoor sardana door
 	# \param gDName name of the data object
-	def initSardana(self,gDoor,gDName):
+	# \param gHost host name
+	# \param gPort port
+	def initSardana(self,gDoor,gDName,gHost=None,gPort=None):
 		self.elem.attrib["type"]="SARDANA"
 		do=NTag(self.elem,"door")
 		do.elem.attrib["name"]=gDoor
+		if gHost:
+			do.elem.attrib["hostname"]=gHost
+		if gPort:
+			do.elem.attrib["port"]=gPort
 		da=NTag(self.elem,"record")
 		da.addTagAttr("name", gDName)
 
@@ -368,7 +384,8 @@ class DevNGroup(NGroup):
 
 		self.fetchProperties()	
 		self.fetchAttributes()	
-		self.fetchCommands()
+		if self.commands:		
+			self.fetchCommands()
 	
 
 	## fetches properties	
@@ -380,8 +397,8 @@ class DevNGroup(NGroup):
 			self.addAttr(pr,"NX_CHAR",str(self.proxy.get_property(pr)[pr][0]))
 			if pr not in self.fields:
 				self.fields[pr]=NField(self.elem,pr,"NX_CHAR")
-				sr=NDSource(self.fields[pr].elem,"STEP","haso228k.desy.de","10000")
-				sr.initTango(self.devName,"property",pr)
+				sr=NDSource(self.fields[pr].elem,"STEP")
+				sr.initTango(self.devName,"property",pr,gHost="haso228k.desy.de",gPort="10000")
 
 	## fetches Attributes
 	# \brief collects the device attributes
@@ -425,29 +442,28 @@ class DevNGroup(NGroup):
 					self.fields[at].addDoc(cf.description)
 				self.addAttr('URL',"NX_CHAR","tango://"+self.devName)
 			
-				sr=NDSource(self.fields[at].elem,"STEP","haso228k.desy.de","10000")
-				sr.initTango(self.devName,"attribute",at)
+				sr=NDSource(self.fields[at].elem,"STEP")
+				sr.initTango(self.devName,"attribute",at,gHost="haso228k.desy.de",gPort="10000")
 
 #		print self.proxy.attribute_list_query()
 
 	## fetches commands
 	# \brief It collects results of the device commands
 	def fetchCommands(self):	
-		if self.commands:		
-                        ## list of the device commands
-			cmd=self.proxy.command_list_query()
-			print "COMMANDS",cmd
-			for cd in cmd:
-				if str(cd.in_type).split(".")[-1] == "DevVoid" \
-					    and str(cd.out_type).split(".")[-1] != "DevVoid" \
-					    and str(cd.out_type).split(".")[-1] in tTypes \
-					    and cd.cmd_name not in self.fields:
-					self.fields[cd.cmd_name] = \
-					    NField(self.elem,cd.cmd_name, \
-							   nTypes[tTypes.index(str(cd.out_type).split(".")[-1])])
-					sr=NDSource(self.fields[cd.cmd_name].elem,"STEP", \
-							    "haso228k.desy.de","10000")
-					sr.initTango(self.devName,"command",cd.cmd_name)
+                ## list of the device commands
+		cmd=self.proxy.command_list_query()
+		print "COMMANDS",cmd
+		for cd in cmd:
+			if str(cd.in_type).split(".")[-1] == "DevVoid" \
+				    and str(cd.out_type).split(".")[-1] != "DevVoid" \
+				    and str(cd.out_type).split(".")[-1] in tTypes \
+				    and cd.cmd_name not in self.fields:
+				self.fields[cd.cmd_name] = \
+				    NField(self.elem,cd.cmd_name, \
+						   nTypes[tTypes.index(str(cd.out_type).split(".")[-1])])
+				sr=NDSource(self.fields[cd.cmd_name].elem,"STEP")
+				sr.initTango(self.devName,"command",cd.cmd_name,\
+						     gHost="haso228k.desy.de",gPort="10000")
 				
 						
 				
@@ -503,8 +519,8 @@ if __name__ == "__main__":
 	d.dim("1","151")
 	d.dim("2","2")
 	## source
-	sr=NDSource(f.elem,"STEP","haso228k.desy.de")
-	sr.initDBase("MYSQL","SELECT name,pid FROM device","tango","IMAGE")
+	sr=NDSource(f.elem,"STEP")
+	sr.initDBase("MYSQL","SELECT name,pid FROM device","tango","IMAGE",gHost="haso228k.desy.de")
 
 
 	f = NField(src.elem,"pgsql_record","NX_CHAR")
@@ -522,8 +538,8 @@ if __name__ == "__main__":
 	d=NDimensions(f.elem,"1")
 	d.dim("1","19")
 	## source
-	sr=NDSource(f.elem,"STEP","haso228k.desy.de")
-	sr.initDBase("ORACLE","select * from telefonbuch",gUser='read',gPasswd='****',gFormat="SPECTRUM",gDsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))')
+	sr=NDSource(f.elem,"STEP")
+	sr.initDBase("ORACLE","select * from telefonbuch",gUser='read',gPasswd='****',gFormat="SPECTRUM",gDsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))',gHost="haso228k.desy.de")
 
 	f = NField(src.elem,"type","NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
@@ -535,18 +551,18 @@ if __name__ == "__main__":
 	f = NField(src.elem,"power","NX_FLOAT")
 	f.setUnits("W")
 	f.setText("1")
-	sr=NDSource(f.elem,"INIT","haso228k.desy.de","10000")
-	sr.initTango("p09/motor/exp.01","attribute","Position")
+	sr=NDSource(f.elem,"INIT")
+	sr.initTango("p09/motor/exp.01","attribute","Position",gHost="haso228k.desy.de",gPort="10000")
 	f = NField(src.elem,"emittance_x","NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
-	sr=NDSource(f.elem,"STEP","haso228k.desy.de","10000")
+	sr=NDSource(f.elem,"STEP")
 	sr.initClient("emitannce_x");
 	f = NField(src.elem,"emittance_y","NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
-	sr=NDSource(f.elem,"STEP","haso228k.desy.de","10000")
-	sr.initSardana("door1","emitannce_y");
+	sr=NDSource(f.elem,"STEP")
+	sr.initSardana("door1","emitannce_y",gHost="haso228k.desy.de",gPort="10000");
 	f = NField(src.elem,"sigma_x","NX_FLOAT")
 	f.setUnits("nm")
 	f.setText("0.1")
@@ -591,10 +607,10 @@ if __name__ == "__main__":
 #	d.dim("2","100")
 	d.dim("1","2")
 	d.dim("2","2")
-#	sr=NDSource(f.elem,"STEP","haso228k.desy.de","10000")
-	sr=NDSource(f.elem,"FINAL","haso228k.desy.de","10000")
-#	sr=NDSource(f.elem,"INIT","haso228k.desy.de","10000")
-	sr.initTango("p09/tst/exp.01","attribute","MyImageAttribute")
+#	sr=NDSource(f.elem,"STEP")
+	sr=NDSource(f.elem,"FINAL")
+#	sr=NDSource(f.elem,"INIT")
+	sr.initTango("p09/tst/exp.01","attribute","MyImageAttribute",gHost="haso228k.desy.de",gPort="10000")
 	f = NField(de.elem,"distance","NX_FLOAT")
 	f = NField(de.elem,"polar_angle","NX_FLOAT")
 	f.addDoc(""" Optional rotation angle for the case when the powder diagram has been obtained
@@ -605,8 +621,8 @@ if __name__ == "__main__":
 	f = NField(de.elem,"rotation_angle","NX_FLOAT")
 	f = NField(de.elem,"x_pixel_size","NX_FLOAT")
 	f = NField(de.elem,"y_pixel_size","NX_FLOAT")
-	sr=NDSource(f.elem,"FINAL","haso228k.desy.de","10000")
-	sr.initTango("p09/motor/exp.01","attribute","Position")
+	sr=NDSource(f.elem,"FINAL")
+	sr.initTango("p09/motor/exp.01","attribute","Position",gHost="haso228k.desy.de",gPort="10000")
 
 
         ##	NXdata

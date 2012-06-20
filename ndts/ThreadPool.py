@@ -44,7 +44,8 @@ class ThreadPool:
         self.elementList.append(elem)
 
     ## sets the JSON string to threads
-    # \param mJSON the JSON string
+    # \param mJSON the static JSON string
+    # \param locJSON the dynamic JSON string
     def setJSON(self,mJSON,locJSON=None):
         for el in self.elementList :
             if hasattr(el.source,"setJSON"):

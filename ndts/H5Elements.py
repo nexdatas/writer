@@ -406,6 +406,10 @@ class EDevice(Element):
         Element.__init__(self,name,attrs,last)
         if "name" in attrs.keys():
             self.beforeLast().source.device=attrs["name"]
+        if "hostname" in attrs.keys():
+            self.beforeLast().source.hostname=attrs["hostname"]
+        if "port" in attrs.keys():
+            self.beforeLast().source.port=attrs["port"]
 
 ## door tag element        
 class EDoor(Element):        
@@ -417,6 +421,10 @@ class EDoor(Element):
         Element.__init__(self,name,attrs,last)
         if "name" in attrs.keys():
             self.beforeLast().source.door=attrs["name"]
+        if "hostname" in attrs.keys():
+            self.beforeLast().source.hostname=attrs["hostname"]
+        if "port" in attrs.keys():
+            self.beforeLast().source.port=attrs["port"]
 
 
 ## query tag element        
@@ -456,6 +464,10 @@ class EDatabase(Element):
             self.beforeLast().source.format=attrs["mode"]
         if "mycnf" in attrs.keys():
             self.beforeLast().source.mycnf=attrs["mycnf"]
+        if "hostname" in attrs.keys():
+            self.beforeLast().source.hostname=attrs["hostname"]
+        if "port" in attrs.keys():
+            self.beforeLast().source.port=attrs["port"]
 
     ## stores the tag content
     # \param name the tag name    
