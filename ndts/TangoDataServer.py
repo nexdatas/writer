@@ -86,7 +86,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::always_excuted_hook()"
 
 
-
 #==================================================================
 #
 #	TangoDataServer read/write attribute methods
@@ -216,12 +215,15 @@ class TangoDataServer(PyTango.Device_4Impl):
 #
 #	Description: Record setting for one step
 #                
+#	argin:  DevString	JSON string with data
 #------------------------------------------------------------------
-	def Record(self):
+	def Record(self, argin):
+		print "In ", self.get_name(), "::Record()"
+		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
 		print "In ", self.get_name(), "::Record()"
 		#	Add your own code here
-		self.tdw.record()
+		self.tdw.record(argin)
 		self.set_state(PyTango.DevState.OPEN)
 
 
@@ -363,7 +365,7 @@ class TangoDataServerClass(PyTango.DeviceClass):
 	#	Command definitions
 	cmd_list = {
 		'Record':
-			[[PyTango.DevVoid, ""],
+			[[PyTango.DevString, "JSON string with data"],
 			[PyTango.DevVoid, ""]],
 		'OpenFile':
 			[[PyTango.DevVoid, ""],

@@ -45,10 +45,10 @@ class ThreadPool:
 
     ## sets the JSON string to threads
     # \param mJSON the JSON string
-    def setJSON(self,mJSON):
+    def setJSON(self,mJSON,locJSON=None):
         for el in self.elementList :
             if hasattr(el.source,"setJSON"):
-                el.source.setJSON(mJSON)
+                el.source.setJSON(mJSON,locJSON)
         return self
 
     ## runner

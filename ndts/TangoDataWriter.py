@@ -43,7 +43,7 @@ class TangoDataWriter:
         self.fileName=fName
         ## XML string with file settings
         self.xmlSettings=""
-        ## JSON string with data settings
+        ## static JSON string with data settings
         self.json="{}"
         ## thread pool with INIT elements
         self.initPool=None
@@ -90,14 +90,16 @@ class TangoDataWriter:
             handler = NexusXMLHandler(self.eFile)
             sax.parseString(self.xmlSettings,handler)
             
-            self.initPool=handler.initPool.setJSON(self.json)
-            self.stepPool=handler.stepPool.setJSON(self.json)
-            self.finalPool=handler.finalPool.setJSON(self.json)
+            self.initPool=handler.initPool
+            self.stepPool=handler.stepPool
+            self.finalPool=handler.finalPool
             
             self.initPool.numThreads=self.numThreads
             self.stepPool.numThreads=self.numThreads
             self.finalPool.numThreads=self.numThreads
            
+
+            self.initPool.setJSON(self.json)
             self.initPool.runAndWait()
 #            self.nxFile=handler.getNXFile()
 
@@ -128,9 +130,10 @@ class TangoDataWriter:
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
-    def record(self):
+    def record(self,argin=None):
         print 'record:'
         if self.stepPool:
+            self.stepPool.setJSON(self.json,argin)
             self.stepPool.runAndWait()
 
 
@@ -142,6 +145,7 @@ class TangoDataWriter:
 
 
         if self.finalPool:
+            self.finalPool.setJSON(self.json)
             self.finalPool.runAndWait()
 
 

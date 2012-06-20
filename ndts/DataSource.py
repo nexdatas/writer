@@ -226,29 +226,57 @@ class ClientSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## the current JSON object
+        ## the current  static JSON object
         self.JSON=None
+        ## the current  dynamic JSON object
+        self.lJSON=None
         
     ## sets JSON string
     # \brief It sets the currently used  JSON string
     # \param sJSON JSON string    
-    def setJSON(self,sJSON):
+    def setJSON(self,sJSON,lJSON=None):
         self.JSON=json.loads(sJSON)
+        if lJSON:
+            self.lJSON=json.loads(lJSON)
+        else:
+            self.lJSON=None
     
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):
-        print "JSON:", json.dumps(self.JSON)
-        if 'type' not in self.JSON.keys() \
-                or 'name' not in self.JSON.keys() or self.JSON['type'] != "record_data":
-            return None
+        print "static JSON:", json.dumps(self.JSON)
+        print "dynamic JSON:", json.dumps(self.lJSON)
 
-        if self.name in self.JSON['data']:
-            rec=self.JSON['data'][self.name]
+        if 'type' not in self.JSON.keys() \
+                or 'data' not in self.JSON.keys() or self.JSON['type'] != "record_data":
+            self.JSON= None
+            print 'JSON Static NONE'
+
+        if 'type' not in self.lJSON.keys() \
+                or 'data' not in self.lJSON.keys() or self.lJSON['type'] != "record_data":
+            self.lJSON= None
+            print 'JSON dynamic NONE'
+
+        if self.JSON and  self.lJSON:
+            myJSON=json.loads(dict(self.JSON.items() + self.lJSON.items()))
+        elif self.lJSON:
+            myJSON=self.lJSON 
+        elif self.JSON:
+            myJSON=self.JSON 
+        else:
+            return None
+            
+        print "myJSON:", json.dumps(self.lJSON)
+        
+
+        if self.name in myJSON['data']:
+            rec=myJSON['data'][self.name]
+            print "RECORD", rec
             ntp=NTP()
             rank,rshape,dtype=ntp.arrayRankRShape(rec)
-            if rank in NTP.rTF:
-                return DataHolder(NTP.rTF[rank],rec,dtype.__name__,shape.reverse())
+            print "TYPE", dtype
+            if rank in NTP.rTf:
+                return DataHolder(NTP.rTf[rank],rec,NTP.pTt[dtype.__name__],rshape.reverse())
             
 
 

@@ -28,7 +28,7 @@ if __name__ == "__main__":
     argc=len(sys.argv)
 
     if  argc < 4:
-        print "usage: simpleClient.py   <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>  <device_name>"
+        print "usage: simpleClient.py   <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>  <device_name e.g. p09/tdw/r228>"
         
     else:
         xmlf=sys.argv[1]
@@ -67,16 +67,16 @@ if __name__ == "__main__":
                 dpx.OpenEntry()
                 
                 print "recording the H5 file"
-                dpx.record()
+                dpx.record("")
                 
                 print "sleeping for 1s"
                 time.sleep(1)
                 print "recording the H5 file"
-                dpx.record()
+                dpx.record("")
                 print "sleeping for 1s"
                 time.sleep(1)
                 print "recording the H5 file"
-                dpx.record()
+                dpx.record("")
                 print "closing the  entry"
                 dpx.closeEntry()
 
