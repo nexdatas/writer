@@ -66,11 +66,11 @@ class NTP:
             "NX_CHAR",
             "NX_CHAR"
             "NX_INT32",
-            "NX_INT64",
+            "NX_INT32",
             "NX_FLOAT32",
             "NX_FLOAT64",
             "NX_UINT32",
-            "NX_UINT64",
+            "NX_UINT32",
             "NX_CHAR",
             "NX_CHAR",
             "NX_CHAR",
@@ -82,11 +82,11 @@ class NTP:
             "NX_UINT64",
             "NX_INT64",
             "NX_UINT64",
-            "NX_INT",
+            "NX_INT32",
             "NX_CHAR"]
 
     ## map of Python:Tango types
-    pTt={"int":"DevLong", "float":"DevFloat", "str":"DevString"}
+    pTt={"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
 
     ## map of NEXUS : pninx types 
     mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
