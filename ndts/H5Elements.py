@@ -271,7 +271,6 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     # \returns directory defined by group namesS    
     def typesToNames(self,text,groupTypes):
-        """  converts NXclass types to names in a path string"""
         sp= text.split("/")
         print "TTN:", sp 
         res="/"

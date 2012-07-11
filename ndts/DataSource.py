@@ -210,7 +210,7 @@ class DBaseSource(DataSource):
                     ldata=list(el[0] for el in data)
                 else:
                     ldata=list(el for el in data[0])
-                    dh=DataHolder("SPECTRUM",ldata,"DevString",[len(ldata),0])
+                dh=DataHolder("SPECTRUM",ldata,"DevString",[len(ldata),0])
             else:
                 data = cursor.fetchall()
                 ldata=list(list(el) for el in data)
