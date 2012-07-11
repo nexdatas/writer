@@ -19,6 +19,8 @@
 ## \file DataHolder.py
 #
                          
+from Types import *
+
 import numpy
 
 ## Holder for passing data 
@@ -59,4 +61,27 @@ class DataHolder:
         if str(self.format).split('.')[-1] == "IMAGE":
             return numpy.array(self.value,dtype=tp)
 
+
+    def cast(self,tp):
+        if str(self.format).split('.')[-1] == "SCALAR":
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):
+                return self.value
+            else:
+                print "casting ", self.type ," to ", tp
+                return NTP.convert[tp](self.value)
+
+        else:
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):
+                return numpy.array(self.value,dtype=tp)
+            else:    
+                print "casting ", self.type ," to ", tp
+                if str(self.format).split('.')[-1] == "SPECTRUM":
+                    return numpy.array([ NTP.convert[tp](el) for el in  self.value],dtype=tp)
+                
+                if str(self.format).split('.')[-1] == "IMAGE":
+                    return numpy.array([ [ NTP.convert[tp](self.value[j][i]) \
+                                for i in range(len(self.value[j])) ] \
+                              for j in range(len(self.value)) ],dtype=tp)
+
+        
 

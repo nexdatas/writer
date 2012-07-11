@@ -88,15 +88,19 @@ class NTP:
     ## map of Python:Tango types
     pTt={"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
 
+    ## map of Numpy:Tango types
+    npTt={"int":"DevLong64","int64":"DevLong64","int32":"DevLong", "uint":"DevULong64","uint64":"DevULong64","uint32":"DevULong", "float":"DevDouble","float64":"DevDouble","float32":"DevFloat", "string":"DevString"}
+
     ## map of NEXUS : pninx types 
     mt={"NX_FLOAT32":"float32","NX_FLOAT64":"float64","NX_FLOAT":"float64","NX_NUMBER":"float64","NX_INT":"int64","NX_INT64":"int64","NX_INT32":"int32","NX_UINT64":"uint64","NX_UINT32":"uint32","NX_DATE_TIME":"string","NX_CHAR":"string","NX_BOOLEAN":"int32"}
+
+    ## map of type : converting function
+    convert={"float32":float,"float64":float,"float":float,"int64":long,"int32":int,"int":int,"uint64":long,"uint32":int,"uint":int,"string":str}
 
     ## map of tag attribute types 
     dA={"signal":"NX_INT","axis":"NX_INT","primary":"NX_INT32","offset":"NX_INT","stride":"NX_INT","vector":"NX_FLOATVECTOR",
         "file_time":"NX_DATE_TIME","file_update_time":"NX_DATE_TIME","restricted":"NX_INT","ignoreExtraGroups":"NX_BOOLEAN",
         "ignoreExtraFields":"NX_BOOLEAN","ignoreExtraAttributes":"NX_BOOLEAN","minOccus":"NX_INT","maxOccus":"NX_INT"
-
-
         }
 
     ## map of rank : data format

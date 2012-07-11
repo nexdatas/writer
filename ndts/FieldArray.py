@@ -87,14 +87,23 @@ class FieldArray:
         if self.fdim < 1:
             self.fList.append(parent.create_field(fName.encode(),fType.encode(),self.shape))
         elif self.fdim == 1:
-            for i in range(self.shape[1]):
-                self.fList.append(parent.create_field(fName.encode()+"_"+str(i),
+            if self.shape[1] == 1:
+                self.fList.append(parent.create_field(fName.encode(),
                                                       fType.encode(),[self.shape[0]]))
+            else:
+                for i in range(self.shape[1]):
+                    self.fList.append(parent.create_field(fName.encode()+"_"+str(i),
+                                                          fType.encode(),[self.shape[0]]))
         elif self.fdim == 2:
-            for i in range(self.shape[1]):
-                for j in range(self.shape[2]):
-                    self.fList.append(parent.create_field(fName.encode()+"_"+str(i)+"_"+str(j),
-                                                     fType.encode(),[self.shape[0]]))
+            if self.shape[1] == 1 and self.shape[2] == 1 :
+                self.fList.append(parent.create_field(fName.encode(),
+                                                      fType.encode(),[self.shape[0]]))
+            
+            else:
+                for i in range(self.shape[1]):
+                    for j in range(self.shape[2]):
+                        self.fList.append(parent.create_field(fName.encode()+"_"+str(i)+"_"+str(j),
+                                                              fType.encode(),[self.shape[0]]))
         
             
         
@@ -147,11 +156,6 @@ class FieldArray:
     # \param key slice object
     # \param value assigning value
     def __setitem__(self, key, value):
-#        print "key:", key 
-#        print "value:", value 
-#        print "fdim:", self.fdim
-#        print "shape", self.shape
-#        print "len fList", len(self.fList)
         
         if len(self.fList)<1:
             raise "array Field without elements"
@@ -169,6 +173,7 @@ class FieldArray:
         ntp=NTP()    
         rank=ntp.arrayRank(value)            
 
+
         if len(self.shape) >0 :
             kr=(range(self.shape[0])[mkey[0]])
             if isinstance(kr,int):  kr =[kr]
@@ -178,12 +183,7 @@ class FieldArray:
         if len(self.shape) >2 :
             jr=(range(self.shape[2])[mkey[2]])
             if isinstance(jr,int):  jr =[jr]
-#            print "kr:", kr
-#            print "ir:", ir
-#            print "jr:", jr
-         
-        
-        
+
         if self.fdim < 1 :
             for k in range(len(value)):
                 self.fList[0].__setitem__(kr[k],value[k])
@@ -213,11 +213,6 @@ class FieldArray:
                 if len(kr) == 1:
                         for i in range(len(value)):
                             for j in range(len(value[0])):
-#                                print "fL index: ",ir[i]*self.shape[2]+jr[j]
-#                                print "key: " ,key[0]
-#                                print "range",range(self.shape[0])
-#                                print "key shape: " , (range(self.shape[0])[key[0]])
-#                                print "value: " ,value[i][j]
                                 self.fList[ir[i]*self.shape[2]+jr[j]][kr[0]]=value[i][j].encode()
                 elif len(ir) == 1 :        
                     for k in range(len(value)):
@@ -230,10 +225,10 @@ class FieldArray:
 
             elif rank == 1:            
                 if len(kr) == 1 and len(ir) == 1:
-                        for j in range(len(value )):
+                        for j in range(len(value)):
                             self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0],value[j])
                 if len(kr) == 1 and len(jr) == 1:
-                        for i in range(len(value )):
+                        for i in range(len(value)):
                             self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0],value[i])
                 if len(ir) == 1 and len(jr) == 1:
                     for k in range(len(value)):

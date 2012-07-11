@@ -146,62 +146,36 @@ class EField(FElement):
             if dh:
 #                print "shape", self.fObject.shape, dh.shape
                 if not self.extraD:
-                    if str(dh.format).split('.')[-1] == "SCALAR":
-                        self.fObject.write(dh.value)
-                    if str(dh.format).split('.')[-1] == "SPECTRUM":
-                        self.fObject.write(dh.array(self.fObject.dtype))
-                    if str(dh.format).split('.')[-1] == "IMAGE":
-                        self.fObject.write(dh.array(self.fObject.dtype))
+                    self.fObject.write(dh.cast(self.fObject.dtype))
                 else:
 #                    print "DH type", dh.type
 #                    print "DH format ",str(dh.format).split('.')[-1]
+
                     if str(dh.format).split('.')[-1] == "SCALAR":
                         self.fObject.grow()
-#                        self.fObject[-1]=dh.value
-                        if NTP.nTypes[NTP.tTypes.index(str(dh.type))] == "NX_CHAR":
-                            self.fObject[self.fObject.shape[0]-1]=str(dh.value)
-                        else:
-                            self.fObject[self.fObject.shape[0]-1]=dh.value
+                        self.fObject[self.fObject.shape[0]-1]=dh.cast(self.fObject.dtype)
                     if str(dh.format).split('.')[-1] == "SPECTRUM":
-                        self.fObject.grow()
-                        if NTP.nTypes[NTP.tTypes.index(str(dh.type))] == "NX_CHAR":
-                            print "fO SHAPE:" , self.fObject.shape
-                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
-                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
-#                            print "ARRAY: ", arr
-                            if len(arr.shape) == 1 and arr.shape[0] == 1:
-                                self.fObject[self.fObject.shape[0]-1,:]=arr[0]
-                            else:
-                                self.fObject[self.fObject.shape[0]-1,:]=arr
+
+                        # way around for a bug in pninx
+
+                        print "fO SHAPE:" , self.fObject.shape
+                        arr=dh.cast(self.fObject.dtype)
+                        print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
+
+                        if isinstance(arr,numpy.ndarray) \
+                                and len(arr.shape) == 1 and arr.shape[0] == 1:
+                            print "FIRST:" ,arr
+                            self.fObject.grow()
+                            self.fObject[self.fObject.shape[0]-1,:]=arr[0]
                         else:
-#                            print "fO SHAPE:" , self.fObject.shape
-                            arr=dh.array(self.fObject.dtype)
-#                            print "ARRAY SHAPE: ", dh.array(self.fObject.dtype).shape,len(arr.shape) 
-#                            print "ARRAY: ", arr
-                            if len(arr.shape) == 1 and arr.shape[0] == 1:
-                                self.fObject[self.fObject.shape[0]-1,:]=arr[0]
-                            else:                                
-                                self.fObject[self.fObject.shape[0]-1,:]=arr
+                            self.fObject.grow()
+                            print "SECOND:", arr
+                            self.fObject[self.fObject.shape[0]-1,:]=arr
+
+
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.fObject.grow()
-                        if str(dh.type) not in NTP.tTypes or NTP.nTypes[NTP.tTypes.index(str(dh.type))] == "NX_CHAR":
-                            #                            print "fO SHAPE:" , self.fObject.shape
-                            val=dh.value
-                            larr=[ [ str(val[j][i]) for i in range(len(val[0])) ] for j in range(len(val)) ]
-                            print self.fObject.dtype
-                            arr= numpy.array(larr)
-#                            arr= numpy.array(larr,self.fObject.dtype)
-#                            arr=numpy.array(list((str(el)) for el in dh.value),self.fObject.dtype)
-#                            print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
-#                            print "ARRAY: ", arr
-                            print "my shape:", self.fObject.shape
-                            self.fObject[self.fObject.shape[0]-1,:,:]=arr
-                        else:
-#                            print "fO SHAPE:" , self.fObject.shape
-                            arr=dh.array(self.fObject.dtype)
-#                            print "ARRAY SHAPE: ", dh.array(self.fObject.dtype).shape,len(arr.shape) 
-#                            print "ARRAY: ", arr
-                            self.fObject[self.fObject.shape[0]-1,:,:]=arr
+                        self.fObject[self.fObject.shape[0]-1,:,:]=dh.cast(self.fObject.dtype)
 
 
 

@@ -247,14 +247,15 @@ class ClientSource(DataSource):
     def getData(self):
         print "static JSON:", json.dumps(self.JSON)
         print "dynamic JSON:", json.dumps(self.lJSON)
-
-        if 'type' not in self.JSON.keys() \
-                or 'data' not in self.JSON.keys() or self.JSON['type'] != "record_data":
+        
+        
+        if  self.JSON and ('type' not in self.JSON.keys() \
+                or 'data' not in self.JSON.keys() or self.JSON['type'] != "record_data"):
             self.JSON= None
             print 'JSON Static NONE'
 
-        if 'type' not in self.lJSON.keys() \
-                or 'data' not in self.lJSON.keys() or self.lJSON['type'] != "record_data":
+        if self.lJSON and ('type' not in self.lJSON.keys() \
+                or 'data' not in self.lJSON.keys() or self.lJSON['type'] != "record_data"):
             self.lJSON= None
             print 'JSON dynamic NONE'
 

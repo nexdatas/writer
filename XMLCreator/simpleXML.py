@@ -513,6 +513,24 @@ if __name__ == "__main__":
 	f.setUnits("m")
 	f.setText("100.")
 
+
+	f = NField(src.elem,"single_mysql_record_string","NX_CHAR")
+	## dimensions
+	d=NDimensions(f.elem,"1")
+	d.dim("1","1")
+	## source
+	sr=NDSource(f.elem,"STEP")
+	sr.initDBase("MYSQL","SELECT pid FROM device limit 1","tango","SPECTRUM",gHost="haso228k.desy.de")
+
+	f = NField(src.elem,"single_mysql_record_int","NX_INT")
+	## dimensions
+	d=NDimensions(f.elem,"1")
+	d.dim("1","1")
+	## source
+	sr=NDSource(f.elem,"STEP")
+	sr.initDBase("MYSQL","SELECT pid FROM device limit 1","tango","SPECTRUM",gHost="haso228k.desy.de")
+
+
 	f = NField(src.elem,"mysql_record","NX_CHAR")
 	## dimensions
 	d=NDimensions(f.elem,"2")

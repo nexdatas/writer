@@ -6,6 +6,28 @@
 				<field name="distance" type="NX_FLOAT" units="m">
 					100.
 				</field>
+				<field name="single_mysql_record_string" type="NX_CHAR">
+					<dimensions rank="1">
+						<dim index="1" value="1"/>
+					</dimensions>
+					<datasource strategy="STEP" type="DB">
+						<database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+						<query format="SPECTRUM">
+							SELECT pid FROM device limit 1
+						</query>
+					</datasource>
+				</field>
+				<field name="single_mysql_record_int" type="NX_INT">
+					<dimensions rank="1">
+						<dim index="1" value="1"/>
+					</dimensions>
+					<datasource strategy="STEP" type="DB">
+						<database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+						<query format="SPECTRUM">
+							SELECT pid FROM device limit 1
+						</query>
+					</datasource>
+				</field>
 				<field name="mysql_record" type="NX_CHAR">
 					<dimensions rank="2">
 						<dim index="1" value="151"/>
