@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<definition>
+	<group name="entry1" type="NXentry">
+		<group name="instrument" type="NXinstrument">
+			<group name="source" type="NXsource">
+				<field name="counter1" type="NX_FLOAT" units="m">
+					<datasource strategy="STEP" type="CLIENT">
+						<record name="p09/counter/exp.01"/>
+					</datasource>
+				</field>
+				<field name="counter2" type="NX_FLOAT" units="s">
+					<datasource strategy="STEP" type="CLIENT">
+						<record name="p09/counter/exp.02"/>
+					</datasource>
+				</field>
+				<field name="mca" type="NX_FLOAT" units="">
+					<dimensions rank="1">
+						<dim index="1" value="2048"/>
+					</dimensions>
+					<datasource strategy="STEP" type="CLIENT">
+						<record name="p09/mca/exp.02"/>
+					</datasource>
+				</field>
+			</group>
+		</group>
+	</group>
+</definition>

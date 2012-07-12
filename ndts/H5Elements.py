@@ -158,18 +158,16 @@ class EField(FElement):
 
                         # way around for a bug in pninx
 
-                        print "fO SHAPE:" , self.fObject.shape
+#                        print "fO SHAPE:" , self.fObject.shape
                         arr=dh.cast(self.fObject.dtype)
-                        print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
+#                        print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
 
                         if isinstance(arr,numpy.ndarray) \
                                 and len(arr.shape) == 1 and arr.shape[0] == 1:
-                            print "FIRST:" ,arr
                             self.fObject.grow()
                             self.fObject[self.fObject.shape[0]-1,:]=arr[0]
                         else:
                             self.fObject.grow()
-                            print "SECOND:", arr
                             self.fObject[self.fObject.shape[0]-1,:]=arr
 
 
