@@ -26,22 +26,22 @@ if __name__ == "__main__":
 	## instrument
 	ins = NGroup(en.elem,"instrument","NXinstrument")
 #	NXsource	
-	src = NGroup(ins.elem,"source","NXsource")
-	f = NField(src.elem,"counter1","NX_FLOAT")
+	dt = NGroup(ins.elem,"detector","NXdetector")
+	f = NField(dt.elem,"counter1","NX_FLOAT")
 	f.setUnits("m")
 #	f.setText("0.2")
 	sr=NDSource(f.elem,"STEP")
 	sr.initClient("p09/counter/exp.01");
 
 
-	f = NField(src.elem,"counter2","NX_FLOAT")
+	f = NField(dt.elem,"counter2","NX_FLOAT")
 	f.setUnits("s")
 #	f.setText("0.2")
 	sr=NDSource(f.elem,"STEP")
 	sr.initClient("p09/counter/exp.02");
 	
 
-	f = NField(src.elem,"mca","NX_FLOAT")
+	f = NField(dt.elem,"mca","NX_FLOAT")
 	f.setUnits("")
 
 	d=NDimensions(f.elem,"1")
@@ -50,6 +50,18 @@ if __name__ == "__main__":
 #	f.setText("0.2")
 	sr=NDSource(f.elem,"STEP")
 	sr.initClient("p09/mca/exp.02");
+
+        ##	NXdata
+	da = NGroup(en.elem,"data","NXdata")
+	## link
+	l= NLink(da.elem,"data", "/NXentry/NXinstrument/NXdetector/mca")
+	l.addDoc("Link to mca in /NXentry/NXinstrument/NXdetector")
+	l= NLink(da.elem,"counter1","/NXentry/NXinstrument/NXdetector/counter1")
+	l.addDoc("Link to counter1 in /NXentry/NXinstrument/NXdetector")
+	l= NLink(da.elem,"counter2","/NXentry/NXinstrument/NXdetector/counter2")
+	l.addDoc("Link to counter2 in /NXentry/NXinstrument/NXdetector")
+
+
 
 	df.dump()
 
