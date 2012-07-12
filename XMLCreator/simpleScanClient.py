@@ -27,6 +27,14 @@ from math import exp
 
 from PyTango import *
 
+
+
+def nicePlot(xlen=2048):
+    pr=[[1./random.randrange(100,1000),random.randrange(0,xlen),random.randrange(0,2000)/2000.] for i in range(5)]
+    return [sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
+                         for i in range(xlen)]
+    
+
 if __name__ == "__main__":
 
     if  len(sys.argv) <2:
@@ -71,29 +79,24 @@ if __name__ == "__main__":
             print "opening the entry"
             dpx.OpenEntry()
 
-            print "recording the H5 file"
-            pr=[[1./random.randrange(100,1000),random.randrange(0.,2048.0),random.randrange(0.,2000)/2000.] for i in range(5)]
-            mca=str([sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
-                         for i in range(2048)])
+            print "recording the H5 file" 
+            mca=str(nicePlot(2048))
+
             dpx.record('{"data": {"p09/counter/exp.01":0.1,"p09/counter/exp.02":1.1,"p09/mca/exp.02":'\
                            + mca+ '  } }')
             
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            pr=[[1./random.randrange(100,1000),random.randrange(0.,2048.0),random.randrange(0.,2000)/2000.] for i in range(5)]
-            mca=str([sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
-                         for i in range(2048)])
+            mca=str(nicePlot(2048))
             dpx.record('{"data": {"p09/counter/exp.01":0.2,"p09/counter/exp.02":1.3,"p09/mca/exp.02":'\
                            + mca+ '  } }')
 
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            pr=[[1./random.randrange(100,1000),random.randrange(0.,2048.0),random.randrange(0.,2000)/2000.] for i in range(5)]
-            mca=str([sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
-                         for i in range(2048)])
-            
+
+            mca=str(nicePlot(2048))
             dpx.record('{"data": {"p09/counter/exp.01":0.3,"p09/counter/exp.02":1.4,"p09/mca/exp.02":'\
                            + mca+ '  } }')
 
