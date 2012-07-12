@@ -30,10 +30,10 @@ from PyTango import *
 
 
 def nicePlot(xlen=2048,nrGauss=5):
-    pr=[[1./random.randrange(100,1000),random.randrange(0,xlen),random.randrange(0,2000)/2000.] \
+    pr=[[random.uniform(0.01,0.001),random.uniform(0,xlen),random.uniform(0.0,1.)] \
             for i in range(nrGauss)]
     return [sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
-                         for i in range(xlen)]
+                for i in range(xlen)]
     
 
 if __name__ == "__main__":
