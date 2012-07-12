@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 # \package  ndtstools tools for ndts
-# \file simpleClient.py
+# \file simpleScanClient.py
 
 import sys,os
 import time
@@ -76,7 +76,7 @@ if __name__ == "__main__":
             mca=str([sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
                          for i in range(2048)])
             dpx.record('{"data": {"p09/counter/exp.01":0.1,"p09/counter/exp.02":1.1,"p09/mca/exp.02":'\
-                           + mca+ '  },   "type": "record_data"}')
+                           + mca+ '  } }')
             
             print "sleeping for 1s"
             time.sleep(1)
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             mca=str([sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
                          for i in range(2048)])
             dpx.record('{"data": {"p09/counter/exp.01":0.2,"p09/counter/exp.02":1.3,"p09/mca/exp.02":'\
-                           + mca+ '  },   "type": "record_data"}')
+                           + mca+ '  } }')
 
             print "sleeping for 1s"
             time.sleep(1)
@@ -95,7 +95,7 @@ if __name__ == "__main__":
                          for i in range(2048)])
             
             dpx.record('{"data": {"p09/counter/exp.01":0.3,"p09/counter/exp.02":1.4,"p09/mca/exp.02":'\
-                           + mca+ '  },   "type": "record_data"}')
+                           + mca+ '  } }')
 
             print "closing the  entry"
             dpx.closeEntry()

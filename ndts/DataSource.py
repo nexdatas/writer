@@ -245,17 +245,15 @@ class ClientSource(DataSource):
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):
-        print "static JSON:", json.dumps(self.JSON)
-        print "dynamic JSON:", json.dumps(self.lJSON)
+#        print "static JSON:", json.dumps(self.JSON)
+#        print "dynamic JSON:", json.dumps(self.lJSON)
         
         
-        if  self.JSON and ('type' not in self.JSON.keys() \
-                or 'data' not in self.JSON.keys() or self.JSON['type'] != "record_data"):
+        if  self.JSON and 'data' not in self.JSON.keys() :
             self.JSON= None
             print 'JSON Static NONE'
 
-        if self.lJSON and ('type' not in self.lJSON.keys() \
-                or 'data' not in self.lJSON.keys() or self.lJSON['type'] != "record_data"):
+        if self.lJSON and 'data' not in self.lJSON.keys() :
             self.lJSON= None
             print 'JSON dynamic NONE'
 
@@ -268,15 +266,15 @@ class ClientSource(DataSource):
         else:
             return None
             
-        print "myJSON:", json.dumps(self.lJSON)
+#        print "myJSON:", json.dumps(self.lJSON)
         
 
         if self.name in myJSON['data']:
             rec=myJSON['data'][self.name]
-            print "RECORD", rec
+#            print "RECORD", rec
             ntp=NTP()
             rank,rshape,dtype=ntp.arrayRankRShape(rec)
-            print "TYPE", dtype
+#            print "TYPE", dtype
             if rank in NTP.rTf:
                 return DataHolder(NTP.rTf[rank],rec,NTP.pTt[dtype.__name__],rshape.reverse())
             
