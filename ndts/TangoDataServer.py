@@ -76,6 +76,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def init_device(self):
 		print "In ", self.get_name(), "::init_device()"
+		self.tdw=TDW("name.h5")
 		self.set_state(PyTango.DevState.ON)
 		self.get_device_properties(self.get_device_class())
 
