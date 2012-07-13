@@ -76,8 +76,14 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def init_device(self):
 		print "In ", self.get_name(), "::init_device()"
-		self.tdw=TDW("name.h5")
-		self.set_state(PyTango.DevState.ON)
+		try:
+			self.set_state(PyTango.DevState.RUNNING)
+			self.tdw=TDW("name.h5")
+			self.set_state(PyTango.DevState.ON)
+ 		finally:
+			if self.get_state() == PyTango.DevState.RUNNING:
+				self.set_state(PyTango.DevState.OFF)
+			
 		self.get_device_properties(self.get_device_class())
 
 #------------------------------------------------------------------
@@ -224,8 +230,10 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		print "In ", self.get_name(), "::Record()"
 		#	Add your own code here
-		self.tdw.record(argin)
-		self.set_state(PyTango.DevState.OPEN)
+		try:
+			self.tdw.record(argin)
+		finally:
+			self.set_state(PyTango.DevState.OPEN)
 
 
 #---- Record command State Machine -----------------
@@ -250,8 +258,13 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::OpenFile()"
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
-		self.tdw.openNXFile()
-		self.set_state(PyTango.DevState.INIT)
+		try:
+			self.tdw.openNXFile()
+			self.set_state(PyTango.DevState.INIT)
+ 		finally:
+			if self.get_state() == PyTango.DevState.RUNNING:
+				self.set_state(PyTango.DevState.ON)
+
 
 
 #---- OpenFile command State Machine -----------------
@@ -279,8 +292,14 @@ class TangoDataServer(PyTango.Device_4Impl):
 		                        PyTango.DevState.RUNNING]:
 			self.CloseEntry()
 		self.set_state(PyTango.DevState.RUNNING)
-		self.tdw.closeNXFile()
-		self.set_state(PyTango.DevState.ON)
+		try:
+			self.tdw.closeNXFile()
+			self.set_state(PyTango.DevState.ON)
+ 		finally:
+			if self.get_state() == PyTango.DevState.RUNNING:
+				self.set_state(PyTango.DevState.INIT)
+
+
 
 
 #---- CloseFile command State Machine -----------------
@@ -304,8 +323,12 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::OpenEntry()"
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
-		self.tdw.openEntry()
-		self.set_state(PyTango.DevState.OPEN)
+		try:
+			self.tdw.openEntry()
+			self.set_state(PyTango.DevState.OPEN)
+ 		finally:
+			if self.get_state() == PyTango.DevState.RUNNING:
+				self.set_state(PyTango.DevState.INIT)
 
 
 #---- OpenEntry command State Machine -----------------
@@ -330,8 +353,13 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::CloseEntry()"
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
-		self.tdw.closeEntry()
-		self.set_state(PyTango.DevState.INIT)
+		try:
+			self.tdw.closeEntry()
+			self.set_state(PyTango.DevState.INIT)
+ 		finally:
+			if self.get_state() == PyTango.DevState.RUNNING:
+				self.set_state(PyTango.DevState.OPEN)
+			
 
 
 #---- CloseEntry command State Machine -----------------
