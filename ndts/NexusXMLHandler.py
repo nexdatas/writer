@@ -105,8 +105,6 @@ class NexusXMLHandler(sax.ContentHandler):
     def startElement(self, name, attrs):
         self.content=""
         if name in self.elementClass:
-            print "Calling: ", name, attrs.keys()
-            print "MYType" , type(self.last())
             self.stack.append(self.elementClass[name](name, attrs, self.last()))
             if hasattr(self.last(),"fetchName"):
                 self.last().fetchName(self.groupTypes)
@@ -119,17 +117,12 @@ class NexusXMLHandler(sax.ContentHandler):
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        print 'End of element:', name , "last:" ,  self.last().tName
         if self.last().tName == name :
             if name in self.elementClass:
-                print "Closing: ", name
                 strategy=self.last().store(name)
 
                 if strategy in self.poolMap.keys():
-                    print "adding to pool"
                     self.poolMap[strategy].append(self.last())
-                print 'Content:' , "".join(self.last().content)    
-                print "poping"
                 self.stack.pop()
 
 

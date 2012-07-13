@@ -95,11 +95,9 @@ class TangoSource(DataSource):
             elif self.type == "command":
                 print "calling the command: ", self.name
 		clist=[cm.cmd_name for cm in proxy.command_list_query()]
-#                print clist
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da=proxy.command_inout(self.name.encode())
-#                    print "COMMAND", da
                     return DataHolder("SCALAR",da,cd.out_type,[1,0])
                     
                         
@@ -189,8 +187,6 @@ class DBaseSource(DataSource):
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):
-        print "QUERY: ", self.query
-
 
         db=None
 
@@ -217,7 +213,6 @@ class DBaseSource(DataSource):
                 dh=DataHolder("IMAGE",ldata,"DevString",[len(ldata),len(ldata[0])])
             cursor.close()
             db.close()
-#        print "DB DH:" , dh.value    
         return dh
 
 ## Client data source
@@ -245,17 +240,13 @@ class ClientSource(DataSource):
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):
-#        print "static JSON:", json.dumps(self.JSON)
-#        print "dynamic JSON:", json.dumps(self.lJSON)
         
         
         if  self.JSON and 'data' not in self.JSON.keys() :
             self.JSON= None
-            print 'JSON Static NONE'
 
         if self.lJSON and 'data' not in self.lJSON.keys() :
             self.lJSON= None
-            print 'JSON dynamic NONE'
 
         if self.JSON and  self.lJSON:
             myJSON=json.loads(dict(self.JSON.items() + self.lJSON.items()))
@@ -266,15 +257,12 @@ class ClientSource(DataSource):
         else:
             return None
             
-#        print "myJSON:", json.dumps(self.lJSON)
         
 
         if self.name in myJSON['data']:
             rec=myJSON['data'][self.name]
-#            print "RECORD", rec
             ntp=NTP()
             rank,rshape,dtype=ntp.arrayRankRShape(rec)
-#            print "TYPE", dtype
             if rank in NTP.rTf:
                 return DataHolder(NTP.rTf[rank],rec,NTP.pTt[dtype.__name__],rshape.reverse())
             

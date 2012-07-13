@@ -48,18 +48,12 @@ class ElementThread(Thread):
         full=True    
         while full:
             time.sleep(0.0001)
-#            with self.safeprint:
-#                print( "loop THREAD: ", self.index)
             try:
                 elem=self.queue.get(block=False)
-#                with self.safeprint:
-#                    print " THREAD fetched: ", elem.name, " with ", elem.tAttrs
                 if hasattr(elem,"run"):
                     elem.run()
                     
             except Queue.Empty:
-#                with self.safeprint:
-#                    print " THREAD empty: ", self.index
                 full=False    
                 pass
                 

@@ -62,6 +62,9 @@ class DataHolder:
             return numpy.array(self.value,dtype=tp)
 
 
+    ## casts the data into given type
+    # \param tp given type of data
+    # \returns numpy array of defined type or value for SCALAR
     def cast(self,tp):
         if str(self.format).split('.')[-1] == "SCALAR":
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):

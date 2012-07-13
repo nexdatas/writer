@@ -83,7 +83,6 @@ class TangoDataWriter:
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
-        print 'open:'
         if len(self.xmlSettings)>0:
             parser = sax.make_parser()
         
@@ -108,30 +107,25 @@ class TangoDataWriter:
     # \param xmlSettings XML string       
     def setXML(self,xmlSettings):
         self.xmlSettings=xmlSettings
-        print 'setXML'
 
     ## provides the XML setting string
     # \returns the XML string with settings
     def getXML(self):
-        print 'getXML'
         return self.xmlSettings
 
     ## defines the JSON data string 
     # \param json JSON data string 
     def setJSON(self,json):
         self.json=json
-        print 'setJSON'
 
     ## provides the JSON data string
     # \returns the JSON data string 
     def getJSON(self):
-        print 'getJSON'
         return self.json
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
     def record(self,argin=None):
-        print 'record:'
         if self.stepPool:
             self.stepPool.setJSON(self.json,argin)
             self.stepPool.runAndWait()
@@ -141,8 +135,6 @@ class TangoDataWriter:
     # \brief It runs threads from the FINAL pool and
     #  removes the thread pools 
     def closeEntry(self):
-        print 'close:'
-
 
         if self.finalPool:
             self.finalPool.setJSON(self.json)

@@ -40,7 +40,6 @@ class ThreadPool:
     ## appends the thread element
     # \param elem the thread element
     def append(self,elem):
-        print "appending: ", elem
         self.elementList.append(elem)
 
     ## sets the JSON string to threads
@@ -69,7 +68,6 @@ class ThreadPool:
             self.threadList.append(th)
             th.start()
 
-#            print "running ", th.name
 
     ## waits for all thread from the pool
     # \param timeout the maximal waiting time
@@ -77,7 +75,6 @@ class ThreadPool:
         for th in self.threadList:
             if th.isAlive():
                 th.join()
-        print "All threads have finished their jobs"
 
                 
     ## runner with waiting

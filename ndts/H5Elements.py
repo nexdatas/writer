@@ -82,7 +82,6 @@ class EField(FElement):
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        print "Storing field"
 
         self.extraD=False
         if self.source and self.source.isValid() and self.source.strategy == "STEP":
@@ -136,7 +135,7 @@ class EField(FElement):
             if  self.source.isValid() :
                 return self.source.strategy
         else:
-            print "invalid dataSource"
+            print "invalid dataSource for ", nm
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
@@ -144,12 +143,9 @@ class EField(FElement):
         if self.source:
             dh=self.source.getData()
             if dh:
-#                print "shape", self.fObject.shape, dh.shape
                 if not self.extraD:
                     self.fObject.write(dh.cast(self.fObject.dtype))
                 else:
-#                    print "DH type", dh.type
-#                    print "DH format ",str(dh.format).split('.')[-1]
 
                     if str(dh.format).split('.')[-1] == "SCALAR":
                         self.fObject.grow()
@@ -158,9 +154,7 @@ class EField(FElement):
 
                         # way around for a bug in pninx
 
-#                        print "fO SHAPE:" , self.fObject.shape
                         arr=dh.cast(self.fObject.dtype)
-#                        print "ARRAY SHAPE: ", arr.shape, len(arr.shape) 
 
                         if isinstance(arr,numpy.ndarray) \
                                 and len(arr.shape) == 1 and arr.shape[0] == 1:
@@ -190,7 +184,6 @@ class EGroup(FElement):
         self.tpAttrs={}
 
         if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            print "type", type(self.lastObject())
             g=self.lastObject().create_group(attrs["name"].encode(),attrs["type"].encode())
         elif "type" in attrs.keys():
             g=self.lastObject().create_group(attrs["type"][2:].encode(),attrs["type"].encode())
@@ -215,13 +208,10 @@ class EGroup(FElement):
     ## fetches the type and the name of the current group            
     # \param groupTypes dictionary with the group type:name pairs            
     def fetchName(self,groupTypes):
-        print "fetching"
         if ("type" in self.tAttrs.keys()) and ("name" in self.tAttrs.keys()):
             groupTypes[self.tAttrs["type"]]=self.tAttrs["name"]
-            print "typeGroup", groupTypes[self.tAttrs["type"]]
         elif "type" in self.tAttrs.keys():
             groupTypes[self.tAttrs["type"]]=self.tAttrs["type"][2:]
-            print "typeGroup", groupTypes[self.tAttrs["type"]]
         else:
             raise "The group type not defined !!!"
         
@@ -244,21 +234,17 @@ class ELink(FElement):
     # \returns directory defined by group namesS    
     def typesToNames(self,text,groupTypes):
         sp= text.split("/")
-        print "TTN:", sp 
         res="/"
         for gr in sp[:-1]:
             sgr=gr.split(":")
-            print sgr
             if len(sgr)>1 :
                 res="/".join([res,sgr[1]])
             else:
                 if sgr[0] in groupTypes:
                     res="/".join([res,groupTypes[sgr[0]]])
                 else:
-                    print "sgr " ,sgr[0]
-                    raise "No sgr[0] in  groupTypes " 
+                    raise "No "+ str(sgr[0])+ "in  groupTypes " 
         res=res+"/"+sp[-1]
-        print "TTN:", res 
 
         return res
 
@@ -267,15 +253,11 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self,groupTypes):
         if ("name" in self.tAttrs.keys()) and ("target" in self.tAttrs.keys()):
-            print "linking ",self.lastObject() ,self.tAttrs["name"].encode()
             l=(self.lastObject()).link((self.typesToNames(self.tAttrs["target"],groupTypes)).encode(),
                                        self.tAttrs["name"].encode())
-            print self.typesToNames(self.tAttrs["target"],groupTypes)
         else:
             raise "No name or type!!!"
         self.fObject=l
-        for key in self.tAttrs.keys():
-            print "Attrs:", key.encode(), self.tAttrs[key].encode()
           
                 
 
@@ -293,8 +275,6 @@ class EAttribute(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        print "Storing Attributes:", "".join(self.content)
-
 
         if "name" in self.tAttrs.keys(): 
             nm = self.tAttrs["name"]
@@ -333,7 +313,6 @@ class EDoc(Element):
     # \param name the tag name    
     def store(self,name):
         self.beforeLast().doc=self.beforeLast().doc + "".join(self.content)            
-        print "Added doc\n", self.beforeLast().doc
 
 ## symbol tag element        
 class ESymbol(Element):        
@@ -456,7 +435,6 @@ class EDimensions(Element):
         Element.__init__(self,name,attrs,last)
         if "rank" in attrs.keys():
             self.last.rank=attrs["rank"]
-            print "setting rank to ", self.last.rank
 
 ## dim tag element        
 class EDim(Element):        
@@ -468,6 +446,5 @@ class EDim(Element):
         Element.__init__(self,name,attrs,last)
         if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
             self.beforeLast().lengths[attrs["index"]]=attrs["value"]
-            print "setting dim %s to %s " % (attrs["index"], attrs["value"])
 
 

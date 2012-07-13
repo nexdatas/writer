@@ -111,7 +111,6 @@ class NTP:
     # \param array given array
     def arrayRank(self,array) :
         rank=0
-        print "array:",array
         if isinstance(array,Iterable) and not isinstance(array,str):       
             rank=1+self.arrayRank(array[0])
         return rank            
