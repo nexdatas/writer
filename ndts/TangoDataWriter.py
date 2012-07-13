@@ -173,7 +173,7 @@ if __name__ == "__main__":
     ## instance of TangoDataWriter
     tdw = TangoDataWriter("test.h5")
 
-    tdw.numThreads=100
+    tdw.numThreads=1
 
     ## xml file name
 #    xmlf="../XMLExamples/test.xml"

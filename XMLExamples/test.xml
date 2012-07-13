@@ -133,9 +133,15 @@
 				</field>
 			</group>
 			<group name="detector" type="NXdetector">
-				<field name="azimuthal_angle" type="NX_FLOAT"/>
-				<field name="beam_center_x" type="NX_FLOAT"/>
-				<field name="beam_center_y" type="NX_FLOAT"/>
+				<field name="azimuthal_angle" type="NX_FLOAT">
+					0.1
+				</field>
+				<field name="beam_center_x" type="NX_FLOAT">
+					0.0001
+				</field>
+				<field name="beam_center_y" type="NX_FLOAT">
+					-0.00012
+				</field>
 				<field name="data" type="NX_UINT32">
 					<dimensions rank="2">
 						<dim index="1" value="2"/>
@@ -146,7 +152,9 @@
 						<record name="MyImageAttribute" type="attribute"/>
 					</datasource>
 				</field>
-				<field name="distance" type="NX_FLOAT"/>
+				<field name="distance" type="NX_FLOAT">
+					10.00012
+				</field>
 				<field name="polar_angle" type="NX_FLOAT">
 					<doc>
 						 Optional rotation angle for the case when the powder diagram has been obtained
@@ -157,9 +165,14 @@
 						<dim index="1" value="100"/>
 					</dimensions>
 				</field>
-				<field name="rotation_angle" type="NX_FLOAT"/>
-				<field name="x_pixel_size" type="NX_FLOAT"/>
+				<field name="rotation_angle" type="NX_FLOAT">
+					0.0
+				</field>
+				<field name="x_pixel_size" type="NX_FLOAT">
+					0.01
+				</field>
 				<field name="y_pixel_size" type="NX_FLOAT">
+					0.01
 					<datasource strategy="FINAL" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
 						<record name="Position" type="attribute"/>

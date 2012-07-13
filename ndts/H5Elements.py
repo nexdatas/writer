@@ -135,7 +135,13 @@ class EField(FElement):
             if  self.source.isValid() :
                 return self.source.strategy
         else:
-            print "invalid dataSource for ", nm
+            val=("".join(self.content)).strip().encode()   
+            if len(val)>0:
+                dh=DataHolder("SCALAR",val,"DevString",[1,0])
+                self.fObject.write(dh.cast(self.fObject.dtype))
+                
+            else:
+                print "invalid dataSource for ", nm
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  

@@ -104,7 +104,7 @@ if __name__ == "__main__":
 	f = NField(src.elem,"mode","NX_CHAR")
 	f.setText("Single Bunch")
 	f = NField(src.elem,"top_up","NX_BOOLEAN")
-	f.setText("true")
+	f.setText("1")
 	
 	
 	src.setText("My source")

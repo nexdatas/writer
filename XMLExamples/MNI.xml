@@ -94,7 +94,7 @@
 					Single Bunch
 				</field>
 				<field name="top_up" type="NX_BOOLEAN">
-					true
+					1
 				</field>
 			</group>
 			<group name="motor1" type="NXpositioner">

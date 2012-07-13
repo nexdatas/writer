@@ -64,7 +64,7 @@ class DataHolder:
 
     ## casts the data into given type
     # \param tp given type of data
-    # \returns numpy array of defined type or value for SCALAR
+    # \returns numpy array of defined type or list for strings or value for SCALAR
     def cast(self,tp):
         if str(self.format).split('.')[-1] == "SCALAR":
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):
@@ -75,16 +75,27 @@ class DataHolder:
 
         else:
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):
-                return numpy.array(self.value,dtype=tp)
+                if tp == "string":
+                    return str(self.value)  
+                else:
+                    return numpy.array(self.value,dtype=tp)
             else:    
                 print "casting ", self.type ," to ", tp
                 if str(self.format).split('.')[-1] == "SPECTRUM":
-                    return numpy.array([ NTP.convert[tp](el) for el in  self.value],dtype=tp)
+                    if tp == "string":
+                        return [ NTP.convert[tp](el) for el in  self.value]
+                    else:
+                        return numpy.array([ NTP.convert[tp](el) for el in  self.value],dtype=tp)
                 
                 if str(self.format).split('.')[-1] == "IMAGE":
-                    return numpy.array([ [ NTP.convert[tp](self.value[j][i]) \
-                                for i in range(len(self.value[j])) ] \
-                              for j in range(len(self.value)) ],dtype=tp)
+                    if tp == "string":
+                        return [ [ NTP.convert[tp](self.value[j][i]) \
+                                       for i in range(len(self.value[j])) ] \
+                                     for j in range(len(self.value)) ]
+                    else:
+                        return numpy.array([ [ NTP.convert[tp](self.value[j][i]) \
+                                                   for i in range(len(self.value[j])) ] \
+                                                 for j in range(len(self.value)) ],dtype=tp)
 
         
 

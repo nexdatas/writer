@@ -616,8 +616,11 @@ if __name__ == "__main__":
         ##       NXdetector	
 	de = NGroup(ins.elem,"detector","NXdetector")
 	f = NField(de.elem,"azimuthal_angle","NX_FLOAT")
+	f.setText("0.1")
 	f = NField(de.elem,"beam_center_x","NX_FLOAT")
+	f.setText("0.0001")
 	f = NField(de.elem,"beam_center_y","NX_FLOAT")
+	f.setText("-0.00012")
 #	f = NField(de.elem,"data","NX_FLOAT")
 	f = NField(de.elem,"data","NX_UINT32")
 	d=NDimensions(f.elem,"2")
@@ -630,6 +633,7 @@ if __name__ == "__main__":
 #	sr=NDSource(f.elem,"INIT")
 	sr.initTango("p09/tst/exp.01","attribute","MyImageAttribute",gHost="haso228k.desy.de",gPort="10000")
 	f = NField(de.elem,"distance","NX_FLOAT")
+	f.setText("10.00012")
 	f = NField(de.elem,"polar_angle","NX_FLOAT")
 	f.addDoc(""" Optional rotation angle for the case when the powder diagram has been obtained
 	  through an omega-2theta scan like from a traditional single detector powder
@@ -637,8 +641,11 @@ if __name__ == "__main__":
 	d=NDimensions(f.elem,"1")
 	d.dim("1","100")
 	f = NField(de.elem,"rotation_angle","NX_FLOAT")
+	f.setText("0.0")
 	f = NField(de.elem,"x_pixel_size","NX_FLOAT")
+	f.setText("0.01")
 	f = NField(de.elem,"y_pixel_size","NX_FLOAT")
+	f.setText("0.01")
 	sr=NDSource(f.elem,"FINAL")
 	sr.initTango("p09/motor/exp.01","attribute","Position",gHost="haso228k.desy.de",gPort="10000")
 
