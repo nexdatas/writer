@@ -27,6 +27,7 @@ from DataHolder import *
 
 from Types import *
 
+## list of available databases
 DB_AVAILABLE=[]
 
 try:
