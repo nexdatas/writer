@@ -40,16 +40,13 @@ if __name__ == "__main__":
 	sr=NDSource(f.elem,"STEP")
 	sr.initClient("p09/counter/exp.02");
 	
-
+	
 	f = NField(dt.elem,"mca","NX_FLOAT")
 	f.setUnits("")
-
 	d=NDimensions(f.elem,"1")
 	d.dim("1","2048")
-
-#	f.setText("0.2")
 	sr=NDSource(f.elem,"STEP")
-	sr.initClient("p09/mca/exp.02");
+	sr.initTango("p09/mca/exp.02","attribute","Data",gHost="haso228k.desy.de",gPort="10000")
 
         ##	NXdata
 	da = NGroup(en.elem,"data","NXdata")
