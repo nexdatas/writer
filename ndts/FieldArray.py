@@ -46,7 +46,7 @@ class AttributeArray(object):
     ## gets the value
     # \returns the value from the first attribute object        
     def getvalue(self):
-        if len(self.aObject)>0:
+        if self.aObject:
             return self.aObject[0].value
 
     ## sets the value
@@ -157,7 +157,7 @@ class FieldArray(object):
     # \param value assigning value
     def __setitem__(self, key, value):
         
-        if len(self.fList)<1:
+        if not self.fList:
             raise "array Field without elements"
 
         mkey=key
@@ -247,7 +247,7 @@ class FieldArray(object):
         for k in range(len(self.shape)):
             key.append(slice(0,self.shape[k],1))
 
-        if len(key)>0:
+        if key:
             elf.__setitem__(key,value)
 
 
@@ -258,7 +258,7 @@ class FieldArray(object):
         for k in range(len(self.shape)):
             key.append(slice(0,self.shape[k],1))
 
-        if len(key)>0:
+        if key:
             return self.__getitem__(key)
     
                     

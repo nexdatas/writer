@@ -83,7 +83,7 @@ class TangoDataWriter(object):
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
-        if len(self.xmlSettings)>0:
+        if self.xmlSettings:
             parser = sax.make_parser()
         
             handler = NexusXMLHandler(self.eFile)

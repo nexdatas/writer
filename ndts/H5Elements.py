@@ -112,7 +112,7 @@ class EField(FElement):
         if len(shape)> 1 and tp.encode() == "string":
             self.splitArray=True
 
-        if len(shape)>0:
+        if shape:
             if self.splitArray:
                 f=FieldArray(self.lastObject(),nm.encode(),tp.encode(),shape)
             else:
@@ -136,7 +136,7 @@ class EField(FElement):
                 return self.source.strategy
         else:
             val=("".join(self.content)).strip().encode()   
-            if len(val)>0:
+            if val:
                 dh=DataHolder("SCALAR",val,"DevString",[1,0])
                 self.fObject.write(dh.cast(self.fObject.dtype))
                 

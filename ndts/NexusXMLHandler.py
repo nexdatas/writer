@@ -71,7 +71,7 @@ class NexusXMLHandler(sax.ContentHandler):
     # \returns an object from the last stack element 
     #    
     def lastObject(self):
-        if len(self.stack) > 0: 
+        if self.stack : 
             return self.stack[-1].fObject
         else:
             return None
@@ -80,7 +80,7 @@ class NexusXMLHandler(sax.ContentHandler):
     ## the last stack element 
     # \returns the last stack element 
     def last(self):
-        if len(self.stack) > 0: 
+        if self.stack : 
             return self.stack[-1]
         else:
             return None
@@ -88,7 +88,7 @@ class NexusXMLHandler(sax.ContentHandler):
     ## the before last stack element 
     # \returns the before last stack element 
     def beforeLast(self):
-        if len(self.stack) > 0: 
+        if self.stack: 
             return self.stack[-2]
         else:
             return None
