@@ -24,7 +24,7 @@ from ElementThread import *
 import Queue
 
 ## Pool with threads
-class ThreadPool:
+class ThreadPool(object):
     ## constructor
     # \brief It cleans the member variables
     def __init__(self,numThreads=10):

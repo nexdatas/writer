@@ -21,7 +21,7 @@
                                                                       
 
 ## Tag element stored on our stack 
-class Element:
+class Element(object):
 
     ## constructor
     # \param name tag name

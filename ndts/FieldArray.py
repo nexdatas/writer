@@ -62,7 +62,7 @@ class AttributeArray(object):
                                                                   
 
 ## Array of the string fields
-class FieldArray:
+class FieldArray(object):
 
     ## constructor
     # \param parent parent object

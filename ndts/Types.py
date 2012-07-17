@@ -22,7 +22,7 @@
 from collections import Iterable
                                                
 ## type converter
-class NTP:
+class NTP(object):
     ## Tango types
     tTypes=["DevVoid",
             "DevBoolean",

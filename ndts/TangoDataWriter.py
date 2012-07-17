@@ -34,7 +34,7 @@ from H5Elements import *
 
 
 ## NeXuS data writer
-class TangoDataWriter:
+class TangoDataWriter(object):
     ## constructor
     # \brief It initialize the data writer for the H5 output file
     # \param fName name of the H5 output file

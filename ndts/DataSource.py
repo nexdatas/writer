@@ -35,7 +35,7 @@ import cx_Oracle
 import json
 
 ## Data source
-class DataSource:
+class DataSource(object):
     ## constructor
     # \brief It cleans all member variables
     def __init__(self):

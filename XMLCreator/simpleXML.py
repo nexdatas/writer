@@ -89,7 +89,7 @@ nTypes=["NX_CHAR",
 
 
 ## tag wrapper
-class NTag:
+class NTag(object):
 	## constructor
 	# \param gTag tag name
 	# \param parent parent ET tag element
@@ -470,7 +470,7 @@ class DevNGroup(NGroup):
 			
 			
 ## XML file object
-class XMLFile:
+class XMLFile(object):
 	## constructor
 	# \param fname XML file name
 	def __init__(self,fname):

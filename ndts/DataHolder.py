@@ -24,7 +24,7 @@ from Types import *
 import numpy
 
 ## Holder for passing data 
-class DataHolder:
+class DataHolder(object):
 
     ## constructor
     # \param dFormat format of the data, i.e. SCALAR, SPECTRUM, IMAGE
