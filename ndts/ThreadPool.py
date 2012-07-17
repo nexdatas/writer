@@ -47,7 +47,7 @@ class ThreadPool(object):
     # \param locJSON the dynamic JSON string
     def setJSON(self,mJSON,locJSON=None):
         for el in self.elementList :
-            if hasattr(el.source,"setJSON"):
+            if hasattr(el.source,"setJSON") and callable(el.source.setJSON):
                 el.source.setJSON(mJSON,locJSON)
         return self
 

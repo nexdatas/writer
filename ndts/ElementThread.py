@@ -50,7 +50,7 @@ class ElementThread(Thread):
             time.sleep(0.0001)
             try:
                 elem=self.queue.get(block=False)
-                if hasattr(elem,"run"):
+                if hasattr(elem,"run") and callable(elem.run):
                     elem.run()
                     
             except Queue.Empty:

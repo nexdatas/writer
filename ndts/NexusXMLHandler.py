@@ -106,9 +106,9 @@ class NexusXMLHandler(sax.ContentHandler):
         self.content=""
         if name in self.elementClass:
             self.stack.append(self.elementClass[name](name, attrs, self.last()))
-            if hasattr(self.last(),"fetchName"):
+            if hasattr(self.last(),"fetchName") and callable(self.last().fetchName):
                 self.last().fetchName(self.groupTypes)
-            if hasattr(self.last(),"createLink"):
+            if hasattr(self.last(),"createLink") and callable(self.last().createLink):
                 self.last().createLink(self.groupTypes)
         else:
             print 'Unsupported tag:', name, attrs.keys()
@@ -131,7 +131,7 @@ class NexusXMLHandler(sax.ContentHandler):
     def closeStack(self):
         for s in self.stack:
             if isinstance(s, FElement) and not isinstance(s, EFile):
-                if hasattr(s.fObject,"close"):
+                if hasattr(s.fObject,"close") and callable(s.fObject.close):
                     s.fObject.close()
  
 
