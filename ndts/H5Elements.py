@@ -63,41 +63,41 @@ class EField(FElement):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        FElement.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        FElement.__init__(self, name, attrs, last)
         ## rank of the field
-        self.rank="0"
+        self.rank = "0"
         ## shape of the field
-        self.lengths={}
+        self.lengths = {}
         ## dictionary with attribures from sepatare attribute tags
-        self.tpAttrs={}
+        self.tagAttributes = {}
         ## if field is stored in STEP mode
-        self.extraD=False
+        self._extraD = False
         ## if field array is splitted into columns
-        self.splitArray=False
+        self._splitArray = False
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
+    def store(self, name):
 
-        self.extraD=False
+        self._extraD = False
         if self.source and self.source.isValid() and self.source.strategy == "STEP":
-            self.extraD=True
+            self._extraD = True
             
         if "name" in self._tagAttrs.keys():
-            nm=self._tagAttrs["name"]
+            nm = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys():
-                tp=NTP.mt[self._tagAttrs["type"]]
+                tp = NTP.mt[self._tagAttrs["type"]]
             else:
-                tp="string"
+                tp = "string"
         else:
             raise " Field without a name !!!"
 
 
         shape=[]
-        if self.extraD:
+        if self._extraD:
             shape.append(0)
-        if int(self.rank)>1  or (int(self.rank)>0 and int(self.lengths["1"].encode())>=1):
+        if int(self.rank) > 1  or (int(self.rank)>0 and int(self.lengths["1"].encode()) >= 1):
             for i in range(int(self.rank)):
                 si=str(i+1)
                 if si in self.lengths.keys():
@@ -106,35 +106,35 @@ class EField(FElement):
                 else:
                     raise "Wrongly defined shape"
                 
-        if len(shape)> 1 and tp.encode() == "string":
-            self.splitArray=True
+        if len(shape) > 1 and tp.encode() == "string":
+            self._splitArray=True
 
         if shape:
-            if self.splitArray:
-                f=FieldArray(self._lastObject(),nm.encode(),tp.encode(),shape)
+            if self._splitArray:
+                f=FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
             else:
-                f=self._lastObject().create_field(nm.encode(),tp.encode(),shape)
+                f=self._lastObject().create_field(nm.encode(), tp.encode(), shape)
         else:
-            f=self._lastObject().create_field(nm.encode(),tp.encode())
+            f=self._lastObject().create_field(nm.encode(), tp.encode())
 
 
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),"string")).value=self._tagAttrs[key].strip().encode()
+                (f.attr(key.encode(),"string")).value = self._tagAttrs[key].strip().encode()
 
-        for key in self.tpAttrs.keys():
+        for key in self.tagAttributes.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].strip().encode()
+                (f.attr(key.encode(),NTP.mt[self.tagAttributes[key][0]].encode())).value = self.tagAttributes[key][1].strip().encode()
 
-        self.h5Object=f
+        self.h5Object = f
 
         if self.source:
             if  self.source.isValid() :
                 return self.source.strategy
         else:
-            val=("".join(self.content)).strip().encode()   
+            val = ("".join(self.content)).strip().encode()   
             if val:
-                dh=DataHolder("SCALAR",val,"DevString",[1,0])
+                dh = DataHolder("SCALAR",val,"DevString",[1,0])
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
                 
             else:
@@ -146,7 +146,7 @@ class EField(FElement):
         if self.source:
             dh=self.source.getData()
             if dh:
-                if not self.extraD:
+                if not self._extraD:
                     self.h5Object.write(dh.cast(self.h5Object.dtype))
                 else:
 
@@ -184,7 +184,7 @@ class EGroup(FElement):
         FElement.__init__(self,name,attrs,last)
 
         ## dictionary with attribures from sepatare attribute tags
-        self.tpAttrs={}
+        self.tagAttributes={}
 
         if ("type" in attrs.keys()) and ("name" in attrs.keys()):
             g=self._lastObject().create_group(attrs["name"].encode(),attrs["type"].encode())
@@ -202,10 +202,10 @@ class EGroup(FElement):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
-        for key in self.tpAttrs.keys() :
+    def store(self, name):
+        for key in self.tagAttributes.keys() :
             if key not in ["name","type"]:
-                (self.h5Object.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
+                (self.h5Object.attr(key.encode(),NTP.mt[self.tagAttributes[key][0]].encode())).value = self.tagAttributes[key][1].encode()
 
 
     ## fetches the type and the name of the current group            
@@ -286,7 +286,7 @@ class EAttribute(Element):
             else:        
                 tp = "NX_CHAR"
                 
-            self._last.tpAttrs[nm]=(tp,("".join(self.content)).strip().encode())
+            self._last.tagAttributes[nm]=(tp,("".join(self.content)).strip().encode())
 
 
 

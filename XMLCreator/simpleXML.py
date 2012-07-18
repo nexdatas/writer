@@ -103,18 +103,11 @@ class NTag(object):
 		## type attribute
 		self.gType=gType
 		## tag element from ET
-		self.text=""	
 		self.elem=ET.SubElement(parent,gTag)
 		if gName != "" :
 			self.elem.attrib["name"]=gName
 		if gType != "" :
 			self.elem.attrib["type"]=gType
-
-	## converts string charaters to XML characters
-	# \param st imput string
-	# \returns XML string 		
-	def str2XML(self, st):
-		return st.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
 
         ## adds tag attribute
 	# \param name attribute name		
@@ -125,13 +118,13 @@ class NTag(object):
         ## sets tag content
 	# \param gText tag content
 	def setText(self,gText):
-		self.elem.text=self.str2XML(gText)
+		self.elem.text=gText
 
 
         ## adds tag content
 	# \param gText tag content
 	def addText(self,gText):
-		self.elem.text= self.elem.text + self.str2XML(gText)
+		self.elem.text= self.elem.text +  gText
 
 
 ## Attribute tag wrapper	
@@ -163,7 +156,7 @@ class NGroup(NTag):
 	# \param gDoc doc tag content	
 	def addDoc(self,gDoc):
 		self.doc.append(ET.SubElement(self.elem,"doc"))
-		self.doc[-1].text = self.str2XML(gDoc)
+		self.doc[-1].text = gDoc
 
 
         ## adds attribute tag
@@ -195,7 +188,7 @@ class NLink(NTag):
 	# \param gDoc doc tag content	
 	def addDoc(self,gDoc):
 		self.doc.append(ET.SubElement(self.elem,"doc"))
-		self.doc[-1].text = self.str2XML(gDoc)
+		self.doc[-1].text = gDoc
 
 
 ## Dimensions tag wrapper
@@ -254,7 +247,7 @@ class NField(NTag):
 	# \param gDoc doc tag content	
 	def addDoc(self,gDoc):
 		self.doc.append(ET.SubElement(self.elem,"doc"))
-		self.doc[-1].text = self.str2XML(gDoc)
+		self.doc[-1].text = gDoc
 
         ## adds attribute tag
 	# \param aName name attribute
@@ -311,13 +304,14 @@ class NDSource(NTag):
 		if gMode:
 			da.elem.attrib["mode"]=gMode
 		if gDsn:
-			da.elem.text = self.str2XML(gDsn)
+			da.elem.text = gDsn
 		
 
 		da=NTag(self.elem,"query")
 		if gFormat:
 			da.elem.attrib["format"]=gFormat
-		da.elem.text = self.str2XML(gQuery)
+#		da.elem.text = self.str2XML(gQuery)
+		da.elem.text = gQuery
 
         ## sets paramters for Tango device
 	# \param gDevice device name
