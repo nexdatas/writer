@@ -31,7 +31,7 @@ class ElementThread(Thread):
     # \brief It creates ElementThread from the runnable element
     # \param index the current thread index
     # \param queue queue with tasks
-    def __init__(self,index, queue):
+    def __init__(self, index, queue):
         Thread.__init__(self)
         ## thread index
         self.index = index

@@ -34,7 +34,7 @@ if __name__ == "__main__":
 	d.dim("1","151")
 	d.dim("2","2")
 	sr=NDSource(f.elem,"STEP")
-	sr.initDBase("MYSQL","SELECT name,pid FROM device","tango","IMAGE",gHost="haso228k.desy.de")
+	sr.initDBase("MYSQL","SELECT name,pid FROM device limit 151","tango","IMAGE",gHost="haso228k.desy.de")
 	f = NField(src.elem,"type","NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src.elem,"name","NX_CHAR")

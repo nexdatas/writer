@@ -176,7 +176,7 @@ if __name__ == "__main__":
         
             ## xml string    
             xml = open(xmlf, 'r').read()
-            tdw.setSettings = xml
+            tdw.xmlSettings = xml
 
             print "opening the data entry "
             tdw.openEntry()

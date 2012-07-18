@@ -320,15 +320,15 @@ class DataSourceFactory(Element):
     def createDSource(self, name, attrs):
         if "type" in attrs.keys():
             if attrs["type"] in self.sourceClass.keys():
-                self.last.source=self.sourceClass[attrs["type"]]()
+                self._last.source=self.sourceClass[attrs["type"]]()
             else:
                 print "Unknown data source"
-                self.last.source=DataSource()
+                self._last.source=DataSource()
         else:
             print "Typeless data source"
-            self.last.source=DataSource()
+            self._last.source=DataSource()
 
         if "strategy" in attrs.keys():
-            self.last.source.strategy=attrs["strategy"]
+            self._last.source.strategy=attrs["strategy"]
 
 

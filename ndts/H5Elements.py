@@ -27,7 +27,6 @@ from DataSource import *
 
 from DataHolder import *
 
-
 from Element import *
 
 from FieldArray import *
@@ -43,15 +42,13 @@ class FElement(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    # \param obj H5 file object
-    def __init__(self,name,attrs,last,obj=None):
-        Element.__init__(self,name,attrs,last)
+    # \param h5object H5 file object
+    def __init__(self, name, attrs, last, h5object=None):
+        Element.__init__(self, name, attrs, last)
         ## stored H5 file object 
-        self.fObject=None
-        if obj:
-            self.fObject=obj
+        self.h5Object = h5object
         ## data source    
-        self.source=None
+        self.source = None
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
@@ -87,10 +84,10 @@ class EField(FElement):
         if self.source and self.source.isValid() and self.source.strategy == "STEP":
             self.extraD=True
             
-        if "name" in self.tAttrs.keys():
-            nm=self.tAttrs["name"]
-            if "type" in self.tAttrs.keys():
-                tp=NTP.mt[self.tAttrs["type"]]
+        if "name" in self._tagAttrs.keys():
+            nm=self._tagAttrs["name"]
+            if "type" in self._tagAttrs.keys():
+                tp=NTP.mt[self._tagAttrs["type"]]
             else:
                 tp="string"
         else:
@@ -114,22 +111,22 @@ class EField(FElement):
 
         if shape:
             if self.splitArray:
-                f=FieldArray(self.lastObject(),nm.encode(),tp.encode(),shape)
+                f=FieldArray(self._lastObject(),nm.encode(),tp.encode(),shape)
             else:
-                f=self.lastObject().create_field(nm.encode(),tp.encode(),shape)
+                f=self._lastObject().create_field(nm.encode(),tp.encode(),shape)
         else:
-            f=self.lastObject().create_field(nm.encode(),tp.encode())
+            f=self._lastObject().create_field(nm.encode(),tp.encode())
 
 
-        for key in self.tAttrs.keys():
+        for key in self._tagAttrs.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),"string")).value=self.tAttrs[key].strip().encode()
+                (f.attr(key.encode(),"string")).value=self._tagAttrs[key].strip().encode()
 
         for key in self.tpAttrs.keys():
             if key not in ["name"]:
                 (f.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].strip().encode()
 
-        self.fObject=f
+        self.h5Object=f
 
         if self.source:
             if  self.source.isValid() :
@@ -138,7 +135,7 @@ class EField(FElement):
             val=("".join(self.content)).strip().encode()   
             if val:
                 dh=DataHolder("SCALAR",val,"DevString",[1,0])
-                self.fObject.write(dh.cast(self.fObject.dtype))
+                self.h5Object.write(dh.cast(self.h5Object.dtype))
                 
             else:
                 print "invalid dataSource for ", nm
@@ -150,30 +147,30 @@ class EField(FElement):
             dh=self.source.getData()
             if dh:
                 if not self.extraD:
-                    self.fObject.write(dh.cast(self.fObject.dtype))
+                    self.h5Object.write(dh.cast(self.h5Object.dtype))
                 else:
 
                     if str(dh.format).split('.')[-1] == "SCALAR":
-                        self.fObject.grow()
-                        self.fObject[self.fObject.shape[0]-1]=dh.cast(self.fObject.dtype)
+                        self.h5Object.grow()
+                        self.h5Object[self.h5Object.shape[0]-1]=dh.cast(self.h5Object.dtype)
                     if str(dh.format).split('.')[-1] == "SPECTRUM":
 
                         # way around for a bug in pninx
 
-                        arr=dh.cast(self.fObject.dtype)
+                        arr=dh.cast(self.h5Object.dtype)
 
                         if isinstance(arr,numpy.ndarray) \
                                 and len(arr.shape) == 1 and arr.shape[0] == 1:
-                            self.fObject.grow()
-                            self.fObject[self.fObject.shape[0]-1,:]=arr[0]
+                            self.h5Object.grow()
+                            self.h5Object[self.h5Object.shape[0]-1,:]=arr[0]
                         else:
-                            self.fObject.grow()
-                            self.fObject[self.fObject.shape[0]-1,:]=arr
+                            self.h5Object.grow()
+                            self.h5Object[self.h5Object.shape[0]-1,:]=arr
 
 
                     if str(dh.format).split('.')[-1] == "IMAGE":
-                        self.fObject.grow()
-                        self.fObject[self.fObject.shape[0]-1,:,:]=dh.cast(self.fObject.dtype)
+                        self.h5Object.grow()
+                        self.h5Object[self.h5Object.shape[0]-1,:,:]=dh.cast(self.h5Object.dtype)
 
 
 
@@ -190,12 +187,12 @@ class EGroup(FElement):
         self.tpAttrs={}
 
         if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            g=self.lastObject().create_group(attrs["name"].encode(),attrs["type"].encode())
+            g=self._lastObject().create_group(attrs["name"].encode(),attrs["type"].encode())
         elif "type" in attrs.keys():
-            g=self.lastObject().create_group(attrs["type"][2:].encode(),attrs["type"].encode())
+            g=self._lastObject().create_group(attrs["type"][2:].encode(),attrs["type"].encode())
         else:
             raise "The group type not defined !!!"
-        self.fObject=g
+        self.h5Object=g
         for key in attrs.keys() :
             if key not in ["name","type"]:
                 if key in NTP.dA.keys():
@@ -208,16 +205,16 @@ class EGroup(FElement):
     def store(self,name):
         for key in self.tpAttrs.keys() :
             if key not in ["name","type"]:
-                (self.fObject.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
+                (self.h5Object.attr(key.encode(),NTP.mt[self.tpAttrs[key][0]].encode())).value=self.tpAttrs[key][1].encode()
 
 
     ## fetches the type and the name of the current group            
     # \param groupTypes dictionary with the group type:name pairs            
     def fetchName(self,groupTypes):
-        if ("type" in self.tAttrs.keys()) and ("name" in self.tAttrs.keys()):
-            groupTypes[self.tAttrs["type"]]=self.tAttrs["name"]
-        elif "type" in self.tAttrs.keys():
-            groupTypes[self.tAttrs["type"]]=self.tAttrs["type"][2:]
+        if ("type" in self._tagAttrs.keys()) and ("name" in self._tagAttrs.keys()):
+            groupTypes[self._tagAttrs["type"]]=self._tagAttrs["name"]
+        elif "type" in self._tagAttrs.keys():
+            groupTypes[self._tagAttrs["type"]]=self._tagAttrs["type"][2:]
         else:
             raise "The group type not defined !!!"
         
@@ -232,7 +229,7 @@ class ELink(FElement):
     # \param last the last element from the stack
     def __init__(self,name,attrs,last):
         FElement.__init__(self,name,attrs,last)
-        self.fObject=None
+        self.h5Object=None
 
     ## converts types to Names using groupTypes dictionary
     # \param text original directory     
@@ -258,12 +255,12 @@ class ELink(FElement):
     ## creates the link the H5 file
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self,groupTypes):
-        if ("name" in self.tAttrs.keys()) and ("target" in self.tAttrs.keys()):
-            l=(self.lastObject()).link((self.typesToNames(self.tAttrs["target"],groupTypes)).encode(),
-                                       self.tAttrs["name"].encode())
+        if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
+            l=(self._lastObject()).link((self.typesToNames(self._tagAttrs["target"],groupTypes)).encode(),
+                                        self._tagAttrs["name"].encode())
         else:
             raise "No name or type!!!"
-        self.fObject=l
+        self.h5Object=l
           
                 
 
@@ -282,14 +279,14 @@ class EAttribute(Element):
     # \param name the tag name    
     def store(self,name):
 
-        if "name" in self.tAttrs.keys(): 
-            nm = self.tAttrs["name"]
-            if "type" in self.tAttrs.keys() :
-                tp = self.tAttrs["type"]
+        if "name" in self._tagAttrs.keys(): 
+            nm = self._tagAttrs["name"]
+            if "type" in self._tagAttrs.keys() :
+                tp = self._tagAttrs["type"]
             else:        
                 tp = "NX_CHAR"
                 
-            self.last.tpAttrs[nm]=(tp,("".join(self.content)).strip().encode())
+            self._last.tpAttrs[nm]=(tp,("".join(self.content)).strip().encode())
 
 
 
@@ -318,7 +315,7 @@ class EDoc(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self.beforeLast().doc=self.beforeLast().doc + "".join(self.content)            
+        self._beforeLast().doc=self._beforeLast().doc + "".join(self.content)            
 
 ## symbol tag element        
 class ESymbol(Element):        
@@ -334,8 +331,8 @@ class ESymbol(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        if "name" in self.tAttrs.keys():
-            self.symbols[self.tAttrs["name"]]=self.last().doc
+        if "name" in self._tagAttrs.keys():
+            self.symbols[self._tagAttrs["name"]]=self._last.doc
 
 
 ## record tag element        
@@ -347,9 +344,9 @@ class ERecord(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "type" in attrs.keys():
-            self.beforeLast().source.type=attrs["type"]
+            self._beforeLast().source.type=attrs["type"]
         if "name" in attrs.keys():
-            self.beforeLast().source.name=attrs["name"]
+            self._beforeLast().source.name=attrs["name"]
 
 
 ## device tag element        
@@ -361,11 +358,11 @@ class EDevice(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "name" in attrs.keys():
-            self.beforeLast().source.device=attrs["name"]
+            self._beforeLast().source.device=attrs["name"]
         if "hostname" in attrs.keys():
-            self.beforeLast().source.hostname=attrs["hostname"]
+            self._beforeLast().source.hostname=attrs["hostname"]
         if "port" in attrs.keys():
-            self.beforeLast().source.port=attrs["port"]
+            self._beforeLast().source.port=attrs["port"]
 
 ## door tag element        
 class EDoor(Element):        
@@ -376,11 +373,11 @@ class EDoor(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "name" in attrs.keys():
-            self.beforeLast().source.door=attrs["name"]
+            self._beforeLast().source.door=attrs["name"]
         if "hostname" in attrs.keys():
-            self.beforeLast().source.hostname=attrs["hostname"]
+            self._beforeLast().source.hostname=attrs["hostname"]
         if "port" in attrs.keys():
-            self.beforeLast().source.port=attrs["port"]
+            self._beforeLast().source.port=attrs["port"]
 
 
 ## query tag element        
@@ -392,12 +389,12 @@ class EQuery(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "format" in attrs.keys():
-            self.beforeLast().source.format=attrs["format"]
+            self._beforeLast().source.format=attrs["format"]
 
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self.beforeLast().source.query= ("".join(self.content)).strip()        
+        self._beforeLast().source.query= ("".join(self.content)).strip()        
 
 
 ## Database tag element        
@@ -409,26 +406,26 @@ class EDatabase(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "dbname" in attrs.keys():
-            self.beforeLast().source.dbname=attrs["dbname"]
+            self._beforeLast().source.dbname=attrs["dbname"]
         if "dbtype" in attrs.keys():
-            self.beforeLast().source.dbtype=attrs["dbtype"]
+            self._beforeLast().source.dbtype=attrs["dbtype"]
         if "user" in attrs.keys():
-            self.beforeLast().source.user=attrs["user"]
+            self._beforeLast().source.user=attrs["user"]
         if "passwd" in attrs.keys():
-            self.beforeLast().source.passwd=attrs["passwd"]
+            self._beforeLast().source.passwd=attrs["passwd"]
         if "mode" in attrs.keys():
-            self.beforeLast().source.format=attrs["mode"]
+            self._beforeLast().source.format=attrs["mode"]
         if "mycnf" in attrs.keys():
-            self.beforeLast().source.mycnf=attrs["mycnf"]
+            self._beforeLast().source.mycnf=attrs["mycnf"]
         if "hostname" in attrs.keys():
-            self.beforeLast().source.hostname=attrs["hostname"]
+            self._beforeLast().source.hostname=attrs["hostname"]
         if "port" in attrs.keys():
-            self.beforeLast().source.port=attrs["port"]
+            self._beforeLast().source.port=attrs["port"]
 
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self.beforeLast().source.dsn= ("".join(self.content)).strip()        
+        self._beforeLast().source.dsn= ("".join(self.content)).strip()        
 
  
 ## dimensions tag element        
@@ -440,7 +437,7 @@ class EDimensions(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if "rank" in attrs.keys():
-            self.last.rank=attrs["rank"]
+            self._last.rank=attrs["rank"]
 
 ## dim tag element        
 class EDim(Element):        
@@ -451,6 +448,6 @@ class EDim(Element):
     def __init__(self,name,attrs,last):
         Element.__init__(self,name,attrs,last)
         if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
-            self.beforeLast().lengths[attrs["index"]]=attrs["value"]
+            self._beforeLast().lengths[attrs["index"]]=attrs["value"]
 
 

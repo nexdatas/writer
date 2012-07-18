@@ -27,38 +27,38 @@ class Element(object):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last=None):
-        ## Stored tag name
-        self.tName=name
+    def __init__(self, name, attrs, last=None):
+        ## stored tag name
+        self.tagName = name
         ## tag attributes
-        self.tAttrs=attrs
+        self._tagAttrs = attrs
         ## stored tag content
-        self.content=[]
+        self.content = []
         ## doc string
-        self.doc=""
+        self.doc = ""
         ## the previous element
-        self.last=last
+        self._last = last
 
 
     ## last H5 file object
     # \returns H5 file object of the previous element    
-    def lastObject(self):
-        if hasattr(self.last,"fObject"):
-            return self.last.fObject
+    def _lastObject(self):
+        if hasattr(self._last, "h5Object"):
+            return self._last.h5Object
         else:
-            print "H5 Object not found :", self.tName
+            print "H5 Object not found :", self.tagName
 
 
     ## before last stack element
     # \returns  before last element placed on the stack
-    def beforeLast(self):
-        if self.last:
-            return self.last.last
+    def _beforeLast(self):
+        if self._last:
+            return self._last._last
         else:
             return None
 
         
     ## stores the tag
     # \brief abstract method to store the tag element    
-    def store(self,name):
+    def store(self, name):
         pass

@@ -15,7 +15,7 @@
 					<datasource strategy="STEP" type="DB">
 						<database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
 						<query format="IMAGE">
-							SELECT name,pid FROM device
+							SELECT name,pid FROM device limit 151
 						</query>
 					</datasource>
 				</field>
@@ -349,8 +349,8 @@ rest
 				<field name="StepBacklash" type="NX_INT32" units="step">
 					<doc>
 						backlash is used for movements which have NOT
-  (steps &gt; 0 &amp;&amp; StepBacklash) &gt; 0 ||
-  (steps &lt; 0 &amp;&amp; StepsBacklash) &lt; 0
+  (steps &amp;gt; 0 &amp;amp;&amp;amp; StepBacklash) &amp;gt; 0 ||
+  (steps &amp;lt; 0 &amp;amp;&amp;amp; StepsBacklash) &amp;lt; 0
 					</doc>
 					<datasource strategy="STEP" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
@@ -741,7 +741,7 @@ for the motor position
 				<field name="CorrectionGain" type="NX_INT32">
 					<doc>
 						[1,32000], SlewCorr = CorrGain*PositionError (but
-&lt; SlewRateCorrection)
+&amp;lt; SlewRateCorrection)
 					</doc>
 					<datasource strategy="STEP" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
@@ -1104,8 +1104,8 @@ rest
 				<field name="StepBacklash" type="NX_INT32" units="step">
 					<doc>
 						backlash is used for movements which have NOT
-  (steps &gt; 0 &amp;&amp; StepBacklash) &gt; 0 ||
-  (steps &lt; 0 &amp;&amp; StepsBacklash) &lt; 0
+  (steps &amp;gt; 0 &amp;amp;&amp;amp; StepBacklash) &amp;gt; 0 ||
+  (steps &amp;lt; 0 &amp;amp;&amp;amp; StepsBacklash) &amp;lt; 0
 					</doc>
 					<datasource strategy="STEP" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/motor/exp.02" port="10000"/>
@@ -1496,7 +1496,7 @@ for the motor position
 				<field name="CorrectionGain" type="NX_INT32">
 					<doc>
 						[1,32000], SlewCorr = CorrGain*PositionError (but
-&lt; SlewRateCorrection)
+&amp;lt; SlewRateCorrection)
 					</doc>
 					<datasource strategy="STEP" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/motor/exp.02" port="10000"/>
@@ -1670,8 +1670,8 @@ recent write operations to the server.
 				</attribute>
 				<field name="StateBank0" type="NX_INT32">
 					<doc>
-						0 -&gt; on
-1 -&gt; running
+						0 -&amp;gt; on
+1 -&amp;gt; running
 					</doc>
 					<datasource strategy="STEP" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/mca/exp.02" port="10000"/>
@@ -1683,8 +1683,8 @@ recent write operations to the server.
 				</attribute>
 				<field name="StateBank1" type="NX_INT32">
 					<doc>
-						0 -&gt; on
-1 -&gt; running
+						0 -&amp;gt; on
+1 -&amp;gt; running
 					</doc>
 					<datasource strategy="STEP" type="TANGO">
 						<device hostname="haso228k.desy.de" name="p09/mca/exp.02" port="10000"/>

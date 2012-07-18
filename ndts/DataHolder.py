@@ -74,10 +74,7 @@ class DataHolder(object):
                 return NTP.convert[tp](self.value)
 
         else:
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):
-                if tp == "string":
-                    return str(self.value)  
-                else:
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type) and tp != "string":
                     return numpy.array(self.value,dtype=tp)
             else:    
                 print "casting ", self.type ," to ", tp

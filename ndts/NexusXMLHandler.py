@@ -100,7 +100,7 @@ class NexusXMLHandler(sax.ContentHandler):
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        if self._last().tName == name :
+        if self._last().tagName == name :
             if name in self._elementClass:
                 strategy=self._last().store(name)
 
@@ -114,8 +114,8 @@ class NexusXMLHandler(sax.ContentHandler):
     def close(self):
         for s in self._stack:
             if isinstance(s, FElement) and not isinstance(s, EFile):
-                if hasattr(s.fObject,"close") and callable(s.fObject.close):
-                    s.fObject.close()
+                if hasattr(s.h5Object,"close") and callable(s.h5Object.close):
+                    s.h5Object.close()
  
 
 

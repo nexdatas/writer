@@ -87,7 +87,7 @@ class ThreadPool(object):
     # \brief It close the threads from the pool
     def close(self):
         for el in self._elementList:
-            el.fObject.close()
+            el.h5Object.close()
         self._threadList = []
         self._elementList = []
         self._elementQueue = None
