@@ -31,30 +31,30 @@ class ElementThread(Thread):
     # \brief It creates ElementThread from the runnable element
     # \param index the current thread index
     # \param queue queue with tasks
-    def __init__(self,index,queue):
+    def __init__(self,index, queue):
         Thread.__init__(self)
         ## thread index
-        self.index=index
+        self.index = index
         ## queue with runnable elements
-        self.queue=queue
+        self._queue = queue
         ## lock for safe printing messeges
-        self.safeprint=thread.allocate_lock()
+        self._safeprint = thread.allocate_lock()
 
     ## runner
     # \brief It runs the defined thread
     def run(self):
-        with self.safeprint:
+        with self._safeprint:
             print "Running THREAD: %s" % self.index
-        full=True    
+        full = True    
         while full:
             time.sleep(0.0001)
             try:
-                elem=self.queue.get(block=False)
-                if hasattr(elem,"run") and callable(elem.run):
+                elem = self._queue.get(block=False)
+                if hasattr(elem, "run") and callable(elem.run):
                     elem.run()
                     
             except Queue.Empty:
-                full=False    
+                full = False    
                 pass
                 
 

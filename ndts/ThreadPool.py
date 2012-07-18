@@ -27,52 +27,52 @@ import Queue
 class ThreadPool(object):
     ## constructor
     # \brief It cleans the member variables
-    def __init__(self,numThreads=10):
-        ## queue of the appended elements
-        self.elementQueue=Queue.Queue()
-        ## list of the appended elements
-        self.elementList=[]
-        ## list of the threads related to the appended elements
-        self.threadList=[]
+    def __init__(self, numThreads=10):
         ## maximal number of threads
-        self.numThreads=-1
+        self.numThreads = -1
+        ## queue of the appended elements
+        self._elementQueue = Queue.Queue()
+        ## list of the appended elements
+        self._elementList = []
+        ## list of the threads related to the appended elements
+        self._threadList = []
 
     ## appends the thread element
     # \param elem the thread element
-    def append(self,elem):
-        self.elementList.append(elem)
+    def append(self, elem):
+        self._elementList.append(elem)
 
     ## sets the JSON string to threads
-    # \param mJSON the static JSON string
-    # \param locJSON the dynamic JSON string
-    def setJSON(self,mJSON,locJSON=None):
-        for el in self.elementList :
+    # \param globalJSON the static JSON string
+    # \param localJSON the dynamic JSON string
+    def setJSON(self, globalJSON, localJSON=None):
+        for el in self._elementList :
             if hasattr(el.source,"setJSON") and callable(el.source.setJSON):
-                el.source.setJSON(mJSON,locJSON)
+                el.source.setJSON(globalJSON, localJSON)
         return self
 
     ## runner
     # \brief It runs the threads from the pool
     def run(self):
-        self.threadList=[]
-        self.elementQueue=Queue.Queue()
+        self._threadList = []
+        self._elementQueue = Queue.Queue()
         
-        for eth in self.elementList:
-            self.elementQueue.put(eth)
+        for eth in self._elementList:
+            self._elementQueue.put(eth)
 
-        if self.numThreads <1:
-            self.numThreads=len(self.elementList)
+        if self.numThreads < 1:
+            self.numThreads=len(self._elementList)
 
-        for  i in range(min(self.numThreads,len(self.elementList))):
-            th=ElementThread(i,self.elementQueue)
-            self.threadList.append(th)
+        for  i in range(min(self.numThreads,len(self._elementList))):
+            th = ElementThread(i,self._elementQueue)
+            self._threadList.append(th)
             th.start()
 
 
     ## waits for all thread from the pool
     # \param timeout the maximal waiting time
     def join(self,timeout=None):
-        for th in self.threadList:
+        for th in self._threadList:
             if th.isAlive():
                 th.join()
 
@@ -86,8 +86,8 @@ class ThreadPool(object):
     ## closer
     # \brief It close the threads from the pool
     def close(self):
-        for el in self.elementList:
+        for el in self._elementList:
             el.fObject.close()
-        self.threadList=[]
-        self.elementList=[]
-        self.elementQueue=None
+        self._threadList = []
+        self._elementList = []
+        self._elementQueue = None
