@@ -18,7 +18,7 @@
 						<dim index="1" value="2048"/>
 					</dimensions>
 					<datasource strategy="STEP" type="TANGO">
-						<device hostname="haso228k.desy.de" name="p09/mca/exp.02" port="10000"/>
+						<device name="p09/mca/exp.02"/>
 						<record name="Data" type="attribute"/>
 					</datasource>
 				</field>

@@ -46,7 +46,7 @@ if __name__ == "__main__":
 	d=NDimensions(f.elem,"1")
 	d.dim("1","2048")
 	sr=NDSource(f.elem,"STEP")
-	sr.initTango("p09/mca/exp.02","attribute","Data",gHost="haso228k.desy.de",gPort="10000")
+	sr.initTango("p09/mca/exp.02","attribute","Data")
 #	sr.initClient("p09/mca/exp.02");
 
         ##	NXdata
