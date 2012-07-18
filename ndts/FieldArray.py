@@ -28,34 +28,34 @@ from Types import *
 class AttributeArray(object):
     ## constructor
     # \param parents parent object
-    # \param aName name of the field array
-    # \param aType type of the field array
-    def __init__(self, parents, aName , aType):
+    # \param name name of the attribute array
+    # \param dtype type of the attribute array
+    def __init__(self, parents, name, dtype):
         ## parents
         
-        self.parents = parents
+        self._parents = parents
         ## name of the attribute array
-        self.name = aName
+        self.name = name
         ## name of the array type
-        self.type = aType
-        ## shape
-        self.aObject=[]
+        self.dtype = dtype
+        ## list of attributes
+        self._aObject=[]
         for f in parents:
-            self.aObject.append(f.attr(aName,aType))
+            self._aObject.append(f.attr(name, dtype))
         
     ## gets the value
     # \returns the value from the first attribute object        
-    def getvalue(self):
-        if self.aObject:
-            return self.aObject[0].value
+    def _getvalue(self):
+        if self._aObject:
+            return self._aObject[0].value
 
     ## sets the value
     # \param value value to be set to all attribute objects
-    def setvalue(self,value):
-        for a in self.aObject:
-            a.value=value
+    def _setvalue(self,value):
+        for a in self._aObject:
+            a.value = value
 
-    value=property(getvalue,setvalue)            
+    value=property(_getvalue, _setvalue)            
 
     
         
@@ -66,56 +66,57 @@ class FieldArray(object):
 
     ## constructor
     # \param parent parent object
-    # \param fName name of the field array
-    # \param fType type of the field array
-    # \param fShape shape of the field array
-    def __init__(self, parent, fName , fType, fShape):
-        ## parent
-        self.parent = parent
+    # \param name name of the field array
+    # \param dtype type of the field array
+    # \param shape shape of the field array
+    def __init__(self, parent, name, dtype, shape):
         ## name of the field array
-        self.name = fName
+        self.name = name
         ## type of the field array
-        self.dtype = fType
+        self.dtype = dtype
         ## shape
-        self.shape = fShape
+        self.shape = shape
+        ## parent
+        self._parent = parent
         ##  list of fields
-        self.fList = []
+        self._fList = []
         ## attribute array
-        self.aArray = None
+        self._aArray = None
         ## flatten dimensions
-        self.fdim=len(fShape)-1
-        if self.fdim < 1:
-            self.fList.append(parent.create_field(fName.encode(),fType.encode(),self.shape))
-        elif self.fdim == 1:
+        self._fdim=len(shape)-1
+
+        if self._fdim < 1:
+            self._fList.append(parent.create_field(name.encode(), dtype.encode(), self.shape))
+        elif self._fdim == 1:
             if self.shape[1] == 1:
-                self.fList.append(parent.create_field(fName.encode(),
-                                                      fType.encode(),[self.shape[0]]))
+                self._fList.append(parent.create_field(name.encode(),
+                                                      dtype.encode(), [self.shape[0]]))
             else:
                 for i in range(self.shape[1]):
-                    self.fList.append(parent.create_field(fName.encode()+"_"+str(i),
-                                                          fType.encode(),[self.shape[0]]))
-        elif self.fdim == 2:
+                    self._fList.append(parent.create_field(name.encode()+"_"+str(i),
+                                                          dtype.encode(), [self.shape[0]]))
+        elif self._fdim == 2:
             if self.shape[1] == 1 and self.shape[2] == 1 :
-                self.fList.append(parent.create_field(fName.encode(),
-                                                      fType.encode(),[self.shape[0]]))
+                self._fList.append(parent.create_field(name.encode(),
+                                                      dtype.encode(), [self.shape[0]]))
             
             else:
                 for i in range(self.shape[1]):
                     for j in range(self.shape[2]):
-                        self.fList.append(parent.create_field(fName.encode()+"_"+str(i)+"_"+str(j),
-                                                              fType.encode(),[self.shape[0]]))
+                        self._fList.append(parent.create_field(name.encode()+"_"+str(i)+"_"+str(j),
+                                                              dtype.encode(), [self.shape[0]]))
         
             
         
 
     
     ## access to attrributes Array    
-    # \param aName name of the attribute
-    # \param aType type of the attribute
-    def attr(self,aName,aType):
-        if not self.aArray:
-            self.aArray=AttributeArray(self.fList, aName , aType)
-        return self.aArray
+    # \param name name of the attribute
+    # \param dtype type of the attribute
+    def attr(self,name, dtype):
+        if not self._aArray:
+            self._aArray=AttributeArray(self._fList, name, dtype)
+        return self._aArray
 
     ## gets item
     # \param key slice object
@@ -141,12 +142,12 @@ class FieldArray(object):
             jr=(range(self.shape[2])[mkey[2]])
             if isinstance(jr,int):  jr =[jr]
             
-        if self.fdim == 0:
-            return numpy.array([self.fList[0].__getitem__(k) for k in kr])
-        elif self.fdim == 1:
-            return numpy.array([[self.fList[k].__getitem__(i) for i  in ir] for k in kr])
-        elif self.fdim == 2:
-            return numpy.array([[[self.fList[i*len(self.shape(2))+j].__getitem__(k)  
+        if self._fdim == 0:
+            return numpy.array([self._fList[0].__getitem__(k) for k in kr])
+        elif self._fdim == 1:
+            return numpy.array([[self._fList[k].__getitem__(i) for i  in ir] for k in kr])
+        elif self._fdim == 2:
+            return numpy.array([[[self._fList[i*len(self.shape(2))+j].__getitem__(k)  
                                 for j  in jr] for i  in ir] for k in kr])
         else: 
             return None
@@ -157,7 +158,7 @@ class FieldArray(object):
     # \param value assigning value
     def __setitem__(self, key, value):
         
-        if not self.fList:
+        if not self._fList:
             raise "array Field without elements"
 
         mkey=key
@@ -184,57 +185,57 @@ class FieldArray(object):
             jr=(range(self.shape[2])[mkey[2]])
             if isinstance(jr,int):  jr =[jr]
 
-        if self.fdim < 1 :
+        if self._fdim < 1 :
             for k in range(len(value)):
-                self.fList[0].__setitem__(kr[k],value[k])
-        elif self.fdim == 1:
+                self._fList[0].__setitem__(kr[k],value[k])
+        elif self._fdim == 1:
             if rank == 2:
                 for i in range(len(value[0])):
                     for k in range(len(value)):
-                        self.fList[ir[i]].__setitem__(kr[k],value[k][i])
+                        self._fList[ir[i]].__setitem__(kr[k],value[k][i])
             elif rank == 1 :
                 if len(ir) == 1:
                     for k in range(len(value)):
-                        self.fList[ir[0]].__setitem__(kr[k],value[k])
+                        self._fList[ir[0]].__setitem__(kr[k],value[k])
                 if len(kr) == 1:
                     for i in range(len(value)):
-                        self.fList[ir[i]].__setitem__(kr[0],value[i])
+                        self._fList[ir[i]].__setitem__(kr[0],value[i])
             elif rank == 0 and len(ir) == 1 and len(kr) == 1:
-                self.fList[ir[0]].__setitem__(kr[0],value)
+                self._fList[ir[0]].__setitem__(kr[0],value)
         
-        elif self.fdim == 2:
+        elif self._fdim == 2:
             if rank == 3:
                 for k in range(len(value)):
                     for i in range(len(value[0])):
                         for j in range(len(value[0,0])):
-                            self.fList[ir[i]*self.shape[2]+jr[j]].__setitem__([kr[k]],value[k][i][j])
+                            self._fList[ir[i]*self.shape[2]+jr[j]].__setitem__([kr[k]],value[k][i][j])
 
             elif rank == 2:
                 if len(kr) == 1:
                         for i in range(len(value)):
                             for j in range(len(value[0])):
-                                self.fList[ir[i]*self.shape[2]+jr[j]][kr[0]]=value[i][j].encode()
+                                self._fList[ir[i]*self.shape[2]+jr[j]][kr[0]]=value[i][j].encode()
                 elif len(ir) == 1 :        
                     for k in range(len(value)):
                         for j in range(len(value[0])):
-                            self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[k],value[k][j])
+                            self._fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[k],value[k][j])
                 elif len(jr) == 1 :        
                     for k in range(len(value)):
                         for i in range(len(value[0])):
-                            self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k][i])
+                            self._fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k][i])
 
             elif rank == 1:            
                 if len(kr) == 1 and len(ir) == 1:
                         for j in range(len(value)):
-                            self.fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0],value[j])
+                            self._fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0],value[j])
                 if len(kr) == 1 and len(jr) == 1:
                         for i in range(len(value)):
-                            self.fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0],value[i])
+                            self._fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0],value[i])
                 if len(ir) == 1 and len(jr) == 1:
                     for k in range(len(value)):
-                        self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k])
+                        self._fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k])
             elif rank == 0:
-                    self.fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[0],value)
+                    self._fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[0],value)
 
                     
 
@@ -265,7 +266,7 @@ class FieldArray(object):
     ## growing method
     # \brief It enlage the field
     def grow(self,dim=0,ln=1):
-        for f in self.fList:
+        for f in self._fList:
             f.grow(dim,ln)
         self.shape[dim]=self.shape[dim]+ln
     
@@ -273,7 +274,7 @@ class FieldArray(object):
     ## closing method
     # \brief It closes all fields from the array    
     def close(self):
-        for f in self.fList:
+        for f in self._fList:
             f.close()
 
         
