@@ -33,63 +33,46 @@ class NexusXMLHandler(sax.ContentHandler):
 
     ## constructor
     # \brief It constructs parser and defines the H5 output file
-    # \param efile file element
-    def __init__(self,efile):
+    # \param fileElement file element
+    def __init__(self, fileElement):
         sax.ContentHandler.__init__(self)
 
         ## map of NXclass : name
-        self.groupTypes={"":""}
+        self._groupTypes = {"":""}
         ## stack with open tag elements
-        self.stack=[efile]
+        self._stack = [fileElement]
 
         ## the current content of the tag 
-        self.content=""
+        self._content = ""
 
         ## map of tag names to related classes
-        self.elementClass={'group':EGroup, 'field':EField, 'attribute':EAttribute,
-                           'link':ELink, 'doc':EDoc,
-                           'symbols':Element, 'symbol':ESymbol, 
-                           'dimensions':EDimensions, 
-                           'dim':EDim, 'enumeration':Element, 'item':Element,
-                           'datasource':DataSourceFactory,'record':ERecord , 'query':EQuery, 
-                           'database':EDatabase, 
-                           'device':EDevice, 'door':EDoor}
+        self._elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
+                              'link':ELink, 'doc':EDoc,
+                              'symbols':Element, 'symbol':ESymbol, 
+                              'dimensions':EDimensions, 
+                              'dim':EDim, 'enumeration':Element, 'item':Element,
+                              'datasource':DataSourceFactory,'record':ERecord , 'query':EQuery, 
+                              'database':EDatabase, 
+                              'device':EDevice, 'door':EDoor}
 
 
 
         ## thread pool with INIT elements
-        self.initPool=ThreadPool()
+        self.initPool = ThreadPool()
         ## thread pool with STEP elements
-        self.stepPool=ThreadPool()
+        self.stepPool = ThreadPool()
         ## thread pool with FINAL elements
-        self.finalPool=ThreadPool()
+        self.finalPool = ThreadPool()
 
         ## map of pool names to related classes
-        self.poolMap={'INIT':self.initPool,'STEP':self.stepPool,'FINAL':self.finalPool}
+        self._poolMap = {'INIT':self.initPool, 'STEP':self.stepPool, 'FINAL':self.finalPool}        
 
-    ## PNINX file object of the last stack element
-    # \returns an object from the last stack element 
-    #    
-    def lastObject(self):
-        if self.stack : 
-            return self.stack[-1].fObject
-        else:
-            return None
-        
 
     ## the last stack element 
     # \returns the last stack element 
-    def last(self):
-        if self.stack : 
-            return self.stack[-1]
-        else:
-            return None
-
-    ## the before last stack element 
-    # \returns the before last stack element 
-    def beforeLast(self):
-        if self.stack: 
-            return self.stack[-2]
+    def _last(self):
+        if self._stack : 
+            return self._stack[-1]
         else:
             return None
 
@@ -97,19 +80,19 @@ class NexusXMLHandler(sax.ContentHandler):
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        self.last().content.append(ch)
+        self._last().content.append(ch)
 
     ##  parses the opening tag
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        self.content=""
-        if name in self.elementClass:
-            self.stack.append(self.elementClass[name](name, attrs, self.last()))
-            if hasattr(self.last(),"fetchName") and callable(self.last().fetchName):
-                self.last().fetchName(self.groupTypes)
-            if hasattr(self.last(),"createLink") and callable(self.last().createLink):
-                self.last().createLink(self.groupTypes)
+        self._content=""
+        if name in self._elementClass:
+            self._stack.append(self._elementClass[name](name, attrs, self._last()))
+            if hasattr(self._last(),"fetchName") and callable(self._last().fetchName):
+                self._last().fetchName(self._groupTypes)
+            if hasattr(self._last(),"createLink") and callable(self._last().createLink):
+                self._last().createLink(self._groupTypes)
         else:
             print 'Unsupported tag:', name, attrs.keys()
 
@@ -117,19 +100,19 @@ class NexusXMLHandler(sax.ContentHandler):
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        if self.last().tName == name :
-            if name in self.elementClass:
-                strategy=self.last().store(name)
+        if self._last().tName == name :
+            if name in self._elementClass:
+                strategy=self._last().store(name)
 
-                if strategy in self.poolMap.keys():
-                    self.poolMap[strategy].append(self.last())
-                self.stack.pop()
+                if strategy in self._poolMap.keys():
+                    self._poolMap[strategy].append(self._last())
+                self._stack.pop()
 
 
-    ## closes the stack
+    ## closes the elements
     # \brief It goes through all stack elements closing them
-    def closeStack(self):
-        for s in self.stack:
+    def close(self):
+        for s in self._stack:
             if isinstance(s, FElement) and not isinstance(s, EFile):
                 if hasattr(s.fObject,"close") and callable(s.fObject.close):
                     s.fObject.close()
@@ -144,23 +127,23 @@ if __name__ == "__main__":
         
     else:
         ## input XML file
-        fi=sys.argv[1]
+        fi = sys.argv[1]
         if os.path.exists(fi):
             ## output h5 file
-            fo=sys.argv[2]
+            fo = sys.argv[2]
 
             ## a parser object
             parser = sax.make_parser()
             
             ## file  handle
-            nxFile=nx.create_file(self.self.fileName,overwrite=True)
+            nxFile = nx.create_file(self.self.fileName, overwrite=True)
             ## element file objects
-            eFile=EFile("NXfile",[],None,self.nxFile)
+            fileElement = EFile("NXfile", [], None, self.nxFile)
             ## a SAX2 handler object
-            handler = NexusXMLHandler(eFile)
-            parser.setContentHandler( handler )
+            handler = NexusXMLHandler(fileElement)
+            parser.setContentHandler(handler)
 
             parser.parse(open(fi))
-            handler.closeStack()
+            handler.close()
             nxFile.close()
     

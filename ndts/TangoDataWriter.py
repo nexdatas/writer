@@ -100,7 +100,6 @@ class TangoDataWriter(object):
 
             self._initPool.setJSON(self.json)
             self._initPool.runAndWait()
-#            self._nxFile=handler.getNXFile()
 
 
     ## close the data writer        

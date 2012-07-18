@@ -66,6 +66,7 @@ if __name__ == "__main__":
             
             dpx=DeviceProxy(device)
             print " Connected to: ", device
+            dpx.Init()
     
             xml = open(xmlf, 'r').read()
 
