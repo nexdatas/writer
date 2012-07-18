@@ -114,7 +114,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
  		
-		attr.set_value(self.tdw.getXML())
+		attr.set_value(self.tdw.xmlSettings)
 
 
 #------------------------------------------------------------------
@@ -125,7 +125,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		data=[]
 		attr.get_write_value(data)
 		print "Attribute value = ", data
-		self.tdw.setXML(data[0])
+		self.tdw.xmlSettings=data[0]
 		self.set_state(PyTango.DevState.INIT)
 
 
@@ -148,7 +148,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.tdw.getJSON())
+		attr.set_value(self.tdw.json)
 
 
 #------------------------------------------------------------------
@@ -159,7 +159,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		data=[]
 		attr.get_write_value(data)
 		print "Attribute value = ", data
-		self.tdw.setJSON(data[0])
+		self.tdw.json=data[0]
 
 		#	Add your own code here
 

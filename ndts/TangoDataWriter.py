@@ -37,47 +37,47 @@ from H5Elements import *
 class TangoDataWriter(object):
     ## constructor
     # \brief It initialize the data writer for the H5 output file
-    # \param fName name of the H5 output file
-    def __init__(self,fName):
+    # \param fileName name of the H5 output file
+    def __init__(self, fileName):
         ## output file name
-        self.fileName=fName
+        self.fileName = fileName
         ## XML string with file settings
-        self.xmlSettings=""
-        ## static JSON string with data settings
-        self.json="{}"
+        self.xmlSettings = ""
+        ## global JSON string with data records
+        self.json = "{}"
         ## thread pool with INIT elements
-        self.initPool=None
+        self._initPool = None
         ## thread pool with STEP elements
-        self.stepPool=None
+        self._stepPool = None
         ## thread pool with FINAL elements
-        self.finalPool=None
+        self._finalPool = None
         ## H5 file handle
-        self.nxFile=None
-        ## H5 file handle
-        self.numThreads=100
+        self._nxFile = None
+        ## maximal number of threads
+        self.numThreads = 100
         ## element file objects
-        self.eFile=None
+        self._eFile = None
        
     ## the H5 file opening
     # \brief It opens the H5 file       
     def openNXFile(self):
         ## file handle
-        self.nxFile=nx.create_file(self.fileName,overwrite=True)
+        self._nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
-        self.eFile=EFile("NXfile",[],None,self.nxFile)
+        self._eFile = EFile("NXfile", [], None, self._nxFile)
 
 
 
     ## the H5 file handle 
     # \returns the H5 file handle 
     def getNXFile(self):
-        return self.nxFile            
+        return self._nxFile            
 
 
     ## the H5 file closing
     # \brief It closes the H5 file       
     def closeNXFile(self):
-        self.nxFile.close()
+        self._nxFile.close()
         
 
     ##  opens the data entry corresponding to a new XML settings
@@ -86,49 +86,30 @@ class TangoDataWriter(object):
         if self.xmlSettings:
             parser = sax.make_parser()
         
-            handler = NexusXMLHandler(self.eFile)
-            sax.parseString(self.xmlSettings,handler)
+            handler = NexusXMLHandler(self._eFile)
+            sax.parseString(self.xmlSettings, handler)
             
-            self.initPool=handler.initPool
-            self.stepPool=handler.stepPool
-            self.finalPool=handler.finalPool
+            self._initPool = handler.initPool
+            self._stepPool = handler.stepPool
+            self._finalPool = handler.finalPool
             
-            self.initPool.numThreads=self.numThreads
-            self.stepPool.numThreads=self.numThreads
-            self.finalPool.numThreads=self.numThreads
+            self._initPool.numThreads = self.numThreads
+            self._stepPool.numThreads = self.numThreads
+            self._finalPool.numThreads = self.numThreads
            
 
-            self.initPool.setJSON(self.json)
-            self.initPool.runAndWait()
-#            self.nxFile=handler.getNXFile()
+            self._initPool.setJSON(self.json)
+            self._initPool.runAndWait()
+#            self._nxFile=handler.getNXFile()
 
-            
-    ## defines the XML string with settings
-    # \param xmlSettings XML string       
-    def setXML(self,xmlSettings):
-        self.xmlSettings=xmlSettings
-
-    ## provides the XML setting string
-    # \returns the XML string with settings
-    def getXML(self):
-        return self.xmlSettings
-
-    ## defines the JSON data string 
-    # \param json JSON data string 
-    def setJSON(self,json):
-        self.json=json
-
-    ## provides the JSON data string
-    # \returns the JSON data string 
-    def getJSON(self):
-        return self.json
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
-    def record(self,argin=None):
-        if self.stepPool:
-            self.stepPool.setJSON(self.json,argin)
-            self.stepPool.runAndWait()
+    # \param json local JSON string with data records      
+    def record(self,json=None):
+        if self._stepPool:
+            self._stepPool.setJSON(self.json, json)
+            self._stepPool.runAndWait()
 
 
     ## closes the data entry        
@@ -136,28 +117,27 @@ class TangoDataWriter(object):
     #  removes the thread pools 
     def closeEntry(self):
 
-        if self.finalPool:
-            self.finalPool.setJSON(self.json)
-            self.finalPool.runAndWait()
+        if self._finalPool:
+            self._finalPool.setJSON(self.json)
+            self._finalPool.runAndWait()
 
 
-        if self.initPool:
-            self.initPool.close()
+        if self._initPool:
+            self._initPool.close()
             
 
-        if self.stepPool:
-            self.stepPool.close()
+        if self._stepPool:
+            self._stepPool.close()
                 
-        if self.finalPool: 
-            self.finalPool.close()
+        if self._finalPool: 
+            self._finalPool.close()
 
-    
-#        if self.nxFile:
-#            self.nxFile.flush()
+#        if self._nxFile:
+#            self._nxFile.flush()
 
-        self.initPool=None
-        self.stepPool=None
-        self.finalPool=None
+        self._initPool = None
+        self._stepPool = None
+        self._finalPool = None
 
 
 
@@ -173,32 +153,31 @@ if __name__ == "__main__":
     ## instance of TangoDataWriter
     tdw = TangoDataWriter("test.h5")
 
-    tdw.numThreads=1
+    tdw.numThreads = 1
 
     ## xml file name
-#    xmlf="../XMLExamples/test.xml"
-    xmlf="../XMLExamples/MNI.xml"
+#    xmlf = "../XMLExamples/test.xml"
+    xmlf = "../XMLExamples/MNI.xml"
 
     print "usage: TangoDataWriter.py  <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>"
 
     ## No arguments
-    argc=len(sys.argv)
-    if argc>2:
-        tdw.fileName=sys.argv[argc-1]
+    argc = len(sys.argv)
+    if argc > 2:
+        tdw.fileName = sys.argv[argc-1]
 
     print "opening the H5 file"
     tdw.openNXFile()
 
 
-    if argc>1:
+    if argc > 1:
 
-        for i in range(1,argc-1):
-            xmlf=sys.argv[i]
+        for i in range(1, argc-1):
+            xmlf = sys.argv[i]
         
             ## xml string    
             xml = open(xmlf, 'r').read()
-            tdw.setXML(xml)
-
+            tdw.setSettings = xml
 
             print "opening the data entry "
             tdw.openEntry()
