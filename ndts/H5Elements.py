@@ -297,9 +297,9 @@ class EFile(FElement):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    # \param obj H5 file object
-    def __init__(self,name,attrs,last,obj):
-        FElement.__init__(self,name,attrs,last,obj)
+    # \param h5fileObject H5 file object
+    def __init__(self, name, attrs, last, h5fileObject):
+        FElement.__init__(self, name, attrs, last, h5fileObject)
 
 
 
@@ -309,13 +309,13 @@ class EDoc(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
-        self._beforeLast().doc=self._beforeLast().doc + "".join(self.content)            
+    def store(self, name):
+        self._beforeLast().doc = self._beforeLast().doc + "".join(self.content)            
 
 ## symbol tag element        
 class ESymbol(Element):        
@@ -323,16 +323,16 @@ class ESymbol(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         ## dictionary with symbols
         self.symbols={}
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
+    def store(self, name):
         if "name" in self._tagAttrs.keys():
-            self.symbols[self._tagAttrs["name"]]=self._last.doc
+            self.symbols[self._tagAttrs["name"]] = self._last.doc
 
 
 ## record tag element        
@@ -341,12 +341,12 @@ class ERecord(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         if "type" in attrs.keys():
-            self._beforeLast().source.type=attrs["type"]
+            self._beforeLast().source.type = attrs["type"]
         if "name" in attrs.keys():
-            self._beforeLast().source.name=attrs["name"]
+            self._beforeLast().source.name = attrs["name"]
 
 
 ## device tag element        
@@ -355,14 +355,14 @@ class EDevice(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         if "name" in attrs.keys():
-            self._beforeLast().source.device=attrs["name"]
+            self._beforeLast().source.device = attrs["name"]
         if "hostname" in attrs.keys():
-            self._beforeLast().source.hostname=attrs["hostname"]
+            self._beforeLast().source.hostname = attrs["hostname"]
         if "port" in attrs.keys():
-            self._beforeLast().source.port=attrs["port"]
+            self._beforeLast().source.port = attrs["port"]
 
 ## door tag element        
 class EDoor(Element):        
@@ -370,14 +370,14 @@ class EDoor(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         if "name" in attrs.keys():
-            self._beforeLast().source.door=attrs["name"]
+            self._beforeLast().source.door = attrs["name"]
         if "hostname" in attrs.keys():
-            self._beforeLast().source.hostname=attrs["hostname"]
+            self._beforeLast().source.hostname = attrs["hostname"]
         if "port" in attrs.keys():
-            self._beforeLast().source.port=attrs["port"]
+            self._beforeLast().source.port = attrs["port"]
 
 
 ## query tag element        
@@ -386,14 +386,14 @@ class EQuery(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         if "format" in attrs.keys():
-            self._beforeLast().source.format=attrs["format"]
+            self._beforeLast().source.format = attrs["format"]
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
+    def store(self, name):
         self._beforeLast().source.query= ("".join(self.content)).strip()        
 
 
@@ -403,29 +403,29 @@ class EDatabase(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
+    def __init__(self, name, attrs, last):
         Element.__init__(self,name,attrs,last)
         if "dbname" in attrs.keys():
-            self._beforeLast().source.dbname=attrs["dbname"]
+            self._beforeLast().source.dbname = attrs["dbname"]
         if "dbtype" in attrs.keys():
-            self._beforeLast().source.dbtype=attrs["dbtype"]
+            self._beforeLast().source.dbtype = attrs["dbtype"]
         if "user" in attrs.keys():
-            self._beforeLast().source.user=attrs["user"]
+            self._beforeLast().source.user = attrs["user"]
         if "passwd" in attrs.keys():
-            self._beforeLast().source.passwd=attrs["passwd"]
+            self._beforeLast().source.passwd = attrs["passwd"]
         if "mode" in attrs.keys():
-            self._beforeLast().source.format=attrs["mode"]
+            self._beforeLast().source.format = attrs["mode"]
         if "mycnf" in attrs.keys():
-            self._beforeLast().source.mycnf=attrs["mycnf"]
+            self._beforeLast().source.mycnf = attrs["mycnf"]
         if "hostname" in attrs.keys():
-            self._beforeLast().source.hostname=attrs["hostname"]
+            self._beforeLast().source.hostname = attrs["hostname"]
         if "port" in attrs.keys():
-            self._beforeLast().source.port=attrs["port"]
+            self._beforeLast().source.port = attrs["port"]
 
     ## stores the tag content
     # \param name the tag name    
     def store(self,name):
-        self._beforeLast().source.dsn= ("".join(self.content)).strip()        
+        self._beforeLast().source.dsn = ("".join(self.content)).strip()        
 
  
 ## dimensions tag element        
@@ -434,10 +434,10 @@ class EDimensions(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         if "rank" in attrs.keys():
-            self._last.rank=attrs["rank"]
+            self._last.rank = attrs["rank"]
 
 ## dim tag element        
 class EDim(Element):        
@@ -445,9 +445,9 @@ class EDim(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
-            self._beforeLast().lengths[attrs["index"]]=attrs["value"]
+            self._beforeLast().lengths[attrs["index"]] = attrs["value"]
 
 
