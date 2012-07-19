@@ -29,16 +29,16 @@ class DataHolder(object):
     ## constructor
     # \param format format of the data, i.e. SCALAR, SPECTRUM, IMAGE
     # \param value value of the data. It may be also 1D and 2D array
-    # \param dtype type of the data
+    # \param tangoDType type of the data
     # \param shape shape of the data
-    def __init__(self, format, value, dtype, shape):
+    def __init__(self, format, value, tangoDType, shape):
 
         ## data format
         self.format = format
         ## data value
         self.value = value
         ## data type
-        self.dtype = dtype
+        self.tangoDType = tangoDType
         ## data shape
         self.shape = shape
 
@@ -48,17 +48,17 @@ class DataHolder(object):
     # \returns numpy array of defined type or list for strings or value for SCALAR
     def cast(self, tp):
         if str(self.format).split('.')[-1] == "SCALAR":
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.dtype):
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType):
                 return self.value
             else:
-#                print "casting ", self.dtype ," to ", tp
+#                print "casting ", self.tangoDType ," to ", tp
                 return NTP.convert[tp](self.value)
 
         else:
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.dtype) and tp != "string":
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
             else:    
-#                print "casting ", self.dtype ," to ", tp
+#                print "casting ", self.tangoDType ," to ", tp
                 if str(self.format).split('.')[-1] == "SPECTRUM":
                     if tp == "string":
                         return [ NTP.convert[tp](el) for el in self.value]

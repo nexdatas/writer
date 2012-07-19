@@ -276,9 +276,9 @@ class ClientSource(DataSource):
         if self.name in mergedJSON['data']:
             rec = mergedJSON['data'][self.name]
             ntp = NTP()
-            rank, rshape, dtype = ntp.arrayRankRShape(rec)
+            rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
             if rank in NTP.rTf:
-                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[dtype.__name__], rshape.reverse())
+                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[pythonDType.__name__], rshape.reverse())
             
 
 
