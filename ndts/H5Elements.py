@@ -87,7 +87,7 @@ class EField(FElement):
         if "name" in self._tagAttrs.keys():
             nm = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys():
-                tp = NTP.mt[self._tagAttrs["type"]]
+                tp = NTP.nTnp[self._tagAttrs["type"]]
             else:
                 tp = "string"
         else:
@@ -124,7 +124,8 @@ class EField(FElement):
 
         for key in self.tagAttributes.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),NTP.mt[self.tagAttributes[key][0]].encode())).value = self.tagAttributes[key][1].strip().encode()
+                (f.attr(key.encode(),NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
+                    = self.tagAttributes[key][1].strip().encode()
 
         self.h5Object = f
 
@@ -136,7 +137,6 @@ class EField(FElement):
             if val:
                 dh = DataHolder("SCALAR",val,"DevString",[1,0])
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
-                
             else:
                 print "invalid dataSource for ", nm
 
@@ -195,8 +195,8 @@ class EGroup(FElement):
         self.h5Object=g
         for key in attrs.keys() :
             if key not in ["name","type"]:
-                if key in NTP.dA.keys():
-                    (g.attr(key.encode(),NTP.mt[NTP.dA[key]].encode())).value=attrs[key].encode()
+                if key in NTP.aTn.keys():
+                    (g.attr(key.encode(),NTP.nTnp[NTP.aTn[key]].encode())).value=attrs[key].encode()
                 else:
                     (g.attr(key.encode(),"string")).value=attrs[key].encode()
 
@@ -205,7 +205,8 @@ class EGroup(FElement):
     def store(self, name):
         for key in self.tagAttributes.keys() :
             if key not in ["name","type"]:
-                (self.h5Object.attr(key.encode(),NTP.mt[self.tagAttributes[key][0]].encode())).value = self.tagAttributes[key][1].encode()
+                (self.h5Object.attr(key.encode(),NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
+                    = self.tagAttributes[key][1].encode()
 
 
     ## fetches the type and the name of the current group            
@@ -344,7 +345,7 @@ class ERecord(Element):
     def __init__(self, name, attrs, last):
         Element.__init__(self, name, attrs, last)
         if "type" in attrs.keys():
-            self._beforeLast().source.type = attrs["type"]
+            self._beforeLast().source.memberType = attrs["type"]
         if "name" in attrs.keys():
             self._beforeLast().source.name = attrs["name"]
 
@@ -414,7 +415,7 @@ class EDatabase(Element):
         if "passwd" in attrs.keys():
             self._beforeLast().source.passwd = attrs["passwd"]
         if "mode" in attrs.keys():
-            self._beforeLast().source.format = attrs["mode"]
+            self._beforeLast().source.mode = attrs["mode"]
         if "mycnf" in attrs.keys():
             self._beforeLast().source.mycnf = attrs["mycnf"]
         if "hostname" in attrs.keys():

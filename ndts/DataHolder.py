@@ -27,62 +27,43 @@ import numpy
 class DataHolder(object):
 
     ## constructor
-    # \param dFormat format of the data, i.e. SCALAR, SPECTRUM, IMAGE
-    # \param dValue value of the data. It may be also 1D and 2D array
-    # \param dType type of the data
-    # \param dShape shape of the data
-    def __init__(self,dFormat,dValue,dType,dShape):
+    # \param format format of the data, i.e. SCALAR, SPECTRUM, IMAGE
+    # \param value value of the data. It may be also 1D and 2D array
+    # \param dtype type of the data
+    # \param shape shape of the data
+    def __init__(self, format, value, dtype, shape):
 
         ## data format
-        self.format=dFormat
+        self.format = format
         ## data value
-        self.value=dValue
+        self.value = value
         ## data type
-        self.type=dType
+        self.dtype = dtype
         ## data shape
-        self.shape=dShape
-
-    ## typeless array   
-    # \returns numpy array when the data is not SCALAR
-    def typeless_array(self):
-        if str(self.format).split('.')[-1] == "SPECTRUM":
-            return numpy.array(self.value)
-        
-        if str(self.format).split('.')[-1] == "IMAGE":
-            return numpy.array(self.value)
-
-    ## array with a type    
-    # \param tp type of the data    
-    # \returns numpy array of defined type when the data is not SCALAR 
-    def array(self,tp):
-        if str(self.format).split('.')[-1] == "SPECTRUM":
-            return numpy.array(self.value,dtype=tp)
-        
-        if str(self.format).split('.')[-1] == "IMAGE":
-            return numpy.array(self.value,dtype=tp)
+        self.shape = shape
 
 
     ## casts the data into given type
     # \param tp given type of data
     # \returns numpy array of defined type or list for strings or value for SCALAR
-    def cast(self,tp):
+    def cast(self, tp):
         if str(self.format).split('.')[-1] == "SCALAR":
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type):
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.dtype):
                 return self.value
             else:
-                print "casting ", self.type ," to ", tp
+#                print "casting ", self.dtype ," to ", tp
                 return NTP.convert[tp](self.value)
 
         else:
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.type) and tp != "string":
-                    return numpy.array(self.value,dtype=tp)
+            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.dtype) and tp != "string":
+                    return numpy.array(self.value, dtype=tp)
             else:    
-                print "casting ", self.type ," to ", tp
+#                print "casting ", self.dtype ," to ", tp
                 if str(self.format).split('.')[-1] == "SPECTRUM":
                     if tp == "string":
-                        return [ NTP.convert[tp](el) for el in  self.value]
+                        return [ NTP.convert[tp](el) for el in self.value]
                     else:
-                        return numpy.array([ NTP.convert[tp](el) for el in  self.value],dtype=tp)
+                        return numpy.array([ NTP.convert[tp](el) for el in self.value], dtype=tp)
                 
                 if str(self.format).split('.')[-1] == "IMAGE":
                     if tp == "string":
@@ -92,7 +73,7 @@ class DataHolder(object):
                     else:
                         return numpy.array([ [ NTP.convert[tp](self.value[j][i]) \
                                                    for i in range(len(self.value[j])) ] \
-                                                 for j in range(len(self.value)) ],dtype=tp)
+                                                 for j in range(len(self.value)) ], dtype=tp)
 
         
 

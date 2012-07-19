@@ -18,17 +18,16 @@
 ## \package ndts nexdatas
 # \file DataSource.py
 
-                                                                      
-from Element import *
+import json
 
 from PyTango import *
 
+from Element import *
 from DataHolder import *
-
 from Types import *
 
 ## list of available databases
-DB_AVAILABLE=[]
+DB_AVAILABLE = []
 
 try:
     import MySQLdb
@@ -42,8 +41,6 @@ try:
 except ImportError,e:
     print "PGSQL not available: %s" % e
 
-
-
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
@@ -51,7 +48,6 @@ except ImportError,e:
     print "ORACLE not available: %s" % e
 
 
-import json
 
 ## Data source
 class DataSource(object):
@@ -59,13 +55,13 @@ class DataSource(object):
     # \brief It cleans all member variables
     def __init__(self):
         ## strategy, i.e. INIT, STEP of FINAL
-        self.strategy=None
+        self.strategy = None
         ## name of the host with the data source
-        self.hostname=None
+        self.hostname = None
         ## port related to the host
-        self.port=None
+        self.port = None
         ## name of data
-        self.name=None
+        self.name = None
 
     ## access to data
     # \brief It is an abstract method providing data   
@@ -84,40 +80,40 @@ class TangoSource(DataSource):
     def __init__(self):
         DataSource.__init__(self)
         ## name of the tango device
-        self.device=None
-        ## type of the data, i.e. attribute, property,...
-        self.type=None
+        self.device = None
+        ## member type of the data, i.e. attribute, property,...
+        self.memberType = None
 
     ## data provider
     # \returns DataHolder with collected data  
     def getData(self):
-        if self.device and self.type and self.name:
+        if self.device and self.memberType and self.name:
             proxy=DeviceProxy(self.device.encode())
             da=None
-            if self.type == "attribute":
+            if self.memberType == "attribute":
                 alist=proxy.get_attribute_list()
 
                 if self.name.encode() in alist:
                     da=proxy.read_attribute( self.name.encode())
-                    if str(da.data_format).split('.')[-1] == "SPECTRUM":
-                        print "Spectrum Device: ", self.device.encode()
-                    if str(da.data_format).split('.')[-1] == "IMAGE":
-                        print "Image Device: ", self.device.encode()
-                    return DataHolder(da.data_format,da.value,da.type,[da.dim_x,da.dim_y])
+#                    if str(da.data_format).split('.')[-1] == "SPECTRUM":
+#                        print "Spectrum Device: ", self.device.encode()
+#                    if str(da.data_format).split('.')[-1] == "IMAGE":
+#                        print "Image Device: ", self.device.encode()
+                    return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y])
 
-            elif self.type == "property":
-                print "getting the property: ", self.name
+            elif self.memberType == "property":
+#                print "getting the property: ", self.name
                 plist=proxy.get_property_list('*')
                 if self.name.encode() in plist:
-                    da=proxy.get_property(self.name.encode())[self.name.encode()][0]
-                    return DataHolder("SCALAR",da,"DevString",[1,0])
-            elif self.type == "command":
-                print "calling the command: ", self.name
+                    da = proxy.get_property(self.name.encode())[self.name.encode()][0]
+                    return DataHolder("SCALAR", da, "DevString", [1,0])
+            elif self.memberType == "command":
+#                print "calling the command: ", self.name
 		clist=[cm.cmd_name for cm in proxy.command_list_query()]
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
-                    da=proxy.command_inout(self.name.encode())
-                    return DataHolder("SCALAR",da,cd.out_type,[1,0])
+                    da = proxy.command_inout(self.name.encode())
+                    return DataHolder("SCALAR", da, cd.out_type, [1,0])
                     
                         
 
@@ -128,80 +124,80 @@ class DBaseSource(DataSource):
     def __init__(self):
         DataSource.__init__(self)
         ## database query
-        self.query=None
+        self.query = None
         ## DSN string
-        self.dsn=None
+        self.dsn = None
         ## database type, i.e. MYSQL, PGSQL, ORACLE
-        self.dbtype=None
+        self.dbtype = None
         ## oracle database mode
-        self.mode=None
+        self.mode = None
         ## database name
-        self.dbname=None
+        self.dbname = None
         ## database user
-        self.user=None
+        self.user = None
         ## database password
-        self.passwd=None
+        self.passwd = None
         ## mysql database configuration file
-        self.mycnf='/etc/my.cnf'
+        self.mycnf = '/etc/my.cnf'
         ## record format, i.e. SCALAR, SPECTRUM, IMAGE
-        self.format=None
+        self.format = None
 
         ## map 
-        self.dbConnect={"MYSQL":self.connectMYSQL, 
-                        "PGSQL":self.connectPGSQL,
-                        "ORACLE":self.connectORACLE}
+        self._dbConnect = {"MYSQL":self._connectMYSQL, 
+                          "PGSQL":self._connectPGSQL,
+                          "ORACLE":self._connectORACLE}
 
     ## connects to MYSQL database    
     # \returns open database object
-    def connectMYSQL(self):
-        args={}
+    def _connectMYSQL(self):
+        args = {}
         if self.mycnf:
-            args["read_default_file"]=self.mycnf.encode()
+            args["read_default_file"] = self.mycnf.encode()
         if self.dbname:
-            args["db"]=self.dbname.encode()
+            args["db"] = self.dbname.encode()
         if self.user:
-            args["user"]=self.user.encode()
+            args["user"] = self.user.encode()
         if self.passwd:
-            args["passwd"]=self.passwd.encode()
+            args["passwd"] = self.passwd.encode()
         if self.hostname:
-            args["host"]=self.hostname.encode()
+            args["host"] = self.hostname.encode()
         if self.port:
-            args["port"]=int(self.port)
+            args["port"] = int(self.port)
             
         return MySQLdb.connect(**args)
 
     ## connects to PGSQL database    
     # \returns open database object
-    def connectPGSQL(self):
+    def _connectPGSQL(self):
         args={}
 
         if self.dbname:
-            args["database"]=self.dbname.encode()
+            args["database"] = self.dbname.encode()
         if self.user:
-            args["user"]=self.user.encode()
+            args["user"] = self.user.encode()
         if self.passwd:
-            args["password"]=self.passwd.encode()
+            args["password"] = self.passwd.encode()
         if self.hostname:
-            args["host"]=self.hostname.encode()
+            args["host"] = self.hostname.encode()
         if self.port:
-            args["port"]=int(self.port)
+            args["port"] = int(self.port)
             
         return psycopg2.connect(**args)
 
     ## connects to ORACLE database    
     # \returns open database object
-    def connectORACLE(self):
+    def _connectORACLE(self):
         args={}
         if self.user:
-            args["user"]=self.user.encode()
+            args["user"] = self.user.encode()
         if self.passwd:
-            args["password"]=self.passwd.encode()
+            args["password"] = self.passwd.encode()
         if self.dsn:
-            args["dsn"]=self.dsn.encode()
+            args["dsn"] = self.dsn.encode()
         if self.mode:
-            args["mode"]=self.mode.encode()
+            args["mode"] = self.mode.encode()
             
-        return  cx_Oracle.connect(**args)
+        return cx_Oracle.connect(**args)
 
     ## provides access to the data    
     # \returns  DataHolder with collected data   
@@ -209,8 +205,8 @@ class DBaseSource(DataSource):
 
         db=None
 
-        if self.dbtype in self.dbConnect.keys() and self.dbtype in DB_AVAILABLE:
-            db=self.dbConnect[self.dbtype]()
+        if self.dbtype in self._dbConnect.keys() and self.dbtype in DB_AVAILABLE:
+            db = self._dbConnect[self.dbtype]()
                 
 
         if db:
@@ -218,18 +214,18 @@ class DBaseSource(DataSource):
             cursor.execute(self.query)
             if not self.format or self.format == 'SCALAR':
                 data = cursor.fetchone()
-                dh=DataHolder("SCALAR",data[0],"DevString",[1,0])
+                dh = DataHolder("SCALAR", data[0], "DevString", [1,0])
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
                 if len(data[0]) == 1:
-                    ldata=list(el[0] for el in data)
+                    ldata = list(el[0] for el in data)
                 else:
-                    ldata=list(el for el in data[0])
-                dh=DataHolder("SPECTRUM",ldata,"DevString",[len(ldata),0])
+                    ldata = list(el for el in data[0])
+                dh=DataHolder("SPECTRUM", ldata, "DevString", [len(ldata),0])
             else:
                 data = cursor.fetchall()
-                ldata=list(list(el) for el in data)
-                dh=DataHolder("IMAGE",ldata,"DevString",[len(ldata),len(ldata[0])])
+                ldata = list(list(el) for el in data)
+                dh = DataHolder("IMAGE", ldata, "DevString", [len(ldata), len(ldata[0])])
             cursor.close()
             db.close()
         return dh
@@ -241,49 +237,48 @@ class ClientSource(DataSource):
     def __init__(self):
         DataSource.__init__(self)
         ## the current  static JSON object
-        self.JSON=None
+        self._globalJSON = None
         ## the current  dynamic JSON object
-        self.lJSON=None
+        self._localJSON = None
         
     ## sets JSON string
     # \brief It sets the currently used  JSON string
-    # \param sJSON static JSON string    
-    # \param lJSON dynamic JSON string    
-    def setJSON(self,sJSON,lJSON=None):
-        self.JSON=json.loads(sJSON)
-        if lJSON:
-            self.lJSON=json.loads(lJSON)
+    # \param globalJSON static JSON string    
+    # \param localJSON dynamic JSON string    
+    def setJSON(self, globalJSON, localJSON=None):
+        self._globalJSON = json.loads(globalJSON)
+        if localJSON:
+            self._localJSON = json.loads(localJSON)
         else:
-            self.lJSON=None
+            self._localJSON = None
     
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):
         
         
-        if  self.JSON and 'data' not in self.JSON.keys() :
-            self.JSON= None
+        if  self._globalJSON and 'data' not in self._globalJSON.keys() :
+            self._globalJSON = None
 
-        if self.lJSON and 'data' not in self.lJSON.keys() :
-            self.lJSON= None
+        if self._localJSON and 'data' not in self._localJSON.keys() :
+            self._localJSON = None
 
-        if self.JSON and  self.lJSON:
-            myJSON=json.loads(dict(self.JSON.items() + self.lJSON.items()))
-        elif self.lJSON:
-            myJSON=self.lJSON 
-        elif self.JSON:
-            myJSON=self.JSON 
+        if self._globalJSON and self._localJSON:
+            mergedJSON = json.loads(dict(self._globalJSON.items() + self._localJSON.items()))
+        elif self._localJSON:
+            mergedJSON = self._localJSON 
+        elif self._globalJSON:
+            mergedJSON = self._globalJSON 
         else:
             return None
             
         
-
-        if self.name in myJSON['data']:
-            rec=myJSON['data'][self.name]
-            ntp=NTP()
-            rank,rshape,dtype=ntp.arrayRankRShape(rec)
+        if self.name in mergedJSON['data']:
+            rec = mergedJSON['data'][self.name]
+            ntp = NTP()
+            rank, rshape, dtype = ntp.arrayRankRShape(rec)
             if rank in NTP.rTf:
-                return DataHolder(NTP.rTf[rank],rec,NTP.pTt[dtype.__name__],rshape.reverse())
+                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[dtype.__name__], rshape.reverse())
             
 
 
@@ -307,28 +302,28 @@ class DataSourceFactory(Element):
     # \param name name of the tag
     # \param attrs dictionary with the tag attributes
     # \param last the last element on the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
         ## dictionary with data source classes
-        self.sourceClass={"DB":DBaseSource,"TANGO":TangoSource,
-                          "CLIENT":ClientSource,"SARDANA":SardanaSource}
-        self.createDSource(name,attrs)
+        self._sourceClass = {"DB":DBaseSource, "TANGO":TangoSource,
+                            "CLIENT":ClientSource, "SARDANA":SardanaSource}
+        self.createDSource(name, attrs)
 
     ## creates data source   
     # \param name name of the tag
     # \param attrs dictionary with the tag attributes
     def createDSource(self, name, attrs):
         if "type" in attrs.keys():
-            if attrs["type"] in self.sourceClass.keys():
-                self._last.source=self.sourceClass[attrs["type"]]()
+            if attrs["type"] in self._sourceClass.keys():
+                self._last.source = self._sourceClass[attrs["type"]]()
             else:
                 print "Unknown data source"
-                self._last.source=DataSource()
+                self._last.source = DataSource()
         else:
             print "Typeless data source"
-            self._last.source=DataSource()
+            self._last.source = DataSource()
 
         if "strategy" in attrs.keys():
-            self._last.source.strategy=attrs["strategy"]
+            self._last.source.strategy = attrs["strategy"]
 
 
