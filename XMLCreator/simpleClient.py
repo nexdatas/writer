@@ -52,6 +52,7 @@ if __name__ == "__main__":
             
             dpx = PyTango.DeviceProxy(device)
             dpx.set_timeout_millis(25000)
+            dpx.Init()
             print " Connected to: ", device
     
             xml = open(xmlf, 'r').read()
