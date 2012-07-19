@@ -118,10 +118,10 @@ class FieldArray(object):
             self._aArray = AttributeArray(self._fList, name, dtype)
         return self._aArray
 
-    ## gets item
+    ## fetches ranges from the field shape and key
     # \param key slice object
-    def __getitem__(self, key):
-
+    # \returns 
+    def _fetchRanges(self,key):
         mkey = key
         
         if isinstance(key, Iterable):
@@ -131,7 +131,11 @@ class FieldArray(object):
 
         while mkey < len(self.shape):
             mkey.append(slice(0,self.shape[len(mkey)],1))
-
+            
+        kr=None
+        ir=None
+        jr=None
+            
         if len(self.shape) >0 :
             kr = (range(self.shape[0])[mkey[0]])
             if isinstance(kr,int):  kr = [kr]
@@ -141,6 +145,16 @@ class FieldArray(object):
         if len(self.shape) >2 :
             jr = (range(self.shape[2])[mkey[2]])
             if isinstance(jr,int):  jr = [jr]
+        
+        return kr, ir, jr
+            
+            
+
+    ## gets item
+    # \param key slice object
+    def __getitem__(self, key):
+
+        kr, ir, jr = self._fetchRanges(key)
             
         if self._fdim == 0:
             return numpy.array([self._fList[0].__getitem__(k) for k in kr])
@@ -161,29 +175,11 @@ class FieldArray(object):
         if not self._fList:
             raise "array Field without elements"
 
-        mkey = key
-        
-        if isinstance(key, Iterable):
-            mkey = key
-        else:
-            mkey = [key]
-
-        while mkey < len(self.shape):
-            mkey.append(slice(0,self.shape[len(mkey)],1))
+        kr, ir, jr = self._fetchRanges(key)
 
         ntp = NTP()    
         rank = ntp.arrayRank(value)            
 
-
-        if len(self.shape) >0 :
-            kr = (range(self.shape[0])[mkey[0]])
-            if isinstance(kr,int):  kr = [kr]
-        if len(self.shape) >1 :
-            ir = (range(self.shape[1])[mkey[1]])
-            if isinstance(ir,int):  ir = [ir]
-        if len(self.shape) >2 :
-            jr = (range(self.shape[2])[mkey[2]])
-            if isinstance(jr,int):  jr = [jr]
 
         if self._fdim < 1 :
             for k in range(len(value)):
