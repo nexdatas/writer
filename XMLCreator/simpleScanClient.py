@@ -18,7 +18,7 @@
 # \package  ndtstools tools for ndts
 # \file simpleScanClient.py
 
-import sys,os
+import sys, os
 import time
 
 import random
@@ -29,78 +29,78 @@ import PyTango
 
 
 
-def nicePlot(xlen=2048,nrGauss=5):
-    pr=[[random.uniform(0.01,0.001),random.uniform(0,xlen),random.uniform(0.0,1.)] \
-            for i in range(nrGauss)]
-    return [sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
-                for i in range(xlen)]
+def nicePlot(xlen=2048, nrGauss=5):
+    pr = [ [ random.uniform(0.01,0.001), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
+               for i in range(nrGauss) ]
+    return [ sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
+                 for i in range(xlen)]
     
 
 if __name__ == "__main__":
 
-    if  len(sys.argv) <2:
+    if  len(sys.argv) < 2:
         print "usage: simpleClient.py  <XMLfile>  <H5file>  <tangoServer>"
         
     else:
-        xmlf=sys.argv[1]
+        xmlf = sys.argv[1]
         if os.path.exists(xmlf):
 
 
-            if len(sys.argv)>2:
+            if len(sys.argv) > 2:
                 
-                fname=sys.argv[2]
+                fname = sys.argv[2]
                 print fname
             else:
-                sp=xmlf.split(".")
+                sp = xmlf.split(".")
                 print sp
                 if sp[-1] == 'xml' :
-                    fname=''.join(sp[0:-1])
+                    fname = ''.join(sp[0:-1])
                 else:
-                    fname=xmlf
+                    fname = xmlf
                 fname = fname.strip() + ".h5"
             print "storing in ", fname 
     
-            device="p09/tdw/r228"
+            device = "p09/tdw/r228"
             if len(sys.argv)>3:
-                device=sys.argv[3]
+                device = sys.argv[3]
             
-            dpx=PyTango.DeviceProxy(device)
+            dpx = PyTango.DeviceProxy(device)
             print " Connected to: ", device
             dpx.Init()
     
             xml = open(xmlf, 'r').read()
 
 
-            dpx.FileName=fname
+            dpx.FileName = fname
 
             print "opening the H5 file"
             dpx.OpenFile()
 
-            dpx.TheXMLSettings=xml
+            dpx.TheXMLSettings = xml
 
             print "opening the entry"
             dpx.OpenEntry()
 
             print "recording the H5 file" 
-            mca=str(nicePlot(2048,10))
+            mca = str(nicePlot(2048, 10))
 
-            dpx.record('{"data": {"p09/counter/exp.01":0.1,"p09/counter/exp.02":1.1,"p09/mca/exp.02":'\
+            dpx.record('{"data": {"p09/counter/exp.01":0.1, "p09/counter/exp.02":1.1, "p09/mca/exp.02":'\
                            + mca+ '  } }')
             
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            mca=str(nicePlot(2048,4))
+            mca = str(nicePlot(2048, 4))
 
-            dpx.record('{"data": {"p09/counter/exp.01":0.2,"p09/counter/exp.02":1.3,"p09/mca/exp.02":'\
+            dpx.record('{"data": {"p09/counter/exp.01":0.2, "p09/counter/exp.02":1.3, "p09/mca/exp.02":'\
                            + mca+ '  } }')
 
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
 
-            mca=str(nicePlot(2048,20))
-            dpx.record('{"data": {"p09/counter/exp.01":0.3,"p09/counter/exp.02":1.4,"p09/mca/exp.02":'\
+            mca = str(nicePlot(2048, 20))
+            dpx.record('{"data": {"p09/counter/exp.01":0.3, "p09/counter/exp.02":1.4, "p09/mca/exp.02":'\
                            + mca+ '  } }')
 
             print "closing the  entry"

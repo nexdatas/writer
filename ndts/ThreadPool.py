@@ -47,7 +47,7 @@ class ThreadPool(object):
     # \param localJSON the dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
         for el in self._elementList :
-            if hasattr(el.source,"setJSON") and callable(el.source.setJSON):
+            if hasattr(el.source, "setJSON") and callable(el.source.setJSON):
                 el.source.setJSON(globalJSON, localJSON)
         return self
 
@@ -61,17 +61,17 @@ class ThreadPool(object):
             self._elementQueue.put(eth)
 
         if self.numThreads < 1:
-            self.numThreads=len(self._elementList)
+            self.numThreads = len(self._elementList)
 
-        for  i in range(min(self.numThreads,len(self._elementList))):
-            th = ElementThread(i,self._elementQueue)
+        for  i in range(min(self.numThreads, len(self._elementList))):
+            th = ElementThread(i, self._elementQueue)
             self._threadList.append(th)
             th.start()
 
 
     ## waits for all thread from the pool
     # \param timeout the maximal waiting time
-    def join(self,timeout=None):
+    def join(self, timeout=None):
         for th in self._threadList:
             if th.isAlive():
                 th.join()

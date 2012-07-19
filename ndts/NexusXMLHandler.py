@@ -21,7 +21,7 @@
 import pni.nx.h5 as nx
 from xml import sax
 
-import sys,os
+import sys, os
 
 from H5Elements import *
 from ThreadPool import *
@@ -86,12 +86,12 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        self._content=""
+        self._content = ""
         if name in self._elementClass:
             self._stack.append(self._elementClass[name](name, attrs, self._last()))
-            if hasattr(self._last(),"fetchName") and callable(self._last().fetchName):
+            if hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
                 self._last().fetchName(self._groupTypes)
-            if hasattr(self._last(),"createLink") and callable(self._last().createLink):
+            if hasattr(self._last(), "createLink") and callable(self._last().createLink):
                 self._last().createLink(self._groupTypes)
         else:
             print 'Unsupported tag:', name, attrs.keys()
@@ -102,7 +102,7 @@ class NexusXMLHandler(sax.ContentHandler):
     def endElement(self, name):
         if self._last().tagName == name :
             if name in self._elementClass:
-                strategy=self._last().store(name)
+                strategy = self._last().store(name)
 
                 if strategy in self._poolMap.keys():
                     self._poolMap[strategy].append(self._last())
@@ -114,7 +114,7 @@ class NexusXMLHandler(sax.ContentHandler):
     def close(self):
         for s in self._stack:
             if isinstance(s, FElement) and not isinstance(s, EFile):
-                if hasattr(s.h5Object,"close") and callable(s.h5Object.close):
+                if hasattr(s.h5Object, "close") and callable(s.h5Object.close):
                     s.h5Object.close()
  
 

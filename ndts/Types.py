@@ -71,7 +71,7 @@ class NTP(object):
         shape = []
         pythonDType = None
         if isinstance(array, Iterable) and not isinstance(array, str):
-            rank,shape,pythonDType = self.arrayRankRShape(array[0])
+            rank, shape, pythonDType = self.arrayRankRShape(array[0])
             shape.append(len(array))
             rank += 1
         else:

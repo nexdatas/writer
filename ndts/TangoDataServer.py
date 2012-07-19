@@ -59,15 +59,15 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 #	Device constructor
 #------------------------------------------------------------------
-	def __init__(self,cl, name):
+	def __init__(self, cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
-		self.tdw=TDW("name.h5")
+		self.tdw = TDW("name.h5")
 
 #------------------------------------------------------------------
 #	Device destructor
 #------------------------------------------------------------------
 	def delete_device(self):
-		print "[Device delete_device method] for device",self.get_name()
+		print "[Device delete_device method] for device", self.get_name()
 		self.set_state(PyTango.DevState.OFF)
 
 
@@ -78,7 +78,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::init_device()"
 		try:
 			self.set_state(PyTango.DevState.RUNNING)
-			self.tdw=TDW("name.h5")
+			self.tdw = TDW("name.h5")
 			self.set_state(PyTango.DevState.ON)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
@@ -101,7 +101,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 #	Read Attribute Hardware
 #------------------------------------------------------------------
-	def read_attr_hardware(self,data):
+	def read_attr_hardware(self, data):
 		print "In ", self.get_name(), "::read_attr_hardware()"
 
 
@@ -122,10 +122,10 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_TheXMLSettings(self, attr):
 		print "In ", self.get_name(), "::write_TheXMLSettings()"
-		data=[]
+		data = []
 		attr.get_write_value(data)
 #		print "Attribute value = ", data
-		self.tdw.xmlSettings=data[0]
+		self.tdw.xmlSettings = data[0]
 		self.set_state(PyTango.DevState.INIT)
 
 
@@ -156,10 +156,10 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_TheJSONRecord(self, attr):
 		print "In ", self.get_name(), "::write_TheJSONRecord()"
-		data=[]
+		data = []
 		attr.get_write_value(data)
 		print "Attribute value = ", data
-		self.tdw.json=data[0]
+		self.tdw.json = data[0]
 
 		#	Add your own code here
 
@@ -190,10 +190,10 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_FileName(self, attr):
 		print "In ", self.get_name(), "::write_FileName()"
-		data=[]
+		data = []
 		attr.get_write_value(data)
 		print "Attribute value = ", data
-		self.tdw.fileName=data[0]
+		self.tdw.fileName = data[0]
 
 		#	Add your own code here
 
@@ -444,13 +444,13 @@ class TangoDataServerClass(PyTango.DeviceClass):
 if __name__ == '__main__':
 	try:
 		py = PyTango.Util(sys.argv)
-		py.add_TgClass(TangoDataServerClass,TangoDataServer,'TangoDataServer')
+		py.add_TgClass(TangoDataServerClass, TangoDataServer, 'TangoDataServer')
 
 		U = PyTango.Util.instance()
 		U.server_init()
 		U.server_run()
 
-	except PyTango.DevFailed,e:
-		print '-------> Received a DevFailed exception:',e
-	except Exception,e:
-		print '-------> An unforeseen exception occured....',e
+	except PyTango.DevFailed, e:
+		print '-------> Received a DevFailed exception:', e
+	except Exception, e:
+		print '-------> An unforeseen exception occured....', e

@@ -28,7 +28,7 @@ import pni.nx.h5 as nx
 from numpy  import * 
 from xml import sax
 
-import sys,os
+import sys, os
 from H5Elements import *
 
 
@@ -105,7 +105,7 @@ class TangoDataWriter(object):
     ## close the data writer        
     # \brief It runs threads from the STEP pool
     # \param json local JSON string with data records      
-    def record(self,json=None):
+    def record(self, json=None):
         if self._stepPool:
             self._stepPool.setJSON(self.json, json)
             self._stepPool.runAndWait()

@@ -16,52 +16,52 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package  ndtstools tools for ndts
-# \file simpleClient.py
+# \file simpleClient2.py
 
-import sys,os
+import sys, os
 import time
 
 import PyTango 
 
 if __name__ == "__main__":
 
-    argc=len(sys.argv)
+    argc = len(sys.argv)
 
     if  argc < 4:
         print "usage: simpleClient.py   <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>  <device_name e.g. p09/tdw/r228>"
         
     else:
-        xmlf=sys.argv[1]
+        xmlf = sys.argv[1]
         if os.path.exists(xmlf):
 
 
                 
-            fname=sys.argv[argc-2]
+            fname = sys.argv[argc-2]
             print fname
 
             print "storing in ", fname 
     
-#            device="p09/tdw/r228"
-            device=sys.argv[argc-1]
+#            device = "p09/tdw/r228"
+            device = sys.argv[argc-1]
             
-            dpx=PyTango.DeviceProxy(device)
+            dpx = PyTango.DeviceProxy(device)
             dpx.set_timeout_millis(25000)
             print " Connected to: ", device
 
 
-            dpx.FileName=fname
+            dpx.FileName = fname
 
             print "opening the H5 file"
             dpx.OpenFile()
 
 
             
-            for i in range(1,argc-2):
-                xmlf=sys.argv[i]
+            for i in range(1, argc-2):
+                xmlf = sys.argv[i]
                 
                 xml = open(xmlf, 'r').read()
 
-                dpx.TheXMLSettings=xml
+                dpx.TheXMLSettings = xml
                 
                 print "opening the entry"
                 dpx.OpenEntry()

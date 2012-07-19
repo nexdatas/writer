@@ -94,37 +94,37 @@ class EField(FElement):
             raise " Field without a name !!!"
 
 
-        shape=[]
+        shape = []
         if self._extraD:
             shape.append(0)
-        if int(self.rank) > 1  or (int(self.rank)>0 and int(self.lengths["1"].encode()) >= 1):
+        if int(self.rank) > 1  or (int(self.rank) > 0 and int(self.lengths["1"].encode()) >= 1):
             for i in range(int(self.rank)):
-                si=str(i+1)
+                si = str(i+1)
                 if si in self.lengths.keys():
-                    if int(self.lengths[si]) >0:
+                    if int(self.lengths[si]) > 0:
                         shape.append(int(self.lengths[si]))
                 else:
                     raise "Wrongly defined shape"
                 
         if len(shape) > 1 and tp.encode() == "string":
-            self._splitArray=True
+            self._splitArray = True
 
         if shape:
             if self._splitArray:
-                f=FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
+                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
             else:
-                f=self._lastObject().create_field(nm.encode(), tp.encode(), shape)
+                f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
         else:
-            f=self._lastObject().create_field(nm.encode(), tp.encode())
+            f = self._lastObject().create_field(nm.encode(), tp.encode())
 
 
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),"string")).value = self._tagAttrs[key].strip().encode()
+                (f.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
 
         for key in self.tagAttributes.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(),NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
+                (f.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
                     = self.tagAttributes[key][1].strip().encode()
 
         self.h5Object = f
@@ -135,7 +135,7 @@ class EField(FElement):
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:
-                dh = DataHolder("SCALAR",val,"DevString",[1,0])
+                dh = DataHolder("SCALAR", val, "DevString", [1,0])
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
             else:
                 print "invalid dataSource for ", nm
@@ -144,7 +144,7 @@ class EField(FElement):
     # \brief During its thread run it fetches the data from the source  
     def run(self):
         if self.source:
-            dh=self.source.getData()
+            dh = self.source.getData()
             if dh:
                 if not self._extraD:
                     self.h5Object.write(dh.cast(self.h5Object.dtype))
@@ -152,25 +152,25 @@ class EField(FElement):
 
                     if str(dh.format).split('.')[-1] == "SCALAR":
                         self.h5Object.grow()
-                        self.h5Object[self.h5Object.shape[0]-1]=dh.cast(self.h5Object.dtype)
+                        self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                     if str(dh.format).split('.')[-1] == "SPECTRUM":
 
                         # way around for a bug in pninx
 
-                        arr=dh.cast(self.h5Object.dtype)
+                        arr = dh.cast(self.h5Object.dtype)
 
-                        if isinstance(arr,numpy.ndarray) \
+                        if isinstance(arr, numpy.ndarray) \
                                 and len(arr.shape) == 1 and arr.shape[0] == 1:
                             self.h5Object.grow()
-                            self.h5Object[self.h5Object.shape[0]-1,:]=arr[0]
+                            self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
                         else:
                             self.h5Object.grow()
-                            self.h5Object[self.h5Object.shape[0]-1,:]=arr
+                            self.h5Object[self.h5Object.shape[0]-1,:] = arr
 
 
                     if str(dh.format).split('.')[-1] == "IMAGE":
                         self.h5Object.grow()
-                        self.h5Object[self.h5Object.shape[0]-1,:,:]=dh.cast(self.h5Object.dtype)
+                        self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
 
 
 
@@ -180,42 +180,42 @@ class EGroup(FElement):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        FElement.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        FElement.__init__(self, name, attrs, last)
 
         ## dictionary with attribures from sepatare attribute tags
-        self.tagAttributes={}
+        self.tagAttributes = {}
 
         if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            g=self._lastObject().create_group(attrs["name"].encode(),attrs["type"].encode())
+            self.h5Object = self._lastObject().create_group(attrs["name"].encode(), attrs["type"].encode())
         elif "type" in attrs.keys():
-            g=self._lastObject().create_group(attrs["type"][2:].encode(),attrs["type"].encode())
+            self.h5Object = self._lastObject().create_group(attrs["type"][2:].encode(), attrs["type"].encode())
         else:
             raise "The group type not defined !!!"
-        self.h5Object=g
+
         for key in attrs.keys() :
             if key not in ["name","type"]:
                 if key in NTP.aTn.keys():
-                    (g.attr(key.encode(),NTP.nTnp[NTP.aTn[key]].encode())).value=attrs[key].encode()
+                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key].encode()
                 else:
-                    (g.attr(key.encode(),"string")).value=attrs[key].encode()
+                    (self.h5Object.attr(key.encode(), "string")).value = attrs[key].encode()
 
     ## stores the tag content
     # \param name the tag name    
     def store(self, name):
         for key in self.tagAttributes.keys() :
             if key not in ["name","type"]:
-                (self.h5Object.attr(key.encode(),NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
+                (self.h5Object.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
                     = self.tagAttributes[key][1].encode()
 
 
     ## fetches the type and the name of the current group            
     # \param groupTypes dictionary with the group type:name pairs            
-    def fetchName(self,groupTypes):
+    def fetchName(self, groupTypes):
         if ("type" in self._tagAttrs.keys()) and ("name" in self._tagAttrs.keys()):
-            groupTypes[self._tagAttrs["type"]]=self._tagAttrs["name"]
+            groupTypes[self._tagAttrs["type"]] = self._tagAttrs["name"]
         elif "type" in self._tagAttrs.keys():
-            groupTypes[self._tagAttrs["type"]]=self._tagAttrs["type"][2:]
+            groupTypes[self._tagAttrs["type"]] = self._tagAttrs["type"][2:]
         else:
             raise "The group type not defined !!!"
         
@@ -228,40 +228,39 @@ class ELink(FElement):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        FElement.__init__(self,name,attrs,last)
-        self.h5Object=None
+    def __init__(self, name, attrs, last):
+        FElement.__init__(self, name, attrs, last)
+        self.h5Object = None
 
     ## converts types to Names using groupTypes dictionary
     # \param text original directory     
     # \param groupTypes dictionary with type:name group pairs
     # \returns directory defined by group namesS    
-    def typesToNames(self,text,groupTypes):
-        sp= text.split("/")
-        res="/"
+    def typesToNames(self, text, groupTypes):
+        sp = text.split("/")
+        res = "/"
         for gr in sp[:-1]:
-            sgr=gr.split(":")
+            sgr = gr.split(":")
             if len(sgr)>1 :
-                res="/".join([res,sgr[1]])
+                res = "/".join([res,sgr[1]])
             else:
                 if sgr[0] in groupTypes:
-                    res="/".join([res,groupTypes[sgr[0]]])
+                    res = "/".join([res,groupTypes[sgr[0]]])
                 else:
                     raise "No "+ str(sgr[0])+ "in  groupTypes " 
-        res=res+"/"+sp[-1]
+        res = res + "/" + sp[-1]
 
         return res
 
         
     ## creates the link the H5 file
     # \param groupTypes dictionary with type:name group pairs
-    def createLink(self,groupTypes):
+    def createLink(self, groupTypes):
         if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            l=(self._lastObject()).link((self.typesToNames(self._tagAttrs["target"],groupTypes)).encode(),
-                                        self._tagAttrs["name"].encode())
+            self.h5Object = (self._lastObject()).link((self.typesToNames(self._tagAttrs["target"], groupTypes)).encode(),
+                                                      self._tagAttrs["name"].encode())
         else:
             raise "No name or type!!!"
-        self.h5Object=l
           
                 
 
@@ -272,13 +271,13 @@ class EAttribute(Element):
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self,name,attrs,last):
-        Element.__init__(self,name,attrs,last)
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
 
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
+    def store(self, name):
 
         if "name" in self._tagAttrs.keys(): 
             nm = self._tagAttrs["name"]
@@ -287,7 +286,7 @@ class EAttribute(Element):
             else:        
                 tp = "NX_CHAR"
                 
-            self._last.tagAttributes[nm]=(tp,("".join(self.content)).strip().encode())
+            self._last.tagAttributes[nm] = (tp, ("".join(self.content)).strip().encode())
 
 
 
@@ -327,7 +326,7 @@ class ESymbol(Element):
     def __init__(self, name, attrs, last):
         Element.__init__(self, name, attrs, last)
         ## dictionary with symbols
-        self.symbols={}
+        self.symbols = {}
 
     ## stores the tag content
     # \param name the tag name    
@@ -395,7 +394,7 @@ class EQuery(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self, name):
-        self._beforeLast().source.query= ("".join(self.content)).strip()        
+        self._beforeLast().source.query = ("".join(self.content)).strip()        
 
 
 ## Database tag element        
@@ -405,7 +404,7 @@ class EDatabase(Element):
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
-        Element.__init__(self,name,attrs,last)
+        Element.__init__(self, name, attrs, last)
         if "dbname" in attrs.keys():
             self._beforeLast().source.dbname = attrs["dbname"]
         if "dbtype" in attrs.keys():
@@ -425,7 +424,7 @@ class EDatabase(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self,name):
+    def store(self, name):
         self._beforeLast().source.dsn = ("".join(self.content)).strip()        
 
  

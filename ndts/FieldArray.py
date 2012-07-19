@@ -55,6 +55,7 @@ class AttributeArray(object):
         for a in self._aObject:
             a.value = value
 
+    ## attribute value       
     value = property(_getvalue, _setvalue)            
 
     
@@ -113,7 +114,7 @@ class FieldArray(object):
     ## access to attrributes Array    
     # \param name name of the attribute
     # \param dtype type of the attribute
-    def attr(self,name, dtype):
+    def attr(self, name, dtype):
         if not self._aArray:
             self._aArray = AttributeArray(self._fList, name, dtype)
         return self._aArray
@@ -121,7 +122,7 @@ class FieldArray(object):
     ## fetches ranges from the field shape and key
     # \param key slice object
     # \returns 
-    def _fetchRanges(self,key):
+    def _fetchRanges(self, key):
         mkey = key
         
         if isinstance(key, Iterable):
@@ -130,21 +131,21 @@ class FieldArray(object):
             mkey = [key]
 
         while mkey < len(self.shape):
-            mkey.append(slice(0,self.shape[len(mkey)],1))
+            mkey.append(slice(0,self.shape[len(mkey)], 1))
             
-        kr=None
-        ir=None
-        jr=None
+        kr = None
+        ir = None
+        jr = None
             
         if len(self.shape) >0 :
             kr = (range(self.shape[0])[mkey[0]])
-            if isinstance(kr,int):  kr = [kr]
+            if isinstance(kr, int):  kr = [kr]
         if len(self.shape) >1 :
             ir = (range(self.shape[1])[mkey[1]])
-            if isinstance(ir,int):  ir = [ir]
+            if isinstance(ir, int):  ir = [ir]
         if len(self.shape) >2 :
             jr = (range(self.shape[2])[mkey[2]])
-            if isinstance(jr,int):  jr = [jr]
+            if isinstance(jr, int):  jr = [jr]
         
         return kr, ir, jr
             
@@ -183,28 +184,28 @@ class FieldArray(object):
 
         if self._fdim < 1 :
             for k in range(len(value)):
-                self._fList[0].__setitem__(kr[k],value[k])
+                self._fList[0].__setitem__(kr[k], value[k])
         elif self._fdim == 1:
             if rank == 2:
                 for i in range(len(value[0])):
                     for k in range(len(value)):
-                        self._fList[ir[i]].__setitem__(kr[k],value[k][i])
+                        self._fList[ir[i]].__setitem__(kr[k], value[k][i])
             elif rank == 1 :
                 if len(ir) == 1:
                     for k in range(len(value)):
-                        self._fList[ir[0]].__setitem__(kr[k],value[k])
+                        self._fList[ir[0]].__setitem__(kr[k], value[k])
                 if len(kr) == 1:
                     for i in range(len(value)):
-                        self._fList[ir[i]].__setitem__(kr[0],value[i])
+                        self._fList[ir[i]].__setitem__(kr[0], value[i])
             elif rank == 0 and len(ir) == 1 and len(kr) == 1:
-                self._fList[ir[0]].__setitem__(kr[0],value)
+                self._fList[ir[0]].__setitem__(kr[0], value)
         
         elif self._fdim == 2:
             if rank == 3:
                 for k in range(len(value)):
                     for i in range(len(value[0])):
                         for j in range(len(value[0,0])):
-                            self._fList[ir[i]*self.shape[2]+jr[j]].__setitem__([kr[k]],value[k][i][j])
+                            self._fList[ir[i]*self.shape[2]+jr[j]].__setitem__([kr[k]], value[k][i][j])
 
             elif rank == 2:
                 if len(kr) == 1:
@@ -214,24 +215,24 @@ class FieldArray(object):
                 elif len(ir) == 1 :        
                     for k in range(len(value)):
                         for j in range(len(value[0])):
-                            self._fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[k],value[k][j])
+                            self._fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[k], value[k][j])
                 elif len(jr) == 1 :        
                     for k in range(len(value)):
                         for i in range(len(value[0])):
-                            self._fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k][i])
+                            self._fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[k], value[k][i])
 
             elif rank == 1:            
                 if len(kr) == 1 and len(ir) == 1:
                         for j in range(len(value)):
-                            self._fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0],value[j])
+                            self._fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0], value[j])
                 if len(kr) == 1 and len(jr) == 1:
                         for i in range(len(value)):
-                            self._fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0],value[i])
+                            self._fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0], value[i])
                 if len(ir) == 1 and len(jr) == 1:
                     for k in range(len(value)):
-                        self._fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[k],value[k])
+                        self._fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[k], value[k])
             elif rank == 0:
-                    self._fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[0],value)
+                    self._fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[0], value)
 
                     
 
@@ -245,7 +246,7 @@ class FieldArray(object):
             key.append(slice(0, self.shape[k], 1))
 
         if key:
-            elf.__setitem__(key,value)
+            elf.__setitem__(key, value)
 
 
     ## reads the field value

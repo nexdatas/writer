@@ -32,19 +32,19 @@ DB_AVAILABLE = []
 try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
-except ImportError,e:
+except ImportError, e:
     print "MYSQL not available: %s" % e
     
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
-except ImportError,e:
+except ImportError, e:
     print "PGSQL not available: %s" % e
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
-except ImportError,e:
+except ImportError, e:
     print "ORACLE not available: %s" % e
 
 
@@ -88,13 +88,13 @@ class TangoSource(DataSource):
     # \returns DataHolder with collected data  
     def getData(self):
         if self.device and self.memberType and self.name:
-            proxy=PyTango.DeviceProxy(self.device.encode())
-            da=None
+            proxy = PyTango.DeviceProxy(self.device.encode())
+            da = None
             if self.memberType == "attribute":
-                alist=proxy.get_attribute_list()
+                alist = proxy.get_attribute_list()
 
                 if self.name.encode() in alist:
-                    da=proxy.read_attribute( self.name.encode())
+                    da = proxy.read_attribute( self.name.encode())
 #                    if str(da.data_format).split('.')[-1] == "SPECTRUM":
 #                        print "Spectrum Device: ", self.device.encode()
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
@@ -103,13 +103,13 @@ class TangoSource(DataSource):
 
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
-                plist=proxy.get_property_list('*')
+                plist = proxy.get_property_list('*')
                 if self.name.encode() in plist:
                     da = proxy.get_property(self.name.encode())[self.name.encode()][0]
                     return DataHolder("SCALAR", da, "DevString", [1,0])
             elif self.memberType == "command":
 #                print "calling the command: ", self.name
-		clist=[cm.cmd_name for cm in proxy.command_list_query()]
+		clist = [cm.cmd_name for cm in proxy.command_list_query()]
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
@@ -169,7 +169,7 @@ class DBaseSource(DataSource):
     ## connects to PGSQL database    
     # \returns open database object
     def _connectPGSQL(self):
-        args={}
+        args = {}
 
         if self.dbname:
             args["database"] = self.dbname.encode()
@@ -187,7 +187,7 @@ class DBaseSource(DataSource):
     ## connects to ORACLE database    
     # \returns open database object
     def _connectORACLE(self):
-        args={}
+        args = {}
         if self.user:
             args["user"] = self.user.encode()
         if self.passwd:
@@ -203,7 +203,7 @@ class DBaseSource(DataSource):
     # \returns  DataHolder with collected data   
     def getData(self):
 
-        db=None
+        db = None
 
         if self.dbtype in self._dbConnect.keys() and self.dbtype in DB_AVAILABLE:
             db = self._dbConnect[self.dbtype]()
@@ -221,7 +221,7 @@ class DBaseSource(DataSource):
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
-                dh=DataHolder("SPECTRUM", ldata, "DevString", [len(ldata),0])
+                dh = DataHolder("SPECTRUM", ldata, "DevString", [len(ldata),0])
             else:
                 data = cursor.fetchall()
                 ldata = list(list(el) for el in data)
