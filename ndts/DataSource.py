@@ -20,7 +20,7 @@
 
 import json
 
-from PyTango import *
+import PyTango 
 
 from Element import *
 from DataHolder import *
@@ -88,7 +88,7 @@ class TangoSource(DataSource):
     # \returns DataHolder with collected data  
     def getData(self):
         if self.device and self.memberType and self.name:
-            proxy=DeviceProxy(self.device.encode())
+            proxy=PyTango.DeviceProxy(self.device.encode())
             da=None
             if self.memberType == "attribute":
                 alist=proxy.get_attribute_list()

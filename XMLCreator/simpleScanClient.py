@@ -25,7 +25,7 @@ import random
 
 from math import exp
 
-from PyTango import *
+import PyTango 
 
 
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             if len(sys.argv)>3:
                 device=sys.argv[3]
             
-            dpx=DeviceProxy(device)
+            dpx=PyTango.DeviceProxy(device)
             print " Connected to: ", device
             dpx.Init()
     

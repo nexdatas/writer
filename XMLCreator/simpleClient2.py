@@ -21,7 +21,7 @@
 import sys,os
 import time
 
-from PyTango import *
+import PyTango 
 
 if __name__ == "__main__":
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 #            device="p09/tdw/r228"
             device=sys.argv[argc-1]
             
-            dpx=DeviceProxy(device)
+            dpx=PyTango.DeviceProxy(device)
             dpx.set_timeout_millis(25000)
             print " Connected to: ", device
 

@@ -19,7 +19,7 @@
 ## \file simpleXML.py
 # creator of XML files
 
-from PyTango import *
+import PyTango 
 import sys, os, time
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
@@ -373,7 +373,7 @@ class DevNGroup(NGroup):
 		## if we call the commands
 		self.commands=commands
 		## device proxy
-		self.proxy=DeviceProxy(devName)
+		self.proxy=PyTango.DeviceProxy(devName)
 		## fields of the device
 		self.fields={}
 		## if we call the commands

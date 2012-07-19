@@ -21,7 +21,7 @@
 import sys,os
 import time
 
-from PyTango import *
+import PyTango
 
 if __name__ == "__main__":
 
@@ -31,7 +31,6 @@ if __name__ == "__main__":
     else:
         xmlf=sys.argv[1]
         if os.path.exists(xmlf):
-
 
             if len(sys.argv)>2:
                 
@@ -51,7 +50,7 @@ if __name__ == "__main__":
             if len(sys.argv)>3:
                 device=sys.argv[3]
             
-            dpx=DeviceProxy(device)
+            dpx=PyTango.DeviceProxy(device)
             dpx.set_timeout_millis(25000)
             print " Connected to: ", device
     
