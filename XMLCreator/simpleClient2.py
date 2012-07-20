@@ -24,8 +24,8 @@ import time
 
 import PyTango 
 
-if __name__ == "__main__":
-
+## the main function
+def main():
     argc = len(sys.argv)
 
     if  argc < 4:
@@ -34,8 +34,6 @@ if __name__ == "__main__":
     else:
         xmlf = sys.argv[1]
         if os.path.exists(xmlf):
-
-
                 
             fname = sys.argv[argc-2]
             print fname
@@ -87,6 +85,10 @@ if __name__ == "__main__":
             print "closing the H5 file"
             dpx.closeFile()
 
+
+
+if __name__ == "__main__":
+    main()
 
             
                 

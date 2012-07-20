@@ -24,8 +24,8 @@ import time
 
 import PyTango
 
-if __name__ == "__main__":
-
+## the main function
+def main():
     if  len(sys.argv) < 2:
         print "usage: simpleClient.py  <XMLfile>  <H5file>  <tangoServer>"
         
@@ -84,6 +84,10 @@ if __name__ == "__main__":
             dpx.closeEntry()
             print "closing the H5 file"
             dpx.closeFile()
+
+
+if __name__ == "__main__":
+    main()
             
                 
             

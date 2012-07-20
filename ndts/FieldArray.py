@@ -25,7 +25,7 @@ from collections import Iterable
 from Types import *
 
 ## exception for corrupted FieldArray
-class CorruptedFieldArra(Exception): pass
+class CorruptedFieldArray(Exception): pass
 
 ## Array of the attributes
 class AttributeArray(object):

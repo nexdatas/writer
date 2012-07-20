@@ -30,16 +30,18 @@ from math import exp
 import PyTango 
 
 
-
+## creates spectrum plot with random Gaussians
+# \param xlen data length 
+# \param number of Gaussians  
+# \returns list with the plot
 def nicePlot(xlen=2048, nrGauss=5):
     pr = [ [ random.uniform(0.01,0.001), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
                for i in range(nrGauss) ]
     return [ sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
                  for i in range(xlen)]
-    
 
-if __name__ == "__main__":
-
+## the main function    
+def main():
     if  len(sys.argv) < 2:
         print "usage: simpleClient.py  <XMLfile>  <H5file>  <tangoServer>"
         
@@ -109,6 +111,12 @@ if __name__ == "__main__":
             dpx.closeEntry()
             print "closing the H5 file"
             dpx.closeFile()
+
+
+
+if __name__ == "__main__":
+    main()
+
             
                 
             

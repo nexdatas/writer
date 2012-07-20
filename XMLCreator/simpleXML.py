@@ -486,8 +486,8 @@ class XMLFile(object):
  
 		
 
-
-if __name__ == "__main__":
+## the main function
+def main():
 	## handler to XML file
 	df = XMLFile("test.xml")
 	## entry
@@ -649,3 +649,6 @@ if __name__ == "__main__":
 	df.dump()
 
  
+
+if __name__ == "__main__":
+	main()

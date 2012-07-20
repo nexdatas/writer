@@ -21,7 +21,8 @@
 
 from simpleXML import *
 
-if __name__ == "__main__":
+## the main function
+def main():
 	df = XMLFile("scan.xml")
 	
 	en = NGroup(df.root, "entry1", "NXentry")
@@ -66,4 +67,7 @@ if __name__ == "__main__":
 
 	df.dump()
 
- 
+
+
+if __name__ == "__main__":
+	main()
