@@ -34,6 +34,10 @@ from FieldArray import *
 from Types import *
 
 
+## exception for syntax in XML settings
+class XMLSettingSyntaxError(Exception): pass
+
+
 ## NeXuS runnable tag element
 # tag element corresponding to one of H5 objects 
 class FElement(Element):
@@ -91,7 +95,7 @@ class EField(FElement):
             else:
                 tp = "string"
         else:
-            raise " Field without a name !!!"
+            raise XMLSettingSyntaxError, " Field without a name"
 
 
         shape = []
@@ -104,7 +108,7 @@ class EField(FElement):
                     if int(self.lengths[si]) > 0:
                         shape.append(int(self.lengths[si]))
                 else:
-                    raise "Wrongly defined shape"
+                    raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
@@ -191,7 +195,7 @@ class EGroup(FElement):
         elif "type" in attrs.keys():
             self.h5Object = self._lastObject().create_group(attrs["type"][2:].encode(), attrs["type"].encode())
         else:
-            raise "The group type not defined !!!"
+            raise XMLSettingSyntaxError, "The group type not defined"
 
         for key in attrs.keys() :
             if key not in ["name","type"]:
@@ -217,7 +221,7 @@ class EGroup(FElement):
         elif "type" in self._tagAttrs.keys():
             groupTypes[self._tagAttrs["type"]] = self._tagAttrs["type"][2:]
         else:
-            raise "The group type not defined !!!"
+            raise XMLSettingSyntaxError, "The group type not defined"
         
         
 
@@ -247,7 +251,7 @@ class ELink(FElement):
                 if sgr[0] in groupTypes:
                     res = "/".join([res,groupTypes[sgr[0]]])
                 else:
-                    raise "No "+ str(sgr[0])+ "in  groupTypes " 
+                    raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
         res = res + "/" + sp[-1]
 
         return res
@@ -260,7 +264,7 @@ class ELink(FElement):
             self.h5Object = (self._lastObject()).link((self.typesToNames(self._tagAttrs["target"], groupTypes)).encode(),
                                                       self._tagAttrs["name"].encode())
         else:
-            raise "No name or type!!!"
+            raise XMLSettingSyntaxError, "No name or type"
           
                 
 

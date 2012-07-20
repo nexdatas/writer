@@ -24,6 +24,9 @@ from collections import Iterable
 
 from Types import *
 
+## exception for corrupted FieldArray
+class CorruptedFieldArra(Exception): pass
+
 ## Array of the attributes
 class AttributeArray(object):
     ## constructor
@@ -174,7 +177,7 @@ class FieldArray(object):
     def __setitem__(self, key, value):
         
         if not self._fList:
-            raise "array Field without elements"
+            raise CorruptedFieldArray, "Field list without elements"
 
         kr, ir, jr = self._fetchRanges(key)
 
