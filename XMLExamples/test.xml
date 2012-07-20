@@ -80,8 +80,8 @@
         <field name="power" type="NX_FLOAT" units="W">
           1
           <datasource strategy="INIT" type="TANGO">
-            <device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
-            <record name="Position" type="attribute"/>
+            <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
+            <record name="Position"/>
           </datasource>
         </field>
         <field name="emittance_x" type="NX_FLOAT" units="nm rad">
@@ -148,8 +148,8 @@
             <dim index="2" value="2"/>
           </dimensions>
           <datasource strategy="FINAL" type="TANGO">
-            <device hostname="haso228k.desy.de" name="p09/tst/exp.01" port="10000"/>
-            <record name="MyImageAttribute" type="attribute"/>
+            <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
+            <record name="MyImageAttribute"/>
           </datasource>
         </field>
         <field name="distance" type="NX_FLOAT">
@@ -174,8 +174,8 @@
         <field name="y_pixel_size" type="NX_FLOAT">
           0.01
           <datasource strategy="FINAL" type="TANGO">
-            <device hostname="haso228k.desy.de" name="p09/motor/exp.01" port="10000"/>
-            <record name="Position" type="attribute"/>
+            <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
+            <record name="Position"/>
           </datasource>
         </field>
       </group>

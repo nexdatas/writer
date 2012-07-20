@@ -16,7 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndts nexdatas
-# \file DataSource.py
+## \file DataSource.py
+# data-source types
 
 import json
 
@@ -246,12 +247,13 @@ class ClientSource(DataSource):
     # \param globalJSON static JSON string    
     # \param localJSON dynamic JSON string    
     def setJSON(self, globalJSON, localJSON=None):
-        self._globalJSON = json.loads(globalJSON)
-        if localJSON:
-            self._localJSON = json.loads(localJSON)
-        else:
-            self._localJSON = None
-    
+            self._globalJSON = json.loads(globalJSON)
+            if localJSON:
+                self._localJSON = json.loads(localJSON)
+            else:
+                self._localJSON = None
+            
+
     ## provides access to the data    
     # \returns  DataHolder with collected data   
     def getData(self):

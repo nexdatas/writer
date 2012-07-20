@@ -250,13 +250,14 @@ class NDSource(NTag):
 		dv = NTag(self.elem, "device")
 		dv.elem.attrib["name"] = device
 
+		if memberType:
+			dv.elem.attrib["member"] = memberType
 		if host:
 			dv.elem.attrib["hostname"] = host
 		if port:
 			dv.elem.attrib["port"] = port
 
 		da = NTag(self.elem, "record")
-		da.addTagAttr("type", memberType)
 		da.addTagAttr("name", recordName)
 
         ## sets paramters for Client data

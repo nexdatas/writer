@@ -343,8 +343,6 @@ class ERecord(Element):
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
         Element.__init__(self, name, attrs, last)
-        if "type" in attrs.keys():
-            self._beforeLast().source.memberType = attrs["type"]
         if "name" in attrs.keys():
             self._beforeLast().source.name = attrs["name"]
 
@@ -363,6 +361,10 @@ class EDevice(Element):
             self._beforeLast().source.hostname = attrs["hostname"]
         if "port" in attrs.keys():
             self._beforeLast().source.port = attrs["port"]
+        if "member" in attrs.keys():
+            self._beforeLast().source.memberType = attrs["member"]
+        else:
+            self._beforeLast().source.memberType = "attribute"
 
 ## door tag element        
 class EDoor(Element):        

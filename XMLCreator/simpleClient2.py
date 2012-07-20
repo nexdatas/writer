@@ -16,7 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package  ndtstools tools for ndts
-# \file simpleClient2.py
+## \file simpleClient2.py
+# second example of simple client
 
 import sys, os
 import time

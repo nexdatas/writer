@@ -18,8 +18,8 @@
             <dim index="1" value="2048"/>
           </dimensions>
           <datasource strategy="STEP" type="TANGO">
-            <device name="p09/mca/exp.02"/>
-            <record name="Data" type="attribute"/>
+            <device member="attribute" name="p09/mca/exp.02"/>
+            <record name="Data"/>
           </datasource>
         </field>
       </group>

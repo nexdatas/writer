@@ -17,7 +17,7 @@
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndts nexdatas
 ## \file DataHolder.py
-#
+# holder for data
                          
 from Types import *
 

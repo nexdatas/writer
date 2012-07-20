@@ -16,7 +16,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package  ndtstools tools for ndts
-# \file simpleScanClient.py
+## \file simpleScanClient.py
+# example of simple client
+
 
 import sys, os
 import time
