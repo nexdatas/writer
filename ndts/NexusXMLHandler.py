@@ -42,9 +42,6 @@ class NexusXMLHandler(sax.ContentHandler):
         ## stack with open tag elements
         self._stack = [fileElement]
 
-        ## the current content of the tag 
-        self._content = ""
-
         ## map of tag names to related classes
         self._elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
                               'link':ELink, 'doc':EDoc,
@@ -68,6 +65,7 @@ class NexusXMLHandler(sax.ContentHandler):
         self._poolMap = {'INIT':self.initPool, 'STEP':self.stepPool, 'FINAL':self.finalPool}        
 
 
+
     ## the last stack element 
     # \returns the last stack element 
     def _last(self):
@@ -86,7 +84,6 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        self._content = ""
         if name in self._elementClass:
             self._stack.append(self._elementClass[name](name, attrs, self._last()))
             if hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
@@ -103,11 +100,10 @@ class NexusXMLHandler(sax.ContentHandler):
         if self._last().tagName == name :
             if name in self._elementClass:
                 strategy = self._last().store(name)
-
+                
                 if strategy in self._poolMap.keys():
                     self._poolMap[strategy].append(self._last())
                 self._stack.pop()
-
 
     ## closes the elements
     # \brief It goes through all stack elements closing them
