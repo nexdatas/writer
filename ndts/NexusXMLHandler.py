@@ -39,8 +39,13 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## map of NXclass : name
         self._groupTypes = {"":""}
+
         ## stack with open tag elements
         self._stack = [fileElement]
+
+        ## unsupported tag tracer
+        self._unsupportedTag=""
+
 
         ## map of tag names to related classes
         self._elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
@@ -48,10 +53,12 @@ class NexusXMLHandler(sax.ContentHandler):
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
                               'dim':EDim, 'enumeration':Element, 'item':Element,
-                              'datasource':DataSourceFactory,'record':ERecord , 'query':EQuery, 
+                              'datasource':DataSourceFactory, 'record':ERecord , 'query':EQuery, 
                               'database':EDatabase, 
                               'device':EDevice, 'door':EDoor}
 
+        ## transparent tags
+        self._transparentTags = ['definition']
 
 
         ## thread pool with INIT elements
@@ -78,32 +85,40 @@ class NexusXMLHandler(sax.ContentHandler):
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        self._last().content.append(ch)
+        if not self._unsupportedTag:
+            self._last().content.append(ch)
 
     ##  parses the opening tag
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        if name in self._elementClass:
-            self._stack.append(self._elementClass[name](name, attrs, self._last()))
-            if hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
-                self._last().fetchName(self._groupTypes)
-            if hasattr(self._last(), "createLink") and callable(self._last().createLink):
-                self._last().createLink(self._groupTypes)
-        else:
-            print 'Unsupported tag:', name, attrs.keys()
-
+        if not self._unsupportedTag :
+            if name in self._elementClass:
+                self._stack.append(self._elementClass[name](name, attrs, self._last()))
+                if hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
+                    self._last().fetchName(self._groupTypes)
+                if hasattr(self._last(), "createLink") and callable(self._last().createLink):
+                    self._last().createLink(self._groupTypes)
+            elif name not in self._transparentTags:
+                print "Unsupported tag: ", name ,attrs.keys()
+                self._unsupportedTag = name
+                
 
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        if self._last().tagName == name :
-            if name in self._elementClass:
-                strategy = self._last().store(name)
-                
-                if strategy in self._poolMap.keys():
-                    self._poolMap[strategy].append(self._last())
-                self._stack.pop()
+        if not self._unsupportedTag and name in self._elementClass:
+#            if self._last().tagName == name :
+            strategy = self._last().store(name)
+            
+            if strategy in self._poolMap.keys():
+                self._poolMap[strategy].append(self._last())
+            self._stack.pop()
+        elif name not in self._transparentTags:
+            if self._unsupportedTag == name:
+                self._unsupportedTag = ""
+   
+            
 
     ## closes the elements
     # \brief It goes through all stack elements closing them

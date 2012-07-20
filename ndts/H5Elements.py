@@ -190,12 +190,16 @@ class EGroup(FElement):
         ## dictionary with attribures from sepatare attribute tags
         self.tagAttributes = {}
 
-        if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-            self.h5Object = self._lastObject().create_group(attrs["name"].encode(), attrs["type"].encode())
-        elif "type" in attrs.keys():
-            self.h5Object = self._lastObject().create_group(attrs["type"][2:].encode(), attrs["type"].encode())
+        if self._lastObject():
+            if ("type" in attrs.keys()) and ("name" in attrs.keys()) :
+                self.h5Object = self._lastObject().create_group(attrs["name"].encode(), attrs["type"].encode())
+            elif "type" in attrs.keys() :
+                self.h5Object = self._lastObject().create_group(attrs["type"][2:].encode(), attrs["type"].encode())
+            else:
+                raise XMLSettingSyntaxError, "The group type not defined"
         else:
-            raise XMLSettingSyntaxError, "The group type not defined"
+                raise XMLSettingSyntaxError, "File object for the last element does not exist"
+            
 
         for key in attrs.keys() :
             if key not in ["name","type"]:
@@ -319,7 +323,9 @@ class EDoc(Element):
     ## stores the tag content
     # \param name the tag name    
     def store(self, name):
-        self._beforeLast().doc = self._beforeLast().doc + "".join(self.content)            
+        if self._beforeLast():
+            self._beforeLast().doc = self._beforeLast().doc + "".join(self.content)            
+
 
 ## symbol tag element        
 class ESymbol(Element):        
