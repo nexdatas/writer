@@ -26,7 +26,8 @@ import sys, os
 from H5Elements import *
 from ThreadPool import *
 
-
+## unsupported tag exception
+class UnsupportedTagError(Exception): pass
     
 ## SAX2 parser 
 class NexusXMLHandler(sax.ContentHandler):
@@ -45,6 +46,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## unsupported tag tracer
         self._unsupportedTag=""
+        self._raiseUnsupportedTag=True
 
 
         ## map of tag names to related classes
@@ -100,6 +102,8 @@ class NexusXMLHandler(sax.ContentHandler):
                 if hasattr(self._last(), "createLink") and callable(self._last().createLink):
                     self._last().createLink(self._groupTypes)
             elif name not in self._transparentTags:
+                if self._raiseUnsupportedTag:
+                    raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
                 print "Unsupported tag: ", name ,attrs.keys()
                 self._unsupportedTag = name
                 
