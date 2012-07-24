@@ -165,11 +165,11 @@ if __name__ == "__main__":
     if argc > 2:
         tdw.fileName = sys.argv[argc-1]
 
-    print "opening the H5 file"
-    tdw.openNXFile()
-
-
     if argc > 1:
+        print "opening the H5 file"
+        tdw.openNXFile()
+
+
 
         for i in range(1, argc-1):
             xmlf = sys.argv[i]
@@ -196,8 +196,8 @@ if __name__ == "__main__":
             tdw.closeEntry()
 
 
-    print "closing the H5 file"
-    tdw.closeNXFile()
+        print "closing the H5 file"
+        tdw.closeNXFile()
             
                 
     
