@@ -43,7 +43,7 @@ def nicePlot(xlen=2048, nrGauss=5):
 
 
 
-
+## the main function
 def main():
 
 
