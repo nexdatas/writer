@@ -149,7 +149,9 @@ class EField(FElement):
     def run(self):
         if self.source:
             dh = self.source.getData()
-            if dh:
+            if not dh:
+                print "WARNING: Data for %s not found" % self.h5Object.name
+            else:
                 if not self._extraD:
                     self.h5Object.write(dh.cast(self.h5Object.dtype))
                 else:
