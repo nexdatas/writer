@@ -45,6 +45,7 @@ class ThreadPool(object):
     ## sets the JSON string to threads
     # \param globalJSON the static JSON string
     # \param localJSON the dynamic JSON string
+    # \returns self object    
     def setJSON(self, globalJSON, localJSON=None):
         for el in self._elementList :
             if hasattr(el.source, "setJSON") and callable(el.source.setJSON):
