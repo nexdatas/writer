@@ -566,8 +566,8 @@ def main():
 	f = NField(src.elem, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
-	sr = NDSource(f.elem, "STEP")
-	sr.initSardana("door1", "emitannce_y", host="haso228k.desy.de", port="10000");
+#	sr = NDSource(f.elem, "STEP")
+#	sr.initSardana("door1", "emitannce_y", host="haso228k.desy.de", port="10000");
 	f = NField(src.elem, "sigma_x", "NX_FLOAT")
 	f.setUnits("nm")
 	f.setText("0.1")

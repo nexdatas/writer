@@ -33,10 +33,6 @@
         </field>
         <field name="power" type="NX_FLOAT" units="W">
           1
-          <datasource strategy="INIT" type="TANGO">
-            <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
-            <record name="power"/>
-          </datasource>
         </field>
         <field name="emittance_x" type="NX_FLOAT" units="nm rad">
           0.2
@@ -46,10 +42,6 @@
         </field>
         <field name="emittance_y" type="NX_FLOAT" units="nm rad">
           0.2
-          <datasource strategy="STEP" type="SARDANA">
-            <door hostname="haso228k.desy.de" name="door1" port="10000"/>
-            <record name="emitannce_y"/>
-          </datasource>
         </field>
         <field name="sigma_x" type="NX_FLOAT" units="nm">
           0.1

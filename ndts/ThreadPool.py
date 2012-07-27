@@ -23,6 +23,9 @@ from threading import *
 from ElementThread import *
 import Queue
 
+## exception for problems in thread
+class ThreadError(Exception): pass
+
 ## Pool with threads
 class ThreadPool(object):
     ## constructor
@@ -83,6 +86,34 @@ class ThreadPool(object):
     def runAndWait(self):
         self.run()
         self.join()
+
+    ## checks errors from threads
+    def checkErrors(self):
+        elementNames = []
+        errors=[]
+        messages=[]
+        for el in self._elementList:
+            if el.error:
+                if hasattr(el, "h5Object") and hasattr(el.h5Object, "name"):
+                    elementNames.append(str(el.h5Object.name))
+                else:
+                    elementNames.append("unnamed")
+
+                errors.append(el.error)
+                
+                if len(el.error) > 1 :
+                    print el.error[1]
+                    if hasattr(el.error[1],"__str__"):
+                        messages.append(el.error[1].__str__())
+                    else:
+                        messages.append(str(el.error[1]))
+                else:
+                    print el.error
+                    messages.append(str(el.error))
+                    
+
+        if elementNames:
+            raise ThreadError("Problems in storing data for %s with %s" %  (str(elementNames), str(messages))  )
 
     ## closer
     # \brief It close the threads from the pool

@@ -100,6 +100,7 @@ class TangoDataWriter(object):
 
             self._initPool.setJSON(self.json)
             self._initPool.runAndWait()
+            self._initPool.checkErrors()
 
 
     ## close the data writer        
@@ -109,6 +110,7 @@ class TangoDataWriter(object):
         if self._stepPool:
             self._stepPool.setJSON(self.json, json)
             self._stepPool.runAndWait()
+            self._stepPool.checkErrors()
 
 
     ## closes the data entry        
@@ -119,6 +121,7 @@ class TangoDataWriter(object):
         if self._finalPool:
             self._finalPool.setJSON(self.json)
             self._finalPool.runAndWait()
+            self._finalPool.checkErrors()
 
 
         if self._initPool:

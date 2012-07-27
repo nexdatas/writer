@@ -92,10 +92,6 @@
         </field>
         <field name="emittance_y" type="NX_FLOAT" units="nm rad">
           0.2
-          <datasource strategy="STEP" type="SARDANA">
-            <door hostname="haso228k.desy.de" name="door1" port="10000"/>
-            <record name="emitannce_y"/>
-          </datasource>
         </field>
         <field name="sigma_x" type="NX_FLOAT" units="nm">
           0.1

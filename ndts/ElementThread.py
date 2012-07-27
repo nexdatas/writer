@@ -51,8 +51,9 @@ class ElementThread(Thread):
             try:
                 elem = self._queue.get(block=False)
                 if hasattr(elem, "run") and callable(elem.run):
+                    elem.error=None
                     elem.run()
-                    
+
             except Queue.Empty:
                 full = False    
                 pass
