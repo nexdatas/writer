@@ -35,14 +35,14 @@ def main():
 	f.setUnits("m")
 #	f.setText("0.2")
 	sr = NDSource(f.elem, "STEP")
-	sr.initClient("p09/counter/exp.01");
+	sr.initClient("exp_c01");
 
 
 	f = NField(dt.elem, "counter2", "NX_FLOAT")
 	f.setUnits("s")
 #	f.setText("0.2")
 	sr = NDSource(f.elem, "STEP")
-	sr.initClient("p09/counter/exp.02");
+	sr.initClient("exp_c02");
 	
 
 	f = NField(dt.elem, "mca", "NX_FLOAT")

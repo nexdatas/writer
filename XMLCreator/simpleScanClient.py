@@ -88,7 +88,7 @@ def main():
             print "recording the H5 file" 
             mca = str(nicePlot(2048, 10))
 
-            dpx.record('{"data": {"p09/counter/exp.01":0.1, "p09/counter/exp.02":1.1, "p09/mca/exp.02":'\
+            dpx.record('{"data": {"exp_c01":0.1, "exp_c02":1.1, "p09/mca/exp.02":'\
                            + mca+ '  } }')
             
             print "sleeping for 1s"
@@ -96,7 +96,7 @@ def main():
             print "recording the H5 file"
             mca = str(nicePlot(2048, 4))
 
-            dpx.record('{"data": {"p09/counter/exp.01":0.2, "p09/counter/exp.02":1.3, "p09/mca/exp.02":'\
+            dpx.record('{"data": {"exp_c01":0.2, "exp_c02":1.3, "p09/mca/exp.02":'\
                            + mca+ '  } }')
 
             print "sleeping for 1s"
@@ -104,7 +104,7 @@ def main():
             print "recording the H5 file"
 
             mca = str(nicePlot(2048, 20))
-            dpx.record('{"data": {"p09/counter/exp.01":0.3, "p09/counter/exp.02":1.4, "p09/mca/exp.02":'\
+            dpx.record('{"data": {"exp_c01":0.3, "exp_c02":1.4, "p09/mca/exp.02":'\
                            + mca+ '  } }')
 
             print "closing the  entry"
@@ -122,3 +122,5 @@ if __name__ == "__main__":
             
             
 
+
+#  LocalWords:  nicePlot
