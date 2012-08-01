@@ -197,9 +197,9 @@ class EField(FElement):
                                 self.h5Object[self.h5Object.shape[0]-1,:] = arr
 
                                 
-                            if str(dh.format).split('.')[-1] == "IMAGE":
-                                self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                        if str(dh.format).split('.')[-1] == "IMAGE":
+                            self.h5Object.grow()
+                            self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print message[0]
