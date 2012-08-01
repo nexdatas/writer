@@ -148,6 +148,22 @@ class EField(FElement):
             else:
                 print "Warning: Invalid datasource for ", nm
 
+    ## creates the error message
+    def setMessage(self, exceptionMessage=None):
+        if hasattr(self.h5Object, "name"):
+            name = self.h5Object.name
+        else:
+            name = "unnamed object"
+        if source:
+            dsource = str(self.source)
+        else:
+            dsource = "unknown datasource"
+            
+            
+        message = ("WARNING: Data for %s on %s not found" % (name, dsource), exceptionMessage )
+        return message
+        
+
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
@@ -155,8 +171,9 @@ class EField(FElement):
             if self.source:
                 dh = self.source.getData()
                 if not dh:
-                    print "WARNING: Data for %s not found" % self.h5Object.name
-                    self.error = (None, "WARNING: Data for %s not found" % self.h5Object.name,None )
+                    message = self.setMessage()
+                    print message[0]
+                    self.error = message
                 else:
                     if not self._extraD:
                         self.h5Object.write(dh.cast(self.h5Object.dtype))
@@ -179,12 +196,15 @@ class EField(FElement):
                                 self.h5Object.grow()
                                 self.h5Object[self.h5Object.shape[0]-1,:] = arr
 
-
-                        if str(dh.format).split('.')[-1] == "IMAGE":
-                            self.h5Object.grow()
-                            self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                                
+                            if str(dh.format).split('.')[-1] == "IMAGE":
+                                self.h5Object.grow()
+                                self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
         except:
-            self.error = sys.exc_info()
+            message = self.setMessage( sys.exc_info()[1].__str__()  )
+            print message[0]
+            self.error = message
+                                #            self.error = sys.exc_info()
             
 
 

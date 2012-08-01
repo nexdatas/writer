@@ -89,31 +89,13 @@ class ThreadPool(object):
 
     ## checks errors from threads
     def checkErrors(self):
-        elementNames = []
-        errors=[]
-        messages=[]
+        errors = []
         for el in self._elementList:
             if el.error:
-                if hasattr(el, "h5Object") and hasattr(el.h5Object, "name"):
-                    elementNames.append(str(el.h5Object.name))
-                else:
-                    elementNames.append("unnamed")
-
                 errors.append(el.error)
-                
-                if len(el.error) > 1 :
-                    print el.error[1]
-                    if hasattr(el.error[1],"__str__"):
-                        messages.append(el.error[1].__str__())
-                    else:
-                        messages.append(str(el.error[1]))
-                else:
-                    print el.error
-                    messages.append(str(el.error))
-                    
 
-        if elementNames:
-            raise ThreadError("Problems in storing data for %s with %s" %  (str(elementNames), str(messages))  )
+        if errors:
+            raise ThreadError("Problems in storing data: %s" %  str(errors)  )
 
     ## closer
     # \brief It close the threads from the pool

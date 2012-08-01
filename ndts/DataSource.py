@@ -74,6 +74,11 @@ class DataSource(object):
     def isValid(self):
         return True
 
+    ## self-description 
+    # \returns self-describing string
+    def __str__(self):
+        return "unknown DataSource"
+
 ## Tango data source
 class TangoSource(DataSource):
     ## constructor
@@ -84,6 +89,12 @@ class TangoSource(DataSource):
         self.device = None
         ## member type of the data, i.e. attribute, property,...
         self.memberType = None
+
+    ## self-description 
+    # \returns self-describing string
+    def __str__(self):
+        return "Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
+
 
     ## data provider
     # \returns DataHolder with collected data  
@@ -143,10 +154,19 @@ class DBaseSource(DataSource):
         ## record format, i.e. SCALAR, SPECTRUM, IMAGE
         self.format = None
 
+
+        
+
         ## map 
         self._dbConnect = {"MYSQL":self._connectMYSQL, 
                           "PGSQL":self._connectPGSQL,
                           "ORACLE":self._connectORACLE}
+
+    ## self-description 
+    # \returns self-describing string
+    def __str__(self):
+        return " %s DataBase %s with %s " % (self.dbtype, self.dbname if self.dbname else "" , self.query )
+
 
     ## connects to MYSQL database    
     # \returns open database object
@@ -242,6 +262,12 @@ class ClientSource(DataSource):
         ## the current  dynamic JSON object
         self._localJSON = None
         
+    ## self-description 
+    # \returns self-describing string
+    def __str__(self):
+        return " client record %s from JSON:  %s or %s " % (self.name, self._localJSON , self._globalJSON  )
+
+
     ## sets JSON string
     # \brief It sets the currently used  JSON string
     # \param globalJSON static JSON string    

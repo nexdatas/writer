@@ -68,7 +68,13 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def delete_device(self):
 		print "[Device delete_device method] for device", self.get_name()
+		if hasattr(self,'tdw') and  self.tdw :
+			if hasattr(self.tdw,'closeNXFile'):
+				self.tdw.closeNXFile()
+			del self.tdw
+			self.tdw = None
 		self.set_state(PyTango.DevState.OFF)
+
 
 
 #------------------------------------------------------------------
@@ -78,6 +84,11 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::init_device()"
 		try:
 			self.set_state(PyTango.DevState.RUNNING)
+			if hasattr(self,'tdw') and self.tdw:
+				if hasattr(self.tdw,'closeNXFile'):
+					self.tdw.closeNXFile()
+				del self.tdw
+				self.tdw = None
 			self.tdw = TDW("name.h5")
 			self.set_state(PyTango.DevState.ON)
  		finally:

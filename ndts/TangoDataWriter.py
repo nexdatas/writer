@@ -62,6 +62,13 @@ class TangoDataWriter(object):
     # \brief It opens the H5 file       
     def openNXFile(self):
         ## file handle
+        self.closeNXFile() 
+        self._nxFile = None
+        self._eFile = None
+        self._initPool = None
+        self._stepPool = None
+        self._finalPool = None
+        ## file handle
         self._nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
         self._eFile = EFile("NXfile", [], None, self._nxFile)
@@ -77,8 +84,24 @@ class TangoDataWriter(object):
     ## the H5 file closing
     # \brief It closes the H5 file       
     def closeNXFile(self):
-        self._nxFile.close()
-        
+
+        if self._initPool:
+            self._initPool.close()
+            self._initPool = None         
+   
+        if self._stepPool:
+            self._stepPool.close()
+            self._stepPool = None         
+                
+        if self._finalPool: 
+            self._finalPool.close()
+            self._finalPool = None         
+
+        if self._nxFile:    
+            self._nxFile.close()
+            
+        self._nxFile = None
+        self._eFile = None
 
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
@@ -126,20 +149,20 @@ class TangoDataWriter(object):
 
         if self._initPool:
             self._initPool.close()
+        self._initPool = None
             
 
         if self._stepPool:
             self._stepPool.close()
+        self._stepPool = None
                 
         if self._finalPool: 
             self._finalPool.close()
+        self._finalPool = None
 
 #        if self._nxFile:
 #            self._nxFile.flush()
 
-        self._initPool = None
-        self._stepPool = None
-        self._finalPool = None
 
 
 
