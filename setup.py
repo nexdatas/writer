@@ -19,6 +19,7 @@
 # ndts installer 
 import os
 
+## ndts version
 __version__="0.0.1"
 
 ## reading a file

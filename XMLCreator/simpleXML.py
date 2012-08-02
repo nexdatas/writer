@@ -468,6 +468,7 @@ class XMLFile(object):
 		self.fname = fname
 		## XML root instance
 		self.root = Document()
+		## XML definition element
 		self.elem = self.root.createElement("definition")
 		self.root.appendChild(self.elem)
 		
