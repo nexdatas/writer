@@ -106,14 +106,26 @@ class EField(FElement):
         if self._extraD:
             shape.append(0)
         if int(self.rank) > 1  or (int(self.rank) > 0 and int(self.lengths["1"].encode()) >= 1):
-            for i in range(int(self.rank)):
-                si = str(i+1)
-                if si in self.lengths.keys():
-                    if int(self.lengths[si]) > 0:
-                        shape.append(int(self.lengths[si]))
-                else:
-                    raise XMLSettingSyntaxError, "Wrongly defined shape"
-                
+            try:
+                for i in range(int(self.rank)):
+                    si = str(i+1)
+                    if si in self.lengths.keys():
+                        if int(self.lengths[si]) > 0:
+                            shape.append(int(self.lengths[si]))
+                    else:
+                        raise XMLSettingSyntaxError, "Dimensions not defined"
+            except:
+                ## TODO fetch shape from datasources
+                if self.source and self.source.isValid():
+                    dsShape = self.source.fetchShape()
+                    shape = []
+                    if self._extraD:
+                        shape.append(0)
+                    if dsShape:    
+                        pass
+                    else:
+                        raise XMLSettingSyntaxError, "Wrongly defined shape"
+
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
 

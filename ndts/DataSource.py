@@ -69,6 +69,11 @@ class DataSource(object):
     def getData(self):
         pass
 
+    ## fetches the data shape
+    # \brief It is an abstract method providing the data shape  
+    def fetchShape(self):
+        pass
+
     ## checks if the data is valid
     # \returns if the data is valid
     def isValid(self):
