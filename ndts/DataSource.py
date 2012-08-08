@@ -69,10 +69,6 @@ class DataSource(object):
     def getData(self):
         pass
 
-    ## fetches the data shape
-    # \brief It is an abstract method providing the data shape  
-    def fetchShape(self):
-        pass
 
     ## checks if the data is valid
     # \returns if the data is valid
@@ -99,6 +95,7 @@ class TangoSource(DataSource):
     # \returns self-describing string
     def __str__(self):
         return "Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
+
 
 
     ## data provider

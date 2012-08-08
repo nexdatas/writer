@@ -38,6 +38,9 @@ from Types import *
 ## exception for syntax in XML settings
 class XMLSettingSyntaxError(Exception): pass
 
+## exception for fetching data from data source
+class DataSourceError(Exception): pass
+
 
 ## NeXuS runnable tag element
 # tag element corresponding to one of H5 objects 
@@ -105,7 +108,7 @@ class EField(FElement):
         shape = []
         if self._extraD:
             shape.append(0)
-        if int(self.rank) > 1  or (int(self.rank) > 0 and int(self.lengths["1"].encode()) >= 1):
+        if  int(self.rank) > 0:
             try:
                 for i in range(int(self.rank)):
                     si = str(i+1)
@@ -117,12 +120,17 @@ class EField(FElement):
             except:
                 ## TODO fetch shape from datasources
                 if self.source and self.source.isValid():
-                    dsShape = self.source.fetchShape()
+                    try:
+                        dsShape = self.source.getData().shape                    
+                    except:
+                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
                     if self._extraD:
                         shape.append(0)
                     if dsShape:    
-                        pass
+                        for s in dsShape:
+                            if s:
+                                shape.append(s)
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
 
