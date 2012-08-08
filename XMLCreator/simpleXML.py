@@ -195,9 +195,13 @@ class NDSource(NTag):
 	## constructor
 	# \param parent parent tag element
 	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
-	def __init__(self, parent, strategy):
+	# \param trigger for asynchronous writting, e.g. with different subentries
+	def __init__(self, parent, strategy, trigger=None):
 		NTag.__init__(self, parent, "datasource")
 		self.addTagAttr("strategy", strategy)
+		if trigger:
+			self.addTagAttr("trigger", trigger)
+			
 
 	## sets parameters of DataBase		
 	# \param dbname name of used DataBase

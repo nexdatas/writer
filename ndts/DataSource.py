@@ -57,6 +57,8 @@ class DataSource(object):
     def __init__(self):
         ## strategy, i.e. INIT, STEP of FINAL
         self.strategy = None
+        ## trigger for asynchronous writting
+        self.trigger = None
         ## name of the host with the data source
         self.hostname = None
         ## port related to the host
@@ -355,5 +357,8 @@ class DataSourceFactory(Element):
 
         if "strategy" in attrs.keys():
             self._last.source.strategy = attrs["strategy"]
+
+        if "trigger" in attrs.keys():
+            self._last.source.trigger = attrs["trigger"]
 
 
