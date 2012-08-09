@@ -51,6 +51,8 @@ class TangoDataWriter(object):
         self._stepPool = None
         ## thread pool with FINAL elements
         self._finalPool = None
+        ## collection of thread pool with triggered STEP elements
+        self._triggerPools = {}
         ## H5 file handle
         self._nxFile = None
         ## maximal number of threads
@@ -68,6 +70,7 @@ class TangoDataWriter(object):
         self._initPool = None
         self._stepPool = None
         self._finalPool = None
+        self._triggerPools = {}
         ## file handle
         self._nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
@@ -97,6 +100,12 @@ class TangoDataWriter(object):
             self._finalPool.close()
             self._finalPool = None         
 
+
+        if self._triggerPools: 
+            for pool in self._triggerPools.keys(): 
+                self._triggerPools[pool].close()
+            self._triggerPools = {}
+
         if self._nxFile:    
             self._nxFile.close()
             
@@ -115,11 +124,14 @@ class TangoDataWriter(object):
             self._initPool = handler.initPool
             self._stepPool = handler.stepPool
             self._finalPool = handler.finalPool
+            self._triggerPools = handler.triggerPools
             
             self._initPool.numThreads = self.numThreads
             self._stepPool.numThreads = self.numThreads
             self._finalPool.numThreads = self.numThreads
-           
+
+            for pool in self._triggerPools.keys():
+                self._triggerPools[pool].numThreads = self.numThreads
 
             self._initPool.setJSON(self.json)
             self._initPool.runAndWait()
@@ -131,9 +143,17 @@ class TangoDataWriter(object):
     # \param json local JSON string with data records      
     def record(self, json=None):
         if self._stepPool:
+            print "Default trigger"
             self._stepPool.setJSON(self.json, json)
             self._stepPool.runAndWait()
             self._stepPool.checkErrors()
+            
+        for pool in self._triggerPools.keys():
+            print "Trigger: %s" % pool 
+            self._triggerPools[pool].setJSON(self.json, json)
+            self._triggerPools[pool].runAndWait()
+            self._triggerPools[pool].checkErrors()
+
 
 
     ## closes the data entry        
@@ -159,6 +179,12 @@ class TangoDataWriter(object):
         if self._finalPool: 
             self._finalPool.close()
         self._finalPool = None
+
+        if self._triggerPools: 
+            for pool in self._triggerPools.keys(): 
+                self._triggerPools[pool].close()
+            self._triggerPools = {}
+
 
 #        if self._nxFile:
 #            self._nxFile.flush()

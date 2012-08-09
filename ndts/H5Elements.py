@@ -118,12 +118,11 @@ class EField(FElement):
                     else:
                         raise XMLSettingSyntaxError, "Dimensions not defined"
             except:
-                ## TODO fetch shape from datasources
                 if self.source and self.source.isValid():
-                    try:
-                        dsShape = self.source.getData().shape                    
-                    except:
-                        raise DataSourceError, "Problem with fetching the data shape"
+#                    try:
+                    dsShape = self.source.getData().shape                    
+#                    except:
+#                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
                     if self._extraD:
                         shape.append(0)
@@ -159,7 +158,8 @@ class EField(FElement):
 
         if self.source:
             if  self.source.isValid() :
-                return self.source.strategy
+#                return self.source.strategy
+                return self.source.strategy,self.source.trigger
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:

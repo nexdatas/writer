@@ -25,6 +25,8 @@ import sys, os
 
 from H5Elements import *
 from ThreadPool import *
+from collections import Iterable
+
 
 ## unsupported tag exception
 class UnsupportedTagError(Exception): pass
@@ -72,7 +74,8 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## map of pool names to related classes
         self._poolMap = {'INIT':self.initPool, 'STEP':self.stepPool, 'FINAL':self.finalPool}        
-
+        ## collection of thread pool with triggered STEP elements
+        self.triggerPools = {}
 
 
     ## the last stack element 
@@ -113,9 +116,22 @@ class NexusXMLHandler(sax.ContentHandler):
     def endElement(self, name):
         if not self._unsupportedTag and name in self._elementClass:
 #            if self._last().tagName == name :
-            strategy = self._last().store(name)
-            
-            if strategy in self._poolMap.keys():
+            res = self._last().store(name)
+            trigger = None
+            strategy = None
+            if res :
+                if isinstance(res, Iterable):
+                    strategy = res[0]
+                    if len(res)>1 :
+                        trigger = res[1]
+                else:
+                    strategy = res
+        
+            if trigger and strategy == 'STEP':
+                if trigger not in self.triggerPools.keys():
+                    self.triggerPools[trigger]=ThreadPool()
+                self.triggerPools[trigger].append(self._last())
+            elif strategy in self._poolMap.keys():
                 self._poolMap[strategy].append(self._last())
             self._stack.pop()
         elif name not in self._transparentTags:
