@@ -161,8 +161,7 @@ class NField(NTag):
 	# \param parent parent tag element
 	# \param nameAttr name attribute
 	# \param typeAttr type attribute
-	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
-	# \param trigger for asynchronous writting, e.g. with different subentries
+es
 	def __init__(self, parent, nameAttr, typeAttr=""):
 		NTag.__init__(self, parent, "field", nameAttr, typeAttr)
 
@@ -173,7 +172,6 @@ class NField(NTag):
 		
 
 	## sets the field unit
-	# \param unitsAttr the field unit	
 	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
 	# \param trigger for asynchronous writting, e.g. with different subentries
 	def setStrategy(self,  strategy = "STEP", trigger = None):
