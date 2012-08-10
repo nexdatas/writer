@@ -70,16 +70,16 @@ def main():
             dpx.OpenEntry()
 
             print "recording the H5 file"
-            dpx.record('{"data": {"emitannce_x": 0.1},   "macro_id": "5bc81db6-b466-11e1-bd4b-0019d1246604",   "type": "record_data"}')
+            dpx.record('{"data": {"emitannce_x": 0.1}  }')
             
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            dpx.record('{"data": {"emitannce_x": 0.3},   "macro_id": "5bc81db6-b466-11e1-bd4b-0019d1246604",   "type": "record_data"}')
+            dpx.record('{"data": {"emitannce_x": 0.3} }')
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            dpx.record('{"data": {"emitannce_x": 0.8},   "macro_id": "5bc81db6-b466-11e1-bd4b-0019d1246604",   "type": "record_data"}')
+            dpx.record('{"data": {"emitannce_x": 0.8} }')
             print "closing the  entry"
             dpx.closeEntry()
             print "closing the H5 file"

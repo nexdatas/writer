@@ -273,11 +273,8 @@ class ClientSource(DataSource):
     # \param globalJSON static JSON string    
     # \param localJSON dynamic JSON string    
     def setJSON(self, globalJSON, localJSON=None):
-            self._globalJSON = json.loads(globalJSON)
-            if localJSON:
-                self._localJSON = json.loads(localJSON)
-            else:
-                self._localJSON = None
+        self._globalJSON = globalJSON
+        self._localJSON = localJSON
             
 
     ## provides access to the data    

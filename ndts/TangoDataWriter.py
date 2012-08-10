@@ -28,6 +28,8 @@ import pni.nx.h5 as nx
 from numpy  import * 
 from xml import sax
 
+import json
+from collections import Iterable
 import sys, os
 from H5Elements import *
 
@@ -133,27 +135,37 @@ class TangoDataWriter(object):
             for pool in self._triggerPools.keys():
                 self._triggerPools[pool].numThreads = self.numThreads
 
-            self._initPool.setJSON(self.json)
+            self._initPool.setJSON(json.loads(self.json))
             self._initPool.runAndWait()
             self._initPool.checkErrors()
 
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
-    # \param json local JSON string with data records      
-    def record(self, json=None):
+    # \param jsonstring local JSON string with data records      
+    def record(self, jsonstring=None):
+        localJSON = None
+        if jsonstring:
+            localJSON = json.loads(jsonstring)
+            
         if self._stepPool:
             print "Default trigger"
-            self._stepPool.setJSON(self.json, json)
+            self._stepPool.setJSON(json.loads(self.json), localJSON)
             self._stepPool.runAndWait()
             self._stepPool.checkErrors()
-            
-        for pool in self._triggerPools.keys():
-            print "Trigger: %s" % pool 
-            self._triggerPools[pool].setJSON(self.json, json)
-            self._triggerPools[pool].runAndWait()
-            self._triggerPools[pool].checkErrors()
+       
+        triggers = None    
+        if localJSON and 'triggers' in localJSON.keys():
+            triggers = localJSON['triggers']
 
+        if isinstance(triggers, Iterable):
+            for pool in triggers:
+                if pool in self._triggerPools.keys():
+                    print "Trigger: %s" % pool 
+                    self._triggerPools[pool].setJSON(self.json, json)
+                    self._triggerPools[pool].runAndWait()
+                    self._triggerPools[pool].checkErrors()
+                    
 
 
     ## closes the data entry        
@@ -162,7 +174,7 @@ class TangoDataWriter(object):
     def closeEntry(self):
 
         if self._finalPool:
-            self._finalPool.setJSON(self.json)
+            self._finalPool.setJSON(json.loads(self.json))
             self._finalPool.runAndWait()
             self._finalPool.checkErrors()
 
@@ -234,16 +246,24 @@ if __name__ == "__main__":
             tdw.openEntry()
             
             print "recording the H5 file"
-            tdw.record()
+            tdw.record('{"data": {"emitannce_x": 0.8} ,  "triggers":["trigger1", "trigger2"] }')
             
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record()
+            tdw.record('{"data": {"emitannce_x": 1.2}  ,  "triggers":["trigger2"] }')
+
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record()
+            tdw.record('{"data": {"emitannce_x": 1.1}  ,  "triggers":["trigger1"] }')
+
+
+            print "sleeping for 1s"
+            time.sleep(1)
+            print "recording the H5 file"
+            tdw.record('{"data": {"emitannce_x": 0.7} }')
+
             print "closing the data entry "
             tdw.closeEntry()
 
