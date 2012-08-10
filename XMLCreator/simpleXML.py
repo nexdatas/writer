@@ -161,13 +161,26 @@ class NField(NTag):
 	# \param parent parent tag element
 	# \param nameAttr name attribute
 	# \param typeAttr type attribute
+	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
+	# \param trigger for asynchronous writting, e.g. with different subentries
 	def __init__(self, parent, nameAttr, typeAttr=""):
 		NTag.__init__(self, parent, "field", nameAttr, typeAttr)
+
 		## list of doc tag contents
 		self._doc = []
 		## container with attribute tag wrappers
 		self._attr = {}
 		
+
+	## sets the field unit
+	# \param unitsAttr the field unit	
+	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
+	# \param trigger for asynchronous writting, e.g. with different subentries
+	def setStrategy(self,  strategy = "STEP", trigger = None):
+		self.addTagAttr("strategy", strategy)
+		if trigger:
+			self.addTagAttr("trigger", trigger)
+
 	## sets the field unit
 	# \param unitsAttr the field unit	
 	def setUnits(self, unitsAttr):
@@ -194,13 +207,8 @@ class NField(NTag):
 class NDSource(NTag):
 	## constructor
 	# \param parent parent tag element
-	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
-	# \param trigger for asynchronous writting, e.g. with different subentries
-	def __init__(self, parent, strategy, trigger=None):
+	def __init__(self, parent):
 		NTag.__init__(self, parent, "datasource")
-		self.addTagAttr("strategy", strategy)
-		if trigger:
-			self.addTagAttr("trigger", trigger)
 			
 
 	## sets parameters of DataBase		
@@ -391,7 +399,8 @@ class NDeviceGroup(NGroup):
 			self.addAttr(pr, "NX_CHAR", str(self._proxy.get_property(pr)[pr][0]))
 			if pr not in self._fields:
 				self._fields[pr] = NField(self, pr, "NX_CHAR")
-				sr = NDSource(self._fields[pr], "STEP")
+				self._fields[pr].setStrategy("STEP")
+				sr = NDSource(self._fields[pr])
 				sr.initTango(self._deviceName, "property", pr, host="haso228k.desy.de", port="10000")
 
 	## fetches Attributes
@@ -435,8 +444,9 @@ class NDeviceGroup(NGroup):
 				if cf.description != 'No description':
 					self._fields[at].addDoc(cf.description)
 				self.addAttr('URL', "NX_CHAR", "tango://"+self._deviceName)
-			
-				sr = NDSource(self._fields[at], "STEP")
+
+				self._fields[at].setStrategy("STEP")
+				sr = NDSource(self._fields[at])
 				sr.initTango(self._deviceName, "attribute", at, host="haso228k.desy.de", port="10000")
 
 #		print self._proxy.attribute_list_query()
@@ -455,7 +465,8 @@ class NDeviceGroup(NGroup):
 				self._fields[cd.cmd_name] = \
 				    NField(self, cd.cmd_name, \
 						   self.nTypes[self.tTypes.index(str(cd.out_type).split(".")[-1])])
-				sr = NDSource(self._fields[cd.cmd_name], "STEP")
+				self._fields[cd.cmd_name].setStrategy("STEP")
+				sr = NDSource(self._fields[cd.cmd_name])
 				sr.initTango(self._deviceName, "command", cd.cmd_name,\
 						     host="haso228k.desy.de", port="10000")
 				
@@ -515,7 +526,8 @@ def main():
 	d = NDimensions(f, "1")
 	d.dim("1", "1")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
 
 	f = NField(src, "single_mysql_record_int", "NX_INT")
@@ -523,7 +535,8 @@ def main():
 	d = NDimensions(f, "1")
 	d.dim("1", "1")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
 
 
@@ -533,7 +546,8 @@ def main():
 	d.dim("1", "151")
 	d.dim("2", "2")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("MYSQL", "SELECT name, pid FROM device limit 151", "tango", "IMAGE", host="haso228k.desy.de")
 
 
@@ -543,7 +557,8 @@ def main():
 	d.dim("1", "3")
 	d.dim("2", "5")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("PGSQL", "SELECT * FROM weather limit 3", "mydb", "IMAGE")
 
  
@@ -552,7 +567,8 @@ def main():
 	d = NDimensions(f, "1")
 	d.dim("1", "19")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("ORACLE", "select * from (select * from telefonbuch) where ROWNUM <= 19", user='read', passwd='****', format="SPECTRUM", dsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))', host="haso228k.desy.de")
 	f = NField(src, "type", "NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
@@ -564,12 +580,14 @@ def main():
 	f = NField(src, "power", "NX_FLOAT")
 	f.setUnits("W")
 	f.setText("1")
-	sr = NDSource(f, "INIT")
+	f.setStrategy("INIT")
+	sr = NDSource(f)
 	sr.initTango("p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
 	f = NField(src, "emittance_x", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initClient("emitannce_x");
 	f = NField(src, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
@@ -623,9 +641,8 @@ def main():
 #	d.dim("2", "100")
 	d.dim("1", "2")
 	d.dim("2", "2")
-#	sr = NDSource(f, "STEP")
-	sr = NDSource(f, "FINAL")
-#	sr = NDSource(f, "INIT")
+	f.setStrategy("FINAL")
+	sr = NDSource(f)
 	sr.initTango("p09/tst/exp.01", "attribute", "MyImageAttribute", host="haso228k.desy.de", port="10000")
 	f = NField(de, "distance", "NX_FLOAT")
 	f.setText("10.00012")
@@ -641,7 +658,8 @@ def main():
 	f.setText("0.01")
 	f = NField(de, "y_pixel_size", "NX_FLOAT")
 	f.setText("0.01")
-	sr = NDSource(f, "FINAL")
+	f.setStrategy("FINAL")
+	sr = NDSource(f)
 	sr.initTango("p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
 
 

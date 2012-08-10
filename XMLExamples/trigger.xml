@@ -6,49 +6,49 @@
         <field name="distance" type="NX_FLOAT" units="m">
           100.
         </field>
-        <field name="single_mysql_record_string" type="NX_CHAR">
+        <field name="single_mysql_record_string" strategy="STEP" trigger="trigger1" type="NX_CHAR">
           <dimensions rank="1">
             <dim index="1" value="1"/>
           </dimensions>
-          <datasource strategy="STEP" trigger="trigger1" type="DB">
+          <datasource type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
           </datasource>
         </field>
-        <field name="single_mysql_record_int" type="NX_INT">
+        <field name="single_mysql_record_int" strategy="STEP" trigger="trigger2" type="NX_INT">
           <dimensions rank="1">
             <dim index="1" value="1"/>
           </dimensions>
-          <datasource strategy="STEP" trigger="trigger2" type="DB">
+          <datasource type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
           </datasource>
         </field>
-        <field name="mysql_record" type="NX_CHAR">
+        <field name="mysql_record" strategy="STEP" type="NX_CHAR">
           <dimensions rank="2"/>
-          <datasource strategy="STEP" type="DB">
+          <datasource type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
             <query format="IMAGE">
               SELECT name, pid FROM device limit 151
             </query>
           </datasource>
         </field>
-        <field name="pgsql_record" type="NX_CHAR">
+        <field name="pgsql_record" strategy="STEP" type="NX_CHAR">
           <dimensions rank="2"/>
-          <datasource strategy="STEP" type="DB">
+          <datasource type="DB">
             <database dbname="mydb" dbtype="PGSQL"/>
             <query format="IMAGE">
               SELECT * FROM weather limit 3
             </query>
           </datasource>
         </field>
-        <field name="oracle_record" type="NX_CHAR">
+        <field name="oracle_record" strategy="STEP" trigger="trigger2" type="NX_CHAR">
           <dimensions rank="1"/>
-          <datasource strategy="STEP" trigger="trigger2" type="DB">
+          <datasource type="DB">
             <database dbtype="ORACLE" hostname="haso228k.desy.de" passwd="****" user="read">
               (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))
             </database>
@@ -69,16 +69,16 @@
         <field name="probe" type="NX_CHAR">
           x-ray
         </field>
-        <field name="power" type="NX_FLOAT" units="W">
+        <field name="power" strategy="INIT" trigger="trigger1" type="NX_FLOAT" units="W">
           1
-          <datasource strategy="INIT" trigger="trigger1" type="TANGO">
+          <datasource type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Position"/>
           </datasource>
         </field>
-        <field name="emittance_x" type="NX_FLOAT" units="nm rad">
+        <field name="emittance_x" strategy="STEP" type="NX_FLOAT" units="nm rad">
           0.2
-          <datasource strategy="STEP" type="CLIENT">
+          <datasource type="CLIENT">
             <record name="emitannce_x"/>
           </datasource>
         </field>
@@ -130,12 +130,12 @@
         <field name="beam_center_y" type="NX_FLOAT">
           -0.00012
         </field>
-        <field name="data" type="NX_UINT32">
+        <field name="data" strategy="FINAL" type="NX_UINT32">
           <dimensions rank="2">
             <dim index="1" value="2"/>
             <dim index="2" value="2"/>
           </dimensions>
-          <datasource strategy="FINAL" type="TANGO">
+          <datasource type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
             <record name="MyImageAttribute"/>
           </datasource>
@@ -159,9 +159,9 @@
         <field name="x_pixel_size" type="NX_FLOAT">
           0.01
         </field>
-        <field name="y_pixel_size" type="NX_FLOAT">
+        <field name="y_pixel_size" strategy="FINAL" trigger="trigger1" type="NX_FLOAT">
           0.01
-          <datasource strategy="FINAL" trigger="trigger1" type="TANGO">
+          <datasource type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Position"/>
           </datasource>

@@ -86,15 +86,30 @@ class EField(FElement):
         self._extraD = False
         ## if field array is splitted into columns
         self._splitArray = False
+        ## strategy, i.e. INIT, STEP of FINAL
+        self.strategy = None
+        ## trigger for asynchronous writting
+        self.trigger = None
+
+
 
     ## stores the tag content
     # \param name the tag name    
     def store(self, name):
 
+        if "strategy" in self._tagAttrs.keys():
+            self.strategy = self._tagAttrs["strategy"]
+
+        if "trigger" in self._tagAttrs.keys():
+            self.trigger = self._tagAttrs["trigger"]
+
+
         self._extraD = False
-        if self.source and self.source.isValid() and self.source.strategy == "STEP":
+        if self.source and self.source.isValid() and self.strategy == "STEP":
             self._extraD = True
             
+
+
         if "name" in self._tagAttrs.keys():
             nm = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys():
@@ -158,8 +173,7 @@ class EField(FElement):
 
         if self.source:
             if  self.source.isValid() :
-#                return self.source.strategy
-                return self.source.strategy,self.source.trigger
+                return self.strategy, self.trigger
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:

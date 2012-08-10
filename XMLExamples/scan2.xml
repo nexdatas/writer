@@ -3,21 +3,21 @@
   <group name="entry1" type="NXentry">
     <group name="instrument" type="NXinstrument">
       <group name="detector" type="NXdetector">
-        <field name="counter1" type="NX_FLOAT" units="m">
-          <datasource strategy="STEP" type="CLIENT">
+        <field name="counter1" strategy="STEP" type="NX_FLOAT" units="m">
+          <datasource type="CLIENT">
             <record name="exp_c01"/>
           </datasource>
         </field>
-        <field name="counter2" type="NX_FLOAT" units="s">
-          <datasource strategy="STEP" type="CLIENT">
+        <field name="counter2" strategy="STEP" type="NX_FLOAT" units="s">
+          <datasource type="CLIENT">
             <record name="exp_c02"/>
           </datasource>
         </field>
-        <field name="mca" type="NX_FLOAT" units="">
+        <field name="mca" strategy="STEP" type="NX_FLOAT" units="">
           <dimensions rank="1">
             <dim index="1" value="2048"/>
           </dimensions>
-          <datasource strategy="STEP" type="TANGO">
+          <datasource type="TANGO">
             <device member="attribute" name="p09/mca/exp.02"/>
             <record name="Data"/>
           </datasource>

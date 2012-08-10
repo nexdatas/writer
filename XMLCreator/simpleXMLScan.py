@@ -34,14 +34,17 @@ def main():
 	f = NField(dt, "counter1", "NX_FLOAT")
 	f.setUnits("m")
 #	f.setText("0.2")
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
+
 	sr.initClient("exp_c01");
 
 
 	f = NField(dt, "counter2", "NX_FLOAT")
 	f.setUnits("s")
 #	f.setText("0.2")
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initClient("exp_c02");
 	
 
@@ -49,7 +52,8 @@ def main():
 	f.setUnits("")
 	d = NDimensions(f, "1")
 	d.dim("1", "2048")
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initTango("p09/mca/exp.02", "attribute", "Data")
 #	sr.initClient("p09/mca/exp.02");
 

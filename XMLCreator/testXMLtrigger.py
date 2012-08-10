@@ -43,7 +43,8 @@ def main():
 	d = NDimensions(f, "1")
 	d.dim("1", "1")
 	## source
-	sr = NDSource(f, "STEP", "trigger1")
+	f.setStrategy("STEP", "trigger1")
+	sr = NDSource(f)
 	sr.initDBase("MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
 
 	f = NField(src, "single_mysql_record_int", "NX_INT")
@@ -51,7 +52,8 @@ def main():
 	d = NDimensions(f, "1")
 	d.dim("1", "1")
 	## source
-	sr = NDSource(f, "STEP","trigger2")
+	f.setStrategy( "STEP","trigger2")
+	sr = NDSource(f)
 	sr.initDBase("MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
 
 
@@ -61,7 +63,8 @@ def main():
 #	d.dim("1", "151")
 #	d.dim("2", "2")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("MYSQL", "SELECT name, pid FROM device limit 151", "tango", "IMAGE", host="haso228k.desy.de")
 
 
@@ -71,7 +74,8 @@ def main():
 #	d.dim("1", "3")
 #	d.dim("2", "5")
 	## source
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initDBase("PGSQL", "SELECT * FROM weather limit 3", "mydb", "IMAGE")
 
  
@@ -80,7 +84,8 @@ def main():
 	d = NDimensions(f, "1")
 #	d.dim("1", "19")
 	## source
-	sr = NDSource(f, "STEP", "trigger2")
+	f.setStrategy("STEP", "trigger2")
+	sr = NDSource(f)
 	sr.initDBase("ORACLE", "select * from (select * from telefonbuch) where ROWNUM <= 19", user='read', passwd='****', format="SPECTRUM", dsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))', host="haso228k.desy.de")
 	f = NField(src, "type", "NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
@@ -92,12 +97,14 @@ def main():
 	f = NField(src, "power", "NX_FLOAT")
 	f.setUnits("W")
 	f.setText("1")
-	sr = NDSource(f, "INIT", "trigger1")
+	f.setStrategy("INIT", "trigger1")
+	sr = NDSource(f)
 	sr.initTango("p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
 	f = NField(src, "emittance_x", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
-	sr = NDSource(f, "STEP")
+	f.setStrategy("STEP")
+	sr = NDSource(f)
 	sr.initClient("emitannce_x");
 	f = NField(src, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
@@ -152,7 +159,8 @@ def main():
 	d.dim("1", "2")
 	d.dim("2", "2")
 #	sr = NDSource(f, "STEP")
-	sr = NDSource(f, "FINAL")
+	f.setStrategy("FINAL")
+	sr = NDSource(f)
 #	sr = NDSource(f, "INIT")
 	sr.initTango("p09/tst/exp.01", "attribute", "MyImageAttribute", host="haso228k.desy.de", port="10000")
 	f = NField(de, "distance", "NX_FLOAT")
@@ -169,7 +177,8 @@ def main():
 	f.setText("0.01")
 	f = NField(de, "y_pixel_size", "NX_FLOAT")
 	f.setText("0.01")
-	sr = NDSource(f, "FINAL","trigger1")
+	f.setStrategy("FINAL", "trigger1")
+	sr = NDSource(f)
 	sr.initTango("p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
 
 
