@@ -42,6 +42,8 @@ class XMLSettingSyntaxError(Exception): pass
 class DataSourceError(Exception): pass
 
 
+
+
 ## NeXuS runnable tag element
 # tag element corresponding to one of H5 objects 
 class FElement(Element):
@@ -68,6 +70,28 @@ class FElement(Element):
             
 
 
+## query tag element        
+class EStrategy(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
+
+        if "mode" in attrs.keys():
+            self._last.strategy = attrs["mode"]
+        if "trigger" in attrs.keys():
+            self._last.trigger = attrs["trigger"]
+            print "TRIGGER" , attrs["trigger"]
+
+
+    ## stores the tag content
+    # \param name the tag name    
+    def store(self, name):
+        self._last.postrun = ("".join(self.content)).strip()        
+
+
 ## field H5 tag element
 class EField(FElement):        
     ## constructor
@@ -86,10 +110,12 @@ class EField(FElement):
         self._extraD = False
         ## if field array is splitted into columns
         self._splitArray = False
-        ## strategy, i.e. INIT, STEP of FINAL
+        ## strategy, i.e. INIT, STEP, FINAL, POSTRUN
         self.strategy = None
         ## trigger for asynchronous writting
         self.trigger = None
+        ## label for postprocessing data
+        self.postrun = ""
 
 
 
@@ -97,16 +123,10 @@ class EField(FElement):
     # \param name the tag name    
     def store(self, name):
 
-        if "strategy" in self._tagAttrs.keys():
-            self.strategy = self._tagAttrs["strategy"]
-
-        if "trigger" in self._tagAttrs.keys():
-            self.trigger = self._tagAttrs["trigger"]
-
-
         self._extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
             self._extraD = True
+            
             
 
 
@@ -148,8 +168,10 @@ class EField(FElement):
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
 
+
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
+          
 
         if shape:
             if self._splitArray:
@@ -168,6 +190,10 @@ class EField(FElement):
             if key not in ["name"]:
                 (f.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
                     = self.tagAttributes[key][1].strip().encode()
+
+        if self.strategy == "POSTRUN":
+            f.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
+
 
         self.h5Object = f
 

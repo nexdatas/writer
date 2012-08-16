@@ -153,7 +153,6 @@ class NDim(NTag):
 		self.addTagAttr("index", indexAttr)
 		self.addTagAttr("value", valueAttr)
 		
-		
 
 ## Field tag wrapper
 class NField(NTag):
@@ -161,7 +160,6 @@ class NField(NTag):
 	# \param parent parent tag element
 	# \param nameAttr name attribute
 	# \param typeAttr type attribute
-es
 	def __init__(self, parent, nameAttr, typeAttr=""):
 		NTag.__init__(self, parent, "field", nameAttr, typeAttr)
 
@@ -172,12 +170,17 @@ es
 		
 
 	## sets the field unit
-	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL
+	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL, POSTRUN
 	# \param trigger for asynchronous writting, e.g. with different subentries
-	def setStrategy(self,  strategy = "STEP", trigger = None):
-		self.addTagAttr("strategy", strategy)
+	def setStrategy(self,  mode = "STEP", trigger = None, value = None):
+		strategy = NTag(self, "strategy")
+		if strategy:
+			strategy.addTagAttr("mode", mode)
 		if trigger:
-			self.addTagAttr("trigger", trigger)
+			strategy.addTagAttr("trigger", trigger)	
+ 		if value :
+			strategy.setText(value)
+
 
 	## sets the field unit
 	# \param unitsAttr the field unit	
