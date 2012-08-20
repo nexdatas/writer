@@ -302,6 +302,13 @@ class NDSource(NTag):
 
 
 
+        ## adds doc tag content
+	# \param doc doc tag content
+		def addDoc(self, doc):
+			self._doc.append(NTag(self, "doc"))
+			self._doc[-1].addText(doc)
+
+
 
 ## Tango device tag creator
 class NDeviceGroup(NGroup):
