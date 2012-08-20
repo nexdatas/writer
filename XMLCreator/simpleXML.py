@@ -173,6 +173,7 @@ class NField(NTag):
 	# \param strategy strategy of data writing, i.e. INIT, STEP, FINAL, POSTRUN
 	# \param trigger for asynchronous writting, e.g. with different subentries
 	def setStrategy(self,  mode = "STEP", trigger = None, value = None):
+		## strateegy of data writing, i.e. INIT, STEP, FINAL, POSTRUN
 		strategy = NTag(self, "strategy")
 		if strategy:
 			strategy.addTagAttr("mode", mode)
