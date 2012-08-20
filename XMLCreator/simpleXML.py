@@ -211,6 +211,9 @@ class NDSource(NTag):
 	# \param parent parent tag element
 	def __init__(self, parent):
 		NTag.__init__(self, parent, "datasource")
+
+		## list of doc tag contents
+		self._doc = []
 			
 
 	## sets parameters of DataBase		
