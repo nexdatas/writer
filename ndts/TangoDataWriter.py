@@ -32,7 +32,7 @@ import json
 from collections import Iterable
 import sys, os
 from H5Elements import *
-
+import gc
 
 
 ## NeXuS data writer
@@ -113,6 +113,7 @@ class TangoDataWriter(object):
             
         self._nxFile = None
         self._eFile = None
+        gc.collect()
 
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
@@ -165,7 +166,7 @@ class TangoDataWriter(object):
                     self._triggerPools[pool].setJSON(self.json, json)
                     self._triggerPools[pool].runAndWait()
                     self._triggerPools[pool].checkErrors()
-                    
+        gc.collect()
 
 
     ## closes the data entry        
@@ -201,6 +202,7 @@ class TangoDataWriter(object):
 #        if self._nxFile:
 #            self._nxFile.flush()
 
+        gc.collect()
 
 
 
