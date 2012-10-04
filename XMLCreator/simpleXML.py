@@ -73,6 +73,7 @@ class NAttr(NTag):
 	def __init__(self, parent, nameAttr, typeAttr=""):
 		NTag.__init__(self, parent, "attribute", nameAttr, typeAttr)
 
+
 ## Group tag wrapper
 class NGroup(NTag):
 	## constructor
@@ -682,7 +683,6 @@ def main():
 	l.addDoc("Link to polar angle in /NXentry/NXinstrument/NXdetector")
 	l = NLink(da, "data", "/NXentry/NXinstrument/NXdetector/data")
 	l.addDoc("Link to data in /NXentry/NXinstrument/NXdetector")
-
 
 	df.dump()
 
