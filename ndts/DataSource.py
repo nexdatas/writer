@@ -89,6 +89,10 @@ class TangoSource(DataSource):
         self.device = None
         ## member type of the data, i.e. attribute, property,...
         self.memberType = None
+        ## host name of tango server
+        self.hostname = None
+        ## port of tango server
+        self.port = None
 
     ## self-description 
     # \returns self-describing string
@@ -101,7 +105,13 @@ class TangoSource(DataSource):
     # \returns DataHolder with collected data  
     def getData(self):
         if self.device and self.memberType and self.name:
-            proxy = PyTango.DeviceProxy(self.device.encode())
+            if self.hostname and self.port:
+                proxy = PyTango.DeviceProxy("%s:%s/%s"
+                                            % (self.hostname.encode(),
+                                               self.port.encode(),
+                                               self.device.encode()))
+            else:
+                proxy = PyTango.DeviceProxy(self.device.encode())
             da = None
             if self.memberType == "attribute":
                 alist = proxy.get_attribute_list()
