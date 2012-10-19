@@ -34,7 +34,8 @@
 import PyTango
 import sys
 
-from TangoDataWriter import TangoDataWriter as TDW
+import ndts
+from ndts.TangoDataWriter import TangoDataWriter as TDW
 
 #==================================================================
 #   TangoDataServer Class Description:
