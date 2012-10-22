@@ -23,8 +23,13 @@ from xml import sax
 
 import sys, os
 
-from H5Elements import *
-from ThreadPool import *
+from Element import Element
+from H5Elements import (EGroup, EField, EAttribute,
+                        ELink, EDoc, ESymbol, EDimensions, EDim, 
+                              ERecord, EStrategy ,EQuery, 
+                              EDatabase, EDevice, EDoor)
+from DataSource import DataSourceFactory
+from ThreadPool import ThreadPool
 from collections import Iterable
 
 

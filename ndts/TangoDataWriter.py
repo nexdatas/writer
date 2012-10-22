@@ -21,17 +21,17 @@
 #
 
 
-from NexusXMLHandler import *
+from NexusXMLHandler import NexusXMLHandler
 
 import pni.nx.h5 as nx
 
-from numpy  import * 
+#from numpy  import * 
 from xml import sax
 
 import json
 from collections import Iterable
 import sys, os
-from H5Elements import *
+from H5Elements import EFile
 import gc
 
 

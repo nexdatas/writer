@@ -23,9 +23,9 @@ import json
 
 import PyTango 
 
-from Element import *
-from DataHolder import *
-from Types import *
+from Element import Element
+from DataHolder import DataHolder
+from Types import NTP
 
 ## list of available databases
 DB_AVAILABLE = []

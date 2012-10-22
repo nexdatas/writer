@@ -19,10 +19,10 @@
 ## \file FieldArray.py
 # FieldArray
 
-from numpy import * 
+import numpy
 from collections import Iterable
 
-from Types import *
+from Types import NTP
 
 ## exception for corrupted FieldArray
 class CorruptedFieldArray(Exception): pass

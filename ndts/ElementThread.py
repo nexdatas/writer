@@ -19,7 +19,7 @@
 ## \file ElementThread.py
 # ElementThread
 
-from threading import *                                                                       
+from threading import Thread
 import Queue
 import thread
 import time

@@ -19,7 +19,7 @@
 ## \file DataHolder.py
 # holder for data
                          
-from Types import *
+from Types import NTP
 
 import numpy
 

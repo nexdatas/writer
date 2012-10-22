@@ -19,8 +19,8 @@
 ## \file ThreadPool.py
 # Thread Pool class
 
-from threading import *                                                                      
-from ElementThread import *
+#from threading import *                                                                      
+from ElementThread import ElementThread
 import Queue
 
 ## exception for problems in thread

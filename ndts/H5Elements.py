@@ -22,17 +22,17 @@
 import sys                                                                       
 import pni.nx.h5 as nx
 
-from numpy  import * 
+import numpy 
 
-from DataSource import *
+#from DataSource import DataSource
 
-from DataHolder import *
+from DataHolder import DataHolder
 
-from Element import *
+from Element import Element
 
-from FieldArray import *
+from FieldArray import FieldArray
 
-from Types import *
+from Types import NTP
 
 
 ## exception for syntax in XML settings
@@ -214,7 +214,7 @@ class EField(FElement):
             name = self.h5Object.name
         else:
             name = "unnamed object"
-        if source:
+        if self.source:
             dsource = str(self.source)
         else:
             dsource = "unknown datasource"
