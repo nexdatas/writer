@@ -33,7 +33,14 @@ INDTS = __import__(NDTS)
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-
+## required files
+required = [
+    'numpy (>=1.5.0)',
+    'PyTango (>=7.2.2)',
+    'pninx (>=4.0.2)',
+#   'pninx-python (>=0.1.2)'
+#   'libpninx-python (>=0.1.2)'
+    ]
 
 ## metadata for distutils
 SETUPDATA=dict(
@@ -46,6 +53,7 @@ SETUPDATA=dict(
     keywords = "writer Tango server nexus data",
     url = "http://code.google.com/p/nexdatas/",
     packages=['ndts'],
+    requires=required,
     scripts = ['TangoDataServer.py', 'TDS'],
 #    scripts = ['TangoDataServer.py'],
 #    package_data={'ndts': ['TDS']},
