@@ -41,9 +41,19 @@ class TangoDataWriterTest(unittest.TestCase):
     def test_creation(self):
         print "Run: TangoDataWriterTest.test_creation() "
         fname = "test.h5"
+
         tdw = TangoDataWriter(fname)
-        tdw.openNXFile()
         self.assertTrue(tdw.fileName == fname)
+        self.assertTrue(tdw.xmlSettings == "")
+        self.assertTrue(tdw.json == "{}")
+        self.assertTrue(tdw.getNXFile() is None)
+        self.assertTrue(tdw.numThreads > 0)
+        self.assertTrue(isinstance(tdw.numThreads,(int,long)))
+
+        tdw.openNXFile()
+        self.assertTrue(tdw.getNXFile() is not None)
+
+
         tdw.closeNXFile()
 
 
