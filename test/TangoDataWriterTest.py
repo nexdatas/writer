@@ -21,6 +21,8 @@
 #
 import unittest
 import os
+from pni.nx.h5 import open_file
+
 
 from ndts import TangoDataWriter 
 from ndts.TangoDataWriter  import TangoDataWriter 
@@ -47,9 +49,9 @@ class TangoDataWriterTest(unittest.TestCase):
         fname = "test.h5"
         try:
             tdw = TangoDataWriter(fname)
-            self.assertTrue(tdw.fileName == fname)
-            self.assertTrue(tdw.xmlSettings == "")
-            self.assertTrue(tdw.json == "{}")
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.json, "{}")
             self.assertTrue(tdw.getNXFile() is None)
             self.assertTrue(tdw.numThreads > 0)
             self.assertTrue(isinstance(tdw.numThreads,(int, long)))
@@ -62,5 +64,35 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw.closeNXFile()
             
             self.assertTrue(tdw.getNXFile() is None)
+            
+
+            f = open_file(fname,readonly=True)
+            self.assertEqual(f.name, fname)
+
+            print "\nFile attributes:"
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+                print at.name,"=",at.value
+            self.assertEqual(cnt, f.nattrs)
+            print ""    
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 0)
+
+            cnt = 0
+            for ch in f.children:
+                cnt += 1
+            self.assertEqual(cnt, f.nchildren)
+            print ""    
+
+#            print f.children.valid
+            print "Path:" , f.path
+            print "Base:", f.base
+
+            f.close()
+
         finally:
             os.remove(fname)
