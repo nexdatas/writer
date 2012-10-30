@@ -20,6 +20,7 @@
 # the unittest runner
 #
 import unittest
+import os
 
 from ndts import TangoDataWriter 
 from ndts.TangoDataWriter  import TangoDataWriter 
@@ -35,25 +36,31 @@ class TangoDataWriterTest(unittest.TestCase):
 
     def tearDown(self):
         print "tearing down ..."
-        self._tdw.closeNXFile()
+        try:
+            self._tdw.closeNXFile()
+        finally:
+            os.remove("tangodatawritertest.h5")
 
 
     def test_creation(self):
         print "Run: TangoDataWriterTest.test_creation() "
         fname = "test.h5"
-
-        tdw = TangoDataWriter(fname)
-        self.assertTrue(tdw.fileName == fname)
-        self.assertTrue(tdw.xmlSettings == "")
-        self.assertTrue(tdw.json == "{}")
-        self.assertTrue(tdw.getNXFile() is None)
-        self.assertTrue(tdw.numThreads > 0)
-        self.assertTrue(isinstance(tdw.numThreads,(int,long)))
-
-        tdw.openNXFile()
-        self.assertTrue(tdw.getNXFile() is not None)
-
-
-        tdw.closeNXFile()
-
-
+        try:
+            tdw = TangoDataWriter(fname)
+            self.assertTrue(tdw.fileName == fname)
+            self.assertTrue(tdw.xmlSettings == "")
+            self.assertTrue(tdw.json == "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            
+            tdw.openNXFile()
+            self.assertTrue(tdw.getNXFile() is not None)
+            self.assertTrue(tdw.getNXFile().valid)
+            self.assertFalse(tdw.getNXFile().readonly)
+            
+            tdw.closeNXFile()
+            
+            self.assertTrue(tdw.getNXFile() is None)
+        finally:
+            os.remove(fname)
