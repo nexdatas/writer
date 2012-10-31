@@ -31,8 +31,10 @@ class DataHolder(object):
     # \param value value of the data. It may be also 1D and 2D array
     # \param tangoDType type of the data
     # \param shape shape of the data
-    def __init__(self, format, value, tangoDType, shape, encoding = None):
+    def __init__(self, format, value, tangoDType, shape, encoding = None, decoders = None):
 
+        if shape is None: 
+            print "format", format, shape, tangoDType 
         ## data format
         self.format = format
         ## data value
@@ -42,7 +44,22 @@ class DataHolder(object):
         ## data shape
         self.shape = shape
         ## encoding type of Tango DevEncoded varibles
-        self.encoding = encoding
+        self.encoding = str(encoding)
+        ## pool with decoding algorithm
+        self.decoders = decoders
+
+        if str(self.tangoDType) == 'DevEncoded':
+            self.shape = None
+            if self.encoding and self.decoders and \
+                    self.decoders.hasDecoder(self.encoding):
+                decoder = self.decoders.get(self.encoding)
+                print "decoding", self.encoding
+                decoder.load(self.value)
+                self.shape = decoder.shape()
+        if self.shape is None:
+            raise ValueError, "Shape not defined"
+            
+            
 
 
     ## casts the data into given type
@@ -51,8 +68,17 @@ class DataHolder(object):
     def cast(self, tp):
         if str(self.format).split('.')[-1] == "SCALAR":
             if str(self.tangoDType) == 'DevEncoded':
-                if self.encoding:
-                    pass
+                if self.encoding and self.decoders and \
+                        self.decoders.hasDecoder(self.encoding):
+                    decoder = self.decoders.get(self.encoding)
+                    print "decoding", self.encoding
+                    decoder.load(self.value)
+                    value = decoder.decode()
+                    if value:
+                        return NTP.convert[tp](value)
+                    else:
+                        raise ValueError, "Empty data of decoded variable"
+                        
                 else:
                     raise ValueError, "Encoding of DevEncoded variables not defined"
                 

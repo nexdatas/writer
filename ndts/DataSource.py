@@ -95,6 +95,8 @@ class TangoSource(DataSource):
         self.port = None
         ## encoding of Tango DevEncoded variables
         self.encoding = None
+        ## decoder pool
+        self._decoders = None
 
     ## self-description 
     # \returns self-describing string
@@ -102,6 +104,10 @@ class TangoSource(DataSource):
         return "Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
 
 
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        self._decoders = decoders
 
     ## data provider
     # \returns DataHolder with collected data  
@@ -125,7 +131,7 @@ class TangoSource(DataSource):
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
 #                        print "Image Device: ", self.device.encode()
                     return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y],
-                                      encoding = self.encoding)
+                                      encoding = self.encoding, decoders = self._decoders)
 
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
@@ -139,7 +145,8 @@ class TangoSource(DataSource):
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
-                    return DataHolder("SCALAR", da, cd.out_type, [1,0], encoding = self.encoding)
+                    return DataHolder("SCALAR", da, cd.out_type, [1,0], 
+                                      encoding = self.encoding, decoders = self._decoders)
                     
                         
 
@@ -317,7 +324,10 @@ class ClientSource(DataSource):
             ntp = NTP()
             rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
             if rank in NTP.rTf:
-                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[pythonDType.__name__], rshape.reverse())
+                shape = rshape.reverse()
+                if  shape is None:
+                    shape = [1,0]
+                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[pythonDType.__name__], shape)
             
 
 
@@ -348,6 +358,14 @@ class DataSourceFactory(Element):
                             "CLIENT":ClientSource, "SARDANA":SardanaSource}
         self.createDSource(name, attrs)
 
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        if self._last and self._last.source and self._last.source.isValid() \
+                and hasattr(self._last.source,"setDecoders"):
+            self._last.source.setDecoders(decoders)
+            
     ## creates data source   
     # \param name name of the tag
     # \param attrs dictionary with the tag attributes

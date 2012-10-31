@@ -117,18 +117,15 @@ class EField(FElement):
         ## label for postprocessing data
         self.postrun = ""
 
-
-
     ## stores the tag content
     # \param name the tag name    
     def store(self, name):
+            
 
         self._extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
             self._extraD = True
             
-            
-
 
         if "name" in self._tagAttrs.keys():
             nm = self._tagAttrs["name"]
@@ -206,6 +203,7 @@ class EField(FElement):
                 dh = DataHolder("SCALAR", val, "DevString", [1,0])
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
             else:
+#                raise ValueError,"Warning: Invalid datasource for %s" % nm
                 print "Warning: Invalid datasource for ", nm
 
     ## creates the error message
@@ -542,6 +540,7 @@ class EDimensions(Element):
         Element.__init__(self, name, attrs, last)
         if "rank" in attrs.keys():
             self._last.rank = attrs["rank"]
+
 
 ## dim tag element        
 class EDim(Element):        

@@ -25,15 +25,14 @@ from NexusXMLHandler import NexusXMLHandler
 
 import pni.nx.h5 as nx
 
-#from numpy  import * 
 from xml import sax
-
 import json
-from collections import Iterable
 import sys, os
-from H5Elements import EFile
 import gc
+from collections import Iterable
 
+from H5Elements import EFile
+from DecoderPool import DecoderPool
 
 ## NeXuS data writer
 class TangoDataWriter(object):
@@ -61,6 +60,10 @@ class TangoDataWriter(object):
         self.numThreads = 100
         ## element file objects
         self._eFile = None
+
+        ## pool with decoders
+        self._decoders = DecoderPool()
+
        
     ## the H5 file opening
     # \brief It opens the H5 file       
@@ -121,7 +124,7 @@ class TangoDataWriter(object):
         if self.xmlSettings:
             parser = sax.make_parser()
         
-            handler = NexusXMLHandler(self._eFile)
+            handler = NexusXMLHandler(self._eFile, self._decoders)
             sax.parseString(self.xmlSettings, handler)
             
             self._initPool = handler.initPool

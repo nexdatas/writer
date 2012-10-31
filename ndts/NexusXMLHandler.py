@@ -42,7 +42,8 @@ class NexusXMLHandler(sax.ContentHandler):
     ## constructor
     # \brief It constructs parser and defines the H5 output file
     # \param fileElement file element
-    def __init__(self, fileElement):
+    # \param decoders decoder pool
+    def __init__(self, fileElement, decoders=None):
         sax.ContentHandler.__init__(self)
 
         ## map of NXclass : name
@@ -62,7 +63,8 @@ class NexusXMLHandler(sax.ContentHandler):
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
                               'dim':EDim, 'enumeration':Element, 'item':Element,
-                              'datasource':DataSourceFactory, 'record':ERecord,'strategy':EStrategy , 'query':EQuery, 
+                              'datasource':DataSourceFactory, 'record':ERecord,
+                              'strategy':EStrategy, 'query':EQuery, 
                               'database':EDatabase, 
                               'device':EDevice, 'door':EDoor}
 
@@ -81,6 +83,9 @@ class NexusXMLHandler(sax.ContentHandler):
         self._poolMap = {'INIT':self.initPool, 'STEP':self.stepPool, 'FINAL':self.finalPool}        
         ## collection of thread pool with triggered STEP elements
         self.triggerPools = {}
+
+        ## pool with decoders
+        self._decoders = decoders
 
 
     ## the last stack element 
@@ -107,6 +112,8 @@ class NexusXMLHandler(sax.ContentHandler):
                 self._stack.append(self._elementClass[name](name, attrs, self._last()))
                 if hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
                     self._last().fetchName(self._groupTypes)
+                if hasattr(self._last(), "setDecoders") and callable(self._last().setDecoders):
+                    self._last().setDecoders(self._decoders)
                 if hasattr(self._last(), "createLink") and callable(self._last().createLink):
                     self._last().createLink(self._groupTypes)
             elif name not in self._transparentTags:
