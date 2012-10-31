@@ -31,7 +31,7 @@ class DataHolder(object):
     # \param value value of the data. It may be also 1D and 2D array
     # \param tangoDType type of the data
     # \param shape shape of the data
-    def __init__(self, format, value, tangoDType, shape):
+    def __init__(self, format, value, tangoDType, shape, encoding = None):
 
         ## data format
         self.format = format
@@ -41,6 +41,8 @@ class DataHolder(object):
         self.tangoDType = tangoDType
         ## data shape
         self.shape = shape
+        ## encoding type of Tango DevEncoded varibles
+        self.encoding = encoding
 
 
     ## casts the data into given type
@@ -48,6 +50,12 @@ class DataHolder(object):
     # \returns numpy array of defined type or list for strings or value for SCALAR
     def cast(self, tp):
         if str(self.format).split('.')[-1] == "SCALAR":
+            if str(self.tangoDType) == 'DevEncoded':
+                if self.encoding:
+                    pass
+                else:
+                    raise ValueError, "Encoding of DevEncoded variables not defined"
+                
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType):
                 return self.value
             else:
@@ -55,6 +63,9 @@ class DataHolder(object):
                 return NTP.convert[tp](self.value)
 
         else:
+            if str(self.tangoDType) == 'DevEncoded':
+                raise ValueError, "Array of DevEncoded variables not supported"
+
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
             else:    

@@ -461,6 +461,8 @@ class EDevice(Element):
             self._beforeLast().source.hostname = attrs["hostname"]
         if "port" in attrs.keys():
             self._beforeLast().source.port = attrs["port"]
+        if "encoding" in attrs.keys():
+            self._beforeLast().source.encoding = attrs["encoding"]
         if "member" in attrs.keys():
             self._beforeLast().source.memberType = attrs["member"]
         else:

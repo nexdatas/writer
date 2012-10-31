@@ -85,14 +85,16 @@ class TangoSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## name of the tango device
+        ## name of the Tango device
         self.device = None
         ## member type of the data, i.e. attribute, property,...
         self.memberType = None
-        ## host name of tango server
+        ## host name of Tango server
         self.hostname = None
-        ## port of tango server
+        ## port of Tango server
         self.port = None
+        ## encoding of Tango DevEncoded variables
+        self.encoding = None
 
     ## self-description 
     # \returns self-describing string
@@ -122,7 +124,8 @@ class TangoSource(DataSource):
 #                        print "Spectrum Device: ", self.device.encode()
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
 #                        print "Image Device: ", self.device.encode()
-                    return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y])
+                    return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y],
+                                      encoding = self.encoding)
 
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
@@ -136,7 +139,7 @@ class TangoSource(DataSource):
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
-                    return DataHolder("SCALAR", da, cd.out_type, [1,0])
+                    return DataHolder("SCALAR", da, cd.out_type, [1,0], encoding = self.encoding)
                     
                         
 
