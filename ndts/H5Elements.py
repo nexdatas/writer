@@ -144,7 +144,7 @@ class EField(FElement):
             try:
                 for i in range(int(self.rank)):
                     si = str(i+1)
-                    if si in self.lengths.keys():
+                    if si in self.lengths.keys() and self.lengths[si] is not None:
                         if int(self.lengths[si]) > 0:
                             shape.append(int(self.lengths[si]))
                     else:
@@ -164,7 +164,6 @@ class EField(FElement):
                                 shape.append(s)
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
-
 
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
@@ -236,7 +235,6 @@ class EField(FElement):
                     if not self._extraD:
                         self.h5Object.write(dh.cast(self.h5Object.dtype))
                     else:
-
                         if str(dh.format).split('.')[-1] == "SCALAR":
                             self.h5Object.grow()
                             self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)

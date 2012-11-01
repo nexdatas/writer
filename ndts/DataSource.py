@@ -114,10 +114,9 @@ class TangoSource(DataSource):
     def getData(self):
         if self.device and self.memberType and self.name:
             if self.hostname and self.port:
-                proxy = PyTango.DeviceProxy("%s:%s/%s"
-                                            % (self.hostname.encode(),
-                                               self.port.encode(),
-                                               self.device.encode()))
+                proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
+                                                          self.port.encode(),
+                                                          self.device.encode()))
             else:
                 proxy = PyTango.DeviceProxy(self.device.encode())
             da = None
@@ -130,6 +129,7 @@ class TangoSource(DataSource):
 #                        print "Spectrum Device: ", self.device.encode()
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
 #                        print "Image Device: ", self.device.encode()
+#                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self._decoders
                     return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y],
                                       encoding = self.encoding, decoders = self._decoders)
 

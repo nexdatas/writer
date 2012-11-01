@@ -53,7 +53,7 @@ class VDEOdecoder(object):
     def load(self, data):
         self._data = data
         self.format = data[0]
-        self.loadHeader(data[1][:struct.calcsize(self._headerFormat)])        
+        self._loadHeader(data[1][:struct.calcsize(self._headerFormat)])        
         self._value = None
         
 
@@ -61,6 +61,7 @@ class VDEOdecoder(object):
     ## loads the image header    
     # \param headerData buffer with header data
     def _loadHeader(self, headerData):
+        hd = struct.unpack(self._headerFormat, headerData)
         hdr = struct.unpack(self._headerFormat, headerData)
         self._header = {}
         self._header['magic'] = hdr[0]
@@ -78,7 +79,7 @@ class VDEOdecoder(object):
     ## provides the data shape
     # \returns the data shape if data was loaded
     def shape(self):
-        if not self._header:
+        if self._header:
             return [self._header['width'],self._header['height']]
         
 
@@ -88,7 +89,7 @@ class VDEOdecoder(object):
     def decode(self):        
         if not self._header or not self._data:
             return
-        if not self.value:
+        if not self._value:
             image = self._data[1][struct.calcsize(self._headerFormat):]
             format = self._formatID[self._header['imageMode']]
             fSize = struct.calcsize(format)
@@ -140,6 +141,14 @@ class DecoderPool(object):
     # \returns True if it the decoder is registered        
     def hasDecoder(self, decoder):
         return True if decoder in self._pool.keys() else False
+
+
+    ## checks it the decoder is registered        
+    # \param decoder the given decoder
+    # \returns True if it the decoder is registered        
+    def get(self, decoder):
+        if decoder in self._pool.keys():
+            return self._pool[decoder]
 
     
     ## adds additional decoder

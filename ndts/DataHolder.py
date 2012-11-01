@@ -35,8 +35,6 @@ class DataHolder(object):
     # \param decoders poll with decoding classes
     def __init__(self, format, value, tangoDType, shape, encoding = None, decoders = None):
 
-        if shape is None: 
-            print "format", format, shape, tangoDType 
         ## data format
         self.format = format
         ## data value
@@ -46,7 +44,7 @@ class DataHolder(object):
         ## data shape
         self.shape = shape 
         ## encoding type of Tango DevEncoded varibles
-       self.encoding = str(encoding)
+        self.encoding = str(encoding)
         ## pool with decoding algorithm
         self.decoders = decoders
 
@@ -55,13 +53,40 @@ class DataHolder(object):
             if self.encoding and self.decoders and \
                     self.decoders.hasDecoder(self.encoding):
                 decoder = self.decoders.get(self.encoding)
-                print "decoding", self.encoding
+#                print "decoding", self.encoding
                 decoder.load(self.value)
                 self.shape = decoder.shape()
+                if self.shape:
+                    if len(self.shape) == 1:
+                        if self.shape[-1]  < 2:
+                            self.format = "SCALAR"
+                        else:
+                            self.format = "SPECTRUM"
+                    if len(self.shape) == 2:
+                        if self.shape[-1]  < 2:
+                            if self.shape[-2]  < 2:
+                                self.format = "SCALAR"
+                            else:
+                                self.format = "SPECTRUM"
+                        else:
+                            self.format = "IMAGE"
+                        
+                            
+                            
+            self.value = None    
+            if self.encoding and self.decoders and \
+                    self.decoders.hasDecoder(self.encoding):
+                decoder = self.decoders.get(self.encoding)
+#                print "decoding", self.encoding
+                decoder.load(value)
+                self.value = decoder.decode()
+              
+ 
+        if self.value is None:        
+            raise ValueError, "Encoding of DevEncoded variables not defined"
+
         if self.shape is None:
             raise ValueError, "Shape not defined"
-            
-            
 
 
     ## casts the data into given type
@@ -69,21 +94,6 @@ class DataHolder(object):
     # \returns numpy array of defined type or list for strings or value for SCALAR
     def cast(self, tp):
         if str(self.format).split('.')[-1] == "SCALAR":
-            if str(self.tangoDType) == 'DevEncoded':
-                if self.encoding and self.decoders and \
-                        self.decoders.hasDecoder(self.encoding):
-                    decoder = self.decoders.get(self.encoding)
-                    print "decoding", self.encoding
-                    decoder.load(self.value)
-                    value = decoder.decode()
-                    if value:
-                        return NTP.convert[tp](value)
-                    else:
-                        raise ValueError, "Empty data of decoded variable"
-                        
-                else:
-                    raise ValueError, "Encoding of DevEncoded variables not defined"
-                
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType):
                 return self.value
             else:
@@ -91,8 +101,8 @@ class DataHolder(object):
                 return NTP.convert[tp](self.value)
 
         else:
-            if str(self.tangoDType) == 'DevEncoded':
-                raise ValueError, "Array of DevEncoded variables not supported"
+#            if str(self.tangoDType) == 'DevEncoded':
+#                raise ValueError, "Array of DevEncoded variables not supported"
 
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
@@ -110,6 +120,7 @@ class DataHolder(object):
                                        for i in range(len(self.value[j])) ] \
                                      for j in range(len(self.value)) ]
                     else:
+                        
                         return numpy.array([ [ NTP.convert[tp](self.value[j][i]) \
                                                    for i in range(len(self.value[j])) ] \
                                                  for j in range(len(self.value)) ], dtype=tp)
