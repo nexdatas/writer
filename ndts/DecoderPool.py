@@ -19,52 +19,106 @@
 ## \file DecoderPool.py
 # decoder classes
 
+import struct
+import numpy
 
-## LIMA VDEO decoder
+## VIDEO IMAGE LIMA decoder
 class VDEOdecoder(object):
 
     ## constructor
     # \brief It clears the local variables
     def __init__(self):
+        ## decoder name
+        self.name = "VIDEO_IMAGE_LIMA"
+        ## decoder format
+        self.format = None
+        
+        ## image data
         self._value = None
+        ## header and image data
         self._data = None
-        self.name = "VDEO"
+        ## struct header format
+        self._headerFormat = '!IHHqiiHHHH'
+        ## header data
+        self._header = {}
+        ## format modes
+        self._formatID = {0:'B', 1:'H', 2:'I', 3:'L'}
+        ## dtype modes
+        self._dtypeID = {0:'uint8', 1:'uint16', 2:'uint32', 3:'uint64'}
+
+
 
     ## loads encoded data
     # \param data encoded data    
     def load(self, data):
         self._data = data
+        self.format = data[0]
+        self.loadHeader(data[1][:struct.calcsize(self._headerFormat)])        
         self._value = None
+        
+
+
+    ## loads the image header    
+    # \param headerData buffer with header data
+    def _loadHeader(self, headerData):
+        hdr = struct.unpack(self._headerFormat, headerData)
+        self._header = {}
+        self._header['magic'] = hdr[0]
+        self._header['headerVersion'] = hdr[1]
+        self._header['imageMode'] = hdr[2]
+        self._header['frameNumber'] = hdr[3]
+        self._header['width'] = hdr[4]
+        self._header['height'] = hdr[5]
+        self._header['endianness'] = hdr[6]
+        self._header['headerSize'] = hdr[7]
+        self._header['padding'] = hdr[7:]
+        
+
 
     ## provides the data shape
     # \returns the data shape if data was loaded
     def shape(self):
-        pass
+        if not self._header:
+            return [self._header['width'],self._header['height']]
+        
+
 
     ## provides the decoded data
     # \returns the decoded data if data was loaded
     def decode(self):        
-        if self._value:
-            return self._value
+        if not self._header or not self._data:
+            return
+        if not self.value:
+            image = self._data[1][struct.calcsize(self._headerFormat):]
+            format = self._formatID[self._header['imageMode']]
+            fSize = struct.calcsize(format)
+            self._value = numpy.array(
+                struct.unpack(format*(len(image)/fSize), image),
+                dtype=self._dtypeID[self._header['imageMode']]
+                ).reshape(self._header['width'],self._header['height'])
+        return self._value
+
 
 
 
 ## Data source creator
 class DecoderPool(object):        
 
+
     ## constructor
     # \brief It creates know decoders    
-    # \param json string with decoders    
+    # \param configJSON string with decoders    
     def __init__(self, configJSON = None):
-        self._knowDecoders = { "VDEO":VDEOdecoder }
+        self._knowDecoders = { "VIDEO_IMAGE_LIMA":VDEOdecoder }
         self._pool = {}
         self._userDecoders = {}
         
         self._createDecoders()
         self._appendUserDecoders(configJSON)
 
+
     ## loads user decoders
-    # \param json string with decoders    
+    # \param configJSON string with decoders    
     def _appendUserDecoders(self, configJSON):
         if configJSON and 'decoders' in configJSON.keys() and  hasattr(configJSON['decoders'],'keys'):
             for dk in configJSON['decoders'].keys():
@@ -78,6 +132,8 @@ class DecoderPool(object):
     def _createDecoders(self):
         for dk in self._knowDecoders.keys():
             self._pool[dk] = self._knowDecoders[dk]()
+
+
             
     ## checks it the decoder is registered        
     # \param decoder the given decoder
@@ -102,6 +158,7 @@ class DecoderPool(object):
             dname = name
         self._pool[dname] = decoder
         return dname
+
 
     ## adds additional decoder
     # \param name name of the adding decoder

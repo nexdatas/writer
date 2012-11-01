@@ -23,14 +23,18 @@
 import unittest
 import TangoDataWriterTest
 
+## main function
 def main():
 
+    ## test suit
     suite = unittest.TestSuite()
     
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
     
+    ## test runner
     runner = unittest.TextTestRunner()
+    ## test result
     result = runner.run(suite)
 
 if __name__ == "__main__":

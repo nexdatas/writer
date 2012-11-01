@@ -31,6 +31,8 @@ class DataHolder(object):
     # \param value value of the data. It may be also 1D and 2D array
     # \param tangoDType type of the data
     # \param shape shape of the data
+    # \param encoding encoding type of Tango DevEncoded varibles
+    # \param decoders poll with decoding classes
     def __init__(self, format, value, tangoDType, shape, encoding = None, decoders = None):
 
         if shape is None: 
@@ -42,9 +44,9 @@ class DataHolder(object):
         ## data type
         self.tangoDType = tangoDType
         ## data shape
-        self.shape = shape
+        self.shape = shape 
         ## encoding type of Tango DevEncoded varibles
-        self.encoding = str(encoding)
+       self.encoding = str(encoding)
         ## pool with decoding algorithm
         self.decoders = decoders
 

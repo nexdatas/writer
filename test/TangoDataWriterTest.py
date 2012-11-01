@@ -28,14 +28,18 @@ from ndts import TangoDataWriter
 from ndts.TangoDataWriter  import TangoDataWriter 
 
 
-# test fixture
+## test fixture
 class TangoDataWriterTest(unittest.TestCase):
 
+    ## test starter
+    # \brief It opens the H5 file
     def setUp(self):
         print "setting up..."
         self._tdw = TangoDataWriter("tangodatawritertest.h5")
         self._tdw.openNXFile()
 
+    ## test closer
+    # \brief It closes the H5 file
     def tearDown(self):
         print "tearing down ..."
         try:
@@ -43,7 +47,8 @@ class TangoDataWriterTest(unittest.TestCase):
         finally:
             os.remove("tangodatawritertest.h5")
 
-
+    ## creation test
+    # \brief It tests validation of opening and closing H5 files.
     def test_creation(self):
         print "Run: TangoDataWriterTest.test_creation() "
         fname = "test.h5"

@@ -19,4 +19,5 @@
 ## \file __init__.py
 # package constructor
 
+## package version
 __version__ = "1.0.0"
