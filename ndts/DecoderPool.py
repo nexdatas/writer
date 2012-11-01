@@ -32,6 +32,8 @@ class VDEOdecoder(object):
         self.name = "VIDEO_IMAGE_LIMA"
         ## decoder format
         self.format = None
+        ## data type
+        self.dtype = None
         
         ## image data
         self._value = None
@@ -45,7 +47,6 @@ class VDEOdecoder(object):
         self._formatID = {0:'B', 1:'H', 2:'I', 3:'L'}
         ## dtype modes
         self._dtypeID = {0:'uint8', 1:'uint16', 2:'uint32', 3:'uint64'}
-
 
 
     ## loads encoded data
@@ -74,7 +75,7 @@ class VDEOdecoder(object):
         self._header['headerSize'] = hdr[7]
         self._header['padding'] = hdr[7:]
         
-
+        self.dtype = self._dtypeID[self._header['imageMode']]
 
     ## provides the data shape
     # \returns the data shape if data was loaded
@@ -94,8 +95,7 @@ class VDEOdecoder(object):
             format = self._formatID[self._header['imageMode']]
             fSize = struct.calcsize(format)
             self._value = numpy.array(
-                struct.unpack(format*(len(image)/fSize), image),
-                dtype=self._dtypeID[self._header['imageMode']]
+                struct.unpack(format*(len(image)/fSize), image), dtype=self.dtype
                 ).reshape(self._header['width'],self._header['height'])
         return self._value
 
@@ -157,7 +157,8 @@ class DecoderPool(object):
     # \returns name of decoder
     def append(self, decoder, name = None):
         if not hasattr(decoder,"load") or not hasattr(decoder,"name") \
-                or not hasattr(decoder,"shape") or not hasattr(decoder,"decode"):
+                or not hasattr(decoder,"shape") or not hasattr(decoder,"decode") \
+                or not hasattr(decoder,"dtype") or not hasattr(decoder,"format"):
             return 
         if name is None:
             if not decoder.name:

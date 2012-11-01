@@ -49,39 +49,41 @@ class DataHolder(object):
         self.decoders = decoders
 
         if str(self.tangoDType) == 'DevEncoded':
-            self.shape = None
-            if self.encoding and self.decoders and \
-                    self.decoders.hasDecoder(self.encoding):
-                decoder = self.decoders.get(self.encoding)
+            self._setupEncoded()
+
+    def _setupEncoded(self):    
+        self.shape = None
+        if self.encoding and self.decoders and \
+                self.decoders.hasDecoder(self.encoding):
+            decoder = self.decoders.get(self.encoding)
 #                print "decoding", self.encoding
-                decoder.load(self.value)
-                self.shape = decoder.shape()
-                if self.shape:
-                    if len(self.shape) == 1:
-                        if self.shape[-1]  < 2:
+            decoder.load(self.value)
+            self.shape = decoder.shape()
+            if self.shape:
+                if len(self.shape) == 1:
+                    if self.shape[-1]  < 2:
+                        self.format = "SCALAR"
+                    else:
+                        self.format = "SPECTRUM"
+                elif len(self.shape) == 2:
+                    if self.shape[-1]  < 2:
+                        if self.shape[-2]  < 2:
                             self.format = "SCALAR"
                         else:
                             self.format = "SPECTRUM"
-                    if len(self.shape) == 2:
-                        if self.shape[-1]  < 2:
-                            if self.shape[-2]  < 2:
-                                self.format = "SCALAR"
-                            else:
-                                self.format = "SPECTRUM"
-                        else:
-                            self.format = "IMAGE"
-                        
-                            
-                            
-            self.value = None    
-            if self.encoding and self.decoders and \
-                    self.decoders.hasDecoder(self.encoding):
-                decoder = self.decoders.get(self.encoding)
-#                print "decoding", self.encoding
-                decoder.load(value)
+                    else:
+                        self.format = "IMAGE"
+                else:
+                    self.format = "SCALAR"
+                    
+                    
+                self.value = None    
                 self.value = decoder.decode()
-              
- 
+
+            tp =  decoder.dtype
+            if tp in NTP.npTt.keys():
+                self.tangoDType = NTP.npTt[tp]
+                
         if self.value is None:        
             raise ValueError, "Encoding of DevEncoded variables not defined"
 
