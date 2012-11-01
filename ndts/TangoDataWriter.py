@@ -64,7 +64,15 @@ class TangoDataWriter(object):
         ## pool with decoders
         self._decoders = DecoderPool()
 
+
+
+    ## the H5 file handle 
+    # \returns the H5 file handle 
+    def getNXFile(self):
+        return self._nxFile            
+
        
+
     ## the H5 file opening
     # \brief It opens the H5 file       
     def openNXFile(self):
@@ -83,45 +91,12 @@ class TangoDataWriter(object):
 
 
 
-    ## the H5 file handle 
-    # \returns the H5 file handle 
-    def getNXFile(self):
-        return self._nxFile            
-
-
-    ## the H5 file closing
-    # \brief It closes the H5 file       
-    def closeNXFile(self):
-
-        if self._initPool:
-            self._initPool.close()
-            self._initPool = None         
-   
-        if self._stepPool:
-            self._stepPool.close()
-            self._stepPool = None         
-                
-        if self._finalPool: 
-            self._finalPool.close()
-            self._finalPool = None         
-
-
-        if self._triggerPools: 
-            for pool in self._triggerPools.keys(): 
-                self._triggerPools[pool].close()
-            self._triggerPools = {}
-
-        if self._nxFile:    
-            self._nxFile.close()
-            
-        self._nxFile = None
-        self._eFile = None
-        gc.collect()
-
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
         if self.xmlSettings:
+            self._decoders = DecoderPool(json.loads(self.json))            
+
             parser = sax.make_parser()
         
             handler = NexusXMLHandler(self._eFile, self._decoders)
@@ -208,6 +183,34 @@ class TangoDataWriter(object):
         gc.collect()
 
 
+    ## the H5 file closing
+    # \brief It closes the H5 file       
+    def closeNXFile(self):
+
+        if self._initPool:
+            self._initPool.close()
+            self._initPool = None         
+   
+        if self._stepPool:
+            self._stepPool.close()
+            self._stepPool = None         
+                
+        if self._finalPool: 
+            self._finalPool.close()
+            self._finalPool = None         
+
+
+        if self._triggerPools: 
+            for pool in self._triggerPools.keys(): 
+                self._triggerPools[pool].close()
+            self._triggerPools = {}
+
+        if self._nxFile:    
+            self._nxFile.close()
+            
+        self._nxFile = None
+        self._eFile = None
+        gc.collect()
 
         
 

@@ -54,10 +54,24 @@ class DecoderPool(object):
 
     ## constructor
     # \brief It creates know decoders    
-    def __init__(self):
-        self._knowDecoders={"VDEO":VDEOdecoder}
+    # \param json string with decoders    
+    def __init__(self, configJSON = None):
+        self._knowDecoders = { "VDEO":VDEOdecoder }
         self._pool = {}
+        self._userDecoders = {}
+        
         self._createDecoders()
+        self._appendUserDecoders(configJSON)
+
+    ## loads user decoders
+    # \param json string with decoders    
+    def _appendUserDecoders(self, configJSON):
+        if configJSON and 'decoders' in configJSON.keys() and  hasattr(configJSON['decoders'],'keys'):
+            for dk in configJSON['decoders'].keys():
+                pkl = configJSON['decoders'][dk].split(".")
+                dec =  __import__(".".join(pkl[:-1]), globals(), locals(), pkl[-1])  
+                self.append(getattr(dec, pkl[-1]), dk)
+            
 
     ## creates know decoders
     # \brief It calls constructor of know decoders    
