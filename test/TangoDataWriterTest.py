@@ -84,7 +84,7 @@ class TangoDataWriterTest(unittest.TestCase):
         print "\nsetting up..."
 
     ## test closer
-    # \brie Common tear down
+    # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
