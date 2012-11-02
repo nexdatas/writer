@@ -550,7 +550,7 @@ class TangoDataWriterTest(unittest.TestCase):
 
         finally:
 
-#            os.remove(fname)
-            pass
+            os.remove(fname)
+#            pass
 
 
