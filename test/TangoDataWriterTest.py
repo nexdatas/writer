@@ -23,6 +23,7 @@ import unittest
 import os
 from pni.nx.h5 import open_file
 
+from  xml.sax import SAXParseException
 
 from ndts import TangoDataWriter 
 from ndts.TangoDataWriter  import TangoDataWriter 
@@ -32,25 +33,19 @@ from ndts.TangoDataWriter  import TangoDataWriter
 class TangoDataWriterTest(unittest.TestCase):
 
     ## test starter
-    # \brief It opens the H5 file
+    # \brief Common set up
     def setUp(self):
-        print "setting up..."
-        self._tdw = TangoDataWriter("tangodatawritertest.h5")
-        self._tdw.openNXFile()
+        print "\nsetting up..."
 
     ## test closer
-    # \brief It closes the H5 file
+    # \brie Common tear down
     def tearDown(self):
-        print "tearing down ..."
-        try:
-            self._tdw.closeNXFile()
-        finally:
-            os.remove("tangodatawritertest.h5")
+        print "\ntearing down ..."
 
-    ## creation test
+    ## openFile test
     # \brief It tests validation of opening and closing H5 files.
-    def test_creation(self):
-        print "Run: TangoDataWriterTest.test_creation() "
+    def test_openFile(self):
+        print "Run: TangoDataWriterTest.test_openFile() "
         fname = "test.h5"
         try:
             tdw = TangoDataWriter(fname)
@@ -67,20 +62,28 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertFalse(tdw.getNXFile().readonly)
             
             tdw.closeNXFile()
-            
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.json, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
             self.assertTrue(tdw.getNXFile() is None)
             
+
+            # check the created file
 
             f = open_file(fname,readonly=True)
             self.assertEqual(f.name, fname)
 
-            print "\nFile attributes:"
+#            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-                print at.name,"=",at.value
+#                print at.name,"=",at.value
             self.assertEqual(cnt, f.nattrs)
-            print ""    
+            self.assertEqual(6, f.nattrs)
+#            print ""    
 
             self.assertEqual(f.attr("file_name").value, fname)
             self.assertTrue(f.attr("NX_class").value,"NXroot")
@@ -91,13 +94,145 @@ class TangoDataWriterTest(unittest.TestCase):
             for ch in f.children:
                 cnt += 1
             self.assertEqual(cnt, f.nchildren)
-            print ""    
-
-#            print f.children.valid
-            print "Path:" , f.path
-            print "Base:", f.base
 
             f.close()
+
+        finally:
+            os.remove(fname)
+
+
+
+    ## openEntry test
+    # \brief It tests validation of opening and closing entry in H5 files.
+    def test_openEntry(self):
+        print "Run: TangoDataWriterTest.test_openEntry() "
+        fname = "test.h5"
+        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        try:
+            tdw = TangoDataWriter(fname)
+            
+            tdw.openNXFile()
+
+            tdw.xmlSettings = xml
+            tdw.openEntry()
+
+            tdw.closeEntry()
+
+            self.assertTrue(tdw.getNXFile() is not None)
+            self.assertTrue(tdw.getNXFile().valid)
+            self.assertFalse(tdw.getNXFile().readonly)
+            self.assertEqual(tdw.fileName, fname)
+            self.assertNotEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.json, "{}")
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+
+            tdw.closeNXFile()
+           
+             # check the created file
+            
+            f = open_file(fname,readonly=True)
+            self.assertEqual(f.name, fname)
+
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+            self.assertEqual(cnt, f.nattrs)
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 1)
+
+            cnt = 0
+            for ch in f.children:
+                self.assertTrue(ch.valid)
+                self.assertEqual(ch.name,"entry")
+                self.assertEqual(ch.nattrs,1)
+                cnt += 1
+                for at in ch.attributes:
+                    self.assertTrue(at.valid)
+                    self.assertTrue(hasattr(at.shape,"__iter__"))
+                    self.assertEqual(len(at.shape),0)
+                    self.assertEqual(at.dtype,"string")
+#                    self.assertEqual(at.dtype,"string")
+                    self.assertEqual(at.name,"NX_class")
+                    self.assertEqual(at.value,"NXentry")
+                    
+                
+            self.assertEqual(cnt, f.nchildren)
+
+            f.close()
+
+        finally:
+            os.remove(fname)
+
+
+
+    ## openEntry test
+    # \brief It tests validation of opening and closing entry in H5 files.
+    def test_openEntryWithSAXParseException(self):
+        print "Run: TangoDataWriterTest.test_openEntryWithSAXParseException() "
+        fname = "test.h5"
+        wrongXml = """Ala ma kota."""
+        xml = """<definition/>"""
+        try:
+            tdw = TangoDataWriter(fname)
+            
+            tdw.openNXFile()
+
+            tdw.xmlSettings = wrongXml
+            try:
+                error = None
+                tdw.openEntry()
+            except SAXParseException,e:
+                error = True
+            except Exception,e:
+                error = False
+            self.assertTrue(error is not None)
+            self.assertEqual(error, True)
+                
+
+
+            tdw.xmlSettings = xml
+            try:
+                error = None
+                tdw.openEntry()
+            except SAXParseException,e:
+                error = True
+            except Exception,e:
+                error = False
+            self.assertTrue(error is None)
+                                
+            tdw.closeEntry()
+
+            tdw.closeNXFile()
+            
+
+            # check the created file
+            
+            f = open_file(fname,readonly=True)
+            self.assertEqual(f.name, fname)
+
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+            self.assertEqual(cnt, f.nattrs)
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 0)
+
+            cnt = 0
+            for ch in f.children:
+                cnt += 1
+                
+            self.assertEqual(cnt, f.nchildren)
+
+            f.close()
+
+
 
         finally:
             os.remove(fname)

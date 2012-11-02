@@ -46,6 +46,9 @@ class TangoDataWriter(object):
         self.xmlSettings = ""
         ## global JSON string with data records
         self.json = "{}"
+        ## maximal number of threads
+        self.numThreads = 100
+
         ## thread pool with INIT elements
         self._initPool = None
         ## thread pool with STEP elements
@@ -56,8 +59,6 @@ class TangoDataWriter(object):
         self._triggerPools = {}
         ## H5 file handle
         self._nxFile = None
-        ## maximal number of threads
-        self.numThreads = 100
         ## element file objects
         self._eFile = None
 
