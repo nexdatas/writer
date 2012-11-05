@@ -22,6 +22,7 @@
 
 import unittest
 import TangoDataWriterTest
+import TangoDataServerTest
 
 ## main function
 def main():
@@ -31,6 +32,8 @@ def main():
     
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
     
     ## test runner
     runner = unittest.TextTestRunner()

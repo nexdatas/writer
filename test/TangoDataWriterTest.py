@@ -32,6 +32,8 @@ from ndts.TangoDataWriter  import TangoDataWriter
 ## test fixture
 class TangoDataWriterTest(unittest.TestCase):
 
+    ## constructor
+    # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
