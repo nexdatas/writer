@@ -21,11 +21,13 @@
 #
 import unittest
 import os
+import sys
 import subprocess
 
 import PyTango
 import time
 from pni.nx.h5 import open_file
+from  xml.sax import SAXParseException
 
 
 ## test fixture
@@ -259,6 +261,94 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertEqual(cnt, f.nchildren)
 
             f.close()
+
+        finally:
+            os.remove(fname)
+
+
+
+    ## openEntryWithSAXParseException test
+    # \brief It tests validation of opening and closing entry with SAXParseException
+    def test_openEntryWithSAXParseException(self):
+        print "Run: TangoDataServerTest.test_openEntryWithSAXParseException() "
+        fname= '%s/test2.h5' % os.getcwd()   
+        wrongXml = """Ala ma kota."""
+        xml = """<definition/>"""
+        try:
+            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+            dp.FileName = fname
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+            dp.OpenFile()
+
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+            dp.TheXMLSettings = wrongXml
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            try:
+                error = None
+                dp.OpenEntry()
+            except PyTango.DevFailed,e:
+                error = True
+            except Exception, e: 
+                error = False
+            self.assertEqual(error, True)
+            self.assertTrue(error is not None)
+                
+
+
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+#            dp.CloseFile()
+#            dp.OpenFile()
+
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+            dp.TheXMLSettings = xml
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            dp.OpenEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+
+            dp.CloseEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            dp.CloseFile()
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+
+
+
+            # check the created file
+            
+            f = open_file(fname,readonly=True)
+            self.assertEqual(f.path, fname)
+
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+            self.assertEqual(cnt, f.nattrs)
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 0)
+
+            cnt = 0
+            for ch in f.children:
+                cnt += 1
+                
+            self.assertEqual(cnt, f.nchildren)
+
+            f.close()
+
+
 
         finally:
             os.remove(fname)
