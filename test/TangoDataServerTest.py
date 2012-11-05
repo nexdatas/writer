@@ -117,7 +117,7 @@ class TangoDataServerTest(unittest.TestCase):
             try:
                 print "\b.",
                 time.sleep(0.02)
-                dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+                dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
             except:    
