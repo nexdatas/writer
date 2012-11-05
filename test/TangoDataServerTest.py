@@ -108,8 +108,22 @@ class TangoDataServerTest(unittest.TestCase):
                 "TDS TDWTEST &",stdout =  subprocess.PIPE, 
                 stderr =  subprocess.PIPE , shell= True)
 #            raise ErrorValue, "Cannot find the server instance"
-        print "waiting for server..."    
-        time.sleep(1)
+        print "waiting for server",
+#        time.sleep(1)
+
+        found = False
+        cnt = 0
+        while not found and cnt < 1000:
+            try:
+                print "\b.",
+                time.sleep(0.02)
+                dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+                if dp.state() == PyTango.DevState.ON:
+                    found = True
+            except:    
+                found = False
+            cnt +=1
+        print ""
 
     ## test closer
     # \brief Common tear down oif Tango Server
@@ -124,7 +138,6 @@ class TangoDataServerTest(unittest.TestCase):
 
         res = pipe.read().split("\n")
         for r in res:
-#            print r
             sr = r.split()
             if len(sr)>2:
                  subprocess.call("kill -9 %s" % sr[1],stderr=subprocess.PIPE , shell= True)
@@ -139,7 +152,6 @@ class TangoDataServerTest(unittest.TestCase):
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
             #        print 'attributes', dp.attribute_list_query()
-            print dp.state()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
             dp.OpenFile()
