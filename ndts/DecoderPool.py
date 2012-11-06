@@ -29,7 +29,7 @@ class VDEOdecoder(object):
     # \brief It clears the local variables
     def __init__(self):
         ## decoder name
-        self.name = "VIDEO_IMAGE_LIMA"
+        self.name = "LIMA_VIDEO_IMAGE"
         ## decoder format
         self.format = None
         ## data type
@@ -110,7 +110,7 @@ class DecoderPool(object):
     # \brief It creates know decoders    
     # \param configJSON string with decoders    
     def __init__(self, configJSON = None):
-        self._knowDecoders = { "VIDEO_IMAGE_LIMA":VDEOdecoder }
+        self._knowDecoders = { "LIMA_VIDEO_IMAGE":VDEOdecoder }
         self._pool = {}
         self._userDecoders = {}
         
