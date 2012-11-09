@@ -66,6 +66,14 @@ class TangoDataWriter(object):
         self._decoders = DecoderPool()
 
 
+        ## adding logs
+        self.addingLogs = True
+        ## counter for open entries
+        self._entryCounter = 0
+        ## group with Nexus log Info
+        self._logGroup = None
+
+        
 
     ## the H5 file handle 
     # \returns the H5 file handle 
@@ -89,6 +97,8 @@ class TangoDataWriter(object):
         self._nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
         self._eFile = EFile("NXfile", [], None, self._nxFile)
+        if self.addingLogs:    
+            self._logGroup = self._nxFile.create_group("NexusConfigurationLogs")
 
 
 
@@ -115,10 +125,16 @@ class TangoDataWriter(object):
             for pool in self._triggerPools.keys():
                 self._triggerPools[pool].numThreads = self.numThreads
 
+
             self._initPool.setJSON(json.loads(self.json))
             self._initPool.runAndWait()
             self._initPool.checkErrors()
 
+            if self.addingLogs:    
+                self._entryCounter += 1
+                lfield = self._logGroup.create_field("Nexus__entry__%s_XML" % str(self._entryCounter),"string")
+                lfield.write(self.xmlSettings)
+            
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
@@ -255,23 +271,23 @@ if __name__ == "__main__":
             tdw.openEntry()
             
             print "recording the H5 file"
-            tdw.record('{"data": {"emitannce_x": 0.8} ,  "triggers":["trigger1", "trigger2"] }')
+            tdw.record('{"data": {"emittance_x": 0.8} ,  "triggers":["trigger1", "trigger2"] }')
             
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record('{"data": {"emitannce_x": 1.2}  ,  "triggers":["trigger2"] }')
+            tdw.record('{"data": {"emittance_x": 1.2}  ,  "triggers":["trigger2"] }')
 
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record('{"data": {"emitannce_x": 1.1}  ,  "triggers":["trigger1"] }')
+            tdw.record('{"data": {"emittance_x": 1.1}  ,  "triggers":["trigger1"] }')
 
 
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record('{"data": {"emitannce_x": 0.7} }')
+            tdw.record('{"data": {"emittance_x": 0.7} }')
 
             print "closing the data entry "
             tdw.closeEntry()
