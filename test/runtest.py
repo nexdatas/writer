@@ -27,13 +27,23 @@ import TangoDataServerTest
 ## main function
 def main():
 
+    try:
+        import PyTango
+    ## if module PyTango avalable
+        PYTANGO_AVAILABLE = True
+    except ImportError, e:
+        PYTANGO_AVAILABLE = False
+        print "PyTango is not available: %s" % e
+
     ## test suit
     suite = unittest.TestSuite()
     
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
+
+    if PYTANGO_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
     
     ## test runner
     runner = unittest.TextTestRunner()

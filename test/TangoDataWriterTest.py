@@ -389,8 +389,8 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
-            value = cnt[:]
+            value = cnt.read()
+#            value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
                 

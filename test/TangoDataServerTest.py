@@ -96,12 +96,13 @@ class TangoDataServerTest(unittest.TestCase):
         db.add_device(self._new_device_info_writer)
         db.add_server("TangoDataServer/TDWTEST", self._new_device_info_writer)
         
-        if os.path.isfile("../TDS2"):
-            self._psub = subprocess.Popen(
-                "cd ..; ./TDS2 TDWTEST &",
-                stdout = subprocess.PIPE, 
-                stderr =  subprocess.PIPE,  shell= True)
-        elif os.path.isfile("../TDS"):
+#        if os.path.isfile("../TDS2"):
+#            self._psub = subprocess.Popen(
+#                "cd ..; ./TDS2 TDWTEST &",
+#                stdout = subprocess.PIPE, 
+#                stderr =  subprocess.PIPE,  shell= True)
+#        elif os.path.isfile("../TDS"):
+        if os.path.isfile("../TDS"):
             self._psub = subprocess.Popen(
                 "cd ..; ./TDS TDWTEST &",stdout =  subprocess.PIPE, 
                 stderr =  subprocess.PIPE,  shell= True)
