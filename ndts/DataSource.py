@@ -21,11 +21,20 @@
 
 import json
 
-import PyTango 
+
+
 
 from Element import Element
 from DataHolder import DataHolder
 from Types import NTP
+
+try:
+    import PyTango
+    PYTANGO_AVAILABLE = True
+except ImportError, e:
+    PYTANGO_AVAILABLE = False
+    print "PYTANGO not available: %s" % e
+
 
 ## list of available databases
 DB_AVAILABLE = []
@@ -50,6 +59,12 @@ except ImportError, e:
 
 
 import copy
+
+
+
+## exception for fetching data from data source
+class PackageError(Exception): pass
+
 
 ## Data source
 class DataSource(object):
@@ -112,6 +127,9 @@ class TangoSource(DataSource):
     ## data provider
     # \returns DataHolder with collected data  
     def getData(self):
+        if not PYTANGO_AVAILABLE:
+            raise PackageError, "Support for PyTango datasources not available" 
+
         if self.device and self.memberType and self.name:
             if self.hostname and self.port:
                 proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
@@ -249,7 +267,9 @@ class DBaseSource(DataSource):
 
         if self.dbtype in self._dbConnect.keys() and self.dbtype in DB_AVAILABLE:
             db = self._dbConnect[self.dbtype]()
-                
+        else:
+            raise PackageError, "Support for %s database not available" % self.dbtype
+
 
         if db:
             cursor = db.cursor()
