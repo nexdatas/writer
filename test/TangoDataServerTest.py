@@ -182,7 +182,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertEqual(f.attr("file_name").value, fname)
             self.assertTrue(f.attr("NX_class").value,"NXroot")
 
-            self.assertEqual(f.nchildren, 0)
+            self.assertEqual(f.nchildren, 1)
 
             cnt = 0
             for ch in f.children:
@@ -241,22 +241,27 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertEqual(f.attr("file_name").value, fname)
             self.assertTrue(f.attr("NX_class").value,"NXroot")
 
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.nchildren, 2)
 
             cnt = 0
             for ch in f.children:
                 self.assertTrue(ch.valid)
-                self.assertEqual(ch.name,"entry")
-                self.assertEqual(ch.nattrs,1)
                 cnt += 1
-                for at in ch.attributes:
-                    self.assertTrue(at.valid)
-                    self.assertTrue(hasattr(at.shape,"__iter__"))
-                    self.assertEqual(len(at.shape),0)
-                    self.assertEqual(at.dtype,"string")
-#                    self.assertEqual(at.dtype,"string")
-                    self.assertEqual(at.name,"NX_class")
-                    self.assertEqual(at.value,"NXentry")
+                if ch.name == "entry":
+                    self.assertEqual(ch.name,"entry")
+                    self.assertEqual(ch.nattrs,1)
+                    for at in ch.attributes:
+                        self.assertTrue(at.valid)
+                        self.assertTrue(hasattr(at.shape,"__iter__"))
+                        self.assertEqual(len(at.shape),0)
+                        self.assertEqual(at.dtype,"string")
+                    #                    self.assertEqual(at.dtype,"string")
+                        self.assertEqual(at.name,"NX_class")
+                        self.assertEqual(at.value,"NXentry")
+                else:
+                    self.assertEqual(ch.name,"NexusConfigurationLogs")
+                    self.assertEqual(ch.nattrs,0)
+
                     
                 
             self.assertEqual(cnt, f.nchildren)
@@ -339,7 +344,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertEqual(f.attr("file_name").value, fname)
             self.assertTrue(f.attr("NX_class").value,"NXroot")
 
-            self.assertEqual(f.nchildren, 0)
+            self.assertEqual(f.nchildren, 1)
 
             cnt = 0
             for ch in f.children:
@@ -406,7 +411,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertEqual(6, f.nattrs)
             self.assertEqual(f.attr("file_name").value, fname)
             self.assertTrue(f.attr("NX_class").value,"NXroot")
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.nchildren, 2)
             
             en = f.open("entry1")
             self.assertTrue(en.valid)
