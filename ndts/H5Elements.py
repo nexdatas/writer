@@ -336,9 +336,9 @@ class ELink(FElement):
         for gr in sp[:-1]:
             sgr = gr.split(":")
             if len(sgr)>1 :
-                res = "/".join([res,sgr[1]])
+                res = "/".join([res,sgr[0]])
             else:
-                if sgr[0] in groupTypes:
+                if sgr[0] in groupTypes.keys():
                     res = "/".join([res,groupTypes[sgr[0]]])
                 else:
                     raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
@@ -351,7 +351,8 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
         if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            self.h5Object = (self._lastObject()).link((self.typesToNames(self._tagAttrs["target"], groupTypes)).encode(),
+            self.h5Object = (self._lastObject()).link((self.typesToNames(self._tagAttrs["target"], 
+                                                                         groupTypes)).encode(),
                                                       self._tagAttrs["name"].encode())
         else:
             raise XMLSettingSyntaxError, "No name or type"
