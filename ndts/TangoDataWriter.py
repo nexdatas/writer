@@ -22,6 +22,7 @@
 
 
 from NexusXMLHandler import NexusXMLHandler
+from FetchNameHandler import FetchNameHandler
 
 import pni.nx.h5 as nx
 
@@ -110,7 +111,10 @@ class TangoDataWriter(object):
 
             parser = sax.make_parser()
         
-            handler = NexusXMLHandler(self._eFile, self._decoders)
+            fetcher = FetchNameHandler()
+            sax.parseString(self.xmlSettings, fetcher)
+            
+            handler = NexusXMLHandler(self._eFile, self._decoders, fetcher.groupTypes)
             sax.parseString(self.xmlSettings, handler)
             
             self._initPool = handler.initPool
