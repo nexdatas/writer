@@ -16,26 +16,33 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file TangoDataWriterTest.py
-# unittests for TangoDataWriter
+## \file TangoDataServerTest.py
+# unittests for TangoDataServer
 #
 import unittest
 import os
+import sys
+import subprocess
+
+import PyTango
+import time
 from pni.nx.h5 import open_file
-
 from  xml.sax import SAXParseException
-
-from ndts import TangoDataWriter 
-from ndts.TangoDataWriter  import TangoDataWriter 
 
 
 ## test fixture
-class TangoDataWriterTest(unittest.TestCase):
+class TangoDataServerTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
+        self._new_device_info_writer = PyTango.DbDevInfo()
+        self._new_device_info_writer._class = "TangoDataServer"
+        self._new_device_info_writer.server = "TangoDataServer/TDWTEST"
+        self._new_device_info_writer.name = "testp09/testtdw/testr228"
+
+        self._psub = None
 
         self._scanXml = """
 <definition>
@@ -80,50 +87,89 @@ class TangoDataWriterTest(unittest.TestCase):
         self._mca2 = [(float(e)/(100.+e)) for e in range(2048)]
 
 
+
     ## test starter
-    # \brief Common set up
+    # \brief Common set up of Tango Server
     def setUp(self):
         print "\nsetting up..."
+        db = PyTango.Database()
+        db.add_device(self._new_device_info_writer)
+        db.add_server("TangoDataServer/TDWTEST", self._new_device_info_writer)
+        
+#        if os.path.isfile("../TDS2"):
+#            self._psub = subprocess.Popen(
+#                "cd ..; ./TDS2 TDWTEST &",
+#                stdout = subprocess.PIPE, 
+#                stderr =  subprocess.PIPE,  shell= True)
+#        elif os.path.isfile("../TDS"):
+        if os.path.isfile("../TDS"):
+            self._psub = subprocess.Popen(
+                "cd ..; ./TDS TDWTEST &",stdout =  subprocess.PIPE, 
+                stderr =  subprocess.PIPE,  shell= True)
+        else:
+            self._psub = subprocess.Popen(
+                "TDS TDWTEST &",stdout =  subprocess.PIPE, 
+                stderr =  subprocess.PIPE , shell= True)
+#            raise ErrorValue, "Cannot find the server instance"
+        print "waiting for server",
+#        time.sleep(1)
+
+        found = False
+        cnt = 0
+        while not found and cnt < 1000:
+            try:
+                print "\b.",
+                time.sleep(0.02)
+                dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
+                if dp.state() == PyTango.DevState.ON:
+                    found = True
+            except:    
+                found = False
+            cnt +=1
+        print ""
 
     ## test closer
-    # \brief Common tear down
-    def tearDown(self):
+    # \brief Common tear down oif Tango Server
+    def tearDown(self): 
         print "tearing down ..."
+        db = PyTango.Database()
+        db.delete_server(self._new_device_info_writer.server)
+        
+        output = ""
+        pipe = subprocess.Popen(
+            "ps -ef | grep 'TangoDataServer.py TDWTEST'", stdout=subprocess.PIPE , shell= True).stdout
+
+        res = pipe.read().split("\n")
+        for r in res:
+            sr = r.split()
+            if len(sr)>2:
+                 subprocess.call("kill -9 %s" % sr[1],stderr=subprocess.PIPE , shell= True)
+
+        
 
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
-    def test_openFile(self):
-        print "Run: TangoDataWriterTest.test_openFile() "
-        fname = "test.h5"
+    def test_openFile(self):     
+        print "Run: TangoDataServerTest.test_openFile()"
         try:
-            tdw = TangoDataWriter(fname)
-            self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.json, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
-            
-            tdw.openNXFile()
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
-            
-            tdw.closeNXFile()
-            self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.json, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
-            self.assertTrue(tdw.getNXFile() is None)
-            
+            fname= '%s/test.h5' % os.getcwd()   
+            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+            dp.FileName = fname
+            dp.OpenFile()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.TheXMLSettings,"")
+            self.assertEqual(dp.TheJSONRecord, "{}")
+            dp.CloseFile()
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+
 
             # check the created file
-
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
-
+#            self.assertEqual(f.name, fname)
+            self.assertEqual(f.path, fname)
+        
 #            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
@@ -144,43 +190,48 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(cnt, f.nchildren)
 
             f.close()
-
+            
         finally:
             os.remove(fname)
-
 
 
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
-        print "Run: TangoDataWriterTest.test_openEntry() "
-        fname = "test.h5"
+        print "Run: TangoDataServerTest.test_openEntry() "
+        fname= '%s/test2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
-            tdw = TangoDataWriter(fname)
-            
-            tdw.openNXFile()
+            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+            dp.FileName = fname
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
 
-            tdw.xmlSettings = xml
-            tdw.openEntry()
+            dp.OpenFile()
 
-            tdw.closeEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
 
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
-            self.assertEqual(tdw.fileName, fname)
-            self.assertNotEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.json, "{}")
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            dp.TheXMLSettings = xml
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
 
-            tdw.closeNXFile()
+
+            dp.OpenEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+
+            dp.CloseEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            dp.CloseFile()
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+
            
              # check the created file
             
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            self.assertEqual(f.path, fname)
 
             cnt = 0
             for at in f.attributes:
@@ -206,10 +257,11 @@ class TangoDataWriterTest(unittest.TestCase):
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
-                        self.assertEqual(at.value,"NXentry")                
+                        self.assertEqual(at.value,"NXentry")
                 else:
                     self.assertEqual(ch.name,"NexusConfigurationLogs")
                     self.assertEqual(ch.nattrs,0)
+
                     
                 
             self.assertEqual(cnt, f.nchildren)
@@ -224,47 +276,65 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: TangoDataWriterTest.test_openEntryWithSAXParseException() "
-        fname = "test.h5"
+        print "Run: TangoDataServerTest.test_openEntryWithSAXParseException() "
+        fname= '%s/test2.h5' % os.getcwd()   
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
         try:
-            tdw = TangoDataWriter(fname)
-            
-            tdw.openNXFile()
+            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+            dp.FileName = fname
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
 
-            tdw.xmlSettings = wrongXml
+            dp.OpenFile()
+
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+            dp.TheXMLSettings = wrongXml
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
             try:
                 error = None
-                tdw.openEntry()
-            except SAXParseException,e:
+                dp.OpenEntry()
+            except PyTango.DevFailed,e:
                 error = True
-            except Exception, e:
+            except Exception, e: 
                 error = False
-            self.assertTrue(error is not None)
             self.assertEqual(error, True)
+            self.assertTrue(error is not None)
                 
 
 
-            tdw.xmlSettings = xml
-            try:
-                error = None
-                tdw.openEntry()
-            except SAXParseException,e:
-                error = True
-            except Exception, e:
-                error = False
-            self.assertTrue(error is None)
-                                
-            tdw.closeEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
 
-            tdw.closeNXFile()
-            
+#            dp.CloseFile()
+#            dp.OpenFile()
+
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+            dp.TheXMLSettings = xml
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            dp.OpenEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+
+            dp.CloseEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            dp.CloseFile()
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+
+
 
             # check the created file
             
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            self.assertEqual(f.path, fname)
 
             cnt = 0
             for at in f.attributes:
@@ -291,31 +361,45 @@ class TangoDataWriterTest(unittest.TestCase):
 
 
 
-
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
-        print "Run: TangoDataWriterTest.test_scanRecord() "
-        fname = "scantest.h5"
+        print "Run: TangoDataServerTest.test_scanRecord() "
+        fname= '%s/scantest2.h5' % os.getcwd()   
+        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
-            tdw = TangoDataWriter(fname)
-            
-            tdw.openNXFile()
+            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+            dp.FileName = fname
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
 
-            tdw.xmlSettings = self._scanXml
-            tdw.openEntry()
+            dp.OpenFile()
+
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+            dp.TheXMLSettings = self._scanXml
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
 
 
+            dp.OpenEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
-            tdw.record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
+            dp.Record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
                            + str(self._mca1)+ '  } }')
-
-            tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            dp.Record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
                            + str(self._mca2)+ '  } }')
 
-            tdw.closeEntry()
 
-            tdw.closeNXFile()
+            dp.CloseEntry()
+            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+
+
+            dp.CloseFile()
+            self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+
            
 
 
@@ -323,7 +407,7 @@ class TangoDataWriterTest(unittest.TestCase):
              # check the created file
             
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            self.assertEqual(f.path, fname)
             self.assertEqual(6, f.nattrs)
             self.assertEqual(f.attr("file_name").value, fname)
             self.assertTrue(f.attr("NX_class").value,"NXroot")
@@ -393,8 +477,8 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-            value = cnt.read()
-#            value = cnt[:]
+#            print cnt.read()
+            value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
                 
@@ -558,5 +642,3 @@ class TangoDataWriterTest(unittest.TestCase):
 
             os.remove(fname)
 #            pass
-
-

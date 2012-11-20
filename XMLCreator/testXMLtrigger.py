@@ -105,13 +105,13 @@ def main():
 	f.setText("0.2")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initClient("emitannce_x");
+	sr.initClient("emittance_x");
 	f = NField(src, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setStrategy("POSTRUN", value = "hasso.desy.de:/data/emitance1.dat")
 #	f.setText("0.2")
 #	sr = NDSource(f, "STEP")
-#	sr.initSardana("door1", "emitannce_y", host="haso228k.desy.de", port="10000");
+#	sr.initSardana("door1", "emittance_y", host="haso228k.desy.de", port="10000");
 	f = NField(src, "sigma_x", "NX_FLOAT")
 	f.setUnits("nm")
 	f.setText("0.1")

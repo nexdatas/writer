@@ -55,6 +55,7 @@ class ThreadPool(object):
                 el.source.setJSON(globalJSON, localJSON)
         return self
 
+
     ## runner
     # \brief It runs the threads from the pool
     def run(self):

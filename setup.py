@@ -21,9 +21,9 @@ import os,sys
 from distutils.core import setup
 from distutils.command.install import install
 
-## ndts version
-
+## package name
 NDTS = "ndts"
+## ndts imported package
 INDTS = __import__(NDTS)
 
 

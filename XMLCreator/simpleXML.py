@@ -266,7 +266,8 @@ class NDSource(NTag):
 	# \param recordName name of the data object
 	# \param host host name
 	# \param port port
-	def initTango(self, device, memberType, recordName, host=None, port=None):
+	# \param encoding encoding of DevEncoded data	
+	def initTango(self, device, memberType, recordName, host=None, port=None, encoding = None):
 		self.addTagAttr("type", "TANGO")
 		dv = NTag(self, "device")
 		dv.addTagAttr("name", device)
@@ -277,6 +278,8 @@ class NDSource(NTag):
 			dv.addTagAttr("hostname", host)
 		if port:
 			dv.addTagAttr("port", port)
+		if encoding:
+			dv.addTagAttr("encoding", encoding)
 
 		da = NTag(self, "record")
 		da.addTagAttr("name", recordName)
@@ -441,15 +444,20 @@ class NDeviceGroup(NGroup):
 			
 			if at not in self._fields and  at not in self._blackAttrs:
 				self._fields[at] = NField(self, at, self.nTypes[cf.data_type])
+				encoding = None
 				if str(cf.data_format).split('.')[-1] == "SPECTRUM":
 					da = self._proxy.read_attribute(at)
 					d = NDimensions(self._fields[at], "1")
 					d.dim("1", str(da.dim_x))
+					if str(da.type) == 'DevEncoded':
+						encoding = 'VDEO'
 				if str(cf.data_format).split('.')[-1] == "IMAGE":
 					da = self._proxy.read_attribute(at)
 					d = NDimensions(self._fields[at], "2")
 					d.dim("1", str(da.dim_x))
 					d.dim("2", str(da.dim_y))
+					if str(da.type) == 'DevEncoded':
+						encoding = 'VDEO'
 				
 				if cf.unit != 'No unit':
 					self._fields[at].setUnits(cf.unit)
@@ -461,7 +469,7 @@ class NDeviceGroup(NGroup):
 
 				self._fields[at].setStrategy("STEP")
 				sr = NDSource(self._fields[at])
-				sr.initTango(self._deviceName, "attribute", at, host="haso228k.desy.de", port="10000")
+				sr.initTango(self._deviceName, "attribute", at, host="haso228k.desy.de", port="10000", encoding = encoding)
 
 #		print self._proxy.attribute_list_query()
 
@@ -602,12 +610,12 @@ def main():
 	f.setText("0.2")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initClient("emitannce_x");
+	sr.initClient("emittance_x");
 	f = NField(src, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
 #	sr = NDSource(f, "STEP")
-#	sr.initSardana("door1", "emitannce_y", host="haso228k.desy.de", port="10000");
+#	sr.initSardana("door1", "emittance_y", host="haso228k.desy.de", port="10000");
 	f = NField(src, "sigma_x", "NX_FLOAT")
 	f.setUnits("nm")
 	f.setText("0.1")

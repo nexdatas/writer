@@ -69,16 +69,16 @@ def main():
                 dpx.OpenEntry()
                 
                 print "recording the H5 file"
-                dpx.record("")
+                dpx.record('{"data": {"emittance_x": 0.1} }')
                 
                 print "sleeping for 1s"
                 time.sleep(1)
                 print "recording the H5 file"
-                dpx.record("")
+                dpx.record('{"data": {"emittance_x": 0.3} }')
                 print "sleeping for 1s"
                 time.sleep(1)
                 print "recording the H5 file"
-                dpx.record("")
+                dpx.record('{"data": {"emittance_x": 0.2} }')
                 print "closing the  entry"
                 dpx.closeEntry()
 

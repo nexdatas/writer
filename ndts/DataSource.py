@@ -21,11 +21,20 @@
 
 import json
 
-import PyTango 
+
+
 
 from Element import Element
 from DataHolder import DataHolder
 from Types import NTP
+
+try:
+    import PyTango
+    PYTANGO_AVAILABLE = True
+except ImportError, e:
+    PYTANGO_AVAILABLE = False
+    print "PYTANGO not available: %s" % e
+
 
 ## list of available databases
 DB_AVAILABLE = []
@@ -50,6 +59,12 @@ except ImportError, e:
 
 
 import copy
+
+
+
+## exception for fetching data from data source
+class PackageError(Exception): pass
+
 
 ## Data source
 class DataSource(object):
@@ -85,14 +100,18 @@ class TangoSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## name of the tango device
+        ## name of the Tango device
         self.device = None
         ## member type of the data, i.e. attribute, property,...
         self.memberType = None
-        ## host name of tango server
+        ## host name of Tango server
         self.hostname = None
-        ## port of tango server
+        ## port of Tango server
         self.port = None
+        ## encoding of Tango DevEncoded variables
+        self.encoding = None
+        ## decoder pool
+        self._decoders = None
 
     ## self-description 
     # \returns self-describing string
@@ -100,16 +119,22 @@ class TangoSource(DataSource):
         return "Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
 
 
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        self._decoders = decoders
 
     ## data provider
     # \returns DataHolder with collected data  
     def getData(self):
+        if not PYTANGO_AVAILABLE:
+            raise PackageError, "Support for PyTango datasources not available" 
+
         if self.device and self.memberType and self.name:
             if self.hostname and self.port:
-                proxy = PyTango.DeviceProxy("%s:%s/%s"
-                                            % (self.hostname.encode(),
-                                               self.port.encode(),
-                                               self.device.encode()))
+                proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
+                                                          self.port.encode(),
+                                                          self.device.encode()))
             else:
                 proxy = PyTango.DeviceProxy(self.device.encode())
             da = None
@@ -122,7 +147,9 @@ class TangoSource(DataSource):
 #                        print "Spectrum Device: ", self.device.encode()
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
 #                        print "Image Device: ", self.device.encode()
-                    return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y])
+#                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self._decoders
+                    return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y],
+                                      encoding = self.encoding, decoders = self._decoders)
 
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
@@ -136,7 +163,8 @@ class TangoSource(DataSource):
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
-                    return DataHolder("SCALAR", da, cd.out_type, [1,0])
+                    return DataHolder("SCALAR", da, cd.out_type, [1,0], 
+                                      encoding = self.encoding, decoders = self._decoders)
                     
                         
 
@@ -239,7 +267,9 @@ class DBaseSource(DataSource):
 
         if self.dbtype in self._dbConnect.keys() and self.dbtype in DB_AVAILABLE:
             db = self._dbConnect[self.dbtype]()
-                
+        else:
+            raise PackageError, "Support for %s database not available" % self.dbtype
+
 
         if db:
             cursor = db.cursor()
@@ -314,7 +344,10 @@ class ClientSource(DataSource):
             ntp = NTP()
             rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
             if rank in NTP.rTf:
-                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[pythonDType.__name__], rshape.reverse())
+                shape = rshape.reverse()
+                if  shape is None:
+                    shape = [1,0]
+                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[pythonDType.__name__], shape)
             
 
 
@@ -345,6 +378,14 @@ class DataSourceFactory(Element):
                             "CLIENT":ClientSource, "SARDANA":SardanaSource}
         self.createDSource(name, attrs)
 
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        if self._last and self._last.source and self._last.source.isValid() \
+                and hasattr(self._last.source,"setDecoders"):
+            self._last.source.setDecoders(decoders)
+            
     ## creates data source   
     # \param name name of the tag
     # \param attrs dictionary with the tag attributes

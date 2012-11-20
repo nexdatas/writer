@@ -38,7 +38,7 @@
           0.2
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
-            <record name="emitannce_x"/>
+            <record name="emittance_x"/>
           </datasource>
         </field>
         <field name="emittance_y" type="NX_FLOAT" units="nm rad">
