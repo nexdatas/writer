@@ -12,7 +12,7 @@
             <dim index="2" value="2"/>
           </dimensions>
           <strategy mode="STEP"/>
-          <datasource type="DB">
+          <datasource name="db_devices" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
             <query format="IMAGE">
               SELECT name, pid FROM device limit 151
@@ -37,7 +37,7 @@
         <field name="emittance_x" type="NX_FLOAT" units="nm rad">
           0.2
           <strategy mode="STEP"/>
-          <datasource type="CLIENT">
+          <datasource name="emittance_x" type="CLIENT">
             <record name="emittance_x"/>
           </datasource>
         </field>
@@ -97,7 +97,7 @@
         </attribute>
         <field name="AccelerationMaxHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="AccelerationMaxHw"/>
           </datasource>
@@ -107,7 +107,7 @@
         </attribute>
         <field name="AccelerationMinHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="AccelerationMinHw"/>
           </datasource>
@@ -117,7 +117,7 @@
         </attribute>
         <field name="AccuMax" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="AccuMax"/>
           </datasource>
@@ -127,7 +127,7 @@
         </attribute>
         <field name="AccuMin" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="AccuMin"/>
           </datasource>
@@ -137,7 +137,7 @@
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -147,7 +147,7 @@
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -157,7 +157,7 @@
         </attribute>
         <field name="FlagEncoder" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagEncoder"/>
           </datasource>
@@ -167,7 +167,7 @@
         </attribute>
         <field name="IgnoreLimitSw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="IgnoreLimitSw"/>
           </datasource>
@@ -177,7 +177,7 @@
         </attribute>
         <field name="MaxVSerie" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="MaxVSerie"/>
           </datasource>
@@ -187,7 +187,7 @@
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -197,7 +197,7 @@
         </attribute>
         <field name="SlewRateMaxHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="SlewRateMaxHw"/>
           </datasource>
@@ -207,7 +207,7 @@
         </attribute>
         <field name="SlewRateMinHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="SlewRateMinHw"/>
           </datasource>
@@ -217,7 +217,7 @@
         </attribute>
         <field name="Type" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="Type"/>
           </datasource>
@@ -227,7 +227,7 @@
         </attribute>
         <field name="__SubDevices" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.01" port="10000"/>
             <record name="__SubDevices"/>
           </datasource>
@@ -237,7 +237,7 @@
             the acceleration 
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Acceleration"/>
           </datasource>
@@ -250,7 +250,7 @@
             the motor starts to move with this rate, then accelerates
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="BaseRate"/>
           </datasource>
@@ -263,7 +263,7 @@
             the conversion factor, steps = conversion*units
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Conversion"/>
           </datasource>
@@ -276,7 +276,7 @@
             set to 1, when the calibration is defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagCalibrationDefined"/>
           </datasource>
@@ -289,7 +289,7 @@
             set to 1, when the user calibration is defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagCalibrationUserDefined"/>
           </datasource>
@@ -302,7 +302,7 @@
             set to 1, when the conversion is defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagConversionDefined"/>
           </datasource>
@@ -316,7 +316,7 @@
 rest
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="SettleTime"/>
           </datasource>
@@ -329,7 +329,7 @@ rest
             the motor speed
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="SlewRate"/>
           </datasource>
@@ -342,7 +342,7 @@ rest
             the maximum slew rate
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="SlewRateMax"/>
           </datasource>
@@ -355,7 +355,7 @@ rest
             the minumum slew rate
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="SlewRateMin"/>
           </datasource>
@@ -370,7 +370,7 @@ rest
   (steps &lt; 0 &amp;&amp; StepsBacklash) &lt; 0
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepBacklash"/>
           </datasource>
@@ -383,7 +383,7 @@ rest
             see the description of unitCalibration
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepCalibration"/>
           </datasource>
@@ -397,7 +397,7 @@ rest
 stepCalibration, see the explanations at unitCalibration
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepCalibrationUser"/>
           </datasource>
@@ -410,7 +410,7 @@ stepCalibration, see the explanations at unitCalibration
             corresponds to the upper unit limit, changing on affects the other
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepLimitMax"/>
           </datasource>
@@ -423,7 +423,7 @@ stepCalibration, see the explanations at unitCalibration
             corresponds to unit limit min, changing one affects the other
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepLimitMin"/>
           </datasource>
@@ -436,7 +436,7 @@ stepCalibration, see the explanations at unitCalibration
             the internal (Software) position
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepPositionInternal"/>
           </datasource>
@@ -449,7 +449,7 @@ stepCalibration, see the explanations at unitCalibration
             the controller (Software) position
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepPositionController"/>
           </datasource>
@@ -464,7 +464,7 @@ changes the other, see the explanations given
 for stepBacklash 
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="UnitBacklash"/>
           </datasource>
@@ -481,7 +481,7 @@ units2steps is then:
 steps = stepsCalibration + conversion*( unit - unitCalibration)
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="UnitCalibration"/>
           </datasource>
@@ -495,7 +495,7 @@ steps = stepsCalibration + conversion*( unit - unitCalibration)
 unitCalibration, see the explanation there
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="UnitCalibrationUser"/>
           </datasource>
@@ -508,7 +508,7 @@ unitCalibration, see the explanation there
             the upper motor limit
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="UnitLimitMax"/>
           </datasource>
@@ -521,7 +521,7 @@ unitCalibration, see the explanation there
             the lower limit of a motor
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="UnitLimitMin"/>
           </datasource>
@@ -531,7 +531,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="DerivativeGain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="DerivativeGain"/>
           </datasource>
@@ -541,7 +541,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="IntegralGain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="IntegralGain"/>
           </datasource>
@@ -551,7 +551,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="ProportionalGain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="ProportionalGain"/>
           </datasource>
@@ -561,7 +561,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="TotalMoveTime" type="NX_FLOAT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="TotalMoveTime"/>
           </datasource>
@@ -571,7 +571,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="RemainingTime" type="NX_FLOAT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="RemainingTime"/>
           </datasource>
@@ -581,7 +581,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="CwLimit" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="CwLimit"/>
           </datasource>
@@ -591,7 +591,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="CcwLimit" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="CcwLimit"/>
           </datasource>
@@ -604,7 +604,7 @@ unitCalibration, see the explanation there
             Protection mask
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagProtected"/>
           </datasource>
@@ -614,7 +614,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="Magnitude" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Magnitude"/>
           </datasource>
@@ -624,7 +624,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="FlagMotorReady" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagMotorReady"/>
           </datasource>
@@ -634,7 +634,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="FlagBacklash" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagBacklash"/>
           </datasource>
@@ -644,7 +644,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="Position" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Position"/>
           </datasource>
@@ -654,7 +654,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="AccuLimitMin" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="AccuLimitMin"/>
           </datasource>
@@ -664,7 +664,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="AccuLimitMax" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="AccuLimitMax"/>
           </datasource>
@@ -677,7 +677,7 @@ unitCalibration, see the explanation there
             1 if the conversion factor of the encoder was defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagEncoderConversionDefined"/>
           </datasource>
@@ -690,7 +690,7 @@ unitCalibration, see the explanation there
             1 if the encoder home position was defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagEncoderHomeDefined"/>
           </datasource>
@@ -703,7 +703,7 @@ unitCalibration, see the explanation there
             1 if the encoder went through a homing procedure
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagEncoderHomed"/>
           </datasource>
@@ -716,7 +716,7 @@ unitCalibration, see the explanation there
             the encoder conversion factor
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="ConversionEncoder"/>
           </datasource>
@@ -729,7 +729,7 @@ unitCalibration, see the explanation there
             the unit position of the encoder home switch 
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="HomePosition"/>
           </datasource>
@@ -743,7 +743,7 @@ unitCalibration, see the explanation there
 for the motor position
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagUseEncoderPosition"/>
           </datasource>
@@ -756,7 +756,7 @@ for the motor position
             closed loop stepping mode on/off
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagClosedLoop"/>
           </datasource>
@@ -769,7 +769,7 @@ for the motor position
             the maximum slew used in closed loop corrections
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="SlewRateCorrection"/>
           </datasource>
@@ -782,7 +782,7 @@ for the motor position
             dead band in encoder counts (steps * encConv/Conv)
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="StepDeadBand"/>
           </datasource>
@@ -796,7 +796,7 @@ for the motor position
 &lt; SlewRateCorrection)
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="CorrectionGain"/>
           </datasource>
@@ -809,7 +809,7 @@ for the motor position
             slit tolerance, in encoder units, [0,65535]
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="SlipTolerance"/>
           </datasource>
@@ -830,7 +830,7 @@ Map: positions is kept in [map, map+360[, positions are
   automatically re-calibrated, automatically short way
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagCutOrMap"/>
           </datasource>
@@ -844,7 +844,7 @@ Map: positions is kept in [map, map+360[, positions are
 see flagCutOrMap
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="CutOrMap"/>
           </datasource>
@@ -854,7 +854,7 @@ see flagCutOrMap
         </attribute>
         <field name="FlagInvertEncoderDirection" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="FlagInvertEncoderDirection"/>
           </datasource>
@@ -867,7 +867,7 @@ see flagCutOrMap
             the output of the ER? command
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="EncoderRatio"/>
           </datasource>
@@ -884,7 +884,7 @@ see flagCutOrMap
 recent write operations to the server.
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="RecentWrites"/>
           </datasource>
@@ -894,7 +894,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -904,7 +904,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -920,7 +920,7 @@ recent write operations to the server.
         </attribute>
         <field name="AccelerationMaxHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="AccelerationMaxHw"/>
           </datasource>
@@ -930,7 +930,7 @@ recent write operations to the server.
         </attribute>
         <field name="AccelerationMinHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="AccelerationMinHw"/>
           </datasource>
@@ -940,7 +940,7 @@ recent write operations to the server.
         </attribute>
         <field name="AccuMax" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="AccuMax"/>
           </datasource>
@@ -950,7 +950,7 @@ recent write operations to the server.
         </attribute>
         <field name="AccuMin" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="AccuMin"/>
           </datasource>
@@ -960,7 +960,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -970,7 +970,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -980,7 +980,7 @@ recent write operations to the server.
         </attribute>
         <field name="FlagEncoder" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagEncoder"/>
           </datasource>
@@ -990,7 +990,7 @@ recent write operations to the server.
         </attribute>
         <field name="IgnoreLimitSw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="IgnoreLimitSw"/>
           </datasource>
@@ -1000,7 +1000,7 @@ recent write operations to the server.
         </attribute>
         <field name="MaxVSerie" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="MaxVSerie"/>
           </datasource>
@@ -1010,7 +1010,7 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -1020,7 +1020,7 @@ recent write operations to the server.
         </attribute>
         <field name="SlewRateMaxHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="SlewRateMaxHw"/>
           </datasource>
@@ -1030,7 +1030,7 @@ recent write operations to the server.
         </attribute>
         <field name="SlewRateMinHw" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="SlewRateMinHw"/>
           </datasource>
@@ -1040,7 +1040,7 @@ recent write operations to the server.
         </attribute>
         <field name="Type" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="Type"/>
           </datasource>
@@ -1050,7 +1050,7 @@ recent write operations to the server.
         </attribute>
         <field name="__SubDevices" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/motor/exp.02" port="10000"/>
             <record name="__SubDevices"/>
           </datasource>
@@ -1060,7 +1060,7 @@ recent write operations to the server.
             the acceleration 
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="Acceleration"/>
           </datasource>
@@ -1073,7 +1073,7 @@ recent write operations to the server.
             the motor starts to move with this rate, then accelerates
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="BaseRate"/>
           </datasource>
@@ -1086,7 +1086,7 @@ recent write operations to the server.
             the conversion factor, steps = conversion*units
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="Conversion"/>
           </datasource>
@@ -1099,7 +1099,7 @@ recent write operations to the server.
             set to 1, when the calibration is defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagCalibrationDefined"/>
           </datasource>
@@ -1112,7 +1112,7 @@ recent write operations to the server.
             set to 1, when the user calibration is defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagCalibrationUserDefined"/>
           </datasource>
@@ -1125,7 +1125,7 @@ recent write operations to the server.
             set to 1, when the conversion is defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagConversionDefined"/>
           </datasource>
@@ -1139,7 +1139,7 @@ recent write operations to the server.
 rest
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="SettleTime"/>
           </datasource>
@@ -1152,7 +1152,7 @@ rest
             the motor speed
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="SlewRate"/>
           </datasource>
@@ -1165,7 +1165,7 @@ rest
             the maximum slew rate
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="SlewRateMax"/>
           </datasource>
@@ -1178,7 +1178,7 @@ rest
             the minumum slew rate
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="SlewRateMin"/>
           </datasource>
@@ -1193,7 +1193,7 @@ rest
   (steps &lt; 0 &amp;&amp; StepsBacklash) &lt; 0
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepBacklash"/>
           </datasource>
@@ -1206,7 +1206,7 @@ rest
             see the description of unitCalibration
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepCalibration"/>
           </datasource>
@@ -1220,7 +1220,7 @@ rest
 stepCalibration, see the explanations at unitCalibration
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepCalibrationUser"/>
           </datasource>
@@ -1233,7 +1233,7 @@ stepCalibration, see the explanations at unitCalibration
             corresponds to the upper unit limit, changing on affects the other
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepLimitMax"/>
           </datasource>
@@ -1246,7 +1246,7 @@ stepCalibration, see the explanations at unitCalibration
             corresponds to unit limit min, changing one affects the other
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepLimitMin"/>
           </datasource>
@@ -1259,7 +1259,7 @@ stepCalibration, see the explanations at unitCalibration
             the internal (Software) position
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepPositionInternal"/>
           </datasource>
@@ -1272,7 +1272,7 @@ stepCalibration, see the explanations at unitCalibration
             the controller (Software) position
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepPositionController"/>
           </datasource>
@@ -1287,7 +1287,7 @@ changes the other, see the explanations given
 for stepBacklash 
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="UnitBacklash"/>
           </datasource>
@@ -1304,7 +1304,7 @@ units2steps is then:
 steps = stepsCalibration + conversion*( unit - unitCalibration)
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="UnitCalibration"/>
           </datasource>
@@ -1318,7 +1318,7 @@ steps = stepsCalibration + conversion*( unit - unitCalibration)
 unitCalibration, see the explanation there
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="UnitCalibrationUser"/>
           </datasource>
@@ -1331,7 +1331,7 @@ unitCalibration, see the explanation there
             the upper motor limit
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="UnitLimitMax"/>
           </datasource>
@@ -1344,7 +1344,7 @@ unitCalibration, see the explanation there
             the lower limit of a motor
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="UnitLimitMin"/>
           </datasource>
@@ -1354,7 +1354,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="DerivativeGain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="DerivativeGain"/>
           </datasource>
@@ -1364,7 +1364,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="IntegralGain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="IntegralGain"/>
           </datasource>
@@ -1374,7 +1374,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="ProportionalGain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="ProportionalGain"/>
           </datasource>
@@ -1384,7 +1384,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="TotalMoveTime" type="NX_FLOAT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="TotalMoveTime"/>
           </datasource>
@@ -1394,7 +1394,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="RemainingTime" type="NX_FLOAT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="RemainingTime"/>
           </datasource>
@@ -1404,7 +1404,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="CwLimit" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="CwLimit"/>
           </datasource>
@@ -1414,7 +1414,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="CcwLimit" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="CcwLimit"/>
           </datasource>
@@ -1427,7 +1427,7 @@ unitCalibration, see the explanation there
             Protection mask
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagProtected"/>
           </datasource>
@@ -1437,7 +1437,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="Magnitude" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="Magnitude"/>
           </datasource>
@@ -1447,7 +1447,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="FlagMotorReady" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagMotorReady"/>
           </datasource>
@@ -1457,7 +1457,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="FlagBacklash" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagBacklash"/>
           </datasource>
@@ -1467,7 +1467,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="Position" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="Position"/>
           </datasource>
@@ -1477,7 +1477,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="AccuLimitMin" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="AccuLimitMin"/>
           </datasource>
@@ -1487,7 +1487,7 @@ unitCalibration, see the explanation there
         </attribute>
         <field name="AccuLimitMax" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="AccuLimitMax"/>
           </datasource>
@@ -1500,7 +1500,7 @@ unitCalibration, see the explanation there
             1 if the conversion factor of the encoder was defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagEncoderConversionDefined"/>
           </datasource>
@@ -1513,7 +1513,7 @@ unitCalibration, see the explanation there
             1 if the encoder home position was defined
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagEncoderHomeDefined"/>
           </datasource>
@@ -1526,7 +1526,7 @@ unitCalibration, see the explanation there
             1 if the encoder went through a homing procedure
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagEncoderHomed"/>
           </datasource>
@@ -1539,7 +1539,7 @@ unitCalibration, see the explanation there
             the encoder conversion factor
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="ConversionEncoder"/>
           </datasource>
@@ -1552,7 +1552,7 @@ unitCalibration, see the explanation there
             the unit position of the encoder home switch 
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="HomePosition"/>
           </datasource>
@@ -1566,7 +1566,7 @@ unitCalibration, see the explanation there
 for the motor position
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagUseEncoderPosition"/>
           </datasource>
@@ -1579,7 +1579,7 @@ for the motor position
             closed loop stepping mode on/off
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagClosedLoop"/>
           </datasource>
@@ -1592,7 +1592,7 @@ for the motor position
             the maximum slew used in closed loop corrections
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="SlewRateCorrection"/>
           </datasource>
@@ -1605,7 +1605,7 @@ for the motor position
             dead band in encoder counts (steps * encConv/Conv)
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="StepDeadBand"/>
           </datasource>
@@ -1619,7 +1619,7 @@ for the motor position
 &lt; SlewRateCorrection)
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="CorrectionGain"/>
           </datasource>
@@ -1632,7 +1632,7 @@ for the motor position
             slit tolerance, in encoder units, [0,65535]
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="SlipTolerance"/>
           </datasource>
@@ -1653,7 +1653,7 @@ Map: positions is kept in [map, map+360[, positions are
   automatically re-calibrated, automatically short way
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagCutOrMap"/>
           </datasource>
@@ -1667,7 +1667,7 @@ Map: positions is kept in [map, map+360[, positions are
 see flagCutOrMap
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="CutOrMap"/>
           </datasource>
@@ -1677,7 +1677,7 @@ see flagCutOrMap
         </attribute>
         <field name="FlagInvertEncoderDirection" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="FlagInvertEncoderDirection"/>
           </datasource>
@@ -1690,7 +1690,7 @@ see flagCutOrMap
             the output of the ER? command
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="EncoderRatio"/>
           </datasource>
@@ -1707,7 +1707,7 @@ see flagCutOrMap
 recent write operations to the server.
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="RecentWrites"/>
           </datasource>
@@ -1717,7 +1717,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -1727,7 +1727,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/motor/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/motor/exp.02" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -1743,7 +1743,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/mca/exp.02" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -1753,7 +1753,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base2" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/mca/exp.02" port="10000"/>
             <record name="Base2"/>
           </datasource>
@@ -1763,7 +1763,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/mca/exp.02" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -1773,7 +1773,7 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/mca/exp.02" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -1783,7 +1783,7 @@ recent write operations to the server.
             Length of the data spectrum to be read from memory
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="DataLength"/>
           </datasource>
@@ -1796,7 +1796,7 @@ recent write operations to the server.
             Selects bank 0 or 1 from the MCA memory
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="BankId"/>
           </datasource>
@@ -1810,7 +1810,7 @@ recent write operations to the server.
 1 -&gt; running
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="StateBank0"/>
           </datasource>
@@ -1824,7 +1824,7 @@ recent write operations to the server.
 1 -&gt; running
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="StateBank1"/>
           </datasource>
@@ -1837,7 +1837,7 @@ recent write operations to the server.
             <dim index="1" value="2048"/>
           </dimensions>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="Data"/>
           </datasource>
@@ -1847,7 +1847,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -1857,7 +1857,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/mca/exp.02" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -1867,28 +1867,28 @@ recent write operations to the server.
         </attribute>
         <field name="Clear" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/mca/exp.02" port="10000"/>
             <record name="Clear"/>
           </datasource>
         </field>
         <field name="Read" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/mca/exp.02" port="10000"/>
             <record name="Read"/>
           </datasource>
         </field>
         <field name="Start" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/mca/exp.02" port="10000"/>
             <record name="Start"/>
           </datasource>
         </field>
         <field name="Stop" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/mca/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/mca/exp.02" port="10000"/>
             <record name="Stop"/>
           </datasource>
@@ -1900,7 +1900,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/counter/exp.02" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -1910,7 +1910,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/counter/exp.02" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -1920,14 +1920,14 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/counter/exp.02" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
         </field>
         <field name="Counts" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.02" port="10000"/>
             <record name="Counts"/>
           </datasource>
@@ -1937,7 +1937,7 @@ recent write operations to the server.
         </attribute>
         <field name="Offset" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.02" port="10000"/>
             <record name="Offset"/>
           </datasource>
@@ -1947,7 +1947,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.02" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -1957,7 +1957,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/counter/exp.02" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -1967,14 +1967,14 @@ recent write operations to the server.
         </attribute>
         <field name="Read" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/counter/exp.02" port="10000"/>
             <record name="Read"/>
           </datasource>
         </field>
         <field name="Reset" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/counter/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/counter/exp.02" port="10000"/>
             <record name="Reset"/>
           </datasource>
@@ -1986,7 +1986,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dac/exp.02" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -1996,7 +1996,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dac/exp.02" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -2006,7 +2006,7 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dac/exp.02" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -2016,14 +2016,14 @@ recent write operations to the server.
         </attribute>
         <field name="__SubDevices" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dac/exp.02" port="10000"/>
             <record name="__SubDevices"/>
           </datasource>
         </field>
         <field name="Voltage" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dac/exp.02" port="10000"/>
             <record name="Voltage"/>
           </datasource>
@@ -2033,7 +2033,7 @@ recent write operations to the server.
         </attribute>
         <field name="VoltageMin" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dac/exp.02" port="10000"/>
             <record name="VoltageMin"/>
           </datasource>
@@ -2043,7 +2043,7 @@ recent write operations to the server.
         </attribute>
         <field name="VoltageMax" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dac/exp.02" port="10000"/>
             <record name="VoltageMax"/>
           </datasource>
@@ -2053,7 +2053,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dac/exp.02" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -2063,7 +2063,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dac/exp.02" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -2073,7 +2073,7 @@ recent write operations to the server.
         </attribute>
         <field name="GetDACVoltage" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dac/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dac/exp.02" port="10000"/>
             <record name="GetDACVoltage"/>
           </datasource>
@@ -2085,7 +2085,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/adc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/adc/exp.02" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -2095,7 +2095,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/adc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/adc/exp.02" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -2105,7 +2105,7 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/adc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/adc/exp.02" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -2115,7 +2115,7 @@ recent write operations to the server.
             ADC value
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/adc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/adc/exp.02" port="10000"/>
             <record name="Value"/>
           </datasource>
@@ -2125,7 +2125,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/adc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/adc/exp.02" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -2135,7 +2135,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/adc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/adc/exp.02" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -2150,7 +2150,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/vfc/exp.02" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -2160,7 +2160,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/vfc/exp.02" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -2170,7 +2170,7 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/vfc/exp.02" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -2180,7 +2180,7 @@ recent write operations to the server.
         </attribute>
         <field name="__SubDevices" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/vfc/exp.02" port="10000"/>
             <record name="__SubDevices"/>
           </datasource>
@@ -2190,7 +2190,7 @@ recent write operations to the server.
             ADC value
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="Value"/>
           </datasource>
@@ -2200,7 +2200,7 @@ recent write operations to the server.
         </attribute>
         <field name="Gain" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="Gain"/>
           </datasource>
@@ -2210,7 +2210,7 @@ recent write operations to the server.
         </attribute>
         <field name="Offset" type="NX_FLOAT64">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="Offset"/>
           </datasource>
@@ -2220,7 +2220,7 @@ recent write operations to the server.
         </attribute>
         <field name="Polarity" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="Polarity"/>
           </datasource>
@@ -2230,7 +2230,7 @@ recent write operations to the server.
         </attribute>
         <field name="Counts" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="Counts"/>
           </datasource>
@@ -2240,7 +2240,7 @@ recent write operations to the server.
         </attribute>
         <field name="FlagVFCADCInit" type="NX_BOOLEAN">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="FlagVFCADCInit"/>
           </datasource>
@@ -2250,7 +2250,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -2260,7 +2260,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/vfc/exp.02" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -2270,35 +2270,35 @@ recent write operations to the server.
         </attribute>
         <field name="InitVFCADC" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/vfc/exp.02" port="10000"/>
             <record name="InitVFCADC"/>
           </datasource>
         </field>
         <field name="Reset" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/vfc/exp.02" port="10000"/>
             <record name="Reset"/>
           </datasource>
         </field>
         <field name="SetGain" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/vfc/exp.02" port="10000"/>
             <record name="SetGain"/>
           </datasource>
         </field>
         <field name="SetOffset" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/vfc/exp.02" port="10000"/>
             <record name="SetOffset"/>
           </datasource>
         </field>
         <field name="SetPolarity" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/vfc/exp.02" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/vfc/exp.02" port="10000"/>
             <record name="SetPolarity"/>
           </datasource>
@@ -2310,7 +2310,7 @@ recent write operations to the server.
         </attribute>
         <field name="Base" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Base"/>
           </datasource>
@@ -2320,7 +2320,7 @@ recent write operations to the server.
         </attribute>
         <field name="Channel" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Channel"/>
           </datasource>
@@ -2330,7 +2330,7 @@ recent write operations to the server.
         </attribute>
         <field name="SimulationMode" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/dgg2/exp.01" port="10000"/>
             <record name="SimulationMode"/>
           </datasource>
@@ -2340,7 +2340,7 @@ recent write operations to the server.
             SampleTime in sec
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dgg2/exp.01" port="10000"/>
             <record name="SampleTime"/>
           </datasource>
@@ -2353,7 +2353,7 @@ recent write operations to the server.
             Remaining time in sec
           </doc>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dgg2/exp.01" port="10000"/>
             <record name="RemainingTime"/>
           </datasource>
@@ -2363,7 +2363,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dgg2/exp.01" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -2373,7 +2373,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -2383,49 +2383,49 @@ recent write operations to the server.
         </attribute>
         <field name="Check" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Check"/>
           </datasource>
         </field>
         <field name="Read" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Read"/>
           </datasource>
         </field>
         <field name="Start" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Start"/>
           </datasource>
         </field>
         <field name="StartAndWaitForTimer" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="StartAndWaitForTimer"/>
           </datasource>
         </field>
         <field name="StartPreset" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="StartPreset"/>
           </datasource>
         </field>
         <field name="Stop" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="Stop"/>
           </datasource>
         </field>
         <field name="WaitForTimer" type="NX_INT32">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/dgg2/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/dgg2/exp.01" port="10000"/>
             <record name="WaitForTimer"/>
           </datasource>
@@ -2439,14 +2439,14 @@ recent write operations to the server.
         </attribute>
         <field name="ala" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="property" name="p09/tst/exp.01" port="10000"/>
             <record name="ala"/>
           </datasource>
         </field>
         <field name="Myattr" type="NX_UINT32" units="mm">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
             <record name="Myattr"/>
           </datasource>
@@ -2459,7 +2459,7 @@ recent write operations to the server.
             <dim index="1" value="1"/>
           </dimensions>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
             <record name="MySpectrumAttribute"/>
           </datasource>
@@ -2473,7 +2473,7 @@ recent write operations to the server.
             <dim index="2" value="2"/>
           </dimensions>
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
             <record name="MyImageAttribute"/>
           </datasource>
@@ -2483,7 +2483,7 @@ recent write operations to the server.
         </attribute>
         <field name="State" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
             <record name="State"/>
           </datasource>
@@ -2493,7 +2493,7 @@ recent write operations to the server.
         </attribute>
         <field name="Status" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="attribute" name="p09/tst/exp.01" port="10000"/>
             <record name="Status"/>
           </datasource>
@@ -2503,7 +2503,7 @@ recent write operations to the server.
         </attribute>
         <field name="DeviceName" type="NX_CHAR">
           <strategy mode="STEP"/>
-          <datasource type="TANGO">
+          <datasource name="p09/tst/exp.01" type="TANGO">
             <device hostname="haso228k.desy.de" member="command" name="p09/tst/exp.01" port="10000"/>
             <record name="DeviceName"/>
           </datasource>

@@ -219,6 +219,7 @@ class NDSource(NTag):
 			
 
 	## sets parameters of DataBase		
+	# \param name name of datasource
 	# \param dbname name of used DataBase
 	# \param query database query
 	# \param dbtype type of the database, i.e. MYSQL, PGSQL, ORACLE
@@ -230,9 +231,10 @@ class NDSource(NTag):
 	# \param mode mode for ORACLE databases, i.e. SYSDBA or SYSOPER		
 	# \param host name of the host
 	# \param port port number
-	def initDBase(self, dbtype, query, dbname=None,  format=None,  mycnf=None,  user=None,  
+	def initDBase(self, name, dbtype, query, dbname=None,  format=None,  mycnf=None,  user=None,  
 		      passwd=None,  dsn=None,  mode=None, host=None, port=None):
 		self.addTagAttr("type", "DB")
+		self.addTagAttr("name", name)
 		da = NTag(self, "database")
 		da.addTagAttr("dbtype", dbtype)
 
@@ -261,14 +263,16 @@ class NDSource(NTag):
 		da.addText(query)
 
         ## sets paramters for Tango device
+	# \param name name of datasource
 	# \param device device name
 	# \param memberType type of the data object, i.e. attribute,  property, command	
 	# \param recordName name of the data object
 	# \param host host name
 	# \param port port
 	# \param encoding encoding of DevEncoded data	
-	def initTango(self, device, memberType, recordName, host=None, port=None, encoding = None):
+	def initTango(self, name, device, memberType, recordName, host=None, port=None, encoding = None):
 		self.addTagAttr("type", "TANGO")
+		self.addTagAttr("name", name)
 		dv = NTag(self, "device")
 		dv.addTagAttr("name", device)
 
@@ -285,20 +289,24 @@ class NDSource(NTag):
 		da.addTagAttr("name", recordName)
 
         ## sets paramters for Client data
+	# \param name name of datasource
 	# \param recordName name of the data object
-	def initClient(self, recordName):
+	def initClient(self, name, recordName):
 		self.addTagAttr("type", "CLIENT")
+		self.addTagAttr("name", name)
 		da = NTag(self, "record")
 		da.addTagAttr("name", recordName)
 		
 
         ## sets paramters for Sardana data
+	# \param name name of datasource
 	# \param door sardana door
 	# \param recordName name of the data object
 	# \param host host name
 	# \param port port
-	def initSardana(self, door, recordName, host=None, port=None):
+	def initSardana(self, name, door, recordName, host=None, port=None):
 		self.addTagAttr("type", "SARDANA")
+		self.addTagAttr("name", name)
 		do = NTag(self, "door")
 		do.addTagAttr("name", door)
 		if host:
@@ -418,7 +426,7 @@ class NDeviceGroup(NGroup):
 				self._fields[pr] = NField(self, pr, "NX_CHAR")
 				self._fields[pr].setStrategy("STEP")
 				sr = NDSource(self._fields[pr])
-				sr.initTango(self._deviceName, "property", pr, host="haso228k.desy.de", port="10000")
+				sr.initTango(self._deviceName, self._deviceName, "property", pr, host="haso228k.desy.de", port="10000")
 
 	## fetches Attributes
 	# \brief collects the device attributes
@@ -469,7 +477,7 @@ class NDeviceGroup(NGroup):
 
 				self._fields[at].setStrategy("STEP")
 				sr = NDSource(self._fields[at])
-				sr.initTango(self._deviceName, "attribute", at, host="haso228k.desy.de", port="10000", encoding = encoding)
+				sr.initTango(self._deviceName,self._deviceName, "attribute", at, host="haso228k.desy.de", port="10000", encoding = encoding)
 
 #		print self._proxy.attribute_list_query()
 
@@ -489,7 +497,7 @@ class NDeviceGroup(NGroup):
 						   self.nTypes[self.tTypes.index(str(cd.out_type).split(".")[-1])])
 				self._fields[cd.cmd_name].setStrategy("STEP")
 				sr = NDSource(self._fields[cd.cmd_name])
-				sr.initTango(self._deviceName, "command", cd.cmd_name,\
+				sr.initTango(self._deviceName, self._deviceName, "command", cd.cmd_name,\
 						     host="haso228k.desy.de", port="10000")
 				
 						
@@ -550,7 +558,7 @@ def main():
 	## source
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initDBase("MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
+	sr.initDBase("single_mysql_record_string","MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
 
 	f = NField(src, "single_mysql_record_int", "NX_INT")
 	## dimensions
@@ -559,7 +567,7 @@ def main():
 	## source
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initDBase("MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
+	sr.initDBase( "single_mysql_record_int", "MYSQL", "SELECT pid FROM device limit 1", "tango", "SPECTRUM", host="haso228k.desy.de")
 
 
 	f = NField(src, "mysql_record", "NX_CHAR")
@@ -570,7 +578,7 @@ def main():
 	## source
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initDBase("MYSQL", "SELECT name, pid FROM device limit 151", "tango", "IMAGE", host="haso228k.desy.de")
+	sr.initDBase("mysql_record", "MYSQL", "SELECT name, pid FROM device limit 151", "tango", "IMAGE", host="haso228k.desy.de")
 
 
 	f = NField(src, "pgsql_record", "NX_CHAR")
@@ -581,7 +589,7 @@ def main():
 	## source
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initDBase("PGSQL", "SELECT * FROM weather limit 3", "mydb", "IMAGE")
+	sr.initDBase("pgsql_record", "PGSQL", "SELECT * FROM weather limit 3", "mydb", "IMAGE")
 
  
 	f = NField(src, "oracle_record", "NX_CHAR")
@@ -591,7 +599,7 @@ def main():
 	## source
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initDBase("ORACLE", "select * from (select * from telefonbuch) where ROWNUM <= 19", user='read', passwd='****', format="SPECTRUM", dsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))', host="haso228k.desy.de")
+	sr.initDBase("oracle_record", "ORACLE", "select * from (select * from telefonbuch) where ROWNUM <= 19", user='read', passwd='****', format="SPECTRUM", dsn='(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))', host="haso228k.desy.de")
 	f = NField(src, "type", "NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src, "name", "NX_CHAR")
@@ -604,13 +612,13 @@ def main():
 	f.setText("1")
 	f.setStrategy("INIT")
 	sr = NDSource(f)
-	sr.initTango("p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
+	sr.initTango("p09/motor/exp.01","p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
 	f = NField(src, "emittance_x", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initClient("emittance_x");
+	sr.initClient("emittance_x", "emittance_x");
 	f = NField(src, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
@@ -665,7 +673,7 @@ def main():
 	d.dim("2", "2")
 	f.setStrategy("FINAL")
 	sr = NDSource(f)
-	sr.initTango("p09/tst/exp.01", "attribute", "MyImageAttribute", host="haso228k.desy.de", port="10000")
+	sr.initTango("p09/tst/exp.01","p09/tst/exp.01", "attribute", "MyImageAttribute", host="haso228k.desy.de", port="10000")
 	f = NField(de, "distance", "NX_FLOAT")
 	f.setText("10.00012")
 	f = NField(de, "polar_angle", "NX_FLOAT")
@@ -682,7 +690,7 @@ def main():
 	f.setText("0.01")
 	f.setStrategy("FINAL")
 	sr = NDSource(f)
-	sr.initTango("p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
+	sr.initTango("p09/motor/exp.01","p09/motor/exp.01", "attribute", "Position", host="haso228k.desy.de", port="10000")
 
 
         ##	NXdata

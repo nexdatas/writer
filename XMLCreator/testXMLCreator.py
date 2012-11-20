@@ -39,7 +39,7 @@ def main():
 	d.dim("2", "2")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initDBase("MYSQL", "SELECT name, pid FROM device limit 151", "tango", "IMAGE", host="haso228k.desy.de")
+	sr.initDBase( "db_devices", "MYSQL", "SELECT name, pid FROM device limit 151", "tango", "IMAGE", host="haso228k.desy.de")
 	f = NField(src, "type", "NX_CHAR")
 	f.setText("Synchrotron X-ray Source")
 	f = NField(src, "name", "NX_CHAR")
@@ -51,19 +51,19 @@ def main():
 	f.setUnits("W")
 	f.setText("1")
 #	sr = NDSource(f)
-#	sr.initTango("p09/motor/exp.01", "attribute", "power", host="haso228k.desy.de", port="10000")
+#	sr.initTango("p09/motor/exp.01","p09/motor/exp.01", "attribute", "power", host="haso228k.desy.de", port="10000")
 	f = NField(src, "emittance_x", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initClient("emittance_x");
+	sr.initClient("emittance_x","emittance_x");
 	f = NField(src, "emittance_y", "NX_FLOAT")
 	f.setUnits("nm rad")
 	f.setText("0.2")
 #	sr = NDSource(f)
 #	f.setStrategy("STEP")
-#	sr.initSardana("door1", "emittance_y", host="haso228k.desy.de", port="10000");
+#	sr.initSardana("door1","door1", "emittance_y", host="haso228k.desy.de", port="10000");
 	f = NField(src, "sigma_x", "NX_FLOAT")
 	f.setUnits("nm")
 	f.setText("0.1")
