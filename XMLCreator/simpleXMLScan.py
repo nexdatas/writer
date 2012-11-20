@@ -37,7 +37,7 @@ def main():
 	f.setStrategy("STEP")
 	sr = NDSource(f)
 
-	sr.initClient("exp_c01");
+	sr.initClient("exp_c01","exp_c01");
 
 
 	f = NField(dt, "counter2", "NX_FLOAT")
@@ -45,7 +45,7 @@ def main():
 #	f.setText("0.2")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initClient("exp_c02");
+	sr.initClient("exp_c02","exp_c02");
 	
 
 	f = NField(dt, "mca", "NX_FLOAT")
@@ -54,8 +54,8 @@ def main():
 	d.dim("1", "2048")
 	f.setStrategy("STEP")
 	sr = NDSource(f)
-	sr.initTango("p09/mca/exp.02", "attribute", "Data")
-#	sr.initClient("p09/mca/exp.02");
+	sr.initTango("p09/mca/exp.02","p09/mca/exp.02", "attribute", "Data")
+#	sr.initClient("p09/mca/exp.02","p09/mca/exp.02")
 
         ##	NXdata
 	da = NGroup(en, "data", "NXdata")
