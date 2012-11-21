@@ -108,7 +108,7 @@ class FetchNameHandler(sax.ContentHandler):
                         self._tstack[-1] = content
             
             self._attribute = False
-            self.content = ""
+            self._content = []
             self._attrName = None
             
             
