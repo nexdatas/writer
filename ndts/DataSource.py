@@ -30,6 +30,7 @@ from Types import NTP
 
 try:
     import PyTango
+    ## global variable if PyTango module installed
     PYTANGO_AVAILABLE = True
 except ImportError, e:
     PYTANGO_AVAILABLE = False
