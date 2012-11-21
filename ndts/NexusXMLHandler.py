@@ -31,7 +31,7 @@ from H5Elements import (EGroup, EField, EAttribute,
 from DataSource import DataSourceFactory
 from ThreadPool import ThreadPool
 from collections import Iterable
-
+from InnerXMLParser import InnerXMLHandler
 
 ## unsupported tag exception
 class UnsupportedTagError(Exception): pass
@@ -43,8 +43,9 @@ class NexusXMLHandler(sax.ContentHandler):
     # \brief It constructs parser and defines the H5 output file
     # \param fileElement file element
     # \param decoders decoder pool
-    #\param groupTypes map of NXclass : name
-    def __init__(self, fileElement, decoders=None, groupTypes=None):
+    # \param groupTypes map of NXclass : name
+    # \param parser instance of sax.xmlreader
+    def __init__(self, fileElement, decoders=None, groupTypes=None , parser = None):
         sax.ContentHandler.__init__(self)
 
         
@@ -63,6 +64,14 @@ class NexusXMLHandler(sax.ContentHandler):
         self._unsupportedTag=""
         self._raiseUnsupportedTag=True
 
+        ## xmlreader
+        self._parser = parser
+        self._innerHander = None
+
+        ## tags with innerxml as its input
+        self._withXMLinput = ['doc']
+        ##  stored attributes
+        self._storedAttrs = None
 
         ## map of tag names to related classes
         self._elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
@@ -115,7 +124,14 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
         if not self._unsupportedTag :
-            if name in self._elementClass:
+            print "parser",self._parser , name 
+            if self._parser and  name in self._withXMLinput:
+                print "XML input"
+                self._storedAttrs = attrs
+                self._innerHandler = InnerXMLHandler(self._parser, self)
+                self._parser.setContentHandler(self._innerHandler) 
+                
+            elif name in self._elementClass:
                 self._stack.append(self._elementClass[name](name, attrs, self._last()))
                 if self._fetching and hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
                     self._last().fetchName(self._groupTypes)
@@ -133,7 +149,10 @@ class NexusXMLHandler(sax.ContentHandler):
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        if not self._unsupportedTag and name in self._elementClass:
+        if not self._unsupportedTag and self._parser and  name in self._withXMLinput:
+            print "innerxml"
+            print "XML", self._innerHandler.xml
+        elif not self._unsupportedTag and name in self._elementClass:
 #            if self._last().tagName == name :
             res = self._last().store(name)
             trigger = None
