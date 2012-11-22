@@ -60,7 +60,7 @@ except ImportError, e:
     print "ORACLE not available: %s" % e
 
 
-import copy
+#import copy
 
 
 
@@ -356,17 +356,20 @@ class DBaseSource(DataSource):
             cursor = db.cursor()
             cursor.execute(self.query)
             if not self.format or self.format == 'SCALAR':
-                data = copy.deepcopy(cursor.fetchone())
+#                data = copy.deepcopy(cursor.fetchone())
+                data = cursor.fetchone()
                 dh = DataHolder("SCALAR", data[0], "DevString", [1,0])
             elif self.format == 'SPECTRUM':
-                data = copy.deepcopy(cursor.fetchall())
+                data = cursor.fetchall()
+#                data = copy.deepcopy(cursor.fetchall())
                 if len(data[0]) == 1:
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
                 dh = DataHolder("SPECTRUM", ldata, "DevString", [len(ldata),0])
             else:
-                data = copy.deepcopy(cursor.fetchall())
+                data = cursor.fetchall()
+#                data = copy.deepcopy(cursor.fetchall())
                 ldata = list(list(el) for el in data)
                 dh = DataHolder("IMAGE", ldata, "DevString", [len(ldata), len(ldata[0])])
             cursor.close()
