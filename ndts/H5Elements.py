@@ -88,7 +88,7 @@ class EStrategy(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
         self._last.postrun = ("".join(self.content)).strip()        
 
 
@@ -119,7 +119,7 @@ class EField(FElement):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
             
 
         self._extraD = False
@@ -296,7 +296,7 @@ class EGroup(FElement):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
         for key in self.tagAttributes.keys() :
             if key not in ["name","type"]:
                 (self.h5Object.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
@@ -372,7 +372,7 @@ class EAttribute(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
 
         if "name" in self._tagAttrs.keys(): 
             nm = self._tagAttrs["name"]
@@ -409,9 +409,9 @@ class EDoc(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self, xml):
         if self._beforeLast():
-            self._beforeLast().doc = self._beforeLast().doc + "".join(self.content)            
+            self._beforeLast().doc +=  "".join(xml[1])            
 
 
 ## symbol tag element        
@@ -427,7 +427,7 @@ class ESymbol(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
         if "name" in self._tagAttrs.keys():
             self.symbols[self._tagAttrs["name"]] = self._last.doc
 
@@ -494,7 +494,7 @@ class EQuery(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
         self._beforeLast().source.query = ("".join(self.content)).strip()        
 
 
@@ -525,7 +525,7 @@ class EDatabase(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self, name):
+    def store(self):
         self._beforeLast().source.dsn = ("".join(self.content)).strip()        
 
  

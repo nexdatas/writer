@@ -60,5 +60,5 @@ class Element(object):
         
     ## stores the tag
     # \brief abstract method to store the tag element    
-    def store(self, name):
+    def store(self):
         pass

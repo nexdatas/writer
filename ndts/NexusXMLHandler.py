@@ -69,13 +69,15 @@ class NexusXMLHandler(sax.ContentHandler):
         self._innerHander = None
 
         ## tags with innerxml as its input
-        self._withXMLinput = ['doc']
+        self._withXMLinput = {'doc':EDoc}
         ##  stored attributes
         self._storedAttrs = None
+        ##  stored name
+        self._storedName = None
 
         ## map of tag names to related classes
         self._elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
-                              'link':ELink, 'doc':EDoc,
+                              'link':ELink,
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
                               'dim':EDim, 'enumeration':Element, 'item':Element,
@@ -104,6 +106,8 @@ class NexusXMLHandler(sax.ContentHandler):
         self._decoders = decoders
 
 
+        self._inner = False
+
     ## the last stack element 
     # \returns the last stack element 
     def _last(self):
@@ -116,6 +120,10 @@ class NexusXMLHandler(sax.ContentHandler):
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
+        if self._inner == True:
+            print "XML:\n", self._innerHandler.xml
+            self._createInnerTag(self._innerHandler.xml)
+            self._inner = False
         if not self._unsupportedTag:
             self._last().content.append(ch)
 
@@ -123,14 +131,18 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
+        if self._inner == True:
+            print "XML:\n", self._innerHandler.xml
+            self._createInnerTag(self._innerHandler.xml)
+            self._inner = False
         if not self._unsupportedTag :
             print "parser",self._parser , name 
             if self._parser and  name in self._withXMLinput:
-                print "XML input"
                 self._storedAttrs = attrs
-                self._innerHandler = InnerXMLHandler(self._parser, self)
+                self._storedName = name
+                self._innerHandler = InnerXMLHandler(self._parser, self, name, attrs)
                 self._parser.setContentHandler(self._innerHandler) 
-                
+                self._inner = True
             elif name in self._elementClass:
                 self._stack.append(self._elementClass[name](name, attrs, self._last()))
                 if self._fetching and hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
@@ -149,15 +161,29 @@ class NexusXMLHandler(sax.ContentHandler):
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
+        if self._inner == True:
+            print "XML:\n", self._innerHandler.xml
+            self._createInnerTag(self._innerHandler.xml)
+            self._inner = False
         if not self._unsupportedTag and self._parser and  name in self._withXMLinput:
             print "innerxml"
             print "XML", self._innerHandler.xml
         elif not self._unsupportedTag and name in self._elementClass:
-#            if self._last().tagName == name :
-            res = self._last().store(name)
+            res = self._last().store()
+            if res:
+                self._addToPool(res, self._last())
+            self._stack.pop()
+        elif name not in self._transparentTags:
+            if self._unsupportedTag == name:
+                self._unsupportedTag = ""
+
+
+    ## addding to pool
+    # \param res strategy or (strategy, trigger)
+    def _addToPool(self, res, task):
             trigger = None
             strategy = None
-            if res :
+            if res:
                 if isinstance(res, Iterable):
                     strategy = res[0]
                     if len(res)>1 :
@@ -168,15 +194,23 @@ class NexusXMLHandler(sax.ContentHandler):
             if trigger and strategy == 'STEP':
                 if trigger not in self.triggerPools.keys():
                     self.triggerPools[trigger]=ThreadPool()
-                self.triggerPools[trigger].append(self._last())
+                self.triggerPools[trigger].append(task)
             elif strategy in self._poolMap.keys():
-                self._poolMap[strategy].append(self._last())
-            self._stack.pop()
-        elif name not in self._transparentTags:
-            if self._unsupportedTag == name:
-                self._unsupportedTag = ""
+                self._poolMap[strategy].append(task)
+                
+
    
+    ## creates class instance of the current inner xml
+    # \param xml inner xml
+    def _createInnerTag(self, xml):
+        if self._storedName in self._withXMLinput:
+            inner = self._withXMLinput[self._storedName](self._storedName, self._storedAttrs, self._last())
+            res = inner.store(xml)
+            if res:
+                self._addToPool(res, inner)
+
             
+                
 
     ## closes the elements
     # \brief It goes through all stack elements closing them

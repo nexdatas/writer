@@ -33,31 +33,52 @@ class InnerXMLHandler(sax.ContentHandler):
 
     ## constructor
     # \brief It constructs parser handler for fetching group names
-    def __init__(self, xmlReader, contentHandler):
+    def __init__(self, xmlReader, contentHandler, name, attrs):
         sax.ContentHandler.__init__(self)
-        ## xml string       
-        self.xml = ""
+        ## xml string
+        self.xml = None
         ## external contentHandler
         self._contentHandler = contentHandler
         ## external xmlreader
         self._xmlReader = xmlReader 
         ## tag depth
         self._depth = 1
+        ## first tag
+        self._preXML = self._openTag(name, attrs, eol = False) 
+        ## last tag
+        self._postXML = "</%s>"% name
+        ## tag content
+        self._contentXML = ""
 
-    ##  parses the opening tag
+    ## creates opening tag
+    # \param name tag name
+    # \param attrs tag attributes    
+    def _openTag(self, name, attrs, eol = True):
+        xml = ""
+        if eol:
+            xml += "\n<%s "% name
+        else:
+            xml += "<%s "% name
+            
+        for k in attrs.keys():
+            xml += " %s=\"%s\"" % (k, attrs[k].replace("\"","&quot;"))
+        if eol:
+            xml += ">\n"
+        else:
+            xml += ">"
+        return xml
+
+    ## parses the opening tag
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
         self._depth +=1 
-        self.xml += "< %s "% name
-        for k in attrs.keys():
-            self.xml += " %s  = \"%s\"" % (k, attrs[k].replace("\"","&quot;"))
-        self.xml += " > "
+        self._contentXML += self._openTag(name, attrs)
 
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        self.xml += ch
+        self._contentXML += ch.strip()
 
 
     ## parses an closing tag
@@ -65,13 +86,10 @@ class InnerXMLHandler(sax.ContentHandler):
     def endElement(self, name):
         self._depth -=1 
         if self._depth == 0:
+            self.xml = (self._preXML, self._contentXML, self._postXML)
             self._xmlReader.setContentHandler(self._contentHandler)
-            print "E:", self.xml
-        else:
-            self.xml += "</ %s >" % name 
-            
-            
-           
+        else:   
+            self._contentXML += "\n</%s>\n" % name 
 
 
 
