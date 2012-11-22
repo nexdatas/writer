@@ -152,7 +152,8 @@ class EField(FElement):
             except:
                 if self.source and self.source.isValid():
 #                    try:
-                    dsShape = self.source.getData().shape                    
+                    dh = DataHolder(**self.source.getData())
+                    dsShape = dh.shape
 #                    except:
 #                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
@@ -226,7 +227,7 @@ class EField(FElement):
     def run(self):
         try:
             if self.source:
-                dh = self.source.getData()
+                dh = DataHolder(**self.source.getData())
                 if not dh:
                     message = self.setMessage()
                     print message[0]

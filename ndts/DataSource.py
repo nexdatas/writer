@@ -26,7 +26,6 @@ import json
 from xml.dom import minidom
 
 from Element import Element
-from DataHolder import DataHolder
 from Types import NTP
 
 try:
@@ -170,7 +169,7 @@ class TangoSource(DataSource):
         self._decoders = decoders
 
     ## data provider
-    # \returns DataHolder with collected data  
+    # \returns dictionary with collected data  
     def getData(self):
         if not PYTANGO_AVAILABLE:
             raise PackageError, "Support for PyTango datasources not available" 
@@ -193,23 +192,24 @@ class TangoSource(DataSource):
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
 #                        print "Image Device: ", self.device.encode()
 #                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self._decoders
-                    return DataHolder(da.data_format, da.value, da.type, [da.dim_x,da.dim_y],
-                                      encoding = self.encoding, decoders = self._decoders)
+                    return {"format":da.data_format, "value":da.value, "tangoDType":da.type, 
+                            "shape":[da.dim_x,da.dim_y],
+                            "encoding": self.encoding, "decoders": self._decoders}
 
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
                 plist = proxy.get_property_list('*')
                 if self.name.encode() in plist:
                     da = proxy.get_property(self.name.encode())[self.name.encode()][0]
-                    return DataHolder("SCALAR", da, "DevString", [1,0])
+                    return {"format":"SCALAR", "value":da, "tangoDType":"DevString", "shape":[1,0]}
             elif self.memberType == "command":
 #                print "calling the command: ", self.name
 		clist = [cm.cmd_name for cm in proxy.command_list_query()]
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
-                    return DataHolder("SCALAR", da, cd.out_type, [1,0], 
-                                      encoding = self.encoding, decoders = self._decoders)
+                    return {"format":"SCALAR", "value":da, "tangoDType":cd.out_type, "shape":[1,0], 
+                                      "encoding":self.encoding, "decoders":self._decoders}
                     
                         
 
@@ -341,7 +341,7 @@ class DBaseSource(DataSource):
         return cx_Oracle.connect(**args)
 
     ## provides access to the data    
-    # \returns  DataHolder with collected data   
+    # \returns  dictionary with collected data   
     def getData(self):
 
         db = None
@@ -358,7 +358,7 @@ class DBaseSource(DataSource):
             if not self.format or self.format == 'SCALAR':
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
-                dh = DataHolder("SCALAR", data[0], "DevString", [1,0])
+                dh = {"format":"SCALAR", "value":data[0], "tangoDType":"DevString", "shape":[1,0]}
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
@@ -366,12 +366,12 @@ class DBaseSource(DataSource):
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
-                dh = DataHolder("SPECTRUM", ldata, "DevString", [len(ldata),0])
+                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":"DevString", "shape":[len(ldata),0]}
             else:
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
                 ldata = list(list(el) for el in data)
-                dh = DataHolder("IMAGE", ldata, "DevString", [len(ldata), len(ldata[0])])
+                dh = {"format":"IMAGE", "value":ldata, "tangoDType":"DevString", "shape":[len(ldata), len(ldata[0])]}
             cursor.close()
             db.close()
         return dh
@@ -421,7 +421,7 @@ class ClientSource(DataSource):
             
 
     ## provides access to the data    
-    # \returns  DataHolder with collected data   
+    # \returns  dictionary with collected data   
     def getData(self):
         
         
@@ -449,7 +449,8 @@ class ClientSource(DataSource):
                 shape = rshape.reverse()
                 if  shape is None:
                     shape = [1,0]
-                return DataHolder(NTP.rTf[rank], rec, NTP.pTt[pythonDType.__name__], shape)
+                return {"format":NTP.rTf[rank], "value":rec, 
+                        "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
             
 
 
