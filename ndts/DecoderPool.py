@@ -102,7 +102,7 @@ class VDEOdecoder(object):
 
 
 
-## Data source creator
+## Decoder pool
 class DecoderPool(object):        
 
 
@@ -155,19 +155,14 @@ class DecoderPool(object):
     # \param name name of the adding decoder
     # \param decoder instance of the adding decoder
     # \returns name of decoder
-    def append(self, decoder, name = None):
+    def append(self, decoder, name):
+        self._pool[name] = decoder()
         if not hasattr(decoder,"load") or not hasattr(decoder,"name") \
                 or not hasattr(decoder,"shape") or not hasattr(decoder,"decode") \
                 or not hasattr(decoder,"dtype") or not hasattr(decoder,"format"):
+            self.pop(name)
             return 
-        if name is None:
-            if not decoder.name:
-                return
-            dname = decoder.name
-        else:
-            dname = name
-        self._pool[dname] = decoder
-        return dname
+        return name
 
 
     ## adds additional decoder

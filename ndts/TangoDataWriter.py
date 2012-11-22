@@ -40,6 +40,7 @@ from collections import Iterable
 
 from H5Elements import EFile
 from DecoderPool import DecoderPool
+from DataSourcePool import DataSourcePool
 
 ## NeXuS data writer
 class TangoDataWriter(object):
@@ -71,6 +72,9 @@ class TangoDataWriter(object):
 
         ## pool with decoders
         self._decoders = DecoderPool()
+
+        ## pool with decoders
+        self._datasources = DataSourcePool()
 
 
         ## adding logs
@@ -114,6 +118,7 @@ class TangoDataWriter(object):
     def openEntry(self):
         if self.xmlSettings:
             self._decoders = DecoderPool(json.loads(self.json))            
+            self._datasources = DataSourcePool(json.loads(self.json))            
 
             parser = sax.make_parser()
         
@@ -126,7 +131,8 @@ class TangoDataWriter(object):
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
  
-            handler = NexusXMLHandler(self._eFile, self._decoders, fetcher.groupTypes, parser)
+            handler = NexusXMLHandler(self._eFile, self._datasources, self._decoders, 
+                                      fetcher.groupTypes, parser)
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
 

@@ -25,7 +25,7 @@ import sys, os
 
 from Element import Element
 from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy)
-from DataSource import DataSourceFactory
+from DataSourceFactory import DataSourceFactory
 from ThreadPool import ThreadPool
 from collections import Iterable
 from InnerXMLParser import InnerXMLHandler
@@ -40,9 +40,10 @@ class NexusXMLHandler(sax.ContentHandler):
     # \brief It constructs parser and defines the H5 output file
     # \param fileElement file element
     # \param decoders decoder pool
+    # \param datasources datasource pool
     # \param groupTypes map of NXclass : name
     # \param parser instance of sax.xmlreader
-    def __init__(self, fileElement, decoders=None, groupTypes=None , parser = None):
+    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , parser = None):
         sax.ContentHandler.__init__(self)
 
         
@@ -100,6 +101,9 @@ class NexusXMLHandler(sax.ContentHandler):
         ## pool with decoders
         self._decoders = decoders
 
+        ## pool with datasources
+        self._datasources = datasources
+
         ## if innerparse was running
         self._inner = False
 
@@ -142,8 +146,6 @@ class NexusXMLHandler(sax.ContentHandler):
                 self._stack.append(self._elementClass[name](name, attrs, self._last()))
                 if self._fetching and hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
                     self._last().fetchName(self._groupTypes)
-                if hasattr(self._last(), "setDecoders") and callable(self._last().setDecoders):
-                    self._last().setDecoders(self._decoders)
                 if hasattr(self._last(), "createLink") and callable(self._last().createLink):
                     self._last().createLink(self._groupTypes)
             elif name not in self._transparentTags:
@@ -157,11 +159,10 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param name tag name
     def endElement(self, name):
         if self._inner == True:
-            print "XML:\n", self._innerHandler.xml
+#            print "XML:\n", self._innerHandler.xml
             self._createInnerTag(self._innerHandler.xml)
             self._inner = False
         if not self._unsupportedTag and self._parser and  name in self._withXMLinput:
-            print "innerxml"
             print "XML", self._innerHandler.xml
         elif not self._unsupportedTag and name in self._elementClass:
             res = self._last().store()
@@ -176,22 +177,22 @@ class NexusXMLHandler(sax.ContentHandler):
     ## addding to pool
     # \param res strategy or (strategy, trigger)
     def _addToPool(self, res, task):
-            trigger = None
-            strategy = None
-            if res:
-                if isinstance(res, Iterable):
-                    strategy = res[0]
-                    if len(res)>1 :
-                        trigger = res[1]
-                else:
-                    strategy = res
+        trigger = None
+        strategy = None
+        if res:
+            if isinstance(res, Iterable):
+                strategy = res[0]
+                if len(res)>1 :
+                    trigger = res[1]
+            else:
+                strategy = res
         
-            if trigger and strategy == 'STEP':
-                if trigger not in self.triggerPools.keys():
-                    self.triggerPools[trigger]=ThreadPool()
-                self.triggerPools[trigger].append(task)
-            elif strategy in self._poolMap.keys():
-                self._poolMap[strategy].append(task)
+        if trigger and strategy == 'STEP':
+            if trigger not in self.triggerPools.keys():
+                self.triggerPools[trigger]=ThreadPool()
+            self.triggerPools[trigger].append(task)
+        elif strategy in self._poolMap.keys():
+            self._poolMap[strategy].append(task)
                 
 
    
@@ -200,7 +201,11 @@ class NexusXMLHandler(sax.ContentHandler):
     def _createInnerTag(self, xml):
         if self._storedName in self._withXMLinput:
             inner = self._withXMLinput[self._storedName](self._storedName, self._storedAttrs, self._last())
+            if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
+                inner.setDataSources(self._datasources)
             res = inner.store(xml)
+            if hasattr(inner, "setDecoders") and callable(inner.setDecoders):
+                inner.setDecoders(self._decoders)
             if res:
                 self._addToPool(res, inner)
 

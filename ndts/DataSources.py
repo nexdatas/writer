@@ -20,12 +20,7 @@
 # data-source types
 
 import json
-
-
-
 from xml.dom import minidom
-
-from Element import Element
 from Types import NTP
 
 try:
@@ -452,53 +447,4 @@ class ClientSource(DataSource):
                 return {"format":NTP.rTf[rank], "value":rec, 
                         "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
             
-
-
-
-## Data source creator
-class DataSourceFactory(Element):        
-    ## constructor
-    # \param name name of the tag
-    # \param attrs dictionary with the tag attributes
-    # \param last the last element on the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-        ## dictionary with data source classes
-        self._sourceClass = {"DB":DBaseSource, "TANGO":TangoSource,
-                            "CLIENT":ClientSource}
-        self.createDSource(name, attrs)
-
-
-    ##  sets the datasource form xml string
-    # \param xml input parameter   
-    def store(self, xml):
-        jxml = "".join(xml)
-        self._last.source.setup(jxml)
-        if self._last and hasattr(self._last,"tagAttributes"):
-            self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
-        
-        
-
-    ## sets the used decoders
-    # \param decoders pool to be set
-    def setDecoders(self, decoders):
-        if self._last and self._last.source and self._last.source.isValid() \
-                and hasattr(self._last.source,"setDecoders"):
-            self._last.source.setDecoders(decoders)
-            
-    ## creates data source   
-    # \param name name of the tag
-    # \param attrs dictionary with the tag attributes
-    def createDSource(self, name, attrs):
-        if "type" in attrs.keys():
-            if attrs["type"] in self._sourceClass.keys():
-                self._last.source = self._sourceClass[attrs["type"]]()
-            else:
-                print "Unknown data source"
-                self._last.source = DataSource()
-        else:
-            print "Typeless data source"
-            self._last.source = DataSource()
-
-
-
+    
