@@ -88,7 +88,7 @@ class EStrategy(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self):
+    def store(self, xml = None):
         self._last.postrun = ("".join(self.content)).strip()        
 
 
@@ -119,7 +119,7 @@ class EField(FElement):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self):
+    def store(self, xml = None):
             
 
         self._extraD = False
@@ -296,7 +296,7 @@ class EGroup(FElement):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self):
+    def store(self, xml = None):
         for key in self.tagAttributes.keys() :
             if key not in ["name","type"]:
                 (self.h5Object.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
@@ -372,7 +372,7 @@ class EAttribute(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self):
+    def store(self, xml = None):
 
         if "name" in self._tagAttrs.keys(): 
             nm = self._tagAttrs["name"]
@@ -427,106 +427,10 @@ class ESymbol(Element):
 
     ## stores the tag content
     # \param name the tag name    
-    def store(self):
+    def store(self, xml = None):
         if "name" in self._tagAttrs.keys():
             self.symbols[self._tagAttrs["name"]] = self._last.doc
 
-
-## record tag element        
-class ERecord(Element):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-        if "name" in attrs.keys():
-            self._beforeLast().source.name = attrs["name"]
-
-
-## device tag element        
-class EDevice(Element):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-        if "name" in attrs.keys():
-            self._beforeLast().source.device = attrs["name"]
-        if "hostname" in attrs.keys():
-            self._beforeLast().source.hostname = attrs["hostname"]
-        if "port" in attrs.keys():
-            self._beforeLast().source.port = attrs["port"]
-        if "encoding" in attrs.keys():
-            self._beforeLast().source.encoding = attrs["encoding"]
-        if "member" in attrs.keys():
-            self._beforeLast().source.memberType = attrs["member"]
-        else:
-            self._beforeLast().source.memberType = "attribute"
-
-## door tag element        
-class EDoor(Element):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-        if "name" in attrs.keys():
-            self._beforeLast().source.door = attrs["name"]
-        if "hostname" in attrs.keys():
-            self._beforeLast().source.hostname = attrs["hostname"]
-        if "port" in attrs.keys():
-            self._beforeLast().source.port = attrs["port"]
-
-
-## query tag element        
-class EQuery(Element):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-        if "format" in attrs.keys():
-            self._beforeLast().source.format = attrs["format"]
-
-    ## stores the tag content
-    # \param name the tag name    
-    def store(self):
-        self._beforeLast().source.query = ("".join(self.content)).strip()        
-
-
-## Database tag element        
-class EDatabase(Element):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-        if "dbname" in attrs.keys():
-            self._beforeLast().source.dbname = attrs["dbname"]
-        if "dbtype" in attrs.keys():
-            self._beforeLast().source.dbtype = attrs["dbtype"]
-        if "user" in attrs.keys():
-            self._beforeLast().source.user = attrs["user"]
-        if "passwd" in attrs.keys():
-            self._beforeLast().source.passwd = attrs["passwd"]
-        if "mode" in attrs.keys():
-            self._beforeLast().source.mode = attrs["mode"]
-        if "mycnf" in attrs.keys():
-            self._beforeLast().source.mycnf = attrs["mycnf"]
-        if "hostname" in attrs.keys():
-            self._beforeLast().source.hostname = attrs["hostname"]
-        if "port" in attrs.keys():
-            self._beforeLast().source.port = attrs["port"]
-
-    ## stores the tag content
-    # \param name the tag name    
-    def store(self):
-        self._beforeLast().source.dsn = ("".join(self.content)).strip()        
 
  
 ## dimensions tag element        

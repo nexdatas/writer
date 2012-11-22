@@ -23,6 +23,7 @@ import json
 
 
 
+from xml.dom import minidom
 
 from Element import Element
 from DataHolder import DataHolder
@@ -66,24 +67,26 @@ import copy
 ## exception for fetching data from data source
 class PackageError(Exception): pass
 
+## exception for setting data source
+class DataSourceSetupError(Exception): pass
+
 
 ## Data source
 class DataSource(object):
     ## constructor
     # \brief It cleans all member variables
     def __init__(self):
-        ## name of the host with the data source
-        self.hostname = None
-        ## port related to the host
-        self.port = None
-        ## name of data
-        self.name = None
+        pass
+
+    ## sets the parrameters up from xml
+    # \brief xml  datasource parameters
+    def setup(self, xml):
+        pass
 
     ## access to data
     # \brief It is an abstract method providing data   
     def getData(self):
         pass
-
 
     ## checks if the data is valid
     # \returns if the data is valid
@@ -95,12 +98,26 @@ class DataSource(object):
     def __str__(self):
         return "unknown DataSource"
 
+    ## provides xml content of the node
+    # \param node DOM node
+    # \returns xml content string
+    def _getText(self, node):
+        xml = node.toxml() 
+        start = xml.find('>')
+        end = xml.rfind('<')
+        if start == -1 or end < start:
+            return ""
+        return xml[start + 1:end].replace("&lt;","<").replace("&gt;","<").replace("&amp;","&")
+
+
 ## Tango data source
 class TangoSource(DataSource):
     ## constructor
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
+        ## name of data
+        self.name = None
         ## name of the Tango device
         self.device = None
         ## member type of the data, i.e. attribute, property,...
@@ -118,6 +135,33 @@ class TangoSource(DataSource):
     # \returns self-describing string
     def __str__(self):
         return "Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
+
+
+    ## sets the parrameters up from xml
+    # \brief xml  datasource parameters
+    def setup(self, xml):
+#        print "TG XML" , xml
+        dom = minidom.parseString(xml)
+        rec = dom.getElementsByTagName("record")
+        if rec and len(rec)> 0:
+            self.name = rec[0].getAttribute("name")
+        if not self.name:
+            raise  DataSourceSetupError, \
+                "Tango record name not defined: %s" % xml
+
+        dv = dom.getElementsByTagName("device")
+        if dv and len(dv)> 0:
+            self.device = dv[0].getAttribute("name")
+            self.hostname = dv[0].getAttribute("hostname")
+            self.port = dv[0].getAttribute("port")
+            self.encoding = dv[0].getAttribute("encoding")
+            self.memberType = dv[0].getAttribute("member")
+            if not self.memberType or self.memberType not in ["attribute", "command", "property"]:
+                self.memberType = "attribute" 
+#            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.memberType, self.encoding
+        if not self.device :
+            raise  DataSourceSetupError, \
+                "Tango device name not defined: %s" % xml
 
 
     ## sets the used decoders
@@ -175,6 +219,10 @@ class DBaseSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
+        ## name of the host with the data source
+        self.hostname = None
+        ## port related to the host
+        self.port = None
         ## database query
         self.query = None
         ## DSN string
@@ -196,7 +244,6 @@ class DBaseSource(DataSource):
 
 
         
-
         ## map 
         self._dbConnect = {"MYSQL":self._connectMYSQL, 
                           "PGSQL":self._connectPGSQL,
@@ -206,6 +253,39 @@ class DBaseSource(DataSource):
     # \returns self-describing string
     def __str__(self):
         return " %s DataBase %s with %s " % (self.dbtype, self.dbname if self.dbname else "" , self.query )
+
+    ## sets the parrameters up from xml
+    # \brief xml  datasource parameters
+    def setup(self, xml):
+#        print "DB XML" , xml
+        dom = minidom.parseString(xml)
+        query = dom.getElementsByTagName("query")
+        if query and len(query)> 0:
+            self.format = query[0].getAttribute("format")
+#            print "format:", self.format
+            self.query = self._getText(query[0])
+            
+        if not self.format or not self.query:
+            raise  DataSourceSetupError, \
+                "Database query or its format not defined: %s" % xml
+
+        db = dom.getElementsByTagName("database")
+        if db and len(db)> 0:
+            self.dbname = db[0].getAttribute("dbname")
+            self.dbtype = db[0].getAttribute("dbtype")
+            self.user = db[0].getAttribute("user") 
+            self.passwd = db[0].getAttribute("passwd")
+            self.mode = db[0].getAttribute("mode")
+            mycnf = db[0].getAttribute("mycnf")
+            if mycnf:
+                self.mycnf
+            self.hostname = db[0].getAttribute("hostname")
+            self.port = db[0].getAttribute("port")
+            self.dsn = self._getText(db[0])
+            
+#            print "DATABASE:", self.dbname, self.dbtype, self.user,self.passwd , self.hostname, self.port, self.mode, self.mycnf,self.dsn
+
+
 
 
     ## connects to MYSQL database    
@@ -299,11 +379,29 @@ class ClientSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
+        ## name of data
+        self.name = None
         ## the current  static JSON object
         self._globalJSON = None
         ## the current  dynamic JSON object
         self._localJSON = None
         
+
+    ## sets the parrameters up from xml
+    # \brief xml  datasource parameters
+    def setup(self, xml):
+#        print "CL XML" , xml
+        dom = minidom.parseString(xml)
+        rec = dom.getElementsByTagName("record")
+        if rec and len(rec)> 0:
+            self.name = rec[0].getAttribute("name")
+#            print "NAME:", self.name
+        if not self.name:
+            raise  DataSourceSetupError, \
+                "Client record name not defined: %s" % xml
+            
+
+
     ## self-description 
     # \returns self-describing string
     def __str__(self):
@@ -353,19 +451,6 @@ class ClientSource(DataSource):
 
 
 
-## Sardana data source
-class SardanaSource(DataSource):
-    ## constructor
-    # \brief It cleans all member variables
-    def __init__(self):
-        DataSource.__init__(self)
-
-    ## provides access to the data    
-    # \returns  DataHolder with collected data   
-    def getData(self):
-        pass
-
-
 ## Data source creator
 class DataSourceFactory(Element):        
     ## constructor
@@ -376,9 +461,19 @@ class DataSourceFactory(Element):
         Element.__init__(self, name, attrs, last)
         ## dictionary with data source classes
         self._sourceClass = {"DB":DBaseSource, "TANGO":TangoSource,
-                            "CLIENT":ClientSource, "SARDANA":SardanaSource}
+                            "CLIENT":ClientSource}
         self.createDSource(name, attrs)
 
+
+    ##  sets the datasource form xml string
+    # \param xml input parameter   
+    def store(self, xml):
+        jxml = "".join(xml)
+        self._last.source.setup(jxml)
+        if self._last and hasattr(self._last,"tagAttributes"):
+            self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
+        
+        
 
     ## sets the used decoders
     # \param decoders pool to be set

@@ -50,10 +50,24 @@ class InnerXMLHandler(sax.ContentHandler):
         ## tag content
         self._contentXML = ""
 
+    ## replaces characters not allowed in xml string
+    # \param string text
+    # \returns converted text with special characters 
+    def _replace(self, string):
+        return string.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+
+
+    ## replaces characters not allowed in  xml attribute values
+    # \param string text
+    # \returns converted text with special characters 
+    def _replaceAttr(self, string):
+        return self._replace(string).replace("\"","&quot;").replace("'","&apos;")
+
+
     ## creates opening tag
     # \param name tag name
     # \param attrs tag attributes    
-    def _openTag(self, name, attrs, eol = True):
+    def _openTag(self, name, attrs, eol = False):
         xml = ""
         if eol:
             xml += "\n<%s "% name
@@ -61,7 +75,7 @@ class InnerXMLHandler(sax.ContentHandler):
             xml += "<%s "% name
             
         for k in attrs.keys():
-            xml += " %s=\"%s\"" % (k, attrs[k].replace("\"","&quot;"))
+            xml += " %s=\"%s\"" % (k, self._replaceAttr(attrs[k]))
         if eol:
             xml += ">\n"
         else:
@@ -78,7 +92,7 @@ class InnerXMLHandler(sax.ContentHandler):
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        self._contentXML += ch.strip()
+        self._contentXML += self._replace(ch)
 
 
     ## parses an closing tag
@@ -89,7 +103,7 @@ class InnerXMLHandler(sax.ContentHandler):
             self.xml = (self._preXML, self._contentXML, self._postXML)
             self._xmlReader.setContentHandler(self._contentHandler)
         else:   
-            self._contentXML += "\n</%s>\n" % name 
+            self._contentXML += "</%s>" % name 
 
 
 

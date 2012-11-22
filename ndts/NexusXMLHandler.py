@@ -24,10 +24,7 @@ from xml import sax
 import sys, os
 
 from Element import Element
-from H5Elements import (EGroup, EField, EAttribute,
-                        ELink, EDoc, ESymbol, EDimensions, EDim, 
-                              ERecord, EStrategy ,EQuery, 
-                              EDatabase, EDevice, EDoor)
+from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy)
 from DataSource import DataSourceFactory
 from ThreadPool import ThreadPool
 from collections import Iterable
@@ -69,7 +66,7 @@ class NexusXMLHandler(sax.ContentHandler):
         self._innerHander = None
 
         ## tags with innerxml as its input
-        self._withXMLinput = {'doc':EDoc}
+        self._withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
         ##  stored attributes
         self._storedAttrs = None
         ##  stored name
@@ -81,10 +78,8 @@ class NexusXMLHandler(sax.ContentHandler):
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
                               'dim':EDim, 'enumeration':Element, 'item':Element,
-                              'datasource':DataSourceFactory, 'record':ERecord,
-                              'strategy':EStrategy, 'query':EQuery, 
-                              'database':EDatabase, 
-                              'device':EDevice, 'door':EDoor}
+                              'strategy':EStrategy
+                              }
 
         ## transparent tags
         self._transparentTags = ['definition']
@@ -105,7 +100,7 @@ class NexusXMLHandler(sax.ContentHandler):
         ## pool with decoders
         self._decoders = decoders
 
-
+        ## if innerparse was running
         self._inner = False
 
     ## the last stack element 
@@ -121,11 +116,12 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param ch partial content of the tag    
     def characters(self, ch):
         if self._inner == True:
-            print "XML:\n", self._innerHandler.xml
+#            print "XML:\n", self._innerHandler.xml
             self._createInnerTag(self._innerHandler.xml)
             self._inner = False
         if not self._unsupportedTag:
             self._last().content.append(ch)
+
 
     ##  parses the opening tag
     # \param name tag name
@@ -136,7 +132,6 @@ class NexusXMLHandler(sax.ContentHandler):
             self._createInnerTag(self._innerHandler.xml)
             self._inner = False
         if not self._unsupportedTag :
-            print "parser",self._parser , name 
             if self._parser and  name in self._withXMLinput:
                 self._storedAttrs = attrs
                 self._storedName = name
