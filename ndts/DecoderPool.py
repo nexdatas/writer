@@ -156,10 +156,12 @@ class DecoderPool(object):
     # \param decoder instance of the adding decoder
     # \returns name of decoder
     def append(self, decoder, name):
-        self._pool[name] = decoder()
-        if not hasattr(decoder,"load") or not hasattr(decoder,"name") \
-                or not hasattr(decoder,"shape") or not hasattr(decoder,"decode") \
-                or not hasattr(decoder,"dtype") or not hasattr(decoder,"format"):
+        instance = decoder()  
+        self._pool[name] = instance
+
+        if not hasattr(instance,"load") or not hasattr(instance,"name") \
+                or not hasattr(instance,"shape") or not hasattr(instance,"decode") \
+                or not hasattr(instance,"dtype") or not hasattr(instance,"format"):
             self.pop(name)
             return 
         return name

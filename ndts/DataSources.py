@@ -72,25 +72,30 @@ class DataSource(object):
     def __init__(self):
         pass
 
+
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
         pass
+
 
     ## access to data
     # \brief It is an abstract method providing data   
     def getData(self):
         pass
 
+
     ## checks if the data is valid
     # \returns if the data is valid
     def isValid(self):
         return True
 
+
     ## self-description 
     # \returns self-describing string
     def __str__(self):
         return "unknown DataSource"
+
 
     ## provides xml content of the node
     # \param node DOM node
@@ -102,6 +107,7 @@ class DataSource(object):
         if start == -1 or end < start:
             return ""
         return xml[start + 1:end].replace("&lt;","<").replace("&gt;","<").replace("&amp;","&")
+
 
 
 ## Tango data source
@@ -162,6 +168,7 @@ class TangoSource(DataSource):
     # \param decoders pool to be set
     def setDecoders(self, decoders):
         self._decoders = decoders
+
 
     ## data provider
     # \returns dictionary with collected data  
