@@ -74,6 +74,21 @@ class NAttr(NTag):
         NTag.__init__(self, parent, "attribute", nameAttr, typeAttr)
 
 
+    ## sets the attribute strategy
+    # \param mode mode data writing, i.e. INIT, STEP, FINAL, POSTRUN
+    # \param trigger for asynchronous writting, e.g. with different subentries
+    # \param value label for postrun mode    
+    def setStrategy(self,  mode = "STEP", trigger = None, value = None):
+        ## strategy of data writing, i.e. INIT, STEP, FINAL, POSTRUN
+        strategy = NTag(self, "strategy")
+        if strategy:
+            strategy.addTagAttr("mode", mode)
+        if trigger:
+            strategy.addTagAttr("trigger", trigger)    
+	if value :
+            strategy.setText(value)
+
+
 ## Group tag wrapper
 class NGroup(NTag):
     ## constructor
@@ -104,6 +119,7 @@ class NGroup(NTag):
         self._gAttr[attrName] = at
         if attrValue != "":
             at.setText(attrValue)
+        return self._attr[attrName]
             
 
 ## Link tag wrapper
@@ -169,7 +185,7 @@ class NField(NTag):
         self._attr = {}
         
 
-    ## sets the field unit
+    ## sets the field strategu
     # \param mode mode data writing, i.e. INIT, STEP, FINAL, POSTRUN
     # \param trigger for asynchronous writting, e.g. with different subentries
     # \param value label for postrun mode    
@@ -203,8 +219,8 @@ class NField(NTag):
         self._attr[attrName] = NAttr(self, attrName, attrType)
 	if attrValue != '':
             self._attr[attrName].setText(attrValue)
-
-
+        return self._attr[attrName]
+            
 
 ## Source tag wrapper
 class NDSource(NTag):
@@ -603,7 +619,9 @@ def main():
     f.setText("Synchrotron X-ray Source")
     f = NField(src, "name", "NX_CHAR")
     f.setText("PETRA-III")
-    f.addAttr("short_name", "NX_CHAR", "P3")
+    a = f.addAttr("short_name", "NX_CHAR", "P3")
+#    sr = NDSource(a)
+#    sr.initClient("emittance_x", "emittance_x");
     f = NField(src, "probe", "NX_CHAR")
     f.setText("x-ray")
     f = NField(src, "power", "NX_FLOAT")
