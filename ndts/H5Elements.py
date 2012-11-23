@@ -87,7 +87,7 @@ class EStrategy(Element):
 
 
     ## stores the tag content
-    # \param name the tag name    
+    # \param xml xml setting 
     def store(self, xml = None):
         self._last.postrun = ("".join(self.content)).strip()        
 
@@ -118,7 +118,7 @@ class EField(FElement):
         self.postrun = ""
 
     ## stores the tag content
-    # \param name the tag name    
+    # \param xml xml setting 
     def store(self, xml = None):
             
 
@@ -296,7 +296,7 @@ class EGroup(FElement):
                     (self.h5Object.attr(key.encode(), "string")).value = attrs[key].encode()
 
     ## stores the tag content
-    # \param name the tag name    
+    # \param xml xml setting 
     def store(self, xml = None):
         for key in self.tagAttributes.keys() :
             if key not in ["name","type"]:
@@ -372,7 +372,7 @@ class EAttribute(Element):
 
 
     ## stores the tag content
-    # \param name the tag name    
+    # \param xml xml setting
     def store(self, xml = None):
 
         if "name" in self._tagAttrs.keys(): 
@@ -409,7 +409,7 @@ class EDoc(Element):
         Element.__init__(self, name, attrs, last)
 
     ## stores the tag content
-    # \param name the tag name    
+    # \param xml xml setting
     def store(self, xml):
         if self._beforeLast():
             self._beforeLast().doc +=  "".join(xml[1])            
@@ -427,7 +427,7 @@ class ESymbol(Element):
         self.symbols = {}
 
     ## stores the tag content
-    # \param name the tag name    
+    # \param xml xml setting
     def store(self, xml = None):
         if "name" in self._tagAttrs.keys():
             self.symbols[self._tagAttrs["name"]] = self._last.doc

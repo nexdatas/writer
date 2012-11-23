@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package ndts nexdatas
-## \file DataSource.py
+## \file DataSourceFactory.py
 # data-source types
 
 import DataSources
@@ -33,9 +33,7 @@ class DataSourceFactory(Element):
     # \param last the last element on the stack
     def __init__(self, name, attrs, last):
         Element.__init__(self, name, attrs, last)
-        ## dictionary with data source classes
-#        self._sourceClass = {"DB":DBaseSource, "TANGO":TangoSource,
-#                            "CLIENT":ClientSource}
+        ## datasource pool
         self._dsPool = None
 
 
@@ -49,7 +47,7 @@ class DataSourceFactory(Element):
             self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
 
     ## sets the used decoders
-    # \param datasource pool to be set
+    # \param datasources pool to be set
     def setDataSources(self, datasources):
         self._dsPool = datasources
         
