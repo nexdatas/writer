@@ -44,20 +44,20 @@ class NTag(object):
         if typeAttr !=  "" :
             self.elem.setAttribute("type", typeAttr)
 
-        ## adds tag attribute
+    ## adds tag attribute
     # \param name attribute name        
     # \param value attribute value        
     def addTagAttr(self, name, value):
         self.elem.setAttribute(name, value)
 
-        ## sets tag content
+    ## sets tag content
     # \param text tag content
     def setText(self, text):
         ptext = self.root.createTextNode(text)
         self.elem.appendChild(ptext)
 
 
-        ## adds tag content
+    ## adds tag content
     # \param text tag content
     def addText(self, text):
         ptext = self.root.createTextNode(text)
@@ -102,14 +102,14 @@ class NGroup(NTag):
         ## container with attribute tag wrappers
         self._gAttr = {}
 
-        ## adds doc tag content
+    ## adds doc tag content
     # \param doc doc tag content    
     def addDoc(self, doc):
         self._doc.append(NTag(self, "doc"))
         self._doc[-1].addText(doc)
 
 
-        ## adds attribute tag
+    ## adds attribute tag
     # \param attrName name attribute
     # \param attrType type attribute
     # \param attrValue content of the attribute tag
@@ -134,7 +134,7 @@ class NLink(NTag):
         ## list of doc tag contents
         self._doc = []
 
-        ## adds doc tag content
+    ## adds doc tag content
     # \param doc doc tag content    
     def addDoc(self, doc):
         self._doc.append(NTag(self, "doc"))
@@ -205,13 +205,13 @@ class NField(NTag):
     def setUnits(self, unitsAttr):
         self.addTagAttr("units", unitsAttr)
 
-        ## adds doc tag content
+    ## adds doc tag content
     # \param doc doc tag content    
     def addDoc(self, doc):
         self._doc.append(NTag(self, "doc"))
         self._doc[-1].addText(doc)
 
-        ## adds attribute tag
+    ## adds attribute tag
     # \param attrName name attribute
     # \param attrType type attribute
     # \param attrValue content of the attribute tag
@@ -277,7 +277,7 @@ class NDSource(NTag):
             da.addTagAttr("format", format)
         da.addText(query)
 
-        ## sets paramters for Tango device
+    ## sets paramters for Tango device
     # \param name name of datasource
     # \param device device name
     # \param memberType type of the data object, i.e. attribute,  property, command    
@@ -303,7 +303,7 @@ class NDSource(NTag):
         da = NTag(self, "record")
         da.addTagAttr("name", recordName)
 
-        ## sets paramters for Client data
+    ## sets paramters for Client data
     # \param name name of datasource
     # \param recordName name of the data object
     def initClient(self, name, recordName):
@@ -313,7 +313,7 @@ class NDSource(NTag):
         da.addTagAttr("name", recordName)
         
 
-        ## sets paramters for Sardana data
+    ## sets paramters for Sardana data
     # \param name name of datasource
     # \param door sardana door
     # \param recordName name of the data object
