@@ -37,7 +37,6 @@ class DataSourcePool(object):
                       "CLIENT":DataSources.ClientSource}
         self._appendUserDataSources(configJSON)
 
-
     ## loads user datasources
     # \param configJSON string with datasources    
     def _appendUserDataSources(self, configJSON):
@@ -68,11 +67,10 @@ class DataSourcePool(object):
     # \param name name of the adding datasource
     # \param datasource instance of the adding datasource
     # \returns name of datasource
-    def append(self, datasource, name = None):
+    def append(self, datasource, name):
         self._pool[name] = datasource
-        if not hasattr(datasource,"load") or not hasattr(datasource,"name") \
-                or not hasattr(datasource,"shape") or not hasattr(datasource,"decode") \
-                or not hasattr(datasource,"dtype") or not hasattr(datasource,"format"):
+        if not hasattr(datasource,"setup") or not hasattr(datasource,"getData") \
+                or not hasattr(datasource,"isValid") or not hasattr(datasource,"__str__"):
             self.pop(name)
             return 
         return name
