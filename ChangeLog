@@ -1,3 +1,8 @@
+2012-11-23 Jan Kotanski <jankotan@gmail.com>
+	* adding a factory for external datasources
+	* fixing the decoder pool for external decoders
+	* tagged as 1.0.3
+
 2012-11-20 Jan Kotanski <jankotan@gmail.com>
 	* adding datasource name into XMLCreator
 	* tagged as 1.0.2
