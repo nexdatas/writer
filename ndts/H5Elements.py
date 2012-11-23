@@ -119,6 +119,7 @@ class EField(FElement):
 
     ## stores the tag content
     # \param xml xml setting 
+    # \returns (strategy, trigger) or strategy
     def store(self, xml = None):
             
 
