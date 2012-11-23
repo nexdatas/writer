@@ -27,6 +27,12 @@ from FetchNameHandler import FetchNameHandler
 import pni.nx.h5 as nx
 
 from xml import sax
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 import json
 import sys, os
 import gc
@@ -34,6 +40,7 @@ from collections import Iterable
 
 from H5Elements import EFile
 from DecoderPool import DecoderPool
+from DataSourcePool import DataSourcePool
 
 ## NeXuS data writer
 class TangoDataWriter(object):
@@ -65,6 +72,9 @@ class TangoDataWriter(object):
 
         ## pool with decoders
         self._decoders = DecoderPool()
+
+        ## pool with decoders
+        self._datasources = DataSourcePool()
 
 
         ## adding logs
@@ -108,14 +118,28 @@ class TangoDataWriter(object):
     def openEntry(self):
         if self.xmlSettings:
             self._decoders = DecoderPool(json.loads(self.json))            
+            self._datasources = DataSourcePool(json.loads(self.json))            
 
             parser = sax.make_parser()
         
             fetcher = FetchNameHandler()
             sax.parseString(self.xmlSettings, fetcher)
-            
-            handler = NexusXMLHandler(self._eFile, self._decoders, fetcher.groupTypes)
-            sax.parseString(self.xmlSettings, handler)
+
+#            handler = NexusXMLHandler(self._eFile, self._decoders, fetcher.groupTypes)
+#            sax.parseString(self.xmlSettings, handler)
+
+            errorHandler = sax.ErrorHandler()
+            parser = sax.make_parser()
+ 
+            handler = NexusXMLHandler(self._eFile, self._datasources, self._decoders, 
+                                      fetcher.groupTypes, parser)
+            parser.setContentHandler(handler)
+            parser.setErrorHandler(errorHandler)
+
+            inpsrc = sax.InputSource()
+            inpsrc.setByteStream(StringIO(self.xmlSettings))
+            parser.parse(inpsrc)
+
             
             self._initPool = handler.initPool
             self._stepPool = handler.stepPool

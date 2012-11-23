@@ -60,5 +60,6 @@ class Element(object):
         
     ## stores the tag
     # \brief abstract method to store the tag element    
-    def store(self, name):
+    # \param xml tuple of xml code    
+    def store(self, xml = None):
         pass
