@@ -70,6 +70,39 @@ class FElement(Element):
             
 
 
+
+## NeXuS runnable tag element with attributes
+# tag element corresponding to one of H5 objects with attributes
+class FElementWithAttr(FElement):
+    
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    # \param h5object H5 file object
+    def __init__(self, name, attrs, last, h5object=None):
+        FElement.__init__(self, name, attrs, last, h5object)
+        ## dictionary with attribures from sepatare attribute tags
+        self.tagAttributes = {}
+        self._h5Instances = {}
+  
+
+    ## creates h5 attributes
+    # \brief It creates attributes instances which have been stored in tagAttributes dictionary
+    def _createAttributes(self):
+        for key in self.tagAttributes.keys():
+            if key not in ["name","type"]:
+                self._h5Instances[key.encode()] = self.h5Object.attr(
+                    key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
+                self._h5Instances[key.encode()].value = self.tagAttributes[key][1].strip().encode()
+    
+    ## provides attribute h5 object
+    # \param name attribute name
+    # \returns instance of the attribute object if created            
+    def h5Attribute(self, name):
+        return self._h5Instances.get(name)
+
+
 ## query tag element        
 class EStrategy(Element):        
     ## constructor
@@ -93,19 +126,17 @@ class EStrategy(Element):
 
 
 ## field H5 tag element
-class EField(FElement):        
+class EField(FElementWithAttr):        
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
-        FElement.__init__(self, name, attrs, last)
+        FElementWithAttr.__init__(self, name, attrs, last)
         ## rank of the field
         self.rank = "0"
         ## shape of the field
         self.lengths = {}
-        ## dictionary with attribures from sepatare attribute tags
-        self.tagAttributes = {}
         ## if field is stored in STEP mode
         self._extraD = False
         ## if field array is splitted into columns
@@ -118,28 +149,9 @@ class EField(FElement):
         self.postrun = ""
 
 
-    ## stores the tag content
-    # \param xml xml setting 
-    # \returns (strategy, trigger)
-    def store(self, xml = None):
-            
-        # if growing in extra dimension
-        self._extraD = False
-        if self.source and self.source.isValid() and self.strategy == "STEP":
-            self._extraD = True
-            
-
-        #  type and name
-        if "name" in self._tagAttrs.keys():
-            nm = self._tagAttrs["name"]
-            if "type" in self._tagAttrs.keys():
-                tp = NTP.nTnp[self._tagAttrs["type"]]
-            else:
-                tp = "string"
-        else:
-            raise XMLSettingSyntaxError, " Field without a name"
-
-        # shape
+    ## creates shape object from rank and lengths variables
+    # \returns shape of the field    
+    def _findShape(self):
         shape = []
         if self._extraD:
             shape.append(0)
@@ -168,7 +180,32 @@ class EField(FElement):
                                 shape.append(s)
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
+        return shape
 
+
+    ## stores the tag content
+    # \param xml xml setting 
+    # \returns (strategy, trigger)
+    def store(self, xml = None):
+            
+        # if growing in extra dimension
+        self._extraD = False
+        if self.source and self.source.isValid() and self.strategy == "STEP":
+            self._extraD = True
+            
+
+        #  type and name
+        if "name" in self._tagAttrs.keys():
+            nm = self._tagAttrs["name"]
+            if "type" in self._tagAttrs.keys():
+                tp = NTP.nTnp[self._tagAttrs["type"]]
+            else:
+                tp = "string"
+        else:
+            raise XMLSettingSyntaxError, " Field without a name"
+
+        # shape
+        shape = self._findShape()
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
           
@@ -182,23 +219,20 @@ class EField(FElement):
         else:
             f = self._lastObject().create_field(nm.encode(), tp.encode())
 
+        self.h5Object = f
 
 
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
-                (f.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
+                (self.h5Object.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
 
-        for key in self.tagAttributes.keys():
-            if key not in ["name"]:
-                (f.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
-                    = self.tagAttributes[key][1].strip().encode()
-
+        self._createAttributes()        
+                
         if self.strategy == "POSTRUN":
-            f.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
+            self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
 
 
-        self.h5Object = f
 
 
         # return strategy or fill the value in
@@ -276,16 +310,13 @@ class EField(FElement):
 
 
 ## group H5 tag element        
-class EGroup(FElement):        
+class EGroup(FElementWithAttr):        
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
-        FElement.__init__(self, name, attrs, last)
-
-        ## dictionary with attribures from sepatare attribute tags
-        self.tagAttributes = {}
+        FElementWithAttr.__init__(self, name, attrs, last)
 
         if self._lastObject():
             if ("type" in attrs.keys()) and ("name" in attrs.keys()) :
@@ -308,10 +339,7 @@ class EGroup(FElement):
     ## stores the tag content
     # \param xml xml setting 
     def store(self, xml = None):
-        for key in self.tagAttributes.keys() :
-            if key not in ["name","type"]:
-                (self.h5Object.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
-                    = self.tagAttributes[key][1].encode()
+        self._createAttributes()
 
 
     ## fetches the type and the name of the current group            
