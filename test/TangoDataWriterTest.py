@@ -400,7 +400,7 @@ class TangoDataWriterTest(unittest.TestCase):
                 
 
 
-            self.assertEqual(cnt.nattrs,2)
+            self.assertEqual(cnt.nattrs,3)
             
 
 
@@ -422,6 +422,12 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(at.name,"units")
             self.assertEqual(at.value,"m")
 
+            at = cnt.attr("nexdatas_source")
+            self.assertTrue(at.valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),0)
+            self.assertEqual(at.dtype,"string")
+
 
             mca = det.open("mca")
             self.assertTrue(mca.valid)
@@ -439,7 +445,7 @@ class TangoDataWriterTest(unittest.TestCase):
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(mca.nattrs,2)
+            self.assertEqual(mca.nattrs,3)
 
             at = mca.attr("type")
             self.assertTrue(at.valid)
@@ -458,6 +464,11 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(at.name,"units")
             self.assertEqual(at.value,"")
 
+            at = mca.attr("nexdatas_source")
+            self.assertTrue(at.valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),0)
+            self.assertEqual(at.dtype,"string")
             
             dt = en.open("data")
             self.assertTrue(dt.valid)
@@ -494,7 +505,7 @@ class TangoDataWriterTest(unittest.TestCase):
                 
 
 
-            self.assertEqual(cnt.nattrs,2)
+            self.assertEqual(cnt.nattrs,3)
             
 
 
@@ -516,6 +527,12 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(at.name,"units")
             self.assertEqual(at.value,"m")
 
+            at = cnt.attr("nexdatas_source")
+            self.assertTrue(at.valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),0)
+            self.assertEqual(at.dtype,"string")
+
 
             mca = dt.open("data")
             self.assertTrue(mca.valid)
@@ -533,7 +550,7 @@ class TangoDataWriterTest(unittest.TestCase):
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(mca.nattrs,2)
+            self.assertEqual(mca.nattrs,3)
 
             at = mca.attr("type")
             self.assertTrue(at.valid)
@@ -551,6 +568,12 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
             self.assertEqual(at.value,"")
+
+            at = mca.attr("nexdatas_source")
+            self.assertTrue(at.valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),0)
+            self.assertEqual(at.dtype,"string")
 
             f.close()
 
