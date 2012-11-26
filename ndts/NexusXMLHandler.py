@@ -27,7 +27,6 @@ from Element import Element
 from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy)
 from DataSourceFactory import DataSourceFactory
 from ThreadPool import ThreadPool
-from collections import Iterable
 from InnerXMLParser import InnerXMLHandler
 
 ## unsupported tag exception
@@ -180,7 +179,7 @@ class NexusXMLHandler(sax.ContentHandler):
         trigger = None
         strategy = None
         if res:
-            if isinstance(res, Iterable):
+            if hasattr(res, "__iter__"):
                 strategy = res[0]
                 if len(res)>1 :
                     trigger = res[1]

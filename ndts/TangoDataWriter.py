@@ -36,7 +36,6 @@ except ImportError:
 import json
 import sys, os
 import gc
-from collections import Iterable
 
 from H5Elements import EFile
 from DecoderPool import DecoderPool
@@ -182,7 +181,7 @@ class TangoDataWriter(object):
         if localJSON and 'triggers' in localJSON.keys():
             triggers = localJSON['triggers']
 
-        if isinstance(triggers, Iterable):
+        if hasattr(triggers, "__iter__"):
             for pool in triggers:
                 if pool in self._triggerPools.keys():
                     print "Trigger: %s" % pool 

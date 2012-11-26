@@ -19,8 +19,6 @@
 ## \file Types.py
 # Type converter
                        
-from collections import Iterable
-                                               
 ## type converter
 class NTP(object):
 
@@ -58,7 +56,7 @@ class NTP(object):
     # \param array given array
     def arrayRank(self, array) :
         rank = 0
-        if isinstance(array, Iterable) and not isinstance(array, str):       
+        if hasattr(array, "__iter__") and not isinstance(array, str):       
             rank = 1 + self.arrayRank(array[0])
         return rank            
 
@@ -70,7 +68,7 @@ class NTP(object):
         rank = 0
         shape = []
         pythonDType = None
-        if isinstance(array, Iterable) and not isinstance(array, str):
+        if hasattr(array, "__iter__") and not isinstance(array, str):
             rank, shape, pythonDType = self.arrayRankRShape(array[0])
             shape.append(len(array))
             rank += 1
