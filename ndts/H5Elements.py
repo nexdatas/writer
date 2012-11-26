@@ -419,8 +419,6 @@ class EAttribute(FElement):
         self.name = ""
         ## rank of the attribute
         self.rank = "0"
-        ## rank of the attribute
-        self.rank = "0"
         ## shape of the attribute
         self.lengths = {}
         ## strategy, i.e. INIT, STEP, FINAL
