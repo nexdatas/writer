@@ -70,6 +70,55 @@ class FElement(Element):
             
 
 
+    ## creates shape object from rank and lengths variables
+    # \returns shape of the object
+    def _findShape(self, rank, lengths=None, extraD = False):
+        shape = []
+        if extraD:
+            shape.append(0)
+        if  int(rank) > 0:
+            try:
+                for i in range(int(rank)):
+                    si = str(i+1)
+                    if si in lengths.keys() and lengths[si] is not None:
+                        if int(lengths[si]) > 0:
+                            shape.append(int(self.lengths[si]))
+                    else:
+                        raise XMLSettingSyntaxError, "Dimensions not defined"
+            except:
+                if self.source and self.source.isValid():
+#                    try:
+                    dh = DataHolder(**self.source.getData())
+                    dsShape = dh.shape
+#                    except:
+#                        raise DataSourceError, "Problem with fetching the data shape"
+                    shape = []
+                    if extraD:
+                        shape.append(0)
+                    if dsShape:    
+                        for s in dsShape:
+                            if s:
+                                shape.append(s)
+                    else:
+                        raise XMLSettingSyntaxError, "Wrongly defined shape"
+        return shape
+
+
+    ## creates the error message
+    def setMessage(self, exceptionMessage=None):
+        if hasattr(self.h5Object, "name"):
+            name = self.h5Object.name
+        else:
+            name = "unnamed object"
+        if self.source:
+            dsource = str(self.source)
+        else:
+            dsource = "unknown datasource"
+            
+            
+        message = ("WARNING: Data for %s on %s not found" % (name, dsource), exceptionMessage )
+        return message
+
 
 ## NeXuS runnable tag element with attributes
 # tag element corresponding to one of H5 objects with attributes
@@ -92,10 +141,15 @@ class FElementWithAttr(FElement):
     def _createAttributes(self):
         for key in self.tagAttributes.keys():
             if key not in ["name","type"]:
-                self._h5Instances[key.encode()] = self.h5Object.attr(
-                    key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
-                self._h5Instances[key.encode()].value = self.tagAttributes[key][1].strip().encode()
-    
+                if len(self.tagAttributes[key]) < 3:
+                    self._h5Instances[key.encode()] = self.h5Object.attr(
+                        key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
+                    self._h5Instances[key.encode()].value = self.tagAttributes[key][1].strip().encode()
+                else:
+                    self._h5Instances[key.encode()] = self.h5Object.attr(
+                        key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode(), 
+                        self.tagAttributes[key][2])
+
     ## provides attribute h5 object
     # \param name attribute name
     # \returns instance of the attribute object if created            
@@ -149,38 +203,6 @@ class EField(FElementWithAttr):
         self.postrun = ""
 
 
-    ## creates shape object from rank and lengths variables
-    # \returns shape of the field    
-    def _findShape(self):
-        shape = []
-        if self._extraD:
-            shape.append(0)
-        if  int(self.rank) > 0:
-            try:
-                for i in range(int(self.rank)):
-                    si = str(i+1)
-                    if si in self.lengths.keys() and self.lengths[si] is not None:
-                        if int(self.lengths[si]) > 0:
-                            shape.append(int(self.lengths[si]))
-                    else:
-                        raise XMLSettingSyntaxError, "Dimensions not defined"
-            except:
-                if self.source and self.source.isValid():
-#                    try:
-                    dh = DataHolder(**self.source.getData())
-                    dsShape = dh.shape
-#                    except:
-#                        raise DataSourceError, "Problem with fetching the data shape"
-                    shape = []
-                    if self._extraD:
-                        shape.append(0)
-                    if dsShape:    
-                        for s in dsShape:
-                            if s:
-                                shape.append(s)
-                    else:
-                        raise XMLSettingSyntaxError, "Wrongly defined shape"
-        return shape
 
 
     ## stores the tag content
@@ -205,7 +227,7 @@ class EField(FElementWithAttr):
             raise XMLSettingSyntaxError, " Field without a name"
 
         # shape
-        shape = self._findShape()
+        shape = self._findShape(self.rank, self.lengths, self._extraD)
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
           
@@ -250,20 +272,6 @@ class EField(FElementWithAttr):
 
 
 
-    ## creates the error message
-    def setMessage(self, exceptionMessage=None):
-        if hasattr(self.h5Object, "name"):
-            name = self.h5Object.name
-        else:
-            name = "unnamed object"
-        if self.source:
-            dsource = str(self.source)
-        else:
-            dsource = "unknown datasource"
-            
-            
-        message = ("WARNING: Data for %s on %s not found" % (name, dsource), exceptionMessage )
-        return message
         
 
     ## runner  
@@ -400,13 +408,25 @@ class ELink(FElement):
 
 
 ## attribute tag element        
-class EAttribute(Element):        
+class EAttribute(FElement):        
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+        FElement.__init__(self, name, attrs, last)
+        ## attribute name
+        self.name = ""
+        ## rank of the attribute
+        self.rank = "0"
+        ## rank of the attribute
+        self.rank = "0"
+        ## shape of the attribute
+        self.lengths = {}
+        ## strategy, i.e. INIT, STEP, FINAL
+        self.strategy = None
+        ## trigger for asynchronous writting
+        self.trigger = None
 
 
     ## stores the tag content
@@ -414,15 +434,45 @@ class EAttribute(Element):
     def store(self, xml = None):
 
         if "name" in self._tagAttrs.keys(): 
-            nm = self._tagAttrs["name"]
+            self.name = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys() :
                 tp = self._tagAttrs["type"]
             else:        
                 tp = "NX_CHAR"
                 
-            self._last.tagAttributes[nm] = (tp, ("".join(self.content)).strip().encode())
+            shape = self._findShape(self.rank, self.lengths)
+            if not shape:
+                self._last.tagAttributes[self.name] = (tp, ("".join(self.content)).strip().encode())
+            else:
+                self._last.tagAttributes[self.name] = (tp, ("".join(self.content)).strip().encode(), tuple(shape))
+
+            if self.source:
+                if  self.source.isValid() :
+                    return self.strategy, self.trigger
 
 
+    ## runner  
+    # \brief During its thread run it fetches the data from the source  
+    def run(self):
+        try:
+            if self.name:
+                self.h5Object = self._last.h5Attribute(self.name)
+                if self.source:
+                    dh = DataHolder(**self.source.getData())
+                    import gc
+                    gc.collect()
+                    if not dh:
+                        message = self.setMessage()
+                        print message[0]
+                        self.error = message
+                    else:
+                        self.h5Object.value = dh.cast(self.h5Object.dtype)
+        except:
+            message = self.setMessage( sys.exc_info()[1].__str__()  )
+            print message[0]
+            self.error = message
+                                #            self.error = sys.exc_info()
+            
 
 
 ## file H5 element        
