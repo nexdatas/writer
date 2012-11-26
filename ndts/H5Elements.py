@@ -456,7 +456,8 @@ class EAttribute(FElement):
     def run(self):
         try:
             if self.name:
-                self.h5Object = self._last.h5Attribute(self.name)
+                if not self.h5Object:
+                    self.h5Object = self._last.h5Attribute(self.name)
                 if self.source:
                     dh = DataHolder(**self.source.getData())
                     import gc
