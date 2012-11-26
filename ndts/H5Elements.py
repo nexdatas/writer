@@ -117,17 +117,19 @@ class EField(FElement):
         ## label for postprocessing data
         self.postrun = ""
 
+
     ## stores the tag content
     # \param xml xml setting 
     # \returns (strategy, trigger)
     def store(self, xml = None):
             
-
+        # if growing in extra dimension
         self._extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
             self._extraD = True
             
 
+        #  type and name
         if "name" in self._tagAttrs.keys():
             nm = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys():
@@ -137,7 +139,7 @@ class EField(FElement):
         else:
             raise XMLSettingSyntaxError, " Field without a name"
 
-
+        # shape
         shape = []
         if self._extraD:
             shape.append(0)
@@ -171,6 +173,7 @@ class EField(FElement):
             self._splitArray = True
           
 
+        # create h5 object
         if shape:
             if self._splitArray:
                 f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
@@ -180,6 +183,8 @@ class EField(FElement):
             f = self._lastObject().create_field(nm.encode(), tp.encode())
 
 
+
+        # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
                 (f.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
@@ -195,6 +200,8 @@ class EField(FElement):
 
         self.h5Object = f
 
+
+        # return strategy or fill the value in
         if self.source:
             if  self.source.isValid() :
                 return self.strategy, self.trigger
@@ -206,6 +213,8 @@ class EField(FElement):
             else:
 #                raise ValueError,"Warning: Invalid datasource for %s" % nm
                 print "Warning: Invalid datasource for ", nm
+
+
 
     ## creates the error message
     def setMessage(self, exceptionMessage=None):
