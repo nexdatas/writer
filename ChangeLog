@@ -1,3 +1,8 @@
+2012-11-27 Jan Kotanski <jankotan@gmail.com>
+	* adding support for attribute datasources
+	* fixing reading from JSON string the client datasource
+	* tagged as 1.0.4
+
 2012-11-23 Jan Kotanski <jankotan@gmail.com>
 	* adding a factory for external datasources
 	* fixing the decoder pool for external decoders
