@@ -221,8 +221,8 @@ class TangoDataWriter(object):
             self._triggerPools = {}
 
 
-#        if self._nxFile:
-#            self._nxFile.flush()
+        if self._nxFile:
+            self._nxFile.flush()
 
         gc.collect()
 
