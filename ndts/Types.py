@@ -19,13 +19,12 @@
 ## \file Types.py
 # Type converter
                        
-from collections import Iterable
-                                               
 ## type converter
 class NTP(object):
 
     ## map of Python:Tango types
-    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
+#    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
+    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString"}
 
     ## map of Numpy:Tango types
     npTt = {"int":"DevLong64", "int64":"DevLong64", "int32":"DevLong", "uint":"DevULong64", 
@@ -58,7 +57,7 @@ class NTP(object):
     # \param array given array
     def arrayRank(self, array) :
         rank = 0
-        if isinstance(array, Iterable) and not isinstance(array, str):       
+        if hasattr(array, "__iter__") and not isinstance(array, str):       
             rank = 1 + self.arrayRank(array[0])
         return rank            
 
@@ -70,7 +69,7 @@ class NTP(object):
         rank = 0
         shape = []
         pythonDType = None
-        if isinstance(array, Iterable) and not isinstance(array, str):
+        if hasattr(array, "__iter__") and not isinstance(array, str):
             rank, shape, pythonDType = self.arrayRankRShape(array[0])
             shape.append(len(array))
             rank += 1

@@ -20,7 +20,6 @@
 # FieldArray
 
 import numpy
-from collections import Iterable
 
 from Types import NTP
 
@@ -128,7 +127,7 @@ class FieldArray(object):
     def _fetchRanges(self, key):
         mkey = key
         
-        if isinstance(key, Iterable):
+        if hasattr(key, "__iter__"):
             mkey = key
         else:
             mkey = [key]
