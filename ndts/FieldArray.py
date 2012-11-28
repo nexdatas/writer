@@ -72,13 +72,16 @@ class FieldArray(object):
     # \param name name of the field array
     # \param dtype type of the field array
     # \param shape shape of the field array
-    def __init__(self, parent, name, dtype, shape):
+    # \param chunk chunk of the field array
+    def __init__(self, parent, name, dtype, shape, chunk = None):
         ## name of the field array
         self.name = name
         ## type of the field array
         self.dtype = dtype
         ## shape
         self.shape = shape
+        ## chunk
+        self.chunk = chunk
         ## parent
         self._parent = parent
         ##  list of fields
@@ -87,6 +90,7 @@ class FieldArray(object):
         self._aArray = None
         ## flatten dimensions
         self._fdim = len(shape)-1
+
 
         if self._fdim < 1:
             self._fList.append(parent.create_field(name.encode(), dtype.encode(), self.shape))
@@ -264,6 +268,8 @@ class FieldArray(object):
                     
     ## growing method
     # \brief It enlage the field
+    # \param dim growing dimension
+    # \param ln a number of grow units    
     def grow(self, dim=0,ln=1):
         for f in self._fList:
             f.grow(dim, ln)

@@ -119,7 +119,7 @@ class NGroup(NTag):
         self._gAttr[attrName] = at
         if attrValue != "":
             at.setText(attrValue)
-        return self._attr[attrName]
+        return self._gAttr[attrName]
             
 
 ## Link tag wrapper
@@ -189,11 +189,14 @@ class NField(NTag):
     # \param mode mode data writing, i.e. INIT, STEP, FINAL, POSTRUN
     # \param trigger for asynchronous writting, e.g. with different subentries
     # \param value label for postrun mode    
-    def setStrategy(self,  mode = "STEP", trigger = None, value = None):
+    # \param grows growing dimension
+    def setStrategy(self,  mode = "STEP", trigger = None, value = None, grows = None):
         ## strategy of data writing, i.e. INIT, STEP, FINAL, POSTRUN
         strategy = NTag(self, "strategy")
         if strategy:
             strategy.addTagAttr("mode", mode)
+        if grows:
+            strategy.addTagAttr("grows", grows)    
         if trigger:
             strategy.addTagAttr("trigger", trigger)    
 	if value :
@@ -672,7 +675,7 @@ def main():
     f.addDoc("Optimum diffracted wavelength")
     d = NDimensions(f, "1")
     d.dim("1", "10")
-
+    f.setText("1 2 3 4 5 6 7 8 10 12")
         ##       NXdetector    
     de = NGroup(ins, "detector", "NXdetector")
     f = NField(de, "azimuthal_angle", "NX_FLOAT")
@@ -699,6 +702,7 @@ def main():
       diffractometer""")
     d = NDimensions(f, "1")
     d.dim("1", "100")
+    f.setText(" ".join([str(l) for l in range(100)]))
     f = NField(de, "rotation_angle", "NX_FLOAT")
     f.setText("0.0")
     f = NField(de, "x_pixel_size", "NX_FLOAT")

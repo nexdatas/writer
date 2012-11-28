@@ -72,10 +72,17 @@ class FElement(Element):
 
     ## creates shape object from rank and lengths variables
     # \returns shape of the object
-    def _findShape(self, rank, lengths=None, extraD = False):
+    def _findShape(self, rank, lengths=None, extraD = False, grows = None):
         shape = []
         if extraD:
-            shape.append(0)
+            if grows and grows >1:
+                exDim = grows  
+            else:
+                exDim = 1
+        else:
+            exDim = 0
+                    
+#            shape.append(0)
         if  int(rank) > 0:
             try:
                 for i in range(int(rank)):
@@ -85,6 +92,8 @@ class FElement(Element):
                             shape.append(int(self.lengths[si]))
                     else:
                         raise XMLSettingSyntaxError, "Dimensions not defined"
+                if extraD:
+                    shape.insert(exDim-1,0)    
             except:
                 if self.source and self.source.isValid():
 #                    try:
@@ -93,14 +102,16 @@ class FElement(Element):
 #                    except:
 #                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
-                    if extraD:
-                        shape.append(0)
                     if dsShape:    
                         for s in dsShape:
                             if s:
                                 shape.append(s)
+                    if extraD:
+                        shape.insert(exDim-1,0)    
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
+        elif extraD:            
+            shape = [0]
         return shape
 
 
@@ -171,6 +182,10 @@ class EStrategy(Element):
         if "trigger" in attrs.keys():
             self._last.trigger = attrs["trigger"]
             print "TRIGGER" , attrs["trigger"]
+        if "grows" in attrs.keys() and hasattr(self._last,"grows"):
+            self._last.grows = int(attrs["grows"])
+            if self._last.grows < 1:
+                self._last.grows = 1
 
 
     ## stores the tag content
@@ -197,8 +212,10 @@ class EField(FElementWithAttr):
         self._splitArray = False
         ## strategy, i.e. INIT, STEP, FINAL, POSTRUN
         self.strategy = None
-        ## trigger for asynchronous writting
+        ## trigger for asynchronous writing
         self.trigger = None
+        ## growing dimension
+        self.grows = None
         ## label for postprocessing data
         self.postrun = ""
 
@@ -214,7 +231,8 @@ class EField(FElementWithAttr):
         self._extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
             self._extraD = True
-            
+            if not self.grows:
+                self.grows = 1
 
         #  type and name
         if "name" in self._tagAttrs.keys():
@@ -226,23 +244,28 @@ class EField(FElementWithAttr):
         else:
             raise XMLSettingSyntaxError, " Field without a name"
 
-        # shape
-        shape = self._findShape(self.rank, self.lengths, self._extraD)
+        # shape and chunk
+        shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
-          
+            shape = self._findShape(self.rank, self.lengths, self._extraD)
+            self.grows = 1
+            
+        chunk = [s if s > 0 else 1 for s in shape]  
 
         # create h5 object
         if shape:
             if self._splitArray:
                 f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
             else:
-                f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
+                if not chunk:
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
+                else:
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk)
         else:
             f = self._lastObject().create_field(nm.encode(), tp.encode())
 
         self.h5Object = f
-
 
         # create attributes
         for key in self._tagAttrs.keys():
@@ -264,7 +287,16 @@ class EField(FElementWithAttr):
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:
-                dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                if not self.rank or int(self.rank) == 0:
+                    dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                elif  int(self.rank) == 1:
+                    spec = val.split()
+                    dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                elif  int(self.rank) == 2:
+                    lines = val.split("\n")
+                    image = [ln.split() for ln in lines ]
+                    dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+    
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
             else:
 #                raise ValueError,"Warning: Invalid datasource for %s" % nm
@@ -292,23 +324,38 @@ class EField(FElementWithAttr):
                             self.h5Object.grow()
                             self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
-
                         # way around for a bug in pninx
 
                             arr = dh.cast(self.h5Object.dtype)
-
-                            if isinstance(arr, numpy.ndarray) \
-                                    and len(arr.shape) == 1 and arr.shape[0] == 1:
-                                self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                            
+                            if self.grows == 1:
+                                if isinstance(arr, numpy.ndarray) \
+                                        and len(arr.shape) == 1 and arr.shape[0] == 1:
+                                    self.h5Object.grow()
+                                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                                else:
+                                    self.h5Object.grow()
+                                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
                             else:
-                                self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                                if isinstance(arr, numpy.ndarray) \
+                                        and len(arr.shape) == 1 and arr.shape[0] == 1:
+                                    self.h5Object.grow(1)
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
+                                else:
+                                    self.h5Object.grow(1)
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
-                                
                         if str(dh.format).split('.')[-1] == "IMAGE":
-                            self.h5Object.grow()
-                            self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+
+                            if self.grows == 1:
+                                self.h5Object.grow()
+                                self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                            elif self.grows == 2:
+                                self.h5Object.grow(1)
+                                self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
+                            else:
+                                self.h5Object.grow(2)
+                                self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print message[0]

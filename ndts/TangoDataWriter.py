@@ -55,6 +55,7 @@ class TangoDataWriter(object):
         self.json = "{}"
         ## maximal number of threads
         self.numThreads = 100
+#        self.numThreads = 1
 
         ## thread pool with INIT elements
         self._initPool = None
@@ -221,8 +222,8 @@ class TangoDataWriter(object):
             self._triggerPools = {}
 
 
-#        if self._nxFile:
-#            self._nxFile.flush()
+        if self._nxFile:
+            self._nxFile.flush()
 
         gc.collect()
 

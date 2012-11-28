@@ -18,28 +18,51 @@
 ## \package ndts nexdatas
 ## \file Types.py
 # Type converter
-                       
+                     
+## set of converters
+class Converters(object):
+
+    ## converts to bool
+    # \param cls class instance
+    # \param value variable to convert
+    # \returns result in bool type
+    @classmethod
+    def toBool(cls, value):
+        if type(value).__name__ == 'str' or type(value).__name__ == 'unicode':
+            lvalue = value.strip().lower()
+            if lvalue == 'false' or lvalue == '0':
+                return False
+            else:
+                return True
+        elif value:
+            return True
+        return False
+  
 ## type converter
 class NTP(object):
 
+
+
+
     ## map of Python:Tango types
 #    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
-    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString"}
+    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
+           "bool":"DevBoolean"}
 
     ## map of Numpy:Tango types
     npTt = {"int":"DevLong64", "int64":"DevLong64", "int32":"DevLong", "uint":"DevULong64", 
             "uint64":"DevULong64", "uint32":"DevULong", "float":"DevDouble", 
-            "float64":"DevDouble", "float32":"DevFloat", "string":"DevString"}
+            "float64":"DevDouble", "float32":"DevFloat", "string":"DevString", "bool":"DevBoolean"}
 
     ## map of NEXUS : numpy types 
     nTnp = {"NX_FLOAT32":"float32", "NX_FLOAT64":"float64", "NX_FLOAT":"float64", 
             "NX_NUMBER":"float64", "NX_INT":"int64", "NX_INT64":"int64", 
             "NX_INT32":"int32", "NX_UINT64":"uint64", "NX_UINT32":"uint32", 
-            "NX_DATE_TIME":"string", "NX_CHAR":"string", "NX_BOOLEAN":"int32"}
+            "NX_DATE_TIME":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
 
     ## map of type : converting function
     convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int, 
-               "int":int, "uint64":long, "uint32":int, "uint":int, "string":str}
+               "int":int, "uint64":long, "uint32":int, "uint":int, "string":str, "bool":Converters.toBool}
 
     ## map of tag attribute types 
     aTn = {"signal":"NX_INT", "axis":"NX_INT", "primary":"NX_INT32", "offset":"NX_INT", 
@@ -61,6 +84,7 @@ class NTP(object):
             rank = 1 + self.arrayRank(array[0])
         return rank            
 
+    
 
     ## array rank, inverse shape and type
     # \brief It calculates the rank, inverse shape and type of the first element of the array
