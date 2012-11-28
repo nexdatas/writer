@@ -264,6 +264,8 @@ class FieldArray(object):
                     
     ## growing method
     # \brief It enlage the field
+    # \param dim growing dimension
+    # \param ln a number of grow units    
     def grow(self, dim=0,ln=1):
         for f in self._fList:
             f.grow(dim, ln)
