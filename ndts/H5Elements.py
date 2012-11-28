@@ -246,6 +246,9 @@ class EField(FElementWithAttr):
         shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
+            shape = self._findShape(self.rank, self.lengths, self._extraD)
+            self.grows = 1
+            
         chunk = [s if s > 0 else 1 for s in shape]  
 
         # create h5 object
@@ -331,7 +334,7 @@ class EField(FElementWithAttr):
                                 else:
                                     self.h5Object.grow(1)
                                     self.h5Object[:,self.h5Object.shape[1]-1] = arr
-                                
+
                         if str(dh.format).split('.')[-1] == "IMAGE":
 
                             if self.grows == 1:
