@@ -186,7 +186,7 @@ class EStrategy(Element):
                 self._last.grows = 1
         # case not supported in pninx
             if self._last.grows > 1:
-                raise XMLSettingSyntaxError, "grows > 1 not supported yet"
+                raise XMLSettingSyntaxError, "Strategy with grows > 1 not supported yet"
 
     ## stores the tag content
     # \param xml xml setting 
