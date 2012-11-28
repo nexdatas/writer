@@ -155,11 +155,29 @@ class FElementWithAttr(FElement):
                 if len(self.tagAttributes[key]) < 3:
                     self._h5Instances[key.encode()] = self.h5Object.attr(
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
-                    self._h5Instances[key.encode()].value = self.tagAttributes[key][1].strip().encode()
+                    dh = DataHolder(
+                        "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
+                    self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
                 else:
+                    shape = self.tagAttributes[key][2]
                     self._h5Instances[key.encode()] = self.h5Object.attr(
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode(), 
-                        self.tagAttributes[key][2])
+                        shape)
+                    val = self.tagAttributes[key][1].strip().encode()
+                    if val:
+                        rank = len(shape)
+                        if not rank or rank == 0:
+                            dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                        elif  rank == 1:
+                            spec = val.split()
+                            dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                        elif  rank == 2:
+                            lines = val.split("\n")
+                            image = [ln.split() for ln in lines ]
+                            dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+    
+                        self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
+                    
 
     ## provides attribute h5 object
     # \param name attribute name
@@ -486,10 +504,11 @@ class EAttribute(FElement):
                 tp = "NX_CHAR"
                 
             shape = self._findShape(self.rank, self.lengths)
+            val = ("".join(self.content)).strip().encode()   
             if not shape:
-                self._last.tagAttributes[self.name] = (tp, ("".join(self.content)).strip().encode())
+                self._last.tagAttributes[self.name] = (tp, val)
             else:
-                self._last.tagAttributes[self.name] = (tp, ("".join(self.content)).strip().encode(), tuple(shape))
+                self._last.tagAttributes[self.name] = (tp, val, tuple(shape))
 
             if self.source:
                 if  self.source.isValid() :
@@ -505,8 +524,6 @@ class EAttribute(FElement):
                     self.h5Object = self._last.h5Attribute(self.name)
                 if self.source:
                     dh = DataHolder(**self.source.getData())
-                    import gc
-                    gc.collect()
                     if not dh:
                         message = self.setMessage()
                         print message[0]
