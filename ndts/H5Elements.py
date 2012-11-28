@@ -110,6 +110,8 @@ class FElement(Element):
                         shape.insert(exDim-1,0)    
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
+        elif extraD:            
+            shape = [0]
         return shape
 
 
@@ -264,7 +266,6 @@ class EField(FElementWithAttr):
             f = self._lastObject().create_field(nm.encode(), tp.encode())
 
         self.h5Object = f
-
 
         # create attributes
         for key in self._tagAttrs.keys():
