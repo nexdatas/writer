@@ -1,3 +1,10 @@
+2012-11-28 Jan Kotanski <jankotan@gmail.com>
+	* adding flush of h5 file in close entry
+	* adding support for boolean true/false values in XML
+	* adding support for different chunks, i.e. defining arbitrary growing dimension
+	* adding reading multi-dimension value of the fields
+	* tagged as 1.0.5
+
 2012-11-27 Jan Kotanski <jankotan@gmail.com>
 	* adding support for attribute datasources
 	* fixing reading from JSON string the client datasource
