@@ -184,9 +184,7 @@ class EStrategy(Element):
             self._last.grows = int(attrs["grows"])
             if self._last.grows < 1:
                 self._last.grows = 1
-        # case not supported in pninx
-            if self._last.grows > 1:
-                raise XMLSettingSyntaxError, "Strategy with grows > 1 not supported yet"
+
 
     ## stores the tag content
     # \param xml xml setting 
@@ -244,18 +242,21 @@ class EField(FElementWithAttr):
         else:
             raise XMLSettingSyntaxError, " Field without a name"
 
-        # shape
+        # shape and chunk
         shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
-          
+        chunk = [s if s > 0 else 1 for s in shape]  
 
         # create h5 object
         if shape:
             if self._splitArray:
                 f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
             else:
-                f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
+                if not chunk:
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
+                else:
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk)
         else:
             f = self._lastObject().create_field(nm.encode(), tp.encode())
 
@@ -310,11 +311,10 @@ class EField(FElementWithAttr):
                             self.h5Object.grow()
                             self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
-
                         # way around for a bug in pninx
 
                             arr = dh.cast(self.h5Object.dtype)
-
+                            
                             if self.grows == 1:
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
@@ -327,10 +327,10 @@ class EField(FElementWithAttr):
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
                                     self.h5Object.grow(1)
-                                    self.h5Object[:,self.h5Object.shape[0]-1] = arr[0]
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
                                 else:
                                     self.h5Object.grow(1)
-                                    self.h5Object[:,self.h5Object.shape[0]-1] = arr
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
                                 
                         if str(dh.format).split('.')[-1] == "IMAGE":
 
@@ -339,10 +339,10 @@ class EField(FElementWithAttr):
                                 self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
                             elif self.grows == 2:
                                 self.h5Object.grow(1)
-                                self.h5Object[:,self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
+                                self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
                             else:
                                 self.h5Object.grow(2)
-                                self.h5Object[:,:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+                                self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print message[0]

@@ -119,7 +119,7 @@ class NGroup(NTag):
         self._gAttr[attrName] = at
         if attrValue != "":
             at.setText(attrValue)
-        return self._attr[attrName]
+        return self._gAttr[attrName]
             
 
 ## Link tag wrapper

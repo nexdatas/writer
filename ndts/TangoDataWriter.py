@@ -55,6 +55,7 @@ class TangoDataWriter(object):
         self.json = "{}"
         ## maximal number of threads
         self.numThreads = 100
+#        self.numThreads = 1
 
         ## thread pool with INIT elements
         self._initPool = None
