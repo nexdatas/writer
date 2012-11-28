@@ -286,7 +286,16 @@ class EField(FElementWithAttr):
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:
-                dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                if not self.rank or int(self.rank) == 0:
+                    dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                elif  int(self.rank) == 1:
+                    spec = val.split()
+                    dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                elif  int(self.rank) == 2:
+                    lines = val.split("\n")
+                    image = [ln.split() for ln in lines ]
+                    dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+    
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
             else:
 #                raise ValueError,"Warning: Invalid datasource for %s" % nm

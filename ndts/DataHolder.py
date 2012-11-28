@@ -117,6 +117,7 @@ class DataHolder(object):
                         return numpy.array([ NTP.convert[tp](el) for el in self.value], dtype=tp)
                 
                 if str(self.format).split('.')[-1] == "IMAGE":
+                    print "VALUES:", self.value
                     if tp == "string":
                         return [ [ NTP.convert[tp](self.value[j][i]) \
                                        for i in range(len(self.value[j])) ] \
