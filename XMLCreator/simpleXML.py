@@ -675,7 +675,7 @@ def main():
     f.addDoc("Optimum diffracted wavelength")
     d = NDimensions(f, "1")
     d.dim("1", "10")
-
+    f.setText("1 2 3 4 5 6 7 8 10 12")
         ##       NXdetector    
     de = NGroup(ins, "detector", "NXdetector")
     f = NField(de, "azimuthal_angle", "NX_FLOAT")
@@ -702,6 +702,7 @@ def main():
       diffractometer""")
     d = NDimensions(f, "1")
     d.dim("1", "100")
+    f.setText(" ".join([str(l) for l in range(100)]))
     f = NField(de, "rotation_angle", "NX_FLOAT")
     f.setText("0.0")
     f = NField(de, "x_pixel_size", "NX_FLOAT")

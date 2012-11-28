@@ -108,8 +108,8 @@ def main():
     sr.initClient("emittance_x", "emittance_x");
     f = NField(src, "emittance_y", "NX_FLOAT")
     f.setUnits("nm rad")
-    f.setStrategy("POSTRUN", value = "hasso.desy.de:/data/emitance1.dat")
-#    f.setText("0.2")
+    f.setStrategy("POSTRUN", value = "hasso.desy.de:/data/emittance1.dat")
+    f.setText("0.2")
 #    sr = NDSource(f, "STEP")
 #    sr.initSardana("door1", "emittance_y", host="haso228k.desy.de", port="10000");
     f = NField(src, "sigma_x", "NX_FLOAT")
@@ -143,6 +143,7 @@ def main():
     f.addDoc("Optimum diffracted wavelength")
     d = NDimensions(f, "1")
     d.dim("1", "10")
+    f.setText("1 2 3 4 5 6 7 8 10 12")
 
         ##       NXdetector    
     de = NGroup(ins, "detector", "NXdetector")
@@ -172,6 +173,7 @@ def main():
       diffractometer""")
     d = NDimensions(f, "1")
     d.dim("1", "100")
+    f.setText(" ".join([str(l) for l in range(100)]))
     f = NField(de, "rotation_angle", "NX_FLOAT")
     f.setText("0.0")
     f = NField(de, "x_pixel_size", "NX_FLOAT")
