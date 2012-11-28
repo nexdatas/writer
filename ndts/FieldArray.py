@@ -72,6 +72,7 @@ class FieldArray(object):
     # \param name name of the field array
     # \param dtype type of the field array
     # \param shape shape of the field array
+    # \param chunk chunk of the field array
     def __init__(self, parent, name, dtype, shape, chunk = None):
         ## name of the field array
         self.name = name
