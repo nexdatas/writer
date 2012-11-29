@@ -2,7 +2,7 @@
 	* adding flush of h5 file in close entry
 	* adding support for boolean true/false values in XML
 	* adding support for different chunks, i.e. defining arbitrary growing dimension
-	* adding reading multi-dimension value of the fields
+	* adding reading from XML string multi-dimension values of the fields and attributes
 	* tagged as 1.0.5
 
 2012-11-27 Jan Kotanski <jankotan@gmail.com>
