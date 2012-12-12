@@ -204,6 +204,19 @@ class EStrategy(Element):
             self._last.grows = int(attrs["grows"])
             if self._last.grows < 1:
                 self._last.grows = 1
+        if "compression" in attrs.keys() and hasattr(self._last,"compression"):
+            self._last.compression = True if attrs["compression"].upper() == "TRUE" else False
+            if self._last.compression:
+                if "rate" in attrs.keys() and hasattr(self._last,"rate"):
+                    self._last.rate = int(attrs["rate"])
+                    if self._last.rate < 0:
+                        self._last.rate = 0
+                    if self._last.rate > 9:
+                        self._last.rate = 9
+                if "suffle" in attrs.keys() and hasattr(self._last,"suffle"):
+                    self._last.shuffle = False if attrs["suffle"].upper() == "FALSE" else True
+                
+            
 
 
     ## stores the tag content
@@ -236,6 +249,12 @@ class EField(FElementWithAttr):
         self.grows = None
         ## label for postprocessing data
         self.postrun = ""
+        ## compression flag
+        self.compression = False
+        ## compression rate
+        self.rate = 5
+        ## compression shuffle
+        self.shuffle = True
 
 
 
@@ -271,17 +290,24 @@ class EField(FElementWithAttr):
             
         chunk = [s if s > 0 else 1 for s in shape]  
 
+        deflate = None
+        # create Filter
+        if self.compression:
+            deflate = nx.NXDeflateFilter()
+            deflate.rate = self.rate
+            deflate.shuffle = self.shuffle
+            
         # create h5 object
         if shape:
             if self._splitArray:
-                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
+                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape, filter=deflate)
             else:
                 if not chunk:
-                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, filter=deflate)
                 else:
-                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk)
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk, filter=deflate)
         else:
-            f = self._lastObject().create_field(nm.encode(), tp.encode())
+            f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
         self.h5Object = f
 
