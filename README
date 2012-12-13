@@ -113,13 +113,18 @@ dpx.TheJSONRecord = '{"data": {"parameterA":0.2}}'
 
 dpx.OpenEntry()
 
+
 We read our XML settings settings from a file and pass them to the server via 
 the TheXMLSettings attribute. Then we open an entry group related 
 to the XML configuration. Optionally, we can also set TheJSONRecord, 
 i.e. an attribute which contains a global JSON string with data needed 
 to store during opening the entry and also other stages of recording. 
+If external decoder for DevEncoded? data is need one can registred it 
+passing its packages and class names in TheJSONRecord 
+e.g. "desy2d" class of "DESY2D" label in "desydecoders.desy2Ddec" package. 
 The OpenEntry method stores data defined in the XML string with strategy=INIT. 
-The TheJSONRecord attribute can be changed during recording our data.
+The TheJSONRecord attribute can be changed during recording our data. 
+
 
 After finalization of the configuration process we can start recording 
 the main experiment data in a STEP mode.
@@ -131,6 +136,14 @@ are extended by one record unit and the assigned to them data is stored.
 As the method argument we pass a local JSON string with the client data. 
 To record the client data one can also use the global TheJSONRecord string. 
 Contrary to the global JSON string the local one is only valid during one record step.
+
+dpx.Record('{"data": {"emittance_x": 0.1},  "triggers":["trigger1", "trigger2"]  }')
+
+If you denote in your XML configuration string some fields by additional trigger attributes 
+you may ask the server to store your data only in specific record steps. 
+This can be helpful if you want to store your data in asynchronous mode. 
+To this end you define in the local JSON string a list of triggers 
+which are used in the current record step. 
 
 dpx.TheJSONRecord = '{"data": {"parameterB":0.3}}'
 dpx.CloseEntry()
@@ -155,14 +168,50 @@ the server XML examples was created by XMLFile class defined in `XMLCreator/simp
 NXDL extensions
 -----------------
 
-In order to describe various data sources the NXDL standard has been extended by 
-XML tags listed below. Moreover, to make possibility of referring to data stored in 
-external files we add into the field tag a new attribute URL, e.g.
+In order to describe various data sources the NXDL standard has been extended by XML tags listed below. 
+Thus, <strategy> and <datasource> can be situated inside <field> or <attribute> tags. 
+The other ones are nested inside <strategy> and <datasource>. 
 
-<field name="energy" type="NX_FLOAT" units="GeV" URL="https://haso.desy.de/data/energy.dat">
+<strategy>
+-----------
+
+The strategy tag defines in which way the data is fetched:
+
+  * mode -- specifies when the data is fetched, i.e.
+      # INIT -- during opening a new entry
+      # STEP -- when the record() command is performed
+      # FINAL -- at the time of closing the entry
+      # POSTRUN -- during post-processing stage 
+  * trigger -- stands for the name of the related trigger in asynchronous STEP mode (optional)
+  * grows -- selects which a field dimension grows of in the STEP mode. 
+    	  	  The default growing dimension is the first one, i.e. grows="1" (optional)
+  * compression -- specifies if data is compressed (optional)
+      # true -- data going to be compressed
+      # false -- data stored without compression (default) 
+  * rate - compression rate (optional)
+      # from 0 to 9 
+  * shuffle -- compression suffle (optional)
+      # true -- shuffle enabled (default)
+      # false -- shuffle disabled 
+
+An example of usage:
+
+<field name="energy" type="NX_FLOAT" units="GeV" >
+  <strategy mode="STEP" trigger="trigger1" /> 
+  <datasource type="CLIENT">
+    <record name="counter_1"/>  
+  </datasource>
 </field>
 
-Such data should be merged into the H5 file by a post-processing program.
+The content of the strategy tags is an label describing data merged into the H5 file by a post-processing program.
+
+An example of usage:
+
+<field name="energy" type="NX_FLOAT" units="GeV" >
+  <strategy mode="POSTRUN" > 
+    http://haso.desy.de:/data/energy.dat
+  </strategy>
+</field>
 
 
 <datasource>
@@ -175,16 +224,11 @@ attributes:
       # CLIENT -- for communication with client via JSON strings
       # TANGO -- for taking data from Tango servers
       # DB -- for fetching data from databases
-      # SARDANA for connecting to Sardana doors (Since communication with SARDANA can be 
-           performed making use of CLIENT type the code has not been implemented yet) 
-  * strategy -- describing when the data is fetched, i.e.
-      # INIT -- during opening a new entry
-      # STEP -- when the record() command is performed
-      # FINAL -- at the time of closing the entry 
+  * name -- datasource name (optional) 
 
 An example of usage:
 
-<datasource strategy="STEP" type="CLIENT">
+<datasource type="CLIENT" name="exp_c01">
   <record name="counter_1"/>  
 </datasource>
 
@@ -214,11 +258,11 @@ The device tag describes the Tango device which is used to get the data. It has 
       # property -- a property to read 
   * hostname -- a name of the host with the Tango device server (optional)
   * port -- a port number related to the Tango device server (optional) 
-
+  * encoding -- a label defining a required decoder for DevEncoded? data (optional)	
 An example of usage:
 
 <datasource strategy="INIT" type="TANGO">
-  <device hostname="haso.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
+  <device hostname="haso.desy.de" member="attribute" name="p09/motor/exp.01" port="10000" encoding="LIMA_VIDEO_IMAGE"//>
   <record name="Position"/>
 </datasource>
 
