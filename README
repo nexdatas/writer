@@ -109,7 +109,7 @@ be found in the XMLExamples directory.
 xml = open("test.xml", 'r').read()
 dpx.TheXMLSettings = xml
 
-dpx.TheJSONRecord = '{"data": {"parameterA":0.2}}'
+dpx.TheJSONRecord = '{"data": {"parameterA":0.2}, "decoders":{"DESY2D":"desydecoders.desy2Ddec.desy2d"}, "datasources":{"MCLIENT":"sources.DataSources.LocalClientSource"}}'
 
 dpx.OpenEntry()
 
@@ -122,6 +122,8 @@ to store during opening the entry and also other stages of recording.
 If external decoder for DevEncoded? data is need one can registred it 
 passing its packages and class names in TheJSONRecord 
 e.g. "desy2d" class of "DESY2D" label in "desydecoders.desy2Ddec" package. 
+Similary making use of "datasources" records of the JSON string 
+one can registred additional datasources.
 The OpenEntry method stores data defined in the XML string with strategy=INIT. 
 The TheJSONRecord attribute can be changed during recording our data. 
 
