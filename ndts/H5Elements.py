@@ -300,7 +300,7 @@ class EField(FElementWithAttr):
         # create h5 object
         if shape:
             if self._splitArray:
-                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape, filter=deflate)
+                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
             else:
                 if not chunk:
                     f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, filter=deflate)
@@ -371,7 +371,7 @@ class EField(FElementWithAttr):
                         # way around for a bug in pninx
 
                             arr = dh.cast(self.h5Object.dtype)
-                            
+#                            print "arr", arr
                             if self.grows == 1:
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
