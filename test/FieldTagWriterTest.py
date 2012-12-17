@@ -57,6 +57,116 @@ class FieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+
+    ## checks scalar tree
+    # \param f pninx file object    
+    # \param fname file name
+    # \returns detector group object    
+    def _checkScalarTree(self, f, fname):
+        self.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+        self.assertEqual(6, f.nattrs)
+        self.assertEqual( f.attr("file_name").value, fname)
+        self.assertTrue(f.attr("NX_class").value,"NXroot")
+        self.assertEqual(f.nchildren, 2)
+            
+        en = f.open("entry1")
+        self.assertTrue(en.valid)
+        self.assertEqual(en.name,"entry1")
+        self.assertEqual(en.nattrs,1)
+        self.assertEqual(en.nchildren, 1)
+
+        at = en.attr("NX_class")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"NX_class")
+        self.assertEqual(at.value,"NXentry")
+
+        ins = en.open("instrument")
+        self.assertTrue(ins.valid)
+        self.assertEqual(ins.name,"instrument")
+        self.assertEqual(ins.nattrs,1)
+        self.assertEqual(ins.nchildren, 1)
+        
+            
+        at = ins.attr("NX_class")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"NX_class")
+        self.assertEqual(at.value,"NXinstrument")
+
+        det = ins.open("detector")
+        self.assertTrue(det.valid)
+        self.assertEqual(det.name,"detector")
+        self.assertEqual(det.nattrs,1)
+        self.assertEqual(det.nchildren, 10)
+            
+        at = det.attr("NX_class")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"NX_class")
+        self.assertEqual(at.value,"NXdetector")
+            
+        return det
+
+
+
+
+    ## checks  scalar counter
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param unsigned flag if value is integer
+    def _checkScalarCounter(self, det, name, dtype, nxtype, unsigned = False):
+
+        cnt = det.open(name)
+        self.assertTrue(cnt.valid)
+        self.assertEqual(cnt.name,name)
+        self.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self.assertEqual(len(cnt.shape), 1)
+        self.assertEqual(cnt.shape, (6,))
+        self.assertEqual(cnt.dtype, dtype)
+        self.assertEqual(cnt.size, 6)
+        value = cnt.read()
+#            value = cnt[:]
+        for i in range(len(value)):
+            if unsigned:
+                self.assertEqual(abs(self._counter[i]), value[i])
+            else:
+                self.assertEqual(self._counter[i], value[i])
+                        
+        self.assertEqual(cnt.nattrs,3)
+
+        at = cnt.attr("type")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"type")
+        self.assertEqual(at.value,nxtype)
+        
+
+        at = cnt.attr("units")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"units")
+        self.assertEqual(at.value,"m")
+        
+        at = cnt.attr("nexdatas_source")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        
+
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
@@ -144,21 +254,43 @@ class FieldTagWriterTest(unittest.TestCase):
             
         for c in self._counter:
             uc = abs(c)
-            tdw.record('{"data": {"cnt":'+str(c) 
-                       + ', "cnt_8":'+str(c) 
-                       + ', "cnt_16":'+str(c) 
+            tdw.record('{"data": {"cnt":' + str(c) 
+                       + ', "cnt_8":' + str(c) 
+                       + ', "cnt_16":' + str(c) 
                        + ', "cnt_32":' + str(c) 
-                       + ',  "cnt_64":' + str(c) 
-                       + ', "cnt_u":'+str(uc) 
-                       + ', "cnt_u8":'+str(uc) 
-                       + ', "cnt_u16":'+str(uc) 
+                       + ', "cnt_64":' + str(c) 
+                       + ', "cnt_u":' + str(uc) 
+                       + ', "cnt_u8":' + str(uc) 
+                       + ', "cnt_u16":' + str(uc) 
                        + ', "cnt_u32":' + str(uc) 
-                       + ',  "cnt_u64":' + str(uc)+ 
-                       '  } }')
+                       + ',  "cnt_u64":' + str(uc)
+                       + ' } }')
         
         tdw.closeEntry()
         
         tdw.closeNXFile()
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._checkScalarTree(f, fname)
+        self._checkScalarCounter(det, "counter", "int64", "NX_INT")
+        self._checkScalarCounter(det, "counter8", "int8", "NX_INT8")
+        self._checkScalarCounter(det, "counter16", "int16", "NX_INT16")
+        self._checkScalarCounter(det, "counter32", "int32", "NX_INT32")
+        self._checkScalarCounter(det, "counter64", "int64", "NX_INT64")
+        self._checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", True)
+        self._checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", True)
+        self._checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", True)
+        self._checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", True)
+        self._checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", True)
+
+        
+        f.close()
+
             
 
         
