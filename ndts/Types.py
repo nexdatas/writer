@@ -50,19 +50,24 @@ class NTP(object):
            "bool":"DevBoolean"}
 
     ## map of Numpy:Tango types
-    npTt = {"int":"DevLong64", "int64":"DevLong64", "int32":"DevLong", "uint":"DevULong64", 
-            "uint64":"DevULong64", "uint32":"DevULong", "float":"DevDouble", 
-            "float64":"DevDouble", "float32":"DevFloat", "string":"DevString", "bool":"DevBoolean"}
+    npTt = {"int":"DevLong64", "int64":"DevLong64", "int32":"DevLong",
+            "int16":"DevShort", "int8":"DevUChar", "uint":"DevULong64", 
+            "uint64":"DevULong64", "uint32":"DevULong", "uint16":"DevUShort", 
+            "uint8":"DevUChar", "float":"DevDouble", "float64":"DevDouble", 
+            "float32":"DevFloat", "string":"DevString", "bool":"DevBoolean"}
 
     ## map of NEXUS : numpy types 
     nTnp = {"NX_FLOAT32":"float32", "NX_FLOAT64":"float64", "NX_FLOAT":"float64", 
             "NX_NUMBER":"float64", "NX_INT":"int64", "NX_INT64":"int64", 
-            "NX_INT32":"int32", "NX_UINT64":"uint64", "NX_UINT32":"uint32", 
+            "NX_INT32":"int32", "NX_INT16":"int16", "NX_INT8":"int8", 
+            "NX_UINT64":"uint64", "NX_UINT32":"uint32", "NX_UINT16":"uint16", "NX_UINT8":"uint8", 
+            "NX_UINT":"uint64", 
             "NX_DATE_TIME":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
 
     ## map of type : converting function
-    convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int, 
-               "int":int, "uint64":long, "uint32":int, "uint":int, "string":str, "bool":Converters.toBool}
+    convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
+               "int16":long, "int8":int, "int":int, "uint64":long, "uint32":int, "uint16":long,
+               "uint8":int, "uint":int, "string":str, "bool":Converters.toBool}
 
     ## map of tag attribute types 
     aTn = {"signal":"NX_INT", "axis":"NX_INT", "primary":"NX_INT32", "offset":"NX_INT", 
