@@ -62,7 +62,7 @@ class NTP(object):
             "NX_INT32":"int32", "NX_INT16":"int16", "NX_INT8":"int8", 
             "NX_UINT64":"uint64", "NX_UINT32":"uint32", "NX_UINT16":"uint16", "NX_UINT8":"uint8", 
             "NX_UINT":"uint64", "NX_POSINT":"uint64", 
-            "NX_DATE_TIME":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
+            "NX_DATE_TIME":"string", "ISO8601":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
 
     ## map of type : converting function
     convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  

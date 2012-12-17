@@ -414,6 +414,12 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="timestamp"/>
           </datasource>
         </field>
+        <field units="m" type="ISO8601" name="isotime">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="timestamp"/>
+          </datasource>
+        </field>
         <field units="m" type="NX_CHAR" name="string_time">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
@@ -465,8 +471,9 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname, 3)
+        det = self._checkScalarTree(f, fname, 4)
         self._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
+        self._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
         self._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
         self._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
 
