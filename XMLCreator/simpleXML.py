@@ -190,7 +190,10 @@ class NField(NTag):
     # \param trigger for asynchronous writting, e.g. with different subentries
     # \param value label for postrun mode    
     # \param grows growing dimension
-    def setStrategy(self,  mode = "STEP", trigger = None, value = None, grows = None):
+    # \param compression flag if compression shuold be applied
+    # \param rate compression rate
+    # \param shuffle flag if compression shuffle
+    def setStrategy(self,  mode = "STEP", trigger = None, value = None, grows = None, compression = False, rate = None , shuffle = None ):
         ## strategy of data writing, i.e. INIT, STEP, FINAL, POSTRUN
         strategy = NTag(self, "strategy")
         if strategy:
@@ -201,6 +204,12 @@ class NField(NTag):
             strategy.addTagAttr("trigger", trigger)    
 	if value :
             strategy.setText(value)
+        if compression:
+            strategy.addTagAttr("compression", "true")    
+            if rate is not None:
+                strategy.addTagAttr("rate", str(rate))    
+            if shuffle is not None:
+                strategy.addTagAttr("shuffle", "true" if shuffle  else "false")    
 
 
     ## sets the field unit
