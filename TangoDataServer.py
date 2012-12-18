@@ -47,8 +47,8 @@ from ndts.TangoDataWriter import TangoDataWriter as TDW
 #
 #   DevState.ON :       NeXuS Data Server is switch on
 #   DevState.OFF :      NeXuS Data Writer is switch off
-#   DevState.OPEN :     H5 file is open
-#   DevState.INIT :     XML configuration is initialzed
+#   DevState.EXTRACT :  H5 file is open
+#   DevState.OPEN :     XML configuration is initialzed
 #   DevState.RUNNING :  NeXus Data Server is writting
 #==================================================================
 
@@ -60,9 +60,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 #	Device constructor
 #------------------------------------------------------------------
-	def __init__(self, cl, name):
+	def __init__(self,cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
-		self.tdw = TDW("name.h5")
 		TangoDataServer.init_device(self)
 
 #------------------------------------------------------------------
@@ -76,7 +75,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 			del self.tdw
 			self.tdw = None
 		self.set_state(PyTango.DevState.OFF)
-
 
 
 #------------------------------------------------------------------
@@ -106,6 +104,21 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::always_excuted_hook()"
 
 
+#------------------------------------------------------------------
+#	Device constructor
+#------------------------------------------------------------------
+	def __init__(self, cl, name):
+		PyTango.Device_4Impl.__init__(self,cl,name)
+		self.tdw = TDW("name.h5")
+		TangoDataServer.init_device(self)
+
+
+#------------------------------------------------------------------
+#	Read Attribute Hardware
+#------------------------------------------------------------------
+	def read_attr_hardware(self, data):
+		print "In ", self.get_name(), "::read_attr_hardware()"
+
 #==================================================================
 #
 #	TangoDataServer read/write attribute methods
@@ -114,7 +127,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 #	Read Attribute Hardware
 #------------------------------------------------------------------
-	def read_attr_hardware(self, data):
+	def read_attr_hardware(self,data):
 		print "In ", self.get_name(), "::read_attr_hardware()"
 
 
@@ -139,13 +152,13 @@ class TangoDataServer(PyTango.Device_4Impl):
 		attr.get_write_value(data)
 #		print "Attribute value = ", data
 		self.tdw.xmlSettings = data[0]
-		self.set_state(PyTango.DevState.INIT)
+		self.set_state(PyTango.DevState.OPEN)
 
 
 #---- TheXMLSettings attribute State Machine -----------------
 	def is_TheXMLSettings_allowed(self, req_type):
 		if self.get_state() in [PyTango.DevState.OFF,
-		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -214,8 +227,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #---- FileName attribute State Machine -----------------
 	def is_FileName_allowed(self, req_type):
 		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.INIT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -246,14 +259,14 @@ class TangoDataServer(PyTango.Device_4Impl):
 		try:
 			self.tdw.record(argin)
 		finally:
-			self.set_state(PyTango.DevState.OPEN)
+			self.set_state(PyTango.DevState.EXTRACT)
 
 
 #---- Record command State Machine -----------------
 	def is_Record_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.OPEN,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -273,18 +286,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
 			self.tdw.openNXFile()
-			self.set_state(PyTango.DevState.INIT)
+			self.set_state(PyTango.DevState.OPEN)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
 				self.set_state(PyTango.DevState.ON)
 
 
-
 #---- OpenFile command State Machine -----------------
 	def is_OpenFile_allowed(self):
 		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.INIT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -301,7 +313,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def CloseFile(self):
 		print "In ", self.get_name(), "::CloseFile()"
 		#	Add your own code here
-		if self.get_state() in [PyTango.DevState.OPEN,
+		if self.get_state() in [PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.RUNNING]:
 			self.CloseEntry()
 		self.set_state(PyTango.DevState.RUNNING)
@@ -310,9 +322,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 			self.set_state(PyTango.DevState.ON)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.INIT)
-
-
+				self.set_state(PyTango.DevState.OPEN)
 
 
 #---- CloseFile command State Machine -----------------
@@ -338,17 +348,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
 			self.tdw.openEntry()
-			self.set_state(PyTango.DevState.OPEN)
+			self.set_state(PyTango.DevState.EXTRACT)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.INIT)
+				self.set_state(PyTango.DevState.OPEN)
 
 
 #---- OpenEntry command State Machine -----------------
 	def is_OpenEntry_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -368,18 +378,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
 			self.tdw.closeEntry()
-			self.set_state(PyTango.DevState.INIT)
+			self.set_state(PyTango.DevState.OPEN)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.OPEN)
-			
+				self.set_state(PyTango.DevState.EXTRACT)
 
 
 #---- CloseEntry command State Machine -----------------
 	def is_CloseEntry_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.OPEN,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -394,17 +403,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 #==================================================================
 class TangoDataServerClass(PyTango.DeviceClass):
 
-	# 	Class Properties
+	#	Class Properties
 	class_property_list = {
 		}
 
 
-	# 	Device Properties
+	#	Device Properties
 	device_property_list = {
 		}
 
 
-	# 	Command definitions
+	#	Command definitions
 	cmd_list = {
 		'Record':
 			[[PyTango.DevString, "JSON string with data"],
@@ -424,27 +433,38 @@ class TangoDataServerClass(PyTango.DeviceClass):
 		}
 
 
-	# 	Attribute definitions
+	#	Attribute definitions
 	attr_list = {
 		'TheXMLSettings':
 			[[PyTango.DevString,
 			PyTango.SCALAR,
-			PyTango.READ_WRITE]],
+			PyTango.READ_WRITE],
+			{
+				'label':"XML Configuration",
+				'description':"An XML string with Nexus configuration.",
+			} ],
 		'TheJSONRecord':
 			[[PyTango.DevString,
 			PyTango.SCALAR,
-			PyTango.READ_WRITE]],
+			PyTango.READ_WRITE],
+			{
+				'label':"JSON string with client data",
+				'description':"A JSON string with global client data.",
+			} ],
 		'FileName':
 			[[PyTango.DevString,
 			PyTango.SCALAR,
-			PyTango.READ_WRITE]],
+			PyTango.READ_WRITE],
+			{
+				'label':"H5 output file",
+				'description':"A name of H5 output file",
+			} ],
 		}
 
 
 #------------------------------------------------------------------
 #	TangoDataServerClass Constructor
 #------------------------------------------------------------------
-	#  constructor
 	def __init__(self, name):
 		PyTango.DeviceClass.__init__(self, name)
 		self.set_type(name);

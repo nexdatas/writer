@@ -70,86 +70,30 @@ class FElement(Element):
             
 
 
-## query tag element        
-class EStrategy(Element):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
-
-        if "mode" in attrs.keys():
-            self._last.strategy = attrs["mode"]
-        if "trigger" in attrs.keys():
-            self._last.trigger = attrs["trigger"]
-            print "TRIGGER" , attrs["trigger"]
-
-
-    ## stores the tag content
-    # \param xml xml setting 
-    def store(self, xml = None):
-        self._last.postrun = ("".join(self.content)).strip()        
-
-
-## field H5 tag element
-class EField(FElement):        
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        FElement.__init__(self, name, attrs, last)
-        ## rank of the field
-        self.rank = "0"
-        ## shape of the field
-        self.lengths = {}
-        ## dictionary with attribures from sepatare attribute tags
-        self.tagAttributes = {}
-        ## if field is stored in STEP mode
-        self._extraD = False
-        ## if field array is splitted into columns
-        self._splitArray = False
-        ## strategy, i.e. INIT, STEP, FINAL, POSTRUN
-        self.strategy = None
-        ## trigger for asynchronous writting
-        self.trigger = None
-        ## label for postprocessing data
-        self.postrun = ""
-
-    ## stores the tag content
-    # \param xml xml setting 
-    # \returns (strategy, trigger) or strategy
-    def store(self, xml = None):
-            
-
-        self._extraD = False
-        if self.source and self.source.isValid() and self.strategy == "STEP":
-            self._extraD = True
-            
-
-        if "name" in self._tagAttrs.keys():
-            nm = self._tagAttrs["name"]
-            if "type" in self._tagAttrs.keys():
-                tp = NTP.nTnp[self._tagAttrs["type"]]
-            else:
-                tp = "string"
-        else:
-            raise XMLSettingSyntaxError, " Field without a name"
-
-
+    ## creates shape object from rank and lengths variables
+    # \returns shape of the object
+    def _findShape(self, rank, lengths=None, extraD = False, grows = None):
         shape = []
-        if self._extraD:
-            shape.append(0)
-        if  int(self.rank) > 0:
+        if extraD:
+            if grows and grows >1:
+                exDim = grows  
+            else:
+                exDim = 1
+        else:
+            exDim = 0
+                    
+#            shape.append(0)
+        if  int(rank) > 0:
             try:
-                for i in range(int(self.rank)):
+                for i in range(int(rank)):
                     si = str(i+1)
-                    if si in self.lengths.keys() and self.lengths[si] is not None:
-                        if int(self.lengths[si]) > 0:
+                    if si in lengths.keys() and lengths[si] is not None:
+                        if int(lengths[si]) > 0:
                             shape.append(int(self.lengths[si]))
                     else:
                         raise XMLSettingSyntaxError, "Dimensions not defined"
+                if extraD:
+                    shape.insert(exDim-1,0)    
             except:
                 if self.source and self.source.isValid():
 #                    try:
@@ -158,54 +102,18 @@ class EField(FElement):
 #                    except:
 #                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
-                    if self._extraD:
-                        shape.append(0)
                     if dsShape:    
                         for s in dsShape:
                             if s:
                                 shape.append(s)
+                    if extraD:
+                        shape.insert(exDim-1,0)    
                     else:
                         raise XMLSettingSyntaxError, "Wrongly defined shape"
+        elif extraD:            
+            shape = [0]
+        return shape
 
-        if len(shape) > 1 and tp.encode() == "string":
-            self._splitArray = True
-          
-
-        if shape:
-            if self._splitArray:
-                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
-            else:
-                f = self._lastObject().create_field(nm.encode(), tp.encode(), shape)
-        else:
-            f = self._lastObject().create_field(nm.encode(), tp.encode())
-
-
-        for key in self._tagAttrs.keys():
-            if key not in ["name"]:
-                (f.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
-
-        for key in self.tagAttributes.keys():
-            if key not in ["name"]:
-                (f.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
-                    = self.tagAttributes[key][1].strip().encode()
-
-        if self.strategy == "POSTRUN":
-            f.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
-
-
-        self.h5Object = f
-
-        if self.source:
-            if  self.source.isValid() :
-                return self.strategy, self.trigger
-        else:
-            val = ("".join(self.content)).strip().encode()   
-            if val:
-                dh = DataHolder("SCALAR", val, "DevString", [1,0])
-                self.h5Object.write(dh.cast(self.h5Object.dtype))
-            else:
-#                raise ValueError,"Warning: Invalid datasource for %s" % nm
-                print "Warning: Invalid datasource for ", nm
 
     ## creates the error message
     def setMessage(self, exceptionMessage=None):
@@ -221,6 +129,225 @@ class EField(FElement):
             
         message = ("WARNING: Data for %s on %s not found" % (name, dsource), exceptionMessage )
         return message
+
+
+## NeXuS runnable tag element with attributes
+# tag element corresponding to one of H5 objects with attributes
+class FElementWithAttr(FElement):
+    
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    # \param h5object H5 file object
+    def __init__(self, name, attrs, last, h5object=None):
+        FElement.__init__(self, name, attrs, last, h5object)
+        ## dictionary with attribures from sepatare attribute tags
+        self.tagAttributes = {}
+        self._h5Instances = {}
+  
+
+    ## creates h5 attributes
+    # \brief It creates attributes instances which have been stored in tagAttributes dictionary
+    def _createAttributes(self):
+        for key in self.tagAttributes.keys():
+            if key not in ["name","type"]:
+                if len(self.tagAttributes[key]) < 3:
+                    self._h5Instances[key.encode()] = self.h5Object.attr(
+                        key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
+                    dh = DataHolder(
+                        "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
+                    self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
+                else:
+                    shape = self.tagAttributes[key][2]
+                    self._h5Instances[key.encode()] = self.h5Object.attr(
+                        key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode(), 
+                        shape)
+                    val = self.tagAttributes[key][1].strip().encode()
+                    if val:
+                        rank = len(shape)
+                        if not rank or rank == 0:
+                            dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                        elif  rank == 1:
+                            spec = val.split()
+                            dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                        elif  rank == 2:
+                            lines = val.split("\n")
+                            image = [ln.split() for ln in lines ]
+                            dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+    
+                        self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
+                    
+
+    ## provides attribute h5 object
+    # \param name attribute name
+    # \returns instance of the attribute object if created            
+    def h5Attribute(self, name):
+        return self._h5Instances.get(name)
+
+
+## query tag element        
+class EStrategy(Element):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    def __init__(self, name, attrs, last):
+        Element.__init__(self, name, attrs, last)
+
+        if "mode" in attrs.keys():
+            self._last.strategy = attrs["mode"]
+        if "trigger" in attrs.keys():
+            self._last.trigger = attrs["trigger"]
+            print "TRIGGER" , attrs["trigger"]
+        if "grows" in attrs.keys() and hasattr(self._last,"grows"):
+            self._last.grows = int(attrs["grows"])
+            if self._last.grows < 1:
+                self._last.grows = 1
+        if "compression" in attrs.keys() and hasattr(self._last,"compression"):
+            self._last.compression = True if attrs["compression"].upper() == "TRUE" else False
+            if self._last.compression:
+                if "rate" in attrs.keys() and hasattr(self._last,"rate"):
+                    self._last.rate = int(attrs["rate"])
+                    if self._last.rate < 0:
+                        self._last.rate = 0
+                    if self._last.rate > 9:
+                        self._last.rate = 9
+                if "suffle" in attrs.keys() and hasattr(self._last,"suffle"):
+                    self._last.shuffle = False if attrs["suffle"].upper() == "FALSE" else True
+                
+            
+
+
+    ## stores the tag content
+    # \param xml xml setting 
+    def store(self, xml = None):
+        self._last.postrun = ("".join(self.content)).strip()        
+
+
+## field H5 tag element
+class EField(FElementWithAttr):        
+    ## constructor
+    # \param name tag name
+    # \param attrs dictionary of the tag attributes
+    # \param last the last element from the stack
+    def __init__(self, name, attrs, last):
+        FElementWithAttr.__init__(self, name, attrs, last)
+        ## rank of the field
+        self.rank = "0"
+        ## shape of the field
+        self.lengths = {}
+        ## if field is stored in STEP mode
+        self._extraD = False
+        ## if field array is splitted into columns
+        self._splitArray = False
+        ## strategy, i.e. INIT, STEP, FINAL, POSTRUN
+        self.strategy = None
+        ## trigger for asynchronous writing
+        self.trigger = None
+        ## growing dimension
+        self.grows = None
+        ## label for postprocessing data
+        self.postrun = ""
+        ## compression flag
+        self.compression = False
+        ## compression rate
+        self.rate = 5
+        ## compression shuffle
+        self.shuffle = True
+
+
+
+
+    ## stores the tag content
+    # \param xml xml setting 
+    # \returns (strategy, trigger)
+    def store(self, xml = None):
+            
+        # if growing in extra dimension
+        self._extraD = False
+        if self.source and self.source.isValid() and self.strategy == "STEP":
+            self._extraD = True
+            if not self.grows:
+                self.grows = 1
+
+        #  type and name
+        if "name" in self._tagAttrs.keys():
+            nm = self._tagAttrs["name"]
+            if "type" in self._tagAttrs.keys():
+                tp = NTP.nTnp[self._tagAttrs["type"]]
+            else:
+                tp = "string"
+        else:
+            raise XMLSettingSyntaxError, " Field without a name"
+
+        # shape and chunk
+        shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
+        if len(shape) > 1 and tp.encode() == "string":
+            self._splitArray = True
+            shape = self._findShape(self.rank, self.lengths, self._extraD)
+            self.grows = 1
+            
+        chunk = [s if s > 0 else 1 for s in shape]  
+
+        deflate = None
+        # create Filter
+        if self.compression:
+            deflate = nx.NXDeflateFilter()
+            deflate.rate = self.rate
+            deflate.shuffle = self.shuffle
+            
+        # create h5 object
+        if shape:
+            if self._splitArray:
+                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
+            else:
+                if not chunk:
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, filter=deflate)
+                else:
+                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk, filter=deflate)
+        else:
+            f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
+
+        self.h5Object = f
+
+        # create attributes
+        for key in self._tagAttrs.keys():
+            if key not in ["name"]:
+                (self.h5Object.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
+
+        self._createAttributes()        
+                
+        if self.strategy == "POSTRUN":
+            self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
+
+
+
+
+        # return strategy or fill the value in
+        if self.source:
+            if  self.source.isValid() :
+                return self.strategy, self.trigger
+        else:
+            val = ("".join(self.content)).strip().encode()   
+            if val:
+                if not self.rank or int(self.rank) == 0:
+                    dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                elif  int(self.rank) == 1:
+                    spec = val.split()
+                    dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                elif  int(self.rank) == 2:
+                    lines = val.split("\n")
+                    image = [ln.split() for ln in lines ]
+                    dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+    
+                self.h5Object.write(dh.cast(self.h5Object.dtype))
+            else:
+#                raise ValueError,"Warning: Invalid datasource for %s" % nm
+                print "Warning: Invalid datasource for ", nm
+
+
+
         
 
     ## runner  
@@ -241,23 +368,38 @@ class EField(FElement):
                             self.h5Object.grow()
                             self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
-
                         # way around for a bug in pninx
 
                             arr = dh.cast(self.h5Object.dtype)
-
-                            if isinstance(arr, numpy.ndarray) \
-                                    and len(arr.shape) == 1 and arr.shape[0] == 1:
-                                self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+#                            print "arr", arr
+                            if self.grows == 1:
+                                if isinstance(arr, numpy.ndarray) \
+                                        and len(arr.shape) == 1 and arr.shape[0] == 1:
+                                    self.h5Object.grow()
+                                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                                else:
+                                    self.h5Object.grow()
+                                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
                             else:
-                                self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                                if isinstance(arr, numpy.ndarray) \
+                                        and len(arr.shape) == 1 and arr.shape[0] == 1:
+                                    self.h5Object.grow(1)
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
+                                else:
+                                    self.h5Object.grow(1)
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
-                                
                         if str(dh.format).split('.')[-1] == "IMAGE":
-                            self.h5Object.grow()
-                            self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+
+                            if self.grows == 1:
+                                self.h5Object.grow()
+                                self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                            elif self.grows == 2:
+                                self.h5Object.grow(1)
+                                self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
+                            else:
+                                self.h5Object.grow(2)
+                                self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print message[0]
@@ -267,16 +409,13 @@ class EField(FElement):
 
 
 ## group H5 tag element        
-class EGroup(FElement):        
+class EGroup(FElementWithAttr):        
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
-        FElement.__init__(self, name, attrs, last)
-
-        ## dictionary with attribures from sepatare attribute tags
-        self.tagAttributes = {}
+        FElementWithAttr.__init__(self, name, attrs, last)
 
         if self._lastObject():
             if ("type" in attrs.keys()) and ("name" in attrs.keys()) :
@@ -299,10 +438,7 @@ class EGroup(FElement):
     ## stores the tag content
     # \param xml xml setting 
     def store(self, xml = None):
-        for key in self.tagAttributes.keys() :
-            if key not in ["name","type"]:
-                (self.h5Object.attr(key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())).value \
-                    = self.tagAttributes[key][1].encode()
+        self._createAttributes()
 
 
     ## fetches the type and the name of the current group            
@@ -363,13 +499,23 @@ class ELink(FElement):
 
 
 ## attribute tag element        
-class EAttribute(Element):        
+class EAttribute(FElement):        
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+        FElement.__init__(self, name, attrs, last)
+        ## attribute name
+        self.name = ""
+        ## rank of the attribute
+        self.rank = "0"
+        ## shape of the attribute
+        self.lengths = {}
+        ## strategy, i.e. INIT, STEP, FINAL
+        self.strategy = None
+        ## trigger for asynchronous writting
+        self.trigger = None
 
 
     ## stores the tag content
@@ -377,15 +523,45 @@ class EAttribute(Element):
     def store(self, xml = None):
 
         if "name" in self._tagAttrs.keys(): 
-            nm = self._tagAttrs["name"]
+            self.name = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys() :
                 tp = self._tagAttrs["type"]
             else:        
                 tp = "NX_CHAR"
                 
-            self._last.tagAttributes[nm] = (tp, ("".join(self.content)).strip().encode())
+            shape = self._findShape(self.rank, self.lengths)
+            val = ("".join(self.content)).strip().encode()   
+            if not shape:
+                self._last.tagAttributes[self.name] = (tp, val)
+            else:
+                self._last.tagAttributes[self.name] = (tp, val, tuple(shape))
+
+            if self.source:
+                if  self.source.isValid() :
+                    return self.strategy, self.trigger
 
 
+    ## runner  
+    # \brief During its thread run it fetches the data from the source  
+    def run(self):
+        try:
+            if self.name:
+                if not self.h5Object:
+                    self.h5Object = self._last.h5Attribute(self.name)
+                if self.source:
+                    dh = DataHolder(**self.source.getData())
+                    if not dh:
+                        message = self.setMessage()
+                        print message[0]
+                        self.error = message
+                    else:
+                        self.h5Object.value = dh.cast(self.h5Object.dtype)
+        except:
+            message = self.setMessage( sys.exc_info()[1].__str__()  )
+            print message[0]
+            self.error = message
+                                #            self.error = sys.exc_info()
+            
 
 
 ## file H5 element        

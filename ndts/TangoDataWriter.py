@@ -36,7 +36,6 @@ except ImportError:
 import json
 import sys, os
 import gc
-from collections import Iterable
 
 from H5Elements import EFile
 from DecoderPool import DecoderPool
@@ -56,6 +55,7 @@ class TangoDataWriter(object):
         self.json = "{}"
         ## maximal number of threads
         self.numThreads = 100
+#        self.numThreads = 1
 
         ## thread pool with INIT elements
         self._initPool = None
@@ -182,7 +182,7 @@ class TangoDataWriter(object):
         if localJSON and 'triggers' in localJSON.keys():
             triggers = localJSON['triggers']
 
-        if isinstance(triggers, Iterable):
+        if hasattr(triggers, "__iter__"):
             for pool in triggers:
                 if pool in self._triggerPools.keys():
                     print "Trigger: %s" % pool 
@@ -222,8 +222,8 @@ class TangoDataWriter(object):
             self._triggerPools = {}
 
 
-#        if self._nxFile:
-#            self._nxFile.flush()
+        if self._nxFile:
+            self._nxFile.flush()
 
         gc.collect()
 

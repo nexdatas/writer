@@ -426,32 +426,26 @@ class ClientSource(DataSource):
     # \returns  dictionary with collected data   
     def getData(self):
         
-        
         if  self._globalJSON and 'data' not in self._globalJSON.keys() :
             self._globalJSON = None
 
         if self._localJSON and 'data' not in self._localJSON.keys() :
             self._localJSON = None
-
-        if self._globalJSON and self._localJSON:
-            mergedJSON = json.loads(dict(self._globalJSON.items() + self._localJSON.items()))
-        elif self._localJSON:
-            mergedJSON = self._localJSON 
-        elif self._globalJSON:
-            mergedJSON = self._globalJSON 
-        else:
-            return None
             
-        
-        if self.name in mergedJSON['data']:
-            rec = mergedJSON['data'][self.name]
-            ntp = NTP()
-            rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
-            if rank in NTP.rTf:
-                shape = rshape.reverse()
-                if  shape is None:
-                    shape = [1,0]
-                return {"format":NTP.rTf[rank], "value":rec, 
-                        "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
+        rec = None
+        if self._localJSON and 'data' in  self._localJSON and self.name in self._localJSON['data']:
+            rec = self._localJSON['data'][str(self.name)]
+        elif self._globalJSON and 'data' in self._globalJSON and self.name in self._globalJSON['data']:
+            rec = self._globalJSON['data'][str(self.name)]
+        else:
+            return    
+        ntp = NTP()
+        rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
+        if rank in NTP.rTf:
+            shape = rshape.reverse()
+            if  shape is None:
+                shape = [1,0]
+            return {"format":NTP.rTf[rank], "value":rec, 
+                    "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
             
     
