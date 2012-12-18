@@ -106,7 +106,7 @@ class TangoDataServerTest(ServerTestCase.ServerTestCase):
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
             dp.OpenFile()
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
             self.assertEqual(dp.TheXMLSettings,"")
             self.assertEqual(dp.TheJSONRecord, "{}")
             dp.CloseFile()
@@ -157,17 +157,17 @@ class TangoDataServerTest(ServerTestCase.ServerTestCase):
 
             dp.OpenFile()
 
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
             dp.TheXMLSettings = xml
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.OpenEntry()
-            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
 
             dp.CloseEntry()
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.CloseFile()
@@ -236,10 +236,10 @@ class TangoDataServerTest(ServerTestCase.ServerTestCase):
 
             dp.OpenFile()
 
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
             dp.TheXMLSettings = wrongXml
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             try:
@@ -254,22 +254,22 @@ class TangoDataServerTest(ServerTestCase.ServerTestCase):
                 
 
 
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 #            dp.CloseFile()
 #            dp.OpenFile()
 
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
             dp.TheXMLSettings = xml
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.OpenEntry()
-            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
 
             dp.CloseEntry()
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.CloseFile()
@@ -323,24 +323,24 @@ class TangoDataServerTest(ServerTestCase.ServerTestCase):
 
             dp.OpenFile()
 
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
             dp.TheXMLSettings = self._scanXml
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.OpenEntry()
-            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
 
             dp.Record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
                            + str(self._mca1)+ '  } }')
-            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
             dp.Record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
                            + str(self._mca2)+ '  } }')
 
 
             dp.CloseEntry()
-            self.assertEqual(dp.state(),PyTango.DevState.INIT)
+            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.CloseFile()

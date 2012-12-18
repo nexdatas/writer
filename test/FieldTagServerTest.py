@@ -88,24 +88,24 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         
         dp.OpenFile()
         
-        self.assertEqual(dp.state(),PyTango.DevState.INIT)
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
         
         dp.TheXMLSettings = xml
-        self.assertEqual(dp.state(),PyTango.DevState.INIT)
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
         
         
         dp.OpenEntry()
-        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
         
         dp.Record('{"data": {"cnt":'+str(self._counter[0])+', "p09/mca/exp.02":'\
                       + str(self._mca1)+ '  } }')
-        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
         dp.Record('{"data": {"cnt":'+str(self._counter[1])+', "p09/mca/exp.02":'\
                       + str(self._mca2)+ '  } }')
         
         
         dp.CloseEntry()
-        self.assertEqual(dp.state(),PyTango.DevState.INIT)
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
         
         
         dp.CloseFile()
