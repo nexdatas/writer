@@ -47,8 +47,8 @@ from ndts.TangoDataWriter import TangoDataWriter as TDW
 #
 #   DevState.ON :       NeXuS Data Server is switch on
 #   DevState.OFF :      NeXuS Data Writer is switch off
-#   DevState.OPEN :     H5 file is open
-#   DevState.INIT :     XML configuration is initialzed
+#   DevState.EXTRACT :  H5 file is open
+#   DevState.OPEN :     XML configuration is initialzed
 #   DevState.RUNNING :  NeXus Data Server is writting
 #==================================================================
 
@@ -139,13 +139,13 @@ class TangoDataServer(PyTango.Device_4Impl):
 		attr.get_write_value(data)
 #		print "Attribute value = ", data
 		self.tdw.xmlSettings = data[0]
-		self.set_state(PyTango.DevState.INIT)
+		self.set_state(PyTango.DevState.OPEN)
 
 
 #---- TheXMLSettings attribute State Machine -----------------
 	def is_TheXMLSettings_allowed(self, req_type):
 		if self.get_state() in [PyTango.DevState.OFF,
-		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -214,8 +214,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #---- FileName attribute State Machine -----------------
 	def is_FileName_allowed(self, req_type):
 		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.INIT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -246,14 +246,14 @@ class TangoDataServer(PyTango.Device_4Impl):
 		try:
 			self.tdw.record(argin)
 		finally:
-			self.set_state(PyTango.DevState.OPEN)
+			self.set_state(PyTango.DevState.EXTRACT)
 
 
 #---- Record command State Machine -----------------
 	def is_Record_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.OPEN,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -273,7 +273,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
 			self.tdw.openNXFile()
-			self.set_state(PyTango.DevState.INIT)
+			self.set_state(PyTango.DevState.OPEN)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
 				self.set_state(PyTango.DevState.ON)
@@ -283,8 +283,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #---- OpenFile command State Machine -----------------
 	def is_OpenFile_allowed(self):
 		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.INIT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -301,7 +301,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def CloseFile(self):
 		print "In ", self.get_name(), "::CloseFile()"
 		#	Add your own code here
-		if self.get_state() in [PyTango.DevState.OPEN,
+		if self.get_state() in [PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.RUNNING]:
 			self.CloseEntry()
 		self.set_state(PyTango.DevState.RUNNING)
@@ -310,7 +310,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 			self.set_state(PyTango.DevState.ON)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.INIT)
+				self.set_state(PyTango.DevState.OPEN)
 
 
 
@@ -338,17 +338,17 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
 			self.tdw.openEntry()
-			self.set_state(PyTango.DevState.OPEN)
+			self.set_state(PyTango.DevState.EXTRACT)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.INIT)
+				self.set_state(PyTango.DevState.OPEN)
 
 
 #---- OpenEntry command State Machine -----------------
 	def is_OpenEntry_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -368,10 +368,10 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
 			self.tdw.closeEntry()
-			self.set_state(PyTango.DevState.INIT)
+			self.set_state(PyTango.DevState.OPEN)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.OPEN)
+				self.set_state(PyTango.DevState.EXTRACT)
 			
 
 
@@ -379,7 +379,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def is_CloseEntry_allowed(self):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.INIT,
+		                        PyTango.DevState.OPEN,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
