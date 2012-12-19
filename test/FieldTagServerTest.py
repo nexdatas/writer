@@ -209,3 +209,196 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         
         f.close()
         os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatScalar(self):
+        print "FLOAT"
+        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        fname= '%s/clientfloatscalar.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="m" type="NX_FLOAT" name="counter">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="cnt"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_FLOAT32" name="counter_32">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="cnt_32"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_FLOAT64" name="counter_64">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_NUMBER" name="counter_nb">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+
+
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+
+        for c in self._fcounter:
+            uc = abs(c)
+            dp.Record('{"data": {"cnt":' + str(c) 
+                       + ', "cnt_32":' + str(c) 
+                       + ', "cnt_64":' + str(c) 
+                       + ' } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+                
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc._checkScalarTree(f, fname, 4)
+        self._sc._checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc._checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+        self._sc._checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+        self._sc._checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientScalar(self):
+        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        fname= '%s/clientscalar.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="m" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="timestamp"/>
+          </datasource>
+        </field>
+        <field units="m" type="ISO8601" name="isotime">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="timestamp"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="timestamp"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="logical"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        dates = [
+            "1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+            "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200",
+            "1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+            "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200",
+            ]
+        logical = ["1","0","true","false","True","False","TrUe","FaLsE"]
+        
+
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        for i in range(min(len(dates),len(logical))):
+            dp.Record('{"data": {"timestamp":"' + str(dates[i]) 
+                       + '", "logical":"' + str(logical[i])
+                       + '" } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+                
+            
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc._checkScalarTree(f, fname, 4)
+        self._sc._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
+        self._sc._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
+
+        
+        f.close()
+        os.remove(fname)
