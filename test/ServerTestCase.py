@@ -54,12 +54,6 @@ class ServerTestCase(unittest.TestCase):
         db.add_device(self._new_device_info_writer)
         db.add_server("TangoDataServer/TDWTEST", self._new_device_info_writer)
         
-#        if os.path.isfile("../TDS2"):
-#            self._psub = subprocess.Popen(
-#                "cd ..; ./TDS2 TDWTEST &",
-#                stdout = subprocess.PIPE, 
-#                stderr =  subprocess.PIPE,  shell= True)
-#        elif os.path.isfile("../TDS"):
         if os.path.isfile("../TDS"):
             self._psub = subprocess.Popen(
                 "cd ..; ./TDS TDWTEST &",stdout =  subprocess.PIPE, 
@@ -68,17 +62,16 @@ class ServerTestCase(unittest.TestCase):
             self._psub = subprocess.Popen(
                 "TDS TDWTEST &",stdout =  subprocess.PIPE, 
                 stderr =  subprocess.PIPE , shell= True)
-#            raise ErrorValue, "Cannot find the server instance"
         print "waiting for server",
-#        time.sleep(1)
+        
+        dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
 
         found = False
         cnt = 0
         while not found and cnt < 1000:
             try:
                 print "\b.",
-                time.sleep(0.02)
-                dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
+                time.sleep(0.1)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
             except:    
