@@ -23,6 +23,7 @@ import unittest
 import os
 import sys
 import subprocess
+import random
 
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
@@ -30,7 +31,7 @@ from  xml.sax import SAXParseException
 
 from ndts import TangoDataWriter, Types
 from ndts.TangoDataWriter  import TangoDataWriter 
-from Checkers import ScalarChecker
+from Checkers import Checker
 
 ## test fixture
 class FieldTagWriterTest(unittest.TestCase):
@@ -42,7 +43,11 @@ class FieldTagWriterTest(unittest.TestCase):
 
         self._counter =  [1,-2,6,-8,9,-11]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
-        self._sc = ScalarChecker(self)
+        self._sc = Checker(self)
+        self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
+        self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
+        self._fmca1 = self._sc.nicePlot(2048, 10)
+        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
 
     ## test starter
     # \brief Common set up
@@ -171,17 +176,17 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc._checkScalarTree(f, fname , 11)
-        self._sc._checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
-        self._sc._checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
-        self._sc._checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
-        self._sc._checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
-        self._sc._checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._sc._checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
-        self._sc._checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
-        self._sc._checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._sc._checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
-        self._sc._checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
+        det = self._sc.checkScalarTree(f, fname , 11)
+        self._sc.checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
+        self._sc.checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
+        self._sc.checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
+        self._sc.checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
+        self._sc.checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
+        self._sc.checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
 
         
         f.close()
@@ -191,7 +196,6 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
-        print "FLOAT"
         print "Run: FieldTagWriterTest.test_clientFloatScalar() "
         fname= '%s/clientfloatscalar.h5' % os.getcwd()   
         xml= """<definition>
@@ -248,16 +252,15 @@ class FieldTagWriterTest(unittest.TestCase):
         tdw.closeNXFile()
             
 
-
         
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc._checkScalarTree(f, fname, 4)
-        self._sc._checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
-        self._sc._checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
-        self._sc._checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
-        self._sc._checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+        det = self._sc.checkScalarTree(f, fname, 4)
+        self._sc.checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc.checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+        self._sc.checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+        self._sc.checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
         
         f.close()
@@ -340,12 +343,160 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc._checkScalarTree(f, fname, 4)
-        self._sc._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
-        self._sc._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
-        self._sc._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
-        self._sc._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
+        det = self._sc.checkScalarTree(f, fname, 4)
+        self._sc.checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
 
         
         f.close()
         os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntSpectrum(self):
+        print "Run: FieldTagWriterTest.test_clientIntScalar() "
+        fname= '%s/clientintscpectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="mca_int">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT8" name="mca_int8">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT16" name="mca_int16">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT32" name="mca_int32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="mca_int64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="mca_uint">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT8" name="mca_uint8">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT16" name="mca_uint16">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="mca_uint32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT64" name="mca_uint64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        tdw = TangoDataWriter(fname)
+
+        tdw.openNXFile()
+        
+        tdw.xmlSettings = xml
+        
+        tdw.openEntry()
+        mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
+        for mca in self._mca1:
+            tdw.record('{"data": { "mca_int":' + str(mca)
+                       + ', "mca_uint":' + str([(el+100)/2 for el in mca]) 
+                       + '  } }')
+        
+        tdw.closeEntry()
+        
+        tdw.closeNXFile()
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 10)
+        self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int32", "int32", "NX_INT32", self._mca1, grows = 2 )
+        self._sc.checkSpectrumField(det, "mca_int64", "int64", "NX_INT64", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_uint", "uint64", "NX_UINT", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
+        self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+
+        
+        f.close()
+#        os.remove(fname)

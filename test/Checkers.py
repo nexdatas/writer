@@ -20,18 +20,20 @@
 # checkers for unittests
 #
 import os
+import random
 from pni.nx.h5 import open_file
 import unittest
 from ndts import Types
 
 
+from math import exp
 
 
 ## checks for scalar attributes
-class ScalarChecker(object):
+class Checker(object):
 
     ## constructor
-    # \param methodName name of the test method
+    # \param testCase TestCase instance
     def __init__(self, testCase):
         ## test case
         self._tc = testCase 
@@ -41,7 +43,7 @@ class ScalarChecker(object):
     # \param f pninx file object    
     # \param fname file name
     # \returns detector group object    
-    def _checkScalarTree(self, f, fname, children):
+    def checkScalarTree(self, f, fname, children):
         self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
         self._tc.assertEqual(6, f.nattrs)
         self._tc.assertEqual( f.attr("file_name").value, fname)
@@ -101,13 +103,23 @@ class ScalarChecker(object):
         attrs = ['__pow__', '__mul__', '__div__','__add__', '__sub__']
         return all(hasattr(instance, attr) for attr in attrs)
 
+    ## creates spectrum plot with random Gaussians
+    # \param xlen data length 
+    # \param number of Gaussians  
+    # \returns list with the plot
+    def nicePlot(self, xlen=2048, nrGauss=5):
+        pr = [ [ random.uniform(0.01,0.001), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
+                   for i in range(nrGauss) ]
+        return [ sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
+                     for i in range(xlen)]
+
     ## checks  scalar counter
     # \param det detector group
     # \param name counter name
     # \param dtype numpy type
     # \param nxtype nexus type
     # \param unsigned flag if value is integer
-    def _checkScalarCounter(self, det, name, dtype, nxtype, values, error = 0):
+    def checkScalarCounter(self, det, name, dtype, nxtype, values, error = 0):
 
         cnt = det.open(name)
         self._tc.assertTrue(cnt.valid)
@@ -156,6 +168,66 @@ class ScalarChecker(object):
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"units")
         self._tc.assertEqual(at.value,"m")
+        
+        at = cnt.attr("nexdatas_source")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        
+
+
+    ## checks  spectrum field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param unsigned flag if value is integer
+    def checkSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
+
+        cnt = det.open(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        if grows > 1:
+#            lvalues = zip(*values)
+            lvalues = map(lambda *row: list(row), *values)
+        else:
+            lvalues = values
+        self._tc.assertEqual(len(cnt.shape), 2)
+        self._tc.assertEqual(cnt.shape, (len(lvalues),len(lvalues[0])))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        self._tc.assertEqual(cnt.size, len(lvalues)*len(lvalues[0]))        
+        # pninx is not supporting reading string areas 
+        
+        for i in range(len(lvalues)):
+            for j in range(len(lvalues[i])):
+#                print i, j, cnt[i,j], lvalues[i][j]
+                if self._isNumeric(cnt[i,0]):
+                    self._tc.assertTrue(abs(lvalues[i][j] - cnt[i,j]) <= error)
+                else:
+                    self._tc.assertEqual(lvalues[i][j], cnt[i,j])
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,3)
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"type")
+        self._tc.assertEqual(at.value,nxtype)
+        
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"units")
+        self._tc.assertEqual(at.value,"")
         
         at = cnt.attr("nexdatas_source")
         self._tc.assertTrue(at.valid)

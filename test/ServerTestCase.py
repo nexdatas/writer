@@ -64,9 +64,6 @@ class ServerTestCase(unittest.TestCase):
                 stderr =  subprocess.PIPE , shell= True)
         print "waiting for server",
         
-#        time.sleep(0.5)
-#        dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
-
         found = False
         cnt = 0
         while not found and cnt < 1000:

@@ -29,7 +29,7 @@ import time
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
-from Checkers import ScalarChecker
+from Checkers import Checker
 
 import ServerTestCase
 
@@ -43,7 +43,7 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
 
         self._counter =  [1, 2]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
-        self._sc = ScalarChecker(self)
+        self._sc = Checker(self)
 
 
 
@@ -194,17 +194,17 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc._checkScalarTree(f, fname , 11)
-        self._sc._checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
-        self._sc._checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
-        self._sc._checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
-        self._sc._checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
-        self._sc._checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._sc._checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
-        self._sc._checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
-        self._sc._checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._sc._checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
-        self._sc._checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
+        det = self._sc.checkScalarTree(f, fname , 11)
+        self._sc.checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
+        self._sc.checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
+        self._sc.checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
+        self._sc.checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
+        self._sc.checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
+        self._sc.checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
 
         
         f.close()
@@ -214,7 +214,6 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
-        print "FLOAT"
         print "Run: FieldTagWriterTest.test_clientFloatScalar() "
         fname= '%s/clientfloatscalar.h5' % os.getcwd()   
         xml= """<definition>
@@ -293,11 +292,11 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc._checkScalarTree(f, fname, 4)
-        self._sc._checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
-        self._sc._checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
-        self._sc._checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
-        self._sc._checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+        det = self._sc.checkScalarTree(f, fname, 4)
+        self._sc.checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc.checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+        self._sc.checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+        self._sc.checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
         
         f.close()
@@ -393,11 +392,11 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc._checkScalarTree(f, fname, 4)
-        self._sc._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
-        self._sc._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
-        self._sc._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
-        self._sc._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
+        det = self._sc.checkScalarTree(f, fname, 4)
+        self._sc.checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
 
         
         f.close()
