@@ -46,8 +46,8 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc = Checker(self)
         self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
         self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
-        self._fmca1 = self._sc.nicePlot(2048, 10)
-        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
+        self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
+#        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
 
     ## test starter
     # \brief Common set up
@@ -496,6 +496,85 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
         self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
         self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+
+        
+        f.close()
+        os.remove(fname)
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatSpectrum(self):
+        print "Run: FieldTagWriterTest.test_clientIntScalar() "
+        fname= '%s/clientfloatspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_FLOAT" name="mca_float">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT32" name="mca_float32">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="mca_float64">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="mca_number">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        tdw = TangoDataWriter(fname)
+
+        tdw.openNXFile()
+        
+        tdw.xmlSettings = xml
+        
+        tdw.openEntry()
+        for mca in self._fmca1:
+            tdw.record('{"data": { "mca_float":' + str(mca)
+                       + '  } }')
+        
+        tdw.closeEntry()
+        
+        tdw.closeNXFile()
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 4)
 
         
         f.close()
