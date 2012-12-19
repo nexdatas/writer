@@ -64,14 +64,16 @@ class ServerTestCase(unittest.TestCase):
                 stderr =  subprocess.PIPE , shell= True)
         print "waiting for server",
         
-        dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
+#        time.sleep(0.5)
+#        dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
 
         found = False
         cnt = 0
         while not found and cnt < 1000:
             try:
                 print "\b.",
-                time.sleep(0.1)
+                dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
+                time.sleep(0.01)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
             except:    
