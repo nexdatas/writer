@@ -24,15 +24,13 @@ import os
 import sys
 import subprocess
 
-import PyTango
-import time
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
 
 from ndts import TangoDataWriter, Types
 from ndts.TangoDataWriter  import TangoDataWriter 
-
+from Checkers import ScalarChecker
 
 ## test fixture
 class FieldTagWriterTest(unittest.TestCase):
@@ -44,9 +42,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
         self._counter =  [1,-2,6,-8,9,-11]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
-        self._mca1 = [e*0.1 for e in range(2048)]
-        self._mca2 = [(float(e)/(100.+e)) for e in range(2048)]
-
+        self._sc = ScalarChecker(self)
 
     ## test starter
     # \brief Common set up
@@ -58,133 +54,6 @@ class FieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
-
-    ## checks scalar tree
-    # \param f pninx file object    
-    # \param fname file name
-    # \returns detector group object    
-    def _checkScalarTree(self, f, fname, children):
-        self.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
-        self.assertEqual(6, f.nattrs)
-        self.assertEqual( f.attr("file_name").value, fname)
-        self.assertTrue(f.attr("NX_class").value,"NXroot")
-        self.assertEqual(f.nchildren, 2)
-            
-        en = f.open("entry1")
-        self.assertTrue(en.valid)
-        self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 1)
-
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
-
-        ins = en.open("instrument")
-        self.assertTrue(ins.valid)
-        self.assertEqual(ins.name,"instrument")
-        self.assertEqual(ins.nattrs,1)
-        self.assertEqual(ins.nchildren, 1)
-        
-            
-        at = ins.attr("NX_class")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXinstrument")
-
-        det = ins.open("detector")
-        self.assertTrue(det.valid)
-        self.assertEqual(det.name,"detector")
-        self.assertEqual(det.nattrs,1)
-        self.assertEqual(det.nchildren, children)
-            
-        at = det.attr("NX_class")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXdetector")
-            
-        return det
-
-
-    ## checks if instance is numeric
-    # \param checking instance 
-    # \returns is instance is numeric
-    def _isNumeric(self, instance):
-        attrs = ['__pow__', '__mul__', '__div__','__add__', '__sub__']
-        return all(hasattr(instance, attr) for attr in attrs)
-
-    ## checks  scalar counter
-    # \param det detector group
-    # \param name counter name
-    # \param dtype numpy type
-    # \param nxtype nexus type
-    # \param unsigned flag if value is integer
-    def _checkScalarCounter(self, det, name, dtype, nxtype, values, error = 0):
-
-        cnt = det.open(name)
-        self.assertTrue(cnt.valid)
-        self.assertEqual(cnt.name,name)
-        self.assertTrue(hasattr(cnt.shape, "__iter__"))
-        self.assertEqual(len(cnt.shape), 1)
-        self.assertEqual(cnt.shape, (len(values),))
-        self.assertEqual(cnt.dtype, dtype)
-        self.assertEqual(cnt.size, len(values))        
-        # pninx is not supporting reading string areas 
-        if not isinstance(values[0], str):
-            value = cnt.read()
-            for i in range(len(value)):
-                #            print values[i].__repr__(),  value[i].__repr__(), values[i] - value[i]
-                if self._isNumeric(value[i]):
-                    self.assertTrue(abs(values[i] - value[i]) <= error)
-                else:
-                    self.assertEqual(values[i],value[i])
-        for i in range(len(values)):
-            if self._isNumeric(cnt[i]):
-                if not self._isNumeric(values[i]):
-#                    print "BOOL: ", values[i] ,cnt[i]
-                    self.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
-                else:
-                    self.assertTrue(abs(values[i] - cnt[i]) <= error)
-            else:
-                self.assertEqual(values[i],cnt[i])
-            
-
-
-        self.assertEqual(cnt.nattrs,3)
-
-        at = cnt.attr("type")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,nxtype)
-        
-
-        at = cnt.attr("units")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"units")
-        self.assertEqual(at.value,"m")
-        
-        at = cnt.attr("nexdatas_source")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
@@ -302,21 +171,21 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname , 11)
-        self._checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
-        self._checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
-        self._checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
-        self._checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
-        self._checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
-        self._checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
-        self._checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
-        self._checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
+        det = self._sc._checkScalarTree(f, fname , 11)
+        self._sc._checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
+        self._sc._checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
+        self._sc._checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
+        self._sc._checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
+        self._sc._checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
+        self._sc._checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc._checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
+        self._sc._checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
+        self._sc._checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
+        self._sc._checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
 
         
         f.close()
-
+        os.remove(fname)
 
 
     ## scanRecord test
@@ -384,11 +253,11 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname, 4)
-        self._checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
-        self._checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
-        self._checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
-        self._checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+        det = self._sc._checkScalarTree(f, fname, 4)
+        self._sc._checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc._checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+        self._sc._checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+        self._sc._checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
         
         f.close()
@@ -471,16 +340,12 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname, 4)
-        self._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
-        self._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
-        self._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
-        self._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
+        det = self._sc._checkScalarTree(f, fname, 4)
+        self._sc._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
+        self._sc._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
 
         
         f.close()
-
-            
-
-        
-#        os.remove(fname)
+        os.remove(fname)
