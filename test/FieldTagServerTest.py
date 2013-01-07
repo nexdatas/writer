@@ -62,7 +62,7 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
-        print "Run: FieldTagServerTest.test_scanRecord() "
+        print "Run: FieldTagServerTest.test_clientIntScalar() "
         fname= '%s/clientintscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -214,7 +214,7 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
-        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        print "Run: FieldTagServerTest.test_clientFloatScalar() "
         fname= '%s/clientfloatscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -306,7 +306,7 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
-        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        print "Run: FieldTagServerTest.test_clientScalar() "
         fname= '%s/clientscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
