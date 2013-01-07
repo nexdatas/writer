@@ -575,10 +575,14 @@ class FieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 4)
-        self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, error = 1.0e-14)
-        self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, error = 1.0e-6, grows = 2)
-        self._sc.checkSpectrumField(det, "mca_float64", "float64", "NX_FLOAT64", self._fmca1, error = 1.0e-14, grows = 2)
-        self._sc.checkSpectrumField(det, "mca_number", "float64", "NX_NUMBER", self._fmca1, error = 1.0e-14 )
+        self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
+                                    error = 1.0e-14)
+        self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
+                                    error = 1.0e-6, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_float64", "float64", "NX_FLOAT64", self._fmca1, 
+                                    error = 1.0e-14, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_number", "float64", "NX_NUMBER", self._fmca1, 
+                                    error = 1.0e-14)
 
         
         f.close()
@@ -595,40 +599,41 @@ class FieldTagWriterTest(unittest.TestCase):
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
-        <field units="" type="NX_FLOAT" name="mca_float">
-          <dimensions rank="1">
-            <dim value="1024" index="1"/>
-          </dimensions>
+        <field units="" type="NX_DATE_TIME" name="time">
           <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
           <datasource type="CLIENT">
-            <record name="mca_float"/>
+            <record name="timestamps"/>
           </datasource>
         </field>
-        <field units="" type="NX_FLOAT32" name="mca_float32">
-          <dimensions rank="1">
-            <dim value="1024" index="1"/>
-          </dimensions>
+        <field units="" type="ISO8601" name="isotime">
           <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
           <datasource type="CLIENT">
-            <record name="mca_float"/>
+            <record name="timestamps"/>
           </datasource>
         </field>
-        <field units="" type="NX_FLOAT64" name="mca_float64">
-          <dimensions rank="1">
-            <dim value="1024" index="1"/>
-          </dimensions>
+        <field units="" type="NX_CHAR" name="string_time">
           <strategy mode="STEP" grows="2"/>
           <datasource type="CLIENT">
-            <record name="mca_float"/>
+           <record name="timestamps"/>
           </datasource>
-        </field>
-        <field units="" type="NX_NUMBER" name="mca_number">
           <dimensions rank="1">
-            <dim value="1024" index="1"/>
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
           </dimensions>
           <strategy mode="STEP" />
           <datasource type="CLIENT">
-            <record name="mca_float"/>
+            <record name="logicals"/>
           </datasource>
         </field>
       </group>
@@ -643,11 +648,22 @@ class FieldTagWriterTest(unittest.TestCase):
         tdw.openNXFile()
         
         tdw.xmlSettings = xml
+
+        dates = [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1956-05-23T12:12:32.123+0400","2212-12-12T12:25:43.1267-0700",
+                  "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
+        logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
         
         tdw.openEntry()
-        for mca in self._fmca1:
-            tdw.record('{"data": { "mca_float":' + str(mca)
-                       + '  } }')
+
+
+        for i in range(min(len(dates),len(logical))):
+            tdw.record('{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                       + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ' } }')
+            
+
         
         tdw.closeEntry()
         
@@ -659,8 +675,14 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 4)
+        det = self._sc.checkScalarTree(f, fname , 13)
+        self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
 
         
         f.close()
 #        os.remove(fname)
+
+

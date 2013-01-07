@@ -199,12 +199,18 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         self._tc.assertEqual(cnt.size, len(lvalues)*len(lvalues[0]))        
         # pninx is not supporting reading string areas 
+
+
+
         
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
 #                print i, j, cnt[i,j], lvalues[i][j]
                 if self._isNumeric(cnt[i,0]):
-                    self._tc.assertTrue(abs(lvalues[i][j] - cnt[i,j]) <= error)
+                    if nxtype == "NX_BOOLEAN":
+                        self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
+                    else:
+                        self._tc.assertTrue(abs(lvalues[i][j] - cnt[i,j]) <= error)
                 else:
                     self._tc.assertEqual(lvalues[i][j], cnt[i,j])
             
@@ -228,6 +234,66 @@ class Checker(object):
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"units")
         self._tc.assertEqual(at.value,"")
+        
+        at = cnt.attr("nexdatas_source")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+
+
+    ## checks  spectrum field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param unsigned flag if value is integer
+    def checkStringSpectrumField(self, det, name, dtype, nxtype, values):
+
+
+        cnts = [ det.open(name +"_"+str(sz) ) for sz in range(len(values[0]))] 
+
+        for sz in range(len(values[0])) :
+            self._tc.assertEqual(cnts[sz].name,name +"_"+str(sz))
+            
+
+        for cnt in cnts:
+            self._tc.assertTrue(cnt.valid)
+            self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self._tc.assertEqual(len(cnt.shape), 1)
+            self._tc.assertEqual(cnt.shape, (len(values),))
+            self._tc.assertEqual(cnt.dtype, dtype)
+            self._tc.assertEqual(cnt.size, len(values))        
+
+
+        
+        for i in range(len(values)):
+            for j in range(len(values[i])):
+#                print i, j, cnt[i,j], lvalues[i][j]
+                self._tc.assertEqual(values[i][j], cnts[j][i])
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,3)
+
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"units")
+        self._tc.assertEqual(at.value,"")
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"type")
+        self._tc.assertEqual(at.value,nxtype)
+        
+
         
         at = cnt.attr("nexdatas_source")
         self._tc.assertTrue(at.valid)
