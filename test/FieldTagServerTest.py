@@ -23,6 +23,7 @@ import unittest
 import os
 import sys
 import subprocess
+import random
 
 import PyTango
 import time
@@ -44,6 +45,9 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         self._counter =  [1, 2]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._sc = Checker(self)
+        self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
+        self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
+        self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 
 
 
@@ -401,3 +405,395 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         
         f.close()
         os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntSpectrum(self):
+        print "Run: FieldTagServerTest.test_clientIntSpectrum() "
+        fname= '%s/clientintscpectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="mca_int">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT8" name="mca_int8">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT16" name="mca_int16">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT32" name="mca_int32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="mca_int64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="mca_uint">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT8" name="mca_uint8">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT16" name="mca_uint16">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="mca_uint32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT64" name="mca_uint64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
+        for mca in self._mca1:
+            dp.Record('{"data": { "mca_int":' + str(mca)
+                       + ', "mca_uint":' + str([(el+100)/2 for el in mca]) 
+                       + '  } }')
+
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+                
+            
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 10)
+        self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int32", "int32", "NX_INT32", self._mca1, grows = 2 )
+        self._sc.checkSpectrumField(det, "mca_int64", "int64", "NX_INT64", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_uint", "uint64", "NX_UINT", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
+        self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatSpectrum(self):
+        print "Run: FieldTagWriterTest.test_clientFloatSpectrum() "
+        fname= '%s/clientfloatspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_FLOAT" name="mca_float">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT32" name="mca_float32">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="mca_float64">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="mca_number">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        for mca in self._fmca1:
+            dp.Record('{"data": { "mca_float":' + str(mca)
+                       + '  } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+                
+            
+            
+
+
+        
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 4)
+        self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
+                                    error = 1.0e-14)
+        self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
+                                    error = 1.0e-6, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_float64", "float64", "NX_FLOAT64", self._fmca1, 
+                                    error = 1.0e-14, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_number", "float64", "NX_NUMBER", self._fmca1, 
+                                    error = 1.0e-14)
+
+        
+        f.close()
+        os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientSpectrum(self):
+        print "Run: FieldTagWriterTest.test_clientSpectrum() "
+        fname= '%s/clientspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+
+        dates = [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1956-05-23T12:12:32.123+0400","2212-12-12T12:25:43.1267-0700",
+                  "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
+        logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
+
+
+
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        for i in range(min(len(dates),len(logical))):
+            dp.Record('{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                       + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ' } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+                
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 13)
+        self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
+
+        
+        f.close()
+        os.remove(fname)
+
