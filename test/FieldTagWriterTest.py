@@ -49,7 +49,7 @@ class FieldTagWriterTest(unittest.TestCase):
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
-        self._fpco1 = [self._sc.nicePlot2D(20, 30, 10) for i in range(4)]
+        self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
     ## test starter
     # \brief Common set up
@@ -946,5 +946,116 @@ class FieldTagWriterTest(unittest.TestCase):
         
         f.close()
         os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientImage(self):
+        print "Run: FieldTagWriterTest.test_clientImage() "
+        fname= '%s/clientimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        tdw = TangoDataWriter(fname)
+
+        tdw.openNXFile()
+        
+        tdw.xmlSettings = xml
+
+        dates = [[["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"]],
+                 [["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],
+                 ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],                 
+                 ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]]]
+
+        logical = [[["1","0","true","false"], ["True","False","TrUe","FaLsE"], ["1","0","0","1"]],
+                   [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
+        
+        tdw.openEntry()
+
+
+        for i in range(min(len(dates),len(logical))):
+            tdw.record('{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                       + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ' } }')
+            
+
+        
+        tdw.closeEntry()
+        
+        tdw.closeNXFile()
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 37)
+        self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
+
+        
+        f.close()
+#        os.remove(fname)
+
 
 

@@ -42,6 +42,7 @@ class Checker(object):
     ## checks scalar tree
     # \param f pninx file object    
     # \param fname file name
+    # \param children number of detector children   
     # \returns detector group object    
     def checkScalarTree(self, f, fname, children):
         self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
@@ -105,7 +106,7 @@ class Checker(object):
 
     ## creates spectrum plot with random Gaussians
     # \param xlen data length 
-    # \param number of Gaussians  
+    # \param nrGauss of Gaussians  
     # \returns list with the plot
     def nicePlot(self, xlen=2048, nrGauss=5):
         pr = [ [ random.uniform(0.01,0.001), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
@@ -117,10 +118,10 @@ class Checker(object):
     ## creates spectrum plot with random Gaussians
     # \param xlen data x-length 
     # \param ylen data y-length 
-    # \param number of Gaussians  
+    # \param nrGauss of Gaussians  
     # \returns list with the plot
     def nicePlot2D(self, xlen=1024, ylen=1024, nrGauss=5):
-        pr = [ [ random.uniform(0.01,0.001), random.uniform(0.01,0.001), random.uniform(0,ylen), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
+        pr = [ [ random.uniform(0.1,0.01), random.uniform(0.01,0.1), random.uniform(0,ylen), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
                    for i in range(nrGauss) ]
         return [[ sum([pr[j][4]*exp(-pr[j][0]*(i1-pr[j][2])**2-pr[j][1]*(i2-pr[j][3])**2) \
                            for j in range(len(pr)) ]) \
@@ -132,7 +133,8 @@ class Checker(object):
     # \param name counter name
     # \param dtype numpy type
     # \param nxtype nexus type
-    # \param unsigned flag if value is integer
+    # \param values  original values
+    # \param error data precision
     def checkScalarCounter(self, det, name, dtype, nxtype, values, error = 0):
 
         cnt = det.open(name)
@@ -196,7 +198,9 @@ class Checker(object):
     # \param name counter name
     # \param dtype numpy type
     # \param nxtype nexus type
-    # \param unsigned flag if value is integer
+    # \param values  original values
+    # \param error data precision
+    # \param grows growing dimension
     def checkSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
 
         cnt = det.open(name)
@@ -261,7 +265,7 @@ class Checker(object):
     # \param name counter name
     # \param dtype numpy type
     # \param nxtype nexus type
-    # \param unsigned flag if value is integer
+    # \param values  original values
     def checkStringSpectrumField(self, det, name, dtype, nxtype, values):
 
 
@@ -279,6 +283,33 @@ class Checker(object):
             self._tc.assertEqual(cnt.dtype, dtype)
             self._tc.assertEqual(cnt.size, len(values))        
 
+            
+            self._tc.assertEqual(cnt.nattrs,3)
+
+
+            at = cnt.attr("units")
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(at.name,"units")
+            self._tc.assertEqual(at.value,"")
+
+            at = cnt.attr("type")
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(at.name,"type")
+            self._tc.assertEqual(at.value,nxtype)
+        
+
+        
+            at = cnt.attr("nexdatas_source")
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
 
         
         for i in range(len(values)):
@@ -288,32 +319,6 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,3)
-
-
-        at = cnt.attr("units")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
-        self._tc.assertEqual(at.name,"units")
-        self._tc.assertEqual(at.value,"")
-
-        at = cnt.attr("type")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
-        self._tc.assertEqual(at.name,"type")
-        self._tc.assertEqual(at.value,nxtype)
-        
-
-        
-        at = cnt.attr("nexdatas_source")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
         
 
 
@@ -322,7 +327,9 @@ class Checker(object):
     # \param name counter name
     # \param dtype numpy type
     # \param nxtype nexus type
-    # \param unsigned flag if value is integer
+    # \param values  original values
+    # \param error data precision
+    # \param grows growing dimension
     def checkImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
 
         cnt = det.open(name)
@@ -382,4 +389,70 @@ class Checker(object):
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
         self._tc.assertEqual(len(at.shape),0)
         self._tc.assertEqual(at.dtype,"string")
+
+
+
+    ## checks  string image field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param values  original values
+    def checkStringImageField(self, det, name, dtype, nxtype, values):
+
+
+        cnts = [[ det.open(name +"_"+str(s1) +"_"+str(s2) ) for s2 in range(len(values[0][0]))] for s1 in range(len(values[0])) ]
+
+        for s1 in range(len(values[0])) :
+            for s2 in range(len(values[0][0])) :
+                print "NAME:",  name + "_" + str(s1)+ "_" + str(s2)
+                self._tc.assertEqual(cnts[s1][s2].name, name + "_" + str(s1)+ "_" + str(s2))
+            
+
+        for icnt in cnts:
+            for cnt in icnt:
+                self._tc.assertTrue(cnt.valid)
+                self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+                self._tc.assertEqual(len(cnt.shape), 1)
+                self._tc.assertEqual(cnt.shape, (len(values),))
+                self._tc.assertEqual(cnt.dtype, dtype)
+                self._tc.assertEqual(cnt.size, len(values))        
+
+
+                self._tc.assertEqual(cnt.nattrs,3)
+
+
+                at = cnt.attr("units")
+                self._tc.assertTrue(at.valid)
+                self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+                self._tc.assertEqual(len(at.shape),0)
+                self._tc.assertEqual(at.dtype,"string")
+                self._tc.assertEqual(at.name,"units")
+                self._tc.assertEqual(at.value,"")
+                
+                at = cnt.attr("type")
+                self._tc.assertTrue(at.valid)
+                self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+                self._tc.assertEqual(len(at.shape),0)
+                self._tc.assertEqual(at.dtype,"string")
+                self._tc.assertEqual(at.name,"type")
+                self._tc.assertEqual(at.value,nxtype)
+                
+
+        
+                at = cnt.attr("nexdatas_source")
+                self._tc.assertTrue(at.valid)
+                self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+                self._tc.assertEqual(len(at.shape),0)
+                self._tc.assertEqual(at.dtype,"string")
+        
+
+        
+        for i in range(len(values)):
+            for j in range(len(values[i])):
+                for k in range(len(values[i][j])):
+#                print i, j, cnt[i,j], lvalues[i][j]
+                    self._tc.assertEqual(values[i][j][k], cnts[j][k][i])
+            
+
 
