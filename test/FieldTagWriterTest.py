@@ -48,6 +48,7 @@ class FieldTagWriterTest(unittest.TestCase):
         self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
+        self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
 
     ## test starter
     # \brief Common set up
@@ -141,6 +142,8 @@ class FieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+
+
         
 
         tdw = TangoDataWriter(fname)
@@ -686,3 +689,162 @@ class FieldTagWriterTest(unittest.TestCase):
         os.remove(fname)
 
 
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntImage(self):
+        print "Run: FieldTagWriterTest.test_clientIntImage() "
+        fname= '%s/clientintimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="pco_int">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT8" name="pco_int8">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT16" name="pco_int16">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT32" name="pco_int32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="pco_int64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="pco_uint">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT8" name="pco_uint8">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT16" name="pco_uint16">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="pco_uint32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT64" name="pco_uint64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"  grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+
+        tdw = TangoDataWriter(fname)
+
+        tdw.openNXFile()
+        
+        tdw.xmlSettings = xml
+        
+        tdw.openEntry()
+        pco2 = [[[(el+100)/2 for el in rpco] for rpco in pco] for pco in self._pco1  ]
+        for pco in self._pco1:
+            tdw.record('{"data": { "pco_int":' + str(pco)
+                       + ', "pco_uint":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) 
+                       + '  } }')
+        
+        tdw.closeEntry()
+        
+        tdw.closeNXFile()
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 10)
+        self._sc.checkImageField(det, "pco_int", "int64", "NX_INT", self._pco1)
+        self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
+        self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
+        self._sc.checkImageField(det, "pco_int32", "int32", "NX_INT32", self._pco1, grows = 2 )
+        self._sc.checkImageField(det, "pco_int64", "int64", "NX_INT64", self._pco1)
+        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows = 3)
+        self._sc.checkImageField(det, "pco_uint16", "uint16", "NX_UINT16", pco2 )
+        self._sc.checkImageField(det, "pco_uint32", "uint32", "NX_UINT32", pco2, grows = 2 )
+        self._sc.checkImageField(det, "pco_uint64", "uint64", "NX_UINT64", pco2, grows = 3 )
+
+        
+        f.close()
+#        os.remove(fname)

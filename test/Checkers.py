@@ -302,3 +302,70 @@ class Checker(object):
         self._tc.assertEqual(at.dtype,"string")
         
 
+
+    ## checks  image field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param unsigned flag if value is integer
+    def checkImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
+
+        cnt = det.open(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        if grows == 3:
+            lvalues = map(lambda *image: map(lambda *row: list(row), *image), *values)
+        elif grows == 2:
+            lvalues = map(lambda *row: list(row), *values)
+        else:
+            lvalues = values
+        self._tc.assertEqual(len(cnt.shape), 3)
+        self._tc.assertEqual(cnt.shape, (len(lvalues),len(lvalues[0]),len(lvalues[0][0])))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        self._tc.assertEqual(cnt.size, len(lvalues)*len(lvalues[0])*len(lvalues[0][0]))        
+        # pninx is not supporting reading string areas 
+
+
+
+        
+        for i in range(len(lvalues)):
+            for j in range(len(lvalues[i])):
+                for k in range(len(lvalues[i][j])):
+#                print i, j, cnt[i,j], lvalues[i][j]
+                    if self._isNumeric(cnt[i,0,0]):
+                        if nxtype == "NX_BOOLEAN":
+                            self._tc.assertEqual(Types.Converters.toBool(values[i][j][k]),cnt[i,j,k])
+                        else:
+                            self._tc.assertTrue(abs(lvalues[i][j][k] - cnt[i,j,k]) <= error)
+                    else:
+                        self._tc.assertEqual(lvalues[i][j][k], cnt[i,j,k])
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,3)
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"type")
+        self._tc.assertEqual(at.value,nxtype)
+        
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"units")
+        self._tc.assertEqual(at.value,"")
+        
+        at = cnt.attr("nexdatas_source")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+
