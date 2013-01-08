@@ -405,7 +405,6 @@ class Checker(object):
 
         for s1 in range(len(values[0])) :
             for s2 in range(len(values[0][0])) :
-                print "NAME:",  name + "_" + str(s1)+ "_" + str(s2)
                 self._tc.assertEqual(cnts[s1][s2].name, name + "_" + str(s1)+ "_" + str(s2))
             
 

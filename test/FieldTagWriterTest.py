@@ -1055,7 +1055,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
         
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 

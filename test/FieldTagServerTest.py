@@ -48,6 +48,8 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
         self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
+        self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
+        self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
 
 
@@ -158,7 +160,6 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         
         dp.TheXMLSettings = xml
         self.assertEqual(dp.state(),PyTango.DevState.OPEN)
-        
         
         dp.OpenEntry()
         self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
@@ -578,7 +579,7 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
-        print "Run: FieldTagWriterTest.test_clientFloatSpectrum() "
+        print "Run: FieldTagServerTest.test_clientFloatSpectrum() "
         fname= '%s/clientfloatspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -689,7 +690,7 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientSpectrum(self):
-        print "Run: FieldTagWriterTest.test_clientSpectrum() "
+        print "Run: FieldTagServerTest.test_clientSpectrum() "
         fname= '%s/clientspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -796,4 +797,422 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
         
         f.close()
         os.remove(fname)
+
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntImage(self):
+        print "Run: FieldTagServerTest.test_clientIntImage() "
+        fname= '%s/clientintimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="pco_int">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT8" name="pco_int8">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT16" name="pco_int16">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT32" name="pco_int32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="pco_int64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="pco_uint">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT8" name="pco_uint8">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT16" name="pco_uint16">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="pco_uint32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT64" name="pco_uint64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"  grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        pco2 = [[[(el+100)/2 for el in rpco] for rpco in pco] for pco in self._pco1  ]
+        for pco in self._pco1:
+            dp.Record('{"data": { "pco_int":' + str(pco)
+                       + ', "pco_uint":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) 
+                       + '  } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 10)
+        self._sc.checkImageField(det, "pco_int", "int64", "NX_INT", self._pco1)
+        self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
+        self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
+        self._sc.checkImageField(det, "pco_int32", "int32", "NX_INT32", self._pco1, grows = 2 )
+        self._sc.checkImageField(det, "pco_int64", "int64", "NX_INT64", self._pco1)
+        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows = 3)
+        self._sc.checkImageField(det, "pco_uint16", "uint16", "NX_UINT16", pco2 )
+        self._sc.checkImageField(det, "pco_uint32", "uint32", "NX_UINT32", pco2, grows = 2 )
+        self._sc.checkImageField(det, "pco_uint64", "uint64", "NX_UINT64", pco2, grows = 3 )
+
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatImage(self):
+        print "Run: FieldTagServerTest.test_clientFloatImage() "
+        fname= '%s/clientfloatimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_FLOAT" name="pco_float">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT32" name="pco_float32">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="pco_float64">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="pco_number">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"  grows = "1" />
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+
+
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        for pco in self._fpco1:
+            dp.Record('{"data": { "pco_float":' + str(pco)
+                       + '  } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 4)
+        self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
+                                    error = 1.0e-14)
+        self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
+                                    error = 1.0e-6, grows = 2)
+        self._sc.checkImageField(det, "pco_float64", "float64", "NX_FLOAT64", self._fpco1, 
+                                    error = 1.0e-14, grows = 3)
+        self._sc.checkImageField(det, "pco_number", "float64", "NX_NUMBER", self._fpco1, 
+                                    error = 1.0e-14, grows = 1)
+
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientImage(self):
+        print "Run: FieldTagServerTest.test_clientImage() "
+        fname= '%s/clientimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+        dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            #        print 'attributes', dp.attribute_list_query()
+        dp.FileName = fname
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+        dates = [[["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"]],
+                 [["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],
+                 ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],                 
+                 ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]]]
+
+        logical = [[["1","0","true","false"], ["True","False","TrUe","FaLsE"], ["1","0","0","1"]],
+                   [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
+        
+        dp.OpenFile()
+        
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        dp.TheXMLSettings = xml
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.OpenEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+        
+
+        for i in range(min(len(dates),len(logical))):
+            dp.Record('{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                       + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ' } }')
+
+        self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+
+        
+        dp.CloseEntry()
+        self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+        
+        
+        dp.CloseFile()
+        self.assertEqual(dp.state(),PyTango.DevState.ON)
+
+
+
+
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 37)
+        self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
+
+        
+        f.close()
+        os.remove(fname)
+
+
 
