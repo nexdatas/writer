@@ -49,6 +49,7 @@ class FieldTagWriterTest(unittest.TestCase):
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
+        self._fpco1 = [self._sc.nicePlot2D(20, 30, 10) for i in range(4)]
 
     ## test starter
     # \brief Common set up
@@ -504,6 +505,7 @@ class FieldTagWriterTest(unittest.TestCase):
         f.close()
         os.remove(fname)
 
+
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
@@ -847,4 +849,102 @@ class FieldTagWriterTest(unittest.TestCase):
 
         
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatImage(self):
+        print "Run: FieldTagWriterTest.test_clientFloatImage() "
+        fname= '%s/clientfloatimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_FLOAT" name="pco_float">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT32" name="pco_float32">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="pco_float64">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="pco_number">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"  grows = "1" />
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+
+
+        
+
+        tdw = TangoDataWriter(fname)
+
+        tdw.openNXFile()
+        
+        tdw.xmlSettings = xml
+        
+        tdw.openEntry()
+        for pco in self._fpco1:
+            tdw.record('{"data": { "pco_float":' + str(pco)
+                       + '  } }')
+        
+        tdw.closeEntry()
+        
+        tdw.closeNXFile()
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 4)
+        self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
+                                    error = 1.0e-14)
+        self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
+                                    error = 1.0e-6, grows = 2)
+        self._sc.checkImageField(det, "pco_float64", "float64", "NX_FLOAT64", self._fpco1, 
+                                    error = 1.0e-14, grows = 3)
+        self._sc.checkImageField(det, "pco_number", "float64", "NX_NUMBER", self._fpco1, 
+                                    error = 1.0e-14, grows = 1)
+
+        
+        f.close()
+        os.remove(fname)
+
+

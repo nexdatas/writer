@@ -113,6 +113,20 @@ class Checker(object):
         return [ sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
                      for i in range(xlen)]
 
+
+    ## creates spectrum plot with random Gaussians
+    # \param xlen data x-length 
+    # \param ylen data y-length 
+    # \param number of Gaussians  
+    # \returns list with the plot
+    def nicePlot2D(self, xlen=1024, ylen=1024, nrGauss=5):
+        pr = [ [ random.uniform(0.01,0.001), random.uniform(0.01,0.001), random.uniform(0,ylen), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
+                   for i in range(nrGauss) ]
+        return [[ sum([pr[j][4]*exp(-pr[j][0]*(i1-pr[j][2])**2-pr[j][1]*(i2-pr[j][3])**2) \
+                           for j in range(len(pr)) ]) \
+                      for i1 in range(ylen)] for i2 in range(xlen)]
+
+
     ## checks  scalar counter
     # \param det detector group
     # \param name counter name
