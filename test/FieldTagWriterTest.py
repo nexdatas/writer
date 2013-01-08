@@ -61,6 +61,10 @@ class FieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+    ## opens writer
+    # \param fname file name     
+    # \param xml XML settings
+    # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml):
         tdw = TangoDataWriter(fname)
         tdw.openNXFile()
@@ -68,19 +72,20 @@ class FieldTagWriterTest(unittest.TestCase):
         tdw.openEntry()
         return tdw
 
-
+    ## closes writer
+    # \param tdw Tango Data Writer instance
     def closeWriter(self, tdw):
         tdw.closeEntry()
         tdw.closeNXFile()
 
-
+    ## performs one record step
     def record(self, tdw, string):
         tdw.record(string)
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
-        print "Run: FieldTagWriterTest.test_clientIntScalar() "
+        print "Run: %s.test_clientIntScalar() " % self.__class__.__name__
         fname= '%s/clientintscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -203,7 +208,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
-        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        print "Run: %s.test_clientFloatScalar() " % self.__class__.__name__
         fname= '%s/clientfloatscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -272,7 +277,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
-        print "Run: FieldTagWriterTest.test_clientScalar() "
+        print "Run: %s.test_clientScalar() " % self.__class__.__name__
         fname= '%s/clientscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -347,7 +352,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
-        print "Run: FieldTagWriterTest.test_clientIntSpectrum() "
+        print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
         fname= '%s/clientintscpectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -488,7 +493,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
-        print "Run: FieldTagWriterTest.test_clientFloatSpectrum() "
+        print "Run: %s.test_clientFloatSpectrum() " % self.__class__.__name__
         fname= '%s/clientfloatspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -570,7 +575,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientSpectrum(self):
-        print "Run: FieldTagWriterTest.test_clientSpectrum() "
+        print "Run: %s.test_clientSpectrum() " % self.__class__.__name__
         fname= '%s/clientspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -660,7 +665,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntImage(self):
-        print "Run: FieldTagWriterTest.test_clientIntImage() "
+        print "Run: %s.test_clientIntImage() " % self.__class__.__name__
         fname= '%s/clientintimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -812,7 +817,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatImage(self):
-        print "Run: FieldTagWriterTest.test_clientFloatImage() "
+        print "Run: %s.test_clientFloatImage() " % self.__class__.__name__
         fname= '%s/clientfloatimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -901,7 +906,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientImage(self):
-        print "Run: FieldTagWriterTest.test_clientImage() "
+        print "Run: %s.test_clientImage() " % self.__class__.__name__
         fname= '%s/clientimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">

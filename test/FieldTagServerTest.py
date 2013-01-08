@@ -60,8 +60,12 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
     def tearDown(self): 
         self._sv.tearDown()
         
+    ## opens writer
+    # \param fname file name     
+    # \param xml XML settings
+    # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml):
-        tdw = PyTango.DeviceProxy("testp09/testtdw/testr228")
+        tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         tdw.FileName = fname
         self.assertEqual(tdw.state(),PyTango.DevState.ON)
         
@@ -77,13 +81,13 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
         return tdw
 
 
+    ## closes writer
+    # \param tdw Tango Data Writer proxy instance
     def closeWriter(self, tdw):
         self.assertEqual(tdw.state(),PyTango.DevState.EXTRACT)
 
-        
         tdw.CloseEntry()
         self.assertEqual(tdw.state(),PyTango.DevState.OPEN)
-        
         
         tdw.CloseFile()
         self.assertEqual(tdw.state(),PyTango.DevState.ON)
@@ -91,6 +95,7 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
 
 
 
+    ## performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
 
