@@ -16,8 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file ServerTestCase.py
-# base class for TangoDataServer unittests
+## \file ServerSetting.py
+# class with server settings
 #
 import unittest
 import os
@@ -31,12 +31,11 @@ from  xml.sax import SAXParseException
 
 
 ## test fixture
-class ServerTestCase(unittest.TestCase):
+class ServerSetUp(object):
 
     ## constructor
     # \param methodName name of the test method
-    def __init__(self, methodName):
-        unittest.TestCase.__init__(self, methodName)
+    def __init__(self):
         self._new_device_info_writer = PyTango.DbDevInfo()
         self._new_device_info_writer._class = "TangoDataServer"
         self._new_device_info_writer.server = "TangoDataServer/TDWTEST"

@@ -29,15 +29,17 @@ import time
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
-import ServerTestCase
+import ServerSetUp
 
 ## test fixture
-class TangoDataServerTest(ServerTestCase.ServerTestCase):
+class TangoDataServerTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        ServerTestCase.ServerTestCase.__init__(self, methodName)
+        unittest.TestCase.__init__(self, methodName)
+
+        self._sv = ServerSetUp.ServerSetUp()
 
         self._scanXml = """
 <definition>
@@ -86,12 +88,12 @@ class TangoDataServerTest(ServerTestCase.ServerTestCase):
     ## test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        ServerTestCase.ServerTestCase.setUp(self)
+        self._sv.setUp()
 
     ## test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self): 
-        ServerTestCase.ServerTestCase.tearDown(self)
+        self._sv.tearDown()
 
         
 

@@ -32,15 +32,17 @@ from  xml.sax import SAXParseException
 
 from Checkers import Checker
 
-import ServerTestCase
+import ServerSetUp
 
 ## test fixture
-class FieldTagServerTest(ServerTestCase.ServerTestCase):
+class FieldTagServerTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        ServerTestCase.ServerTestCase.__init__(self, methodName)
+        unittest.TestCase.__init__(self, methodName)
+
+        self._sv = ServerSetUp.ServerSetUp()
 
         self._counter =  [1, 2]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
@@ -56,12 +58,12 @@ class FieldTagServerTest(ServerTestCase.ServerTestCase):
     ## test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        ServerTestCase.ServerTestCase.setUp(self)
+        self._sv.setUp()
 
     ## test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self): 
-        ServerTestCase.ServerTestCase.tearDown(self)
+        self._sv.tearDown()
         
 
 

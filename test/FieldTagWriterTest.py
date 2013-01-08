@@ -61,6 +61,21 @@ class FieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+    def openWriter(self, fname, xml):
+        tdw = TangoDataWriter(fname)
+        tdw.openNXFile()
+        tdw.xmlSettings = xml
+        tdw.openEntry()
+        return tdw
+
+
+    def closeWriter(self, tdw):
+        tdw.closeEntry()
+        tdw.closeNXFile()
+
+
+    def record(self, tdw, string):
+        tdw.record(string)
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
@@ -145,19 +160,12 @@ class FieldTagWriterTest(unittest.TestCase):
 """
 
 
-        
+        tdw = self.openWriter(fname, xml)
 
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
             
         for c in self._counter:
             uc = abs(c)
-            tdw.record('{"data": {"cnt":' + str(c) 
+            self.record(tdw,'{"data": {"cnt":' + str(c) 
                        + ', "cnt_8":' + str(c) 
                        + ', "cnt_16":' + str(c) 
                        + ', "cnt_32":' + str(c) 
@@ -170,12 +178,7 @@ class FieldTagWriterTest(unittest.TestCase):
                        + ',  "cnt_u64":' + str(uc)
                        + ' } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
-            
-
-
+        self.closeWriter(tdw)
         
         # check the created file
         
@@ -237,23 +240,14 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
-            
+        tdw = self.openWriter(fname, xml)
         for c in self._fcounter:
-            tdw.record('{"data": {"cnt":' + str(c) 
+            self.record(tdw,'{"data": {"cnt":' + str(c) 
                        + ', "cnt_32":' + str(c) 
                        + ', "cnt_64":' + str(c) 
                        + ' } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
         
@@ -323,23 +317,15 @@ class FieldTagWriterTest(unittest.TestCase):
         logical = ["1","0","true","false","True","False","TrUe","FaLsE"]
         
 
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
+        tdw = self.openWriter(fname, xml)
         
         
         for i in range(min(len(dates),len(logical))):
-            tdw.record('{"data": {"timestamp":"' + str(dates[i]) 
+            self.record(tdw,'{"data": {"timestamp":"' + str(dates[i]) 
                        + '", "logical":"' + str(logical[i])
                        + '" } }')
             
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
@@ -466,22 +452,15 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = TangoDataWriter(fname)
+        tdw = self.openWriter(fname, xml)
 
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
         mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
         for mca in self._mca1:
-            tdw.record('{"data": { "mca_int":' + str(mca)
+            self.record(tdw,'{"data": { "mca_int":' + str(mca)
                        + ', "mca_uint":' + str([(el+100)/2 for el in mca]) 
                        + '  } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
@@ -558,20 +537,13 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = TangoDataWriter(fname)
+        tdw = self.openWriter(fname, xml)
 
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
         for mca in self._fmca1:
-            tdw.record('{"data": { "mca_float":' + str(mca)
+            self.record(tdw,'{"data": { "mca_float":' + str(mca)
                        + '  } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
@@ -648,31 +620,23 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-
         dates = [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
                   "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
                  ["1956-05-23T12:12:32.123+0400","2212-12-12T12:25:43.1267-0700",
                   "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
         logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
         
-        tdw.openEntry()
 
+        tdw = self.openWriter(fname, xml)
 
         for i in range(min(len(dates),len(logical))):
-            tdw.record('{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+            self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
                        + ', "logicals":' + str(logical[i]).replace("'","\"")
                        + ' } }')
             
 
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
@@ -812,22 +776,15 @@ class FieldTagWriterTest(unittest.TestCase):
 
 
 
-        tdw = TangoDataWriter(fname)
+        tdw = self.openWriter(fname, xml)
 
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
         pco2 = [[[(el+100)/2 for el in rpco] for rpco in pco] for pco in self._pco1  ]
         for pco in self._pco1:
-            tdw.record('{"data": { "pco_int":' + str(pco)
+            self.record(tdw,'{"data": { "pco_int":' + str(pco)
                        + ', "pco_uint":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) 
                        + '  } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
@@ -912,20 +869,13 @@ class FieldTagWriterTest(unittest.TestCase):
 
         
 
-        tdw = TangoDataWriter(fname)
+        tdw = self.openWriter(fname, xml)
 
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
         for pco in self._fpco1:
-            tdw.record('{"data": { "pco_float":' + str(pco)
+            self.record(tdw,'{"data": { "pco_float":' + str(pco)
                        + '  } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
@@ -1003,14 +953,6 @@ class FieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
-        
-
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-
         dates = [[["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
                   "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
                  ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
@@ -1027,19 +969,19 @@ class FieldTagWriterTest(unittest.TestCase):
         logical = [[["1","0","true","false"], ["True","False","TrUe","FaLsE"], ["1","0","0","1"]],
                    [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
         
-        tdw.openEntry()
 
+        tdw = self.openWriter(fname, xml)
+
+        
 
         for i in range(min(len(dates),len(logical))):
-            tdw.record('{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
-                       + ', "logicals":' + str(logical[i]).replace("'","\"")
-                       + ' } }')
+            self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                        + ', "logicals":' + str(logical[i]).replace("'","\"")
+                        + ' } }')
             
 
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw)
             
 
 
