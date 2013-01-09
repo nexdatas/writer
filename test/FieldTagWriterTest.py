@@ -65,16 +65,20 @@ class FieldTagWriterTest(unittest.TestCase):
     # \param fname file name     
     # \param xml XML settings
     # \returns Tango Data Writer instance   
-    def openWriter(self, fname, xml):
+    def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter(fname)
         tdw.openNXFile()
         tdw.xmlSettings = xml
+        if json:
+            tdw.json = json
         tdw.openEntry()
         return tdw
 
     ## closes writer
     # \param tdw Tango Data Writer instance
-    def closeWriter(self, tdw):
+    def closeWriter(self, tdw, json = None):
+        if json:
+            tdw.json = json
         tdw.closeEntry()
         tdw.closeNXFile()
 
@@ -158,14 +162,28 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" type="NX_INT64" name="init64">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_UINT32" name="final32">
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="cnt_u32"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
 </definition>
 """
 
-
-        tdw = self.openWriter(fname, xml)
+        uc = self._counter[0]
+        tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_64":' + str(uc) + ' } }')
 
             
         for c in self._counter:
@@ -183,12 +201,13 @@ class FieldTagWriterTest(unittest.TestCase):
                        + ',  "cnt_u64":' + str(uc)
                        + ' } }')
         
-        self.closeWriter(tdw)
+        uc = abs(self._counter[0])
+        self.closeWriter(tdw, json = '{"data": { "cnt_u32":' + str(uc) + ' } }')
         
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 11)
+        det = self._sc.checkScalarTree(f, fname , 13)
         self._sc.checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
         self._sc.checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
         self._sc.checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
@@ -200,9 +219,11 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
         self._sc.checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
 
-        
+        self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
+        self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
+       
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
 
 
     ## scanRecord test
@@ -238,6 +259,18 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="cnt_64"/>
           </datasource>
         </field>
+        <field units="m" type="NX_FLOAT32" name="init_32">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="cnt_32"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_FLOAT64" name="final_64">
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64"/>
+          </datasource>
+        </field>
       </group>
     </group>
   </group>
@@ -245,26 +278,28 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_32":' + str(self._fcounter[0]) + ' } }')
         for c in self._fcounter:
             self.record(tdw,'{"data": {"cnt":' + str(c) 
                        + ', "cnt_32":' + str(c) 
                        + ', "cnt_64":' + str(c) 
                        + ' } }')
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "cnt_64":' + str(self._fcounter[0]) + ' } }')
             
 
         
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname, 4)
+        det = self._sc.checkScalarTree(f, fname, 6)
         self._sc.checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
         self._sc.checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
         self._sc.checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
         self._sc.checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
+        self._sc.checkSingleScalarField(det, "init_32", "float32", "NX_FLOAT32", self._fcounter[0], 1.0e-06)
+        self._sc.checkSingleScalarField(det, "final_64", "float64", "NX_FLOAT64", self._fcounter[0], 1.0e-14)
         
         f.close()
 
@@ -308,6 +343,20 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_CHAR" name="init_string">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="timestamp"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_BOOLEAN" name="final_flag">
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="logical"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -322,7 +371,7 @@ class FieldTagWriterTest(unittest.TestCase):
         logical = ["1","0","true","false","True","False","TrUe","FaLsE"]
         
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamp":"' + str(dates[0]) + '" } }')
         
         
         for i in range(min(len(dates),len(logical))):
@@ -330,7 +379,7 @@ class FieldTagWriterTest(unittest.TestCase):
                        + '", "logical":"' + str(logical[i])
                        + '" } }')
             
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "logical":"' + str(logical[0]) + '" } }')
             
 
 
@@ -338,12 +387,14 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname, 4)
+        det = self._sc.checkScalarTree(f, fname, 6)
         self._sc.checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
         self._sc.checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
 
+        self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
+        self._sc.checkSingleScalarField(det, "final_flag", "bool", "NX_BOOLEAN", logical[0])
         
         f.close()
         os.remove(fname)

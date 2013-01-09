@@ -193,6 +193,73 @@ class Checker(object):
         
 
 
+
+
+    ## checks  scalar counter
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param values  original values
+    # \param error data precision
+    def checkSingleScalarField(self, det, name, dtype, nxtype, values, error = 0):
+
+        cnt = det.open(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 1)
+        self._tc.assertEqual(cnt.shape, (1,))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        self._tc.assertEqual(cnt.size, 1)        
+        # pninx is not supporting reading string areas 
+        if not isinstance(values, str):
+            value = cnt.read()
+            if self._isNumeric(value):
+                self._tc.assertTrue(abs(values - value) <= error)
+            else:
+                self._tc.assertEqual(values,value)
+        if self._isNumeric(cnt.read()):
+            if not self._isNumeric(values):
+#                    print "BOOL: ", values[i] ,cnt[i]
+                self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
+            else:
+                self._tc.assertTrue(abs(values - cnt.read()) <= error)
+        else:
+            self._tc.assertEqual(values, cnt.read())
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,3)
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"type")
+        self._tc.assertEqual(at.value,nxtype)
+        
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"units")
+        self._tc.assertEqual(at.value,"m")
+        
+        at = cnt.attr("nexdatas_source")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        
+
+
+
+
+
     ## checks  spectrum field
     # \param det detector group
     # \param name counter name

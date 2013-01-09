@@ -64,7 +64,7 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
     # \param fname file name     
     # \param xml XML settings
     # \returns Tango Data Writer proxy instance
-    def openWriter(self, fname, xml):
+    def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         tdw.FileName = fname
         self.assertEqual(tdw.state(),PyTango.DevState.ON)
@@ -75,7 +75,8 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
         
         tdw.TheXMLSettings = xml
         self.assertEqual(tdw.state(),PyTango.DevState.OPEN)
-        
+        if json:
+            tdw.TheJSONRecord = json
         tdw.OpenEntry()
         self.assertEqual(tdw.state(),PyTango.DevState.EXTRACT)
         return tdw
@@ -83,9 +84,11 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
 
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
-    def closeWriter(self, tdw):
+    def closeWriter(self, tdw, json= None):
         self.assertEqual(tdw.state(),PyTango.DevState.EXTRACT)
 
+        if json:
+            tdw.TheJSONRecord = json
         tdw.CloseEntry()
         self.assertEqual(tdw.state(),PyTango.DevState.OPEN)
         
