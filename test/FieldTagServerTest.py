@@ -45,8 +45,8 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
 
         self._sv = ServerSetUp.ServerSetUp()
 
-        self._counter =  [1, 2]
-        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
 
 

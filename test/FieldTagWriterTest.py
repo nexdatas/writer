@@ -208,22 +208,22 @@ class FieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 13)
-        self._sc.checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
-        self._sc.checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
-        self._sc.checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
-        self._sc.checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
-        self._sc.checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._sc.checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
-        self._sc.checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+        self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
+        self._sc.checkScalarField(det, "counter16", "int16", "NX_INT16", self._counter)
+        self._sc.checkScalarField(det, "counter32", "int32", "NX_INT32", self._counter)
+        self._sc.checkScalarField(det, "counter64", "int64", "NX_INT64", self._counter)
+        self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
 
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
         self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
        
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
     ## scanRecord test
@@ -293,10 +293,10 @@ class FieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname, 6)
-        self._sc.checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
-        self._sc.checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
-        self._sc.checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
-        self._sc.checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+        self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc.checkScalarField(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+        self._sc.checkScalarField(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+        self._sc.checkScalarField(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
         self._sc.checkSingleScalarField(det, "init_32", "float32", "NX_FLOAT32", self._fcounter[0], 1.0e-06)
         self._sc.checkSingleScalarField(det, "final_64", "float64", "NX_FLOAT64", self._fcounter[0], 1.0e-14)
@@ -388,10 +388,10 @@ class FieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname, 6)
-        self._sc.checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
-        self._sc.checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
-        self._sc.checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
-        self._sc.checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkScalarField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkScalarField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkScalarField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkScalarField(det, "flags", "bool", "NX_BOOLEAN", logical)
 
         self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
         self._sc.checkSingleScalarField(det, "final_flag", "bool", "NX_BOOLEAN", logical[0])
@@ -500,6 +500,25 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_uint"/>
           </datasource>
         </field>
+        <field units="" type="NX_INT64" name="init_mca_int64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT32" name="final_mca_uint32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
 
       </group>
     </group>
@@ -508,7 +527,7 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + '  } }')
 
         mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
         for mca in self._mca1:
@@ -516,7 +535,7 @@ class FieldTagWriterTest(unittest.TestCase):
                        + ', "mca_uint":' + str([(el+100)/2 for el in mca]) 
                        + '  } }')
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "mca_uint":' + str(mca2[0]) + '  } }')
             
 
 
@@ -524,7 +543,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 10)
+        det = self._sc.checkScalarTree(f, fname , 12)
         self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
         self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
@@ -535,6 +554,9 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
         self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
         self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+
+        self._sc.checkSingleSpectrumField(det, "init_mca_int64", "int64", "NX_INT64", self._mca1[0])
+        self._sc.checkSingleSpectrumField(det, "final_mca_uint32", "uint32", "NX_UINT32", mca2[0])
 
         
         f.close()
@@ -586,20 +608,39 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </field>
-      </group>
+
+        <field units="" type="NX_FLOAT32" name="init_mca_float32">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="final_mca_float64">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+       </group>
     </group>
   </group>
 </definition>
 """
         
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
 
         for mca in self._fmca1:
             self.record(tdw,'{"data": { "mca_float":' + str(mca)
                        + '  } }')
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
             
 
 
@@ -607,7 +648,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 4)
+        det = self._sc.checkScalarTree(f, fname , 6)
         self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
         self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
@@ -618,6 +659,12 @@ class FieldTagWriterTest(unittest.TestCase):
                                     error = 1.0e-14)
 
         
+        self._sc.checkSingleSpectrumField(det, "init_mca_float32", "float32", "NX_FLOAT32", self._fmca1[0],
+                                          error = 1.0e-6)
+        self._sc.checkSingleSpectrumField(det, "final_mca_float64", "float64", "NX_FLOAT64", self._fmca1[0],
+                                          error = 1.0e-14)
+
+
         f.close()
         os.remove(fname)
 
@@ -669,6 +716,29 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="logicals"/>
           </datasource>
         </field>
+
+
+
+        <field units="" type="NX_CHAR" name="init_string_time">
+          <strategy mode="INIT" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="final_flags">
+          <strategy mode="FINAL"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -681,9 +751,9 @@ class FieldTagWriterTest(unittest.TestCase):
                  ["1956-05-23T12:12:32.123+0400","2212-12-12T12:25:43.1267-0700",
                   "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
         logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
-        
+#        print "CHECK:", '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }'
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
 
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
@@ -692,7 +762,7 @@ class FieldTagWriterTest(unittest.TestCase):
             
 
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
             
 
 
@@ -700,7 +770,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 13)
+        det = self._sc.checkScalarTree(f, fname , 15)
         self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
@@ -708,7 +778,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
         
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
 
 
 

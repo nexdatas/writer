@@ -362,7 +362,15 @@ class EField(FElementWithAttr):
                     self.error = message
                 else:
                     if not self._extraD:
-                        self.h5Object.write(dh.cast(self.h5Object.dtype))
+#                        print "DATA3", self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
+                        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
+                            sts = dh.cast(self.h5Object.dtype)
+                            for i in range(len(sts)):
+                                self.h5Object[i] = sts[i] 
+#                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
+                        else:
+                            self.h5Object.write(dh.cast(self.h5Object.dtype))
+#                        print "DATA4"
                     else:
                         if str(dh.format).split('.')[-1] == "SCALAR":
                             self.h5Object.grow()
@@ -404,8 +412,9 @@ class EField(FElementWithAttr):
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print message[0]
             self.error = message
-                                #            self.error = sys.exc_info()
-            
+            self.error = sys.exc_info()
+        finally:
+            pass
 
 
 ## group H5 tag element        
