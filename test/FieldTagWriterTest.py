@@ -149,9 +149,9 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="cnt_u16"/>
           </datasource>
         </field>
-        <field units="m" type="NX_UINT32" name="ucounter32">
+        <field units="m" type="NX_UINT32" name="mclient_ucounter32">
           <strategy mode="STEP"/>
-          <datasource type="CLIENT">
+          <datasource type="MCLIENT">
             <record name="cnt_u32"/>
           </datasource>
         </field>
@@ -190,7 +190,10 @@ class FieldTagWriterTest(unittest.TestCase):
 """
 
         uc = self._counter[0]
-        tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_64":' + str(uc) + ' } }')
+        datasources = ', "datasources":{"MCLIENT":"ndts.DataSources.ClientSource"}'
+        tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_64":' + str(uc) + ' }' 
+                              + str(datasources)
+                              + ' }')
 
         flip = True    
         trigstr = ', "triggers":["trigger1"]'
@@ -227,7 +230,7 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarField(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
 
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
