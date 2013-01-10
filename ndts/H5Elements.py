@@ -342,10 +342,9 @@ class EField(FElementWithAttr):
                     dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
     
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
-            else:
+            elif self.strategy != "POSTRUN": 
 #                raise ValueError,"Warning: Invalid datasource for %s" % nm
                 print "Warning: Invalid datasource for ", nm
-
 
 
         
@@ -414,7 +413,10 @@ class EField(FElementWithAttr):
                                 self.h5Object.grow(2)
                                 self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
         except:
-            message = self.setMessage( sys.exc_info()[1].__str__()  )
+#            info = sys.exc_info()
+#            message = self.setMessage(  info[1].__str__() + info[2].__str__() )
+            message = self.setMessage(  sys.exc_info()[1].__str__()  )
+#            del info
             print message[0]
             self.error = message
 #            self.error = sys.exc_info()
@@ -439,7 +441,7 @@ class EGroup(FElementWithAttr):
             else:
                 raise XMLSettingSyntaxError, "The group type not defined"
         else:
-                raise XMLSettingSyntaxError, "File object for the last element does not exist"
+            raise XMLSettingSyntaxError, "File object for the last element does not exist"
             
 
         for key in attrs.keys() :

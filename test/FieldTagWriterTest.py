@@ -176,6 +176,13 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_INT32" name="postrun_counter32">
+          <strategy mode="POSTRUN">
+              https://haso.desy.de/counters/counter32.dat
+          </strategy>
+        </field>
+
       </group>
     </group>
   </group>
@@ -211,7 +218,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 13)
+        det = self._sc.checkScalarTree(f, fname , 14)
         self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
         self._sc.checkScalarField(det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
@@ -225,6 +232,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
         self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
+        self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", "https://haso.desy.de/counters/counter32.dat" )
        
         f.close()
 #        os.remove(fname)
