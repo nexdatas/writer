@@ -733,7 +733,7 @@ class FieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="4" index="1"/>
           </dimensions>
-          <strategy mode="STEP" />
+          <strategy mode="FINAL" />
           <datasource type="CLIENT">
             <record name="logicals"/>
           </datasource>
@@ -775,6 +775,9 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
+
+        self._sc.checkSingleStringSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleSpectrumField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
 
         
         f.close()
@@ -894,6 +897,29 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_INT64" name="init_pco_int64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="final_pco_uint">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -902,7 +928,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
 
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "pco_int":' + str(self._pco1[0])  + '  } }')
 
         pco2 = [[[(el+100)/2 for el in rpco] for rpco in pco] for pco in self._pco1  ]
         for pco in self._pco1:
@@ -910,7 +936,7 @@ class FieldTagWriterTest(unittest.TestCase):
                        + ', "pco_uint":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) 
                        + '  } }')
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "pco_uint":' + str(pco2[0])  + '  } }')
             
 
 
@@ -918,7 +944,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 10)
+        det = self._sc.checkScalarTree(f, fname , 12)
         self._sc.checkImageField(det, "pco_int", "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
         self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
@@ -930,6 +956,9 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(det, "pco_uint32", "uint32", "NX_UINT32", pco2, grows = 2 )
         self._sc.checkImageField(det, "pco_uint64", "uint64", "NX_UINT64", pco2, grows = 3 )
 
+
+        self._sc.checkSingleImageField(det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
+        self._sc.checkSingleImageField(det, "final_pco_uint", "uint64", "NX_UINT", pco2[0])
         
         f.close()
         os.remove(fname)
@@ -984,6 +1013,28 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="pco_float"/>
           </datasource>
         </field>
+
+
+        <field units="" type="NX_FLOAT32" name="init_pco_float32">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="final_pco_float64">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
       </group>
     </group>
   </group>
@@ -995,13 +1046,12 @@ class FieldTagWriterTest(unittest.TestCase):
 
         
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "pco_float":' + str(self._fpco1[0])  + '  } }')
 
         for pco in self._fpco1:
-            self.record(tdw,'{"data": { "pco_float":' + str(pco)
-                       + '  } }')
+            self.record(tdw,'{"data": { "pco_float":' + str(pco) + '  } }')
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "pco_float":' + str(self._fpco1[0])  + '  } }')
             
 
 
@@ -1009,7 +1059,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 4)
+        det = self._sc.checkScalarTree(f, fname , 6)
         self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
                                     error = 1.0e-14)
         self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
@@ -1018,6 +1068,12 @@ class FieldTagWriterTest(unittest.TestCase):
                                     error = 1.0e-14, grows = 3)
         self._sc.checkImageField(det, "pco_number", "float64", "NX_NUMBER", self._fpco1, 
                                     error = 1.0e-14, grows = 1)
+
+
+        self._sc.checkSingleImageField(det, "init_pco_float32", "float32", "NX_FLOAT32", self._fpco1[0], 
+                                    error = 1.0e-6)
+        self._sc.checkSingleImageField(det, "final_pco_float64", "float64", "NX_FLOAT64", self._fpco1[0], 
+                                    error = 1.0e-14)
 
         
         f.close()
@@ -1069,11 +1125,34 @@ class FieldTagWriterTest(unittest.TestCase):
             <dim value="3" index="1"/>
             <dim value="4" index="2"/>
           </dimensions>
-          <strategy mode="STEP" />
           <datasource type="CLIENT">
             <record name="logicals"/>
           </datasource>
         </field>
+
+
+
+        <field units="" type="NX_CHAR" name="init_string_time">
+          <strategy mode="INIT" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="final_flags">
+          <strategy mode="FINAL"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -1096,7 +1175,7 @@ class FieldTagWriterTest(unittest.TestCase):
                    [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
         
 
-        tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
 
         
 
@@ -1107,7 +1186,7 @@ class FieldTagWriterTest(unittest.TestCase):
             
 
         
-        self.closeWriter(tdw)
+        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
             
 
 
@@ -1115,12 +1194,14 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 37)
+        det = self._sc.checkScalarTree(f, fname , 42)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
 
+        self._sc.checkSingleStringImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleImageField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
         
         f.close()
         os.remove(fname)
