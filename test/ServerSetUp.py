@@ -52,7 +52,7 @@ class ServerSetUp(object):
         print "\nsetting up..."
         db = PyTango.Database()
         db.add_device(self.new_device_info_writer)
-        db.add_server("TangoDataServer/TDWTEST", self.new_device_info_writer)
+        db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
         
         if os.path.isfile("../TDS"):
             self._psub = subprocess.Popen(

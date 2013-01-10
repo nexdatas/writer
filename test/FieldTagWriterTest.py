@@ -41,6 +41,7 @@ class FieldTagWriterTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
+        print "PATH", __loader__.fullname
         self._counter =  [1,-2,6,-8,9,-11]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._sc = Checker(self)
@@ -151,7 +152,7 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
         <field units="m" type="NX_UINT32" name="mclient_ucounter32">
           <strategy mode="STEP"/>
-          <datasource type="MCLIENT">
+          <datasource type="MCLIENT" name="external datasource">
             <record name="cnt_u32"/>
           </datasource>
         </field>
@@ -232,7 +233,6 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
-
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
         self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
         self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", "https://haso.desy.de/counters/counter32.dat" )
