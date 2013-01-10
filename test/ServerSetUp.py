@@ -49,7 +49,7 @@ class ServerSetUp(object):
     ## test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        print "\nsetting up..."
+        print "tearing down ..."
         db = PyTango.Database()
         db.add_device(self.new_device_info_writer)
         db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)

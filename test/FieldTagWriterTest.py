@@ -237,7 +237,7 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", "https://haso.desy.de/counters/counter32.dat" )
        
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
     ## scanRecord test

@@ -41,6 +41,10 @@ import sys
 #         My Simple Server
 #
 #==================================================================
+# 	Device States Description:
+#
+#   DevState.ON :  Server On
+#==================================================================
 
 
 class SimpleServer(PyTango.Device_4Impl):
@@ -88,6 +92,18 @@ class SimpleServer(PyTango.Device_4Impl):
 
 
 
+#------------------------------------------------------------------
+#	Read ScalarLong attribute
+#------------------------------------------------------------------
+	def read_ScalarLong(self, attr):
+		print "In ", self.get_name(), "::read_ScalarLong()"
+		
+		#	Add your own code here
+		
+		attr_ScalarLong_read = 1
+		attr.set_value(attr_ScalarLong_read)
+
+
 
 #==================================================================
 #
@@ -119,6 +135,13 @@ class SimpleServerClass(PyTango.DeviceClass):
 
 	#	Attribute definitions
 	attr_list = {
+		'ScalarLong':
+			[[PyTango.DevLong,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"test long scalar attribute",
+			} ],
 		}
 
 

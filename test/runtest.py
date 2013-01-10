@@ -25,6 +25,7 @@ import TangoDataWriterTest
 import TangoDataServerTest
 import FieldTagWriterTest
 import FieldTagServerTest
+import TangoFieldTagWriterTest
 
 ## main function
 def main():
@@ -53,6 +54,10 @@ def main():
     if PYTANGO_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(FieldTagServerTest) )
+
+    if PYTANGO_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )
 
     
     ## test runner
