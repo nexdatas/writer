@@ -41,7 +41,6 @@ class FieldTagWriterTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-        print "PATH", __loader__.fullname
         self._counter =  [1,-2,6,-8,9,-11]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._sc = Checker(self)
