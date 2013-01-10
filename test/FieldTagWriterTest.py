@@ -107,7 +107,7 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="cnt_8"/>
           </datasource>
         </field>
-        <field units="m" type="NX_INT16" name="counter16">
+        <field units="m" type="NX_INT16" name="triggered_counter16">
           <strategy mode="STEP" trigger="trigger1"/>
           <datasource type="CLIENT">
             <record name="cnt_16"/>
@@ -214,7 +214,7 @@ class FieldTagWriterTest(unittest.TestCase):
         det = self._sc.checkScalarTree(f, fname , 13)
         self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
-#        self._sc.checkScalarField(det, "counter16", "int16", "NX_INT16", self._counter)
+        self._sc.checkScalarField(det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
         self._sc.checkScalarField(det, "counter32", "int32", "NX_INT32", self._counter)
         self._sc.checkScalarField(det, "counter64", "int64", "NX_INT64", self._counter)
         self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
