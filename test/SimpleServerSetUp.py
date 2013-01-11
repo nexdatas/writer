@@ -61,7 +61,7 @@ class SimpleServerSetUp(object):
             self._psub = subprocess.Popen(
                 "cd %s; ./ST S1 &" % path ,stdout =  subprocess.PIPE, 
                 stderr =  subprocess.PIPE,  shell= True)
-        print "waiting for server",
+        print "waiting for simple server",
         
         found = False
         cnt = 0
@@ -99,4 +99,6 @@ class SimpleServerSetUp(object):
 if __name__ == "__main__":
     simps = SimpleServerSetUp()
     simps.setUp()
+    dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
+    print dp.status()
     simps.tearDown()

@@ -79,6 +79,7 @@ class SimpleServer(PyTango.Device_4Impl):
 	def always_executed_hook(self):
 		print "In ", self.get_name(), "::always_excuted_hook()"
 
+
 #==================================================================
 #
 #	SimpleServer read/write attribute methods
@@ -100,8 +101,140 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_ScalarLong_read = 1
+		attr_ScalarLong_read = 123
 		attr.set_value(attr_ScalarLong_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarBoolean attribute
+#------------------------------------------------------------------
+	def read_ScalarBoolean(self, attr):
+		print "In ", self.get_name(), "::read_ScalarBoolean()"
+		
+		#	Add your own code here
+		
+		attr_ScalarBoolean_read = 1
+		attr.set_value(attr_ScalarBoolean_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarUChar attribute
+#------------------------------------------------------------------
+	def read_ScalarUChar(self, attr):
+		print "In ", self.get_name(), "::read_ScalarUChar()"
+		
+		#	Add your own code here
+		
+		attr_ScalarUChar_read = 1
+		attr.set_value(attr_ScalarUChar_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarShort attribute
+#------------------------------------------------------------------
+	def read_ScalarShort(self, attr):
+		print "In ", self.get_name(), "::read_ScalarShort()"
+		
+		#	Add your own code here
+		
+		attr_ScalarShort_read = 1
+		attr.set_value(attr_ScalarShort_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarUShort attribute
+#------------------------------------------------------------------
+	def read_ScalarUShort(self, attr):
+		print "In ", self.get_name(), "::read_ScalarUShort()"
+		
+		#	Add your own code here
+		
+		attr_ScalarUShort_read = 12
+		attr.set_value(attr_ScalarUShort_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarULong attribute
+#------------------------------------------------------------------
+	def read_ScalarULong(self, attr):
+		print "In ", self.get_name(), "::read_ScalarULong()"
+		
+		#	Add your own code here
+		
+		attr_ScalarULong_read = 123
+		attr.set_value(attr_ScalarULong_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarLong64 attribute
+#------------------------------------------------------------------
+	def read_ScalarLong64(self, attr):
+		print "In ", self.get_name(), "::read_ScalarLong64()"
+		
+		#	Add your own code here
+		
+		attr_ScalarLong64_read = -1234
+		attr.set_value(attr_ScalarLong64_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarULong64 attribute
+#------------------------------------------------------------------
+	def read_ScalarULong64(self, attr):
+		print "In ", self.get_name(), "::read_ScalarULong64()"
+		
+		#	Add your own code here
+		
+		attr_ScalarULong64_read = 1234
+		attr.set_value(attr_ScalarULong64_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarFloat attribute
+#------------------------------------------------------------------
+	def read_ScalarFloat(self, attr):
+		print "In ", self.get_name(), "::read_ScalarFloat()"
+		
+		#	Add your own code here
+		
+		attr_ScalarFloat_read = 123.43
+		attr.set_value(attr_ScalarFloat_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarDouble attribute
+#------------------------------------------------------------------
+	def read_ScalarDouble(self, attr):
+		print "In ", self.get_name(), "::read_ScalarDouble()"
+		
+		#	Add your own code here
+		
+		attr_ScalarDouble_read = -12.345
+		attr.set_value(attr_ScalarDouble_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarString attribute
+#------------------------------------------------------------------
+	def read_ScalarString(self, attr):
+		print "In ", self.get_name(), "::read_ScalarString()"
+		
+		#	Add your own code here
+		
+		attr_ScalarString_read = "Hello Tango world"
+		attr.set_value(attr_ScalarString_read)
+
+
+#------------------------------------------------------------------
+#	Read ScalarEncoded attribute
+#------------------------------------------------------------------
+	def read_ScalarEncoded(self, attr):
+		print "In ", self.get_name(), "::read_ScalarEncoded()"
+		
+		#	Add your own code here
+		
+		attr_ScalarEncoded_read = 1
+		attr.set_value(attr_ScalarEncoded_read)
 
 
 
@@ -141,6 +274,77 @@ class SimpleServerClass(PyTango.DeviceClass):
 			PyTango.READ],
 			{
 				'description':"test long scalar attribute",
+			} ],
+		'ScalarBoolean':
+			[[PyTango.DevBoolean,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"test scalar bool attribute",
+			} ],
+		'ScalarUChar':
+			[[PyTango.DevUChar,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"test Scalar uchar character",
+			} ],
+		'ScalarShort':
+			[[PyTango.DevShort,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"Scalar Short attribute",
+			} ],
+		'ScalarUShort':
+			[[PyTango.DevUShort,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"ScalarUShort attribute",
+			} ],
+		'ScalarULong':
+			[[PyTango.DevULong,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"ScalarULong attribute",
+			} ],
+		'ScalarLong64':
+			[[PyTango.DevLong64,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"ScalarLong64 attribute",
+			} ],
+		'ScalarULong64':
+			[[PyTango.DevULong64,
+			PyTango.SCALAR,
+			PyTango.READ]],
+		'ScalarFloat':
+			[[PyTango.DevFloat,
+			PyTango.SCALAR,
+			PyTango.READ]],
+		'ScalarDouble':
+			[[PyTango.DevDouble,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"ScalarDouble attribute",
+			} ],
+		'ScalarString':
+			[[PyTango.DevString,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"ScalarString attribute",
+			} ],
+		'ScalarEncoded':
+			[[PyTango.DevEncoded,
+			PyTango.SCALAR,
+			PyTango.READ],
+			{
+				'description':"ScalarEncoded attribute",
 			} ],
 		}
 
