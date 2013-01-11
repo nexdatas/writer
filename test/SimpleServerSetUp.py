@@ -39,12 +39,16 @@ class SimpleServerSetUp(object):
     def __init__(self):
         ## information about tango writer
         self.new_device_info_writer = PyTango.DbDevInfo()
+        ## information about tango writer class
         self.new_device_info_writer._class = "SimpleServer"
+        ## information about tango writer server
         self.new_device_info_writer.server = "SimpleServer/S1"
+        ## information about tango writer name
         self.new_device_info_writer.name = "stestp09/testss/s1r228"
 
         self._psub = None
-
+        ## device proxy
+        self.dp = None
 
 
     ## test starter
@@ -68,9 +72,9 @@ class SimpleServerSetUp(object):
         while not found and cnt < 1000:
             try:
                 print "\b.",
-                dp = PyTango.DeviceProxy(self.new_device_info_writer.name)
+                self.dp = PyTango.DeviceProxy(self.new_device_info_writer.name)
                 time.sleep(0.01)
-                if dp.state() == PyTango.DevState.ON:
+                if self.dp.state() == PyTango.DevState.ON:
                     found = True
             except:    
                 found = False
@@ -99,6 +103,5 @@ class SimpleServerSetUp(object):
 if __name__ == "__main__":
     simps = SimpleServerSetUp()
     simps.setUp()
-    dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-    print dp.status()
+    print simps.dp.status()
     simps.tearDown()
