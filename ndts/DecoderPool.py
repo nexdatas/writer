@@ -22,6 +22,52 @@
 import struct
 import numpy
 
+## UTF8 decoder
+class UTF8decoder(object):
+
+    ## constructor
+    # \brief It clears the local variables
+    def __init__(self):
+        ## decoder name
+        self.name = "UTF8"
+        ## decoder format
+        self.format = None
+        ## data type
+        self.dtype = None
+        
+        ## image data
+        self._value = None
+        ## header and image data
+        self._data = None
+
+
+    ## loads encoded data
+    # \param data encoded data    
+    def load(self, data):
+        self._data = data
+        self.format = data[0]
+        self._value = None
+        self.dtype = "string"
+
+    ## provides the data shape
+    # \returns the data shape if data was loaded
+    def shape(self):
+        return [1,0]
+        
+
+
+    ## provides the decoded data
+    # \returns the decoded data if data was loaded
+    def decode(self):        
+        if not self._data:
+            return
+        if not self._value:
+            self._value = self._data[1]
+        return self._value
+
+
+
+
 ## VIDEO IMAGE LIMA decoder
 class VDEOdecoder(object):
 
@@ -110,7 +156,7 @@ class DecoderPool(object):
     # \brief It creates know decoders    
     # \param configJSON string with decoders    
     def __init__(self, configJSON = None):
-        self._knowDecoders = { "LIMA_VIDEO_IMAGE":VDEOdecoder }
+        self._knowDecoders = { "LIMA_VIDEO_IMAGE":VDEOdecoder, "UTF8":UTF8decoder } 
         self._pool = {}
         self._userDecoders = {}
         

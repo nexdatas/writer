@@ -83,6 +83,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_ScalarFloat=[-1.23]
 		self.attr_ScalarDouble=[1.233]
 		self.attr_ScalarString=["Hello!"]
+		self.attr_ScalarEncoded=["UTF8","Hello UTF8! W\xc4\x85\xc5\xbc \xe6\xb5\x8b"]
 
 #------------------------------------------------------------------
 #	Always excuted hook method
@@ -339,8 +340,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_ScalarEncoded_read = ["ad","sdfsddfsdfsdfs"]
-		attr.set_value(attr_ScalarEncoded_read)
+		attr.set_value(self.attr_ScalarEncoded[0],self.attr_ScalarEncoded[1])
 
 
 #------------------------------------------------------------------
@@ -348,12 +348,13 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ScalarEncoded(self, attr):
 		print "In ", self.get_name(), "::write_ScalarEncoded()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
 
+		# writing encoded attributes not supported for PyTango 7.2.3
+		self.attr_ScalarString = []
+		attr.get_write_value(self.attr_ScalarEncoded)
+		print "Attribute value = ", self.attr_ScalarEncode
 
 
 #==================================================================
