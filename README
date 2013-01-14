@@ -320,20 +320,3 @@ An example of usage:
 </datasource>
 
 
-<door>
---------
-
-The door tag describes the parameters to access to a door server (not implemented). It possesses attributes:
-
-  * name -- a name of the door server
-  * hostname -- a host name of the door server
-  * port -- a port number of the door server 
-
-An example of usage:
-
-<datasource strategy="STEP" type="SARDANA">
-  <door hostname="haso228k.desy.de" name="door1" port="10000"/>
-  <record name="emittance_y"/>
-</datasource>
-
-

@@ -69,33 +69,33 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         tdw.FileName = fname
-        self.assertEqual(tdw.state(),PyTango.DevState.ON)
+        self.assertEqual(tdw.state(), PyTango.DevState.ON)
         
         tdw.OpenFile()
         
-        self.assertEqual(tdw.state(),PyTango.DevState.OPEN)
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
         tdw.TheXMLSettings = xml
-        self.assertEqual(tdw.state(),PyTango.DevState.OPEN)
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         if json:
             tdw.TheJSONRecord = json
         tdw.OpenEntry()
-        self.assertEqual(tdw.state(),PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
 
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
     def closeWriter(self, tdw, json= None):
-        self.assertEqual(tdw.state(),PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
             tdw.TheJSONRecord = json
         tdw.CloseEntry()
-        self.assertEqual(tdw.state(),PyTango.DevState.OPEN)
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
         tdw.CloseFile()
-        self.assertEqual(tdw.state(),PyTango.DevState.ON)
+        self.assertEqual(tdw.state(), PyTango.DevState.ON)
                 
 
 
