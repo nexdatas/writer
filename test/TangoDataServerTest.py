@@ -620,3 +620,6 @@ class TangoDataServerTest(unittest.TestCase):
 
             os.remove(fname)
 #            pass
+
+if __name__ == '__main__':
+    unittest.main()
