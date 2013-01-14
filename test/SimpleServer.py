@@ -74,6 +74,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.get_device_properties(self.get_device_class())
 
 		self.attr_ScalarBoolean=[True]
+		self.attr_ScalarUChar=[12]
 		self.attr_ScalarShort=[12]
 		self.attr_ScalarUShort=[12]
 		self.attr_ScalarLong=[123]
@@ -247,8 +248,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_ScalarULong64[0])
 		# Do not work as well
-#		attr.set_value(self.attr_ScalarLong64[0])
-#		attr.set_value(123)
 
 
 #------------------------------------------------------------------
@@ -354,7 +353,30 @@ class SimpleServer(PyTango.Device_4Impl):
 		# writing encoded attributes not supported for PyTango 7.2.3
 		self.attr_ScalarString = []
 		attr.get_write_value(self.attr_ScalarEncoded)
-		print "Attribute value = ", self.attr_ScalarEncode
+		print "Attribute value = ", self.attr_ScalarEncoded
+
+
+#------------------------------------------------------------------
+#	Read ScalarUChar attribute
+#------------------------------------------------------------------
+	def read_ScalarUChar(self, attr):
+		print "In ", self.get_name(), "::read_ScalarUChar()"
+		
+		#	Add your own code here
+		
+		attr.set_value(self.attr_ScalarUChar[0])
+
+
+#------------------------------------------------------------------
+#	Write ScalarUChar attribute
+#------------------------------------------------------------------
+	def write_ScalarUChar(self, attr):
+		print "In ", self.get_name(), "::write_ScalarUChar()"
+		#	Add your own code here
+		self.attr_ScalarUChar = []
+		attr.get_write_value(self.attr_ScalarUChar)
+		print "Attribute value = ", self.attr_ScalarUChar
+
 
 
 #==================================================================
@@ -463,6 +485,13 @@ class SimpleServerClass(PyTango.DeviceClass):
 			PyTango.READ_WRITE],
 			{
 				'description':"ScalarEncoded attribute",
+			} ],
+		'ScalarUChar':
+			[[PyTango.DevUChar,
+			PyTango.SCALAR,
+			PyTango.READ_WRITE],
+			{
+				'description':"ScalarUChar attribute",
 			} ],
 		}
 
