@@ -191,6 +191,13 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" type="NX_CHAR" name="ScalarState">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="State"/>
+          </datasource>
+        </field>
 
 
       </group>
@@ -225,7 +232,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 11)
+        det = self._sc.checkScalarTree(f, fname , 12)
         self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
@@ -238,6 +245,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error = 1e-14)
         self._sc.checkScalarField(det, "ScalarString", "string", "NX_CHAR", self._bools)
         self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
+        self._sc.checkScalarField(det, "ScalarState", "string", "NX_CHAR", ["ON"  for c in self._bools])
         
         # writing encoded attributes not supported for PyTango 7.2.3
 
