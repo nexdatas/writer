@@ -84,7 +84,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_ScalarFloat=[-1.23]
 		self.attr_ScalarDouble=[1.233]
 		self.attr_ScalarString=["Hello!"]
-		self.attr_ScalarEncoded=["UTF8","Hello UTF8! W\xc4\x85\xc5\xbc \xe6\xb5\x8b"]
+		self.attr_ScalarEncoded=["UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"]
 
 #------------------------------------------------------------------
 #	Always excuted hook method
