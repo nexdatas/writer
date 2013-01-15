@@ -88,7 +88,7 @@ class FetchNameHandler(sax.ContentHandler):
         if name  == "group" :
             if self._tstack[-1] and self._nstack[-1]:
                 self.groupTypes[self._tstack[-1]] = self._nstack[-1]
-            elif self._tstack[-1] and len(_tstack[-1]) > 2:
+            elif self._tstack[-1] and len(self._tstack[-1]) > 2:
                 self.groupTypes[self._tstack[-1]] = self._tstack[-1][2:]
                 
             else:
