@@ -86,6 +86,10 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_ScalarString=["Hello!"]
 		self.attr_ScalarEncoded=["UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"]
 
+
+		self.attr_SpectrumBoolean = [True, False]
+#		self.attr_SpectrumBoolean = [1,0]
+
 #------------------------------------------------------------------
 #	Always excuted hook method
 #------------------------------------------------------------------
@@ -378,6 +382,283 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "Attribute value = ", self.attr_ScalarUChar
 
 
+#------------------------------------------------------------------
+#	Read SpectrumEncoded attribute
+#------------------------------------------------------------------
+	def read_SpectrumEncoded(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumEncoded()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumEncoded_read = 1
+		attr.set_value(attr_SpectrumEncoded_read)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumEncoded attribute
+#------------------------------------------------------------------
+	def write_SpectrumEncoded(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumEncoded()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumBoolean attribute
+#------------------------------------------------------------------
+	def read_SpectrumBoolean(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumBoolean()"
+		
+		#	Add your own code here
+		
+		attr.set_value(self.attr_SpectrumBoolean, len(self.attr_SpectrumBoolean))
+		print self.attr_SpectrumBoolean
+#		attr_SpectrumBoolean_read = [1]#
+#		attr.set_value(attr_SpectrumBoolean_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumBoolean attribute
+#------------------------------------------------------------------
+	def write_SpectrumBoolean(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumBoolean()"
+
+		#	Add your own code here
+		self.attr_SpectrumBoolean = []
+		attr.get_write_value(self.attr_SpectrumBoolean)
+		print "Attribute value = ", self.attr_SpectrumBoolean
+
+#------------------------------------------------------------------
+#	Read SpectrumUChar attribute
+#------------------------------------------------------------------
+	def read_SpectrumUChar(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumUChar()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumUChar_read = [1]
+		attr.set_value(attr_SpectrumUChar_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumUChar attribute
+#------------------------------------------------------------------
+	def write_SpectrumUChar(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumUChar()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumShort attribute
+#------------------------------------------------------------------
+	def read_SpectrumShort(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumShort()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumShort_read = [1]
+		attr.set_value(attr_SpectrumShort_read, 1)
+
+
+#------------------------------------------------------------------
+#	Read SpectrumUShort attribute
+#------------------------------------------------------------------
+	def read_SpectrumUShort(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumUShort()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumUShort_read = [1]
+		attr.set_value(attr_SpectrumUShort_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumUShort attribute
+#------------------------------------------------------------------
+	def write_SpectrumUShort(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumUShort()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumLong attribute
+#------------------------------------------------------------------
+	def read_SpectrumLong(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumLong()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumLong_read = [1]
+		attr.set_value(attr_SpectrumLong_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumLong attribute
+#------------------------------------------------------------------
+	def write_SpectrumLong(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumLong()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumULong attribute
+#------------------------------------------------------------------
+	def read_SpectrumULong(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumULong()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumULong_read = [1]
+		attr.set_value(attr_SpectrumULong_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumULong attribute
+#------------------------------------------------------------------
+	def write_SpectrumULong(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumULong()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumLong64 attribute
+#------------------------------------------------------------------
+	def read_SpectrumLong64(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumLong64()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumLong64_read = [1]
+		attr.set_value(attr_SpectrumLong64_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumLong64 attribute
+#------------------------------------------------------------------
+	def write_SpectrumLong64(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumLong64()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumULong64 attribute
+#------------------------------------------------------------------
+	def read_SpectrumULong64(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumULong64()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumULong64_read = [1]
+		attr.set_value(attr_SpectrumULong64_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumULong64 attribute
+#------------------------------------------------------------------
+	def write_SpectrumULong64(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumULong64()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumFloat attribute
+#------------------------------------------------------------------
+	def read_SpectrumFloat(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumFloat()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumFloat_read = [1.0]
+		attr.set_value(attr_SpectrumFloat_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumFloat attribute
+#------------------------------------------------------------------
+	def write_SpectrumFloat(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumFloat()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumDouble attribute
+#------------------------------------------------------------------
+	def read_SpectrumDouble(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumDouble()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumDouble_read = [1.0]
+		attr.set_value(attr_SpectrumDouble_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumDouble attribute
+#------------------------------------------------------------------
+	def write_SpectrumDouble(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumDouble()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read SpectrumString attribute
+#------------------------------------------------------------------
+	def read_SpectrumString(self, attr):
+		print "In ", self.get_name(), "::read_SpectrumString()"
+		
+		#	Add your own code here
+		
+		attr_SpectrumString_read = ["Hello Tango world"]
+		attr.set_value(attr_SpectrumString_read, 1)
+
+
+#------------------------------------------------------------------
+#	Write SpectrumString attribute
+#------------------------------------------------------------------
+	def write_SpectrumString(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumString()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
 
 #==================================================================
 #
@@ -492,6 +773,90 @@ class SimpleServerClass(PyTango.DeviceClass):
 			PyTango.READ_WRITE],
 			{
 				'description':"ScalarUChar attribute",
+			} ],
+		'SpectrumEncoded':
+			[[PyTango.DevEncoded,
+			PyTango.SCALAR,
+			PyTango.READ_WRITE],
+			{
+				'description':"SpectrumEncoded attribute",
+			} ],
+		'SpectrumBoolean':
+			[[PyTango.DevBoolean,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumBoolean attribute",
+			} ],
+		'SpectrumUChar':
+			[[PyTango.DevUChar,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumUChar attribute",
+			} ],
+		'SpectrumShort':
+			[[PyTango.DevShort,
+			PyTango.SPECTRUM,
+			PyTango.READ, 4096],
+			{
+				'description':"SpectrumShort attribute",
+			} ],
+		'SpectrumUShort':
+			[[PyTango.DevUShort,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumUShort",
+			} ],
+		'SpectrumLong':
+			[[PyTango.DevLong,
+			PyTango.SPECTRUM,
+			PyTango.WRITE, 4096],
+			{
+				'description':"SpectrumLong attribute",
+			} ],
+		'SpectrumULong':
+			[[PyTango.DevULong,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumULong attribute",
+			} ],
+		'SpectrumLong64':
+			[[PyTango.DevLong64,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumLong64 attribute",
+			} ],
+		'SpectrumULong64':
+			[[PyTango.DevULong64,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumULong64 attribute",
+			} ],
+		'SpectrumFloat':
+			[[PyTango.DevFloat,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumFloat attribute",
+			} ],
+		'SpectrumDouble':
+			[[PyTango.DevDouble,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumDouble attribute",
+			} ],
+		'SpectrumString':
+			[[PyTango.DevString,
+			PyTango.SPECTRUM,
+			PyTango.READ_WRITE, 4096],
+			{
+				'description':"SpectrumString attribute",
 			} ],
 		}
 

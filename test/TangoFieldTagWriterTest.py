@@ -252,5 +252,64 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         f.close()
         os.remove(fname)
 
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntSpectrum(self):
+        print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
+        fname= '%s/clientintspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+       <field units="m" type="NX_BOOLEAN" name="SpectrumBoolean">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" >
+            <dim index="1" value="2"/>
+          </dimensions>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumBoolean"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+        tdw = self.openWriter(fname, xml)
+
+        for i in range(min(len(self._counter), len(self._fcounter), len(self._bools))):
+            self._simps.dp.SpectrumBoolean = [True, False]
+#            self._simps.dp.SpectrumBoolean = [True]
+            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
+ #           self._simps.dp.ScalarULong64 = abs(self._counter[i])
+            self.record(tdw,'{}')
+#            self._fcounter[i] = self._simps.dp.ScalarFloat 
+#            self._dcounter[i] = self._simps.dp.ScalarDouble 
+
+        self.closeWriter(tdw)
+        
+        # check the created file
+        
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 1)
+#        self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
+        
+        # writing encoded attributes not supported for PyTango 7.2.3
+
+        f.close()
+#        os.remove(fname)
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

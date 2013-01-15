@@ -413,11 +413,13 @@ class EField(FElementWithAttr):
                                 self.h5Object.grow(2)
                                 self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
         except:
-#            info = sys.exc_info()
-#            message = self.setMessage(  info[1].__str__() + info[2].__str__() )
-            message = self.setMessage(  sys.exc_info()[1].__str__()  )
-#            del info
+            info = sys.exc_info()
+            import traceback
+            message = self.setMessage(str(info[1].__str__()) +"\n "+ (" ").join(traceback.format_tb(sys.exc_info()[2]) ))
+#            message = self.setMessage(  sys.exc_info()[1].__str__()  )
+            del info
             print message[0]
+            print message[1]
             self.error = message
 #            self.error = sys.exc_info()
         finally:
