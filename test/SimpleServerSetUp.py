@@ -16,8 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file ServerTestCase.py
-# base class for TangoDataServer unittests
+## \file ServerSetUp.py
+# class with server settings
 #
 import unittest
 import os
@@ -28,22 +28,27 @@ import PyTango
 import time
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
+import SimpleServer
 
 
 ## test fixture
-class ServerTestCase(unittest.TestCase):
+class SimpleServerSetUp(object):
 
     ## constructor
-    # \param methodName name of the test method
-    def __init__(self, methodName):
-        unittest.TestCase.__init__(self, methodName)
-        self._new_device_info_writer = PyTango.DbDevInfo()
-        self._new_device_info_writer._class = "TangoDataServer"
-        self._new_device_info_writer.server = "TangoDataServer/TDWTEST"
-        self._new_device_info_writer.name = "testp09/testtdw/testr228"
+    # \brief defines server parameters
+    def __init__(self):
+        ## information about tango writer
+        self.new_device_info_writer = PyTango.DbDevInfo()
+        ## information about tango writer class
+        self.new_device_info_writer._class = "SimpleServer"
+        ## information about tango writer server
+        self.new_device_info_writer.server = "SimpleServer/S1"
+        ## information about tango writer name
+        self.new_device_info_writer.name = "stestp09/testss/s1r228"
 
         self._psub = None
-
+        ## device proxy
+        self.dp = None
 
 
     ## test starter
@@ -51,27 +56,25 @@ class ServerTestCase(unittest.TestCase):
     def setUp(self):
         print "\nsetting up..."
         db = PyTango.Database()
-        db.add_device(self._new_device_info_writer)
-        db.add_server("TangoDataServer/TDWTEST", self._new_device_info_writer)
+        db.add_device(self.new_device_info_writer)
+        db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
+
+        path = os.path.dirname(SimpleServer.__file__)
         
-        if os.path.isfile("../TDS"):
+        if os.path.isfile("%s/ST" % path):
             self._psub = subprocess.Popen(
-                "cd ..; ./TDS TDWTEST &",stdout =  subprocess.PIPE, 
+                "cd %s; ./ST S1 &" % path ,stdout =  subprocess.PIPE, 
                 stderr =  subprocess.PIPE,  shell= True)
-        else:
-            self._psub = subprocess.Popen(
-                "TDS TDWTEST &",stdout =  subprocess.PIPE, 
-                stderr =  subprocess.PIPE , shell= True)
-        print "waiting for server",
+        print "waiting for simple server",
         
         found = False
         cnt = 0
         while not found and cnt < 1000:
             try:
                 print "\b.",
-                dp = PyTango.DeviceProxy(self._new_device_info_writer.name)
+                self.dp = PyTango.DeviceProxy(self.new_device_info_writer.name)
                 time.sleep(0.01)
-                if dp.state() == PyTango.DevState.ON:
+                if self.dp.state() == PyTango.DevState.ON:
                     found = True
             except:    
                 found = False
@@ -83,11 +86,11 @@ class ServerTestCase(unittest.TestCase):
     def tearDown(self): 
         print "tearing down ..."
         db = PyTango.Database()
-        db.delete_server(self._new_device_info_writer.server)
+        db.delete_server(self.new_device_info_writer.server)
         
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'TangoDataServer.py TDWTEST'", stdout=subprocess.PIPE , shell= True).stdout
+            "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE , shell= True).stdout
 
         res = pipe.read().split("\n")
         for r in res:
@@ -97,3 +100,8 @@ class ServerTestCase(unittest.TestCase):
 
         
 
+if __name__ == "__main__":
+    simps = SimpleServerSetUp()
+    simps.setUp()
+    print simps.dp.status()
+    simps.tearDown()

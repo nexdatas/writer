@@ -87,7 +87,7 @@ class FieldArray(object):
         ##  list of fields
         self._fList = []
         ## attribute array
-        self._aArray = None
+        self._aArray = {}
         ## flatten dimensions
         self._fdim = len(shape)-1
 
@@ -121,9 +121,9 @@ class FieldArray(object):
     # \param name name of the attribute
     # \param dtype type of the attribute
     def attr(self, name, dtype):
-        if not self._aArray:
-            self._aArray = AttributeArray(self._fList, name, dtype)
-        return self._aArray
+        if name not in self._aArray :
+            self._aArray[name] = AttributeArray(self._fList, name, dtype)
+        return self._aArray[name]
 
     ## fetches ranges from the field shape and key
     # \param key slice object

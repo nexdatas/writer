@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file FieldTagServerTest.py
+## \file TangoFieldTagServerTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -26,39 +26,42 @@ import subprocess
 import random
 
 import PyTango
+
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
-from Checkers import Checker
 
+
+from Checkers import Checker
 import ServerSetUp
-import FieldTagWriterTest
+import TangoFieldTagWriterTest
 
 ## test fixture
-class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
+class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        FieldTagWriterTest.FieldTagWriterTest.__init__(self, methodName)
+        TangoFieldTagWriterTest.TangoFieldTagWriterTest.__init__(self, methodName)
+        unittest.TestCase.__init__(self, methodName)
+
 
         self._sv = ServerSetUp.ServerSetUp()
 
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
-
-
 
     ## test starter
-    # \brief Common set up of Tango Server
+    # \brief Common set up
     def setUp(self):
         self._sv.setUp()
+        self._simps.setUp()
 
     ## test closer
-    # \brief Common tear down oif Tango Server
-    def tearDown(self): 
+    # \brief Common tear down
+    def tearDown(self):
+        self._simps.tearDown()
         self._sv.tearDown()
-        
+
+
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
@@ -83,7 +86,7 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
 
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
-    def closeWriter(self, tdw, json = None):
+    def closeWriter(self, tdw, json= None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
@@ -103,4 +106,3 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
 
 if __name__ == '__main__':
     unittest.main()
-
