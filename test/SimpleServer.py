@@ -93,6 +93,10 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_SpectrumUShort = [1,4,5,6]
 		self.attr_SpectrumLong = [1123,-435,35,-6345]
 		self.attr_SpectrumULong = [2341,2344,45,345]
+		self.attr_SpectrumLong64 = [1123,-435,35,-6345]
+		self.attr_SpectrumULong64 = [1123,23435,35,3345]
+		self.attr_SpectrumFloat = [11.23,-4.35,3.5,-634.5]
+		self.attr_SpectrumDouble = [1.123,23.435,3.5,3.345]
  
 #------------------------------------------------------------------
 #	Always excuted hook method
@@ -560,8 +564,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumLong64_read = [1]
-		attr.set_value(attr_SpectrumLong64_read, 1)
+		attr.set_value(self.attr_SpectrumLong64, len(self.attr_SpectrumLong64))
+		print self.attr_SpectrumLong64
 
 
 #------------------------------------------------------------------
@@ -569,11 +573,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumLong64(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumLong64()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumLong64 = []
+		attr.get_write_value(self.attr_SpectrumLong64)
+		print "Attribute value = ", self.attr_SpectrumLong64
 
 
 #------------------------------------------------------------------
@@ -584,8 +588,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumULong64_read = [1]
-		attr.set_value(attr_SpectrumULong64_read, 1)
+		attr.set_value(self.attr_SpectrumULong64, len(self.attr_SpectrumULong64))
+		print self.attr_SpectrumULong64
 
 
 #------------------------------------------------------------------
@@ -593,11 +597,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumULong64(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumULong64()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumULong64 = []
+		attr.get_write_value(self.attr_SpectrumULong64)
+		print "Attribute value = ", self.attr_SpectrumULong64
 
 
 #------------------------------------------------------------------
@@ -608,8 +612,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumFloat_read = [1.0]
-		attr.set_value(attr_SpectrumFloat_read, 1)
+		attr.set_value(self.attr_SpectrumFloat, len(self.attr_SpectrumFloat))
+		print self.attr_SpectrumFloat
 
 
 #------------------------------------------------------------------
@@ -617,11 +621,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumFloat(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumFloat()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumFloat = []
+		attr.get_write_value(self.attr_SpectrumFloat)
+		print "Attribute value = ", self.attr_SpectrumFloat
 
 
 #------------------------------------------------------------------
@@ -632,8 +636,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumDouble_read = [1.0]
-		attr.set_value(attr_SpectrumDouble_read, 1)
+		attr.set_value(self.attr_SpectrumDouble, len(self.attr_SpectrumDouble))
+		print self.attr_SpectrumDouble
 
 
 #------------------------------------------------------------------
@@ -641,11 +645,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumDouble(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumDouble()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumDouble = []
+		attr.get_write_value(self.attr_SpectrumDouble)
+		print "Attribute value = ", self.attr_SpectrumDouble
 
 
 #------------------------------------------------------------------

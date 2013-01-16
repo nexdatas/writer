@@ -96,9 +96,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_clientIntScalar(self):
-        print "Run: %s.test_clientIntScalar() " % self.__class__.__name__
-        fname= '%s/clientintscalar.h5' % os.getcwd()   
+    def test_tangoScalar(self):
+        print "Run: %s.test_tangoScalar() " % self.__class__.__name__
+        fname= '%s/tangoscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -259,9 +259,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_clientIntSpectrum(self):
-        print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
-        fname= '%s/clientintspectrum.h5' % os.getcwd()   
+    def test_tangoSpectrum(self):
+        print "Run: %s.test_tangoSpectrum() " % self.__class__.__name__
+        fname= '%s/tangospectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -324,6 +324,38 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+       <field units="" type="NX_INT64" name="SpectrumLong64">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT32" name="SpectrumFloat">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="SpectrumDouble">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumDouble"/>
+          </datasource>
+        </field>
+
+
+
       </group>
     </group>
   </group>
@@ -335,7 +367,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumUShort = self._mca2[0]
         self._simps.dp.SpectrumLong = self._mca1[0]
         self._simps.dp.SpectrumULong = self._mca2[0]
+        self._simps.dp.SpectrumLong64 = self._mca1[0]
+# ULong64 not supported by PyTango 7.2.3
+#        self._simps.dp.SpectrumULong64 = self._mca1[0]
+#        self._simps.dp.set_timeout_millis(250000)
+        self._simps.dp.SpectrumFloat = self._fmca1[0][:50]
+        self._simps.dp.SpectrumDouble = self._fmca1[0][:50]
 
+#        print self._fmca1[0]
         tdw = self.openWriter(fname, xml)
 
         import PyTango
@@ -349,6 +388,10 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.SpectrumUShort = self._mca2[i]
             self._simps.dp.SpectrumLong = self._mca1[i]
             self._simps.dp.SpectrumULong = self._mca2[i]
+            self._simps.dp.SpectrumLong64 = self._mca1[i]
+            self._simps.dp.SpectrumFloat = self._fmca1[i][:50]
+            self._simps.dp.SpectrumDouble = self._fmca1[i][:50]
+
             self.record(tdw,'{}')
 
         self.closeWriter(tdw)
@@ -357,11 +400,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 4)
+        det = self._sc.checkScalarTree(f, fname , 9)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps])
         self._sc.checkSpectrumField(det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumLong", "int64", "NX_INT", self._mca1[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumULong", "uint64", "NX_UINT", self._mca2[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps])
         
         # writing encoded attributes not supported for PyTango 7.2.3
 
