@@ -89,6 +89,8 @@ class SimpleServer(PyTango.Device_4Impl):
 
 		self.attr_SpectrumBoolean = [True, False]
 		self.attr_SpectrumUChar = [1,2]
+		self.attr_SpectrumShort = [1,3,4]
+		self.attr_SpectrumUShort = [1,4,5,6]
  
 #------------------------------------------------------------------
 #	Always excuted hook method
@@ -463,9 +465,20 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumShort_read = [1]
-		attr.set_value(attr_SpectrumShort_read, 1)
+		attr.set_value(self.attr_SpectrumShort, len(self.attr_SpectrumShort))
+		print self.attr_SpectrumShort
 
+
+#------------------------------------------------------------------
+#	Write SpectrumShort attribute
+#------------------------------------------------------------------
+	def write_SpectrumShort(self, attr):
+		print "In ", self.get_name(), "::write_SpectrumShort()"
+
+		#	Add your own code here
+		self.attr_SpectrumShort = []
+		attr.get_write_value(self.attr_SpectrumShort)
+		print "Attribute value = ", self.attr_SpectrumShort
 
 #------------------------------------------------------------------
 #	Read SpectrumUShort attribute
@@ -475,8 +488,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumUShort_read = [1]
-		attr.set_value(attr_SpectrumUShort_read, 1)
+		attr.set_value(self.attr_SpectrumUShort, len(self.attr_SpectrumUShort))
+		print self.attr_SpectrumUShort
 
 
 #------------------------------------------------------------------
@@ -484,11 +497,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumUShort(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumUShort()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumUShort = []
+		attr.get_write_value(self.attr_SpectrumUShort)
+		print "Attribute value = ", self.attr_SpectrumUShort
 
 
 #------------------------------------------------------------------
@@ -798,7 +811,7 @@ class SimpleServerClass(PyTango.DeviceClass):
 		'SpectrumShort':
 			[[PyTango.DevShort,
 			PyTango.SPECTRUM,
-			PyTango.READ, 4096],
+			PyTango.READ_WRITE, 4096],
 			{
 				'description':"SpectrumShort attribute",
 			} ],

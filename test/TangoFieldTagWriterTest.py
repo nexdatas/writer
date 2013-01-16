@@ -286,6 +286,28 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+
+
+       <field units="" type="NX_INT16" name="SpectrumShort">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumShort"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT16" name="SpectrumUShort">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumUShort"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -293,22 +315,21 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 """
         self._simps.dp.SpectrumBoolean = self._logical[0]
         self._simps.dp.SpectrumUChar = self._mca2[0]
+        self._simps.dp.SpectrumShort = self._mca1[0]
+        self._simps.dp.SpectrumUShort = self._mca2[0]
 
         tdw = self.openWriter(fname, xml)
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
 
-        steps = min(len(self._logical),len(self._logical))
+        steps = min(len(self._logical), len(self._mca1), len(self._mca2))
         for i in range(steps):
             self._simps.dp.SpectrumBoolean = self._logical[i]
             self._simps.dp.SpectrumUChar = self._mca2[i]
-#            self._simps.dp.SpectrumBoolean = [True]
-            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
- #           self._simps.dp.ScalarULong64 = abs(self._counter[i])
+            self._simps.dp.SpectrumShort = self._mca1[i]
+            self._simps.dp.SpectrumUShort = self._mca2[i]
             self.record(tdw,'{}')
-#            self._fcounter[i] = self._simps.dp.ScalarFloat 
-#            self._dcounter[i] = self._simps.dp.ScalarDouble 
 
         self.closeWriter(tdw)
         
@@ -316,10 +337,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 2)
+        det = self._sc.checkScalarTree(f, fname , 4)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps])
-#        self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
+        self._sc.checkSpectrumField(det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps])
         
         # writing encoded attributes not supported for PyTango 7.2.3
 
