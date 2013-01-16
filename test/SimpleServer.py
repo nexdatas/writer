@@ -33,7 +33,7 @@
 
 import PyTango
 import sys
-
+import numpy
 
 #==================================================================
 #   SimpleServer Class Description:
@@ -99,7 +99,9 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_SpectrumDouble = [1.123,23.435,3.5,3.345]
 		self.attr_SpectrumString = ["Hello","Word","!" ,"!!"]
 		self.attr_SpectrumEncoded=["INT32","\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
- 
+		
+		self.attr_ImageShort = numpy.array([[2,5],[3,4]],dtype='int32')
+
 #------------------------------------------------------------------
 #	Always excuted hook method
 #------------------------------------------------------------------
@@ -415,6 +417,30 @@ class SimpleServer(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
+#	Read ImageEncoded attribute
+#------------------------------------------------------------------
+	def read_ImageEncoded(self, attr):
+		print "In ", self.get_name(), "::read_ImageEncoded()"
+		
+		#	Add your own code here
+		
+		attr_ImageEncoded_read = 1
+		attr.set_value(attr_ImageEncoded_read)
+
+
+#------------------------------------------------------------------
+#	Write ImageEncoded attribute
+#------------------------------------------------------------------
+	def write_ImageEncoded(self, attr):
+		print "In ", self.get_name(), "::write_ImageEncoded()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
 #	Read SpectrumBoolean attribute
 #------------------------------------------------------------------
 	def read_SpectrumBoolean(self, attr):
@@ -424,8 +450,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		attr.set_value(self.attr_SpectrumBoolean, len(self.attr_SpectrumBoolean))
 		print self.attr_SpectrumBoolean
-#		attr_SpectrumBoolean_read = [1]#
-#		attr.set_value(attr_SpectrumBoolean_read, 1)
 
 
 #------------------------------------------------------------------
@@ -438,6 +462,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_SpectrumBoolean = []
 		attr.get_write_value(self.attr_SpectrumBoolean)
 		print "Attribute value = ", self.attr_SpectrumBoolean
+
 
 #------------------------------------------------------------------
 #	Read SpectrumUChar attribute
@@ -486,6 +511,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		attr.get_write_value(self.attr_SpectrumShort)
 		print "Attribute value = ", self.attr_SpectrumShort
 
+
 #------------------------------------------------------------------
 #	Read SpectrumUShort attribute
 #------------------------------------------------------------------
@@ -519,6 +545,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_SpectrumLong, len(self.attr_SpectrumLong))
 		print self.attr_SpectrumLong
+
 
 #------------------------------------------------------------------
 #	Write SpectrumLong attribute
@@ -676,6 +703,283 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "Attribute value = ", self.attr_SpectrumString
 
 
+#------------------------------------------------------------------
+#	Read ImageBoolean attribute
+#------------------------------------------------------------------
+	def read_ImageBoolean(self, attr):
+		print "In ", self.get_name(), "::read_ImageBoolean()"
+		
+		#	Add your own code here
+		
+		attr_ImageBoolean_read = [1][2]
+		attr.set_value(attr_ImageBoolean_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageBoolean attribute
+#------------------------------------------------------------------
+	def write_ImageBoolean(self, attr):
+		print "In ", self.get_name(), "::write_ImageBoolean()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageUChar attribute
+#------------------------------------------------------------------
+	def read_ImageUChar(self, attr):
+		print "In ", self.get_name(), "::read_ImageUChar()"
+		
+		#	Add your own code here
+		
+		attr_ImageUChar_read = [1][2]
+		attr.set_value(attr_ImageUChar_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageUChar attribute
+#------------------------------------------------------------------
+	def write_ImageUChar(self, attr):
+		print "In ", self.get_name(), "::write_ImageUChar()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageShort attribute
+#------------------------------------------------------------------
+	def read_ImageShort(self, attr):
+		print "In ", self.get_name(), "::read_ImageShort()"
+		
+		#	Add your own code here
+		
+		try:
+			if isinstance(self.attr_ImageShort,numpy.ndarray):
+				if self.attr_ImageShort.ndim == 2:
+					attr.set_value(self.attr_ImageShort, 
+						       len(self.attr_ImageShort), len(self.attr_ImageShort[0]))
+				else:
+					attr.set_value(self.attr_ImageShort, len(self.attr_ImageShort))
+			else:
+				self.attr_ImageShort = numpy.array(self.attr_ImageShort,dtype="int16")
+				attr.set_value(self.attr_ImageShort, 
+					       len(self.attr_ImageShort), len(self.attr_ImageShort[0]))
+		except:
+			print "Read error"
+			
+		#			attr.set_value(self.attr_ImageShort,1) 
+		print self.attr_ImageShort
+
+
+
+#------------------------------------------------------------------
+#	Write ImageShort attribute
+#------------------------------------------------------------------
+	def write_ImageShort(self, attr):
+		print "In ", self.get_name(), "::write_ImageShort()"
+		#	Add your own code here
+		self.attr_ImageShort = []
+		attr.get_write_value(self.attr_ImageShort)
+		print "Attribute value = ", self.attr_ImageShort
+
+#------------------------------------------------------------------
+#	Read ImageUShort attribute
+#------------------------------------------------------------------
+	def read_ImageUShort(self, attr):
+		print "In ", self.get_name(), "::read_ImageUShort()"
+		
+		#	Add your own code here
+		
+		attr_ImageUShort_read = [1][2]
+		attr.set_value(attr_ImageUShort_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageUShort attribute
+#------------------------------------------------------------------
+	def write_ImageUShort(self, attr):
+		print "In ", self.get_name(), "::write_ImageUShort()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageLong attribute
+#------------------------------------------------------------------
+	def read_ImageLong(self, attr):
+		print "In ", self.get_name(), "::read_ImageLong()"
+		
+		#	Add your own code here
+		
+		attr_ImageLong_read = [1][2]
+		attr.set_value(attr_ImageLong_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageLong attribute
+#------------------------------------------------------------------
+	def write_ImageLong(self, attr):
+		print "In ", self.get_name(), "::write_ImageLong()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageULong attribute
+#------------------------------------------------------------------
+	def read_ImageULong(self, attr):
+		print "In ", self.get_name(), "::read_ImageULong()"
+		
+		#	Add your own code here
+		
+		attr_ImageULong_read = [1][2]
+		attr.set_value(attr_ImageULong_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageULong attribute
+#------------------------------------------------------------------
+	def write_ImageULong(self, attr):
+		print "In ", self.get_name(), "::write_ImageULong()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageLong64 attribute
+#------------------------------------------------------------------
+	def read_ImageLong64(self, attr):
+		print "In ", self.get_name(), "::read_ImageLong64()"
+		
+		#	Add your own code here
+		
+		attr_ImageLong64_read = [1][2]
+		attr.set_value(attr_ImageLong64_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageLong64 attribute
+#------------------------------------------------------------------
+	def write_ImageLong64(self, attr):
+		print "In ", self.get_name(), "::write_ImageLong64()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageULong64 attribute
+#------------------------------------------------------------------
+	def read_ImageULong64(self, attr):
+		print "In ", self.get_name(), "::read_ImageULong64()"
+		
+		#	Add your own code here
+		
+		attr_ImageULong64_read = [1][2]
+		attr.set_value(attr_ImageULong64_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageULong64 attribute
+#------------------------------------------------------------------
+	def write_ImageULong64(self, attr):
+		print "In ", self.get_name(), "::write_ImageULong64()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageFloat attribute
+#------------------------------------------------------------------
+	def read_ImageFloat(self, attr):
+		print "In ", self.get_name(), "::read_ImageFloat()"
+		
+		#	Add your own code here
+		
+		attr_ImageFloat_read = [1.1][2.2]
+		attr.set_value(attr_ImageFloat_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageFloat attribute
+#------------------------------------------------------------------
+	def write_ImageFloat(self, attr):
+		print "In ", self.get_name(), "::write_ImageFloat()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageDouble attribute
+#------------------------------------------------------------------
+	def read_ImageDouble(self, attr):
+		print "In ", self.get_name(), "::read_ImageDouble()"
+		
+		#	Add your own code here
+		
+		attr_ImageDouble_read = [1.1][2.2]
+		attr.set_value(attr_ImageDouble_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageDouble attribute
+#------------------------------------------------------------------
+	def write_ImageDouble(self, attr):
+		print "In ", self.get_name(), "::write_ImageDouble()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
+#------------------------------------------------------------------
+#	Read ImageString attribute
+#------------------------------------------------------------------
+	def read_ImageString(self, attr):
+		print "In ", self.get_name(), "::read_ImageString()"
+		
+		#	Add your own code here
+		
+		attr_ImageString_read = ["Hello"] ["Tango world"]
+		attr.set_value(attr_ImageString_read, 1, 1)
+
+
+#------------------------------------------------------------------
+#	Write ImageString attribute
+#------------------------------------------------------------------
+	def write_ImageString(self, attr):
+		print "In ", self.get_name(), "::write_ImageString()"
+		data=[]
+		attr.get_write_value(data)
+		print "Attribute value = ", data
+
+		#	Add your own code here
+
+
 
 #==================================================================
 #
@@ -798,6 +1102,13 @@ class SimpleServerClass(PyTango.DeviceClass):
 			{
 				'description':"SpectrumEncoded attribute",
 			} ],
+		'ImageEncoded':
+			[[PyTango.DevEncoded,
+			PyTango.SCALAR,
+			PyTango.READ_WRITE],
+			{
+				'description':"ImageEncoded attribute",
+			} ],
 		'SpectrumBoolean':
 			[[PyTango.DevBoolean,
 			PyTango.SPECTRUM,
@@ -874,6 +1185,83 @@ class SimpleServerClass(PyTango.DeviceClass):
 			PyTango.READ_WRITE, 4096],
 			{
 				'description':"SpectrumString attribute",
+			} ],
+		'ImageBoolean':
+			[[PyTango.DevBoolean,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageBoolean attribute",
+			} ],
+		'ImageUChar':
+			[[PyTango.DevUChar,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageUChar attribute",
+			} ],
+		'ImageShort':
+			[[PyTango.DevShort,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageShort attribute",
+			} ],
+		'ImageUShort':
+			[[PyTango.DevUShort,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageUShort attribute",
+			} ],
+		'ImageLong':
+			[[PyTango.DevLong,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageLong attribute",
+			} ],
+		'ImageULong':
+			[[PyTango.DevULong,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageULong attribute",
+			} ],
+		'ImageLong64':
+			[[PyTango.DevLong64,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageLong64 attribute",
+			} ],
+		'ImageULong64':
+			[[PyTango.DevULong64,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageULong64 attribute",
+			} ],
+		'ImageFloat':
+			[[PyTango.DevFloat,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageFloat attribute",
+			} ],
+		'ImageDouble':
+			[[PyTango.DevDouble,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageDouble attribute",
+			} ],
+		'ImageString':
+			[[PyTango.DevString,
+			PyTango.IMAGE,
+			PyTango.READ_WRITE, 4096, 4096],
+			{
+				'description':"ImageString attribute",
 			} ],
 		}
 

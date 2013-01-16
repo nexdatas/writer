@@ -24,6 +24,7 @@ import os
 import sys
 import subprocess
 import random
+import numpy
 
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
@@ -484,6 +485,62 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         f.close()
         os.remove(fname)
+
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_tangoImage(self):
+        print "Run: %s.test_tangoImage() " % self.__class__.__name__
+        fname= '%s/tangoimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+       <field units="" type="NX_INT32" name="ImageShort">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageShort"/>
+          </datasource>
+        </field>
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+#        self._simps.dp.ImageShort = numpy.array(self._pco1[0],dtype='int32')
+
+#        print self._fmca1[0]
+        tdw = self.openWriter(fname, xml)
+
+        import PyTango
+        dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
+
+        steps = min(len(self._pco1), len(self._pco1))
+        for i in range(steps):
+ #           self._simps.dp.ImageShort = numpy.array(self._pco1[i],dtype='int32')
+
+#            self.record(tdw,'{}')
+            pass
+        self.closeWriter(tdw)
+        
+        # check the created file
+        
+        
+#        f = open_file(fname,readonly=True)
+#        det = self._sc.checkScalarTree(f, fname , 1)
+
+#        f.close()
+#        os.remove(fname)
 
 
 
