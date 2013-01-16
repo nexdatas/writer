@@ -483,7 +483,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                                           error =1.0e-06)
 
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
