@@ -89,8 +89,10 @@ class SimpleServer(PyTango.Device_4Impl):
 
 		self.attr_SpectrumBoolean = [True, False]
 		self.attr_SpectrumUChar = [1,2]
-		self.attr_SpectrumShort = [1,3,4]
+		self.attr_SpectrumShort = [1,-3,4]
 		self.attr_SpectrumUShort = [1,4,5,6]
+		self.attr_SpectrumLong = [1123,-435,35,-6345]
+		self.attr_SpectrumULong = [2341,2344,45,345]
  
 #------------------------------------------------------------------
 #	Always excuted hook method
@@ -511,21 +513,19 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_SpectrumLong()"
 		
 		#	Add your own code here
-		
-		attr_SpectrumLong_read = [1]
-		attr.set_value(attr_SpectrumLong_read, 1)
-
+		attr.set_value(self.attr_SpectrumLong, len(self.attr_SpectrumLong))
+		print self.attr_SpectrumLong
 
 #------------------------------------------------------------------
 #	Write SpectrumLong attribute
 #------------------------------------------------------------------
 	def write_SpectrumLong(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumLong()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumLong = []
+		attr.get_write_value(self.attr_SpectrumLong)
+		print "Attribute value = ", self.attr_SpectrumLong
 
 
 #------------------------------------------------------------------
@@ -536,8 +536,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumULong_read = [1]
-		attr.set_value(attr_SpectrumULong_read, 1)
+		attr.set_value(self.attr_SpectrumULong, len(self.attr_SpectrumULong))
+		print self.attr_SpectrumULong
 
 
 #------------------------------------------------------------------
@@ -545,11 +545,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumULong(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumULong()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumULong = []
+		attr.get_write_value(self.attr_SpectrumULong)
+		print "Attribute value = ", self.attr_SpectrumULong
 
 
 #------------------------------------------------------------------

@@ -286,9 +286,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-
-
-
        <field units="" type="NX_INT16" name="SpectrumShort">
           <strategy mode="STEP"/>
           <dimensions rank="1" />
@@ -298,13 +295,32 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-
        <field units="" type="NX_UINT16" name="SpectrumUShort">
           <strategy mode="STEP"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumUShort"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_INT" name="SpectrumLong">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumLong"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT" name="SpectrumULong">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumULong"/>
           </datasource>
         </field>
 
@@ -317,6 +333,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumUChar = self._mca2[0]
         self._simps.dp.SpectrumShort = self._mca1[0]
         self._simps.dp.SpectrumUShort = self._mca2[0]
+        self._simps.dp.SpectrumLong = self._mca1[0]
+        self._simps.dp.SpectrumULong = self._mca2[0]
 
         tdw = self.openWriter(fname, xml)
 
@@ -329,6 +347,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.SpectrumUChar = self._mca2[i]
             self._simps.dp.SpectrumShort = self._mca1[i]
             self._simps.dp.SpectrumUShort = self._mca2[i]
+            self._simps.dp.SpectrumLong = self._mca1[i]
+            self._simps.dp.SpectrumULong = self._mca2[i]
             self.record(tdw,'{}')
 
         self.closeWriter(tdw)
