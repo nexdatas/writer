@@ -1,6 +1,7 @@
 2013-XX-XX Jan Kotanski <jankotan@gmail.com>
-	* adding decoder for UTF8 endoced data
+	* adding decoder for UTF8 and INT32 ecoded data
 	* fixing storing attributes in FieldArrays
+	* fixing shape finding and FetchNameHandler conditions 
 	* tagged as 1.0.X
 
 

@@ -66,7 +66,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
-
+        self._encoded =[67305728,1413689632, 336793872 ]
 
 
     ## test starter
@@ -316,7 +316,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
-       <field units="" type="NX_INT" name="SpectrumLong">
+       <field units="" type="NX_INT32" name="SpectrumLong">
           <strategy mode="STEP"  compression="true"   shuffle="false" />
           <dimensions rank="1" />
           <datasource type="TANGO">
@@ -325,7 +325,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-       <field units="" type="NX_UINT" name="SpectrumULong">
+       <field units="" type="NX_UINT32" name="SpectrumULong">
           <strategy mode="STEP"   compression="true"  grows="1" />
           <dimensions rank="1" />
           <datasource type="TANGO">
@@ -375,7 +375,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field units="m" type="NX_INT32" name="SpectrumEncoded">
+        <field units="" type="NX_INT32" name="SpectrumEncoded">
           <strategy mode="STEP"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
@@ -460,8 +460,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                                     grows = 3)
         self._sc.checkSpectrumField(det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps], 
                                     grows = 2)
-        self._sc.checkSpectrumField(det, "SpectrumLong", "int64", "NX_INT", self._mca1[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumULong", "uint64", "NX_UINT", self._mca2[:steps],
+        self._sc.checkSpectrumField(det, "SpectrumLong", "int32", "NX_INT32", self._mca1[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumULong", "uint32", "NX_UINT32", self._mca2[:steps],
                                     grows = 1)
         self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps], 
                                     grows = 2)
@@ -474,6 +474,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         self._sc.checkStringSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
         # writing encoded attributes not supported for PyTango 7.2.3
+
+        self._sc.checkSpectrumField(det, "SpectrumEncoded", "int32", "NX_INT32", [self._encoded for c in range(steps)])
 
         self._sc.checkSingleSpectrumField(det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
 
