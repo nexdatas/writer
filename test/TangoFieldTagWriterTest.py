@@ -375,11 +375,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field units="m" type="NX_CHAR" name="SpectrumEncoded">
+        <field units="m" type="NX_INT32" name="SpectrumEncoded">
           <strategy mode="STEP"/>
+          <dimensions rank="1" />
           <datasource type="TANGO">
             <record name="SpectrumEncoded"/>
-           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
+            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UINT32"/>
           </datasource>
         </field>
 
