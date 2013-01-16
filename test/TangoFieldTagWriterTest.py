@@ -371,8 +371,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 # ULong64 not supported by PyTango 7.2.3
 #        self._simps.dp.SpectrumULong64 = self._mca1[0]
 #        self._simps.dp.set_timeout_millis(250000)
-        self._simps.dp.SpectrumFloat = self._fmca1[0][:50]
-        self._simps.dp.SpectrumDouble = self._fmca1[0][:50]
+        self._simps.dp.SpectrumFloat = self._fmca1[0]
+        self._simps.dp.SpectrumDouble = self._fmca1[0]
 
 #        print self._fmca1[0]
         tdw = self.openWriter(fname, xml)
@@ -389,8 +389,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.SpectrumLong = self._mca1[i]
             self._simps.dp.SpectrumULong = self._mca2[i]
             self._simps.dp.SpectrumLong64 = self._mca1[i]
-            self._simps.dp.SpectrumFloat = self._fmca1[i][:50]
-            self._simps.dp.SpectrumDouble = self._fmca1[i][:50]
+            self._simps.dp.SpectrumFloat = self._fmca1[i]
+            self._simps.dp.SpectrumDouble = self._fmca1[i]
 
             self.record(tdw,'{}')
 

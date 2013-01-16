@@ -62,9 +62,9 @@ class SimpleServerSetUp(object):
         path = os.path.dirname(SimpleServer.__file__)
         
         if os.path.isfile("%s/ST" % path):
-            self._psub = subprocess.Popen(
-                "cd %s; ./ST S1 &" % path ,stdout =  subprocess.PIPE, 
-                stderr =  subprocess.PIPE,  shell= True)
+            self._psub = subprocess.call(
+                "cd %s; ./ST S1 &" % path ,stdout =  None, 
+                stderr =  None,  shell= True)
         print "waiting for simple server",
         
         found = False

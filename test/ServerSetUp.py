@@ -55,13 +55,13 @@ class ServerSetUp(object):
         db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
         
         if os.path.isfile("../TDS"):
-            self._psub = subprocess.Popen(
-                "cd ..; ./TDS TDWTEST &",stdout =  subprocess.PIPE, 
-                stderr =  subprocess.PIPE,  shell= True)
+            self._psub = subprocess.call(
+                "cd ..; ./TDS TDWTEST &",stdout =  None, 
+                stderr =  None,  shell= True)
         else:
-            self._psub = subprocess.Popen(
-                "TDS TDWTEST &",stdout =  subprocess.PIPE, 
-                stderr =  subprocess.PIPE , shell= True)
+            self._psub = subprocess.call(
+                "TDS TDWTEST &",stdout =  None, 
+                stderr = None , shell= True)
         print "waiting for server",
         
         found = False
