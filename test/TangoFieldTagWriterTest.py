@@ -49,6 +49,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._bools =  ["TruE","0","1","False","false", "True"]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._dcounter =  [0.1,-2342.4,46.54,-854.456,9.243456,-0.423426545]
+        self._logical =  [[True,False,True,False], [True,False,False,True]]
+
         self._sc = Checker(self)
         self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
         self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
@@ -265,14 +267,22 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
 
-       <field units="m" type="NX_BOOLEAN" name="SpectrumBoolean">
+       <field units="" type="NX_BOOLEAN" name="SpectrumBoolean">
           <strategy mode="STEP"/>
-          <dimensions rank="1" >
-            <dim index="1" value="2"/>
-          </dimensions>
+          <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
            <record name="SpectrumBoolean"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT8" name="SpectrumUChar">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumUChar"/>
           </datasource>
         </field>
 
@@ -281,12 +291,18 @@ class TangoFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
-
+        self._simps.dp.SpectrumBoolean = self._logical[0]
+        self._simps.dp.SpectrumUChar = self._mca2[0]
 
         tdw = self.openWriter(fname, xml)
 
-        for i in range(min(len(self._counter), len(self._fcounter), len(self._bools))):
-            self._simps.dp.SpectrumBoolean = [True, False]
+        import PyTango
+        dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
+
+        steps = min(len(self._logical),len(self._logical))
+        for i in range(steps):
+            self._simps.dp.SpectrumBoolean = self._logical[i]
+            self._simps.dp.SpectrumUChar = self._mca2[i]
 #            self._simps.dp.SpectrumBoolean = [True]
             ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
  #           self._simps.dp.ScalarULong64 = abs(self._counter[i])
@@ -300,7 +316,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 1)
+        det = self._sc.checkScalarTree(f, fname , 2)
+        self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps])
 #        self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         
         # writing encoded attributes not supported for PyTango 7.2.3

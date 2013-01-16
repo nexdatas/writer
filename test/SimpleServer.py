@@ -88,8 +88,8 @@ class SimpleServer(PyTango.Device_4Impl):
 
 
 		self.attr_SpectrumBoolean = [True, False]
-#		self.attr_SpectrumBoolean = [1,0]
-
+		self.attr_SpectrumUChar = [1,2]
+ 
 #------------------------------------------------------------------
 #	Always excuted hook method
 #------------------------------------------------------------------
@@ -439,8 +439,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumUChar_read = [1]
-		attr.set_value(attr_SpectrumUChar_read, 1)
+		attr.set_value(self.attr_SpectrumUChar, len(self.attr_SpectrumUChar))
+		print self.attr_SpectrumUChar
 
 
 #------------------------------------------------------------------
@@ -448,11 +448,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumUChar(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumUChar()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumUChar = []
+		attr.get_write_value(self.attr_SpectrumUChar)
+		print "Attribute value = ", self.attr_SpectrumUChar
 
 
 #------------------------------------------------------------------
