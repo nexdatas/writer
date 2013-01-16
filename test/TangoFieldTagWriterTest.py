@@ -474,6 +474,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkStringSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
         # writing encoded attributes not supported for PyTango 7.2.3
 
+        self._sc.checkSingleSpectrumField(det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
+
+        self._sc.checkSingleSpectrumField(det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[steps-1],
+                                          error =1.0e-06)
+
         f.close()
 #        os.remove(fname)
 
