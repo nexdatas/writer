@@ -288,7 +288,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_UINT8" name="SpectrumUChar">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="false" />
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -297,7 +297,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
        <field units="" type="NX_INT16" name="SpectrumShort">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"  compression="true"  grows="3" shuffle="True" />
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -306,7 +306,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
        <field units="" type="NX_UINT16" name="SpectrumUShort">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"   grows="2" />
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -317,7 +317,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_INT" name="SpectrumLong">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"  compression="true"   shuffle="false" />
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -326,7 +326,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
        <field units="" type="NX_UINT" name="SpectrumULong">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"   compression="true"  grows="1" />
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -338,7 +338,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_INT64" name="SpectrumLong64">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -348,7 +348,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT32" name="SpectrumFloat">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP" />
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -358,7 +358,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT64" name="SpectrumDouble">
-          <strategy mode="STEP"/>
+          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -375,6 +375,34 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" type="NX_CHAR" name="SpectrumEncoded">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO">
+            <record name="SpectrumEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_INT64" name="InitSpectrumLong64">
+          <strategy mode="INIT"  compression="true"  shuffle="True"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT32" name="FinalSpectrumFloat">
+          <strategy mode="FINAL" />
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumFloat"/>
+          </datasource>
+        </field>
 
 
       </group>
@@ -382,17 +410,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
-
-#       <field units="" type="NX_UINT64" name="SpectrumULong64">
-#          <strategy mode="STEP"/>
-#          <dimensions rank="1" />
-#          <datasource type="TANGO">
-#           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
-#           <record name="SpectrumULong64"/>
-#          </datasource>
-#        </field>
-
-
 
         self._simps.dp.SpectrumBoolean = self._logical[0]
         self._simps.dp.SpectrumUChar = self._mca2[0]
@@ -434,18 +451,23 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 13)
+        det = self._sc.checkScalarTree(f, fname , 16)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps], 
+                                    grows = 2)
+        self._sc.checkSpectrumField(det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps], 
+                                    grows = 3)
+        self._sc.checkSpectrumField(det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps], 
+                                    grows = 2)
         self._sc.checkSpectrumField(det, "SpectrumLong", "int64", "NX_INT", self._mca1[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumULong", "uint64", "NX_UINT", self._mca2[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumULong", "uint64", "NX_UINT", self._mca2[:steps],
+                                    grows = 1)
+        self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps], 
+                                    grows = 2)
         self._sc.checkSpectrumField(det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps], 
                                     error = 1e-6)
         self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps], 
-                                    error = 1e-14)
+                                    grows = 1, error = 1e-14)
         self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps], 
                                     error = 1e-14)
         

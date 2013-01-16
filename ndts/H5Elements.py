@@ -108,8 +108,9 @@ class FElement(Element):
                                 shape.append(s)
                     if extraD:
                         shape.insert(exDim-1,0)    
-                    else:
-                        raise XMLSettingSyntaxError, "Wrongly defined shape"
+                else:
+                    raise XMLSettingSyntaxError, "Wrongly defined shape"
+
         elif extraD:            
             shape = [0]
         return shape
