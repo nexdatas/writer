@@ -97,6 +97,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_SpectrumULong64 = [1123,23435,35,3345]
 		self.attr_SpectrumFloat = [11.23,-4.35,3.5,-634.5]
 		self.attr_SpectrumDouble = [1.123,23.435,3.5,3.345]
+		self.attr_SpectrumString = ["Hello","Word","!" ,"!!"]
  
 #------------------------------------------------------------------
 #	Always excuted hook method
@@ -351,7 +352,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_ScalarEncoded[0],self.attr_ScalarEncoded[1])
+		attr.set_value(self.attr_ScalarEncoded[0], self.attr_ScalarEncoded[1])
 
 
 #------------------------------------------------------------------
@@ -660,8 +661,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_SpectrumString_read = ["Hello Tango world"]
-		attr.set_value(attr_SpectrumString_read, 1)
+		attr.set_value(self.attr_SpectrumString, len(self.attr_SpectrumString))
+		print self.attr_SpectrumString
 
 
 #------------------------------------------------------------------
@@ -669,11 +670,11 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_SpectrumString(self, attr):
 		print "In ", self.get_name(), "::write_SpectrumString()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_SpectrumString = []
+		attr.get_write_value(self.attr_SpectrumString)
+		print "Attribute value = ", self.attr_SpectrumString
 
 
 

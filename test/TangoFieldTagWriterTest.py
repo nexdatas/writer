@@ -49,15 +49,25 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._bools =  ["TruE","0","1","False","false", "True"]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._dcounter =  [0.1,-2342.4,46.54,-854.456,9.243456,-0.423426545]
-        self._logical =  [[True,False,True,False], [True,False,False,True]]
+        self._logical =  [[True,False,True,False], [True,False,False,True], [False,False,True,True]]
 
         self._sc = Checker(self)
         self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
         self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
+
+        self._dates = [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                        "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                       ["1956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                        "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],                 
+                       ["1966-02-21T11:22:02.113+0200","1432-12-11T11:23:13.1223-0300",
+                        "1714-11-10T14:03:13.12-0400","1001-01-01T14:11:11.0011-0100"]]
+
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
+
+
 
     ## test starter
     # \brief Common set up
@@ -325,6 +335,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+
+
        <field units="" type="NX_INT64" name="SpectrumLong64">
           <strategy mode="STEP"/>
           <dimensions rank="1" />
@@ -354,6 +366,15 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+       <field units="" type="NX_CHAR" name="SpectrumString">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumString"/>
+          </datasource>
+        </field>
+
 
 
       </group>
@@ -361,6 +382,18 @@ class TangoFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+
+#       <field units="" type="NX_UINT64" name="SpectrumULong64">
+#          <strategy mode="STEP"/>
+#          <dimensions rank="1" />
+#          <datasource type="TANGO">
+#           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+#           <record name="SpectrumULong64"/>
+#          </datasource>
+#        </field>
+
+
+
         self._simps.dp.SpectrumBoolean = self._logical[0]
         self._simps.dp.SpectrumUChar = self._mca2[0]
         self._simps.dp.SpectrumShort = self._mca1[0]
@@ -369,10 +402,10 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumULong = self._mca2[0]
         self._simps.dp.SpectrumLong64 = self._mca1[0]
 # ULong64 not supported by PyTango 7.2.3
-#        self._simps.dp.SpectrumULong64 = self._mca1[0]
-#        self._simps.dp.set_timeout_millis(250000)
+#        self._simps.dp.SpectrumULong64 = self._mca2[0]
         self._simps.dp.SpectrumFloat = self._fmca1[0]
         self._simps.dp.SpectrumDouble = self._fmca1[0]
+        self._simps.dp.SpectrumString = self._dates[0]
 
 #        print self._fmca1[0]
         tdw = self.openWriter(fname, xml)
@@ -380,7 +413,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
 
-        steps = min(len(self._logical), len(self._mca1), len(self._mca2))
+        steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
         for i in range(steps):
             self._simps.dp.SpectrumBoolean = self._logical[i]
             self._simps.dp.SpectrumUChar = self._mca2[i]
@@ -391,6 +424,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.SpectrumLong64 = self._mca1[i]
             self._simps.dp.SpectrumFloat = self._fmca1[i]
             self._simps.dp.SpectrumDouble = self._fmca1[i]
+            self._simps.dp.SpectrumString = self._dates[i]
 
             self.record(tdw,'{}')
 
@@ -400,7 +434,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 9)
+        det = self._sc.checkScalarTree(f, fname , 13)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps])
         self._sc.checkSpectrumField(det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps])
@@ -408,7 +442,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "SpectrumLong", "int64", "NX_INT", self._mca1[:steps])
         self._sc.checkSpectrumField(det, "SpectrumULong", "uint64", "NX_UINT", self._mca2[:steps])
         self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps], 
+                                    error = 1e-6)
+        self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps], 
+                                    error = 1e-14)
+        self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps], 
+                                    error = 1e-14)
         
+        self._sc.checkStringSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
         # writing encoded attributes not supported for PyTango 7.2.3
 
         f.close()
