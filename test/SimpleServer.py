@@ -100,8 +100,17 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_SpectrumString = ["Hello","Word","!" ,"!!"]
 		self.attr_SpectrumEncoded=["INT32","\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
 		
-		self.attr_ImageShort = numpy.array([[2,5],[3,4]],dtype='int16')
 		self.attr_ImageBoolean = numpy.array([[True]],dtype='int16')
+		self.attr_ImageUChar = numpy.array([[2,5],[3,4]],dtype='uint8')
+		self.attr_ImageShort = numpy.array([[2,5],[3,4]],dtype='int16')
+		self.attr_ImageUShort = numpy.array([[2,5],[3,4]],dtype='uint16')
+		self.attr_ImageLong = numpy.array([[2,5],[3,4]],dtype='int32')
+		self.attr_ImageULong = numpy.array([[2,5],[3,4]],dtype='uint32')
+		self.attr_ImageLong64 = numpy.array([[2,5],[3,4]],dtype='int64')
+		self.attr_ImageULong64 = numpy.array([[2,5],[3,4]],dtype='uint64')
+		self.attr_ImageFloat = numpy.array([[2.,5.],[3.,4.]],dtype='float32')
+		self.attr_ImageDouble = numpy.array([[2.4,5.45],[3.4,4.45]],dtype='double')
+		self.attr_ImageString = [['True']]
 
 #------------------------------------------------------------------
 #	Always excuted hook method
@@ -415,9 +424,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageEncoded()"
 		
 		#	Add your own code here
-		
-		attr_ImageEncoded_read = 1
-		attr.set_value(attr_ImageEncoded_read)
+		attr.set_value(self.attr_ImageEncoded[0], self.attr_ImageEncoded[1])
 
 
 #------------------------------------------------------------------
@@ -425,11 +432,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageEncoded(self, attr):
 		print "In ", self.get_name(), "::write_ImageEncoded()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageEncoded = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageEncoded
 
 
 #------------------------------------------------------------------
@@ -440,7 +446,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumBoolean, len(self.attr_SpectrumBoolean))
+		attr.set_value(self.attr_SpectrumBoolean)
 		print self.attr_SpectrumBoolean
 
 
@@ -463,7 +469,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumUChar, len(self.attr_SpectrumUChar))
+		attr.set_value(self.attr_SpectrumUChar)
 		print self.attr_SpectrumUChar
 
 
@@ -486,7 +492,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumShort, len(self.attr_SpectrumShort))
+		attr.set_value(self.attr_SpectrumShort)
 		print self.attr_SpectrumShort
 
 
@@ -509,7 +515,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumUShort, len(self.attr_SpectrumUShort))
+		attr.set_value(self.attr_SpectrumUShort)
 		print self.attr_SpectrumUShort
 
 
@@ -531,7 +537,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_SpectrumLong()"
 		
 		#	Add your own code here
-		attr.set_value(self.attr_SpectrumLong, len(self.attr_SpectrumLong))
+		attr.set_value(self.attr_SpectrumLong)
 		print self.attr_SpectrumLong
 
 
@@ -554,7 +560,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumULong, len(self.attr_SpectrumULong))
+		attr.set_value(self.attr_SpectrumULong)
 		print self.attr_SpectrumULong
 
 
@@ -577,7 +583,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumLong64, len(self.attr_SpectrumLong64))
+		attr.set_value(self.attr_SpectrumLong64)
 		print self.attr_SpectrumLong64
 
 
@@ -600,7 +606,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumULong64, len(self.attr_SpectrumULong64))
+		attr.set_value(self.attr_SpectrumULong64)
 		print self.attr_SpectrumULong64
 
 
@@ -623,7 +629,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumFloat, len(self.attr_SpectrumFloat))
+		attr.set_value(self.attr_SpectrumFloat)
 		print self.attr_SpectrumFloat
 
 
@@ -646,7 +652,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumDouble, len(self.attr_SpectrumDouble))
+		attr.set_value(self.attr_SpectrumDouble)
 		print self.attr_SpectrumDouble
 
 
@@ -669,7 +675,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_SpectrumString, len(self.attr_SpectrumString))
+		attr.set_value(self.attr_SpectrumString)
 		print self.attr_SpectrumString
 
 
@@ -692,8 +698,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.attr_ImageBoolean, 
-			       self.attr_ImageBoolean.shape[1], self.attr_ImageBoolean.shape[0])
+		attr.set_value(self.attr_ImageBoolean) 
 		print self.attr_ImageBoolean
 
 
@@ -715,8 +720,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_ImageUChar_read = [1][2]
-		attr.set_value(attr_ImageUChar_read, 1, 1)
+		attr.set_value(self.attr_ImageUChar) 
+		print self.attr_ImageUChar
 
 
 #------------------------------------------------------------------
@@ -724,9 +729,8 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageUChar(self, attr):
 		print "In ", self.get_name(), "::write_ImageUChar()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
+		self.attr_ImageUChar = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageUChar
 
 		#	Add your own code here
 
@@ -738,8 +742,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageShort()"
 		
 		#	Add your own code here
-		attr.set_value(self.attr_ImageShort, 
-			       self.attr_ImageShort.shape[1], self.attr_ImageShort.shape[0])
+		attr.set_value(self.attr_ImageShort) 
 		print self.attr_ImageShort
 
 
@@ -761,8 +764,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_ImageUShort_read = [1][2]
-		attr.set_value(attr_ImageUShort_read, 1, 1)
+		attr.set_value(self.attr_ImageUShort) 
+		print self.attr_ImageUShort
 
 
 #------------------------------------------------------------------
@@ -770,11 +773,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageUShort(self, attr):
 		print "In ", self.get_name(), "::write_ImageUShort()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageUShort = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageUShort
 
 
 #------------------------------------------------------------------
@@ -785,8 +787,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_ImageLong_read = [1][2]
-		attr.set_value(attr_ImageLong_read, 1, 1)
+		attr.set_value(self.attr_ImageLong) 
+		print self.attr_ImageLong
 
 
 #------------------------------------------------------------------
@@ -794,11 +796,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageLong(self, attr):
 		print "In ", self.get_name(), "::write_ImageLong()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageLong = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageLong
 
 
 #------------------------------------------------------------------
@@ -809,8 +810,8 @@ class SimpleServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr_ImageULong_read = [1][2]
-		attr.set_value(attr_ImageULong_read, 1, 1)
+		attr.set_value(self.attr_ImageULong) 
+		print self.attr_ImageULong
 
 
 #------------------------------------------------------------------
@@ -818,11 +819,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageULong(self, attr):
 		print "In ", self.get_name(), "::write_ImageULong()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageULong = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageULong
 
 
 #------------------------------------------------------------------
@@ -832,9 +832,9 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageLong64()"
 		
 		#	Add your own code here
+		attr.set_value(self.attr_ImageLong64) 
+		print self.attr_ImageLong64
 		
-		attr_ImageLong64_read = [1][2]
-		attr.set_value(attr_ImageLong64_read, 1, 1)
 
 
 #------------------------------------------------------------------
@@ -842,11 +842,9 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageLong64(self, attr):
 		print "In ", self.get_name(), "::write_ImageLong64()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
-
 		#	Add your own code here
+		self.attr_ImageLong64 = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageLong64
 
 
 #------------------------------------------------------------------
@@ -856,9 +854,9 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageULong64()"
 		
 		#	Add your own code here
+		attr.set_value(self.attr_ImageULong64)
+		print self.attr_ImageULong64
 		
-		attr_ImageULong64_read = [1][2]
-		attr.set_value(attr_ImageULong64_read, 1, 1)
 
 
 #------------------------------------------------------------------
@@ -866,11 +864,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageULong64(self, attr):
 		print "In ", self.get_name(), "::write_ImageULong64()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageULong64 = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageULong64
 
 
 #------------------------------------------------------------------
@@ -880,9 +877,9 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageFloat()"
 		
 		#	Add your own code here
+		attr.set_value(self.attr_ImageFloat)
+		print self.attr_ImageFloat
 		
-		attr_ImageFloat_read = [1.1][2.2]
-		attr.set_value(attr_ImageFloat_read, 1, 1)
 
 
 #------------------------------------------------------------------
@@ -890,11 +887,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageFloat(self, attr):
 		print "In ", self.get_name(), "::write_ImageFloat()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageFloat = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageFloat
 
 
 #------------------------------------------------------------------
@@ -904,9 +900,9 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageDouble()"
 		
 		#	Add your own code here
+		attr.set_value(self.attr_ImageDouble)
+		print self.attr_ImageDouble
 		
-		attr_ImageDouble_read = [1.1][2.2]
-		attr.set_value(attr_ImageDouble_read, 1, 1)
 
 
 #------------------------------------------------------------------
@@ -914,11 +910,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageDouble(self, attr):
 		print "In ", self.get_name(), "::write_ImageDouble()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageDouble = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageDouble
 
 
 #------------------------------------------------------------------
@@ -928,9 +923,9 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageString()"
 		
 		#	Add your own code here
+		attr.set_value(self.attr_ImageString)
+		print self.attr_ImageString
 		
-		attr_ImageString_read = ["Hello"] ["Tango world"]
-		attr.set_value(attr_ImageString_read, 1, 1)
 
 
 #------------------------------------------------------------------
@@ -938,11 +933,10 @@ class SimpleServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_ImageString(self, attr):
 		print "In ", self.get_name(), "::write_ImageString()"
-		data=[]
-		attr.get_write_value(data)
-		print "Attribute value = ", data
 
 		#	Add your own code here
+		self.attr_ImageString = attr.get_write_value()
+		print "Attribute value = ", self.attr_ImageString
 
 
 

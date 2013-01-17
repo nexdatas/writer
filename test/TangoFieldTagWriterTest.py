@@ -69,6 +69,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                        ["1966-02-21T11:22:02.113+0200","1432-12-11T11:23:13.1223-0300",
                         "1714-11-10T14:03:13.12-0400","1001-01-01T14:11:11.0011-0100"]]
 
+        self._dates2 = [[["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                          "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                         ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                          "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"]],
+                        [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                          "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                         ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                          "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]],
+                        [["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                          "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],                 
+                         ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                          "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]]]
+
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
         self._encoded =[67305728,1413689632, 336793872 ]
@@ -224,6 +237,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 """
 
 
+#        <field units="m" type="NX_UINT64" name="ScalarULong64">
+#          <strategy mode="STEP"/>
+#          <datasource type="TANGO">
+#           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+#           <record name="ScalarULong64"/>
+#          </datasource>
+#        </field>
+
         tdw = self.openWriter(fname, xml)
 
         for i in range(min(len(self._counter), len(self._fcounter), len(self._bools))):
@@ -238,7 +259,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.ScalarDouble = self._dcounter[i]
             self._simps.dp.ScalarString = self._bools[i]
             ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
- #           self._simps.dp.ScalarULong64 = abs(self._counter[i])
+#            self._simps.dp.ScalarULong64 =abs(self._counter[i])
             self.record(tdw,'{}')
 #            self._fcounter[i] = self._simps.dp.ScalarFloat 
 #            self._dcounter[i] = self._simps.dp.ScalarDouble 
@@ -352,6 +373,16 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+       <field units="" type="NX_INT64" name="SpectrumULong64">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumULong64"/>
+          </datasource>
+        </field>
+
+
        <field units="" type="NX_FLOAT32" name="SpectrumFloat">
           <strategy mode="STEP" />
           <dimensions rank="1" />
@@ -424,13 +455,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumLong = self._mca1[0]
         self._simps.dp.SpectrumULong = self._mca2[0]
         self._simps.dp.SpectrumLong64 = self._mca1[0]
-# ULong64 not supported by PyTango 7.2.3
-#        self._simps.dp.SpectrumULong64 = self._mca2[0]
+        self._simps.dp.SpectrumULong64 = self._mca2[0]
         self._simps.dp.SpectrumFloat = self._fmca1[0]
         self._simps.dp.SpectrumDouble = self._fmca1[0]
         self._simps.dp.SpectrumString = self._dates[0]
 
-#        print self._fmca1[0]
         tdw = self.openWriter(fname, xml)
 
         import PyTango
@@ -445,6 +474,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.SpectrumLong = self._mca1[i]
             self._simps.dp.SpectrumULong = self._mca2[i]
             self._simps.dp.SpectrumLong64 = self._mca1[i]
+            self._simps.dp.SpectrumULong64 = self._mca2[i]
             self._simps.dp.SpectrumFloat = self._fmca1[i]
             self._simps.dp.SpectrumDouble = self._fmca1[i]
             self._simps.dp.SpectrumString = self._dates[i]
@@ -457,7 +487,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 16)
+        det = self._sc.checkScalarTree(f, fname , 17)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps], 
                                     grows = 2)
@@ -469,6 +499,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "SpectrumULong", "uint32", "NX_UINT32", self._mca2[:steps],
                                     grows = 1)
         self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps], 
+                                    grows = 2)
+        self._sc.checkSpectrumField(det, "SpectrumULong64", "int64", "NX_INT64", self._mca2[:steps], 
                                     grows = 2)
         self._sc.checkSpectrumField(det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps], 
                                     error = 1e-6)
@@ -514,12 +546,100 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+       <field units="" type="NX_UINT8" name="ImageUChar">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUChar"/>
+          </datasource>
+        </field>
+
        <field units="" type="NX_INT16" name="ImageShort">
           <strategy mode="STEP"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
            <record name="ImageShort"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT16" name="ImageUShort">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUShort"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT32" name="ImageLong">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT32" name="ImageULong">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_INT64" name="ImageLong64">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT64" name="ImageULong64">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="ImageFloat">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="ImageDouble">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageDouble"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_CHAR" name="ImageString">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageString"/>
           </datasource>
         </field>
 
@@ -532,7 +652,16 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 """
 
         self._simps.dp.ImageBoolean = self._logical2[0]
+        self._simps.dp.ImageUChar = self._pco1[0]
         self._simps.dp.ImageShort = self._pco1[0]
+        self._simps.dp.ImageUShort = self._pco1[0]
+        self._simps.dp.ImageLong = self._pco1[0]
+        self._simps.dp.ImageULong = self._pco1[0]
+        self._simps.dp.ImageLong64 = self._pco1[0]
+        self._simps.dp.ImageULong64 = self._pco1[0]
+        self._simps.dp.ImageFloat = self._fpco1[0]
+        self._simps.dp.ImageDouble = self._fpco1[0]
+        self._simps.dp.ImageString = self._dates2[0]
 
 #        print self._fmca1[0]
         tdw = self.openWriter(fname, xml)
@@ -540,10 +669,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
 
-        steps = min(len(self._pco1), len(self._pco1))
+        steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
         for i in range(steps):
             self._simps.dp.ImageBoolean = self._logical2[i]
+            self._simps.dp.ImageUChar = self._pco1[i]
             self._simps.dp.ImageShort = self._pco1[i]
+            self._simps.dp.ImageUShort = self._pco1[i]
+            self._simps.dp.ImageLong = self._pco1[i]
+            self._simps.dp.ImageULong = self._pco1[i]
+            self._simps.dp.ImageLong64 = self._pco1[i]
+            self._simps.dp.ImageULong64 = self._pco1[i]
+            self._simps.dp.ImageFloat = self._fpco1[i]
+            self._simps.dp.ImageDouble = self._fpco1[i]
+            self._simps.dp.ImageString = self._dates2[i]
 
             self.record(tdw,'{}')
             pass
@@ -553,9 +691,21 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 2)
-        self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2)
-        self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1)
+        det = self._sc.checkScalarTree(f, fname , 18)
+        self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
+        self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageFloat", "float32", "NX_FLOAT32", self._fpco1[:steps], 
+                                    error = 1.0e-6)
+        self._sc.checkImageField(det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps], 
+                                    error = 1.0e-14)
+        self._sc.checkStringImageField(det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
+
 
         f.close()
 #        os.remove(fname)
