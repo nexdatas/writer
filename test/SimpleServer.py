@@ -120,7 +120,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		mode = 0
 		# uint16 H
 #		mode = 1
-		height, width = 20, 33
+		height, width = 30, 22
 		version = 1
 		endian = ord(struct.pack('=H', 1)[-1])
 		hsize = struct.calcsize('!IHHqiiHHHH')
@@ -131,7 +131,8 @@ class SimpleServer(PyTango.Device_4Impl):
 			[[(i*j % 256) for i in range(width)] for j in range(height) ], dtype = 'uint8')
 		fimage = image.flatten()
 		ibuffer = struct.pack('H'*fimage.size, *fimage)
-		return format, header+ibuffer
+		print "LENGTH", len(header+ibuffer),len(header)
+		return [format, header+ibuffer]
 		
 
   

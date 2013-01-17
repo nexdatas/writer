@@ -149,6 +149,7 @@ class VDEOdecoder(object):
     def load(self, data):
         self._data = data
         self.format = data[0]
+        print "DATA", data[0],len(data[1])
         self._loadHeader(data[1][:struct.calcsize(self._headerFormat)])        
         self._value = None
         
@@ -157,7 +158,7 @@ class VDEOdecoder(object):
     ## loads the image header    
     # \param headerData buffer with header data
     def _loadHeader(self, headerData):
-        hd = struct.unpack(self._headerFormat, headerData)
+        print "HEADER", len(headerData)
         hdr = struct.unpack(self._headerFormat, headerData)
         self._header = {}
         self._header['magic'] = hdr[0]

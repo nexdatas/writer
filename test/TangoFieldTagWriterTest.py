@@ -643,6 +643,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" type="NX_UINT8" name="ImageEncoded">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO">
+            <record name="ImageEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
+          </datasource>
+        </field>
+
 
 
       </group>
@@ -691,7 +699,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 18)
+        det = self._sc.checkScalarTree(f, fname , 19)
         self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps])
         self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps])
