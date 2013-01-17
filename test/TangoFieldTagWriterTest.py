@@ -52,6 +52,10 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._dcounter =  [0.1,-2342.4,46.54,-854.456,9.243456,-0.423426545]
         self._logical =  [[True,False,True,False], [True,False,False,True], [False,False,True,True]]
 
+        self._logical2 =  [[[True,False,True,False], [True,False,False,True]], 
+                           [[False,False,True,True], [False,False,True,False]],
+                           [[True,False,True,True], [False,False,True,False]]]
+
         self._sc = Checker(self)
         self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
         self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
@@ -500,7 +504,17 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
 
-       <field units="" type="NX_INT32" name="ImageShort">
+
+       <field units="" type="NX_BOOLEAN" name="ImageBoolean">
+          <strategy mode="STEP"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageBoolean"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT16" name="ImageShort">
           <strategy mode="STEP"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
@@ -517,7 +531,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
 
-#        self._simps.dp.ImageShort = numpy.array(self._pco1[0],dtype='int32')
+        self._simps.dp.ImageBoolean = self._logical2[0]
+        self._simps.dp.ImageShort = self._pco1[0]
 
 #        print self._fmca1[0]
         tdw = self.openWriter(fname, xml)
@@ -527,19 +542,22 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         steps = min(len(self._pco1), len(self._pco1))
         for i in range(steps):
- #           self._simps.dp.ImageShort = numpy.array(self._pco1[i],dtype='int32')
+            self._simps.dp.ImageBoolean = self._logical2[i]
+            self._simps.dp.ImageShort = self._pco1[i]
 
-#            self.record(tdw,'{}')
+            self.record(tdw,'{}')
             pass
         self.closeWriter(tdw)
         
         # check the created file
         
         
-#        f = open_file(fname,readonly=True)
-#        det = self._sc.checkScalarTree(f, fname , 1)
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 2)
+        self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2)
+        self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1)
 
-#        f.close()
+        f.close()
 #        os.remove(fname)
 
 

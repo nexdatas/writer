@@ -195,7 +195,7 @@ class TangoSource(DataSource):
 #                        print "Image Device: ", self.device.encode()
 #                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self._decoders
                     return {"format":da.data_format, "value":da.value, "tangoDType":da.type, 
-                            "shape":[da.dim_x,da.dim_y],
+                            "shape":[da.dim_y,da.dim_x],
                             "encoding": self.encoding, "decoders": self._decoders}
 
             elif self.memberType == "property":

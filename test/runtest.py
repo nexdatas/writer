@@ -27,6 +27,9 @@ import FieldTagWriterTest
 import FieldTagServerTest
 import TangoFieldTagWriterTest
 import TangoFieldTagServerTest
+#import TTangoFieldTagWriterTest
+
+#import TestServerSetUp
 
 ## main function
 def main():
@@ -39,6 +42,9 @@ def main():
         PYTANGO_AVAILABLE = False
         print "PyTango is not available: %s" % e
 
+    ## test server    
+    ts = None    
+    
     ## test suit
     suite = unittest.TestSuite()
     
@@ -61,11 +67,24 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
 
+#        ts = TestServerSetUp.TestServerSetUp()
+#        ts.setUp()
+#        if not ts.found:
+#            ts = None
+
+#        if ts:    
+#            suite.addTests(
+#                unittest.defaultTestLoader.loadTestsFromModule(TTangoFieldTagWriterTest) )
+            
+
     
     ## test runner
     runner = unittest.TextTestRunner()
     ## test result
     result = runner.run(suite)
+
+ #   if ts:
+ #       ts.tearDown()
 
 if __name__ == "__main__":
     main()
