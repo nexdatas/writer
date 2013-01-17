@@ -130,7 +130,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		image = numpy.array(
 			[[(i*j % 256) for i in range(width)] for j in range(height) ], dtype = 'uint8')
 		fimage = image.flatten()
-		ibuffer = struct.pack('H'*fimage.size,*fimage)
+		ibuffer = struct.pack('H'*fimage.size, *fimage)
 		return format, header+ibuffer
 		
 
