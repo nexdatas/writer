@@ -74,18 +74,18 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.ON)
 		self.get_device_properties(self.get_device_class())
 
-		self.attr_ScalarBoolean=True
-		self.attr_ScalarUChar=12
-		self.attr_ScalarShort=12
-		self.attr_ScalarUShort=12
-		self.attr_ScalarLong=123
-		self.attr_ScalarULong=123
-		self.attr_ScalarLong64=123
-		self.attr_ScalarULong64=123
-		self.attr_ScalarFloat=-1.23
-		self.attr_ScalarDouble=1.233
-		self.attr_ScalarString="Hello!"
-		self.attr_ScalarEncoded="UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
+		self.attr_ScalarBoolean = True
+		self.attr_ScalarUChar = 12
+		self.attr_ScalarShort = 12
+		self.attr_ScalarUShort = 12
+		self.attr_ScalarLong = 123
+		self.attr_ScalarULong = 123
+		self.attr_ScalarLong64 = 123
+		self.attr_ScalarULong64 = 123
+		self.attr_ScalarFloat = -1.23
+		self.attr_ScalarDouble = 1.233
+		self.attr_ScalarString = "Hello!"
+		self.attr_ScalarEncoded = "UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"
 
 
 		self.attr_SpectrumBoolean = [True, False]
@@ -93,13 +93,14 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_SpectrumShort = [1,-3,4]
 		self.attr_SpectrumUShort = [1,4,5,6]
 		self.attr_SpectrumLong = [1123,-435,35,-6345]
-		self.attr_SpectrumULong = [2341,2344,45,345]
+		self.attr_SpectrumULong = numpy.array([1234,5678,45,345],dtype = 'uint32')
 		self.attr_SpectrumLong64 = [1123,-435,35,-6345]
 		self.attr_SpectrumULong64 = [1123,23435,35,3345]
 		self.attr_SpectrumFloat = [11.23,-4.35,3.5,-634.5]
 		self.attr_SpectrumDouble = [1.123,23.435,3.5,3.345]
 		self.attr_SpectrumString = ["Hello","Word","!" ,"!!"]
-		self.attr_SpectrumEncoded=["INT32","\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
+		self.attr_SpectrumEncoded = ["INT32","\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
+		self.attr_SpectrumEncoded = self.encodeSpectrum() 
 		
 		self.attr_ImageBoolean = numpy.array([[True]],dtype='int16')
 		self.attr_ImageUChar = numpy.array([[2,5],[3,4]],dtype='uint8')
@@ -112,7 +113,21 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_ImageFloat = numpy.array([[2.,5.],[3.,4.]],dtype='float32')
 		self.attr_ImageDouble = numpy.array([[2.4,5.45],[3.4,4.45]],dtype='double')
 		self.attr_ImageString = [['True']]
-		self.attr_ImageEncoded=self.encodeImage()
+		self.attr_ImageEncoded = self.encodeImage()
+
+
+	def encodeSpectrum(self):
+		format = 'INT32'
+		# uint8 B
+#		mode = 0
+		# uint16 H
+#		mode = 1
+		# uint32 I 
+		mode = 2
+		fspectrum = numpy.array(self.attr_SpectrumULong, dtype='int32')
+		ibuffer = struct.pack('I'*fspectrum.size, *fspectrum)
+		return [format, ibuffer]
+
 
 	def encodeImage(self):
 		format = 'VIDEO_IMAGE'
@@ -425,6 +440,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_SpectrumEncoded()"
 		
 		#	Add your own code here
+		self.attr_SpectrumEncoded = self.encodeSpectrum() 
 		attr.set_value(self.attr_SpectrumEncoded[0], self.attr_SpectrumEncoded[1])
 
 

@@ -84,7 +84,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
-        self._encoded =[67305728,1413689632, 336793872 ]
 
 
     ## test starter
@@ -545,7 +544,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkStringSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
         # writing encoded attributes not supported for PyTango 7.2.3
 
-        self._sc.checkSpectrumField(det, "SpectrumEncoded", "int32", "NX_INT32", [self._encoded for c in range(steps)])
+        self._sc.checkSpectrumField(det, "SpectrumEncoded", "int32", "NX_INT32", self._mca2[:steps])
 
         self._sc.checkSingleSpectrumField(det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
 
