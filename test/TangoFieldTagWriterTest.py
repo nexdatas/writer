@@ -230,6 +230,24 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" type="NX_UINT32" name="InitScalarULong">
+          <strategy mode="INIT"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarULong"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_FLOAT64" name="FinalScalarDouble">
+          <strategy mode="FINAL"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarDouble"/>
+          </datasource>
+        </field>
+
+
+
 
       </group>
     </group>
@@ -245,10 +263,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 #           <record name="ScalarULong64"/>
 #          </datasource>
 #        </field>
+        self._simps.dp.ScalarULong = abs(self._counter[0])
 
         tdw = self.openWriter(fname, xml)
 
-        for i in range(min(len(self._counter), len(self._fcounter), len(self._bools))):
+        steps = min(len(self._counter), len(self._fcounter), len(self._bools))
+        for i in range(steps):
             self._simps.dp.ScalarBoolean = Types.Converters.toBool(self._bools[i])
             self._simps.dp.ScalarUChar = abs(self._counter[i])
             self._simps.dp.ScalarShort = self._counter[i]
@@ -271,7 +291,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 12)
+        det = self._sc.checkScalarTree(f, fname , 14)
         self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
@@ -287,6 +307,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "ScalarState", "string", "NX_CHAR", ["ON"  for c in self._bools])
         
         # writing encoded attributes not supported for PyTango 7.2.3
+
+        self._sc.checkSingleScalarField(det, "InitScalarULong", "uint32", "NX_UINT32", abs(self._counter[0]))
+        self._sc.checkSingleScalarField(det, "FinalScalarDouble", "float64", "NX_FLOAT64",
+                                        self._dcounter[steps-1], error = 1e-14)
+
 
         f.close()
         os.remove(fname)
@@ -374,7 +399,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-       <field units="" type="NX_INT64" name="SpectrumULong64">
+       <field units="" type="NX_UINT64" name="SpectrumULong64">
           <strategy mode="STEP"  compression="true"  grows="2" shuffle="True"/>
           <dimensions rank="1" />
           <datasource type="TANGO">
@@ -443,11 +468,18 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+
+
       </group>
     </group>
   </group>
 </definition>
 """
+
+
+
+
+
 
         self._simps.dp.SpectrumBoolean = self._logical[0]
         self._simps.dp.SpectrumUChar = self._mca2[0]
@@ -501,7 +533,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                                     grows = 1)
         self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps], 
                                     grows = 2)
-        self._sc.checkSpectrumField(det, "SpectrumULong64", "int64", "NX_INT64", self._mca2[:steps], 
+        self._sc.checkSpectrumField(det, "SpectrumULong64", "uint64", "NX_UINT64", self._mca2[:steps], 
                                     grows = 2)
         self._sc.checkSpectrumField(det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps], 
                                     error = 1e-6)
@@ -520,8 +552,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleSpectrumField(det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[steps-1],
                                           error =1.0e-06)
 
+
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
 
 
 
@@ -655,6 +688,28 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
+       <field units="" type="NX_UINT64" name="InitImageULong64">
+          <strategy mode="INIT" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="FinalImageFloat">
+          <strategy mode="FINAL"  compression="true"  shuffle="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+
       </group>
     </group>
   </group>
@@ -701,7 +756,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 19)
+        det = self._sc.checkScalarTree(f, fname , 21)
         self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
                                  grows = 2)
@@ -726,6 +781,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                                  grows = 3)
 
 
+        self._sc.checkSingleImageField(det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
+        self._sc.checkSingleImageField(det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps-1], error = 1.0e-6)
         f.close()
 #        os.remove(fname)
 
