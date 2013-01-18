@@ -88,7 +88,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_clientIntScalar(self):
+    def test_dbIntScalar(self):
         print "Run: %s.test_dbIntScalar() " % self.__class__.__name__
         fname= '%s/dbintscalar.h5' % os.getcwd()   
         xml= """<definition>
@@ -96,7 +96,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
 
-        <field name="single_mysql_record_string" type="NX_CHAR">
+        <field name="pid_scalar_string" type="NX_CHAR">
           <dimensions rank="1">
             <dim index="1" value="1"/>
           </dimensions>
@@ -108,10 +108,21 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
-        <field name="single_mysql_record_int" type="NX_INT">
-          <dimensions rank="1">
-            <dim index="1" value="1"/>
-          </dimensions>
+
+
+        <field name="pid_scalar2_string" type="NX_CHAR">
+          <dimensions rank="1" />
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="pid_scalar2_int" type="NX_INT32">
+          <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
@@ -120,7 +131,117 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
-        <field name="mysql_record" type="NX_CHAR">
+
+
+        <field name="pid_scalar3_string" type="NX_CHAR">
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+        tdw = self.openWriter(fname, xml)
+
+        for c in range(3):
+            self.record(tdw,'{ }')
+
+        self.closeWriter(tdw)
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 4)
+#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+       
+        f.close()
+#        os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_dbIntSpectrum(self):
+        print "Run: %s.test_dbIntSpectrum() " % self.__class__.__name__
+        fname= '%s/dbintspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+
+        <field name="pid_spectrum_string" type="NX_CHAR">
+          <dimensions rank="1">
+            <dim index="1" value="10"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+        <field name="pid_spectrum_int" type="NX_UINT32">
+          <dimensions rank="1">
+            <dim index="1" value="10"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+        tdw = self.openWriter(fname, xml)
+
+        for c in range(3):
+            self.record(tdw,'{ }')
+
+        self.closeWriter(tdw)
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 11)
+#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+       
+        f.close()
+#        os.remove(fname)
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_dbIntImage(self):
+        print "Run: %s.test_dbIntImage() " % self.__class__.__name__
+        fname= '%s/dbintimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+        <field name="pid_string_image" type="NX_CHAR">
           <dimensions rank="2">
             <dim index="1" value="10"/>
             <dim index="2" value="2"/>
@@ -133,6 +254,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
+
+
+        <field name="pid_exported_image_int" type="NX_INT">
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3" />
+          <datasource name="pid_exported" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <query format="IMAGE">
+              SELECT pid, exported FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -141,7 +278,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         tdw = self.openWriter(fname, xml)
 
-        for c in self._counter:
+        for c in range(3):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
@@ -149,7 +286,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 22)
+        det = self._sc.checkScalarTree(f, fname , 21)
 #        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
        
         f.close()

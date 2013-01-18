@@ -3,6 +3,7 @@
 	* fixing storing attributes in FieldArrays
 	* fixing shape finding and FetchNameHandler conditions 
 	* fixing shape order in Tango DataSource
+	* fixing fetching scalars by DB DataSource
 	* tagged as 1.0.X
 
 
