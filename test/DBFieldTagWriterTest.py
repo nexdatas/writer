@@ -28,10 +28,12 @@ import random
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
-
 from ndts import TangoDataWriter, Types
 from ndts.TangoDataWriter  import TangoDataWriter 
 from Checkers import Checker
+
+import MySQLdb
+
 
 ## test fixture
 class DBFieldTagWriterTest(unittest.TestCase):
@@ -50,16 +52,24 @@ class DBFieldTagWriterTest(unittest.TestCase):
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
+        self._mydb = None
+        
 
     ## test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."
+        args = {}
+        args["db"] = 'tango'
+        args["host"] = 'localhost'
+        args["read_default_file"] = '/etc/my.cnf'
+        self._mydb = MySQLdb.connect(**args)
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
+        self._mydb.close()
 
     ## opens writer
     # \param fname file name     
@@ -96,13 +106,27 @@ class DBFieldTagWriterTest(unittest.TestCase):
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
 
-        <field name="pid_scalar_string" type="NX_CHAR">
+
+        <field  units="m" name="pid_scalar_int" type="NX_INT64">
+          <dimensions rank="1">
+            <dim index="1" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field units="m" name="pid_scalar_string" type="NX_CHAR">
           <dimensions rank="1">
             <dim index="1" value="1"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -110,22 +134,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field name="pid_scalar2_string" type="NX_CHAR">
+        <field units="m" name="pid_scalar2_string" type="NX_CHAR">
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
           </datasource>
         </field>
 
-        <field name="pid_scalar2_int" type="NX_INT32">
+        <field  units="m" name="pid_scalar2_int" type="NX_INT32">
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -133,10 +157,10 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field name="pid_scalar3_string" type="NX_CHAR">
+        <field  units="m" name="pid_scalar3_string" type="NX_CHAR">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -149,6 +173,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 1")
+        scalar = str(cursor.fetchone()[0])
+        cursor.close()
+
 
         tdw = self.openWriter(fname, xml)
 
@@ -160,8 +190,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 4)
-#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+        det = self._sc.checkScalarTree(f, fname , 5)
+#        self._sc.checkScalarField(det, "pid_scalar_int", "int32", "NX_INT32", [int(scalar) for c in range(3)])
+        self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar for c in range(3)])
+        self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar for c in range(3)])
+#        self._sc.checkScalarField(det, "pid_scalar2_int", "int32", "NX_INT32", [int(scalar) for c in range(3)])
+        self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar for c in range(3)])
        
         f.close()
 #        os.remove(fname)
@@ -185,7 +219,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 10
             </query>
@@ -198,7 +232,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 10
             </query>
@@ -212,6 +246,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
 
+        
         tdw = self.openWriter(fname, xml)
 
         for c in range(3):
@@ -223,7 +258,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 11)
-#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", [scalar for c in range(3)])
        
         f.close()
 #        os.remove(fname)
@@ -248,7 +283,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
               SELECT name, pid FROM device limit 10
             </query>
@@ -263,7 +298,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="3" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="haso228k.desy.de"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 10
             </query>

@@ -52,11 +52,13 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     ## test starter
     # \brief Common set up of Tango Server
     def setUp(self):
+        DBFieldTagWriterTest.DBFieldTagWriterTest.setUp(self)
         self._sv.setUp()
 
     ## test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self): 
+        DBFieldTagWriterTest.DBFieldTagWriterTest.tearDown(self)
         self._sv.tearDown()
         
     ## opens writer
