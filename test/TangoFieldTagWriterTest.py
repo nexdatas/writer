@@ -548,7 +548,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
        <field units="" type="NX_UINT8" name="ImageUChar">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"   compression="true"  grows="2" />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -557,7 +557,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
        <field units="" type="NX_INT16" name="ImageShort">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"    compression="true"  grows="3" shuffle="false"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -567,7 +567,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_UINT16" name="ImageUShort">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"   grows="1"   />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -576,7 +576,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
        <field units="" type="NX_INT32" name="ImageLong">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -586,7 +586,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_UINT32" name="ImageULong">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"  grows="3"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -596,7 +596,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_INT64" name="ImageLong64">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -606,7 +606,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_UINT64" name="ImageULong64">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"  compression="true"  grows="2"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -617,7 +617,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT32" name="ImageFloat">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"  compression="true"  grows="3" shuffle="true"  />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -627,7 +627,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
        <field units="" type="NX_FLOAT64" name="ImageDouble">
-          <strategy mode="STEP"  />
+          <strategy mode="STEP"  compression="true"  grows="1"   />
           <dimensions rank="2" />
           <datasource type="TANGO">
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
@@ -644,8 +644,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field units="m" type="NX_UINT8" name="ImageEncoded">
-          <strategy mode="STEP"/>
+        <field units="" type="NX_UINT8" name="ImageEncoded">
+          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"/>
           <dimensions rank="2" />
           <datasource type="TANGO">
             <record name="ImageEncoded"/>
@@ -703,19 +703,27 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 19)
         self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
-        self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps])
-        self._sc.checkImageField(det, "ImageFloat", "float32", "NX_FLOAT32", self._fpco1[:steps], 
-                                    error = 1.0e-6)
-        self._sc.checkImageField(det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps], 
-                                    error = 1.0e-14)
+        self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
+                                 grows = 2)
+        self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps],
+                                 grows = 3)
+        self._sc.checkImageField(det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps],
+                                 grows = 1)
+        self._sc.checkImageField(det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps],
+                                 grows = 2)
+        self._sc.checkImageField(det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps],
+                                 grows = 3)
+        self._sc.checkImageField(det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps],
+                                 grows = 1)
+        self._sc.checkImageField(det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps],
+                                 grows = 2)
+        self._sc.checkImageField(det, "ImageFloat", "float32", "NX_FLOAT32", self._fpco1[:steps],
+                                 grows = 3, error = 1.0e-6)
+        self._sc.checkImageField(det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps],
+                                 grows = 1, error = 1.0e-14)
         self._sc.checkStringImageField(det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
-        self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps])
+        self._sc.checkImageField(det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
+                                 grows = 3)
 
 
         f.close()

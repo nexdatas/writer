@@ -120,7 +120,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		mode = 0
 		# uint16 H
 #		mode = 1
-		height, width = self.attr_ImageUChar.shape
+		width,height  = self.attr_ImageUChar.shape
 		version = 1
 		endian = ord(struct.pack('=H', 1)[-1])
 		hsize = struct.calcsize('!IHHqiiHHHH')
@@ -446,6 +446,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ImageEncoded()"
 		
 		#	Add your own code here
+		self.attr_ImageEncoded=self.encodeImage()
 		attr.set_value(self.attr_ImageEncoded[0], self.attr_ImageEncoded[1])
 
 
