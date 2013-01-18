@@ -54,6 +54,9 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FieldTagWriterTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
+
     if PYTANGO_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
@@ -67,15 +70,6 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
 
-#        ts = TestServerSetUp.TestServerSetUp()
-#        ts.setUp()
-#        if not ts.found:
-#            ts = None
-
-#        if ts:    
-#            suite.addTests(
-#                unittest.defaultTestLoader.loadTestsFromModule(TTangoFieldTagWriterTest) )
-            
 
     
     ## test runner
