@@ -103,6 +103,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter(fname)
+#        tdw.numThreads = 1
         tdw.openNXFile()
         tdw.xmlSettings = xml
         if json:
@@ -645,6 +646,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         <field units="m" type="NX_UINT8" name="ImageEncoded">
           <strategy mode="STEP"/>
+          <dimensions rank="2" />
           <datasource type="TANGO">
             <record name="ImageEncoded"/>
            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
@@ -713,6 +715,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps], 
                                     error = 1.0e-14)
         self._sc.checkStringImageField(det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
+        self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps])
 
 
         f.close()
