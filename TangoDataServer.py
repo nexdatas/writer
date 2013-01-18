@@ -148,11 +148,9 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_TheXMLSettings(self, attr):
 		print "In ", self.get_name(), "::write_TheXMLSettings()"
-		data = []
-		attr.get_write_value(data)
-#		print "Attribute value = ", data
-		self.tdw.xmlSettings = data[0]
+		self.tdw.xmlSettings = attr.get_write_value()
 		self.set_state(PyTango.DevState.OPEN)
+		print "Attribute value = ", self.tdw.xmlSettings
 
 
 #---- TheXMLSettings attribute State Machine -----------------
@@ -182,10 +180,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_TheJSONRecord(self, attr):
 		print "In ", self.get_name(), "::write_TheJSONRecord()"
-		data = []
-		attr.get_write_value(data)
-		print "Attribute value = ", data
-		self.tdw.json = data[0]
+		self.tdw.json = attr.get_write_value()
+		print "Attribute value = ", self.tdw.json
 
 		#	Add your own code here
 
@@ -216,10 +212,9 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_FileName(self, attr):
 		print "In ", self.get_name(), "::write_FileName()"
-		data = []
-		attr.get_write_value(data)
-		print "Attribute value = ", data
-		self.tdw.fileName = data[0]
+		self.tdw.fileName = attr.get_write_value()
+
+		print "Attribute value = ", self.tdw.fileName
 
 		#	Add your own code here
 

@@ -108,8 +108,9 @@ class FElement(Element):
                                 shape.append(s)
                     if extraD:
                         shape.insert(exDim-1,0)    
-                    else:
-                        raise XMLSettingSyntaxError, "Wrongly defined shape"
+                else:
+                    raise XMLSettingSyntaxError, "Wrongly defined shape"
+
         elif extraD:            
             shape = [0]
         return shape
@@ -310,7 +311,6 @@ class EField(FElementWithAttr):
             f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
         self.h5Object = f
-
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
@@ -378,6 +378,7 @@ class EField(FElementWithAttr):
                     else:
                         if str(dh.format).split('.')[-1] == "SCALAR":
                             self.h5Object.grow()
+
                             self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
                         # way around for a bug in pninx

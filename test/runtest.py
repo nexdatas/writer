@@ -20,25 +20,51 @@
 # the unittest runner
 #
 
+
+try:
+    import PyTango
+    ## if module PyTango avalable
+    PYTANGO_AVAILABLE = True
+except ImportError, e:
+    PYTANGO_AVAILABLE = False
+    print "PyTango is not available: %s" % e
+    
+## list of available databases
+DB_AVAILABLE = []
+    
+try:
+    import MySQLdb
+    DB_AVAILABLE.append("MYSQL")
+except ImportError, e:
+    print "MYSQL not available: %s" % e
+    
+
 import unittest
+
 import TangoDataWriterTest
-import TangoDataServerTest
 import FieldTagWriterTest
-import FieldTagServerTest
 import TangoFieldTagWriterTest
-import TangoFieldTagServerTest
+if "MYSQL" in DB_AVAILABLE:
+    import DBFieldTagWriterTest
+
+if PYTANGO_AVAILABLE:
+    import TangoDataServerTest
+    import FieldTagServerTest
+    import TangoFieldTagServerTest
+    if "MYSQL" in DB_AVAILABLE:
+        import DBFieldTagServerTest
+
+#import TestServerSetUp
 
 ## main function
 def main():
 
-    try:
-        import PyTango
-    ## if module PyTango avalable
-        PYTANGO_AVAILABLE = True
-    except ImportError, e:
-        PYTANGO_AVAILABLE = False
-        print "PyTango is not available: %s" % e
 
+
+
+    ## test server    
+    ts = None    
+    
     ## test suit
     suite = unittest.TestSuite()
     
@@ -47,6 +73,10 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FieldTagWriterTest) )
+
+    if "MYSQL" in DB_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
 
     if PYTANGO_AVAILABLE:
         suite.addTests(
@@ -61,11 +91,18 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
 
+        if "MYSQL" in DB_AVAILABLE:
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest) )
+
     
     ## test runner
     runner = unittest.TextTestRunner()
     ## test result
     result = runner.run(suite)
+
+ #   if ts:
+ #       ts.tearDown()
 
 if __name__ == "__main__":
     main()

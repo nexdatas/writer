@@ -67,6 +67,55 @@ class UTF8decoder(object):
 
 
 
+## INT decoder
+class UINT32decoder(object):
+
+    ## constructor
+    # \brief It clears the local variables
+    def __init__(self):
+        ## decoder name
+        self.name = "UINT32"
+        ## decoder format
+        self.format = None
+        ## data type
+        self.dtype = None
+        
+        ## image data
+        self._value = None
+        ## header and image data
+        self._data = None
+
+
+    ## loads encoded data
+    # \param data encoded data    
+    def load(self, data):
+        self._data = data
+        self.format = data[0]
+        self._value = None
+        self.dtype = "uint32"
+
+    ## provides the data shape
+    # \returns the data shape if data was loaded
+    def shape(self):
+        return [len(self._data[1])/4,0]
+        
+
+
+    ## provides the decoded data
+    # \returns the decoded data if data was loaded
+    def decode(self):        
+        if not self._data:
+            return
+        if not len(self._data) % 4:
+            return
+        if not self._value:
+            self._value = numpy.array(
+                struct.unpack('I'*(len(self._data[1])/4), self._data[1]), dtype=self.dtype
+                ).reshape(len(self._data[1])/4)
+        return self._value
+
+
+
 
 ## VIDEO IMAGE LIMA decoder
 class VDEOdecoder(object):
@@ -108,7 +157,6 @@ class VDEOdecoder(object):
     ## loads the image header    
     # \param headerData buffer with header data
     def _loadHeader(self, headerData):
-        hd = struct.unpack(self._headerFormat, headerData)
         hdr = struct.unpack(self._headerFormat, headerData)
         self._header = {}
         self._header['magic'] = hdr[0]
@@ -156,7 +204,7 @@ class DecoderPool(object):
     # \brief It creates know decoders    
     # \param configJSON string with decoders    
     def __init__(self, configJSON = None):
-        self._knowDecoders = { "LIMA_VIDEO_IMAGE":VDEOdecoder, "UTF8":UTF8decoder } 
+        self._knowDecoders = { "LIMA_VIDEO_IMAGE":VDEOdecoder, "UTF8":UTF8decoder , "UINT32":UINT32decoder } 
         self._pool = {}
         self._userDecoders = {}
         
