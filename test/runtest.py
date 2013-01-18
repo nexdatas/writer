@@ -27,7 +27,8 @@ import FieldTagWriterTest
 import FieldTagServerTest
 import TangoFieldTagWriterTest
 import TangoFieldTagServerTest
-#import TTangoFieldTagWriterTest
+import DBFieldTagWriterTest
+import DBFieldTagServerTest
 
 #import TestServerSetUp
 
@@ -70,6 +71,8 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
 
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest) )
 
     
     ## test runner
