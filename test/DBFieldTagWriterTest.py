@@ -343,6 +343,35 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field name="pid_exported_image_uint32" type="NX_UINT32" units="">
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="3" />
+          <datasource name="pid_exported" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="IMAGE">
+              SELECT pid, exported FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="pid_exported_image_float32" type="NX_FLOAT32" units="">
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="2" shuffle="false" grows="2" />
+          <datasource name="pid_exported" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="IMAGE">
+              SELECT pid, exported FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -370,11 +399,15 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 21)
+        det = self._sc.checkScalarTree(f, fname , 23)
         self._sc.checkStringImageField(det, "name_pid_string_image", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT", 
                                     [pid_exported]*3)
+        self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32", 
+                                    [pid_exported]*3, grows=3)
+        self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32", 
+                                    [pid_exported]*3, grows=2, error=1e-6)
        
         f.close()
 #        os.remove(fname)
