@@ -99,7 +99,6 @@ class DataHolder(object):
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType):
                 return self.value
             else:
-#                print "casting ", self.tangoDType ," to ", tp
                 return NTP.convert[tp](self.value)
 
         else:

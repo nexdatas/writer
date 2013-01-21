@@ -1,3 +1,11 @@
+2013-01-21 Jan Kotanski <jankotan@gmail.com>
+	* adding decoder for UTF8 and INT32 ecoded data
+	* fixing storing attributes in FieldArrays
+	* fixing shape finding and FetchNameHandler conditions 
+	* fixing shape order in Tango DataSource
+	* fixing fetching scalars by DB DataSource
+	* tagged as 1.0.7
+
 2012-12-18 Jan Kotanski <jankotan@gmail.com>
 	* adding compression, i.e. attributes to strategy tag
 	* updating README

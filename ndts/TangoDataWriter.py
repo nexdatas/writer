@@ -186,7 +186,7 @@ class TangoDataWriter(object):
             for pool in triggers:
                 if pool in self._triggerPools.keys():
                     print "Trigger: %s" % pool 
-                    self._triggerPools[pool].setJSON(self.json, json)
+                    self._triggerPools[pool].setJSON(json.loads(self.json), localJSON)
                     self._triggerPools[pool].runAndWait()
                     self._triggerPools[pool].checkErrors()
         gc.collect()

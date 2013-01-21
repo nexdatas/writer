@@ -108,8 +108,9 @@ class FElement(Element):
                                 shape.append(s)
                     if extraD:
                         shape.insert(exDim-1,0)    
-                    else:
-                        raise XMLSettingSyntaxError, "Wrongly defined shape"
+                else:
+                    raise XMLSettingSyntaxError, "Wrongly defined shape"
+
         elif extraD:            
             shape = [0]
         return shape
@@ -310,7 +311,6 @@ class EField(FElementWithAttr):
             f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
         self.h5Object = f
-
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
@@ -342,10 +342,9 @@ class EField(FElementWithAttr):
                     dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
     
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
-            else:
+            elif self.strategy != "POSTRUN": 
 #                raise ValueError,"Warning: Invalid datasource for %s" % nm
                 print "Warning: Invalid datasource for ", nm
-
 
 
         
@@ -362,10 +361,24 @@ class EField(FElementWithAttr):
                     self.error = message
                 else:
                     if not self._extraD:
-                        self.h5Object.write(dh.cast(self.h5Object.dtype))
+#                        print "DATA3", self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
+                        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
+                            sts = dh.cast(self.h5Object.dtype)
+                            for i in range(len(sts)):
+                                self.h5Object[i] = sts[i] 
+#                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
+                        elif  len(self.h5Object.shape) == 2 and self.h5Object.dtype == "string":       
+                            sts = dh.cast(self.h5Object.dtype)
+                            for i in range(len(sts)):
+                                for j in range(len(sts[i])):
+                                    self.h5Object[i,j] = sts[i][j] 
+                        else:
+                            self.h5Object.write(dh.cast(self.h5Object.dtype))
+#                        print "DATA4"
                     else:
                         if str(dh.format).split('.')[-1] == "SCALAR":
                             self.h5Object.grow()
+
                             self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
                         # way around for a bug in pninx
@@ -401,11 +414,17 @@ class EField(FElementWithAttr):
                                 self.h5Object.grow(2)
                                 self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
         except:
-            message = self.setMessage( sys.exc_info()[1].__str__()  )
+            info = sys.exc_info()
+            import traceback
+            message = self.setMessage(str(info[1].__str__()) +"\n "+ (" ").join(traceback.format_tb(sys.exc_info()[2]) ))
+#            message = self.setMessage(  sys.exc_info()[1].__str__()  )
+            del info
             print message[0]
+            print message[1]
             self.error = message
-                                #            self.error = sys.exc_info()
-            
+#            self.error = sys.exc_info()
+        finally:
+            pass
 
 
 ## group H5 tag element        
@@ -425,7 +444,7 @@ class EGroup(FElementWithAttr):
             else:
                 raise XMLSettingSyntaxError, "The group type not defined"
         else:
-                raise XMLSettingSyntaxError, "File object for the last element does not exist"
+            raise XMLSettingSyntaxError, "File object for the last element does not exist"
             
 
         for key in attrs.keys() :

@@ -16,23 +16,22 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file FieldTagServerTest.py
+## \file FieldTagWriterTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
 import os
 import sys
 import subprocess
+import random
 
-import PyTango
-import time
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
 
 from ndts import TangoDataWriter, Types
 from ndts.TangoDataWriter  import TangoDataWriter 
-
+from Checkers import Checker
 
 ## test fixture
 class FieldTagWriterTest(unittest.TestCase):
@@ -44,9 +43,13 @@ class FieldTagWriterTest(unittest.TestCase):
 
         self._counter =  [1,-2,6,-8,9,-11]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
-        self._mca1 = [e*0.1 for e in range(2048)]
-        self._mca2 = [(float(e)/(100.+e)) for e in range(2048)]
-
+        self._sc = Checker(self)
+        self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
+        self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
+        self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
+#        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
+        self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
+        self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
     ## test starter
     # \brief Common set up
@@ -58,138 +61,35 @@ class FieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+    ## opens writer
+    # \param fname file name     
+    # \param xml XML settings
+    # \returns Tango Data Writer instance   
+    def openWriter(self, fname, xml, json = None):
+        tdw = TangoDataWriter(fname)
+        tdw.openNXFile()
+        tdw.xmlSettings = xml
+        if json:
+            tdw.json = json
+        tdw.openEntry()
+        return tdw
 
-    ## checks scalar tree
-    # \param f pninx file object    
-    # \param fname file name
-    # \returns detector group object    
-    def _checkScalarTree(self, f, fname, children):
-        self.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
-        self.assertEqual(6, f.nattrs)
-        self.assertEqual( f.attr("file_name").value, fname)
-        self.assertTrue(f.attr("NX_class").value,"NXroot")
-        self.assertEqual(f.nchildren, 2)
-            
-        en = f.open("entry1")
-        self.assertTrue(en.valid)
-        self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 1)
+    ## closes writer
+    # \param tdw Tango Data Writer instance
+    def closeWriter(self, tdw, json = None):
+        if json:
+            tdw.json = json
+        tdw.closeEntry()
+        tdw.closeNXFile()
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
-
-        ins = en.open("instrument")
-        self.assertTrue(ins.valid)
-        self.assertEqual(ins.name,"instrument")
-        self.assertEqual(ins.nattrs,1)
-        self.assertEqual(ins.nchildren, 1)
-        
-            
-        at = ins.attr("NX_class")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXinstrument")
-
-        det = ins.open("detector")
-        self.assertTrue(det.valid)
-        self.assertEqual(det.name,"detector")
-        self.assertEqual(det.nattrs,1)
-        self.assertEqual(det.nchildren, children)
-            
-        at = det.attr("NX_class")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXdetector")
-            
-        return det
-
-
-    ## checks if instance is numeric
-    # \param checking instance 
-    # \returns is instance is numeric
-    def _isNumeric(self, instance):
-        attrs = ['__pow__', '__mul__', '__div__','__add__', '__sub__']
-        return all(hasattr(instance, attr) for attr in attrs)
-
-    ## checks  scalar counter
-    # \param det detector group
-    # \param name counter name
-    # \param dtype numpy type
-    # \param nxtype nexus type
-    # \param unsigned flag if value is integer
-    def _checkScalarCounter(self, det, name, dtype, nxtype, values, error = 0):
-
-        cnt = det.open(name)
-        self.assertTrue(cnt.valid)
-        self.assertEqual(cnt.name,name)
-        self.assertTrue(hasattr(cnt.shape, "__iter__"))
-        self.assertEqual(len(cnt.shape), 1)
-        self.assertEqual(cnt.shape, (len(values),))
-        self.assertEqual(cnt.dtype, dtype)
-        self.assertEqual(cnt.size, len(values))        
-        # pninx is not supporting reading string areas 
-        if not isinstance(values[0], str):
-            value = cnt.read()
-            for i in range(len(value)):
-                #            print values[i].__repr__(),  value[i].__repr__(), values[i] - value[i]
-                if self._isNumeric(value[i]):
-                    self.assertTrue(abs(values[i] - value[i]) <= error)
-                else:
-                    self.assertEqual(values[i],value[i])
-        for i in range(len(values)):
-            if self._isNumeric(cnt[i]):
-                if not self._isNumeric(values[i]):
-#                    print "BOOL: ", values[i] ,cnt[i]
-                    self.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
-                else:
-                    self.assertTrue(abs(values[i] - cnt[i]) <= error)
-            else:
-                self.assertEqual(values[i],cnt[i])
-            
-
-
-        self.assertEqual(cnt.nattrs,3)
-
-        at = cnt.attr("type")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,nxtype)
-        
-
-        at = cnt.attr("units")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        self.assertEqual(at.name,"units")
-        self.assertEqual(at.value,"m")
-        
-        at = cnt.attr("nexdatas_source")
-        self.assertTrue(at.valid)
-        self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
-        self.assertEqual(at.dtype,"string")
-        
+    ## performs one record step
+    def record(self, tdw, string):
+        tdw.record(string)
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
-        print "Run: FieldTagWriterTest.test_clientIntScalar() "
+        print "Run: %s.test_clientIntScalar() " % self.__class__.__name__
         fname= '%s/clientintscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -207,8 +107,8 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="cnt_8"/>
           </datasource>
         </field>
-        <field units="m" type="NX_INT16" name="counter16">
-          <strategy mode="STEP"/>
+        <field units="m" type="NX_INT16" name="triggered_counter16">
+          <strategy mode="STEP" trigger="trigger1"/>
           <datasource type="CLIENT">
             <record name="cnt_16"/>
           </datasource>
@@ -249,9 +149,9 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="cnt_u16"/>
           </datasource>
         </field>
-        <field units="m" type="NX_UINT32" name="ucounter32">
+        <field units="m" type="NX_UINT32" name="mclient_ucounter32">
           <strategy mode="STEP"/>
-          <datasource type="CLIENT">
+          <datasource type="MCLIENT" name="external datasource">
             <record name="cnt_u32"/>
           </datasource>
         </field>
@@ -262,68 +162,88 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" type="NX_INT64" name="init64">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_UINT32" name="final32">
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="cnt_u32"/>
+          </datasource>
+        </field>
+
+
+        <field units="m" type="NX_INT32" name="postrun_counter32">
+          <strategy mode="POSTRUN">
+              https://haso.desy.de/counters/counter32.dat
+          </strategy>
+        </field>
+
       </group>
     </group>
   </group>
 </definition>
 """
-        
 
-        tdw = TangoDataWriter(fname)
+        uc = self._counter[0]
+        datasources = ', "datasources":{"MCLIENT":"ndts.DataSources.ClientSource"}'
+        tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_64":' + str(uc) + ' }' 
+                              + str(datasources)
+                              + ' }')
 
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
-            
+        flip = True    
+        trigstr = ', "triggers":["trigger1"]'
         for c in self._counter:
             uc = abs(c)
-            tdw.record('{"data": {"cnt":' + str(c) 
-                       + ', "cnt_8":' + str(c) 
-                       + ', "cnt_16":' + str(c) 
-                       + ', "cnt_32":' + str(c) 
-                       + ', "cnt_64":' + str(c) 
-                       + ', "cnt_u":' + str(uc) 
-                       + ', "cnt_p":' + str(uc) 
-                       + ', "cnt_u8":' + str(uc) 
-                       + ', "cnt_u16":' + str(uc) 
-                       + ', "cnt_u32":' + str(uc) 
-                       + ',  "cnt_u64":' + str(uc)
-                       + ' } }')
-        
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
-            
+            self.record(tdw,'{"data": {"cnt":' + str(c) 
+                        + ', "cnt_8":' + str(c) 
+                        + ', "cnt_16":' + str(c) 
+                        + ', "cnt_32":' + str(c) 
+                        + ', "cnt_64":' + str(c) 
+                        + ', "cnt_u":' + str(uc) 
+                        + ', "cnt_p":' + str(uc) 
+                        + ', "cnt_u8":' + str(uc) 
+                        + ', "cnt_u16":' + str(uc) 
+                        + ', "cnt_u32":' + str(uc) 
+                        + ',  "cnt_u64":' + str(uc)
+                        + ' } '
+                        + str(trigstr if flip else ' ')
+                        +'  }')
+            flip = not flip
 
-
+        uc = abs(self._counter[0])
+        self.closeWriter(tdw, json = '{"data": { "cnt_u32":' + str(uc) + ' } }')
         
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname , 11)
-        self._checkScalarCounter(det, "counter", "int64", "NX_INT", self._counter)
-        self._checkScalarCounter(det, "counter8", "int8", "NX_INT8", self._counter)
-        self._checkScalarCounter(det, "counter16", "int16", "NX_INT16", self._counter)
-        self._checkScalarCounter(det, "counter32", "int32", "NX_INT32", self._counter)
-        self._checkScalarCounter(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._checkScalarCounter(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
-        self._checkScalarCounter(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
-        self._checkScalarCounter(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._checkScalarCounter(det, "ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
-        self._checkScalarCounter(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
-
-        
+        det = self._sc.checkScalarTree(f, fname , 14)
+        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+        self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
+        self._sc.checkScalarField(det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
+        self._sc.checkScalarField(det, "counter32", "int32", "NX_INT32", self._counter)
+        self._sc.checkScalarField(det, "counter64", "int64", "NX_INT64", self._counter)
+        self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
+        self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
+        self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
+        self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", "https://haso.desy.de/counters/counter32.dat" )
+       
         f.close()
-
+        os.remove(fname)
 
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
-        print "FLOAT"
-        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        print "Run: %s.test_clientFloatScalar() " % self.__class__.__name__
         fname= '%s/clientfloatscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -353,6 +273,18 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="cnt_64"/>
           </datasource>
         </field>
+        <field units="m" type="NX_FLOAT32" name="init_32">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="cnt_32"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_FLOAT64" name="final_64">
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64"/>
+          </datasource>
+        </field>
       </group>
     </group>
   </group>
@@ -360,36 +292,28 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
-            
+        tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_32":' + str(self._fcounter[0]) + ' } }')
         for c in self._fcounter:
-            tdw.record('{"data": {"cnt":' + str(c) 
+            self.record(tdw,'{"data": {"cnt":' + str(c) 
                        + ', "cnt_32":' + str(c) 
                        + ', "cnt_64":' + str(c) 
                        + ' } }')
         
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw, json = '{"data": { "cnt_64":' + str(self._fcounter[0]) + ' } }')
             
-
 
         
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname, 4)
-        self._checkScalarCounter(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
-        self._checkScalarCounter(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
-        self._checkScalarCounter(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
-        self._checkScalarCounter(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+        det = self._sc.checkScalarTree(f, fname, 6)
+        self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc.checkScalarField(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+        self._sc.checkScalarField(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+        self._sc.checkScalarField(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
+        self._sc.checkSingleScalarField(det, "init_32", "float32", "NX_FLOAT32", self._fcounter[0], 1.0e-06)
+        self._sc.checkSingleScalarField(det, "final_64", "float64", "NX_FLOAT64", self._fcounter[0], 1.0e-14)
         
         f.close()
 
@@ -402,7 +326,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
-        print "Run: FieldTagWriterTest.test_clientFloatScalar() "
+        print "Run: %s.test_clientScalar() " % self.__class__.__name__
         fname= '%s/clientscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -433,6 +357,20 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_CHAR" name="init_string">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="timestamp"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_BOOLEAN" name="final_flag">
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="logical"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -447,23 +385,15 @@ class FieldTagWriterTest(unittest.TestCase):
         logical = ["1","0","true","false","True","False","TrUe","FaLsE"]
         
 
-        tdw = TangoDataWriter(fname)
-
-        tdw.openNXFile()
-        
-        tdw.xmlSettings = xml
-        
-        tdw.openEntry()
+        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamp":"' + str(dates[0]) + '" } }')
         
         
         for i in range(min(len(dates),len(logical))):
-            tdw.record('{"data": {"timestamp":"' + str(dates[i]) 
+            self.record(tdw,'{"data": {"timestamp":"' + str(dates[i]) 
                        + '", "logical":"' + str(logical[i])
                        + '" } }')
             
-        tdw.closeEntry()
-        
-        tdw.closeNXFile()
+        self.closeWriter(tdw, json = '{"data": { "logical":"' + str(logical[0]) + '" } }')
             
 
 
@@ -471,16 +401,826 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._checkScalarTree(f, fname, 4)
-        self._checkScalarCounter(det, "time", "string", "NX_DATE_TIME", dates)
-        self._checkScalarCounter(det, "isotime", "string", "ISO8601", dates)
-        self._checkScalarCounter(det, "string_time", "string", "NX_CHAR", dates)
-        self._checkScalarCounter(det, "flags", "bool", "NX_BOOLEAN", logical)
+        det = self._sc.checkScalarTree(f, fname, 6)
+        self._sc.checkScalarField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkScalarField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkScalarField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkScalarField(det, "flags", "bool", "NX_BOOLEAN", logical)
+
+        self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
+        self._sc.checkSingleScalarField(det, "final_flag", "bool", "NX_BOOLEAN", logical[0])
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntSpectrum(self):
+        print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
+        fname= '%s/clientintscpectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="mca_int">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT8" name="mca_int8">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT16" name="mca_int16">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT32" name="mca_int32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="mca_int64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="mca_uint">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT8" name="mca_uint8">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT16" name="mca_uint16">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="mca_uint32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT64" name="mca_uint64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="init_mca_int64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT32" name="final_mca_uint32">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + '  } }')
+
+        mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
+        for mca in self._mca1:
+            self.record(tdw,'{"data": { "mca_int":' + str(mca)
+                       + ', "mca_uint":' + str([(el+100)/2 for el in mca]) 
+                       + '  } }')
+        
+        self.closeWriter(tdw, json = '{"data": { "mca_uint":' + str(mca2[0]) + '  } }')
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 12)
+        self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int32", "int32", "NX_INT32", self._mca1, grows = 2 )
+        self._sc.checkSpectrumField(det, "mca_int64", "int64", "NX_INT64", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_uint", "uint64", "NX_UINT", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
+        self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+
+        self._sc.checkSingleSpectrumField(det, "init_mca_int64", "int64", "NX_INT64", self._mca1[0])
+        self._sc.checkSingleSpectrumField(det, "final_mca_uint32", "uint32", "NX_UINT32", mca2[0])
 
         
         f.close()
+        os.remove(fname)
 
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatSpectrum(self):
+        print "Run: %s.test_clientFloatSpectrum() " % self.__class__.__name__
+        fname= '%s/clientfloatspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_FLOAT" name="mca_float">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT32" name="mca_float32">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="mca_float64">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="mca_number">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_FLOAT32" name="init_mca_float32">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="final_mca_float64">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+       </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
+
+        for mca in self._fmca1:
+            self.record(tdw,'{"data": { "mca_float":' + str(mca)
+                       + '  } }')
+        
+        self.closeWriter(tdw, json = '{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 6)
+        self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
+                                    error = 1.0e-14)
+        self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
+                                    error = 1.0e-6, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_float64", "float64", "NX_FLOAT64", self._fmca1, 
+                                    error = 1.0e-14, grows = 2)
+        self._sc.checkSpectrumField(det, "mca_number", "float64", "NX_NUMBER", self._fmca1, 
+                                    error = 1.0e-14)
+
+        
+        self._sc.checkSingleSpectrumField(det, "init_mca_float32", "float32", "NX_FLOAT32", self._fmca1[0],
+                                          error = 1.0e-6)
+        self._sc.checkSingleSpectrumField(det, "final_mca_float64", "float64", "NX_FLOAT64", self._fmca1[0],
+                                          error = 1.0e-14)
+
+
+        f.close()
+        os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientSpectrum(self):
+        print "Run: %s.test_clientSpectrum() " % self.__class__.__name__
+        fname= '%s/clientspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+
+        <field units="" type="NX_CHAR" name="init_string_time">
+          <strategy mode="INIT" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="final_flags">
+          <strategy mode="FINAL"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        dates = [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1956-05-23T12:12:32.123+0400","2212-12-12T12:25:43.1267-0700",
+                  "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
+        logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
+#        print "CHECK:", '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }'
+
+        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
+
+        for i in range(min(len(dates),len(logical))):
+            self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                       + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ' } }')
             
 
         
-#        os.remove(fname)
+        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 15)
+        self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
+
+        self._sc.checkSingleStringSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleSpectrumField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+
+        
+        f.close()
+        os.remove(fname)
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientIntImage(self):
+        print "Run: %s.test_clientIntImage() " % self.__class__.__name__
+        fname= '%s/clientintimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="pco_int">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT8" name="pco_int8">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT16" name="pco_int16">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT32" name="pco_int32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_INT64" name="pco_int64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="pco_uint">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT8" name="pco_uint8">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT16" name="pco_uint16">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="pco_uint32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT64" name="pco_uint64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"  grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_INT64" name="init_pco_int64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="final_pco_uint">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+
+        tdw = self.openWriter(fname, xml, json = '{"data": { "pco_int":' + str(self._pco1[0])  + '  } }')
+
+        pco2 = [[[(el+100)/2 for el in rpco] for rpco in pco] for pco in self._pco1  ]
+        for pco in self._pco1:
+            self.record(tdw,'{"data": { "pco_int":' + str(pco)
+                       + ', "pco_uint":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) 
+                       + '  } }')
+        
+        self.closeWriter(tdw, json = '{"data": { "pco_uint":' + str(pco2[0])  + '  } }')
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 12)
+        self._sc.checkImageField(det, "pco_int", "int64", "NX_INT", self._pco1)
+        self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
+        self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
+        self._sc.checkImageField(det, "pco_int32", "int32", "NX_INT32", self._pco1, grows = 2 )
+        self._sc.checkImageField(det, "pco_int64", "int64", "NX_INT64", self._pco1)
+        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows = 3)
+        self._sc.checkImageField(det, "pco_uint16", "uint16", "NX_UINT16", pco2 )
+        self._sc.checkImageField(det, "pco_uint32", "uint32", "NX_UINT32", pco2, grows = 2 )
+        self._sc.checkImageField(det, "pco_uint64", "uint64", "NX_UINT64", pco2, grows = 3 )
+
+
+        self._sc.checkSingleImageField(det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
+        self._sc.checkSingleImageField(det, "final_pco_uint", "uint64", "NX_UINT", pco2[0])
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientFloatImage(self):
+        print "Run: %s.test_clientFloatImage() " % self.__class__.__name__
+        fname= '%s/clientfloatimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_FLOAT" name="pco_float">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT32" name="pco_float32">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="pco_float64">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="pco_number">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"  grows = "1" />
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_FLOAT32" name="init_pco_float32">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="final_pco_float64">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+
+
+        
+
+        tdw = self.openWriter(fname, xml, json = '{"data": { "pco_float":' + str(self._fpco1[0])  + '  } }')
+
+        for pco in self._fpco1:
+            self.record(tdw,'{"data": { "pco_float":' + str(pco) + '  } }')
+        
+        self.closeWriter(tdw, json = '{"data": { "pco_float":' + str(self._fpco1[0])  + '  } }')
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 6)
+        self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
+                                    error = 1.0e-14)
+        self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
+                                    error = 1.0e-6, grows = 2)
+        self._sc.checkImageField(det, "pco_float64", "float64", "NX_FLOAT64", self._fpco1, 
+                                    error = 1.0e-14, grows = 3)
+        self._sc.checkImageField(det, "pco_number", "float64", "NX_NUMBER", self._fpco1, 
+                                    error = 1.0e-14, grows = 1)
+
+
+        self._sc.checkSingleImageField(det, "init_pco_float32", "float32", "NX_FLOAT32", self._fpco1[0], 
+                                    error = 1.0e-6)
+        self._sc.checkSingleImageField(det, "final_pco_float64", "float64", "NX_FLOAT64", self._fpco1[0], 
+                                    error = 1.0e-14)
+
+        
+        f.close()
+        os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientImage(self):
+        print "Run: %s.test_clientImage() " % self.__class__.__name__
+        fname= '%s/clientimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+
+        <field units="" type="NX_CHAR" name="init_string_time">
+          <strategy mode="INIT" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="final_flags">
+          <strategy mode="FINAL"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        dates = [[["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
+                 ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
+                  "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"]],
+                 [["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],
+                 ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],                 
+                 ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
+                  "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]]]
+
+        logical = [[["1","0","true","false"], ["True","False","TrUe","FaLsE"], ["1","0","0","1"]],
+                   [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
+        
+
+        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
+
+        
+
+        for i in range(min(len(dates),len(logical))):
+            self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                        + ', "logicals":' + str(logical[i]).replace("'","\"")
+                        + ' } }')
+            
+
+        
+        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkScalarTree(f, fname , 42)
+        self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
+
+        self._sc.checkSingleStringImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleImageField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+        
+        f.close()
+        os.remove(fname)
+
+
+
+if __name__ == '__main__':
+    unittest.main()

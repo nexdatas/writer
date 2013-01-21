@@ -93,7 +93,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
-        print "Run: TangoDataWriterTest.test_openFile() "
+        print "Run: %s.test_openFile() " % self.__class__.__name__
         fname = "test.h5"
         try:
             tdw = TangoDataWriter(fname)
@@ -583,3 +583,5 @@ class TangoDataWriterTest(unittest.TestCase):
 #            pass
 
 
+if __name__ == '__main__':
+    unittest.main()
