@@ -186,12 +186,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 5)
-        self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar for c in range(3)])
-        self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar for c in range(3)])
-        self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar for c in range(3)])
-        self._sc.checkScalarField(det, "pid_scalar_uint", "uint64", "NX_UINT", [int(scalar) for c in range(3)])
-        self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
-                                  [float(scalar) for c in range(3)], error = 1e-14)
+        self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar] *3)
+        self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
+        self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
+        self._sc.checkScalarField(det, "pid_scalar_uint", "uint64", "NX_UINT", [int(scalar)] *3)
+        self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [float(scalar)] *3, 
+                                  error = 1e-14)
        
         f.close()
 #        os.remove(fname)
@@ -210,7 +210,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
 
-        <field name="pid_spectrum_string" type="NX_CHAR">
+        <field units="" name="pid_spectrum_string" type="NX_CHAR">
           <dimensions rank="1">
             <dim index="1" value="10"/>
           </dimensions>
@@ -223,7 +223,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field name="pid_spectrum_int" type="NX_UINT32">
+        <field units="" name="pid_spectrum_int32" type="NX_UINT32">
           <dimensions rank="1">
             <dim index="1" value="10"/>
           </dimensions>
@@ -263,6 +263,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
       </group>
     </group>
   </group>
@@ -274,6 +275,10 @@ class DBFieldTagWriterTest(unittest.TestCase):
         scalar = str(cursor.fetchone()[0])
         cursor.close()
 
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 10")
+        spectrum = cursor.fetchall()
+        cursor.close()
         
         tdw = self.openWriter(fname, xml)
 
@@ -286,9 +291,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 13)
-        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", [[int(scalar)] for c in range(3)])
-        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", [[int(scalar)] for c in range(3)])
-#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", [scalar for c in range(3)])
+        self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
+                                          [[str(sub[0]) for sub in spectrum ]]*3)
+        self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
+                                    [[sub[0] for sub in spectrum ]]*3)
+        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", [[int(scalar)] ]*3)
+        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", [[int(scalar)] ]*3)
        
         f.close()
 #        os.remove(fname)
@@ -306,7 +314,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
 
-        <field name="pid_string_image" type="NX_CHAR">
+        <field name="name_pid_string_image" type="NX_CHAR" units="" >
           <dimensions rank="2">
             <dim index="1" value="10"/>
             <dim index="2" value="2"/>
@@ -321,12 +329,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field name="pid_exported_image_int" type="NX_INT">
+        <field name="pid_exported_image_int" type="NX_INT" units="">
           <dimensions rank="2">
             <dim index="1" value="10"/>
             <dim index="2" value="2"/>
           </dimensions>
-          <strategy mode="STEP" grows="3" />
+          <strategy mode="STEP"  />
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
@@ -341,6 +349,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
 
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT name, pid FROM device limit 10")
+        name_pid = cursor.fetchall()
+        cursor.close()
+
+
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid, exported FROM device limit 10")
+        pid_exported = cursor.fetchall()
+        cursor.close()
+
         tdw = self.openWriter(fname, xml)
 
         for c in range(3):
@@ -352,7 +371,10 @@ class DBFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkScalarTree(f, fname , 21)
-#        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+        self._sc.checkStringImageField(det, "name_pid_string_image", "string", "NX_CHAR", 
+                                       [[[str(it) for it in sub] for sub in name_pid]]*3)
+        self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT", 
+                                    [pid_exported]*3)
        
         f.close()
 #        os.remove(fname)

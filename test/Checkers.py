@@ -700,7 +700,7 @@ class Checker(object):
     # \param values  original values
     def checkStringImageField(self, det, name, dtype, nxtype, values):
 
-
+        
         cnts = [[ det.open(name +"_"+str(s1) +"_"+str(s2) ) for s2 in range(len(values[0][0]))] for s1 in range(len(values[0])) ]
 
         for s1 in range(len(values[0])) :
