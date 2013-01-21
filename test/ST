@@ -1,3 +1,5 @@
 #!/bin/bash
 . /home/etc/tango_env
-exec python /home/jkotan/ndts/nexdatas/test/SimpleServer.py $*
+SCRIPT=$(readlink -f $0)
+LOCALDIR=$(dirname "$SCRIPT")
+exec python $LOCALDIR/SimpleServer.py $*

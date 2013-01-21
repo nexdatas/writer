@@ -26,8 +26,6 @@ import subprocess
 
 import PyTango
 import time
-from pni.nx.h5 import open_file
-from  xml.sax import SAXParseException
 import SimpleServer
 
 
