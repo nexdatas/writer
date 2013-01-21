@@ -107,7 +107,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
       <group type="NXdetector" name="detector">
 
 
-        <field  units="m" name="pid_scalar_int" type="NX_INT64">
+        <field  units="" name="pid_scalar_int" type="NX_INT64">
           <dimensions rank="1">
             <dim index="1" value="1"/>
           </dimensions>
@@ -145,7 +145,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field  units="m" name="pid_scalar2_int" type="NX_INT32">
+        <field  units="" name="pid_scalar2_int" type="NX_INT32">
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
@@ -167,6 +167,15 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field  units="m" name="pid_scalar3_int" type="NX_INT">
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
 
       </group>
     </group>
@@ -190,12 +199,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 5)
-#        self._sc.checkScalarField(det, "pid_scalar_int", "int32", "NX_INT32", [int(scalar) for c in range(3)])
+        det = self._sc.checkScalarTree(f, fname , 6)
+        self._sc.checkSpectrumField(det, "pid_scalar_int", "int64", "NX_INT64", [[int(scalar)] for c in range(3)])
         self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar for c in range(3)])
         self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar for c in range(3)])
-#        self._sc.checkScalarField(det, "pid_scalar2_int", "int32", "NX_INT32", [int(scalar) for c in range(3)])
+        self._sc.checkSpectrumField(det, "pid_scalar2_int", "int32", "NX_INT32", [[int(scalar)] for c in range(3)])
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar for c in range(3)])
+        self._sc.checkScalarField(det, "pid_scalar3_int", "int64", "NX_INT", [int(scalar) for c in range(3)])
        
         f.close()
 #        os.remove(fname)
