@@ -361,7 +361,8 @@ class EField(FElementWithAttr):
                     self.error = message
                 else:
                     if not self._extraD:
-#                        print "DATA3", self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
+                        
+                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
                         if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
                             sts = dh.cast(self.h5Object.dtype)
                             for i in range(len(sts)):
