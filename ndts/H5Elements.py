@@ -369,7 +369,6 @@ class EField(FElementWithAttr):
                                 self.h5Object[i] = sts[i] 
 #                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
                         elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
-._splitArray, dh.cast(self.h5Object.dtype)
                             sts = dh.cast(self.h5Object.dtype)
                             if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
                                 self.h5Object.write(sts[0])
