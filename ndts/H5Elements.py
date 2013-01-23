@@ -362,12 +362,22 @@ class EField(FElementWithAttr):
                 else:
                     if not self._extraD:
                         
-                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
+#                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
                         if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
                             sts = dh.cast(self.h5Object.dtype)
                             for i in range(len(sts)):
                                 self.h5Object[i] = sts[i] 
 #                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
+                        elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
+._splitArray, dh.cast(self.h5Object.dtype)
+                            sts = dh.cast(self.h5Object.dtype)
+                            if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
+                                self.h5Object.write(sts[0])
+                            else:
+                                self.h5Object.write(sts)
+                                
+#                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
+
                         elif  len(self.h5Object.shape) == 2 and self.h5Object.dtype == "string":       
                             sts = dh.cast(self.h5Object.dtype)
                             for i in range(len(sts)):
