@@ -1,5 +1,10 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* fixing fetching storing unit spectrum from DB DataSource
+	* tagged as 1.0.8
+
+
 2013-01-21 Jan Kotanski <jankotan@gmail.com>
-	* adding decoder for UTF8 and INT32 ecoded data
+	* adding decoder for UTF8 and INT32 encoded data
 	* fixing storing attributes in FieldArrays
 	* fixing shape finding and FetchNameHandler conditions 
 	* fixing shape order in Tango DataSource
