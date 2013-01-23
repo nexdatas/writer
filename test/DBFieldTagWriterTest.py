@@ -499,8 +499,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-
-
         <field name="name_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
             <dim index="1" value="10"/>
@@ -516,6 +514,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+
         <field name="name_spectrum_string" type="NX_CHAR" units="" >
           <dimensions rank="2" />
           <strategy mode="STEP"/>
@@ -526,8 +525,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
-
-
 
         <field name="pid_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
@@ -542,8 +539,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
-
-
 
         <field name="pid_image_float" type="NX_FLOAT" units="" >
           <dimensions rank="2"> 
@@ -588,7 +583,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-
         <field name="pid_spectrum_float32" type="NX_FLOAT32" units="" >
           <dimensions rank="2" />
           <strategy mode="STEP" grows="2"/>
@@ -599,8 +593,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
-
-
 
         <field name="pid_exported_image_int" type="NX_INT" units="">
           <dimensions rank="2">
@@ -642,9 +634,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-
-
-
         <field name="init_pid_exported_image_int64" type="NX_INT64" units="">
           <dimensions rank="2" />
           <strategy mode="INIT" compression="true" grows="3" />
@@ -685,6 +674,24 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field name="init_pid_image_string" type="NX_CHAR" units="" >
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+
+
       </group>
     </group>
   </group>
@@ -723,7 +730,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 61)
+        det = self._sc.checkScalarTree(f, fname , 62)
         self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
@@ -748,6 +755,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [pid_exported]*3, grows=2, error=1e-6)
         self._sc.checkSingleStringImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
                                     [[str(it) for it in sub] for sub in pid_exported])
+        self._sc.checkSingleStringSpectrumField(det, "init_pid_image_string", "string", "NX_CHAR", 
+                                    [str(sub[0]) for sub in pid])
         self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64", 
                                     pid_exported, grows=3)
         self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64", 

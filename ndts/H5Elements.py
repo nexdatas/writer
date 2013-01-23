@@ -379,9 +379,15 @@ class EField(FElementWithAttr):
 
                         elif  len(self.h5Object.shape) == 2 and self.h5Object.dtype == "string":       
                             sts = dh.cast(self.h5Object.dtype)
-                            for i in range(len(sts)):
-                                for j in range(len(sts[i])):
-                                    self.h5Object[i,j] = sts[i][j] 
+                            if str(dh.format).split('.')[-1] == "IMAGE":
+                                for i in range(len(sts)):
+                                    for j in range(len(sts[i])):
+                                        self.h5Object[i,j] = sts[i][j] 
+                            elif str(dh.format).split('.')[-1] == "SPECTRUM":
+                                for i in range(len(sts)):
+                                        self.h5Object[i,:] = sts[i]
+                            else:            
+                                self.h5Object[:,:] = sts
                         else:
                             self.h5Object.write(dh.cast(self.h5Object.dtype))
 #                        print "DATA4"
