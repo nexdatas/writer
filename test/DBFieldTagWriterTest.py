@@ -74,6 +74,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
+    # \param json JSON Record with client settings
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter(fname)
@@ -86,6 +87,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
     ## closes writer
     # \param tdw Tango Data Writer instance
+    # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         if json:
             tdw.json = json

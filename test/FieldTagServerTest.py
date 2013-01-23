@@ -62,6 +62,7 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
+    # \param json JSON Record with client settings
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
@@ -83,6 +84,7 @@ class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
 
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
+    # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
