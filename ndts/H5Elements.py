@@ -402,15 +402,27 @@ class EField(FElementWithAttr):
                                     self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
                                 else:
                                     self.h5Object.grow()
-                                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                                    if len(self.h5Object.shape) == 3:
+                                        self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+                                    else:
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                                        
                             else:
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
                                     self.h5Object.grow(1)
                                     self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
                                 else:
-                                    self.h5Object.grow(1)
-                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
+                                    if len(self.h5Object.shape) == 3: 
+                                        if self.grows == 2:
+                                            self.h5Object.grow(1)
+                                            self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
+                                        else:
+                                            self.h5Object.grow(2)
+                                            self.h5Object[:,:,self.h5Object.shape[1]-1] = arr
+                                    else:
+                                        self.h5Object.grow(1)
+                                        self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
                         if str(dh.format).split('.')[-1] == "IMAGE":
 

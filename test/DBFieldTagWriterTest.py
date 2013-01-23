@@ -78,6 +78,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter(fname)
+        tdw.numThreads = 1
+
         tdw.openNXFile()
         tdw.xmlSettings = xml
         if json:
@@ -483,7 +485,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
 
-        <field name="name_pid_string_image" type="NX_CHAR" units="" >
+        <field name="name_pid_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
             <dim index="1" value="10"/>
             <dim index="2" value="2"/>
@@ -496,6 +498,108 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
+
+
+
+        <field name="name_image_string" type="NX_CHAR" units="" >
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="IMAGE">
+              SELECT name FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="name_spectrum_string" type="NX_CHAR" units="" >
+          <dimensions rank="2" />
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT name FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+
+        <field name="pid_image_string" type="NX_CHAR" units="" >
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+
+        <field name="pid_image_float" type="NX_FLOAT" units="" >
+          <dimensions rank="2"> 
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+        <field name="pid_image_int32" type="NX_INT32" units="" >
+          <dimensions rank="2"> 
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2" compression="true"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="pid_image_int64" type="NX_INT64" units="" >
+          <dimensions rank="2"> 
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="pid_spectrum_float32" type="NX_FLOAT32" units="" >
+          <dimensions rank="2" />
+          <strategy mode="STEP" grows="2"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
 
 
         <field name="pid_exported_image_int" type="NX_INT" units="">
@@ -592,11 +696,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
         name_pid = cursor.fetchall()
         cursor.close()
 
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT name FROM device limit 10")
+        name = cursor.fetchall()
+        cursor.close()
+
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 10")
+        pid = cursor.fetchall()
+        cursor.close()
+
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid, exported FROM device limit 10")
         pid_exported = cursor.fetchall()
         cursor.close()
+
 
         tdw = self.openWriter(fname, xml)
 
@@ -608,9 +723,23 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 27)
-        self._sc.checkStringImageField(det, "name_pid_string_image", "string", "NX_CHAR", 
+        det = self._sc.checkScalarTree(f, fname , 61)
+        self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
+        self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
+                                       [[[str(it) for it in sub] for sub in name]]*3)
+        self._sc.checkStringImageField(det, "pid_image_string", "string", "NX_CHAR", 
+                                       [[[str(it) for it in sub] for sub in pid]]*3)
+        self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
+                                       [[str(sub[0]) for sub in name]]*3)
+        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
+                                       [[[float(it) for it in sub] for sub in pid]]*3)
+        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32", 
+                                       [[[int(it) for it in sub] for sub in pid]]*3, grows=2)
+        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64", 
+                                       [[[int(it) for it in sub] for sub in pid]]*3, grows=3)
+        self._sc.checkSpectrumField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 
+                                       [[float(sub[0]) for sub in pid]]*3, grows=2)
         self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT", 
                                     [pid_exported]*3)
         self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32", 
