@@ -100,9 +100,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_dbIntScalar(self):
-        print "Run: %s.test_dbIntScalar() " % self.__class__.__name__
-        fname= '%s/dbintscalar.h5' % os.getcwd()   
+    def test_dbScalar(self):
+        print "Run: %s.test_dbScalar() " % self.__class__.__name__
+        fname= '%s/dbscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -177,6 +177,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field  units="m" name="init_pid_scalar_string" type="NX_CHAR">
+          <strategy mode="INIT"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
         <field  units="m" name="final_pid_scalar_float32" type="NX_FLOAT32">
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
@@ -209,7 +220,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 7)
+        det = self._sc.checkScalarTree(f, fname , 8)
         self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
@@ -219,19 +230,20 @@ class DBFieldTagWriterTest(unittest.TestCase):
        
 
         self._sc.checkSingleScalarField(det, "init_pid_scalar_int32", "int32", "NX_INT32", int(scalar))
+        self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", scalar)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
                                         float(scalar), error = 1e-6)
 
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_dbIntSpectrum(self):
-        print "Run: %s.test_dbIntSpectrum() " % self.__class__.__name__
-        fname= '%s/dbintspectrum.h5' % os.getcwd()   
+    def test_dbSpectrum(self):
+        print "Run: %s.test_dbSpectrum() " % self.__class__.__name__
+        fname= '%s/dbspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -256,7 +268,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1">
             <dim index="1" value="10"/>
           </dimensions>
-          <strategy mode="STEP"/>
+          <strategy mode="STEP" grows="2"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
@@ -264,6 +276,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
             </query>
           </datasource>
         </field>
+
+
+
+        <field units="" name="pid_spectrum_float64" type="NX_FLOAT64">
+          <dimensions rank="1">
+            <dim index="1" value="10"/>
+          </dimensions>
+          <strategy mode="STEP" comporession="true" rate="4" shuffle="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
 
         <field  units="" name="pid_scalar_int32" type="NX_INT32">
           <dimensions rank="1" />
@@ -309,9 +337,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field  units="" name="init_pid_scalar_int64" type="NX_INT64">
-          <dimensions rank="1">
-            <dim index="1" value="1"/>
-          </dimensions>
+          <dimensions rank="1"/>
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
@@ -322,7 +348,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field  units="" name="pid_scalar_float32" type="NX_FLOAT32">
+        <field  units="" name="final_pid_scalar_float32" type="NX_FLOAT32">
           <dimensions rank="1">
             <dim index="1" value="1"/>
           </dimensions>
@@ -335,6 +361,58 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field  units="" name="init_pid_spectrum_int32" type="NX_INT32">
+          <dimensions rank="1" />
+          <strategy mode="INIT"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="" name="final_pid_spectrum_float64" type="NX_FLOAT64">
+          <dimensions rank="1">
+            <dim index="1" value="10"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+
+        <field  units="" name="final_pid_scalar_string" type="NX_CHAR">
+          <dimensions rank="1">
+            <dim index="1" value="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="" name="init_pid_spectrum_string" type="NX_CHAR">
+          <dimensions rank="1" />
+          <strategy mode="INIT"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
 
       </group>
     </group>
@@ -362,15 +440,33 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 16)
+        det = self._sc.checkScalarTree(f, fname , 21)
         self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [[str(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
-                                    [[sub[0] for sub in spectrum ]]*3)
-        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", [[int(scalar)] ]*3)
-        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", [[int(scalar)] ]*3)
-        self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [[float(scalar)] ]*3)
+                                    [[sub[0] for sub in spectrum ]]*3, grows=2)
+        self._sc.checkSpectrumField(det, "pid_spectrum_float64", "float64", "NX_FLOAT64", 
+                                    [[float(sub[0]) for sub in spectrum ]]*3)
+        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", 
+                                    [[int(scalar)] ]*3)
+        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", 
+                                    [[int(scalar)] ]*3)
+        self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
+                                    [[float(scalar)] ]*3)
+
+        self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64", 
+                                          [int(scalar)] )
+        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
+                                          [float(scalar)] )
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
+                                          [sub[0] for sub in spectrum ] )
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+                                          [sub[0] for sub in spectrum ] )
        
+        self._sc.checkSingleStringSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
+                                                [str(sub[0]) for sub in spectrum ])
+        self._sc.checkSingleStringSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+                                                [scalar])
         f.close()
 #        os.remove(fname)
 
@@ -379,9 +475,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_dbIntImage(self):
-        print "Run: %s.test_dbIntImage() " % self.__class__.__name__
-        fname= '%s/dbintimage.h5' % os.getcwd()   
+    def test_dbImage(self):
+        print "Run: %s.test_dbImage() " % self.__class__.__name__
+        fname= '%s/dbimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
