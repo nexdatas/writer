@@ -540,6 +540,61 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+
+        <field name="pid2_image_string" type="NX_CHAR" units="m" >
+          <dimensions rank="2">
+            <dim index="1" value="1"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="pid3_image_string" type="NX_CHAR" units="m" >
+          <dimensions rank="2" />
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="pid_image_int" type="NX_INT" units="" >
+          <dimensions rank="2">
+            <dim index="1" value="1"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+        <field name="pid_image_uint" type="NX_UINT" units="" >
+          <dimensions rank="2"/>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
         <field name="pid_image_float" type="NX_FLOAT" units="" >
           <dimensions rank="2"> 
             <dim index="1" value="10"/>
@@ -690,6 +745,45 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field name="final_pid_image_float64" type="NX_FLOAT64" units="" >
+          <dimensions rank="2">
+            <dim index="1" value="10"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="init_pid_spectrum_string" type="NX_CHAR" units="" >
+          <dimensions rank="2" />
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="final_pid_spectrum_float64" type="NX_FLOAT64" units="" >
+          <dimensions rank="2"/>
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
+
 
 
       </group>
@@ -730,19 +824,27 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 62)
+        det = self._sc.checkScalarTree(f, fname , 69)
         self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name]]*3)
         self._sc.checkStringImageField(det, "pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in pid]]*3)
+        self._sc.checkScalarField(det, "pid2_image_string", "string", "NX_CHAR", 
+                                       [str(pid[0][0])]*3)
+        self._sc.checkScalarField(det, "pid3_image_string", "string", "NX_CHAR", 
+                                       [str(pid[0][0])]*3)
         self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
                                        [[str(sub[0]) for sub in name]]*3)
         self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
                                        [[[float(it) for it in sub] for sub in pid]]*3)
         self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32", 
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=2)
+        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT", 
+                                       [[[int(pid[0][0])]]]*3)
+        self._sc.checkSpectrumField(det, "pid_image_uint", "uint64", "NX_UINT", 
+                                       [[int(pid[0][0])]]*3)
         self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64", 
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=3)
         self._sc.checkSpectrumField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 
@@ -761,7 +863,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     pid_exported, grows=3)
         self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64", 
                                     pid_exported, grows=2, error=1e-6)
-       
+        self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64", 
+                                    [[float(sub[0])] for sub in pid])
+        self._sc.checkSingleStringSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
+                                    [str(sub[0]) for sub in pid])
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+                                    [float(sub[0]) for sub in pid])
         f.close()
 #        os.remove(fname)
 

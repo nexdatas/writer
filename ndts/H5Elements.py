@@ -99,6 +99,7 @@ class FElement(Element):
 #                    try:
                     dh = DataHolder(**self.source.getData())
                     dsShape = dh.shape
+                    print "GETShape",dsShape
 #                    except:
 #                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
@@ -107,12 +108,16 @@ class FElement(Element):
                             if s:
                                 shape.append(s)
                     if extraD:
+ #                       if shape == [1]:
+ #                           shape = [0]
+ #                       else:    
                         shape.insert(exDim-1,0)    
                 else:
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
-
+                
         elif extraD:            
             shape = [0]
+        print "RShape",shape
         return shape
 
 
@@ -284,6 +289,8 @@ class EField(FElementWithAttr):
 
         # shape and chunk
         shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
+        print "FINDShape", shape
+
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
             shape = self._findShape(self.rank, self.lengths, self._extraD)
@@ -311,6 +318,7 @@ class EField(FElementWithAttr):
             f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
         self.h5Object = f
+        print "NAME", f.name
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
@@ -393,9 +401,27 @@ class EField(FElementWithAttr):
 #                        print "DATA4"
                     else:
                         if str(dh.format).split('.')[-1] == "SCALAR":
-                            self.h5Object.grow()
+                            if len(self.h5Object.shape) == 1:
+                                self.h5Object.grow()
+                                self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+                            elif  len(self.h5Object.shape) == 2:
+                                if self.grows == 2:
+                                    self.h5Object.grow()
+                                    self.h5Object[:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+                                else:
+                                    self.h5Object.grow()
+                                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
+                            elif  len(self.h5Object.shape) == 3:
+                                if self.grows == 3:
+                                    self.h5Object.grow()
+                                    self.h5Object[:,:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+                                if self.grows == 2:
+                                    self.h5Object.grow()
+                                    self.h5Object[:,self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
+                                else:
+                                    self.h5Object.grow()
+                                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
 
-                            self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
                         # way around for a bug in pninx
 

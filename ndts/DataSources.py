@@ -361,6 +361,7 @@ class DBaseSource(DataSource):
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
                 dh = {"format":"SCALAR", "value":str(data[0]), "tangoDType":"DevString", "shape":[1,0]}
+                print "SCALAR",dh
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
