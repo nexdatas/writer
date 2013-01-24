@@ -272,7 +272,7 @@ class FieldTagWriterTest(unittest.TestCase):
         </attribute>
       </group>
       <field type="NX_FLOAT" name="counter">
-        <attribute type="NX_FLOAT32" name="scalar_float">
+        <attribute type="NX_FLOAT32" name="scalar_float32">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
             <record name="fcnt"/>
@@ -313,11 +313,19 @@ class FieldTagWriterTest(unittest.TestCase):
 
         
         # check the created file
-        
         f = open_file(fname,readonly=True)
-#        det = self._sc.checkFieldTree(f, fname, 1)
-#        self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
-        
+        det, field = self._sc.checkAttributeTree(f, fname, 3,3)
+        self._sc.checkScalarAttribute(det, "scalar_float", "float64", self._fcounter[steps-1],
+                                      error = 1.e-14)
+        self._sc.checkScalarAttribute(det, "scalar_string", "string", 
+                                      str(self._fcounter[steps-1]))
+        self._sc.checkScalarAttribute(det, "init_scalar_int", "int64", self._counter[0])
+        self._sc.checkScalarAttribute(field, "scalar_float32", "float32", self._fcounter[steps-1],
+                                      error = 1.e-6)
+        self._sc.checkScalarAttribute(field, "scalar_string", "string", 
+                                      str(self._fcounter[steps-1]))
+        self._sc.checkScalarAttribute(field, "final_scalar_int8", "int8", self._counter[0])
+    
         f.close()
 
             
