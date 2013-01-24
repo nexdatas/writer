@@ -295,7 +295,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field  units="" name="pid_scalar_int32" type="NX_INT32">
+        <field  units="m" name="pid_scalar_int32" type="NX_INT32">
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
@@ -451,8 +451,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[float(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", 
                                     [[int(scalar)] ]*3)
-        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", 
-                                    [[int(scalar)] ]*3)
+        self._sc.checkScalarField(det, "pid_scalar_int32", "int32", "NX_INT32", 
+                                    [int(scalar) ]*3)
         self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
                                     [[float(scalar)] ]*3)
 
@@ -470,7 +470,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleStringSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
                                                 [scalar])
         f.close()
-        os.remove(fname)
+ #       os.remove(fname)
 
 
 
@@ -583,7 +583,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
 
-        <field name="pid_image_uint" type="NX_UINT" units="" >
+        <field name="pid_image_uint" type="NX_UINT" units="m" >
           <dimensions rank="2"/>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
@@ -843,8 +843,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=2)
         self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT", 
                                        [[[int(pid[0][0])]]]*3)
-        self._sc.checkSpectrumField(det, "pid_image_uint", "uint64", "NX_UINT", 
-                                       [[int(pid[0][0])]]*3)
+        self._sc.checkScalarField(det, "pid_image_uint", "uint64", "NX_UINT", 
+                                       [int(pid[0][0])]*3)
         self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64", 
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=3)
         self._sc.checkSpectrumField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 

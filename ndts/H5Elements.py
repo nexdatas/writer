@@ -99,7 +99,6 @@ class FElement(Element):
 #                    try:
                     dh = DataHolder(**self.source.getData())
                     dsShape = dh.shape
-                    print "GETShape",dsShape
 #                    except:
 #                        raise DataSourceError, "Problem with fetching the data shape"
                     shape = []
@@ -108,16 +107,15 @@ class FElement(Element):
                             if s:
                                 shape.append(s)
                     if extraD:
- #                       if shape == [1]:
- #                           shape = [0]
- #                       else:    
-                        shape.insert(exDim-1,0)    
+                        if shape == [1]:
+                            shape = [0]
+                        else:    
+                            shape.insert(exDim-1,0)    
                 else:
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
         elif extraD:            
             shape = [0]
-        print "RShape",shape
         return shape
 
 
@@ -289,7 +287,6 @@ class EField(FElementWithAttr):
 
         # shape and chunk
         shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
-        print "FINDShape", shape
 
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
@@ -318,7 +315,6 @@ class EField(FElementWithAttr):
             f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
         self.h5Object = f
-        print "NAME", f.name
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
@@ -431,13 +427,21 @@ class EField(FElementWithAttr):
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
                                     self.h5Object.grow()
-                                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                                    if len(self.h5Object.shape) == 2:
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                                    else:                                
+                                        self.h5Object[self.h5Object.shape[0]-1] = arr[0]
                                 else:
                                     self.h5Object.grow()
                                     if len(self.h5Object.shape) == 3:
                                         self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
-                                    else:
+                                    elif  len(self.h5Object.shape) == 2:
                                         self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                                    else:
+                                        if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
+                                            self.h5Object[self.h5Object.shape[0]-1] = arr[0]
+                                        else:
+                                            self.h5Object[self.h5Object.shape[0]-1] = arr
                                         
                             else:
                                 if isinstance(arr, numpy.ndarray) \

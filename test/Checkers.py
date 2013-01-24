@@ -156,7 +156,7 @@ class Checker(object):
                     self._tc.assertEqual(values[i],value[i])
         for i in range(len(values)):
             if self._isNumeric(cnt[i]):
-                if not self._isNumeric(values[i]):
+                if nxtype == "NX_BOOLEAN":
 #                    print "BOOL: ", values[i] ,cnt[i]
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
