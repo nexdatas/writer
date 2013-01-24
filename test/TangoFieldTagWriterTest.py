@@ -292,7 +292,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 14)
+        det = self._sc.checkFieldTree(f, fname , 14)
         self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
@@ -521,7 +521,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 17)
+        det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps], 
                                     grows = 2)
@@ -757,7 +757,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 21)
+        det = self._sc.checkFieldTree(f, fname , 21)
         self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
                                  grows = 2)

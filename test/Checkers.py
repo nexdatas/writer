@@ -44,7 +44,7 @@ class Checker(object):
     # \param fname file name
     # \param children number of detector children   
     # \returns detector group object    
-    def checkScalarTree(self, f, fname, children):
+    def checkFieldTree(self, f, fname, children):
         self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
         self._tc.assertEqual(6, f.nattrs)
         self._tc.assertEqual( f.attr("file_name").value, fname)

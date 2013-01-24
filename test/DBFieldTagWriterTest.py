@@ -308,7 +308,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 15)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
@@ -607,7 +607,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 34)
+        det = self._sc.checkFieldTree(f, fname , 34)
         self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [[str(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
@@ -920,7 +920,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 53)
+        det = self._sc.checkFieldTree(f, fname , 53)
         self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 

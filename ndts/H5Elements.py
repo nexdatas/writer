@@ -161,6 +161,7 @@ class FElementWithAttr(FElement):
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
+###                    print "ATTR",key ,self._h5Instances[key.encode()].dtype, dh.cast(self._h5Instances[key.encode()].dtype)    
                     self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
