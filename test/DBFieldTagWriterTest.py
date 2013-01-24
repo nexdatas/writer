@@ -784,6 +784,58 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field name="init_pid_scalar_string" type="NX_CHAR" units="m" >
+          <dimensions rank="2">
+            <dim index="1" value="1"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="INIT"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="final_pid_scalar_string" type="NX_CHAR" units="m" >
+          <dimensions rank="2"/>
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="init_pid_image_float" type="NX_FLOAT" units="" >
+          <dimensions rank="2" >
+            <dim index="1" value="1"/>
+            <dim index="2" value="1"/>
+          </dimensions>
+          <strategy mode="INIT"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+        <field name="final_pid_image_float" type="NX_FLOAT" units="m" >
+          <dimensions rank="2" />
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
 
 
       </group>
@@ -824,7 +876,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 69)
+        det = self._sc.checkScalarTree(f, fname , 73)
         self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
@@ -869,6 +921,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [str(sub[0]) for sub in pid])
         self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
                                     [float(sub[0]) for sub in pid])
+        self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", 
+                                    str(pid[0][0]))
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+                                    str(pid[0][0]))
+        self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT", 
+                                    [[float(pid[0][0])]])
+        self._sc.checkSingleScalarField(det, "final_pid_image_float", "float64", "NX_FLOAT", 
+                                    float(pid[0][0]))
         f.close()
 #        os.remove(fname)
 
