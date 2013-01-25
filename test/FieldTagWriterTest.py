@@ -616,6 +616,16 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_uint"/>
           </datasource>
         </field>
+
+
+        <field units="" type="NX_INT64" name="mca_int64_dim">
+          <dimensions rank="1"/>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_INT64" name="init_mca_int64">
           <dimensions rank="1">
             <dim value="256" index="1"/>
@@ -637,7 +647,7 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field units="" type="NX_INT64" name="init_mca2_int64">
+        <field units="" type="NX_INT32" name="init_mca_int32">
           <dimensions rank="1"/>
           <strategy mode="INIT" compression="true" rate="3"/>
           <datasource type="CLIENT">
@@ -668,7 +678,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 13)
+        det = self._sc.checkFieldTree(f, fname , 14)
         self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
         self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
@@ -679,9 +689,10 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
         self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
         self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+        self._sc.checkSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", self._mca1)
 
         self._sc.checkSingleSpectrumField(det, "init_mca_int64", "int64", "NX_INT64", self._mca1[0])
-        self._sc.checkSingleSpectrumField(det, "init_mca2_int64", "int64", "NX_INT64", self._mca1[0])
+        self._sc.checkSingleSpectrumField(det, "init_mca_int32", "int32", "NX_INT32", self._mca1[0])
         self._sc.checkSingleSpectrumField(det, "final_mca_uint32", "uint32", "NX_UINT32", mca2[0])
 
         
@@ -738,6 +749,14 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="" type="NX_FLOAT" name="mca_float_dim">
+          <dimensions rank="1"/>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_FLOAT32" name="init_mca_float32">
           <dimensions rank="1">
             <dim value="1024" index="1"/>
@@ -747,6 +766,7 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </field>
+
         <field units="" type="NX_FLOAT64" name="final_mca_float64">
           <dimensions rank="1">
             <dim value="1024" index="1"/>
@@ -756,6 +776,16 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </field>
+
+        <field units="" type="NX_FLOAT" name="final_mca_float">
+          <dimensions rank="1"/>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+
+
        </group>
     </group>
   </group>
@@ -777,8 +807,10 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 6)
+        det = self._sc.checkFieldTree(f, fname , 8)
         self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
+                                    error = 1.0e-14)
+        self._sc.checkSpectrumField(det, "mca_float_dim", "float64", "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
         self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
                                     error = 1.0e-6, grows = 2)
@@ -791,6 +823,8 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleSpectrumField(det, "init_mca_float32", "float32", "NX_FLOAT32", self._fmca1[0],
                                           error = 1.0e-6)
         self._sc.checkSingleSpectrumField(det, "final_mca_float64", "float64", "NX_FLOAT64", self._fmca1[0],
+                                          error = 1.0e-14)
+        self._sc.checkSingleSpectrumField(det, "final_mca_float", "float64", "NX_FLOAT", self._fmca1[0],
                                           error = 1.0e-14)
 
 
@@ -846,6 +880,23 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="" type="NX_BOOLEAN" name="flags_dim">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_CHAR" name="string_time_dim">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1"/>
+        </field>
 
 
         <field units="" type="NX_CHAR" name="init_string_time">
@@ -868,6 +919,24 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_BOOLEAN" name="init_flags">
+          <strategy mode="INIT"/>
+          <dimensions rank="1" />
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_CHAR" name="final_string_time">
+          <strategy mode="FINAL" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1" />
+        </field>
+
       </group>
     </group>
   </group>
@@ -882,7 +951,10 @@ class FieldTagWriterTest(unittest.TestCase):
         logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
 #        print "CHECK:", '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }'
 
-        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  +' "timestamps":' + str(dates[0]).replace("'","\"") \
+                                  + ', "logicals":' + str(logical[0]).replace("'","\"")
+                                  + '  } }')
 
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
@@ -891,7 +963,10 @@ class FieldTagWriterTest(unittest.TestCase):
             
 
         
-        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
+        self.closeWriter(tdw, json = '{"data": {'\
+                             +' "timestamps":' + str(dates[0]).replace("'","\"") \
+                             + ', "logicals":' + str(logical[0]).replace("'","\"")
+                         + '  } }')
             
 
 
@@ -899,14 +974,17 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
+        det = self._sc.checkFieldTree(f, fname , 22)
         self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkStringSpectrumField(det, "string_time_dim", "string", "NX_CHAR", dates)
 
         self._sc.checkSingleStringSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+        self._sc.checkSingleStringSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleSpectrumField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
 
         
         f.close()
@@ -932,9 +1010,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </attribute>
         <attribute type="NX_INT32" name="init_spectrum_int32">
-          <dimensions rank="1">
-            <dim value="256" index="1"/>
-          </dimensions>
+          <dimensions rank="1" />
           <strategy mode="INIT"/>
           <datasource type="CLIENT">
             <record name="mca_int"/>
@@ -953,9 +1029,7 @@ class FieldTagWriterTest(unittest.TestCase):
       </group>
       <field type="NX_FLOAT" name="counter">
         <attribute type="NX_FLOAT32" name="spectrum_float32">
-          <dimensions rank="1">
-            <dim value="1024" index="1"/>
-          </dimensions>
+          <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
             <record name="mca_float"/>
@@ -1070,10 +1144,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
         <field units="" type="NX_INT16" name="pco_int16">
-          <dimensions rank="2">
-            <dim value="10" index="1"/>
-            <dim value="8" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="STEP" compression="true" grows="3"/>
           <datasource type="CLIENT">
             <record name="pco_int"/>
@@ -1153,10 +1224,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
 
         <field units="" type="NX_INT64" name="init_pco_int64">
-          <dimensions rank="2">
-            <dim value="10" index="1"/>
-            <dim value="8" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="INIT" compression="true" rate="3"/>
           <datasource type="CLIENT">
             <record name="pco_int"/>
@@ -1248,10 +1316,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
         <field units="" type="NX_FLOAT64" name="pco_float64">
-          <dimensions rank="2">
-            <dim value="20" index="1"/>
-            <dim value="30" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="STEP" grows="3"/>
           <datasource type="CLIENT">
             <record name="pco_float"/>
@@ -1280,10 +1345,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
         <field units="" type="NX_FLOAT64" name="final_pco_float64">
-          <dimensions rank="2">
-            <dim value="20" index="1"/>
-            <dim value="30" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="FINAL" />
           <datasource type="CLIENT">
             <record name="pco_float"/>
@@ -1355,10 +1417,7 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
         <field units="" type="ISO8601" name="isotime">
           <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
-          <dimensions rank="2">
-            <dim value="3" index="1"/>
-            <dim value="4" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <datasource type="CLIENT">
             <record name="timestamps"/>
           </datasource>
@@ -1384,6 +1443,14 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="" type="NX_BOOLEAN" name="flags_dim">
+          <strategy mode="STEP"/>
+          <dimensions rank="2" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
 
 
         <field units="" type="NX_CHAR" name="init_string_time">
@@ -1398,6 +1465,28 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
         <field units="" type="NX_BOOLEAN" name="final_flags">
           <strategy mode="FINAL"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_CHAR" name="final_string_time">
+          <strategy mode="FINAL" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="init_flags">
+          <strategy mode="INIT"/>
           <dimensions rank="2">
             <dim value="3" index="1"/>
             <dim value="4" index="2"/>
@@ -1429,7 +1518,10 @@ class FieldTagWriterTest(unittest.TestCase):
                    [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
         
 
-        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  +'"timestamps":' + str(dates[0]).replace("'","\"") \
+                                  + ', "logicals":' + str(logical[0]).replace("'","\"")
+                                  + '  } }')
 
         
 
@@ -1440,7 +1532,10 @@ class FieldTagWriterTest(unittest.TestCase):
             
 
         
-        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
+        self.closeWriter(tdw, json = '{"data": {'\
+                             +'"timestamps":' + str(dates[0]).replace("'","\"") \
+                             + ', "logicals":' + str(logical[0]).replace("'","\"") \
+                             + '  } }')
             
 
 
@@ -1448,14 +1543,17 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 42)
+        det = self._sc.checkFieldTree(f, fname , 48)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkImageField(det, "flags_dim", "bool", "NX_BOOLEAN", logical)
 
         self._sc.checkSingleStringImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleImageField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+        self._sc.checkSingleStringImageField(det, "final_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleImageField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
         
         f.close()
         os.remove(fname)
@@ -1486,6 +1584,17 @@ class FieldTagWriterTest(unittest.TestCase):
             <dim value="8" index="2"/>
           </dimensions>
           <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_INT32" name="image_int32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
           <datasource type="CLIENT">
             <record name="pco_int"/>
           </datasource>
@@ -1523,6 +1632,17 @@ class FieldTagWriterTest(unittest.TestCase):
             <dim value="8" index="2"/>
           </dimensions>
           <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_UINT64" name="image_uint64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
           <datasource type="CLIENT">
             <record name="pco_int"/>
           </datasource>
@@ -1583,14 +1703,16 @@ class FieldTagWriterTest(unittest.TestCase):
         
         # check the created file
         f = open_file(fname,readonly=True)
-        det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
+        det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
         self._sc.checkImageAttribute(det, "image_float", "float64", self._fpco1[steps-1],
                                       error = 1.e-14)
         self._sc.checkImageAttribute(det, "image_int", "int64", self._pco1[0])
         self._sc.checkImageAttribute(det, "image_bool", "bool", logical)
+        self._sc.checkImageAttribute(det, "image_int32", "int32", self._pco1[steps-1])
         self._sc.checkImageAttribute(field, "image_float32", "float32", self._fpco1[steps-1],
                                       error = 1.e-6)
         self._sc.checkImageAttribute(field, "image_uint32", "uint32", self._pco1[steps-1])
+        self._sc.checkImageAttribute(field, "image_uint64", "uint64", self._pco1[0])
         self._sc.checkImageAttribute(field, "image_bool", "bool", logical)
         # STRING NOT SUPPORTED BY PNINX
     
