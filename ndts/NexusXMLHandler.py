@@ -42,7 +42,8 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param datasources datasource pool
     # \param groupTypes map of NXclass : name
     # \param parser instance of sax.xmlreader
-    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , parser = None):
+    # \param globalJSON global json string
+    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , parser = None, globalJSON = None):
         sax.ContentHandler.__init__(self)
 
         
@@ -64,6 +65,8 @@ class NexusXMLHandler(sax.ContentHandler):
         ## xmlreader
         self._parser = parser
         self._innerHander = None
+        
+        self._json = globalJSON
 
         ## tags with innerxml as its input
         self._withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
@@ -202,7 +205,7 @@ class NexusXMLHandler(sax.ContentHandler):
             inner = self._withXMLinput[self._storedName](self._storedName, self._storedAttrs, self._last())
             if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
                 inner.setDataSources(self._datasources)
-            res = inner.store(xml)
+            res = inner.store(xml, self._json)
             if hasattr(inner, "setDecoders") and callable(inner.setDecoders):
                 inner.setDecoders(self._decoders)
             if res:

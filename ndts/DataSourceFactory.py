@@ -39,10 +39,13 @@ class DataSourceFactory(Element):
 
     ##  sets the datasource form xml string
     # \param xml input parameter   
-    def store(self, xml):
+    # \param globalJSON global JSON string
+    def store(self, xml, globalJSON = None):
         self.createDSource(self.tagName, self._tagAttrs)
         jxml = "".join(xml)
         self._last.source.setup(jxml)
+        if hasattr(self._last.source,"setJSON") and globalJSON:
+            self._last.source.setJSON(globalJSON)
         if self._last and hasattr(self._last,"tagAttributes"):
             self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
 

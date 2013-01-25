@@ -674,7 +674,8 @@ class EDoc(Element):
 
     ## stores the tag content
     # \param xml xml setting
-    def store(self, xml):
+    # \param globalJSON global JSON string
+    def store(self, xml, globalJSON = None):
         if self._beforeLast():
             self._beforeLast().doc +=  "".join(xml[1])            
 

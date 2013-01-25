@@ -132,7 +132,7 @@ class TangoDataWriter(object):
             parser = sax.make_parser()
  
             handler = NexusXMLHandler(self._eFile, self._datasources, self._decoders, 
-                                      fetcher.groupTypes, parser)
+                                      fetcher.groupTypes, parser, json.loads(self.json))
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
 

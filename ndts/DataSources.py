@@ -426,7 +426,6 @@ class ClientSource(DataSource):
     ## provides access to the data    
     # \returns  dictionary with collected data   
     def getData(self):
-        
         if  self._globalJSON and 'data' not in self._globalJSON.keys() :
             self._globalJSON = None
 

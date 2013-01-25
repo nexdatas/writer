@@ -636,6 +636,15 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_INT64" name="init_mca2_int64">
+          <dimensions rank="1"/>
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_iint"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -643,7 +652,7 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + '  } }')
+        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
 
         mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
         for mca in self._mca1:
@@ -659,7 +668,7 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 12)
+        det = self._sc.checkFieldTree(f, fname , 13)
         self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
         self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
