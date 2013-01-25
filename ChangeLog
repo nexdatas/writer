@@ -2,7 +2,6 @@
 	* adding support for dimension casting
 	* fetching a shape of the client datasource from the global JSON string
 	* allowing storing client attributes of numeric types
-	* adding tests
 	* tagged as 1.0.8
 
 

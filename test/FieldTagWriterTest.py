@@ -520,7 +520,7 @@ class FieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
         print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
-        fname= '%s/clientintscpectrum.h5' % os.getcwd()   
+        fname= '%s/clientintspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -681,11 +681,12 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
 
         self._sc.checkSingleSpectrumField(det, "init_mca_int64", "int64", "NX_INT64", self._mca1[0])
+        self._sc.checkSingleSpectrumField(det, "init_mca2_int64", "int64", "NX_INT64", self._mca1[0])
         self._sc.checkSingleSpectrumField(det, "final_mca_uint32", "uint32", "NX_UINT32", mca2[0])
 
         
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
 
 
 

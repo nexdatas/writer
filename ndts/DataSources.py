@@ -440,9 +440,10 @@ class ClientSource(DataSource):
         else:
             return    
         ntp = NTP()
-        rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
+        rank, shape, pythonDType = ntp.arrayRankRShape(rec)
+        
         if rank in NTP.rTf:
-            shape = rshape.reverse()
+            shape.reverse()
             if  shape is None:
                 shape = [1,0]
             return {"format":NTP.rTf[rank], "value":rec, 

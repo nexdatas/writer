@@ -103,5 +103,5 @@ class NTP(object):
             shape.append(len(array))
             rank += 1
         else:
-           pythonDType = type(array)
+            pythonDType = type(array)
         return (rank, shape, pythonDType)            
