@@ -161,14 +161,15 @@ class FElementWithAttr(FElement):
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
-###                    print "ATTR",key ,self._h5Instances[key.encode()].dtype, dh.cast(self._h5Instances[key.encode()].dtype)    
                     self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
+#                    print "ATTR",key ,self._h5Instances[key.encode()].dtype, dh.cast(self._h5Instances[key.encode()].dtype)    
                 else:
                     shape = self.tagAttributes[key][2]
                     self._h5Instances[key.encode()] = self.h5Object.attr(
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode(), 
                         shape)
                     val = self.tagAttributes[key][1].strip().encode()
+#                    print "ATTR MD",key, shape ,self._h5Instances[key.encode()].dtype, True if val else False , val
                     if val:
                         rank = len(shape)
                         if not rank or rank == 0:
@@ -628,12 +629,20 @@ class EAttribute(FElement):
                     self.h5Object = self._last.h5Attribute(self.name)
                 if self.source:
                     dh = DataHolder(**self.source.getData())
+
                     if not dh:
                         message = self.setMessage()
                         print message[0]
                         self.error = message
                     else:
-                        self.h5Object.value = dh.cast(self.h5Object.dtype)
+                        arr = dh.cast(self.h5Object.dtype)
+                        if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
+                            self.h5Object.value = arr
+                        else:
+                            ## pninx does not support this case
+#                            self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
+                            self.h5Object.value = arr
+                            raise Exception("Storing multi-dimension string attributes not supported by pninx")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print message[0]

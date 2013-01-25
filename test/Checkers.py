@@ -173,7 +173,6 @@ class Checker(object):
     # \param det detector group
     # \param name field name
     # \param dtype numpy type
-    # \param nxtype nexus type
     # \param values  original values
     # \param error data precision
     def checkScalarAttribute(self, det, name, dtype, values, error = 0):
@@ -201,6 +200,72 @@ class Checker(object):
         else:
             self._tc.assertEqual(values, cnt.value)
             
+
+    ## checks  spectrum attribute
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param values  original values
+    # \param error data precision
+    def checkSpectrumAttribute(self, det, name, dtype, values, error = 0):
+
+        cnt = det.attr(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 1)
+        self._tc.assertEqual(cnt.shape, (len(values),))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        # pninx is not supporting reading string areas 
+
+
+        for i in range(len(values)):
+#            print name, i, values[i],  cnt.value[i]
+            if dtype != "string" and self._isNumeric(cnt.value[i]):
+                if dtype == "bool":
+                    self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt.value[i])
+                else:
+                    self._tc.assertTrue(abs(values[i] - cnt.value[i]) <= error)
+            else:
+                self._tc.assertEqual(values[i], cnt.value[i])
+            
+            
+
+
+    ## checks  image attribute
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param values  original values
+    # \param error data precision
+    def checkImageAttribute(self, det, name, dtype, values, error = 0):
+
+        cnt = det.attr(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 2)
+        self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        # pninx is not supporting reading string areas 
+
+
+        
+        for i in range(len(values)):
+            for j in range(len(values[i])):
+#                print i, j, cnt[i,j], values[i][j]
+                if dtype != "string" and self._isNumeric(cnt.value[i,0]):
+                    if dtype == "bool":
+                        self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt.value[i,j])
+                    else:
+                        self._tc.assertTrue(abs(values[i][j] - cnt.value[i,j]) <= error)
+                else:
+                    self._tc.assertEqual(values[i][j], cnt.value[i,j])
+            
+
+
+
+
 
 
 
