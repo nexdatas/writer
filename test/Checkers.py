@@ -521,6 +521,22 @@ class Checker(object):
         self._tc.assertEqual(at.name, "units")
         self._tc.assertEqual(at.value, "m")
         
+        if not isinstance(values, str):
+            value = cnt.read()
+            if self._isNumeric(value):
+                self._tc.assertTrue(abs(values - value) <= error)
+            else:
+                self._tc.assertEqual(values,value)
+        if self._isNumeric(cnt.read()):
+            if not self._isNumeric(values):
+#                    print "BOOL: ", values[i] ,cnt[i]
+                self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
+            else:
+                self._tc.assertTrue(abs(values - cnt.read()) <= error)
+        else:
+            self._tc.assertEqual(values, cnt.read())
+            
+
         
 
 

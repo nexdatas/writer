@@ -131,6 +131,33 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         <field units="m" type="NX_UINT64" name="ucounter64">
           12
         </field>
+        <field units="m" type="NX_FLOAT" name="float">
+         -12.3
+        </field>
+        <field units="m" type="NX_FLOAT32" name="float32">
+         -12.3
+        </field>
+        <field units="m" type="NX_FLOAT64" name="float64">
+         -12.3
+        </field>
+        <field units="m" type="NX_NUMBER" name="number">
+         -12.3
+        </field>
+
+        <field units="m" type="NX_DATE_TIME" name="time">
+             string,string  
+        </field>
+        <field units="m" type="ISO8601" name="isotime">
+             string,string  
+        </field>
+        <field units="m" type="NX_CHAR" name="string_time">
+             string,string  
+        </field>
+        <field units="m" type="NX_BOOLEAN" name="flags">
+          True
+        </field>
+
+
 
       </group>
     </group>
@@ -138,35 +165,48 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
 
+
+
+
         uc = 12
+        mc = -12
+        fc = -12.3
+        string = "string,string"
         tdw = self.openWriter(fname, xml)
 
         flip = True    
         for c in self._counter:
-            uc = abs(c)
             self.record(tdw,'{ }')
-            flip = not flip
 
-        uc = abs(self._counter[0])
         self.closeWriter(tdw)
         
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 11)
-        self._sc.checkXMLScalarField(det, "counter", "int64", "NX_INT", -uc)
-        self._sc.checkXMLScalarField(det, "counter8", "int8", "NX_INT8", -uc)
-        self._sc.checkXMLScalarField(det, "counter16", "int16", "NX_INT16", -uc)
-        self._sc.checkXMLScalarField(det, "counter32", "int32", "NX_INT32", -uc)
-        self._sc.checkXMLScalarField(det, "counter64", "int64", "NX_INT64", -uc)
+        det = self._sc.checkFieldTree(f, fname , 19)
+        self._sc.checkXMLScalarField(det, "counter", "int64", "NX_INT", mc)
+        self._sc.checkXMLScalarField(det, "counter8", "int8", "NX_INT8", mc)
+        self._sc.checkXMLScalarField(det, "counter16", "int16", "NX_INT16", mc)
+        self._sc.checkXMLScalarField(det, "counter32", "int32", "NX_INT32", mc)
+        self._sc.checkXMLScalarField(det, "counter64", "int64", "NX_INT64", mc)
         self._sc.checkXMLScalarField(det, "ucounter", "uint64", "NX_UINT", uc)
         self._sc.checkXMLScalarField(det, "ucounter8", "uint8", "NX_UINT8", uc)
         self._sc.checkXMLScalarField(det, "ucounter16", "uint16", "NX_UINT16", uc)
         self._sc.checkXMLScalarField(det, "ucounter32", "uint32", "NX_UINT32", uc)
         self._sc.checkXMLScalarField(det, "ucounter64", "uint64", "NX_UINT64",uc)
-       
+
+        self._sc.checkXMLScalarField(det, "float", "float64", "NX_FLOAT", fc, 1.0e-14)
+        self._sc.checkXMLScalarField(det, "float64", "float64", "NX_FLOAT64", fc, 1.0e-14)
+        self._sc.checkXMLScalarField(det, "float32", "float32", "NX_FLOAT32", fc, 1.0e-06)
+        self._sc.checkXMLScalarField(det, "number", "float64", "NX_NUMBER", fc, 1.0e-14)
+
+        self._sc.checkXMLScalarField(det, "time", "string", "NX_DATE_TIME", string)
+        self._sc.checkXMLScalarField(det, "isotime", "string", "ISO8601",  string)
+        self._sc.checkXMLScalarField(det, "string_time", "string", "NX_CHAR",  string)
+        self._sc.checkXMLScalarField(det, "flags", "bool", "NX_BOOLEAN", True)
+      
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
 
 
 if __name__ == '__main__':
