@@ -202,6 +202,73 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
+    def test_xmlAttrScalar(self):
+        print "Run: %s.test_xmlAttrScalar() " % self.__class__.__name__
+        fname= '%s/xmlattrscalar.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <attribute type="NX_FLOAT" name="scalar_float">
+            -1.3e-1
+        </attribute>
+        <attribute type="NX_CHAR" name="scalar_string">
+          Let's go.
+        </attribute>
+        <attribute type="NX_INT" name="scalar_int">
+          -12
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="flag">
+           True   
+        </attribute>
+      </group>
+      <field type="NX_FLOAT" name="counter">
+        <attribute type="NX_FLOAT32" name="scalar_float32">
+            -1.3e-1
+        </attribute>
+        <attribute type="NX_CHAR" name="scalar_string">
+          Let's go.
+        </attribute>
+        <attribute type="NX_INT8" name="scalar_int8">
+          -12
+        </attribute>
+        1.2
+      </field>
+    </group>
+  </group>
+</definition>
+"""
+        fls = -1.3e-1
+        ins = -12
+        sts = "Let's go."
+        ls = True
+
+        tdw = self.openWriter(fname, xml)
+        for i in range(3):
+            self.record(tdw,'{}')
+        
+        self.closeWriter(tdw)
+            
+
+        
+        # check the created file
+        f = open_file(fname,readonly=True)
+        det, field = self._sc.checkAttributeTree(f, fname, 4,3)
+        self._sc.checkScalarAttribute(det, "scalar_float", "float64", fls,  error = 1.e-14)
+        self._sc.checkScalarAttribute(det, "scalar_string", "string", sts)
+        self._sc.checkScalarAttribute(det, "scalar_int", "int64", ins)
+        self._sc.checkScalarAttribute(det, "flag", "bool", ls)
+        self._sc.checkScalarAttribute(field, "scalar_float32", "float32", fls, error = 1.e-6)
+        self._sc.checkScalarAttribute(field, "scalar_string", "string", sts)
+        self._sc.checkScalarAttribute(field, "scalar_int8", "int8", ins)
+    
+        f.close()
+        os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
     def test_xmlSpectrum(self):
         print "Run: %s.test_xmlSpectrum() " % self.__class__.__name__
         fname= '%s/xmlspectrum.h5' % os.getcwd()   
@@ -421,6 +488,100 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         
         f.close()
         os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_xmlAttrSpectrum(self):
+        print "Run: %s.test_xmlAttrSpectrum() " % self.__class__.__name__
+        fname= '%s/xmlattrspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <attribute type="NX_FLOAT" name="spectrum_float">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </attribute>
+        <attribute type="NX_INT32" name="init_spectrum_int32">
+          <dimensions rank="1" />
+          <strategy mode="INIT"/>
+            1 2 3 4 5
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="spectrum_bool">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          True False 1  0
+        </attribute>
+
+      </group>
+      <field type="NX_FLOAT" name="counter">
+        <attribute type="NX_FLOAT32" name="spectrum_float32">
+          <dimensions rank="1" />
+          <strategy mode="STEP"/>
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </attribute>
+        <attribute type="NX_UINT64" name="final_spectrum_uint64">
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+            1 2 3 4 5
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="final_spectrum_bool">
+          <dimensions rank="1" />
+          <strategy mode="FINAL"/>
+          True False 1  0
+        </attribute>
+        1.2
+      </field>
+    </group>
+  </group>
+</definition>
+"""
+
+#        <attribute type="NX_CHAR" name="flag_spectrum_string">
+#          <dimensions rank="1">
+#            <dim value="8" index="1"/>
+#          </dimensions>
+#        </attribute>
+
+        spec = [2.344e-4, 234.34, -34.4e+3, -0.34]
+        ins = [1,2,3,4,5]
+        ls = [True, False, True, False]
+        
+        tdw = self.openWriter(fname, xml)
+        for i in range(3):
+            self.record(tdw,'{ }')
+        
+        self.closeWriter(tdw)
+
+
+        
+        # check the created file
+        f = open_file(fname,readonly=True)
+        det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
+        self._sc.checkSpectrumAttribute(det, "spectrum_float", "float64", spec,
+                                      error = 1.e-14)
+        self._sc.checkSpectrumAttribute(det, "init_spectrum_int32", "int32", ins)
+        self._sc.checkSpectrumAttribute(det, "spectrum_bool", "bool", ls)
+        self._sc.checkSpectrumAttribute(field, "spectrum_float32", "float32", spec,
+                                      error = 1.e-5)
+        self._sc.checkSpectrumAttribute(field, "final_spectrum_uint64", "uint64", ins)
+        self._sc.checkSpectrumAttribute(field, "final_spectrum_bool", "bool", ls)
+        ## NOT SUPPORTED BY PNINX
+#        self._sc.checkSpectrumAttribute(field, "flag_spectrum_string", "string", logical)
+    
+        f.close()
+#        os.remove(fname)
+
+
 
 
 
@@ -678,6 +839,147 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 
         f.close()
         os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_xmlAttrImage(self):
+        print "Run: %s.test_xmlAttrImage() " % self.__class__.__name__
+        fname= '%s/xmlattrimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <attribute type="NX_FLOAT" name="image_float">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="3" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          -3.43 -3.3e-1 53.1
+          3.43e+02 3.13e-1 53
+        </attribute>
+
+        <attribute type="NX_INT" name="image_int">
+          <dimensions rank="2" />
+          <strategy mode="FINAL"/>
+          11 12
+          21 22
+          31 32
+        </attribute>
+
+        <attribute type="NX_INT32" name="image_int32">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          11 12
+          21 22
+          31 32
+        </attribute>
+
+
+
+        <attribute type="NX_BOOLEAN" name="image_bool">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+         True False 1 0
+         FALSE TRUE false true
+         0 1 1 0  
+        </attribute>
+
+      </group>
+      <field type="NX_FLOAT" name="counter">
+        <attribute type="NX_FLOAT32" name="image_float32">
+          <dimensions rank="2" />
+          <strategy mode="STEP"/>
+          -3.43 -3.3e-1 53.1
+          3.43e+02 3.13e-1 53
+        </attribute>
+
+        <attribute type="NX_UINT32" name="image_uint32">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          11 12
+          21 22
+          31 32
+        </attribute>
+
+        <attribute type="NX_UINT64" name="image_uint64">
+          <dimensions rank="2"/>
+          <strategy mode="FINAL"/>
+          11 12
+          21 22
+          31 32
+        </attribute>
+
+
+        <attribute type="NX_BOOLEAN" name="image_bool">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="INIT"/>
+         True False 1 0
+         FALSE TRUE false true
+         0 1 1 0  
+        </attribute>
+
+        1.2
+      </field>
+    </group>
+  </group>
+</definition>
+"""
+
+#        <attribute type="NX_CHAR" name="flag_spectrum_string">
+#          <dimensions rank="1">
+#            <dim value="8" index="1"/>
+#          </dimensions>
+#          <strategy mode="STEP"/>
+#        </attribute>
+
+
+        image =  [[11,12],[21,22], [31,32]]
+        fimage =  [[-3.43, -3.3e-1, 53.1],[3.43e+02, 3.13e-1, 53]]
+        bimage= [[True, False, True,False],
+                 [False, True, False, True],
+                 [False, True, True, False]]
+
+
+        tdw = self.openWriter(fname, xml)
+        for i in range(3):
+            self.record(tdw,'{ }')
+        
+        self.closeWriter(tdw)
+
+
+        
+        # check the created file
+        f = open_file(fname,readonly=True)
+        det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
+        self._sc.checkImageAttribute(det, "image_float", "float64", fimage,
+                                      error = 1.e-14)
+        self._sc.checkImageAttribute(det, "image_int", "int64", image)
+        self._sc.checkImageAttribute(det, "image_bool", "bool", bimage)
+        self._sc.checkImageAttribute(det, "image_int32", "int32", image)
+        self._sc.checkImageAttribute(field, "image_float32", "float32", fimage,
+                                      error = 1.e-5)
+        self._sc.checkImageAttribute(field, "image_uint32", "uint32", image)
+        self._sc.checkImageAttribute(field, "image_uint64", "uint64", image)
+        self._sc.checkImageAttribute(field, "image_bool", "bool", bimage)
+        # STRING NOT SUPPORTED BY PNINX
+    
+        f.close()
+#        os.remove(fname)
 
 
 
