@@ -41,15 +41,8 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-        self._counter =  [1,-2,6,-8,9,-11]
-        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._sc = Checker(self)
-        self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
-        self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
-        self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
-#        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
-        self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
-        self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
+
 
     ## test starter
     # \brief Common set up
@@ -145,13 +138,13 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         </field>
 
         <field units="m" type="NX_DATE_TIME" name="time">
-             string,string  
+             string, string  
         </field>
         <field units="m" type="ISO8601" name="isotime">
-             string,string  
+             string, string  
         </field>
         <field units="m" type="NX_CHAR" name="string_time">
-             string,string  
+             string, string  
         </field>
         <field units="m" type="NX_BOOLEAN" name="flags">
           True
@@ -168,11 +161,11 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         uc = 12
         mc = -12
         fc = -12.3
-        string = "string,string"
+        string = "string, string"
         tdw = self.openWriter(fname, xml)
 
         flip = True    
-        for c in self._counter:
+        for c in range(4):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
@@ -281,6 +274,95 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 
 
 
+        <field units="" type="NX_FLOAT" name="mca_float">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3"/>
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </field>
+        <field units="" type="NX_FLOAT32" name="mca_float32">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" grows="2" shuffle="true"/>
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </field>
+        <field units="" type="NX_FLOAT64" name="mca_float64">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" grows="2"/>
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </field>
+        <field units="" type="NX_NUMBER" name="mca_number">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" />
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </field>
+
+        <field units="" type="NX_FLOAT" name="mca_float_dim">
+          <dimensions rank="1"/>
+          <strategy mode="FINAL" />
+           2.344e-4 234.34 -34.4e+3  -0.34
+        </field>
+
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          Let's us check it,.
+        </field>
+
+
+
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          Let's us check it,.
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          Let's us check it,.
+        </field>
+
+
+
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          True False 1  0
+        </field>
+
+        <field units="" type="NX_BOOLEAN" name="flags_dim">
+          <dimensions rank="1" />
+          <strategy mode="STEP" />
+          True False 1  0
+        </field>
+
+        <field units="" type="NX_CHAR" name="string_time_dim">
+          <strategy mode="STEP" grows="2"/>
+          <dimensions rank="1"/>
+          Let's us check it,.
+        </field>
+
+
+
+
+
+
+
 
       </group>
     </group>
@@ -288,11 +370,12 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
         
+        spec = [2.344e-4, 234.34, -34.4e+3, -0.34]
+        string = ["Let's", "us", "check", "it,."]
 
         tdw = self.openWriter(fname, xml)
-
-        mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
-        for mca in self._mca1:
+        
+        for c in range(3):
             self.record(tdw,'{}')
         
         self.closeWriter(tdw)
@@ -303,7 +386,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 11)
+        det = self._sc.checkFieldTree(f, fname , 22)
         self._sc.checkXMLSpectrumField(det, "mca_int", "int64", "NX_INT", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int8", "int8", "NX_INT8",  [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int16", "int16", "NX_INT16", [1,2,3,4,5])
@@ -315,6 +398,25 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         self._sc.checkXMLSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", [1,2,3,4,5])
+
+
+        self._sc.checkXMLSpectrumField(det, "mca_float", "float64", "NX_FLOAT", spec,
+                                    error = 1.0e-14)
+        self._sc.checkXMLSpectrumField(det, "mca_float_dim", "float64", "NX_FLOAT", spec,
+                                    error = 1.0e-14)
+        self._sc.checkXMLSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", spec,
+                                    error = 1.0e-5)
+        self._sc.checkXMLSpectrumField(det, "mca_float64", "float64", "NX_FLOAT64", spec,
+                                    error = 1.0e-14)
+        self._sc.checkXMLSpectrumField(det, "mca_number", "float64", "NX_NUMBER", spec,
+                                    error = 1.0e-14)
+
+
+        self._sc.checkXMLSpectrumField(det, "flags", "bool", "NX_BOOLEAN",[True,False,True,False] )
+        self._sc.checkXMLSpectrumField(det, "time", "string", "NX_DATE_TIME", string)
+        self._sc.checkXMLSpectrumField(det, "string_time", "string", "NX_CHAR", string)
+        self._sc.checkXMLSpectrumField(det, "isotime", "string", "ISO8601", string)
+        self._sc.checkXMLSpectrumField(det, "string_time_dim", "string", "NX_CHAR", string)
 
         
         f.close()

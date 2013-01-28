@@ -125,6 +125,7 @@ class FElement(Element):
                 else:
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
+        
         elif extraD:            
             shape = [0]
         return shape
@@ -300,7 +301,6 @@ class EField(FElementWithAttr):
 
         # shape and chunk
         shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
-
         if len(shape) > 1 and tp.encode() == "string":
             self._splitArray = True
             shape = self._findShape(self.rank, self.lengths, self._extraD)
@@ -338,8 +338,7 @@ class EField(FElementWithAttr):
         if self.strategy == "POSTRUN":
             self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
 
-
-
+            
 
         # return strategy or fill the value in
         if self.source:
@@ -357,8 +356,20 @@ class EField(FElementWithAttr):
                     lines = val.split("\n")
                     image = [ln.split() for ln in lines ]
                     dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
-    
-                self.h5Object.write(dh.cast(self.h5Object.dtype))
+
+
+                if self.h5Object.dtype != "string" or not self.rank or int(self.rank) == 0:
+                    self.h5Object.write(dh.cast(self.h5Object.dtype))
+                elif int(self.rank) == 1:
+                    sts = dh.cast(self.h5Object.dtype)
+                    for i in range(len(sts)):
+                        self.h5Object[i] = sts[i] 
+                elif int(self.rank) == 2:        
+                    sts = dh.cast(self.h5Object.dtype)
+                    for i in range(len(sts)):
+                        for j in range(len(sts[i])):
+                            self.h5Object[i,j] = sts[i][j] 
+
             elif self.strategy != "POSTRUN": 
 #                raise ValueError,"Warning: Invalid datasource for %s" % nm
                 print "Warning: Invalid datasource for ", nm
