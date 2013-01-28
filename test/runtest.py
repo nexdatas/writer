@@ -43,6 +43,7 @@ import unittest
 
 import TangoDataWriterTest
 import ClientFieldTagWriterTest
+import XMLFieldTagWriterTest
 import TangoFieldTagWriterTest
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -50,6 +51,7 @@ if "MYSQL" in DB_AVAILABLE:
 if PYTANGO_AVAILABLE:
     import TangoDataServerTest
     import ClientFieldTagServerTest
+    import XMLFieldTagServerTest
     import TangoFieldTagServerTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
@@ -74,6 +76,9 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
+
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
@@ -84,6 +89,9 @@ def main():
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )
