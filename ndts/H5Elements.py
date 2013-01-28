@@ -95,6 +95,7 @@ class FElement(Element):
                 if extraD:
                     shape.insert(exDim-1,0)    
             except:
+                val = ("".join(self.content)).strip().encode()   
                 if self.source and self.source.isValid():
 #                    try:
                     dh = DataHolder(**self.source.getData())
@@ -111,6 +112,16 @@ class FElement(Element):
                             shape = [0]
                         else:    
                             shape.insert(exDim-1,0)    
+                elif val:
+                    if not rank or int(rank) == 0:
+                        shape = [1]
+                    elif  int(rank) == 1:
+                        spec = val.split()
+                        shape = [len(spec)]
+                    elif int(rank) == 2:
+                        lines = val.split("\n")
+                        image = [ln.split() for ln in lines ]
+                        shape = [len(image),len(image[0])]
                 else:
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
@@ -269,7 +280,7 @@ class EField(FElementWithAttr):
     # \param xml xml setting 
     # \returns (strategy, trigger)
     def store(self, xml = None):
-            
+        
         # if growing in extra dimension
         self._extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":

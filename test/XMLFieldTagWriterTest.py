@@ -158,14 +158,11 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-
       </group>
     </group>
   </group>
 </definition>
 """
-
-
 
 
         uc = 12
@@ -207,6 +204,123 @@ class XMLFieldTagWriterTest(unittest.TestCase):
       
         f.close()
 #        os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_xmlSpectrum(self):
+        print "Run: %s.test_xmlSpectrum() " % self.__class__.__name__
+        fname= '%s/xmlspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="mca_int">
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_INT8" name="mca_int8">
+          <strategy mode="INIT" compression="true"/>
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_INT16" name="mca_int16">
+          <dimensions rank="1" />
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_INT32" name="mca_int32">
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_INT64" name="mca_int64">
+          <dimensions rank="1"/>
+            1 2 3 4 5
+        </field>
+
+        <field units="" type="NX_UINT" name="mca_uint">
+          <strategy mode="INIT" compression="true" rate="2"/>
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_UINT8" name="mca_uint8">
+          <dimensions rank="1"/>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_UINT16" name="mca_uint16">
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_UINT32" name="mca_uint32">
+          <dimensions rank="1">
+          </dimensions>
+            1 2 3 4 5
+        </field>
+        <field units="" type="NX_UINT64" name="mca_uint64">
+          <strategy mode="INIT" compression="true" rate="5" shuffle="false"/>
+          <dimensions rank="1">
+            <dim value="5" index="1"/>
+          </dimensions>
+            1 2 3 4 5
+        </field>
+
+        <field units="" type="NX_INT64" name="mca_int64_dim">
+          <dimensions rank="1"/>
+            1 2 3 4 5
+        </field>
+
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+
+        tdw = self.openWriter(fname, xml)
+
+        mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
+        for mca in self._mca1:
+            self.record(tdw,'{}')
+        
+        self.closeWriter(tdw)
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 11)
+        self._sc.checkXMLSpectrumField(det, "mca_int", "int64", "NX_INT", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int8", "int8", "NX_INT8",  [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int16", "int16", "NX_INT16", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int32", "int32", "NX_INT32", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int64", "int64", "NX_INT64", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint", "uint64", "NX_UINT",  [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8",  [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", [1,2,3,4,5])
+
+        
+        f.close()
+#        os.remove(fname)
+
+
 
 
 if __name__ == '__main__':
