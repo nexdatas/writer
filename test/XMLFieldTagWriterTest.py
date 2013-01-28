@@ -196,7 +196,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         self._sc.checkXMLScalarField(det, "flags", "bool", "NX_BOOLEAN", True)
       
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
@@ -420,7 +420,266 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 
         
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_xmlImage(self):
+        print "Run: %s.test_xmlImage() " % self.__class__.__name__
+        fname= '%s/xmlimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <field units="" type="NX_INT" name="pco_int">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          11 12
+          21 22
+          31 32
+        </field>
+
+        <field units="" type="NX_INT8" name="pco_int8">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="2"/>
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_INT16" name="pco_int16">
+          <dimensions rank="2" />
+          <strategy mode="STEP" compression="true" grows="3"/>
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_INT32" name="pco_int32">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_INT64" name="pco_int64">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          11 12
+          21 22
+          31 32
+        </field>
+
+        <field units="" type="NX_UINT" name="pco_uint">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_UINT8" name="pco_uint8">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3"/>
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_UINT16" name="pco_uint16">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"/>
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_UINT32" name="pco_uint32">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          11 12
+          21 22
+          31 32
+        </field>
+        <field units="" type="NX_UINT64" name="pco_uint64">
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="2" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"  grows="3"/>
+          11 12
+          21 22
+          31 32
+        </field>
+
+
+
+        <field units="" type="NX_FLOAT" name="pco_float">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="3" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          -3.43 -3.3e-1 53.1
+          3.43e+02 3.13e-1 53
+        </field>
+        <field units="" type="NX_FLOAT32" name="pco_float32">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="3" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          -3.43 -3.3e-1 53.1
+          3.43e+02 3.13e-1 53
+        </field>
+        <field units="" type="NX_FLOAT64" name="pco_float64">
+          <dimensions rank="2" />
+          <strategy mode="STEP" grows="3"/>
+          -3.43 -3.3e-1 53.1
+          3.43e+02 3.13e-1 53
+        </field>
+        <field units="" type="NX_NUMBER" name="pco_number">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="3" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"  grows = "1" />
+          -3.43 -3.3e-1 53.1
+          3.43e+02 3.13e-1 53
+        </field>
+
+
+
+        <field units="" type="NX_DATE_TIME" name="time">
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          Let's us check it,
+          and test it here.
+          , . : ;
+        </field>
+        <field units="" type="ISO8601" name="isotime">
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
+          <dimensions rank="2" />
+          Let's us check it,
+          and test it here.
+          , . : ;
+        </field>
+        <field units="" type="NX_CHAR" name="string_time">
+          <strategy mode="STEP" grows="2"/>
+          <dimensions rank="2"/>
+          Let's us check it,
+          and test it here.
+          , . : ;
+        </field>
+
+        <field units="" type="NX_BOOLEAN" name="flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+         True False 1 0
+         FALSE TRUE false true
+         0 1 1 0  
+        </field>
+
+        <field units="" type="NX_BOOLEAN" name="flags_dim">
+          <strategy mode="STEP"/>
+          <dimensions rank="2" />
+         True False 1 0
+         FALSE TRUE false true
+         0 1 1 0  
+        </field>
+
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+        image =  [[11,12],[21,22], [31,32]]
+        fimage =  [[-3.43, -3.3e-1, 53.1],[3.43e+02, 3.13e-1, 53]]
+        simage =  [["Let's", "us", "check", "it,"],        
+                   ["and", "test", "it", "here."],
+                   [",", ".", ":", ";"]]
+        bimage= [[True, False, True,False],
+                 [False, True, False, True],
+                 [False, True, True, False]]
+
+
+        tdw = self.openWriter(fname, xml)
+
+        for c in range(3):
+            self.record(tdw,'{}')
+        
+        self.closeWriter(tdw)
+            
+
+
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 28)
+        self._sc.checkXMLImageField(det, "pco_int", "int64", "NX_INT", image)
+        self._sc.checkXMLImageField(det, "pco_int8", "int8", "NX_INT8", image)
+        self._sc.checkXMLImageField(det, "pco_int16", "int16", "NX_INT16", image)
+        self._sc.checkXMLImageField(det, "pco_int32", "int32", "NX_INT32", image)
+        self._sc.checkXMLImageField(det, "pco_int64", "int64", "NX_INT64", image)
+        self._sc.checkXMLImageField(det, "pco_uint", "uint64", "NX_UINT", image)
+        self._sc.checkXMLImageField(det, "pco_uint8", "uint8", "NX_UINT8", image)
+        self._sc.checkXMLImageField(det, "pco_uint16", "uint16", "NX_UINT16", image)
+        self._sc.checkXMLImageField(det, "pco_uint32", "uint32", "NX_UINT32", image)
+        self._sc.checkXMLImageField(det, "pco_uint64", "uint64", "NX_UINT64", image)
+
+        self._sc.checkXMLImageField(det, "pco_float", "float64", "NX_FLOAT", fimage, 
+                                    error = 1.0e-14)
+        self._sc.checkXMLImageField(det, "pco_float32", "float32", "NX_FLOAT32",  fimage, 
+                                    error = 1.0e-5)
+        self._sc.checkXMLImageField(det, "pco_float64", "float64", "NX_FLOAT64",  fimage, 
+                                    error = 1.0e-14)
+        self._sc.checkXMLImageField(det, "pco_number", "float64", "NX_NUMBER",  fimage, 
+                                    error = 1.0e-14)
+
+        self._sc.checkXMLImageField(det, "flags", "bool", "NX_BOOLEAN", bimage)
+        self._sc.checkXMLStringImageField(det, "time", "string", "NX_DATE_TIME", simage)
+        self._sc.checkXMLStringImageField(det, "string_time", "string", "NX_CHAR", simage)
+        self._sc.checkXMLStringImageField(det, "isotime", "string", "ISO8601", simage)
+        self._sc.checkXMLImageField(det, "flags_dim", "bool", "NX_BOOLEAN", bimage)
+
+        f.close()
+        os.remove(fname)
+
+
 
 
 
