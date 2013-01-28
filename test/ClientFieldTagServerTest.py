@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file FieldTagServerTest.py
+## \file ClientFieldTagServerTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -32,15 +32,15 @@ from  xml.sax import SAXParseException
 from Checkers import Checker
 
 import ServerSetUp
-import FieldTagWriterTest
+import ClientFieldTagWriterTest
 
 ## test fixture
-class FieldTagServerTest(FieldTagWriterTest.FieldTagWriterTest):
+class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        FieldTagWriterTest.FieldTagWriterTest.__init__(self, methodName)
+        ClientFieldTagWriterTest.ClientFieldTagWriterTest.__init__(self, methodName)
 
         self._sv = ServerSetUp.ServerSetUp()
 

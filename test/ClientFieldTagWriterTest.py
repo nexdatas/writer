@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file FieldTagWriterTest.py
+## \file ClientFieldTagWriterTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -34,7 +34,7 @@ from ndts.TangoDataWriter  import TangoDataWriter
 from Checkers import Checker
 
 ## test fixture
-class FieldTagWriterTest(unittest.TestCase):
+class ClientFieldTagWriterTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method

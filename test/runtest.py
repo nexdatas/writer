@@ -42,14 +42,14 @@ except ImportError, e:
 import unittest
 
 import TangoDataWriterTest
-import FieldTagWriterTest
+import ClientFieldTagWriterTest
 import TangoFieldTagWriterTest
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
 
 if PYTANGO_AVAILABLE:
     import TangoDataServerTest
-    import FieldTagServerTest
+    import ClientFieldTagServerTest
     import TangoFieldTagServerTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
@@ -72,7 +72,7 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(FieldTagWriterTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
@@ -83,7 +83,7 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
 
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FieldTagServerTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )
