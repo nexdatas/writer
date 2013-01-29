@@ -253,6 +253,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         os.remove(fname)
 
 
+
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientAttrScalar(self):

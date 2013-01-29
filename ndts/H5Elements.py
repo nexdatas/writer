@@ -300,11 +300,22 @@ class EField(FElementWithAttr):
             raise XMLSettingSyntaxError, " Field without a name"
 
         # shape and chunk
-        shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
-        if len(shape) > 1 and tp.encode() == "string":
-            self._splitArray = True
-            shape = self._findShape(self.rank, self.lengths, self._extraD)
-            self.grows = 1
+        try:
+            shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
+            if len(shape) > 1 and tp.encode() == "string":
+                self._splitArray = True
+                shape = self._findShape(self.rank, self.lengths, self._extraD)
+                self.grows = 1
+        except XMLSettingSyntaxError, ex:
+            if self.strategy == "POSTRUN": 
+                self._splitArray = False
+                if self.rank and int(self.rank) >=0:
+                    shape = [0 for d in range(int(self.rank))]
+                else:
+                    shape = [0]
+            else:
+                raise
+            
             
         chunk = [s if s > 0 else 1 for s in shape]  
 
