@@ -25,6 +25,10 @@ import sys
 import subprocess
 import random
 import numpy
+import struct
+
+IS64BIT = (struct.calcsize("P") == 8)
+
 
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
@@ -84,6 +88,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
+
+        self._bint = "int64" if IS64BIT else "int32"
+        self._buint = "uint64" if IS64BIT else "uint32"
+        self._bfloat = "float64" if IS64BIT else "float32"
+
 
 
     ## test starter
@@ -297,8 +306,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
         self._sc.checkScalarField(det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
-        self._sc.checkScalarField(det, "ScalarLong", "int64", "NX_INT", self._counter)
-        self._sc.checkScalarField(det, "ScalarULong", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ScalarLong", self._bint, "NX_INT", self._counter)
+        self._sc.checkScalarField(det, "ScalarULong",self._buint , "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarLong64", "int64", "NX_INT64", self._counter)
 #        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error = 1e-6)

@@ -28,6 +28,10 @@ import PyTango
 import time
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
+import struct
+
+IS64BIT = (struct.calcsize("P") == 8)
+
 
 import ServerSetUp
 
@@ -82,6 +86,11 @@ class TangoDataServerTest(unittest.TestCase):
         self._counter =  [0.1, 0.2]
         self._mca1 = [e*0.1 for e in range(2048)]
         self._mca2 = [(float(e)/(100.+e)) for e in range(2048)]
+
+
+        self._bint = "int64" if IS64BIT else "int32"
+        self._buint = "uint64" if IS64BIT else "uint32"
+        self._bfloat = "float64" if IS64BIT else "float32"
 
 
 
@@ -425,7 +434,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
-            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.dtype, self._bfloat)
             self.assertEqual(cnt.size, 2)
 #            print cnt.read()
             value = cnt[:]
@@ -473,7 +482,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype, "float64")
+            self.assertEqual(mca.dtype, self._bfloat)
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for j in range(len(value[0])):
@@ -534,7 +543,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
-            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.dtype, self._bfloat)
             self.assertEqual(cnt.size, 2)
 #            print cnt.read()
             value = cnt[:]
@@ -580,7 +589,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype, "float64")
+            self.assertEqual(mca.dtype, self._bfloat)
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for j in range(len(value[0])):
