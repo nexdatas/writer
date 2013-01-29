@@ -322,11 +322,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         steps = min(len(self._fcounter), len(self._counter))
         for i in range(steps):
             self.record(tdw,'{"data": {'
-                       + ' "cnt":' + str(self._counter[i]) 
-                       + ', "fcnt":' + str(self._fcounter[i]) 
-                       + ', "cnt_32":' + str(self._fcounter[i]) 
-                       + ', "cnt_64":' + str(self._fcounter[i]) 
-                       + ' } }')
+                        + ' "cnt":' + str(self._counter[i]) 
+                        + ', "fcnt":' + str(self._fcounter[i]) 
+                        + ', "cnt_32":' + str(self._fcounter[i]) 
+                        + ', "cnt_64":' + str(self._fcounter[i]) 
+                        + ' } }')
         
         self.closeWriter(tdw, json = '{"data": { "cnt":' + str(self._counter[0]) + ' } }')
             
@@ -468,6 +468,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="logical"/>
           </datasource>
         </field>
+        <field units="m" type="NX_BOOLEAN" name="bool_flags">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="bool"/>
+          </datasource>
+        </field>
 
 
         <field units="m" type="NX_CHAR" name="init_string">
@@ -503,7 +509,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamp":"' + str(dates[i]) 
                        + '", "logical":"' + str(logical[i])
-                       + '" } }')
+                       + '", "bool":true'
+                       + ' } }')
             
         self.closeWriter(tdw, json = '{"data": { "logical":"' + str(logical[0]) + '" } }')
             
@@ -513,11 +520,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname, 6)
+        det = self._sc.checkFieldTree(f, fname, 7)
         self._sc.checkScalarField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkScalarField(det, "isotime", "string", "ISO8601", dates)
         self._sc.checkScalarField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkScalarField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkScalarField(det, "bool_flags", "bool", "NX_BOOLEAN", [True for c in range(8)])
 
         self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
         self._sc.checkSingleScalarField(det, "final_flag", "bool", "NX_BOOLEAN", logical[0])
@@ -890,6 +898,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_BOOLEAN" name="bool_flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="bool"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_BOOLEAN" name="flags_dim">
           <strategy mode="STEP"/>
           <dimensions rank="1" />
@@ -960,7 +980,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                   "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
         logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
 #        print "CHECK:", '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }'
-
+        bools = ["[true, false, true, false]", "[true, false, true, false]"]
         tdw = self.openWriter(fname, xml, json = '{"data": {'\
                                   +' "timestamps":' + str(dates[0]).replace("'","\"") \
                                   + ', "logicals":' + str(logical[0]).replace("'","\"")
@@ -969,6 +989,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
                        + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ', "bool":' + bools[i]
                        + ' } }')
             
 
@@ -984,8 +1005,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 22)
+        det = self._sc.checkFieldTree(f, fname , 23)
         self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkSpectrumField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
@@ -1453,6 +1475,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_BOOLEAN" name="bool_flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="bool"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_BOOLEAN" name="flags_dim">
           <strategy mode="STEP"/>
           <dimensions rank="2" />
@@ -1526,6 +1560,10 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         logical = [[["1","0","true","false"], ["True","False","TrUe","FaLsE"], ["1","0","0","1"]],
                    [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
+
+
+        bools = ["[ [true,false,true,false], [true,false,true,false], [true,false,false,true]]",
+                 "[ [false,true,true,false], [true,true,false,false], [false,false,true,false]]"]
         
 
         tdw = self.openWriter(fname, xml, json = '{"data": {'\
@@ -1538,6 +1576,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
                         + ', "logicals":' + str(logical[i]).replace("'","\"")
+                        + ', "bool":' + bools[i]
                         + ' } }')
             
 
@@ -1553,8 +1592,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 48)
+        det = self._sc.checkFieldTree(f, fname , 49)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkImageField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
