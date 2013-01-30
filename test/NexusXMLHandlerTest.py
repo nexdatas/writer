@@ -25,6 +25,10 @@ import sys
 import subprocess
 import random
 import struct
+import pni.nx.h5 as nx
+from ndts.H5Elements import EFile
+from ndts.ThreadPool import ThreadPool
+
 
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -43,8 +47,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
+        self._fname = "test.h5"
+        self._nxFile = None
+        self._eFile = None        
 
-        
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
@@ -52,7 +58,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print "\nsetting up..."        
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile("NXfile", [], None, self._nxFile)
 
     ## test closer
     # \brief Common tear down
@@ -65,6 +75,12 @@ class NexusXMLHandlerTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
+        fname = "test.h5"
+        nh = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(nh.initPool,ThreadPool))
+        self.assertTrue(isinstance(nh.stepPool,ThreadPool))
+        self.assertTrue(isinstance(nh.finalPool,ThreadPool))
+        self.assertEqual(nh.triggerPools, {})
 
 if __name__ == '__main__':
     unittest.main()
