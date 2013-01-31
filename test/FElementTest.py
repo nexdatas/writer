@@ -184,13 +184,8 @@ class FElementTest(unittest.TestCase):
 
     ## run _findShape test
     # \brief It tests _findShape method
-    def test_findShape(self):
-        print "Run: %s.test_findShape() " % self.__class__.__name__
-        message = "My Exception"
-        text = "WARNING: Data for %s on %s not found"
-        uob = "unnamed object"
-        uds = "unknown datasource"
-        ds = TestDataSource()
+    def test_findShape_lenghts_1d(self):
+        print "Run: %s.test_findShape_lenghts_1d() " % self.__class__.__name__
         el = FElement(self._tfname, self._fattrs, None)
         try:
             error =  False
@@ -224,6 +219,7 @@ class FElementTest(unittest.TestCase):
         for i in range(2, 5):
             self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows = i), [mlen, 0] )
 
+        #???
         lens = {'1':str(0)}
         self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [] )
         self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0] )
@@ -255,8 +251,15 @@ class FElementTest(unittest.TestCase):
 
 
 
-#        self.assertEqual(el._findShape("1", lens, extraD=True, grows = 1), [0] )
-#        self.assertEqual(el._findShape("1", {1:"1"}, extraD=False, grows = 1), [] )
+
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_lenghts_2d(self):
+        print "Run: %s.test_findShape_lenghts_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
 
 
         try:
@@ -266,6 +269,44 @@ class FElementTest(unittest.TestCase):
             error = True
         self.assertEqual(error, True)
 
+        
+        mlen = [random.randint(1, 10000),random.randint(1, 10000) ]
+        lens = {'1':str(mlen[0]),'2':str(mlen[1])}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2",lengths = lens ,extraD=False, grows = i), mlen )
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2",lengths = lens ,extraD=True, grows = i), [0] + mlen )
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True, grows = 2), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2",lengths = lens ,extraD=True, grows = i), mlen + [0] )
+
+        #??? exception
+        lens = {'1':'0', '2':str(mlen[0])}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [mlen[0]] )
+        lens = {'2':'0', '1':str(mlen[0])}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [mlen[0]] )
+        lens = {'2':'0', '1':'0'}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [] )
+
+        #??? exception
+        lens = {'1':'0', '2':str(mlen[0])}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0, mlen[0]] )
+        lens = {'2':'0', '1':str(mlen[0])}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0, mlen[0]] )
+        lens = {'1':'0', '2':'0'}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0] )
+
+        #??? exception
+        nlen = [random.randint(-10000, 0), random.randint(-10000, 0)]
+        lens = {'1':str(mlen[0]),'2':str(nlen[1])}
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [mlen[0]] )
+        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0,mlen[0]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", lengths = lens ,extraD=True, grows=i), [0,mlen[0]] )
+        for i in range(2, 5):
+            self.assertEqual(el._findShape("2", lengths = lens ,extraD=True, grows=i), [mlen[0],0] )
 
         try:
             error =  False
