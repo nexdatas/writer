@@ -199,6 +199,11 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(error, True)
 
         self.assertEqual(el._findShape("0"), [] )
+        self.assertEqual(el._findShape("0", None, extraD=True), [0] )
+        for i in range(-2, 4):
+            self.assertEqual(el._findShape("0", None, extraD=True, grows = i), [0] )
+        for i in range(-2, 4):
+            self.assertEqual(el._findShape("0", None, extraD=False, grows = i), [] )
 
         try:
             error =  False
