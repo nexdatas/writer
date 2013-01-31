@@ -71,7 +71,7 @@ class TestDataSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return "unknown DataSource"
+        return "Test DataSource"
 
 
 ## test fixture
@@ -153,7 +153,7 @@ class FElementTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
-        el = FElement(self._tfname, self._fattrs, self._group )
+        el = FElement(self._tfname, self._fattrs, None ,self._group )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
@@ -162,11 +162,11 @@ class FElementTest(unittest.TestCase):
         
 
 
-    ## constructor test
-    # \brief It tests default settings
+    ## run method test
+    # \brief It tests run method
     def test_run(self):
         print "Run: %s.test_run() " % self.__class__.__name__
-        el = FElement(self._tfname, self._fattrs, self._group )
+        el = FElement(self._tfname, self._fattrs, None,  self._group )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
@@ -179,6 +179,57 @@ class FElementTest(unittest.TestCase):
         self.assertTrue(not ds.dataTaken)
         self.assertEqual(el.run(), None)
         self.assertTrue(ds.dataTaken)
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape(self):
+        print "Run: %s.test_findShape() " % self.__class__.__name__
+        message = "My Exception"
+        text = "WARNING: Data for %s on %s not found"
+        uob = "unnamed object"
+        uds = "unknown datasource"
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        self.assertEqual(el.setMessage(),(text % (uob, uds), None))
+        self.assertEqual(el.setMessage(message),(text % (uob, uds), message))
+        el.source = ds
+        self.assertEqual(el.setMessage(),(text % (uob, str(ds)), None))
+        self.assertEqual(el.setMessage(message),(text % (uob, str(ds)), message))
+
+        el2 = FElement(self._tfname, self._fattrs, el, self._group )
+        self.assertEqual(el2.setMessage(),(text % (self._group.name, uds), None))
+        self.assertEqual(el2.setMessage(message),(text % (self._group.name, uds), message))
+        el2.source = ds
+        self.assertEqual(el2.setMessage(),(text % (self._group.name, str(ds)), None))
+        self.assertEqual(el2.setMessage(message),(text % (self._group.name, str(ds)), message))
+        
+
+
+    ## run setMessage test
+    # \brief It tests setMessage method
+    def test_setMessage(self):
+        print "Run: %s.test_setMessage() " % self.__class__.__name__
+        message = "My Exception"
+        text = "WARNING: Data for %s on %s not found"
+        uob = "unnamed object"
+        uds = "unknown datasource"
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        self.assertEqual(el.setMessage(),(text % (uob, uds), None))
+        self.assertEqual(el.setMessage(message),(text % (uob, uds), message))
+        el.source = ds
+        self.assertEqual(el.setMessage(),(text % (uob, str(ds)), None))
+        self.assertEqual(el.setMessage(message),(text % (uob, str(ds)), message))
+
+        el2 = FElement(self._tfname, self._fattrs, el, self._group )
+        self.assertEqual(el2.setMessage(),(text % (self._group.name, uds), None))
+        self.assertEqual(el2.setMessage(message),(text % (self._group.name, uds), message))
+        el2.source = ds
+        self.assertEqual(el2.setMessage(),(text % (self._group.name, str(ds)), None))
+        self.assertEqual(el2.setMessage(message),(text % (self._group.name, str(ds)), message))
+        
+
+
 
 if __name__ == '__main__':
     unittest.main()
