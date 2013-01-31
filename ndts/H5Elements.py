@@ -132,6 +132,7 @@ class FElement(Element):
 
 
     ## creates the error message
+    # \param exceptionMessage additional message of exception
     def setMessage(self, exceptionMessage=None):
         if hasattr(self.h5Object, "name"):
             name = self.h5Object.name

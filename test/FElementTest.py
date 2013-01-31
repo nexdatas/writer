@@ -30,6 +30,7 @@ from ndts.Element import Element
 from ndts.H5Elements import FElement
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
+from ndts.DataSources import DataSource
 
 
 ## if 64-bit machione
@@ -39,6 +40,38 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 from  xml.sax import SAXParseException
 
+
+## test datasource
+class TestDataSource(DataSource):
+        ## constructor
+    # \brief It cleans all member variables
+    def __init__(self):
+        ## flag for running getData
+        self.dataTaken = False
+
+
+    ## sets the parrameters up from xml
+    # \brief xml  datasource parameters
+    def setup(self, xml):
+        pass
+
+
+    ## access to data
+    # \brief It is an abstract method providing data   
+    def getData(self):
+        self.dataTaken = True
+
+
+    ## checks if the data is valid
+    # \returns if the data is valid
+    def isValid(self):
+        return True
+
+
+    ## self-description 
+    # \returns self-describing string
+    def __str__(self):
+        return "unknown DataSource"
 
 
 ## test fixture
@@ -83,16 +116,19 @@ class FElementTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-    ## constructor test
+    ## default constructor test
     # \brief It tests default settings
-    def test_min_constructor(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+    def test_default_constructor(self):
+        print "Run: %s.test_default_constructor() " % self.__class__.__name__
         el = FElement(self._tfname, self._fattrs, self._group)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
+        self.assertEqual(el.source, None)
+        self.assertEqual(el.error, None)
+        self.assertEqual(el.h5Object, None)
 
     ## constructor test
     # \brief It tests default settings
@@ -105,13 +141,19 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2.doc, "")
+        self.assertEqual(el.source, None)
+        self.assertEqual(el.error, None)
+        self.assertEqual(el.h5Object, None)
+        self.assertEqual(el2.h5Object, self._group)
+        
+
 
 
     ## constructor test
     # \brief It tests default settings
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
-        el = Element(self._tfname, self._fattrs, self._group )
+        el = FElement(self._tfname, self._fattrs, self._group )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
@@ -119,6 +161,24 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(el.store("<tag/>"), None)
         
 
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run(self):
+        print "Run: %s.test_run() " % self.__class__.__name__
+        el = FElement(self._tfname, self._fattrs, self._group )
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.doc, "")
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.source, None)
+        ds = TestDataSource()
+        el.source = ds
+        self.assertEqual(el.source, ds)
+        self.assertTrue(hasattr(el.source, "getData"))
+        self.assertTrue(not ds.dataTaken)
+        self.assertEqual(el.run(), None)
+        self.assertTrue(ds.dataTaken)
 
 if __name__ == '__main__':
     unittest.main()
