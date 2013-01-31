@@ -31,7 +31,7 @@ from ndts.H5Elements import FElement
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 from ndts.DataSources import DataSource
-
+from ndts.H5Elements import XMLSettingSyntaxError
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -180,6 +180,7 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(el.run(), None)
         self.assertTrue(ds.dataTaken)
 
+
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape(self):
@@ -190,18 +191,42 @@ class FElementTest(unittest.TestCase):
         uds = "unknown datasource"
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
-        self.assertEqual(el.setMessage(),(text % (uob, uds), None))
-        self.assertEqual(el.setMessage(message),(text % (uob, uds), message))
-        el.source = ds
-        self.assertEqual(el.setMessage(),(text % (uob, str(ds)), None))
-        self.assertEqual(el.setMessage(message),(text % (uob, str(ds)), message))
+        try:
+            error =  False
+            el._findShape("")
+        except ValueError, e:
+            error = True
+        self.assertEqual(error, True)
 
+        self.assertEqual(el._findShape("0"), [] )
+
+        try:
+            error =  False
+            self.assertEqual(el._findShape("1"), [] )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+        try:
+            error =  False
+            self.assertEqual(el._findShape("2"), [] )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+        try:
+            error =  False
+            self.assertEqual(el._findShape("3"), [] )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+        el.source = ds
+        
         el2 = FElement(self._tfname, self._fattrs, el, self._group )
-        self.assertEqual(el2.setMessage(),(text % (self._group.name, uds), None))
-        self.assertEqual(el2.setMessage(message),(text % (self._group.name, uds), message))
         el2.source = ds
-        self.assertEqual(el2.setMessage(),(text % (self._group.name, str(ds)), None))
-        self.assertEqual(el2.setMessage(message),(text % (self._group.name, str(ds)), message))
         
 
 
