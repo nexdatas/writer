@@ -34,7 +34,7 @@ class DataSourceFactory(Element):
     def __init__(self, name, attrs, last):
         Element.__init__(self, name, attrs, last)
         ## datasource pool
-        self._dsPool = None
+        self.__dsPool = None
 
 
     ##  sets the datasource form xml string
@@ -52,7 +52,7 @@ class DataSourceFactory(Element):
     ## sets the used decoders
     # \param datasources pool to be set
     def setDataSources(self, datasources):
-        self._dsPool = datasources
+        self.__dsPool = datasources
         
 
     ## sets the used decoders
@@ -67,8 +67,8 @@ class DataSourceFactory(Element):
     # \param attrs dictionary with the tag attributes
     def createDSource(self, name, attrs):
         if "type" in attrs.keys():
-            if self._dsPool and self._dsPool.hasDataSource(attrs["type"]):
-                self._last.source = self._dsPool.get(attrs["type"])()
+            if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
+                self._last.source = self.__dsPool.get(attrs["type"])()
             else:
                 print "Unknown data source"
                 self._last.source = DataSources.DataSource()

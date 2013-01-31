@@ -36,9 +36,9 @@ class ElementThread(Thread):
         ## thread index
         self.index = index
         ## queue with runnable elements
-        self._queue = queue
+        self.__queue = queue
         ## lock for safe printing messeges
-        self._safeprint = thread.allocate_lock()
+        #        self.__safeprint = thread.allocate_lock()
 
     ## runner
     # \brief It runs the defined thread
@@ -49,7 +49,7 @@ class ElementThread(Thread):
         while full:
             time.sleep(0.0001)
             try:
-                elem = self._queue.get(block=False)
+                elem = self.__queue.get(block=False)
                 if hasattr(elem, "run") and callable(elem.run):
                     elem.error=None
                     elem.run()

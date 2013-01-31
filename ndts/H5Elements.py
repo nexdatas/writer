@@ -160,7 +160,7 @@ class FElementWithAttr(FElement):
         FElement.__init__(self, name, attrs, last, h5object)
         ## dictionary with attribures from sepatare attribute tags
         self.tagAttributes = {}
-        self._h5Instances = {}
+        self.__h5Instances = {}
   
 
     ## creates h5 attributes
@@ -169,19 +169,19 @@ class FElementWithAttr(FElement):
         for key in self.tagAttributes.keys():
             if key not in ["name","type"]:
                 if len(self.tagAttributes[key]) < 3:
-                    self._h5Instances[key.encode()] = self.h5Object.attr(
+                    self.__h5Instances[key.encode()] = self.h5Object.attr(
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
-                    self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
-#                    print "ATTR",key ,self._h5Instances[key.encode()].dtype, dh.cast(self._h5Instances[key.encode()].dtype)    
+                    self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
+#                    print "ATTR",key ,self.__h5Instances[key.encode()].dtype, dh.cast(self.__h5Instances[key.encode()].dtype)    
                 else:
                     shape = self.tagAttributes[key][2]
-                    self._h5Instances[key.encode()] = self.h5Object.attr(
+                    self.__h5Instances[key.encode()] = self.h5Object.attr(
                         key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode(), 
                         shape)
                     val = self.tagAttributes[key][1].strip().encode()
-#                    print "ATTR MD",key, shape ,self._h5Instances[key.encode()].dtype, True if val else False , val
+#                    print "ATTR MD",key, shape ,self.__h5Instances[key.encode()].dtype, True if val else False , val
                     if val:
                         rank = len(shape)
                         if not rank or rank == 0:
@@ -194,14 +194,14 @@ class FElementWithAttr(FElement):
                             image = [ln.split() for ln in lines ]
                             dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
     
-                        self._h5Instances[key.encode()].value = dh.cast(self._h5Instances[key.encode()].dtype)
+                        self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
                     
 
     ## provides attribute h5 object
     # \param name attribute name
     # \returns instance of the attribute object if created            
     def h5Attribute(self, name):
-        return self._h5Instances.get(name)
+        return self.__h5Instances.get(name)
 
 
 ## query tag element        
@@ -256,9 +256,9 @@ class EField(FElementWithAttr):
         ## shape of the field
         self.lengths = {}
         ## if field is stored in STEP mode
-        self._extraD = False
+        self.__extraD = False
         ## if field array is splitted into columns
-        self._splitArray = False
+        self.__splitArray = False
         ## strategy, i.e. INIT, STEP, FINAL, POSTRUN
         self.strategy = None
         ## trigger for asynchronous writing
@@ -283,9 +283,9 @@ class EField(FElementWithAttr):
     def store(self, xml = None):
         
         # if growing in extra dimension
-        self._extraD = False
+        self.__extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
-            self._extraD = True
+            self.__extraD = True
             if not self.grows:
                 self.grows = 1
 
@@ -301,14 +301,14 @@ class EField(FElementWithAttr):
 
         # shape and chunk
         try:
-            shape = self._findShape(self.rank, self.lengths, self._extraD, self.grows)
+            shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows)
             if len(shape) > 1 and tp.encode() == "string":
-                self._splitArray = True
-                shape = self._findShape(self.rank, self.lengths, self._extraD)
+                self.__splitArray = True
+                shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 self.grows = 1
         except XMLSettingSyntaxError, ex:
             if self.strategy == "POSTRUN": 
-                self._splitArray = False
+                self.__splitArray = False
                 if self.rank and int(self.rank) >=0:
                     shape = [0 for d in range(int(self.rank))]
                 else:
@@ -328,7 +328,7 @@ class EField(FElementWithAttr):
             
         # create h5 object
         if shape:
-            if self._splitArray:
+            if self.__splitArray:
                 f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
             else:
                 if not chunk:
@@ -399,9 +399,9 @@ class EField(FElementWithAttr):
                     print message[0]
                     self.error = message
                 else:
-                    if not self._extraD:
+                    if not self.__extraD:
                         
-#                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self._splitArray, dh.cast(self.h5Object.dtype)
+#                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype)
                         if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
                             sts = dh.cast(self.h5Object.dtype)
                             for i in range(len(sts)):

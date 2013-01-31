@@ -58,38 +58,38 @@ class TangoDataWriter(object):
 #        self.numThreads = 1
 
         ## thread pool with INIT elements
-        self._initPool = None
+        self.__initPool = None
         ## thread pool with STEP elements
-        self._stepPool = None
+        self.__stepPool = None
         ## thread pool with FINAL elements
-        self._finalPool = None
+        self.__finalPool = None
         ## collection of thread pool with triggered STEP elements
-        self._triggerPools = {}
+        self.__triggerPools = {}
         ## H5 file handle
-        self._nxFile = None
+        self.__nxFile = None
         ## element file objects
-        self._eFile = None
+        self.__eFile = None
 
         ## pool with decoders
-        self._decoders = DecoderPool()
+        self.__decoders = DecoderPool()
 
         ## pool with decoders
-        self._datasources = DataSourcePool()
+        self.__datasources = DataSourcePool()
 
 
         ## adding logs
         self.addingLogs = True
         ## counter for open entries
-        self._entryCounter = 0
+        self.__entryCounter = 0
         ## group with Nexus log Info
-        self._logGroup = None
+        self.__logGroup = None
 
         
 
     ## the H5 file handle 
     # \returns the H5 file handle 
     def getNXFile(self):
-        return self._nxFile            
+        return self.__nxFile            
 
        
 
@@ -98,18 +98,18 @@ class TangoDataWriter(object):
     def openNXFile(self):
         ## file handle
         self.closeNXFile() 
-        self._nxFile = None
-        self._eFile = None
-        self._initPool = None
-        self._stepPool = None
-        self._finalPool = None
-        self._triggerPools = {}
+        self.__nxFile = None
+        self.__eFile = None
+        self.__initPool = None
+        self.__stepPool = None
+        self.__finalPool = None
+        self.__triggerPools = {}
         ## file handle
-        self._nxFile = nx.create_file(self.fileName, overwrite=True)
+        self.__nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
-        self._eFile = EFile("NXfile", [], None, self._nxFile)
+        self.__eFile = EFile("NXfile", [], None, self.__nxFile)
         if self.addingLogs:    
-            self._logGroup = self._nxFile.create_group("NexusConfigurationLogs")
+            self.__logGroup = self.__nxFile.create_group("NexusConfigurationLogs")
 
 
 
@@ -117,21 +117,21 @@ class TangoDataWriter(object):
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
         if self.xmlSettings:
-            self._decoders = DecoderPool(json.loads(self.json))            
-            self._datasources = DataSourcePool(json.loads(self.json))            
+            self.__decoders = DecoderPool(json.loads(self.json))            
+            self.__datasources = DataSourcePool(json.loads(self.json))            
 
             parser = sax.make_parser()
         
             fetcher = FetchNameHandler()
             sax.parseString(self.xmlSettings, fetcher)
 
-#            handler = NexusXMLHandler(self._eFile, self._decoders, fetcher.groupTypes)
+#            handler = NexusXMLHandler(self.__eFile, self.__decoders, fetcher.groupTypes)
 #            sax.parseString(self.xmlSettings, handler)
 
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
  
-            handler = NexusXMLHandler(self._eFile, self._datasources, self._decoders, 
+            handler = NexusXMLHandler(self.__eFile, self.__datasources, self.__decoders, 
                                       fetcher.groupTypes, parser, json.loads(self.json))
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
@@ -141,26 +141,26 @@ class TangoDataWriter(object):
             parser.parse(inpsrc)
 
             
-            self._initPool = handler.initPool
-            self._stepPool = handler.stepPool
-            self._finalPool = handler.finalPool
-            self._triggerPools = handler.triggerPools
+            self.__initPool = handler.initPool
+            self.__stepPool = handler.stepPool
+            self.__finalPool = handler.finalPool
+            self.__triggerPools = handler.triggerPools
             
-            self._initPool.numThreads = self.numThreads
-            self._stepPool.numThreads = self.numThreads
-            self._finalPool.numThreads = self.numThreads
+            self.__initPool.numThreads = self.numThreads
+            self.__stepPool.numThreads = self.numThreads
+            self.__finalPool.numThreads = self.numThreads
 
-            for pool in self._triggerPools.keys():
-                self._triggerPools[pool].numThreads = self.numThreads
+            for pool in self.__triggerPools.keys():
+                self.__triggerPools[pool].numThreads = self.numThreads
 
 
-            self._initPool.setJSON(json.loads(self.json))
-            self._initPool.runAndWait()
-            self._initPool.checkErrors()
+            self.__initPool.setJSON(json.loads(self.json))
+            self.__initPool.runAndWait()
+            self.__initPool.checkErrors()
 
             if self.addingLogs:    
-                self._entryCounter += 1
-                lfield = self._logGroup.create_field("Nexus__entry__%s_XML" % str(self._entryCounter),"string")
+                self.__entryCounter += 1
+                lfield = self.__logGroup.create_field("Nexus__entry__%s_XML" % str(self.__entryCounter),"string")
                 lfield.write(self.xmlSettings)
             
 
@@ -172,11 +172,11 @@ class TangoDataWriter(object):
         if jsonstring:
             localJSON = json.loads(jsonstring)
             
-        if self._stepPool:
+        if self.__stepPool:
             print "Default trigger"
-            self._stepPool.setJSON(json.loads(self.json), localJSON)
-            self._stepPool.runAndWait()
-            self._stepPool.checkErrors()
+            self.__stepPool.setJSON(json.loads(self.json), localJSON)
+            self.__stepPool.runAndWait()
+            self.__stepPool.checkErrors()
        
         triggers = None    
         if localJSON and 'triggers' in localJSON.keys():
@@ -184,11 +184,11 @@ class TangoDataWriter(object):
 
         if hasattr(triggers, "__iter__"):
             for pool in triggers:
-                if pool in self._triggerPools.keys():
+                if pool in self.__triggerPools.keys():
                     print "Trigger: %s" % pool 
-                    self._triggerPools[pool].setJSON(json.loads(self.json), localJSON)
-                    self._triggerPools[pool].runAndWait()
-                    self._triggerPools[pool].checkErrors()
+                    self.__triggerPools[pool].setJSON(json.loads(self.json), localJSON)
+                    self.__triggerPools[pool].runAndWait()
+                    self.__triggerPools[pool].checkErrors()
         gc.collect()
 
 
@@ -197,33 +197,33 @@ class TangoDataWriter(object):
     #  removes the thread pools 
     def closeEntry(self):
 
-        if self._finalPool:
-            self._finalPool.setJSON(json.loads(self.json))
-            self._finalPool.runAndWait()
-            self._finalPool.checkErrors()
+        if self.__finalPool:
+            self.__finalPool.setJSON(json.loads(self.json))
+            self.__finalPool.runAndWait()
+            self.__finalPool.checkErrors()
 
 
-        if self._initPool:
-            self._initPool.close()
-        self._initPool = None
+        if self.__initPool:
+            self.__initPool.close()
+        self.__initPool = None
             
 
-        if self._stepPool:
-            self._stepPool.close()
-        self._stepPool = None
+        if self.__stepPool:
+            self.__stepPool.close()
+        self.__stepPool = None
                 
-        if self._finalPool: 
-            self._finalPool.close()
-        self._finalPool = None
+        if self.__finalPool: 
+            self.__finalPool.close()
+        self.__finalPool = None
 
-        if self._triggerPools: 
-            for pool in self._triggerPools.keys(): 
-                self._triggerPools[pool].close()
-            self._triggerPools = {}
+        if self.__triggerPools: 
+            for pool in self.__triggerPools.keys(): 
+                self.__triggerPools[pool].close()
+            self.__triggerPools = {}
 
 
-        if self._nxFile:
-            self._nxFile.flush()
+        if self.__nxFile:
+            self.__nxFile.flush()
 
         gc.collect()
 
@@ -232,29 +232,29 @@ class TangoDataWriter(object):
     # \brief It closes the H5 file       
     def closeNXFile(self):
 
-        if self._initPool:
-            self._initPool.close()
-            self._initPool = None         
+        if self.__initPool:
+            self.__initPool.close()
+            self.__initPool = None         
    
-        if self._stepPool:
-            self._stepPool.close()
-            self._stepPool = None         
+        if self.__stepPool:
+            self.__stepPool.close()
+            self.__stepPool = None         
                 
-        if self._finalPool: 
-            self._finalPool.close()
-            self._finalPool = None         
+        if self.__finalPool: 
+            self.__finalPool.close()
+            self.__finalPool = None         
 
 
-        if self._triggerPools: 
-            for pool in self._triggerPools.keys(): 
-                self._triggerPools[pool].close()
-            self._triggerPools = {}
+        if self.__triggerPools: 
+            for pool in self.__triggerPools.keys(): 
+                self.__triggerPools[pool].close()
+            self.__triggerPools = {}
 
-        if self._nxFile:    
-            self._nxFile.close()
+        if self.__nxFile:    
+            self.__nxFile.close()
             
-        self._nxFile = None
-        self._eFile = None
+        self.__nxFile = None
+        self.__eFile = None
         gc.collect()
 
         

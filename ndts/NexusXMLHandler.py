@@ -48,35 +48,35 @@ class NexusXMLHandler(sax.ContentHandler):
 
         
         ## map of NXclass : name 
-        self._groupTypes = {"":""}
+        self.__groupTypes = {"":""}
         ## if name fetching required
-        self._fetching = True
+        self.__fetching = True
         if groupTypes:
-            self._groupTypes = groupTypes
-            self._fetching = False
+            self.__groupTypes = groupTypes
+            self.__fetching = False
 
         ## stack with open tag elements
-        self._stack = [fileElement]
+        self.__stack = [fileElement]
 
         ## unsupported tag tracer
-        self._unsupportedTag=""
-        self._raiseUnsupportedTag=True
+        self.__unsupportedTag=""
+        self.__raiseUnsupportedTag=True
 
         ## xmlreader
-        self._parser = parser
-        self._innerHander = None
+        self.__parser = parser
+        self.__innerHander = None
         
-        self._json = globalJSON
+        self.__json = globalJSON
 
         ## tags with innerxml as its input
-        self._withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
+        self.__withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
         ##  stored attributes
-        self._storedAttrs = None
+        self.__storedAttrs = None
         ##  stored name
-        self._storedName = None
+        self.__storedName = None
 
         ## map of tag names to related classes
-        self._elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
+        self.__elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
                               'link':ELink,
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
@@ -85,7 +85,7 @@ class NexusXMLHandler(sax.ContentHandler):
                               }
 
         ## transparent tags
-        self._transparentTags = ['definition']
+        self.__transparentTags = ['definition']
 
 
         ## thread pool with INIT elements
@@ -96,24 +96,24 @@ class NexusXMLHandler(sax.ContentHandler):
         self.finalPool = ThreadPool()
 
         ## map of pool names to related classes
-        self._poolMap = {'INIT':self.initPool, 'STEP':self.stepPool, 'FINAL':self.finalPool}        
+        self.__poolMap = {'INIT':self.initPool, 'STEP':self.stepPool, 'FINAL':self.finalPool}        
         ## collection of thread pool with triggered STEP elements
         self.triggerPools = {}
 
         ## pool with decoders
-        self._decoders = decoders
+        self.__decoders = decoders
 
         ## pool with datasources
-        self._datasources = datasources
+        self.__datasources = datasources
 
         ## if innerparse was running
-        self._inner = False
+        self.__inner = False
 
     ## the last stack element 
     # \returns the last stack element 
-    def _last(self):
-        if self._stack : 
-            return self._stack[-1]
+    def __last(self):
+        if self.__stack : 
+            return self.__stack[-1]
         else:
             return None
 
@@ -121,64 +121,64 @@ class NexusXMLHandler(sax.ContentHandler):
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        if self._inner == True:
-#            print "XML:\n", self._innerHandler.xml
-            self._createInnerTag(self._innerHandler.xml)
-            self._inner = False
-        if not self._unsupportedTag:
-            self._last().content.append(ch)
+        if self.__inner == True:
+#            print "XML:\n", self.__innerHandler.xml
+            self.__createInnerTag(self.__innerHandler.xml)
+            self.__inner = False
+        if not self.__unsupportedTag:
+            self.__last().content.append(ch)
 
 
     ##  parses the opening tag
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        if self._inner == True:
-            print "XML:\n", self._innerHandler.xml
-            self._createInnerTag(self._innerHandler.xml)
-            self._inner = False
-        if not self._unsupportedTag :
-            if self._parser and  name in self._withXMLinput:
-                self._storedAttrs = attrs
-                self._storedName = name
-                self._innerHandler = InnerXMLHandler(self._parser, self, name, attrs)
-                self._parser.setContentHandler(self._innerHandler) 
-                self._inner = True
-            elif name in self._elementClass:
-                self._stack.append(self._elementClass[name](name, attrs, self._last()))
-                if self._fetching and hasattr(self._last(), "fetchName") and callable(self._last().fetchName):
-                    self._last().fetchName(self._groupTypes)
-                if hasattr(self._last(), "createLink") and callable(self._last().createLink):
-                    self._last().createLink(self._groupTypes)
-            elif name not in self._transparentTags:
-                if self._raiseUnsupportedTag:
+        if self.__inner == True:
+            print "XML:\n", self.__innerHandler.xml
+            self.__createInnerTag(self.__innerHandler.xml)
+            self.__inner = False
+        if not self.__unsupportedTag :
+            if self.__parser and  name in self.__withXMLinput:
+                self.__storedAttrs = attrs
+                self.__storedName = name
+                self.__innerHandler = InnerXMLHandler(self.__parser, self, name, attrs)
+                self.__parser.setContentHandler(self.__innerHandler) 
+                self.__inner = True
+            elif name in self.__elementClass:
+                self.__stack.append(self.__elementClass[name](name, attrs, self.__last()))
+                if self.__fetching and hasattr(self.__last(), "fetchName") and callable(self.__last().fetchName):
+                    self.__last().fetchName(self.__groupTypes)
+                if hasattr(self.__last(), "createLink") and callable(self.__last().createLink):
+                    self.__last().createLink(self.__groupTypes)
+            elif name not in self.__transparentTags:
+                if self.__raiseUnsupportedTag:
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
                 print "Unsupported tag: ", name ,attrs.keys()
-                self._unsupportedTag = name
+                self.__unsupportedTag = name
                 
 
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        if self._inner == True:
-#            print "XML:\n", self._innerHandler.xml
-            self._createInnerTag(self._innerHandler.xml)
-            self._inner = False
-        if not self._unsupportedTag and self._parser and  name in self._withXMLinput:
-            print "XML", self._innerHandler.xml
-        elif not self._unsupportedTag and name in self._elementClass:
-            res = self._last().store()
+        if self.__inner == True:
+#            print "XML:\n", self.__innerHandler.xml
+            self.__createInnerTag(self.__innerHandler.xml)
+            self.__inner = False
+        if not self.__unsupportedTag and self.__parser and  name in self.__withXMLinput:
+            print "XML", self.__innerHandler.xml
+        elif not self.__unsupportedTag and name in self.__elementClass:
+            res = self.__last().store()
             if res:
-                self._addToPool(res, self._last())
-            self._stack.pop()
-        elif name not in self._transparentTags:
-            if self._unsupportedTag == name:
-                self._unsupportedTag = ""
+                self.__addToPool(res, self.__last())
+            self.__stack.pop()
+        elif name not in self.__transparentTags:
+            if self.__unsupportedTag == name:
+                self.__unsupportedTag = ""
 
 
     ## addding to pool
     # \param res strategy or (strategy, trigger)
-    def _addToPool(self, res, task):
+    def __addToPool(self, res, task):
         trigger = None
         strategy = None
         if res:
@@ -193,23 +193,23 @@ class NexusXMLHandler(sax.ContentHandler):
             if trigger not in self.triggerPools.keys():
                 self.triggerPools[trigger]=ThreadPool()
             self.triggerPools[trigger].append(task)
-        elif strategy in self._poolMap.keys():
-            self._poolMap[strategy].append(task)
+        elif strategy in self.__poolMap.keys():
+            self.__poolMap[strategy].append(task)
                 
 
    
     ## creates class instance of the current inner xml
     # \param xml inner xml
-    def _createInnerTag(self, xml):
-        if self._storedName in self._withXMLinput:
-            inner = self._withXMLinput[self._storedName](self._storedName, self._storedAttrs, self._last())
+    def __createInnerTag(self, xml):
+        if self.__storedName in self.__withXMLinput:
+            inner = self.__withXMLinput[self.__storedName](self.__storedName, self.__storedAttrs, self.__last())
             if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
-                inner.setDataSources(self._datasources)
-            res = inner.store(xml, self._json)
+                inner.setDataSources(self.__datasources)
+            res = inner.store(xml, self.__json)
             if hasattr(inner, "setDecoders") and callable(inner.setDecoders):
-                inner.setDecoders(self._decoders)
+                inner.setDecoders(self.__decoders)
             if res:
-                self._addToPool(res, inner)
+                self.__addToPool(res, inner)
 
             
                 
@@ -217,7 +217,7 @@ class NexusXMLHandler(sax.ContentHandler):
     ## closes the elements
     # \brief It goes through all stack elements closing them
     def close(self):
-        for s in self._stack:
+        for s in self.__stack:
             if isinstance(s, FElement) and not isinstance(s, EFile):
                 if hasattr(s.h5Object, "close") and callable(s.h5Object.close):
                     s.h5Object.close()
