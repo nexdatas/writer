@@ -201,28 +201,67 @@ class FElementTest(unittest.TestCase):
 
         self.assertEqual(el._findShape("0"), [] )
         self.assertEqual(el._findShape("0", None, extraD=True), [0] )
-        for i in range(-2, 4):
+        for i in range(-2, 5):
             self.assertEqual(el._findShape("0", None, extraD=True, grows = i), [0] )
-        for i in range(-2, 4):
+        for i in range(-2, 5):
             self.assertEqual(el._findShape("0", None, extraD=False, grows = i), [] )
 
         try:
             error =  False
-            self.assertEqual(el._findShape("1"), [] )
+            el._findShape("1")
         except XMLSettingSyntaxError, e:
             error = True
         self.assertEqual(error, True)
         
-        mlen = random.randint(1, 100)        
+        mlen = random.randint(1, 10000)        
         lens = {'1':str(mlen)}
         self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [mlen] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("1",lengths = lens ,extraD=False, grows = i), [mlen] )
+        self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0, mlen] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows = i), [0, mlen] )
+        for i in range(2, 5):
+            self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows = i), [mlen, 0] )
+
+        lens = {'1':str(0)}
+        self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [] )
+        self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0] )
+
+        mlen = random.randint(-10000, 0)        
+        lens = {'1':str(mlen)}
+        self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [] )
+        self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows=i), [0] )
+
+        mlen = random.randint(1, 1000)        
+        lens = {'2':str(mlen)}
+        try:
+            error =  False
+            el._findShape("1",lengths = lens )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+        mlen = random.randint(1, 1000)        
+        lens = {'2':str(mlen)}
+        try:
+            error =  False
+            el._findShape("1",lengths = lens, extraD=True )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+
 #        self.assertEqual(el._findShape("1", lens, extraD=True, grows = 1), [0] )
 #        self.assertEqual(el._findShape("1", {1:"1"}, extraD=False, grows = 1), [] )
 
 
         try:
             error =  False
-            self.assertEqual(el._findShape("2"), [] )
+            el._findShape("2")
         except XMLSettingSyntaxError, e:
             error = True
         self.assertEqual(error, True)
@@ -230,7 +269,7 @@ class FElementTest(unittest.TestCase):
 
         try:
             error =  False
-            self.assertEqual(el._findShape("3"), [] )
+            el._findShape("3")
         except XMLSettingSyntaxError, e:
             error = True
         self.assertEqual(error, True)
