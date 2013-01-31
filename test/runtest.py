@@ -46,6 +46,7 @@ import ClientFieldTagWriterTest
 import XMLFieldTagWriterTest
 import TangoFieldTagWriterTest
 import NexusXMLHandlerTest
+import ElementTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -71,6 +72,9 @@ def main():
     
     ## test suit
     suite = unittest.TestSuite()
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )

@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file NexusXMLHandlerTest.py
+## \file ElementTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -37,10 +37,10 @@ IS64BIT = (struct.calcsize("P") == 8)
 from  xml.sax import SAXParseException
 
 
-from ndts.NexusXMLHandler import NexusXMLHandler
+from ndts.Element import Element
 
 ## test fixture
-class NexusXMLHandlerTest(unittest.TestCase):
+class ElementTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -51,6 +51,15 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self._nxFile = None
         self._eFile = None        
 
+        self._tfname = "field"
+        self._tfname = "group"
+        self._fattrs = {"short_name":"test","units":"m" }
+        self._gname = "testGroup"
+        self._gtype = "NXentry"
+        self._fdname = "testField"
+        self._fdtype = "int64"
+
+
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
@@ -58,31 +67,42 @@ class NexusXMLHandlerTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
-        self._eFile = EFile("NXfile", [], None, self._nxFile)
+        self._group = self._nxFile.create_group(self._gname, self._gtype)
+        self._field = self._group.create_field(self._fdname, self._fdtype)
+        print "\nsetting up..."        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
-
         self._nxFile.close()
         os.remove(self._fname)
-
 
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
-        fname = "test.h5"
-        nh = NexusXMLHandler(self._eFile)
-        self.assertTrue(isinstance(nh.initPool,ThreadPool))
-        self.assertTrue(isinstance(nh.stepPool,ThreadPool))
-        self.assertTrue(isinstance(nh.finalPool,ThreadPool))
-        self.assertEqual(nh.triggerPools, {})
+        el = Element(self._tfname, self._fattrs)
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.doc, "")
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_store(self):
+        print "Run: %s.test_store() " % self.__class__.__name__
+        el = Element(self._tfname, self._fattrs, self._group )
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.doc, "")
+        self.assertEqual(el.store(), None)
+        self.assertEqual(el.store("<tag/>"), None)
+        
+
 
 if __name__ == '__main__':
     unittest.main()
