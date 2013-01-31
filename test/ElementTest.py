@@ -96,5 +96,64 @@ class ElementTest(unittest.TestCase):
         
 
 
+    ## _lastObject method test
+    # \brief It tests executing _lastObject method
+    def test_lastObject(self):
+        print "Run: %s.test_last() " % self.__class__.__name__
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+        ## element file objects
+        eFile = EFile("NXfile", [], None, nxFile)
+        group = nxFile.create_group(gname, gtype)
+        field = group.create_field(fdname, fdtype)
+
+        el = Element(self._tfname, self._fattrs, eFile )
+        el2 = Element(self._tfname, self._fattrs,  el )
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el._tagAttrs, self._fattrs)
+        self.assertEqual(el.doc, "")
+        self.assertEqual(el._lastObject(), nxFile)
+        self.assertEqual(el2._lastObject(), None)
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+
+
+    ## _beforeLast method test
+    # \brief It tests executing _beforeLast method
+    def test_beforeLast(self):
+        print "Run: %s.test_last() " % self.__class__.__name__
+
+
+
+        el = Element(self._tfname, self._fattrs, None )
+        el2 = Element(self._tfname, self._fattrs,  el )
+        el3 = Element(self._tfname, self._fattrs,  el2 )
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el._tagAttrs, self._fattrs)
+        self.assertEqual(el.doc, "")
+        self.assertEqual(el2._last, el)
+        self.assertEqual(el2._beforeLast(), None)
+        self.assertEqual(el3._beforeLast(), el)
+        
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
