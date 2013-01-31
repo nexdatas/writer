@@ -27,6 +27,7 @@ import random
 import numpy
 import struct
 
+## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 

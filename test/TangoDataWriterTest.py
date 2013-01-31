@@ -29,6 +29,7 @@ from ndts import TangoDataWriter
 from ndts.TangoDataWriter  import TangoDataWriter 
 import struct
 
+## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture

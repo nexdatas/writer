@@ -30,6 +30,7 @@ from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 
 
+## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
@@ -73,20 +74,24 @@ class ElementTest(unittest.TestCase):
         print "Run: %s.test_constructor() " % self.__class__.__name__
         el = Element(self._tfname, self._fattrs)
         self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
+        self.assertEqual(el._last, None)
 
 
-    ## constructor test
-    # \brief It tests default settings
+    ## store method test
+    # \brief It tests executing store method
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
         el = Element(self._tfname, self._fattrs )
         el2 = Element(self._tfname, self._fattrs,  el )
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
+        self.assertEqual(el2._tagAttrs, self._fattrs)
         self.assertEqual(el2.doc, "")
         self.assertEqual(el2.store(), None)
+        self.assertEqual(el2._last, el)
         self.assertEqual(el2.store("<tag/>"), None)
         
 

@@ -30,6 +30,7 @@ from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 import struct
 
+## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 

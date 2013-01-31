@@ -32,6 +32,7 @@ from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 
 
+## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
