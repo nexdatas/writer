@@ -32,6 +32,7 @@ from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 from ndts.DataSources import DataSource
 from ndts.H5Elements import XMLSettingSyntaxError
+import random
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -211,6 +212,12 @@ class FElementTest(unittest.TestCase):
         except XMLSettingSyntaxError, e:
             error = True
         self.assertEqual(error, True)
+        
+        mlen = random.randint(1, 100)        
+        lens = {'1':str(mlen)}
+        self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [mlen] )
+#        self.assertEqual(el._findShape("1", lens, extraD=True, grows = 1), [0] )
+#        self.assertEqual(el._findShape("1", {1:"1"}, extraD=False, grows = 1), [] )
 
 
         try:

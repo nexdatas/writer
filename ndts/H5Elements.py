@@ -89,7 +89,7 @@ class FElement(Element):
                     si = str(i+1)
                     if si in lengths.keys() and lengths[si] is not None:
                         if int(lengths[si]) > 0:
-                            shape.append(int(self.lengths[si]))
+                            shape.append(int(lengths[si]))
                     else:
                         raise XMLSettingSyntaxError, "Dimensions not defined"
                 if extraD:
