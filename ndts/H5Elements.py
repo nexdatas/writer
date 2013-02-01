@@ -75,6 +75,7 @@ class FElement(Element):
     # \param lengths dictionary with dimensions as a string data , e.g. {"1":"34","2":"40"}
     # \param extraD if the object grows
     # \param grows growing dimension        
+    # \raise XMLSettingSyntaxError if shape cannot be found      
     # \returns shape of the object
     def _findShape(self, rank, lengths=None, extraD = False, grows = None):
         shape = []
