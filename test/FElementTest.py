@@ -157,7 +157,7 @@ class FElementTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         print "Run: %s.test_default_constructor() " % self.__class__.__name__
-        el = FElement(self._tfname, self._fattrs, self._group)
+        el = FElement(self._tfname, self._fattrs, None)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertEqual(el.tagName, self._tfname)

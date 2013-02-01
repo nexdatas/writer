@@ -202,7 +202,7 @@ class FElementWithAttr(FElement):
                             lines = val.split("\n")
                             image = [ln.split() for ln in lines ]
                             dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
-    
+                            
                         self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
                     
 
