@@ -184,8 +184,8 @@ class FElementTest(unittest.TestCase):
 
     ## run _findShape test
     # \brief It tests _findShape method
-    def test_findShape_lenghts_1d(self):
-        print "Run: %s.test_findShape_lenghts_1d() " % self.__class__.__name__
+    def test_findShape_lengths_1d(self):
+        print "Run: %s.test_findShape_lengths_1d() " % self.__class__.__name__
         el = FElement(self._tfname, self._fattrs, None)
         try:
             error =  False
@@ -256,8 +256,8 @@ class FElementTest(unittest.TestCase):
 
     ## run _findShape test
     # \brief It tests _findShape method
-    def test_findShape_lenghts_2d(self):
-        print "Run: %s.test_findShape_lenghts_2d() " % self.__class__.__name__
+    def test_findShape_lengths_2d(self):
+        print "Run: %s.test_findShape_lengths_2d() " % self.__class__.__name__
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
 
@@ -308,6 +308,26 @@ class FElementTest(unittest.TestCase):
         for i in range(2, 5):
             self.assertEqual(el._findShape("2", lengths = lens ,extraD=True, grows=i), [mlen[0],0] )
 
+
+        mlen = random.randint(1, 1000)        
+        lens = {'2':str(mlen), '3':str(mlen)}
+        try:
+            error =  False
+            el._findShape("2",lengths = lens )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+        mlen = random.randint(1, 1000)        
+        lens = {'2':str(mlen)}
+        try:
+            error =  False
+            el._findShape("2",lengths = lens, extraD=True )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+
         try:
             error =  False
             el._findShape("3")
@@ -320,6 +340,104 @@ class FElementTest(unittest.TestCase):
         el2 = FElement(self._tfname, self._fattrs, el, self._group )
         el2.source = ds
         
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_lengths_3d(self):
+        print "Run: %s.test_findShape_lengths_3d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+
+
+        try:
+            error =  False
+            el._findShape("3")
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+        
+        mlen = [random.randint(1, 10000),random.randint(1, 10000), random.randint(1, 10000) ]
+        lens = {'1':str(mlen[0]),'2':str(mlen[1]),'3':str(mlen[2])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("3",lengths = lens ,extraD=False, grows = i), mlen )
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = i), [0] + mlen )
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = 2), 
+                         [mlen[0], 0, mlen[1], mlen[2]] )
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = 3), 
+                         [mlen[0],  mlen[1], 0, mlen[2]] )
+        for i in range(4, 5):
+            self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = i), mlen + [0] )
+
+        #??? exception
+        lens = {'1':'0', '2':str(mlen[0]), '3':str(mlen[1])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0], mlen[1]] )
+        lens = {'2':'0', '1':str(mlen[0]), '3':str(mlen[1])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0], mlen[1]] )
+        lens = {'1':'0', '2':'0', '3':str(mlen[0])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0]] )
+        lens = {'2':'0', '3':'0', '1':str(mlen[0])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0]] )
+        lens = {'3':'0', '1':'0', '2':str(mlen[0])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0]] )
+
+
+
+        #??? exception
+        lens = {'1':'0', '2':str(mlen[0]), '3':str(mlen[1])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0], mlen[1]] )
+        lens = {'2':'0', '1':str(mlen[0]), '3':str(mlen[1])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0], mlen[1]] )
+        lens = {'1':'0', '2':'0', '3':str(mlen[0])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0]] )
+        lens = {'2':'0', '3':'0', '1':str(mlen[0])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0]] )
+        lens = {'3':'0', '1':'0', '2':str(mlen[0])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0]] )
+
+
+
+        #??? exception
+        nlen = [random.randint(-10000, 0), random.randint(-10000, 0)]
+        lens = {'1':str(mlen[0]),'2':str(nlen[1]),'3':str(mlen[1])}
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0], mlen[1]] )
+        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0,mlen[0], mlen[1]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("3", lengths = lens ,extraD=True, grows=i), [0,mlen[0],mlen[1]] )
+        self.assertEqual(el._findShape("3", lengths = lens ,extraD=True, grows=2), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("3", lengths = lens ,extraD=True, grows=i), [mlen[0], mlen[1], 0] )
+
+
+        mlen = random.randint(1, 1000)        
+        lens = {'2':str(mlen), '3':str(mlen), '4':str(mlen)}
+        try:
+            error =  False
+            el._findShape("3",lengths = lens )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+        mlen = random.randint(1, 1000)        
+        lens = {'2':str(mlen)}
+        try:
+            error =  False
+            el._findShape("3",lengths = lens, extraD=True )
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+
+        el.source = ds
+        
+        el2 = FElement(self._tfname, self._fattrs, el, self._group )
+        el2.source = ds
+
 
 
     ## run setMessage test
