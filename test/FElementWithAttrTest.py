@@ -144,8 +144,8 @@ class FElementWithAttrTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_createAttributes_1d(self):
-        print "Run: %s.test_createAttributes() " % self.__class__.__name__
+    def test_createAttributes_0d(self):
+        print "Run: %s.test_createAttributes_0d() " % self.__class__.__name__
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
         self.assertEqual(el2.tagAttributes, {})
@@ -221,6 +221,122 @@ class FElementWithAttrTest(unittest.TestCase):
                 else:
                     self.assertEqual([at.value], attrs[nm][0])
 
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createAttributes_1d_single(self):
+        print "Run: %s.test_createAttributes_1d_single() " % self.__class__.__name__
+        el = FElement(self._tfname, self._fattrs, None )
+        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
+        self.assertEqual(el2.tagAttributes, {})
+
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool2":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool2":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+
+
+        for nm in attrs.keys():
+            if attrs[nm][2] == 'string':
+                "writing multi-dimensional string is not supported by pninx"
+                continue
+            el2.tagAttributes[nm] = (attrs[nm][1], str(attrs[nm][0]),attrs[nm][3] )
+            el2._createAttributes() 
+            at = el2.h5Attribute(nm)
+            self.assertEqual(at.dtype, attrs[nm][2])
+            if attrs[nm][2] == "bool":
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+            
+            elif len(attrs[nm]) > 4:
+                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][4])
+            else: 
+                
+                if isinstance(at.value, numpy.ndarray): 
+                    self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+                else:
+                    self.assertEqual([at.value], attrs[nm][0])
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createAttributes_1d(self):
+        print "Run: %s.test_createAttributes_1d() " % self.__class__.__name__
+        el = FElement(self._tfname, self._fattrs, None )
+        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
+        self.assertEqual(el2.tagAttributes, {})
+
+        
+
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool2":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool2":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+        for nm in attrs.keys():
+            mlen = random.randint(1, 100)        
+            attrs[nm][0] =  [ attrs[nm][0] ]*mlen 
+            attrs[nm][3] =  (mlen,)
+
+
+        for nm in attrs.keys():
+            el2.tagAttributes[nm] = (attrs[nm][1], "".join([str(it)+ " "  for it in attrs[nm][0]]),attrs[nm][3] )
+            el2._createAttributes() 
+            at = el2.h5Attribute(nm)
+            self.assertEqual(at.dtype, attrs[nm][2])
+            if attrs[nm][2] == "bool":
+                for i in range(len(attrs[nm][0])):
+                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value[i])
+                pass
+            elif len(attrs[nm]) > 4:
+                for i in range(len(attrs[nm][0])):
+                    self.assertTrue(abs(at.value[i] - attrs[nm][0][i]) <= attrs[nm][4])
+            else: 
+                
+                for i in range(len(attrs[nm][0])):
+                    self.assertEqual(at.value[i], attrs[nm][0][i])
 
 
 
