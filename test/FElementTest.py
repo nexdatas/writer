@@ -220,9 +220,23 @@ class FElementTest(unittest.TestCase):
             self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows = i), [mlen, 0] )
 
         #???
-#        lens = {'1':str(0)}
-#        self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [] )
-#        self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0] )
+        lens = {'1':str(0)}
+        try:
+            error =  False
+            el._findShape("1",lengths = lens ,extraD=False)
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+        try:
+            error =  False
+            el._findShape("1",lengths = lens ,extraD=True)
+        except XMLSettingSyntaxError, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+#        self.assertEqual(, [0] )
 
 #        mlen = random.randint(-10000, 0)        
 #        lens = {'1':str(mlen)}
