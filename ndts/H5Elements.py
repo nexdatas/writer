@@ -96,6 +96,9 @@ class FElement(Element):
                             shape.append(int(lengths[si]))
                     else:
                         raise XMLSettingSyntaxError, "Dimensions not defined"
+                if len(shape) < int(rank):
+                    raise XMLSettingSyntaxError, "Too small dimension number"
+                        
                 if extraD:
                     shape.insert(exDim-1,0)    
             except:
