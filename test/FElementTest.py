@@ -75,6 +75,7 @@ class TestDataSource(DataSource):
         return "Test DataSource"
 
 
+
 ## test fixture
 class FElementTest(unittest.TestCase):
 
@@ -117,6 +118,19 @@ class FElementTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+   def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
     ## default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
@@ -154,7 +168,7 @@ class FElementTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
-        el = FElement(self._tfname, self._fattrs, None ,self._group )
+        el = FElement(self._tfname, self._fattrs, None, self._group )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
@@ -187,12 +201,9 @@ class FElementTest(unittest.TestCase):
     def test_findShape_lengths_1d(self):
         print "Run: %s.test_findShape_lengths_1d() " % self.__class__.__name__
         el = FElement(self._tfname, self._fattrs, None)
-        try:
-            error =  False
-            el._findShape("")
-        except ValueError, e:
-            error = True
-        self.assertEqual(error, True)
+
+
+        self.myAssertRaise(ValueError, el._findShape, "")
 
         self.assertEqual(el._findShape("0"), [] )
         self.assertEqual(el._findShape("0", None, extraD=True), [0] )
@@ -201,71 +212,44 @@ class FElementTest(unittest.TestCase):
         for i in range(-2, 5):
             self.assertEqual(el._findShape("0", None, extraD=False, grows = i), [] )
 
-        try:
-            error =  False
-            el._findShape("1")
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1")
         
         mlen = random.randint(1, 10000)        
         lens = {'1':str(mlen)}
-        self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [mlen] )
+        self.assertEqual(el._findShape("1",lengths = lens, extraD=False), [mlen] )
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("1",lengths = lens ,extraD=False, grows = i), [mlen] )
-        self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0, mlen] )
+            self.assertEqual(el._findShape("1",lengths = lens, extraD=False, grows = i), [mlen] )
+        self.assertEqual(el._findShape("1",lengths = lens, extraD=True), [0, mlen] )
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows = i), [0, mlen] )
+            self.assertEqual(el._findShape("1",lengths = lens, extraD=True, grows = i), [0, mlen] )
         for i in range(2, 5):
-            self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows = i), [mlen, 0] )
+            self.assertEqual(el._findShape("1",lengths = lens, extraD=True, grows = i), [mlen, 0] )
 
-        #???
         lens = {'1':str(0)}
-        try:
-            error =  False
-            el._findShape("1",lengths = lens ,extraD=False)
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
 
-        try:
-            error =  False
-            el._findShape("1",lengths = lens ,extraD=True)
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=False)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=True)
 
+        mlen = random.randint(-10000, 0)        
+        lens = {'1':str(mlen)}
 
-#        self.assertEqual(, [0] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=False)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=True)
 
-#        mlen = random.randint(-10000, 0)        
-#        lens = {'1':str(mlen)}
-#        self.assertEqual(el._findShape("1",lengths = lens ,extraD=False), [] )
-#        self.assertEqual(el._findShape("1",lengths = lens ,extraD=True), [0] )
-#        for i in range(-2, 5):
-#            self.assertEqual(el._findShape("1",lengths = lens ,extraD=True, grows=i), [0] )
+        for i in range(-2, 5):
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=True, grows=i)
 
         mlen = random.randint(1, 1000)        
         lens = {'2':str(mlen)}
-        try:
-            error =  False
-            el._findShape("1",lengths = lens )
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens)
 
         mlen = random.randint(1, 1000)        
         lens = {'2':str(mlen)}
-        try:
-            error =  False
-            el._findShape("1",lengths = lens, extraD=True )
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens,  extraD = True)
 
 
 
-
+        
 
 
     ## run _findShape test
@@ -275,85 +259,60 @@ class FElementTest(unittest.TestCase):
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
 
-
-        try:
-            error =  False
-            el._findShape("2")
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2")
 
         
         mlen = [random.randint(1, 10000),random.randint(1, 10000) ]
         lens = {'1':str(mlen[0]),'2':str(mlen[1])}
-        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), mlen )
+        self.assertEqual(el._findShape("2",lengths = lens, extraD=False), mlen )
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2",lengths = lens ,extraD=False, grows = i), mlen )
-        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0]+ mlen )
+            self.assertEqual(el._findShape("2",lengths = lens, extraD=False, grows = i), mlen )
+        self.assertEqual(el._findShape("2",lengths = lens, extraD=True), [0]+ mlen )
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2",lengths = lens ,extraD=True, grows = i), [0] + mlen )
-        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True, grows = 2), [mlen[0], 0, mlen[1]] )
+            self.assertEqual(el._findShape("2",lengths = lens, extraD=True, grows = i), [0] + mlen )
+        self.assertEqual(el._findShape("2",lengths = lens, extraD=True, grows = 2), [mlen[0], 0, mlen[1]] )
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2",lengths = lens ,extraD=True, grows = i), mlen + [0] )
+            self.assertEqual(el._findShape("2",lengths = lens, extraD=True, grows = i), mlen + [0] )
 
-        #??? exception
-#        lens = {'1':'0', '2':str(mlen[0])}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [mlen[0]] )
-#        lens = {'2':'0', '1':str(mlen[0])}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [mlen[0]] )
-#        lens = {'2':'0', '1':'0'}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [] )
 
-        #??? exception
-#        lens = {'1':'0', '2':str(mlen[0])}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0, mlen[0]] )
-#        lens = {'2':'0', '1':str(mlen[0])}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0, mlen[0]] )
-#        lens = {'1':'0', '2':'0'}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0] )
+        lens = {'1':'0', '2':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = False)
 
-#        #??? exception
-#        nlen = [random.randint(-10000, 0), random.randint(-10000, 0)]
-#        lens = {'1':str(mlen[0]),'2':str(nlen[1])}
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=False), [mlen[0]] )
-#        self.assertEqual(el._findShape("2",lengths = lens ,extraD=True), [0,mlen[0]] )
-#        for i in range(-2, 2):
-#            self.assertEqual(el._findShape("2", lengths = lens ,extraD=True, grows=i), [0,mlen[0]] )
-#        for i in range(2, 5):
-#            self.assertEqual(el._findShape("2", lengths = lens ,extraD=True, grows=i), [mlen[0],0] )
+        lens = {'2':'0', '1':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = False)
+
+        lens = {'2':'0', '1':'0'}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = False)
+
+
+        lens = {'1':'0', '2':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
+
+        lens = {'2':'0', '1':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
+
+        lens = {'1':'0', '2':'0'}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
+
+        nlen = [random.randint(-10000, 0), random.randint(-10000, 0)]
+        lens = {'1':str(mlen[0]),'2':str(nlen[1])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = False)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
+
+        for i in range(-2, 5):
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD=True, grows = i)
+                
 
 
         mlen = random.randint(1, 1000)        
         lens = {'2':str(mlen), '3':str(mlen)}
-        try:
-            error =  False
-            el._findShape("2",lengths = lens )
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens)
 
         mlen = random.randint(1, 1000)        
         lens = {'2':str(mlen)}
-        try:
-            error =  False
-            el._findShape("2",lengths = lens, extraD=True )
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
 
-
-        try:
-            error =  False
-            el._findShape("3")
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
-
-        el.source = ds
-        
-        el2 = FElement(self._tfname, self._fattrs, el, self._group )
-        el2.source = ds
-        
 
 
     ## run _findShape test
@@ -364,93 +323,74 @@ class FElementTest(unittest.TestCase):
         el = FElement(self._tfname, self._fattrs, None)
 
 
-        try:
-            error =  False
-            el._findShape("3")
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3")
 
         
         mlen = [random.randint(1, 10000),random.randint(1, 10000), random.randint(1, 10000) ]
         lens = {'1':str(mlen[0]),'2':str(mlen[1]),'3':str(mlen[2])}
-        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), mlen )
+        self.assertEqual(el._findShape("3",lengths = lens, extraD=False), mlen )
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("3",lengths = lens ,extraD=False, grows = i), mlen )
-        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0]+ mlen )
+            self.assertEqual(el._findShape("3",lengths = lens, extraD=False, grows = i), mlen )
+        self.assertEqual(el._findShape("3",lengths = lens, extraD=True), [0]+ mlen )
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = i), [0] + mlen )
-        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = 2), 
+            self.assertEqual(el._findShape("3",lengths = lens, extraD=True, grows = i), [0] + mlen )
+        self.assertEqual(el._findShape("3",lengths = lens, extraD=True, grows = 2), 
                          [mlen[0], 0, mlen[1], mlen[2]] )
-        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = 3), 
+        self.assertEqual(el._findShape("3",lengths = lens, extraD=True, grows = 3), 
                          [mlen[0],  mlen[1], 0, mlen[2]] )
         for i in range(4, 5):
-            self.assertEqual(el._findShape("3",lengths = lens ,extraD=True, grows = i), mlen + [0] )
+            self.assertEqual(el._findShape("3",lengths = lens, extraD=True, grows = i), mlen + [0] )
 
 #        #??? exception
-#        lens = {'1':'0', '2':str(mlen[0]), '3':str(mlen[1])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0], mlen[1]] )
-#        lens = {'2':'0', '1':str(mlen[0]), '3':str(mlen[1])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0], mlen[1]] )
-#        lens = {'1':'0', '2':'0', '3':str(mlen[0])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0]] )
-#        lens = {'2':'0', '3':'0', '1':str(mlen[0])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0]] )
-#        lens = {'3':'0', '1':'0', '2':str(mlen[0])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0]] )
+        lens = {'1':'0', '2':str(mlen[0]), '3':str(mlen[1])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
+        lens = {'2':'0', '1':str(mlen[0]), '3':str(mlen[1])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
+        lens = {'1':'0', '2':'0', '3':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
+        lens = {'2':'0', '3':'0', '1':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
+        lens = {'3':'0', '1':'0', '2':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
 
 
 
 #        #??? exception
-#        lens = {'1':'0', '2':str(mlen[0]), '3':str(mlen[1])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0], mlen[1]] )
-#        lens = {'2':'0', '1':str(mlen[0]), '3':str(mlen[1])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0], mlen[1]] )
-#        lens = {'1':'0', '2':'0', '3':str(mlen[0])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0]] )
-#        lens = {'2':'0', '3':'0', '1':str(mlen[0])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0]] )
-#        lens = {'3':'0', '1':'0', '2':str(mlen[0])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0, mlen[0]] )
+        lens = {'1':'0', '2':str(mlen[0]), '3':str(mlen[1])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
+        lens = {'2':'0', '1':str(mlen[0]), '3':str(mlen[1])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
+        lens = {'1':'0', '2':'0', '3':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
+        lens = {'2':'0', '3':'0', '1':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
+        lens = {'3':'0', '1':'0', '2':str(mlen[0])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
 
 
 
         #??? exception
-#        nlen = [random.randint(-10000, 0), random.randint(-10000, 0)]
-#        lens = {'1':str(mlen[0]),'2':str(nlen[1]),'3':str(mlen[1])}
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=False), [mlen[0], mlen[1]] )
-#        self.assertEqual(el._findShape("3",lengths = lens ,extraD=True), [0,mlen[0], mlen[1]] )
-#        for i in range(-2, 2):
-#            self.assertEqual(el._findShape("3", lengths = lens ,extraD=True, grows=i), [0,mlen[0],mlen[1]] )
-#        self.assertEqual(el._findShape("3", lengths = lens ,extraD=True, grows=2), [mlen[0], 0, mlen[1]] )
-#        for i in range(3, 5):
-#            self.assertEqual(el._findShape("3", lengths = lens ,extraD=True, grows=i), [mlen[0], mlen[1], 0] )
+        nlen = [random.randint(-10000, 0), random.randint(-10000, 0)]
+        lens = {'1':str(mlen[0]),'2':str(nlen[1]),'3':str(mlen[1])}
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
+        for i in range(-2, 5):
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True,grows = i)
 
 
         mlen = random.randint(1, 1000)        
         lens = {'2':str(mlen), '3':str(mlen), '4':str(mlen)}
-        try:
-            error =  False
-            el._findShape("3",lengths = lens )
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens)
 
         mlen = random.randint(1, 1000)        
         lens = {'2':str(mlen)}
-        try:
-            error =  False
-            el._findShape("3",lengths = lens, extraD=True )
-        except XMLSettingSyntaxError, e:
-            error = True
-        self.assertEqual(error, True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
 
 
-
-        el.source = ds
+#        el.source = ds
         
-        el2 = FElement(self._tfname, self._fattrs, el, self._group )
-        el2.source = ds
+#        el2 = FElement(self._tfname, self._fattrs, el, self._group )
+#        el2.source = ds
 
 
 
