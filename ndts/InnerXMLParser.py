@@ -18,7 +18,7 @@
 ## \package ndts nexdatas
 # \file InnerXMLParser.py
 # An example of SAX Nexus parser
-import pni.nx.h5 as nx
+import pni.io.nx.h5 as nx
 from xml import sax
 
 import sys, os

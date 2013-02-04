@@ -21,7 +21,7 @@
 #
 import os
 import random
-from pni.nx.h5 import open_file
+from pni.io.nx.h5 import open_file
 import unittest
 from ndts import Types
 

@@ -25,7 +25,7 @@ import sys
 import subprocess
 import random
 import struct
-import pni.nx.h5 as nx
+import pni.io.nx.h5 as nx
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 

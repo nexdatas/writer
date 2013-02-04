@@ -20,7 +20,7 @@
 # NeXus runnable elements
 
 import sys                                                                       
-import pni.nx.h5 as nx
+import pni.io.nx.h5 as nx
 
 import numpy 
 

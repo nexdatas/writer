@@ -30,7 +30,7 @@ import struct
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from pni.nx.h5 import open_file
+from pni.io.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
 from ndts import TangoDataWriter, Types
