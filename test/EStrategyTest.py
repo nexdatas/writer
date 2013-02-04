@@ -164,6 +164,70 @@ class EStrategyTest(unittest.TestCase):
         
 
 
+    ## first constructor test
+    # \brief It tests default settings
+    def test_constructor_2(self):
+        print "Run: %s.test_constructor() " % self.__class__.__name__
+        attrs = {}
+        attrs["mode"] = "INIT"
+        attrs["trigger"] = "def_trigger1"
+        attrs["grows"] = "0"
+        attrs["compression"] = "false"
+        attrs["rate"] = "2"
+        attrs["shuffle"] = "false"
+        el = EField("field", self._fattrs, None)
+        st = EStrategy("strategy", attrs, el)
+        self.assertTrue(isinstance(st, Element))
+        self.assertTrue(isinstance(st, EStrategy))
+        self.assertEqual(st.tagName, "strategy")
+        self.assertEqual(st.content, [])
+        self.assertEqual(st.doc, "")
+        self.assertEqual(st._last.strategy, attrs["mode"])
+        self.assertEqual(el.strategy, attrs["mode"])
+        self.assertEqual(st._last.trigger, attrs["trigger"])
+        self.assertEqual(el.trigger, attrs["trigger"])
+        self.assertEqual(st._last.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
+        self.assertEqual(el.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1 )
+        self.assertEqual(st._last.compression, Converters.toBool(attrs["compression"]))
+        self.assertEqual(el.compression,  Converters.toBool(attrs["compression"]))
+        self.assertEqual(st._last.rate, 5)
+        self.assertEqual(el.rate, 5)
+        self.assertEqual(st._last.shuffle, True)
+        self.assertEqual(el.shuffle, True)
+        
+
+
+    ## first constructor test
+    # \brief It tests default settings
+    def test_constructor_3(self):
+        print "Run: %s.test_constructor() " % self.__class__.__name__
+        attrs = {}
+        attrs["mode"] = "STEP"
+        attrs["trigger"] = "def_trigger"
+        attrs["grows"] = "3"
+        attrs["compression"] = "true"
+        attrs["rate"] = "10"
+        attrs["shuffle"] = "true"
+        el = EField("field", self._fattrs, None)
+        st = EStrategy("strategy", attrs, el)
+        self.assertTrue(isinstance(st, Element))
+        self.assertTrue(isinstance(st, EStrategy))
+        self.assertEqual(st.tagName, "strategy")
+        self.assertEqual(st.content, [])
+        self.assertEqual(st.doc, "")
+        self.assertEqual(st._last.strategy, attrs["mode"])
+        self.assertEqual(el.strategy, attrs["mode"])
+        self.assertEqual(st._last.trigger, attrs["trigger"])
+        self.assertEqual(el.trigger, attrs["trigger"])
+        self.assertEqual(st._last.grows, int(attrs["grows"]))
+        self.assertEqual(el.grows, int(attrs["grows"]))
+        self.assertEqual(st._last.compression, Converters.toBool(attrs["compression"]))
+        self.assertEqual(el.compression,  Converters.toBool(attrs["compression"]))
+        self.assertEqual(st._last.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
+        self.assertEqual(el.rate, int(attrs["rate"])  if int(attrs["rate"]) < 10 else 9)
+        self.assertEqual(st._last.shuffle, Converters.toBool(attrs["shuffle"]))
+        self.assertEqual(el.shuffle, Converters.toBool(attrs["shuffle"]))
+
 
         
 
