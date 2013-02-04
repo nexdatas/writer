@@ -240,8 +240,8 @@ class EStrategy(Element):
                         self._last.rate = 0
                     if self._last.rate > 9:
                         self._last.rate = 9
-                if "suffle" in attrs.keys() and hasattr(self._last,"suffle"):
-                    self._last.shuffle = False if attrs["suffle"].upper() == "FALSE" else True
+                if "shuffle" in attrs.keys() and hasattr(self._last,"shuffle"):
+                    self._last.shuffle = False if attrs["shuffle"].upper() == "FALSE" else True
                 
             
 

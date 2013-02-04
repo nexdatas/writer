@@ -250,8 +250,8 @@ class FElementWithAttrTest(unittest.TestCase):
             "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool":[True,"NX_BOOLEAN", "bool", (1,)],
             "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool2":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool2":["true","NX_BOOLEAN", "bool", (1,)]
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
 
@@ -311,16 +311,21 @@ class FElementWithAttrTest(unittest.TestCase):
             "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool":[True,"NX_BOOLEAN", "bool", (1,)],
             "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool2":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool2":["true","NX_BOOLEAN", "bool", (1,)]
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
+                attrs[nm][0] =  [ attrs[nm][0]*mlen[1] ]*mlen[0] 
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 1)]
-            attrs[nm][0] =  [ attrs[nm][0]*mlen[1] ]*mlen[0] 
+                mlen = [random.randint(1, 10)]
+                if nm == 'bool':
+                    attrs[nm][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                else:
+                    attrs[nm][0] =  [ ("true" if random.randint(0,1) else "false")  for c in range(mlen[0]) ]
+
             attrs[nm][3] =  (mlen[0],)
 
 
@@ -375,16 +380,21 @@ class FElementWithAttrTest(unittest.TestCase):
             "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool":[True,"NX_BOOLEAN", "bool", (1,)],
             "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool2":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool2":["true","NX_BOOLEAN", "bool", (1,)]
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
+                attrs[nm][0] =  [[ attrs[nm][0]*mlen[2] ]*mlen[1] ]*mlen[0]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,1)]
-            attrs[nm][0] =  [[ attrs[nm][0]*mlen[2] ]*mlen[1] ]*mlen[0]
+                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                if nm == 'bool':
+                    attrs[nm][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ]]*mlen[0]
+                else:
+                    attrs[nm][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]]*mlen[0]
+                    
             attrs[nm][3] =  (mlen[0],mlen[1])
 
             
@@ -400,7 +410,7 @@ class FElementWithAttrTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])),at.value[i,j])
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
@@ -414,13 +424,6 @@ class FElementWithAttrTest(unittest.TestCase):
 
 
 
-    ## constructor test
-    # \brief It tests default settings
-    def test_h5Attribute(self):
-        print "Run: %s.test_h5Attribute() " % self.__class__.__name__
-        el = FElement(self._tfname, self._fattrs, None )
-        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
-        self.assertEqual(el2.tagAttributes, {})
         
 
 

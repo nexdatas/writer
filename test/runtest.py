@@ -49,6 +49,7 @@ import NexusXMLHandlerTest
 import ElementTest
 import FElementTest
 import FElementWithAttrTest
+import EStrategyTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -77,6 +78,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FElementTest) )
