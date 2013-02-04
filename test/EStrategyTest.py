@@ -228,7 +228,33 @@ class EStrategyTest(unittest.TestCase):
         self.assertEqual(st._last.shuffle, Converters.toBool(attrs["shuffle"]))
         self.assertEqual(el.shuffle, Converters.toBool(attrs["shuffle"]))
 
+    ## store method test
+    # \brief It tests executing store method
+    def test_store(self):
+        print "Run: %s.test_store() " % self.__class__.__name__
 
+        attrs = {"mode":"STEP"}
+        el = EField("field", self._fattrs, None)
+        st = EStrategy("strategy", {"mode":"STEP"}, el)
+        self.assertEqual(st.content, [])
+        self.assertEqual(st.doc, "")
+        self.assertEqual(st.store(), None)
+        self.assertEqual(st._last, el)
+
+        self.assertEqual(st.store("<tag/>"), None)
+        self.assertEqual(st._last.postrun,"")
+
+        content  = ["Test postrun"]
+        st.content = content
+        self.assertEqual(st.content, st.content)
+        self.assertEqual(st.store("<tag/>"), None)
+        self.assertEqual(st._last.postrun,st.content[0])
+
+
+        st.content = ["Test", " postrun"]
+        self.assertEqual(st.content, st.content)
+        self.assertEqual(st.store("<tag/>"), None)
+        self.assertEqual(st._last.postrun, content[0])
         
 
 
