@@ -499,7 +499,7 @@ class EField(FElementWithAttr):
                                             self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
                                         else:
                                             self.h5Object.grow(2)
-                                            self.h5Object[:,:,self.h5Object.shape[1]-1] = arr
+                                            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
                                     else:
                                         self.h5Object.grow(1)
                                         self.h5Object[:,self.h5Object.shape[1]-1] = arr
