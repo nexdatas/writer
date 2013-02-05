@@ -324,7 +324,7 @@ class EField(FElementWithAttr):
                     shape = [0]
             else:
                 raise
-            
+
             
         chunk = [s if s > 0 else 1 for s in shape]  
 
@@ -348,6 +348,8 @@ class EField(FElementWithAttr):
             f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
         self.h5Object = f
+
+        
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
@@ -403,6 +405,7 @@ class EField(FElementWithAttr):
         try:
             if self.source:
                 dh = DataHolder(**self.source.getData())
+#                print "VAL", dh.value, type(dh.value)
                 if not dh:
                     message = self.setMessage()
                     print message[0]
@@ -462,11 +465,12 @@ class EField(FElementWithAttr):
                                     self.h5Object.grow()
                                     self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
 
+                                    
                         if str(dh.format).split('.')[-1] == "SPECTRUM":
                         # way around for a bug in pninx
-
+                            
                             arr = dh.cast(self.h5Object.dtype)
-#                            print "arr", arr
+#                            print "arr", arr, type(arr), arr.dtype
                             if self.grows == 1:
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
@@ -499,7 +503,7 @@ class EField(FElementWithAttr):
                                             self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
                                         else:
                                             self.h5Object.grow(2)
-                                            self.h5Object[:,:,self.h5Object.shape[1]-1] = arr
+                                            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
                                     else:
                                         self.h5Object.grow(1)
                                         self.h5Object[:,self.h5Object.shape[1]-1] = arr
