@@ -33,7 +33,13 @@ except ImportError, e:
 DB_AVAILABLE = []
     
 try:
-    import MySQLdb
+    import MySQLdb    
+    args = {}
+    args["db"] = 'tango'
+    args["host"] = 'localhost'
+    args["read_default_file"] = '/etc/my.cnf'
+    mydb = MySQLdb.connect(**args)
+    mydb.close()
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
     print "MYSQL not available: %s" % e
