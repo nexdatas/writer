@@ -37,6 +37,7 @@ from ndts.H5Elements import FElement
 from ndts.H5Elements import EField
 from ndts.Element import Element
 from ndts.H5Elements import EFile
+from ndts.H5Elements import EGroup
 from ndts.Types import NTP, Converters
 
 ## if 64-bit machione
@@ -63,7 +64,8 @@ class EFieldTest(unittest.TestCase):
 
         self._tfname = "field"
         self._tfname = "group"
-        self._fattrs = {"short_name":"test","units":"m" }
+        self._fattrs = {"name":"test","units":"m" }
+        self._gattrs = {"name":"test","type":"NXentry" }
         self._gname = "testGroup"
         self._gtype = "NXentry"
         self._fdname = "testField"
@@ -80,8 +82,7 @@ class EFieldTest(unittest.TestCase):
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
-        self._group = self._nxFile.create_group(self._gname, self._gtype)
-        self._field = self._group.create_field(self._fdname, self._fdtype)
+        self._field = self._nxFile.create_field(self._fdname, self._fdtype)
         print "\nsetting up..."        
 
     ## test closer
@@ -117,6 +118,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el.rank, "0")
         self.assertEqual(el.lengths, {})
+        self.assertEqual(el.source, None)
         self.assertEqual(el.strategy, None)
         self.assertEqual(el.trigger, None)
         self.assertEqual(el.grows, None)
@@ -124,6 +126,30 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
 
+
+
+    ## default store method
+    # \brief It tests default settings
+    def test_store_default(self):
+        print "Run: %s.test_store() " % self.__class__.__name__
+        eFile = EFile("NXfile", [], None, self._nxFile)
+        el = EField("field", self._fattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "field")
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.rank, "0")
+        self.assertEqual(el.lengths, {})
+        self.assertEqual(el.strategy, None)
+        self.assertEqual(el.source, None)
+        self.assertEqual(el.trigger, None)
+        self.assertEqual(el.grows, None)
+        self.assertEqual(el.compression, False)
+        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.shuffle, True)
+        self.assertEqual(el.store(), None)
+        
 
 
 

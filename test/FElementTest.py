@@ -186,7 +186,7 @@ class FElementTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    ## store method test
     # \brief It tests default settings
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
