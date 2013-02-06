@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file FieldTagWriterTest.py
+## \file ClientFieldTagWriterTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -24,6 +24,12 @@ import os
 import sys
 import subprocess
 import random
+import struct
+
+## if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
@@ -34,7 +40,7 @@ from ndts.TangoDataWriter  import TangoDataWriter
 from Checkers import Checker
 
 ## test fixture
-class FieldTagWriterTest(unittest.TestCase):
+class ClientFieldTagWriterTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -51,6 +57,11 @@ class FieldTagWriterTest(unittest.TestCase):
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
+        
+        self._bint = "int64" if IS64BIT else "int32"
+        self._buint = "uint64" if IS64BIT else "uint32"
+        self._bfloat = "float64" if IS64BIT else "float32"
+
     ## test starter
     # \brief Common set up
     def setUp(self):
@@ -64,6 +75,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
+    # \param json JSON Record with client settings
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter(fname)
@@ -76,6 +88,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
     ## closes writer
     # \param tdw Tango Data Writer instance
+    # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         if json:
             tdw.json = json
@@ -85,6 +98,7 @@ class FieldTagWriterTest(unittest.TestCase):
     ## performs one record step
     def record(self, tdw, string):
         tdw.record(string)
+
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
@@ -221,13 +235,13 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 14)
-        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
+        det = self._sc.checkFieldTree(f, fname , 14)
+        self._sc.checkScalarField(det, "counter", self._bint, "NX_INT", self._counter)
         self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
         self._sc.checkScalarField(det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
         self._sc.checkScalarField(det, "counter32", "int32", "NX_INT32", self._counter)
         self._sc.checkScalarField(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ucounter", self._buint, "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
@@ -238,6 +252,106 @@ class FieldTagWriterTest(unittest.TestCase):
        
         f.close()
         os.remove(fname)
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientAttrScalar(self):
+        print "Run: %s.test_clientAttrScalar() " % self.__class__.__name__
+        fname= '%s/clientattrscalar.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <attribute type="NX_FLOAT" name="scalar_float">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="fcnt"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_CHAR" name="scalar_string">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="fcnt"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_INT" name="init_scalar_int">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="cnt"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="flag">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="logical"/>
+          </datasource>
+        </attribute>
+      </group>
+      <field type="NX_FLOAT" name="counter">
+        <attribute type="NX_FLOAT32" name="scalar_float32">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="fcnt"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_CHAR" name="scalar_string">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="fcnt"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_INT8" name="final_scalar_int8">
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="cnt"/>
+          </datasource>
+        </attribute>
+        1.2
+      </field>
+    </group>
+  </group>
+</definition>
+"""
+        
+        logical = ["1","0","true","false","True","False","TrUe","FaLsE"]
+
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  + ' "cnt":' + str(self._counter[0]) \
+                                  + ', "logical":' + str(logical[0]) \
+                                  + ' } }')
+        steps = min(len(self._fcounter), len(self._counter))
+        for i in range(steps):
+            self.record(tdw,'{"data": {'
+                        + ' "cnt":' + str(self._counter[i]) 
+                        + ', "fcnt":' + str(self._fcounter[i]) 
+                        + ', "cnt_32":' + str(self._fcounter[i]) 
+                        + ', "cnt_64":' + str(self._fcounter[i]) 
+                        + ' } }')
+        
+        self.closeWriter(tdw, json = '{"data": { "cnt":' + str(self._counter[0]) + ' } }')
+            
+
+        
+        # check the created file
+        f = open_file(fname,readonly=True)
+        det, field = self._sc.checkAttributeTree(f, fname, 4,3)
+        self._sc.checkScalarAttribute(det, "scalar_float", self._bfloat, self._fcounter[steps-1],
+                                      error = 1.e-14)
+        self._sc.checkScalarAttribute(det, "scalar_string", "string", 
+                                      str(self._fcounter[steps-1]))
+        self._sc.checkScalarAttribute(det, "init_scalar_int", self._bint, self._counter[0])
+        self._sc.checkScalarAttribute(det, "flag", "bool", logical[0])
+        self._sc.checkScalarAttribute(field, "scalar_float32", "float32", self._fcounter[steps-1],
+                                      error = 1.e-6)
+        self._sc.checkScalarAttribute(field, "scalar_string", "string", 
+                                      str(self._fcounter[steps-1]))
+        self._sc.checkScalarAttribute(field, "final_scalar_int8", "int8", self._counter[0])
+    
+        f.close()
+        os.remove(fname)
+
 
 
     ## scanRecord test
@@ -306,8 +420,8 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname, 6)
-        self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
+        det = self._sc.checkFieldTree(f, fname, 6)
+        self._sc.checkScalarField(det, "counter", self._bfloat, "NX_FLOAT", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
         self._sc.checkScalarField(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
@@ -356,6 +470,12 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="logical"/>
           </datasource>
         </field>
+        <field units="m" type="NX_BOOLEAN" name="bool_flags">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="bool"/>
+          </datasource>
+        </field>
 
 
         <field units="m" type="NX_CHAR" name="init_string">
@@ -391,7 +511,8 @@ class FieldTagWriterTest(unittest.TestCase):
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamp":"' + str(dates[i]) 
                        + '", "logical":"' + str(logical[i])
-                       + '" } }')
+                       + '", "bool":true'
+                       + ' } }')
             
         self.closeWriter(tdw, json = '{"data": { "logical":"' + str(logical[0]) + '" } }')
             
@@ -401,11 +522,12 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname, 6)
+        det = self._sc.checkFieldTree(f, fname, 7)
         self._sc.checkScalarField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkScalarField(det, "isotime", "string", "ISO8601", dates)
         self._sc.checkScalarField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkScalarField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkScalarField(det, "bool_flags", "bool", "NX_BOOLEAN", [True for c in range(8)])
 
         self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
         self._sc.checkSingleScalarField(det, "final_flag", "bool", "NX_BOOLEAN", logical[0])
@@ -418,7 +540,7 @@ class FieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
         print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
-        fname= '%s/clientintscpectrum.h5' % os.getcwd()   
+        fname= '%s/clientintspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -514,6 +636,16 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_uint"/>
           </datasource>
         </field>
+
+
+        <field units="" type="NX_INT64" name="mca_int64_dim">
+          <dimensions rank="1"/>
+          <strategy mode="STEP" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_INT64" name="init_mca_int64">
           <dimensions rank="1">
             <dim value="256" index="1"/>
@@ -534,6 +666,15 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_INT32" name="init_mca_int32">
+          <dimensions rank="1"/>
+          <strategy mode="INIT" compression="true" rate="3"/>
+          <datasource type="CLIENT">
+            <record name="mca_iint"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -541,7 +682,7 @@ class FieldTagWriterTest(unittest.TestCase):
 """
         
 
-        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + '  } }')
+        tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
 
         mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
         for mca in self._mca1:
@@ -557,24 +698,29 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 12)
-        self._sc.checkSpectrumField(det, "mca_int", "int64", "NX_INT", self._mca1)
+        det = self._sc.checkFieldTree(f, fname , 14)
+        self._sc.checkSpectrumField(det, "mca_int",  self._bint, "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
         self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int32", "int32", "NX_INT32", self._mca1, grows = 2 )
         self._sc.checkSpectrumField(det, "mca_int64", "int64", "NX_INT64", self._mca1)
-        self._sc.checkSpectrumField(det, "mca_uint", "uint64", "NX_UINT", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint",  self._buint, "NX_UINT", mca2)
         self._sc.checkSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows = 2)
         self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
         self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
         self._sc.checkSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", mca2)
+        self._sc.checkSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", self._mca1)
 
         self._sc.checkSingleSpectrumField(det, "init_mca_int64", "int64", "NX_INT64", self._mca1[0])
+        self._sc.checkSingleSpectrumField(det, "init_mca_int32", "int32", "NX_INT32", self._mca1[0])
         self._sc.checkSingleSpectrumField(det, "final_mca_uint32", "uint32", "NX_UINT32", mca2[0])
 
         
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
+
+
+
 
 
     ## scanRecord test
@@ -623,6 +769,14 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="" type="NX_FLOAT" name="mca_float_dim">
+          <dimensions rank="1"/>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_FLOAT32" name="init_mca_float32">
           <dimensions rank="1">
             <dim value="1024" index="1"/>
@@ -632,6 +786,7 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </field>
+
         <field units="" type="NX_FLOAT64" name="final_mca_float64">
           <dimensions rank="1">
             <dim value="1024" index="1"/>
@@ -641,6 +796,16 @@ class FieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </field>
+
+        <field units="" type="NX_FLOAT" name="final_mca_float">
+          <dimensions rank="1"/>
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </field>
+
+
        </group>
     </group>
   </group>
@@ -662,8 +827,10 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 6)
-        self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
+        det = self._sc.checkFieldTree(f, fname , 8)
+        self._sc.checkSpectrumField(det, "mca_float", self._bfloat, "NX_FLOAT", self._fmca1, 
+                                    error = 1.0e-14)
+        self._sc.checkSpectrumField(det, "mca_float_dim", self._bfloat, "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
         self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
                                     error = 1.0e-6, grows = 2)
@@ -676,6 +843,8 @@ class FieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleSpectrumField(det, "init_mca_float32", "float32", "NX_FLOAT32", self._fmca1[0],
                                           error = 1.0e-6)
         self._sc.checkSingleSpectrumField(det, "final_mca_float64", "float64", "NX_FLOAT64", self._fmca1[0],
+                                          error = 1.0e-14)
+        self._sc.checkSingleSpectrumField(det, "final_mca_float", self._bfloat, "NX_FLOAT", self._fmca1[0],
                                           error = 1.0e-14)
 
 
@@ -732,6 +901,35 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field units="" type="NX_BOOLEAN" name="bool_flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="bool"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_BOOLEAN" name="flags_dim">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <strategy mode="STEP" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_CHAR" name="string_time_dim">
+          <strategy mode="STEP" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1"/>
+        </field>
+
 
         <field units="" type="NX_CHAR" name="init_string_time">
           <strategy mode="INIT" compression="true" shuffle="true"/>
@@ -753,6 +951,24 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="" type="NX_BOOLEAN" name="init_flags">
+          <strategy mode="INIT"/>
+          <dimensions rank="1" />
+          <strategy mode="FINAL" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_CHAR" name="final_string_time">
+          <strategy mode="FINAL" compression="true" shuffle="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="1" />
+        </field>
+
       </group>
     </group>
   </group>
@@ -766,17 +982,24 @@ class FieldTagWriterTest(unittest.TestCase):
                   "1914-11-04T04:13:13.44-0000","2002-04-03T14:15:03.0012-0300"]]
         logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
 #        print "CHECK:", '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }'
-
-        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
+        bools = ["[true, false, true, false]", "[true, false, true, false]"]
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  +' "timestamps":' + str(dates[0]).replace("'","\"") \
+                                  + ', "logicals":' + str(logical[0]).replace("'","\"")
+                                  + '  } }')
 
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
                        + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + ', "bool":' + bools[i]
                        + ' } }')
             
 
         
-        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
+        self.closeWriter(tdw, json = '{"data": {'\
+                             +' "timestamps":' + str(dates[0]).replace("'","\"") \
+                             + ', "logicals":' + str(logical[0]).replace("'","\"")
+                         + '  } }')
             
 
 
@@ -784,18 +1007,143 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 15)
+        det = self._sc.checkFieldTree(f, fname , 23)
         self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkSpectrumField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkStringSpectrumField(det, "string_time_dim", "string", "NX_CHAR", dates)
 
         self._sc.checkSingleStringSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+        self._sc.checkSingleStringSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleSpectrumField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
 
         
         f.close()
         os.remove(fname)
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientAttrSpectrum(self):
+        print "Run: %s.test_clientAttrSpectrum() " % self.__class__.__name__
+        fname= '%s/clientattrspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <attribute type="NX_FLOAT" name="spectrum_float">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_INT32" name="init_spectrum_int32">
+          <dimensions rank="1" />
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="mca_int"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="spectrum_bool">
+          <dimensions rank="1">
+            <dim value="8" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="flags"/>
+          </datasource>
+        </attribute>
+
+      </group>
+      <field type="NX_FLOAT" name="counter">
+        <attribute type="NX_FLOAT32" name="spectrum_float32">
+          <dimensions rank="1" />
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="mca_float"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_UINT64" name="final_spectrum_uint64">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="final_spectrum_bool">
+          <dimensions rank="1">
+            <dim value="8" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="flags"/>
+          </datasource>
+        </attribute>
+        1.2
+      </field>
+    </group>
+  </group>
+</definition>
+"""
+
+#        <attribute type="NX_CHAR" name="flag_spectrum_string">
+#          <dimensions rank="1">
+#            <dim value="8" index="1"/>
+#          </dimensions>
+#          <strategy mode="STEP"/>
+#          <datasource type="CLIENT">
+#            <record name="flags"/>
+#          </datasource>
+#        </attribute>
+
+
+
+        logical = ["1","0","true","false","True","False","TrUe","FaLsE"]
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  +' "mca_float":' + str(self._fmca1[0]) \
+                                  +',  "flags":' + str(logical).replace("'","\"") \
+                                  +', "mca_int":' + str(self._mca1[0]) \
+                                  + '  } }')
+        steps = min(len(self._fmca1), len(self._fmca1))
+        for i in range(steps):
+            self.record(tdw,'{"data": {'\
+                            +' "mca_float":' + str(self._fmca1[i]) \
+                            +',  "flags":' + str(logical).replace("'","\"") \
+                            + '  } }')
+        
+        self.closeWriter(tdw, json = '{"data": {'\
+                             +' "mca_float":' + str(self._fmca1[0]) \
+                             +', "mca_int":' + str(self._mca1[0]) \
+                             +',  "flags":' + str(logical).replace("'","\"") \
+                             +', "mca_uint":' + str(self._mca2[0]) \
+                             + '  } }')
+
+
+        
+        # check the created file
+        f = open_file(fname,readonly=True)
+        det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
+        self._sc.checkSpectrumAttribute(det, "spectrum_float", self._bfloat, self._fmca1[steps-1],
+                                      error = 1.e-14)
+        self._sc.checkSpectrumAttribute(det, "init_spectrum_int32", "int32", self._mca1[0])
+        self._sc.checkSpectrumAttribute(det, "spectrum_bool", "bool", logical)
+        self._sc.checkSpectrumAttribute(field, "spectrum_float32", "float32", self._fmca1[steps-1],
+                                      error = 1.e-6)
+        self._sc.checkSpectrumAttribute(field, "final_spectrum_uint64", "uint64", self._mca2[0])
+        self._sc.checkSpectrumAttribute(field, "final_spectrum_bool", "bool", logical)
+        ## NOT SUPPORTED BY PNINX
+#        self._sc.checkSpectrumAttribute(field, "flag_spectrum_string", "string", logical)
+    
+        f.close()
+#        os.remove(fname)
 
 
 
@@ -830,10 +1178,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
         <field units="" type="NX_INT16" name="pco_int16">
-          <dimensions rank="2">
-            <dim value="10" index="1"/>
-            <dim value="8" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="STEP" compression="true" grows="3"/>
           <datasource type="CLIENT">
             <record name="pco_int"/>
@@ -913,10 +1258,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
 
         <field units="" type="NX_INT64" name="init_pco_int64">
-          <dimensions rank="2">
-            <dim value="10" index="1"/>
-            <dim value="8" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="INIT" compression="true" rate="3"/>
           <datasource type="CLIENT">
             <record name="pco_int"/>
@@ -958,13 +1300,13 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 12)
-        self._sc.checkImageField(det, "pco_int", "int64", "NX_INT", self._pco1)
+        det = self._sc.checkFieldTree(f, fname , 12)
+        self._sc.checkImageField(det, "pco_int",  self._bint, "NX_INT", self._pco1)
         self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
         self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
         self._sc.checkImageField(det, "pco_int32", "int32", "NX_INT32", self._pco1, grows = 2 )
         self._sc.checkImageField(det, "pco_int64", "int64", "NX_INT64", self._pco1)
-        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint",  self._buint, "NX_UINT", pco2)
         self._sc.checkImageField(det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows = 3)
         self._sc.checkImageField(det, "pco_uint16", "uint16", "NX_UINT16", pco2 )
         self._sc.checkImageField(det, "pco_uint32", "uint32", "NX_UINT32", pco2, grows = 2 )
@@ -972,7 +1314,7 @@ class FieldTagWriterTest(unittest.TestCase):
 
 
         self._sc.checkSingleImageField(det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
-        self._sc.checkSingleImageField(det, "final_pco_uint", "uint64", "NX_UINT", pco2[0])
+        self._sc.checkSingleImageField(det, "final_pco_uint",  self._buint, "NX_UINT", pco2[0])
         
         f.close()
         os.remove(fname)
@@ -1008,10 +1350,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
         <field units="" type="NX_FLOAT64" name="pco_float64">
-          <dimensions rank="2">
-            <dim value="20" index="1"/>
-            <dim value="30" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="STEP" grows="3"/>
           <datasource type="CLIENT">
             <record name="pco_float"/>
@@ -1040,10 +1379,7 @@ class FieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
         <field units="" type="NX_FLOAT64" name="final_pco_float64">
-          <dimensions rank="2">
-            <dim value="20" index="1"/>
-            <dim value="30" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <strategy mode="FINAL" />
           <datasource type="CLIENT">
             <record name="pco_float"/>
@@ -1073,8 +1409,8 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 6)
-        self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
+        det = self._sc.checkFieldTree(f, fname , 6)
+        self._sc.checkImageField(det, "pco_float", self._bfloat, "NX_FLOAT", self._fpco1, 
                                     error = 1.0e-14)
         self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
                                     error = 1.0e-6, grows = 2)
@@ -1115,10 +1451,7 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
         <field units="" type="ISO8601" name="isotime">
           <strategy mode="STEP" compression="true" grows="2" shuffle="true"/>
-          <dimensions rank="2">
-            <dim value="3" index="1"/>
-            <dim value="4" index="2"/>
-          </dimensions>
+          <dimensions rank="2" />
           <datasource type="CLIENT">
             <record name="timestamps"/>
           </datasource>
@@ -1145,6 +1478,26 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field units="" type="NX_BOOLEAN" name="bool_flags">
+          <strategy mode="STEP"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="bool"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_BOOLEAN" name="flags_dim">
+          <strategy mode="STEP"/>
+          <dimensions rank="2" />
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
 
         <field units="" type="NX_CHAR" name="init_string_time">
           <strategy mode="INIT" grows="2"/>
@@ -1158,6 +1511,28 @@ class FieldTagWriterTest(unittest.TestCase):
         </field>
         <field units="" type="NX_BOOLEAN" name="final_flags">
           <strategy mode="FINAL"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_CHAR" name="final_string_time">
+          <strategy mode="FINAL" grows="2"/>
+          <datasource type="CLIENT">
+           <record name="timestamps"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="init_flags">
+          <strategy mode="INIT"/>
           <dimensions rank="2">
             <dim value="3" index="1"/>
             <dim value="4" index="2"/>
@@ -1187,20 +1562,31 @@ class FieldTagWriterTest(unittest.TestCase):
 
         logical = [[["1","0","true","false"], ["True","False","TrUe","FaLsE"], ["1","0","0","1"]],
                    [["0","1","true","false"], ["TrUe","1","0","FaLsE"], ["0","0","1","0"]]]
+
+
+        bools = ["[ [true,false,true,false], [true,false,true,false], [true,false,false,true]]",
+                 "[ [false,true,true,false], [true,true,false,false], [false,false,true,false]]"]
         
 
-        tdw = self.openWriter(fname, xml, json = '{"data": { "timestamps":' + str(dates[0]).replace("'","\"") + '  } }')
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  +'"timestamps":' + str(dates[0]).replace("'","\"") \
+                                  + ', "logicals":' + str(logical[0]).replace("'","\"")
+                                  + '  } }')
 
         
 
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
                         + ', "logicals":' + str(logical[i]).replace("'","\"")
+                        + ', "bool":' + bools[i]
                         + ' } }')
             
 
         
-        self.closeWriter(tdw, json = '{"data": { "logicals":' + str(logical[0]).replace("'","\"") + '  } }')
+        self.closeWriter(tdw, json = '{"data": {'\
+                             +'"timestamps":' + str(dates[0]).replace("'","\"") \
+                             + ', "logicals":' + str(logical[0]).replace("'","\"") \
+                             + '  } }')
             
 
 
@@ -1208,17 +1594,183 @@ class FieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 42)
+        det = self._sc.checkFieldTree(f, fname , 49)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        self._sc.checkImageField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkImageField(det, "flags_dim", "bool", "NX_BOOLEAN", logical)
 
         self._sc.checkSingleStringImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleImageField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+        self._sc.checkSingleStringImageField(det, "final_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleImageField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
         
         f.close()
         os.remove(fname)
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_clientAttrImage(self):
+        print "Run: %s.test_clientAttrImage() " % self.__class__.__name__
+        fname= '%s/clientattrimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+        <attribute type="NX_FLOAT" name="image_float">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_INT" name="image_int">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_INT32" name="image_int32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </attribute>
+
+
+
+        <attribute type="NX_BOOLEAN" name="image_bool">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="flags"/>
+          </datasource>
+        </attribute>
+
+      </group>
+      <field type="NX_FLOAT" name="counter">
+        <attribute type="NX_FLOAT32" name="image_float32">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_float"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_UINT32" name="image_uint32">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_UINT64" name="image_uint64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource type="CLIENT">
+            <record name="pco_int"/>
+          </datasource>
+        </attribute>
+
+
+        <attribute type="NX_BOOLEAN" name="image_bool">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="INIT"/>
+          <datasource type="CLIENT">
+            <record name="flags"/>
+          </datasource>
+        </attribute>
+
+        1.2
+      </field>
+    </group>
+  </group>
+</definition>
+"""
+
+#        <attribute type="NX_CHAR" name="flag_spectrum_string">
+#          <dimensions rank="1">
+#            <dim value="8" index="1"/>
+#          </dimensions>
+#          <strategy mode="STEP"/>
+#          <datasource type="CLIENT">
+#            <record name="flags"/>
+#          </datasource>
+#        </attribute>
+
+
+
+        logical = [["1","0","true","false"], ["True","False","TrUe","FaLsE"]]
+        tdw = self.openWriter(fname, xml, json = '{"data": {'\
+                                  +' "pco_float":' + str(self._fpco1[0]) \
+                                  +',  "flags":' + str(logical).replace("'","\"") \
+                                  +', "pco_int":' + str(self._pco1[0]) \
+                                  + '  } }')
+        steps = min(len(self._pco1), len(self._fpco1))
+        for i in range(steps):
+            self.record(tdw,'{"data": {'\
+                            +' "pco_float":' + str(self._fpco1[i]) \
+                            +', "pco_int":' + str(self._pco1[i]) \
+                            +',  "flags":' + str(logical).replace("'","\"") \
+                            + '  } }')
+        
+        self.closeWriter(tdw, json = '{"data": {'\
+                             +' "pco_float":' + str(self._fpco1[0]) \
+                             +', "pco_int":' + str(self._pco1[0]) \
+                             +',  "flags":' + str(logical).replace("'","\"") \
+                             + '  } }')
+
+
+        
+        # check the created file
+        f = open_file(fname,readonly=True)
+        det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
+        self._sc.checkImageAttribute(det, "image_float", self._bfloat, self._fpco1[steps-1],
+                                      error = 1.e-14)
+        self._sc.checkImageAttribute(det, "image_int",  self._bint, self._pco1[0])
+        self._sc.checkImageAttribute(det, "image_bool", "bool", logical)
+        self._sc.checkImageAttribute(det, "image_int32", "int32", self._pco1[steps-1])
+        self._sc.checkImageAttribute(field, "image_float32", "float32", self._fpco1[steps-1],
+                                      error = 1.e-6)
+        self._sc.checkImageAttribute(field, "image_uint32", "uint32", self._pco1[steps-1])
+        self._sc.checkImageAttribute(field, "image_uint64", "uint64", self._pco1[0])
+        self._sc.checkImageAttribute(field, "image_bool", "bool", logical)
+        # STRING NOT SUPPORTED BY PNINX
+    
+        f.close()
+#        os.remove(fname)
+
 
 
 

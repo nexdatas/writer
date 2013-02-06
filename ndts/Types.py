@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -103,5 +103,5 @@ class NTP(object):
             shape.append(len(array))
             rank += 1
         else:
-           pythonDType = type(array)
+            pythonDType = type(array)
         return (rank, shape, pythonDType)            

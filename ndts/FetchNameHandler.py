@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -40,17 +40,17 @@ class FetchNameHandler(sax.ContentHandler):
         self.groupTypes = {"":""}
 
         ## stack with open tag type attributes
-        self._tstack = []
+        self.__tstack = []
         ## stack with open tag name attributes
-        self._nstack = []
+        self.__nstack = []
         ## stack with open tag names
-        self._stack = []
+        self.__stack = []
         ## name of attribute tag
-        self._attrName = "" 
+        self.__attrName = "" 
         ## content of attribute tag
-        self._content = []
+        self.__content = []
         
-        self._attribute = False
+        self.__attribute = False
 
     ##  parses the opening tag
     # \param name tag name
@@ -65,20 +65,20 @@ class FetchNameHandler(sax.ContentHandler):
                 ttype = attrs["type"]
             if "name" in attrs.keys():
                 tname = attrs["name"]
-            self._tstack.append(ttype)
-            self._nstack.append(tname)
-            self._stack.append(name)
-        elif name == "attribute" and self._stack[-1] == "group":
-            self._content = []
-            self._attribute = True
+            self.__tstack.append(ttype)
+            self.__nstack.append(tname)
+            self.__stack.append(name)
+        elif name == "attribute" and self.__stack[-1] == "group":
+            self.__content = []
+            self.__attribute = True
             if "name" in attrs.keys() and attrs["name"] in ["name", "type"]:
-                self._attrName = attrs["name"]
+                self.__attrName = attrs["name"]
 
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        if self._attribute and self._stack[-1] == "group":
-            self._content.append(ch)
+        if self.__attribute and self.__stack[-1] == "group":
+            self.__content.append(ch)
 
 
 
@@ -86,30 +86,30 @@ class FetchNameHandler(sax.ContentHandler):
     # \param name tag name
     def endElement(self, name):
         if name  == "group" :
-            if self._tstack[-1] and self._nstack[-1]:
-                self.groupTypes[self._tstack[-1]] = self._nstack[-1]
-            elif self._tstack[-1] and len(self._tstack[-1]) > 2:
-                self.groupTypes[self._tstack[-1]] = self._tstack[-1][2:]
+            if self.__tstack[-1] and self.__nstack[-1]:
+                self.groupTypes[self.__tstack[-1]] = self.__nstack[-1]
+            elif self.__tstack[-1] and len(self.__tstack[-1]) > 2:
+                self.groupTypes[self.__tstack[-1]] = self.__tstack[-1][2:]
                 
             else:
                  raise XMLSyntaxError, "The group type not defined"        
-            self._tstack.pop()
-            self._nstack.pop()
-            self._stack.pop()
+            self.__tstack.pop()
+            self.__nstack.pop()
+            self.__stack.pop()
                 
                 
-        if name == "attribute"  and self._stack[-1] == "group":
-            if self._attrName :
-                content = ("".join(self._content)).strip()        
+        if name == "attribute"  and self.__stack[-1] == "group":
+            if self.__attrName :
+                content = ("".join(self.__content)).strip()        
                 if content:
-                    if self._attrName == "name":
-                        self._nstack[-1] = content
-                    if self._attrName == "type":
-                        self._tstack[-1] = content
+                    if self.__attrName == "name":
+                        self.__nstack[-1] = content
+                    if self.__attrName == "type":
+                        self.__tstack[-1] = content
             
-            self._attribute = False
-            self._content = []
-            self._attrName = None
+            self.__attribute = False
+            self.__content = []
+            self.__attrName = None
             
             
 

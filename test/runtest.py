@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,22 +34,38 @@ DB_AVAILABLE = []
     
 try:
     import MySQLdb
+    args = {}
+    args["db"] = 'tango'
+    args["host"] = 'localhost'
+    args["read_default_file"] = '/etc/my.cnf'
+    mydb = MySQLdb.connect(**args)
+    mydb.close()
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
     print "MYSQL not available: %s" % e
+except:
+    print "MYSQL not available"
     
 
 import unittest
 
 import TangoDataWriterTest
-import FieldTagWriterTest
+import ClientFieldTagWriterTest
+import XMLFieldTagWriterTest
 import TangoFieldTagWriterTest
+import NexusXMLHandlerTest
+import ElementTest
+import FElementTest
+import FElementWithAttrTest
+import EStrategyTest
+
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
 
 if PYTANGO_AVAILABLE:
     import TangoDataServerTest
-    import FieldTagServerTest
+    import ClientFieldTagServerTest
+    import XMLFieldTagServerTest
     import TangoFieldTagServerTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
@@ -67,12 +83,30 @@ def main():
     
     ## test suit
     suite = unittest.TestSuite()
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FElementTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FElementWithAttrTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
     
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(FieldTagWriterTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
@@ -83,7 +117,10 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
 
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FieldTagServerTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )

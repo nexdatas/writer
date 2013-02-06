@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -64,6 +64,7 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
+    # \param json JSON Record with client settings
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
@@ -85,6 +86,7 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
 
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
+    # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 

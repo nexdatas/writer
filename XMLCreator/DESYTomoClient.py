@@ -16,22 +16,34 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package  ndtstools tools for ndts
-## \file simpleClient.py
-# first example of simple client
+## \file simpleScanClient.py
+# example of simple client
+
 
 import sys, os
 import time
+from datetime import datetime
+from pytz import timezone
+import pytz
 
-import PyTango
 
-## the main function
+import random
+
+from math import exp
+
+import PyTango 
+
+
+
+## the main function    
 def main():
     if  len(sys.argv) < 2:
-        print "usage: simpleClient.py  <XMLfile>  <H5file>  <tangoServer>"
+        print "usage: DESYTOMOClient.py  <XMLfile>  <H5file>  <tangoServer>"
         
     else:
         xmlf = sys.argv[1]
         if os.path.exists(xmlf):
+
 
             if len(sys.argv) > 2:
                 
@@ -48,13 +60,12 @@ def main():
             print "storing in ", fname 
     
             device = "p09/tdw/r228"
-            if len(sys.argv) > 3:
+            if len(sys.argv)>3:
                 device = sys.argv[3]
             
             dpx = PyTango.DeviceProxy(device)
-            dpx.set_timeout_millis(25000)
-            dpx.Init()
             print " Connected to: ", device
+            dpx.Init()
     
             xml = open(xmlf, 'r').read()
 
@@ -64,40 +75,50 @@ def main():
             print "opening the H5 file"
             dpx.OpenFile()
 
+            amsterdam = timezone('Europe/Amsterdam')
+            fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+            starttime = amsterdam.localize(datetime.now())
+
+
             dpx.TheXMLSettings = xml
+            theString = '{"data": {'\
+                +' "sample_name":"test sample 1",'\
+                +' "start_time":"'+  str(starttime.strftime(fmt)) + '"' \
+                +'}  }'
+                #                +' "start_time":"2012-11-14T14:05:23.2344-0200"' \
+  
+            dpx.TheJSONRecord =theString 
 
             print "opening the entry"
             dpx.OpenEntry()
 
-            print "recording the H5 file"
-            dpx.record('{"data": {"emittance_x": 0.1},  "triggers":["trigger1", "trigger2"]  }')
-            
-            print "sleeping for 1s"
-            time.sleep(1)
+            for i in range(24):
+                flip =  i % 3
+                if flip == 0:
+                    dpx.record('{"triggers":["bright_frame_trigger"]}')
+                elif flip == 1:
+                    dpx.record('{"triggers":["dark_frame_trigger"]}')
+                elif flip == 2:
+                    dpx.record('{"triggers":["sample_frame_trigger"]}')
+                time.sleep(0.1)
 
-            print "recording the H5 file"
-            dpx.record('{"data": {"emittance_x": 0.3} }')
 
 
-            print "sleeping for 1s"
-            time.sleep(1)
+            endtime = amsterdam.localize(datetime.now())
 
-            print "recording the H5 file"
-            dpx.record('{"data": {"emittance_x": 0.6},  "triggers":["trigger1"]  }')
-            
+            theString = '{"data": {'\
+                +' "end_time":"'+  str(endtime.strftime(fmt)) + '"' \
+                +'}  }'
 
-            print "sleeping for 1s"
-            time.sleep(1)
+#                +' "end_time":"2012-11-14T17:15:23.4567-0200" '\
+ 
+            dpx.TheJSONRecord =theString 
 
-            print "recording the H5 file"
-            dpx.record('{"data": {"emittance_x": 0.5} }')
-
-            print "sleeping for 1s"
-            time.sleep(1)
-
-            print "recording the H5 file"
-            dpx.record('{"data": {"emittance_x": 0.1},  "triggers":["trigger2"]  }')
-            
+# monitor_counter
+# sample_rotation
+# sample_x_translation
+# sample_y_translation
+# sample_z_translation
 
 
             print "closing the  entry"
@@ -106,10 +127,14 @@ def main():
             dpx.closeFile()
 
 
+
 if __name__ == "__main__":
     main()
+
             
                 
             
             
 
+
+#  LocalWords:  nicePlot

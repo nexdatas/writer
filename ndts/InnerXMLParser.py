@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,36 +38,36 @@ class InnerXMLHandler(sax.ContentHandler):
         ## xml string
         self.xml = None
         ## external contentHandler
-        self._contentHandler = contentHandler
+        self.__contentHandler = contentHandler
         ## external xmlreader
-        self._xmlReader = xmlReader 
+        self.__xmlReader = xmlReader 
         ## tag depth
-        self._depth = 1
+        self.__depth = 1
         ## first tag
-        self._preXML = self._openTag(name, attrs, eol = False) 
+        self.__preXML = self.__openTag(name, attrs, eol = False) 
         ## last tag
-        self._postXML = "</%s>"% name
+        self.__postXML = "</%s>"% name
         ## tag content
-        self._contentXML = ""
+        self.__contentXML = ""
 
     ## replaces characters not allowed in xml string
     # \param string text
     # \returns converted text with special characters 
-    def _replace(self, string):
+    def __replace(self, string):
         return string.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
 
 
     ## replaces characters not allowed in  xml attribute values
     # \param string text
     # \returns converted text with special characters 
-    def _replaceAttr(self, string):
-        return self._replace(string).replace("\"","&quot;").replace("'","&apos;")
+    def __replaceAttr(self, string):
+        return self.__replace(string).replace("\"","&quot;").replace("'","&apos;")
 
 
     ## creates opening tag
     # \param name tag name
     # \param attrs tag attributes    
-    def _openTag(self, name, attrs, eol = False):
+    def __openTag(self, name, attrs, eol = False):
         xml = ""
         if eol:
             xml += "\n<%s "% name
@@ -75,7 +75,7 @@ class InnerXMLHandler(sax.ContentHandler):
             xml += "<%s "% name
             
         for k in attrs.keys():
-            xml += " %s=\"%s\"" % (k, self._replaceAttr(attrs[k]))
+            xml += " %s=\"%s\"" % (k, self.__replaceAttr(attrs[k]))
         if eol:
             xml += ">\n"
         else:
@@ -86,24 +86,24 @@ class InnerXMLHandler(sax.ContentHandler):
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        self._depth +=1 
-        self._contentXML += self._openTag(name, attrs)
+        self.__depth +=1 
+        self.__contentXML += self.__openTag(name, attrs)
 
     ## adds the tag content 
     # \param ch partial content of the tag    
     def characters(self, ch):
-        self._contentXML += self._replace(ch)
+        self.__contentXML += self.__replace(ch)
 
 
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        self._depth -=1 
-        if self._depth == 0:
-            self.xml = (self._preXML, self._contentXML, self._postXML)
-            self._xmlReader.setContentHandler(self._contentHandler)
+        self.__depth -=1 
+        if self.__depth == 0:
+            self.xml = (self.__preXML, self.__contentXML, self.__postXML)
+            self.__xmlReader.setContentHandler(self.__contentHandler)
         else:   
-            self._contentXML += "</%s>" % name 
+            self.__contentXML += "</%s>" % name 
 
 
 

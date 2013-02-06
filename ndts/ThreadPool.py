@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,23 +34,23 @@ class ThreadPool(object):
         ## maximal number of threads
         self.numThreads = -1
         ## queue of the appended elements
-        self._elementQueue = Queue.Queue()
+        self.__elementQueue = Queue.Queue()
         ## list of the appended elements
-        self._elementList = []
+        self.__elementList = []
         ## list of the threads related to the appended elements
-        self._threadList = []
+        self.__threadList = []
 
     ## appends the thread element
     # \param elem the thread element
     def append(self, elem):
-        self._elementList.append(elem)
+        self.__elementList.append(elem)
 
     ## sets the JSON string to threads
     # \param globalJSON the static JSON string
     # \param localJSON the dynamic JSON string
     # \returns self object    
     def setJSON(self, globalJSON, localJSON=None):
-        for el in self._elementList :
+        for el in self.__elementList :
             if hasattr(el.source, "setJSON") and callable(el.source.setJSON):
                 el.source.setJSON(globalJSON, localJSON)
         return self
@@ -59,25 +59,25 @@ class ThreadPool(object):
     ## runner
     # \brief It runs the threads from the pool
     def run(self):
-        self._threadList = []
-        self._elementQueue = Queue.Queue()
+        self.__threadList = []
+        self.__elementQueue = Queue.Queue()
         
-        for eth in self._elementList:
-            self._elementQueue.put(eth)
+        for eth in self.__elementList:
+            self.__elementQueue.put(eth)
 
         if self.numThreads < 1:
-            self.numThreads = len(self._elementList)
+            self.numThreads = len(self.__elementList)
 
-        for  i in range(min(self.numThreads, len(self._elementList))):
-            th = ElementThread(i, self._elementQueue)
-            self._threadList.append(th)
+        for  i in range(min(self.numThreads, len(self.__elementList))):
+            th = ElementThread(i, self.__elementQueue)
+            self.__threadList.append(th)
             th.start()
 
 
     ## waits for all thread from the pool
     # \param timeout the maximal waiting time
     def join(self, timeout=None):
-        for th in self._threadList:
+        for th in self.__threadList:
             if th.isAlive():
                 th.join()
 
@@ -91,7 +91,7 @@ class ThreadPool(object):
     ## checks errors from threads
     def checkErrors(self):
         errors = []
-        for el in self._elementList:
+        for el in self.__elementList:
             if el.error:
                 errors.append(el.error)
 
@@ -101,9 +101,9 @@ class ThreadPool(object):
     ## closer
     # \brief It close the threads from the pool
     def close(self):
-        for el in self._elementList:
+        for el in self.__elementList:
             if hasattr(el.h5Object,"close"):
                 el.h5Object.close()
-        self._threadList = []
-        self._elementList = []
-        self._elementQueue = None
+        self.__threadList = []
+        self.__elementList = []
+        self.__elementQueue = None

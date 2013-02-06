@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -39,12 +39,12 @@ class Checker(object):
         self._tc = testCase 
 
 
-    ## checks scalar tree
+    ## checks field tree
     # \param f pninx file object    
     # \param fname file name
     # \param children number of detector children   
     # \returns detector group object    
-    def checkScalarTree(self, f, fname, children):
+    def checkFieldTree(self, f, fname, children):
         self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
         self._tc.assertEqual(6, f.nattrs)
         self._tc.assertEqual( f.attr("file_name").value, fname)
@@ -95,6 +95,179 @@ class Checker(object):
         self._tc.assertEqual(at.value,"NXdetector")
             
         return det
+
+
+    ## checks attribute tree
+    # \param f pninx file object    
+    # \param fname file name
+    # \param gattributes number of group attributes
+    # \param fattributes number of field attributes
+    # \returns detector group object    
+    def checkAttributeTree(self, f, fname, gattributes, fattributes):
+        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+        self._tc.assertEqual(6, f.nattrs)
+        self._tc.assertEqual( f.attr("file_name").value, fname)
+        self._tc.assertTrue(f.attr("NX_class").value,"NXroot")
+        self._tc.assertEqual(f.nchildren, 2)
+            
+        en = f.open("entry1")
+        self._tc.assertTrue(en.valid)
+        self._tc.assertEqual(en.name,"entry1")
+        self._tc.assertEqual(en.nattrs,1)
+        self._tc.assertEqual(en.nchildren, 1)
+
+        at = en.attr("NX_class")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"NX_class")
+        self._tc.assertEqual(at.value,"NXentry")
+
+        ins = en.open("instrument")
+        self._tc.assertTrue(ins.valid)
+        self._tc.assertEqual(ins.name,"instrument")
+        self._tc.assertEqual(ins.nattrs,1)
+        self._tc.assertEqual(ins.nchildren, 2)
+        
+            
+        at = ins.attr("NX_class")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"NX_class")
+        self._tc.assertEqual(at.value,"NXinstrument")
+
+        det = ins.open("detector")
+        self._tc.assertTrue(det.valid)
+        self._tc.assertEqual(det.name,"detector")
+        self._tc.assertEqual(det.nattrs, 1 + gattributes)
+        self._tc.assertEqual(det.nchildren, 0)
+
+        det = ins.open("detector")
+        self._tc.assertTrue(det.valid)
+        self._tc.assertEqual(det.name,"detector")
+        self._tc.assertEqual(det.nattrs, 1 + gattributes)
+        self._tc.assertEqual(det.nchildren, 0)
+
+
+        field = ins.open("counter")
+        self._tc.assertTrue(field.valid)
+        self._tc.assertEqual(field.name,"counter")
+        self._tc.assertEqual(field.nattrs, 1 + fattributes)
+            
+        at = det.attr("NX_class")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"NX_class")
+        self._tc.assertEqual(at.value,"NXdetector")
+            
+        return det,field
+
+
+
+    ## checks  scalar attributer
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param values  original values
+    # \param error data precision
+    def checkScalarAttribute(self, det, name, dtype, values, error = 0):
+
+        cnt = det.attr(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 0)
+        self._tc.assertEqual(cnt.shape, ())
+        self._tc.assertEqual(cnt.dtype, dtype)
+        # pninx is not supporting reading string areas 
+        if not isinstance(values, str):
+            value = cnt.value
+            if self._isNumeric(value):
+                self._tc.assertTrue(abs(values - value) <= error)
+            else:
+                self._tc.assertEqual(values,value)
+        if self._isNumeric(cnt.value):
+            if not self._isNumeric(values):
+#                    print "BOOL: ", values[i] ,cnt[i]
+                self._tc.assertEqual(Types.Converters.toBool(values),cnt.value)
+            else:
+                self._tc.assertTrue(abs(values - cnt.value) <= error)
+        else:
+            self._tc.assertEqual(values, cnt.value)
+            
+
+    ## checks  spectrum attribute
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param values  original values
+    # \param error data precision
+    def checkSpectrumAttribute(self, det, name, dtype, values, error = 0):
+
+        cnt = det.attr(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 1)
+        self._tc.assertEqual(cnt.shape, (len(values),))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        # pninx is not supporting reading string areas 
+
+
+        for i in range(len(values)):
+#            print name, i, values[i],  cnt.value[i]
+            if dtype != "string" and self._isNumeric(cnt.value[i]):
+                if dtype == "bool":
+                    self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt.value[i])
+                else:
+                    self._tc.assertTrue(abs(values[i] - cnt.value[i]) <= error)
+            else:
+                self._tc.assertEqual(values[i], cnt.value[i])
+            
+            
+
+
+    ## checks  image attribute
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param values  original values
+    # \param error data precision
+    def checkImageAttribute(self, det, name, dtype, values, error = 0):
+
+        cnt = det.attr(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 2)
+        self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        # pninx is not supporting reading string areas 
+
+
+        
+        for i in range(len(values)):
+            for j in range(len(values[i])):
+#                print i, j, cnt[i,j], values[i][j]
+                if dtype != "string" and self._isNumeric(cnt.value[i,0]):
+                    if dtype == "bool":
+                        self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt.value[i,j])
+                    else:
+                        self._tc.assertTrue(abs(values[i][j] - cnt.value[i,j]) <= error)
+                else:
+                    self._tc.assertEqual(values[i][j], cnt.value[i,j])
+            
+
+
+
+
+
+
 
 
     ## checks if instance is numeric
@@ -156,7 +329,7 @@ class Checker(object):
                     self._tc.assertEqual(values[i],value[i])
         for i in range(len(values)):
             if self._isNumeric(cnt[i]):
-                if not self._isNumeric(values[i]):
+                if nxtype == "NX_BOOLEAN":
 #                    print "BOOL: ", values[i] ,cnt[i]
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
@@ -309,6 +482,65 @@ class Checker(object):
 
 
 
+    ## checks XML scalar counter
+    # \param det detector group
+    # \param name field name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param values  original values
+    # \param error data precision
+    def checkXMLScalarField(self, det, name, dtype, nxtype, values, error = 0):
+
+        cnt = det.open(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 1)
+        self._tc.assertEqual(cnt.shape, (1,))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        self._tc.assertEqual(cnt.size, 1)        
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,2)
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape, "__iter__"))
+        self._tc.assertEqual(len(at.shape), 0)
+        self._tc.assertEqual(at.dtype, "string")
+        self._tc.assertEqual(at.name, "type")
+        self._tc.assertEqual(at.value, nxtype)
+        
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape), 0)
+        self._tc.assertEqual(at.dtype, "string")
+        self._tc.assertEqual(at.name, "units")
+        self._tc.assertEqual(at.value, "m")
+        
+        if not isinstance(values, str):
+            value = cnt.read()
+            if self._isNumeric(value):
+                self._tc.assertTrue(abs(values - value) <= error)
+            else:
+                self._tc.assertEqual(values,value)
+        if self._isNumeric(cnt.read()):
+            if not self._isNumeric(values):
+#                    print "BOOL: ", values[i] ,cnt[i]
+                self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
+            else:
+                self._tc.assertTrue(abs(values - cnt.read()) <= error)
+        else:
+            self._tc.assertEqual(values, cnt.read())
+            
+
+        
+
+
+
 
 
     ## checks  spectrum field
@@ -441,6 +673,64 @@ class Checker(object):
         self._tc.assertEqual(len(at.shape),0)
         self._tc.assertEqual(at.dtype,"string")
 
+
+
+
+
+    ## checks single spectrum field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param values original values
+    # \param error data precision
+    # \param grows growing dimension
+    def checkXMLSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
+
+        cnt = det.open(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name, name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 1)
+        self._tc.assertEqual(cnt.shape, (len(values),))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        self._tc.assertEqual(cnt.size, len(values))        
+        # pninx is not supporting reading string areas 
+
+
+
+        
+        for i in range(len(values)):
+#                print i, j, cnt[i,j], lvalues[i][j]
+            if self._isNumeric(cnt[i]):
+                if nxtype == "NX_BOOLEAN":
+                    self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
+                else:
+                    self._tc.assertTrue(abs(values[i] - cnt[i]) <= error)
+            else:
+                self._tc.assertEqual(values[i], cnt[i])
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,2)
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"type")
+        self._tc.assertEqual(at.value,nxtype)
+        
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"units")
+        self._tc.assertEqual(at.value,"")
+        
 
     ## checks  spectrum field
     # \param det detector group
@@ -691,7 +981,61 @@ class Checker(object):
         self._tc.assertEqual(at.dtype,"string")
 
 
+    ## checks xml image field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param values  original values
+    # \param error data precision
+    # \param grows growing dimension
+    def checkXMLImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
 
+        cnt = det.open(name)
+        self._tc.assertTrue(cnt.valid)
+        self._tc.assertEqual(cnt.name,name)
+        self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+        self._tc.assertEqual(len(cnt.shape), 2)
+        self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
+        self._tc.assertEqual(cnt.dtype, dtype)
+        self._tc.assertEqual(cnt.size, len(values)*len(values[0]))        
+        # pninx is not supporting reading string areas 
+
+
+
+        
+        for i in range(len(values)):
+            for j in range(len(values[i])):
+#                print i, j, cnt[i,j], values[i][j]
+                if self._isNumeric(cnt[i,0]):
+                    if nxtype == "NX_BOOLEAN":
+                        self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
+                    else:
+                        self._tc.assertTrue(abs(values[i][j] - cnt[i,j]) <= error)
+                else:
+                    self._tc.assertEqual(values[i][j], cnt[i,j])
+            
+
+
+        self._tc.assertEqual(cnt.nattrs,2)
+
+        at = cnt.attr("type")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"type")
+        self._tc.assertEqual(at.value,nxtype)
+        
+
+        at = cnt.attr("units")
+        self._tc.assertTrue(at.valid)
+        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(at.name,"units")
+        self._tc.assertEqual(at.value,"")
+        
     ## checks  string image field
     # \param det detector group
     # \param name counter name
@@ -803,6 +1147,61 @@ class Checker(object):
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
             self._tc.assertEqual(len(at.shape),0)
             self._tc.assertEqual(at.dtype,"string")
+        
+
+        
+        for i in range(len(values)):
+            for j in range(len(values[i])):
+#                print i, j, cnt[i,j], lvalues[i][j]
+                self._tc.assertEqual(values[i][j], cnts[j][i])
+            
+
+
+
+    ## checks XML string image field
+    # \param det detector group
+    # \param name counter name
+    # \param dtype numpy type
+    # \param nxtype nexus type
+    # \param values  original values
+    def checkXMLStringImageField(self, det, name, dtype, nxtype, values):
+
+
+        cnts = [ det.open(name +"_"+str(s1) )  for s1 in range(len(values[0])) ]
+
+        for s1 in range(len(values[0])) :
+            self._tc.assertEqual(cnts[s1].name, name + "_" + str(s1))
+            
+
+        for cnt in cnts:
+            self._tc.assertTrue(cnt.valid)
+            self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self._tc.assertEqual(len(cnt.shape), 1)
+            self._tc.assertEqual(cnt.shape, (len(values),))
+            self._tc.assertEqual(cnt.dtype, dtype)
+            self._tc.assertEqual(cnt.size, len(values))        
+
+
+            self._tc.assertEqual(cnt.nattrs,2)
+
+
+            at = cnt.attr("units")
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(at.name,"units")
+            self._tc.assertEqual(at.value,"")
+                
+            at = cnt.attr("type")
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(at.name,"type")
+            self._tc.assertEqual(at.value,nxtype)
+                
+
         
 
         

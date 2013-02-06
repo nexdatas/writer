@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file TangoFieldTagWirterTest.py
+## \file TangoFieldTagWriterTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -25,6 +25,11 @@ import sys
 import subprocess
 import random
 import numpy
+import struct
+
+## if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
 
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
@@ -85,6 +90,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
+        self._bint = "int64" if IS64BIT else "int32"
+        self._buint = "uint64" if IS64BIT else "uint32"
+        self._bfloat = "float64" if IS64BIT else "float32"
+
+
 
     ## test starter
     # \brief Common set up
@@ -99,6 +109,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
+    # \param json JSON Record with client settings
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter(fname)
@@ -112,6 +123,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
     ## closes writer
     # \param tdw Tango Data Writer instance
+    # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         if json:
             tdw.json = json
@@ -221,6 +233,16 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_CHAR" name="ScalarEncoded_MUTF8">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO">
+            <record name="ScalarEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUTF8"/>
+          </datasource>
+        </field>
+
+
         <field units="m" type="NX_CHAR" name="ScalarState">
           <strategy mode="STEP"/>
           <datasource type="TANGO">
@@ -264,7 +286,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 #        </field>
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
-        tdw = self.openWriter(fname, xml)
+        decoder = '"decoders":{"MUTF8":"ndts.DecoderPool.UTF8decoder"}'
+        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         steps = min(len(self._counter), len(self._fcounter), len(self._bools))
         for i in range(steps):
@@ -290,19 +313,20 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 14)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
         self._sc.checkScalarField(det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
-        self._sc.checkScalarField(det, "ScalarLong", "int64", "NX_INT", self._counter)
-        self._sc.checkScalarField(det, "ScalarULong", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ScalarLong", self._bint, "NX_INT", self._counter)
+        self._sc.checkScalarField(det, "ScalarULong",self._buint , "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarLong64", "int64", "NX_INT64", self._counter)
 #        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error = 1e-6)
         self._sc.checkScalarField(det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error = 1e-14)
         self._sc.checkScalarField(det, "ScalarString", "string", "NX_CHAR", self._bools)
         self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
+        self._sc.checkScalarField(det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
         self._sc.checkScalarField(det, "ScalarState", "string", "NX_CHAR", ["ON"  for c in self._bools])
         
         # writing encoded attributes not supported for PyTango 7.2.3
@@ -446,6 +470,16 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field units="" type="NX_INT32" name="SpectrumEncoded_MUINT32">
+          <strategy mode="STEP"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+            <record name="SpectrumEncoded"/>
+            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUINT32"/>
+          </datasource>
+        </field>
+
+
 
        <field units="" type="NX_INT64" name="InitSpectrumLong64">
           <strategy mode="INIT"  compression="true"  shuffle="True"/>
@@ -492,7 +526,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumDouble = self._fmca1[0]
         self._simps.dp.SpectrumString = self._dates[0]
 
-        tdw = self.openWriter(fname, xml)
+        decoder = '"decoders":{"MUINT32":"ndts.DecoderPool.UINT32decoder"}'
+        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
@@ -519,7 +554,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 17)
+        det = self._sc.checkFieldTree(f, fname , 18)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps], 
                                     grows = 2)
@@ -545,6 +580,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         # writing encoded attributes not supported for PyTango 7.2.3
 
         self._sc.checkSpectrumField(det, "SpectrumEncoded", "int32", "NX_INT32", self._mca2[:steps])
+
+        self._sc.checkSpectrumField(det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32", self._mca2[:steps])
 
         self._sc.checkSingleSpectrumField(det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
 
@@ -686,6 +723,16 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field units="" type="NX_UINT8" name="ImageEncoded_MLIMA">
+          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+            <record name="ImageEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MLIMA"/>
+          </datasource>
+        </field>
+
+
 
        <field units="" type="NX_UINT64" name="InitImageULong64">
           <strategy mode="INIT" />
@@ -728,7 +775,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.ImageString = self._dates2[0]
 
 #        print self._fmca1[0]
-        tdw = self.openWriter(fname, xml)
+
+        decoder = '"decoders":{"MLIMA":"ndts.DecoderPool.VDEOdecoder"}'
+        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
@@ -755,7 +804,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkScalarTree(f, fname , 21)
+        det = self._sc.checkFieldTree(f, fname , 22)
         self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
                                  grows = 2)
@@ -779,6 +828,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
                                  grows = 3)
 
+        self._sc.checkImageField(det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
+                                 grows = 3)
 
         self._sc.checkSingleImageField(det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
         self._sc.checkSingleImageField(det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps-1], error = 1.0e-6)

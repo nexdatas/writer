@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file TangoFieldTagServerTest.py
+## \file ClientFieldTagServerTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -26,42 +26,39 @@ import subprocess
 import random
 
 import PyTango
-
 from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
-
-
 from Checkers import Checker
+
 import ServerSetUp
-import TangoFieldTagWriterTest
+import ClientFieldTagWriterTest
 
 ## test fixture
-class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
+class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        TangoFieldTagWriterTest.TangoFieldTagWriterTest.__init__(self, methodName)
-        unittest.TestCase.__init__(self, methodName)
-
+        ClientFieldTagWriterTest.ClientFieldTagWriterTest.__init__(self, methodName)
 
         self._sv = ServerSetUp.ServerSetUp()
 
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
+
+
 
     ## test starter
-    # \brief Common set up
+    # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        self._simps.setUp()
 
     ## test closer
-    # \brief Common tear down
-    def tearDown(self):
-        self._simps.tearDown()
+    # \brief Common tear down oif Tango Server
+    def tearDown(self): 
         self._sv.tearDown()
-
-
+        
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
@@ -88,7 +85,7 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
-    def closeWriter(self, tdw, json= None):
+    def closeWriter(self, tdw, json = None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
@@ -108,3 +105,4 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
 
 if __name__ == '__main__':
     unittest.main()
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -34,22 +34,25 @@ class DataSourceFactory(Element):
     def __init__(self, name, attrs, last):
         Element.__init__(self, name, attrs, last)
         ## datasource pool
-        self._dsPool = None
+        self.__dsPool = None
 
 
     ##  sets the datasource form xml string
     # \param xml input parameter   
-    def store(self, xml):
+    # \param globalJSON global JSON string
+    def store(self, xml, globalJSON = None):
         self.createDSource(self.tagName, self._tagAttrs)
         jxml = "".join(xml)
         self._last.source.setup(jxml)
+        if hasattr(self._last.source,"setJSON") and globalJSON:
+            self._last.source.setJSON(globalJSON)
         if self._last and hasattr(self._last,"tagAttributes"):
             self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
 
     ## sets the used decoders
     # \param datasources pool to be set
     def setDataSources(self, datasources):
-        self._dsPool = datasources
+        self.__dsPool = datasources
         
 
     ## sets the used decoders
@@ -64,8 +67,8 @@ class DataSourceFactory(Element):
     # \param attrs dictionary with the tag attributes
     def createDSource(self, name, attrs):
         if "type" in attrs.keys():
-            if self._dsPool and self._dsPool.hasDataSource(attrs["type"]):
-                self._last.source = self._dsPool.get(attrs["type"])()
+            if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
+                self._last.source = self.__dsPool.get(attrs["type"])()
             else:
                 print "Unknown data source"
                 self._last.source = DataSources.DataSource()

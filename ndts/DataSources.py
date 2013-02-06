@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ class TangoSource(DataSource):
         ## encoding of Tango DevEncoded variables
         self.encoding = None
         ## decoder pool
-        self._decoders = None
+        self.__decoders = None
 
     ## self-description 
     # \returns self-describing string
@@ -167,7 +167,7 @@ class TangoSource(DataSource):
     ## sets the used decoders
     # \param decoders pool to be set
     def setDecoders(self, decoders):
-        self._decoders = decoders
+        self.__decoders = decoders
 
 
     ## data provider
@@ -193,10 +193,10 @@ class TangoSource(DataSource):
 #                        print "Spectrum Device: ", self.device.encode()
 #                    if str(da.data_format).split('.')[-1] == "IMAGE":
 #                        print "Image Device: ", self.device.encode()
-#                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self._decoders
+#                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self.__decoders
                     return {"format":da.data_format, "value":da.value, "tangoDType":da.type, 
                             "shape":[da.dim_y,da.dim_x],
-                            "encoding": self.encoding, "decoders": self._decoders}
+                            "encoding": self.encoding, "decoders": self.__decoders}
 
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
@@ -211,7 +211,7 @@ class TangoSource(DataSource):
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
                     return {"format":"SCALAR", "value":da, "tangoDType":cd.out_type, "shape":[1,0], 
-                                      "encoding":self.encoding, "decoders":self._decoders}
+                                      "encoding":self.encoding, "decoders":self.__decoders}
                     
                         
 
@@ -247,9 +247,9 @@ class DBaseSource(DataSource):
 
         
         ## map 
-        self._dbConnect = {"MYSQL":self._connectMYSQL, 
-                          "PGSQL":self._connectPGSQL,
-                          "ORACLE":self._connectORACLE}
+        self.__dbConnect = {"MYSQL":self.__connectMYSQL, 
+                          "PGSQL":self.__connectPGSQL,
+                          "ORACLE":self.__connectORACLE}
 
     ## self-description 
     # \returns self-describing string
@@ -292,7 +292,7 @@ class DBaseSource(DataSource):
 
     ## connects to MYSQL database    
     # \returns open database object
-    def _connectMYSQL(self):
+    def __connectMYSQL(self):
         args = {}
         if self.mycnf:
             args["read_default_file"] = self.mycnf.encode()
@@ -311,7 +311,7 @@ class DBaseSource(DataSource):
 
     ## connects to PGSQL database    
     # \returns open database object
-    def _connectPGSQL(self):
+    def __connectPGSQL(self):
         args = {}
 
         if self.dbname:
@@ -329,7 +329,7 @@ class DBaseSource(DataSource):
 
     ## connects to ORACLE database    
     # \returns open database object
-    def _connectORACLE(self):
+    def __connectORACLE(self):
         args = {}
         if self.user:
             args["user"] = self.user.encode()
@@ -348,8 +348,8 @@ class DBaseSource(DataSource):
 
         db = None
 
-        if self.dbtype in self._dbConnect.keys() and self.dbtype in DB_AVAILABLE:
-            db = self._dbConnect[self.dbtype]()
+        if self.dbtype in self.__dbConnect.keys() and self.dbtype in DB_AVAILABLE:
+            db = self.__dbConnect[self.dbtype]()
         else:
             raise PackageError, "Support for %s database not available" % self.dbtype
 
@@ -361,6 +361,7 @@ class DBaseSource(DataSource):
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
                 dh = {"format":"SCALAR", "value":str(data[0]), "tangoDType":"DevString", "shape":[1,0]}
+#                print "SCALAR",dh
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
@@ -387,9 +388,9 @@ class ClientSource(DataSource):
         ## name of data
         self.name = None
         ## the current  static JSON object
-        self._globalJSON = None
+        self.__globalJSON = None
         ## the current  dynamic JSON object
-        self._localJSON = None
+        self.__localJSON = None
         
 
     ## sets the parrameters up from xml
@@ -410,7 +411,7 @@ class ClientSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " client record %s from JSON:  %s or %s " % (self.name, self._localJSON , self._globalJSON  )
+        return " client record %s from JSON:  %s or %s " % (self.name, self.__localJSON , self.__globalJSON  )
 
 
     ## sets JSON string
@@ -418,31 +419,31 @@ class ClientSource(DataSource):
     # \param globalJSON static JSON string    
     # \param localJSON dynamic JSON string    
     def setJSON(self, globalJSON, localJSON=None):
-        self._globalJSON = globalJSON
-        self._localJSON = localJSON
+        self.__globalJSON = globalJSON
+        self.__localJSON = localJSON
             
 
     ## provides access to the data    
     # \returns  dictionary with collected data   
     def getData(self):
-        
-        if  self._globalJSON and 'data' not in self._globalJSON.keys() :
-            self._globalJSON = None
+        if  self.__globalJSON and 'data' not in self.__globalJSON.keys() :
+            self.__globalJSON = None
 
-        if self._localJSON and 'data' not in self._localJSON.keys() :
-            self._localJSON = None
+        if self.__localJSON and 'data' not in self.__localJSON.keys() :
+            self.__localJSON = None
             
         rec = None
-        if self._localJSON and 'data' in  self._localJSON and self.name in self._localJSON['data']:
-            rec = self._localJSON['data'][str(self.name)]
-        elif self._globalJSON and 'data' in self._globalJSON and self.name in self._globalJSON['data']:
-            rec = self._globalJSON['data'][str(self.name)]
+        if self.__localJSON and 'data' in  self.__localJSON and self.name in self.__localJSON['data']:
+            rec = self.__localJSON['data'][str(self.name)]
+        elif self.__globalJSON and 'data' in self.__globalJSON and self.name in self.__globalJSON['data']:
+            rec = self.__globalJSON['data'][str(self.name)]
         else:
             return    
         ntp = NTP()
-        rank, rshape, pythonDType = ntp.arrayRankRShape(rec)
+        rank, shape, pythonDType = ntp.arrayRankRShape(rec)
+        
         if rank in NTP.rTf:
-            shape = rshape.reverse()
+            shape.reverse()
             if  shape is None:
                 shape = [1,0]
             return {"format":NTP.rTf[rank], "value":rec, 

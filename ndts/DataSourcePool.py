@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012 Jan Kotanski
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,13 +33,13 @@ class DataSourcePool(object):
     # \brief It creates know datasources    
     # \param configJSON string with datasources    
     def __init__(self, configJSON = None):
-        self._pool = {"DB":DataSources.DBaseSource, "TANGO":DataSources.TangoSource,
+        self.__pool = {"DB":DataSources.DBaseSource, "TANGO":DataSources.TangoSource,
                       "CLIENT":DataSources.ClientSource}
-        self._appendUserDataSources(configJSON)
+        self.__appendUserDataSources(configJSON)
 
     ## loads user datasources
     # \param configJSON string with datasources    
-    def _appendUserDataSources(self, configJSON):
+    def __appendUserDataSources(self, configJSON):
         if configJSON and 'datasources' in configJSON.keys() and  hasattr(configJSON['datasources'],'keys'):
             for dk in configJSON['datasources'].keys():
                 pkl = configJSON['datasources'][dk].split(".")
@@ -52,15 +52,15 @@ class DataSourcePool(object):
     # \param datasource the given datasource
     # \returns True if it the datasource is registered        
     def hasDataSource(self, datasource):
-        return True if datasource in self._pool.keys() else False
+        return True if datasource in self.__pool.keys() else False
 
 
     ## checks it the datasource is registered        
     # \param datasource the given datasource
     # \returns True if it the datasource is registered        
     def get(self, datasource):
-        if datasource in self._pool.keys():
-            return self._pool[datasource]
+        if datasource in self.__pool.keys():
+            return self.__pool[datasource]
 
     
     ## adds additional datasource
@@ -68,7 +68,7 @@ class DataSourcePool(object):
     # \param datasource instance of the adding datasource
     # \returns name of datasource
     def append(self, datasource, name):
-        self._pool[name] = datasource
+        self.__pool[name] = datasource
         if not hasattr(datasource,"setup") or not hasattr(datasource,"getData") \
                 or not hasattr(datasource,"isValid") or not hasattr(datasource,"__str__"):
             self.pop(name)
@@ -79,6 +79,6 @@ class DataSourcePool(object):
     ## adds additional datasource
     # \param name name of the adding datasource
     def pop(self, name):
-        self._pool.pop(name, None)
+        self.__pool.pop(name, None)
 
         
