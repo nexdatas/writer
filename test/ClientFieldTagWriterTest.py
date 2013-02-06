@@ -717,7 +717,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
@@ -1143,7 +1143,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 #        self._sc.checkSpectrumAttribute(field, "flag_spectrum_string", "string", logical)
     
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
@@ -1769,7 +1769,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # STRING NOT SUPPORTED BY PNINX
     
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
