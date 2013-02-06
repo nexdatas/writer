@@ -21,7 +21,7 @@
 #
 import os
 import random
-from pni.nx.h5 import open_file
+from pni.io.nx.h5 import open_file
 import unittest
 from ndts import Types
 
@@ -876,7 +876,8 @@ class Checker(object):
         # pninx is not supporting reading string areas 
 
 
-
+#        print "LV", lvalues
+#        print "CNT",cnt.read()
         
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
@@ -886,6 +887,7 @@ class Checker(object):
                         if nxtype == "NX_BOOLEAN":
                             self._tc.assertEqual(Types.Converters.toBool(values[i][j][k]),cnt[i,j,k])
                         else:
+#                            print "i,j,k", i,j,k,lvalues[i][j][k], cnt[i,j,k]
                             self._tc.assertTrue(abs(lvalues[i][j][k] - cnt[i,j,k]) <= error)
                     else:
                         self._tc.assertEqual(lvalues[i][j][k], cnt[i,j,k])

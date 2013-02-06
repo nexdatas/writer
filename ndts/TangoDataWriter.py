@@ -24,7 +24,7 @@
 from NexusXMLHandler import NexusXMLHandler
 from FetchNameHandler import FetchNameHandler
 
-import pni.nx.h5 as nx
+import pni.io.nx.h5 as nx
 
 from xml import sax
 
@@ -196,6 +196,10 @@ class TangoDataWriter(object):
     # \brief It runs threads from the FINAL pool and
     #  removes the thread pools 
     def closeEntry(self):
+
+        if self.addingLogs and self.__logGroup:    
+            self.__logGroup.close()
+            self.__logGroup = None
 
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.json))

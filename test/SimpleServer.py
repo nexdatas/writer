@@ -125,7 +125,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		# uint32 I 
 		mode = 2
 		fspectrum = numpy.array(self.attr_SpectrumULong, dtype='int32')
-		ibuffer = struct.pack('i'*(fspectrum.size), *fspectrum)
+		ibuffer = struct.pack('i'*fspectrum.size, *fspectrum)
 		return [format, ibuffer]
 
 

@@ -34,6 +34,7 @@ DB_AVAILABLE = []
     
 try:
     import MySQLdb
+    import MySQLdb    
     args = {}
     args["db"] = 'tango'
     args["host"] = 'localhost'
