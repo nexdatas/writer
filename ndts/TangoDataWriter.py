@@ -162,7 +162,7 @@ class TangoDataWriter(object):
                 self.__entryCounter += 1
                 lfield = self.__logGroup.create_field("Nexus__entry__%s_XML" % str(self.__entryCounter),"string")
                 lfield.write(self.xmlSettings)
-            
+                lfield.close()
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
@@ -196,6 +196,10 @@ class TangoDataWriter(object):
     # \brief It runs threads from the FINAL pool and
     #  removes the thread pools 
     def closeEntry(self):
+
+        if self.addingLogs and self.__logGroup:    
+            self.__logGroup.close()
+            self.__logGroup = None
 
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.json))
