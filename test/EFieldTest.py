@@ -41,6 +41,8 @@ from ndts.H5Elements import EGroup
 from ndts.Types import NTP, Converters
 from ndts.DataSources import DataSource
 
+from Checkers import Checker 
+
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -128,6 +130,8 @@ class EFieldTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
+
+        self._sc = Checker(self)
 
     ## test starter
     # \brief Common set up
@@ -382,6 +386,7 @@ class EFieldTest(unittest.TestCase):
 
         attrs = {
             "string":["My string","NX_CHAR", "string"],
+            "string2":["My string","NX_CHAR", ""],
             "datetime":["12:34:34","NX_DATE_TIME", "string"],
             "iso8601":["12:34:34","ISO8601", "string"],
             "int":[-132,"NX_INT", self._bint],
@@ -407,7 +412,7 @@ class EFieldTest(unittest.TestCase):
         eFile = EFile("NXfile", [], None, self._nxFile)
         el = {} 
         for k in attrs: 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1]}, eFile)
+            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].source = ds
@@ -435,8 +440,11 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.shape,(0,))
-            self.assertEqual(h5.dtype,attrs[k][2])
+            self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             self.assertEqual(h5.size,0)
+            self.assertEqual(h5.nattrs, 2)
+            self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
+            self._sc.checkScalarAttribute(h5, "units", "string", "m")
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -452,6 +460,7 @@ class EFieldTest(unittest.TestCase):
 
         attrs = {
             "string":["My string","NX_CHAR", "string"],
+            "string2":["My string","NX_CHAR", ""],
             "datetime":["12:34:34","NX_DATE_TIME", "string"],
             "iso8601":["12:34:34","ISO8601", "string"],
             "int":[-132,"NX_INT", self._bint],
@@ -480,7 +489,10 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             flip = not flip
             stt = 'INIT' if flip else 'FINAL'
-            el[k] = EField("field", {"name":k, "type":attrs[k][1]}, eFile)
+            if attrs[k][1]:
+                el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField("field", {"name":k, "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].source = ds
@@ -509,8 +521,12 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.shape,(1,))
-            self.assertEqual(h5.dtype,attrs[k][2])
+            self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             self.assertEqual(h5.size,1)
+            self.assertEqual(h5.nattrs, 2)
+            self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
+            self._sc.checkScalarAttribute(h5, "units", "string", "m")
+            
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -524,6 +540,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
+            "none":["My string","NX_CHAR", ""],
             "string":["My string","NX_CHAR", "string"],
             "datetime":["12:34:34","NX_DATE_TIME", "string"],
             "iso8601":["12:34:34","ISO8601", "string"],
@@ -551,11 +568,11 @@ class EFieldTest(unittest.TestCase):
         el = {} 
         for k in attrs: 
             stt = 'POSTRUN'
-            el[k] = EField("field", {"name":k, "type":attrs[k][1]}, eFile)
+            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].source = ds
-
+            el[k].postrun = k
             el[k].strategy = stt
         
             self.assertTrue(isinstance(el[k], Element))
@@ -580,11 +597,18 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.shape,(1,))
-            self.assertEqual(h5.dtype,attrs[k][2])
+            self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             self.assertEqual(h5.size,1)
+            self.assertEqual(h5.nattrs, 3)
+            self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
+            self._sc.checkScalarAttribute(h5, "units", "string", "m")
+            self._sc.checkScalarAttribute(h5, "postrun", "string", k)
+
+        
+
             
         self._nxFile.close()
-        os.remove(self._fname)
+#        os.remove(self._fname)
 
 
 
