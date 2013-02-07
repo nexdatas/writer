@@ -1231,5 +1231,99 @@ class EFieldTest(unittest.TestCase):
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_store_createAttributes_0d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "datetime":["12:34:34","NX_DATE_TIME", "string"],
+            "iso8601":["12:34:34","ISO8601", "string"],
+            "int":[-123,"NX_INT", self._bint],
+            "int8":[12,"NX_INT8", "int8"],
+            "int16":[-123,"NX_INT16", "int16"],
+            "int32":[12345,"NX_INT32", "int32"],
+            "int64":[-12345,"NX_INT64", "int64"],
+            "uint":[123,"NX_UINT", self._buint],
+            "uint8":[12,"NX_UINT8", "uint8"],
+            "uint16":[123,"NX_UINT16", "uint16"],
+            "uint32":[12345,"NX_UINT32", "uint32"],
+            "uint64":[12345,"NX_UINT64", "uint64"],
+            "float":[-12.345,"NX_FLOAT", self._bfloat,1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER", self._bfloat,1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool"],
+            "bool2":["FaLse","NX_BOOLEAN", "bool"],
+            "bool3":["false","NX_BOOLEAN", "bool"],
+            "bool4":["true","NX_BOOLEAN", "bool"]
+            }
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile("NXfile", [], None, self._nxFile)
+
+        el = {}
+        for k in attrs.keys():
+            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]))
+            ds = TestDataSource()
+            ds.valid = True
+            el[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
+            
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
+            else: 
+                self.assertEqual(at.value, attrs[k][0])
+
+
+        for k in attrs.keys():
+            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            el[k]._createAttributes() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
+            
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
+            else: 
+                self.assertEqual(at.value, attrs[k][0])
+
+        for k in attrs.keys():
+            if attrs[k][2] == 'string':
+                "writing multi-dimensional string is not supported by pninx"
+                continue
+            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
+            el[k]._createAttributes() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
+            
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
+            else: 
+                
+                if isinstance(at.value, numpy.ndarray): 
+                    self.assertEqual(at.value, numpy.array(attrs[k][0],dtype = attrs[k][2]))
+                else:
+                    self.assertEqual([at.value], attrs[k][0])
+
+        self._nxFile.close()
+ 
+#       os.remove(self._fname)
+
 if __name__ == '__main__':
     unittest.main()
