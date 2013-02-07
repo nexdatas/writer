@@ -79,7 +79,7 @@ class FieldArray(object):
         ## type of the field array
         self.dtype = dtype
         ## shape
-        self.shape = shape
+        self.shape = tuple(shape)
         ## chunk
         self.chunk = chunk
         ## parent
