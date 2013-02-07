@@ -273,8 +273,9 @@ class FieldArray(object):
     def grow(self, dim=0,ln=1):
         for f in self.__fList:
             f.grow(dim, ln)
-        self.shape[dim] = self.shape[dim] + ln
-    
+        shape = list(self.shape)    
+        shape[dim] = shape[dim] + ln
+        self.shape = tuple(shape)
 
     ## closing method
     # \brief It closes all fields from the array    
