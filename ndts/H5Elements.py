@@ -325,7 +325,6 @@ class EField(FElementWithAttr):
             else:
                 raise
 
-            
         chunk = [s if s > 0 else 1 for s in shape]  
 
         deflate = None

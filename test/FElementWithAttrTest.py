@@ -170,8 +170,8 @@ class FElementWithAttrTest(unittest.TestCase):
             "float64":[-12.345,"NX_FLOAT64", "float64",1.e-14],
             "bool":[True,"NX_BOOLEAN", "bool"],
             "bool2":["FaLse","NX_BOOLEAN", "bool"],
-            "bool2":["false","NX_BOOLEAN", "bool"],
-            "bool2":["true","NX_BOOLEAN", "bool"]
+            "bool3":["false","NX_BOOLEAN", "bool"],
+            "bool4":["true","NX_BOOLEAN", "bool"]
             }
 
         for nm in attrs.keys():
