@@ -63,7 +63,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
-        self._eFile = EFile("NXfile", [], None, self._nxFile)
+        self._eFile = EFile([], None, self._nxFile)
 
     ## test closer
     # \brief Common tear down

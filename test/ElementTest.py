@@ -114,7 +114,7 @@ class ElementTest(unittest.TestCase):
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
         ## element file objects
-        eFile = EFile("NXfile", [], None, nxFile)
+        eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
         field = group.create_field(fdname, fdtype)
 

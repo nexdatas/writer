@@ -165,7 +165,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        el = EField("field", self._fattrs, None)
+        el = EField( self._fattrs, None)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -192,8 +192,8 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
-        el = EField("field", self._fattrs, eFile)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( self._fattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -224,8 +224,8 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
-        el = EField("field", self._fattrs, eFile)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
         self.assertTrue(isinstance(el, Element))
@@ -256,8 +256,8 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
-        el = EField("field", self._fattrs, eFile)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
         el.strategy = 'STEP'
@@ -289,8 +289,8 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
-        el = EField("field", self._fattrs, eFile)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
         el.strategy = 'STEP'
@@ -323,8 +323,8 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
-        el = EField("field", self._fattrs, eFile)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
         el.strategy = 'INIT'
@@ -355,8 +355,8 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
-        el = EField("field", self._fattrs, eFile)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         ds.valid = False
         el.source = ds
@@ -413,10 +413,10 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         for k in attrs: 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].source = ds
@@ -487,16 +487,16 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         flip = False
         for k in attrs: 
             flip = not flip
             stt = 'INIT' if flip else 'FINAL'
             if attrs[k][1]:
-                el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             else:    
-                el[k] = EField("field", {"name":k, "units":"m"}, eFile)
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].source = ds
@@ -568,11 +568,11 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         for k in attrs: 
             stt = 'POSTRUN'
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].source = ds
@@ -648,7 +648,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quot = 0
         for k in attrs: 
@@ -669,7 +669,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].rank = "1"
@@ -751,7 +751,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         flip = False
         for k in attrs: 
@@ -772,7 +772,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].rank = "1"
@@ -847,7 +847,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         flip = False
         for k in attrs: 
@@ -868,7 +868,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].rank = "1"
@@ -959,7 +959,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         for k in attrs: 
@@ -968,7 +968,7 @@ class EFieldTest(unittest.TestCase):
             
 
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].rank = "2"
@@ -1069,7 +1069,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         flip = False
@@ -1081,7 +1081,7 @@ class EFieldTest(unittest.TestCase):
             
 
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].rank = "2"
@@ -1176,7 +1176,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         flip = False
@@ -1188,7 +1188,7 @@ class EFieldTest(unittest.TestCase):
             
 
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             ds = TestDataSource()
             ds.valid = True
             el[k].rank = "2"
@@ -1267,11 +1267,11 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
 
             self.assertEqual(el[k].tagAttributes, {})
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]))
@@ -1348,11 +1348,11 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
 
             self.assertEqual(el[k].tagAttributes, {})
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]),attrs[k][3] )
@@ -1424,11 +1424,11 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
 
             self.assertEqual(el[k].tagAttributes, {})
             el[k].tagAttributes[k] = (attrs[k][1], "".join([str(it)+ " "  for it in attrs[k][0]]),attrs[k][3] )
@@ -1499,11 +1499,11 @@ class EFieldTest(unittest.TestCase):
 
             
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
 
             self.assertEqual(el[k].tagAttributes, {})
             el[k].tagAttributes[k] = (attrs[k][1], 
@@ -1577,16 +1577,16 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         for k in attrs: 
             quin = (quin+1) % 5 
             stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
             if attrs[k][1]:
-                el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             else:    
-                el[k] = EField("field", {"name":k, "units":"m"}, eFile)
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
 
             el[k].strategy = stt
             el[k].content.append(str(attrs[k][0]))
@@ -1658,7 +1658,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -1686,7 +1686,7 @@ class EFieldTest(unittest.TestCase):
             quin = (quin+1) % 5 
             stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":""}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":""}, eFile)
             el[k].rank = "1"
             el[k].lengths = {"1":str(attrs[k][3][0])}
             el[k].grows = grow
@@ -1760,7 +1760,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -1788,7 +1788,7 @@ class EFieldTest(unittest.TestCase):
             quin = (quin+1) % 5 
             stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":""}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":""}, eFile)
             el[k].rank = "1"
             el[k].lengths = {"1":str(attrs[k][3][0])}
             el[k].grows = grow
@@ -1881,7 +1881,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile("NXfile", [], None, self._nxFile)
+        eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -1892,7 +1892,7 @@ class EFieldTest(unittest.TestCase):
             quin = (quin+1) % 5 
             stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
 
-            el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":""}, eFile)
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":""}, eFile)
             el[k].rank = "2"
             el[k].lengths = {"1":str(attrs[k][3][0]),"2":str(attrs[k][3][1])}
             el[k].grows = grow

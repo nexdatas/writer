@@ -109,8 +109,8 @@ class EStrategyTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         print "Run: %s.test_default_constructor() " % self.__class__.__name__
-        el = EField("field", self._fattrs, None)
-        st = EStrategy("strategy", self._fattrs, el)
+        el = EField(self._fattrs, None)
+        st = EStrategy(self._fattrs, el)
         self.assertTrue(isinstance(st, Element))
         self.assertTrue(isinstance(st, EStrategy))
         self.assertEqual(st.tagName, "strategy")
@@ -142,8 +142,8 @@ class EStrategyTest(unittest.TestCase):
         attrs["compression"] = "true"
         attrs["rate"] = "4"
         attrs["shuffle"] = "false"
-        el = EField("field", self._fattrs, None)
-        st = EStrategy("strategy", attrs, el)
+        el = EField(self._fattrs, None)
+        st = EStrategy(attrs, el)
         self.assertTrue(isinstance(st, Element))
         self.assertTrue(isinstance(st, EStrategy))
         self.assertEqual(st.tagName, "strategy")
@@ -175,8 +175,8 @@ class EStrategyTest(unittest.TestCase):
         attrs["compression"] = "false"
         attrs["rate"] = "2"
         attrs["shuffle"] = "false"
-        el = EField("field", self._fattrs, None)
-        st = EStrategy("strategy", attrs, el)
+        el = EField(self._fattrs, None)
+        st = EStrategy(attrs, el)
         self.assertTrue(isinstance(st, Element))
         self.assertTrue(isinstance(st, EStrategy))
         self.assertEqual(st.tagName, "strategy")
@@ -208,8 +208,8 @@ class EStrategyTest(unittest.TestCase):
         attrs["compression"] = "true"
         attrs["rate"] = "10"
         attrs["shuffle"] = "true"
-        el = EField("field", self._fattrs, None)
-        st = EStrategy("strategy", attrs, el)
+        el = EField(self._fattrs, None)
+        st = EStrategy(attrs, el)
         self.assertTrue(isinstance(st, Element))
         self.assertTrue(isinstance(st, EStrategy))
         self.assertEqual(st.tagName, "strategy")
@@ -234,8 +234,8 @@ class EStrategyTest(unittest.TestCase):
         print "Run: %s.test_store() " % self.__class__.__name__
 
         attrs = {"mode":"STEP"}
-        el = EField("field", self._fattrs, None)
-        st = EStrategy("strategy", {"mode":"STEP"}, el)
+        el = EField(self._fattrs, None)
+        st = EStrategy({"mode":"STEP"}, el)
         self.assertEqual(st.content, [])
         self.assertEqual(st.doc, "")
         self.assertEqual(st.store(), None)

@@ -28,11 +28,10 @@ from Element import Element
 ## Data source creator
 class DataSourceFactory(Element):        
     ## constructor
-    # \param name name of the tag
     # \param attrs dictionary with the tag attributes
     # \param last the last element on the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "datasource", attrs, last)
         ## datasource pool
         self.__dsPool = None
 

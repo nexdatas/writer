@@ -107,7 +107,7 @@ class TangoDataWriter(object):
         ## file handle
         self.__nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
-        self.__eFile = EFile("NXfile", [], None, self.__nxFile)
+        self.__eFile = EFile([], None, self.__nxFile)
         if self.addingLogs:    
             self.__logGroup = self.__nxFile.create_group("NexusConfigurationLogs")
 

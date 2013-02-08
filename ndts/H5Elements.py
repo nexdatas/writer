@@ -216,11 +216,10 @@ class FElementWithAttr(FElement):
 ## query tag element        
 class EStrategy(Element):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "strategy", attrs, last)
 
         if "mode" in attrs.keys():
             self._last.strategy = attrs["mode"]
@@ -255,11 +254,10 @@ class EStrategy(Element):
 ## field H5 tag element
 class EField(FElementWithAttr):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        FElementWithAttr.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        FElementWithAttr.__init__(self, "field", attrs, last)
         ## rank of the field
         self.rank = "0"
         ## shape of the field
@@ -535,11 +533,10 @@ class EField(FElementWithAttr):
 ## group H5 tag element        
 class EGroup(FElementWithAttr):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        FElementWithAttr.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        FElementWithAttr.__init__(self, "group", attrs, last)
 
         if self._lastObject():
             if ("type" in attrs.keys()) and ("name" in attrs.keys()) :
@@ -581,11 +578,10 @@ class EGroup(FElementWithAttr):
 ## link H5 tag element        
 class ELink(FElement):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        FElement.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        FElement.__init__(self, "link", attrs, last)
         self.h5Object = None
 
     ## converts types to Names using groupTypes dictionary
@@ -625,11 +621,10 @@ class ELink(FElement):
 ## attribute tag element        
 class EAttribute(FElement):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        FElement.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        FElement.__init__(self, "attribute", attrs, last)
         ## attribute name
         self.name = ""
         ## rank of the attribute
@@ -699,23 +694,21 @@ class EAttribute(FElement):
 ## file H5 element        
 class EFile(FElement):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     # \param h5fileObject H5 file object
-    def __init__(self, name, attrs, last, h5fileObject):
-        FElement.__init__(self, name, attrs, last, h5fileObject)
+    def __init__(self, attrs, last, h5fileObject):
+        FElement.__init__(self, "file", attrs, last, h5fileObject)
 
 
 
 ## doc tag element        
 class EDoc(Element):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "doc", attrs, last)
 
     ## stores the tag content
     # \param xml xml setting
@@ -728,11 +721,10 @@ class EDoc(Element):
 ## symbol tag element        
 class ESymbol(Element):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "symbol", attrs, last)
         ## dictionary with symbols
         self.symbols = {}
 
@@ -747,11 +739,10 @@ class ESymbol(Element):
 ## dimensions tag element        
 class EDimensions(Element):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "dimensions", attrs, last)
         if "rank" in attrs.keys():
             self._last.rank = attrs["rank"]
 
@@ -759,11 +750,10 @@ class EDimensions(Element):
 ## dim tag element        
 class EDim(Element):        
     ## constructor
-    # \param name tag name
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "dim", attrs, last)
         if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
             self._beforeLast().lengths[attrs["index"]] = attrs["value"]
 

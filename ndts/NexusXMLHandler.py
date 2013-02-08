@@ -145,7 +145,7 @@ class NexusXMLHandler(sax.ContentHandler):
                 self.__parser.setContentHandler(self.__innerHandler) 
                 self.__inner = True
             elif name in self.__elementClass:
-                self.__stack.append(self.__elementClass[name](name, attrs, self.__last()))
+                self.__stack.append(self.__elementClass[name](attrs, self.__last()))
                 if self.__fetching and hasattr(self.__last(), "fetchName") and callable(self.__last().fetchName):
                     self.__last().fetchName(self.__groupTypes)
                 if hasattr(self.__last(), "createLink") and callable(self.__last().createLink):
@@ -202,7 +202,7 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param xml inner xml
     def __createInnerTag(self, xml):
         if self.__storedName in self.__withXMLinput:
-            inner = self.__withXMLinput[self.__storedName](self.__storedName, self.__storedAttrs, self.__last())
+            inner = self.__withXMLinput[self.__storedName](self.__storedAttrs, self.__last())
             if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
                 inner.setDataSources(self.__datasources)
             res = inner.store(xml, self.__json)
@@ -243,7 +243,7 @@ if __name__ == "__main__":
             ## file  handle
             nxFile = nx.create_file(self.self.fileName, overwrite=True)
             ## element file objects
-            fileElement = EFile("NXfile", [], None, self.nxFile)
+            fileElement = EFile([], None, self.nxFile)
             ## a SAX2 handler object
             handler = NexusXMLHandler(fileElement)
             parser.setContentHandler(handler)
