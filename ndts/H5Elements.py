@@ -384,6 +384,8 @@ class EField(FElementWithAttr):
 #                    self.h5Object.write(dh.cast(self.h5Object.dtype))
                 elif int(self.rank) == 1:
                     sts = dh.cast(self.h5Object.dtype)
+#                    print "STS", sts, type(sts)
+                    
                     for i in range(len(sts)):
                         self.h5Object[i] = sts[i] 
                 elif int(self.rank) == 2:        
