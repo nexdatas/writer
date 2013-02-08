@@ -1542,7 +1542,7 @@ class EFieldTest(unittest.TestCase):
 
     ## default store method
     # \brief It tests default settings
-    def test_store_value_0d_initfinal(self):
+    def test_store_value_0d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -1574,22 +1574,23 @@ class EFieldTest(unittest.TestCase):
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile("NXfile", [], None, self._nxFile)
         el = {} 
-        flip = False
+        quin = 0
         for k in attrs: 
-            flip = not flip
-            stt = 'INIT' if flip else 'FINAL'
+            quin = (quin+1) % 5 
+            stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
             if attrs[k][1]:
                 el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             else:    
                 el[k] = EField("field", {"name":k, "units":"m"}, eFile)
 
             el[k].strategy = stt
-        
+            el[k].content.append(str(attrs[k][0]))
+
             self.assertTrue(isinstance(el[k], Element))
             self.assertTrue(isinstance(el[k], FElement))
             self.assertTrue(isinstance(el[k], FElementWithAttr))
             self.assertEqual(el[k].tagName, "field")
-            self.assertEqual(el[k].content, [])
+            self.assertEqual(el[k].content, [str(attrs[k][0])])
             self.assertEqual(el[k].rank, "0")
             self.assertEqual(el[k].lengths, {})
             self.assertEqual(el[k].strategy, stt)
@@ -1599,19 +1600,19 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].rate, 5)
             self.assertEqual(el[k].shuffle, True)
 
-#            self.assertEqual(el[k].store(), None)
-            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].store(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].grows, None)
-            
-
-        for k in attrs: 
-            h5 = el[k].h5Object
-            self.assertEqual(h5.shape,(1,))
-            self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            self.assertEqual(h5.size,1)
-            self.assertEqual(h5.nattrs, 2)
-            self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
-            self._sc.checkScalarAttribute(h5, "units", "string", "m")
+            if stt != 'POSTRUN':
+                self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                             attrs[k][1], attrs[k][0], 
+                                             attrs[k][3] if len(attrs[k])> 3 else 0)
+            else:
+                self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                             attrs[k][1], attrs[k][0], 
+                                             attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                             attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                             )
             
             
         self._nxFile.close()
