@@ -1634,9 +1634,9 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", self._bint, (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1667,16 +1667,19 @@ class EFieldTest(unittest.TestCase):
             grow = quot-1  if quot else  None
 
 
-            if attrs[k][2] != "bool":
+            if attrs[k][2] == "string":
+                mlen = [1,random.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3)  ] 
+            elif attrs[k][2] != "bool":
                 mlen = [1,random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(mlen[0]) ] 
+                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3)  ] 
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ bool(random.randint(0,1))  ]
                 else:
                     attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
-                                     for c in range(mlen[0]) ]
+                                     ]
 
             attrs[k][3] =  (mlen[0],)
 
@@ -1733,9 +1736,9 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", self._bint, (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1766,7 +1769,10 @@ class EFieldTest(unittest.TestCase):
             grow = quot-1  if quot else  None
 
 
-            if attrs[k][2] != "bool":
+            if attrs[k][2] == "string":
+                mlen = [random.randint(1, 10),random.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3) for r in range(mlen[0]) ] 
+            elif attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
                 attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(mlen[0]) ] 
             else:    
@@ -1833,7 +1839,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
 #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
 #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", self._bint, (1,)],
@@ -1858,7 +1864,10 @@ class EFieldTest(unittest.TestCase):
 
 
         for k in attrs.keys():
-            if attrs[k][2] != "bool":
+            if attrs[k][2] == "string":
+                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(1,3)]
+                attrs[k][0] =  [[ attrs[k][0]*random.randint(1,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
+            elif attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
                 attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             else:    
@@ -1908,16 +1917,21 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
-#            self.myAssertRaise(ValueError, el[k].store)
-            self.assertEqual(el[k].grows, grow)
-            if stt != 'POSTRUN':
+            self.assertEqual(el[k].grows, grow if attrs[k][2] !='string' else 1)
+            if attrs[k][2] =='string':
+                self._sc.checkXMLStringImageField(self._nxFile, k, 
+                                                  attrs[k][2] if attrs[k][2] else 'string',
+                                                  attrs[k][1], attrs[k][0], 
+                                                  attrs = {"type":attrs[k][1],"units":""}
+                                                  )
+            elif stt != 'POSTRUN':
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0)
+                                               attrs[k][4] if len(attrs[k])> 4 else 0)
             else:
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                               attrs[k][4] if len(attrs[k])> 4 else 0, 
                                                attrs = {"type":attrs[k][1],"units":"", "postrun":None}
                                                )
             
