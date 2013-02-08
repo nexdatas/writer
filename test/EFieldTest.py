@@ -208,7 +208,10 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.compression, False)
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
-        self.assertEqual(el.store(), None)
+        
+        self.myAssertRaise(ValueError, el.store)
+        
+
         self.assertEqual(el.grows, None)
         self._nxFile.close()
         os.remove(self._fname)
@@ -240,6 +243,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), (None, None))
+
         self.assertEqual(el.grows, None)
         self._nxFile.close()
         os.remove(self._fname)
@@ -1533,6 +1537,85 @@ class EFieldTest(unittest.TestCase):
                         self.assertEqual(at.value[i][j], attrs[k][0][i][j])
 
 
+
+
+
+    ## default store method
+    # \brief It tests default settings
+    def test_store_value_0d_initfinal(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "string2":["My string","NX_CHAR", ""],
+            "datetime":["12:34:34","NX_DATE_TIME", "string"],
+            "iso8601":["12:34:34","ISO8601", "string"],
+            "int":[-132,"NX_INT", self._bint],
+            "int8":[13,"NX_INT8", "int8"],
+            "int16":[-223,"NX_INT16", "int16"],
+            "int32":[13235,"NX_INT32", "int32"],
+            "int64":[-12425,"NX_INT64", "int64"],
+            "uint":[123,"NX_UINT", self._buint],
+            "uint8":[65,"NX_UINT8", "uint8"],
+            "uint16":[453,"NX_UINT16", "uint16"],
+            "uint32":[12235,"NX_UINT32", "uint32"],
+            "uint64":[14345,"NX_UINT64", "uint64"],
+            "float":[-16.345,"NX_FLOAT", self._bfloat,1.e-14],
+            "number":[-2.345e+2,"NX_NUMBER", self._bfloat,1.e-14],
+            "float32":[-4.355e-1,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[-2.345,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool"],
+            }
+
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile("NXfile", [], None, self._nxFile)
+        el = {} 
+        flip = False
+        for k in attrs: 
+            flip = not flip
+            stt = 'INIT' if flip else 'FINAL'
+            if attrs[k][1]:
+                el[k] = EField("field", {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField("field", {"name":k, "units":"m"}, eFile)
+
+            el[k].strategy = stt
+        
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].content, [])
+            self.assertEqual(el[k].rank, "0")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, None)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+#            self.assertEqual(el[k].store(), None)
+            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].grows, None)
+            
+
+        for k in attrs: 
+            h5 = el[k].h5Object
+            self.assertEqual(h5.shape,(1,))
+            self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
+            self.assertEqual(h5.size,1)
+            self.assertEqual(h5.nattrs, 2)
+            self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
+            self._sc.checkScalarAttribute(h5, "units", "string", "m")
+            
+            
+        self._nxFile.close()
+        os.remove(self._fname)
 
 
         

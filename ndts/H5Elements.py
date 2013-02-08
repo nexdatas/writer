@@ -392,8 +392,8 @@ class EField(FElementWithAttr):
                             self.h5Object[i,j] = sts[i][j] 
 
             elif self.strategy != "POSTRUN": 
-#                raise ValueError,"Warning: Invalid datasource for %s" % nm
-                print "Warning: Invalid datasource for ", nm
+                raise ValueError,"Warning: Invalid datasource for %s" % nm
+#                print "Warning: Invalid datasource for ", nm
 
 
         
