@@ -653,7 +653,8 @@ class EFieldTest(unittest.TestCase):
             
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*mlen[1] ]*mlen[0] 
+#                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(mlen[0]) ] 
             else:    
                 mlen = [random.randint(1, 10)]
                 if k == 'bool':
@@ -756,7 +757,7 @@ class EFieldTest(unittest.TestCase):
             
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*mlen[1] ]*mlen[0] 
+                attrs[k][0] =  [attrs[k][0]*random.randint(0,3)  for c in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10)]
                 if k == 'bool':
@@ -852,7 +853,7 @@ class EFieldTest(unittest.TestCase):
             
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*mlen[1] ]*mlen[0] 
+                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for c in range(mlen[0] )]
             else:    
                 mlen = [random.randint(1, 10)]
                 if k == 'bool':
@@ -943,13 +944,13 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*mlen[2] ]*mlen[1] ]*mlen[0]
+                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10),random.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1053,13 +1054,13 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*mlen[2] ]*mlen[1] ]*mlen[0]
+                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0,3) ] for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10),random.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1160,13 +1161,13 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*mlen[2] ]*mlen[1] ]*mlen[0]
+                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10),random.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1291,15 +1292,10 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes() 
-            at = el[k].h5Attribute(k)
-            self.assertEqual(at.dtype, attrs[k][2])
-            if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
-            
-            elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
-            else: 
-                self.assertEqual(at.value, attrs[k][0])
+            at = el[k].h5Object.attr(k)
+#            at = el[k].h5Attribute(k)
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])>3 else 0)
 
         for k in attrs.keys():
             if attrs[k][2] == 'string':
@@ -1307,23 +1303,14 @@ class EFieldTest(unittest.TestCase):
                 continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
-            at = el[k].h5Attribute(k)
-            self.assertEqual(at.dtype, attrs[k][2])
-            if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
-            
-            elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
-            else: 
-                
-                if isinstance(at.value, numpy.ndarray): 
-                    self.assertEqual(at.value, numpy.array(attrs[k][0],dtype = attrs[k][2]))
-                else:
-                    self.assertEqual([at.value], attrs[k][0])
+#            at = el[k].h5Attribute(k)
+            at = el[k].h5Object.attr(k)
+            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+                                            attrs[k][3] if len(attrs[k])>3 else 0)
 
         self._nxFile.close()
  
-        os.remove(self._fname)
+#        os.remove(self._fname)
  
     ## constructor test
     # \brief It tests default settings
@@ -1373,19 +1360,10 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = 'STEP'
 
             el[k].store() 
-            at = el[k].h5Attribute(k)
-            self.assertEqual(at.dtype, attrs[k][2])
-            if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
-            
-            elif len(attrs[k]) > 4:
-                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][4])
-            else: 
-                
-                if isinstance(at.value, numpy.ndarray): 
-                    self.assertEqual(at.value, numpy.array(attrs[k][0],dtype = attrs[k][2]))
-                else:
-                    self.assertEqual([at.value], attrs[k][0])
+            at = el[k].h5Object.attr(k)
+            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
+                                            attrs[k][3] if len(attrs[k])>3 else 0)
+
 
 
 
@@ -1429,7 +1407,7 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*mlen[1] ]*mlen[0] 
+                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3)  for r in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10)]
                 if k == 'bool':
@@ -1457,19 +1435,10 @@ class EFieldTest(unittest.TestCase):
 
             el[k].store() 
 
-            at = el[k].h5Attribute(k)
-            self.assertEqual(at.dtype, attrs[k][2])
-            if attrs[k][2] == "bool":
-                for i in range(len(attrs[k][0])):
-                    self.assertEqual(Converters.toBool(str(attrs[k][0][i])),at.value[i])
-                pass
-            elif len(attrs[k]) > 4:
-                for i in range(len(attrs[k][0])):
-                    self.assertTrue(abs(at.value[i] - attrs[k][0][i]) <= attrs[k][4])
-            else: 
-                
-                for i in range(len(attrs[k][0])):
-                    self.assertEqual(at.value[i], attrs[k][0][i])
+            at = el[k].h5Object.attr(k)
+
+            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0] , 
+                                            attrs[k][3] if len(attrs[k])>3 else 0)
 
 
 
@@ -1511,13 +1480,13 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             if attrs[k][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*mlen[2] ]*mlen[1] ]*mlen[0]
+                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10),random.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1544,7 +1513,10 @@ class EFieldTest(unittest.TestCase):
             el[k].store() 
 
 
-            at = el[k].h5Attribute(k)
+            at = el[k].h5Object.attr(k)
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0] , 
+                                            attrs[k][4] if len(attrs[k])>4 else 0)
+
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
                 for i in range(len(attrs[k][0])):

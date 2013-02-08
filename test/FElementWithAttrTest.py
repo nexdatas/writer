@@ -318,7 +318,7 @@ class FElementWithAttrTest(unittest.TestCase):
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
                 mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[nm][0] =  [ attrs[nm][0]*mlen[1] ]*mlen[0] 
+                attrs[nm][0] =  [ attrs[nm][0]*random.randint(0, 3) for r in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10)]
                 if nm == 'bool':
@@ -386,14 +386,16 @@ class FElementWithAttrTest(unittest.TestCase):
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[nm][0] =  [[ attrs[nm][0]*mlen[2] ]*mlen[1] ]*mlen[0]
+                mlen = [random.randint(1, 10),random.randint(1, 10), 
+                        (2 << numpy.dtype(attrs[nm][2]).itemsize)  ]
+#                print "SH",nm,mlen[2]    
+                attrs[nm][0] =  [[ attrs[nm][0]*random.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
                 mlen = [random.randint(1, 10),random.randint(1, 10) ]
                 if nm == 'bool':
-                    attrs[nm][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[nm][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]]*mlen[0]
+                    attrs[nm][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[nm][3] =  (mlen[0],mlen[1])
 

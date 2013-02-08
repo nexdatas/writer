@@ -181,6 +181,7 @@ class Checker(object):
         self._tc.assertTrue(cnt.valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
+#        print name, "SHAPE", cnt.shape,len(cnt.shape)
         self._tc.assertEqual(len(cnt.shape), 0)
         self._tc.assertEqual(cnt.shape, ())
         self._tc.assertEqual(cnt.dtype, dtype)
