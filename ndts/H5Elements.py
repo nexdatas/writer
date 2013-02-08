@@ -380,7 +380,8 @@ class EField(FElementWithAttr):
 
 
                 if self.h5Object.dtype != "string" or not self.rank or int(self.rank) == 0:
-                    self.h5Object.write(dh.cast(self.h5Object.dtype))
+                    self.h5Object[...] = dh.cast(self.h5Object.dtype)
+#                    self.h5Object.write(dh.cast(self.h5Object.dtype))
                 elif int(self.rank) == 1:
                     sts = dh.cast(self.h5Object.dtype)
                     for i in range(len(sts)):

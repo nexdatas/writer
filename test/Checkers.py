@@ -593,7 +593,11 @@ class Checker(object):
     # \param values original values
     # \param error data precision
     # \param grows growing dimension
-    def checkSingleSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
+    def checkSingleSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs=None):
+
+        atts = {"type":nxtype,"units":"", "nexdatas_source":None}
+        if attrs:
+            atts = attrs
 
         cnt = det.open(name)
         self._tc.assertTrue(cnt.valid)
@@ -619,31 +623,16 @@ class Checker(object):
                 self._tc.assertEqual(values[i], cnt[i])
             
 
-
-        self._tc.assertEqual(cnt.nattrs,3)
-
-        at = cnt.attr("type")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
-        self._tc.assertEqual(at.name,"type")
-        self._tc.assertEqual(at.value,nxtype)
-        
-
-        at = cnt.attr("units")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
-        self._tc.assertEqual(at.name,"units")
-        self._tc.assertEqual(at.value,"")
-        
-        at = cnt.attr("nexdatas_source")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
+        self._tc.assertEqual(cnt.nattrs,len(atts))
+        for a in atts:
+            at = cnt.attr(a)
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(at.name, a)
+            if atts[a] is not None:
+                self._tc.assertEqual(at.value,atts[a])
 
 
 
@@ -657,7 +646,11 @@ class Checker(object):
     # \param values original values
     # \param error data precision
     # \param grows growing dimension
-    def checkXMLSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0):
+    def checkXMLSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
+
+        atts = {"type":nxtype,"units":""}
+        if attrs:
+            atts = attrs
 
         cnt = det.open(name)
         self._tc.assertTrue(cnt.valid)
@@ -684,25 +677,17 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,2)
+        self._tc.assertEqual(cnt.nattrs,len(atts))
+        for a in atts:
+            at = cnt.attr(a)
+            self._tc.assertTrue(at.valid)
+            self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(at.name, a)
+            if atts[a] is not None:
+                self._tc.assertEqual(at.value,atts[a])
 
-        at = cnt.attr("type")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
-        self._tc.assertEqual(at.name,"type")
-        self._tc.assertEqual(at.value,nxtype)
-        
-
-        at = cnt.attr("units")
-        self._tc.assertTrue(at.valid)
-        self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
-        self._tc.assertEqual(at.dtype,"string")
-        self._tc.assertEqual(at.name,"units")
-        self._tc.assertEqual(at.value,"")
-        
 
     ## checks  spectrum field
     # \param det detector group
