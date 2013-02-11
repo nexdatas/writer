@@ -295,6 +295,8 @@ class EField(FElementWithAttr):
             self.__extraD = True
             if not self.grows:
                 self.grows = 1
+        else:
+            self.grows = None
 
         #  type and name
         if "name" in self._tagAttrs.keys():
@@ -312,7 +314,8 @@ class EField(FElementWithAttr):
             if len(shape) > 1 and tp.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
-                self.grows = 1
+                if self.__extraD:
+                    self.grows = 1
         except XMLSettingSyntaxError, ex:
             if self.strategy == "POSTRUN": 
                 self.__splitArray = False

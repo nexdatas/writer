@@ -65,6 +65,8 @@ class TestDataSource(DataSource):
         self.numpy = True
         ## validity
         self.valid = True
+        ## returned Data
+        self.value = None
 
 
     ## sets the parameters up from xml
@@ -78,7 +80,9 @@ class TestDataSource(DataSource):
     def getData(self):
         if self.valid:
             self.dataTaken = True
-            if len(self.dims) == 0:
+            if self.value:
+                return self.value
+            elif len(self.dims) == 0:
                 return {"format":NTP.rTf[0], "value":1, 
                         "tangoDType":"DevLong", "shape":[0,0]}
             elif numpy:
@@ -1709,7 +1713,8 @@ class EFieldTest(unittest.TestCase):
 
             self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].grows, None)
+
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
@@ -1811,7 +1816,7 @@ class EFieldTest(unittest.TestCase):
 
             self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].grows, None)
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
@@ -1916,8 +1921,8 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
-            self.assertEqual(el[k].grows, grow if attrs[k][2] !='string' else 1)
-            if attrs[k][2] =='string':
+            if attrs[k][2] =='string': 
+                self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
                     self._sc.checkXMLSpectrumField(self._nxFile, k, 
                                                    attrs[k][2] if attrs[k][2] else 'string',
@@ -1932,10 +1937,12 @@ class EFieldTest(unittest.TestCase):
                                                    )
                     
             elif stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
                                                attrs[k][4] if len(attrs[k])> 4 else 0)
             else:
+                self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
                                                attrs[k][4] if len(attrs[k])> 4 else 0, 
@@ -2035,18 +2042,21 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
-            self.assertEqual(el[k].grows, grow if attrs[k][2] !='string' else 1)
             if attrs[k][2] =='string':
+                self.assertEqual(el[k].grows, None)
+#                self.assertEqual(el[k].grows, 1 if stt == 'STEP' else None)
                 self._sc.checkXMLStringImageField(self._nxFile, k, 
                                                   attrs[k][2] if attrs[k][2] else 'string',
                                                   attrs[k][1], attrs[k][0], 
                                                   attrs = {"type":attrs[k][1],"units":""}
                                                   )
             elif stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
                                                attrs[k][4] if len(attrs[k])> 4 else 0)
             else:
+                self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
                                                attrs[k][4] if len(attrs[k])> 4 else 0, 
@@ -2141,7 +2151,10 @@ class EFieldTest(unittest.TestCase):
         eFile = EFile( [], None, self._nxFile)
         el = {} 
         quin = 0
+        quot = 0
         for k in attrs: 
+            quot = (quot + 1) %4
+            grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
             stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
             if attrs[k][1]:
@@ -2150,40 +2163,55 @@ class EFieldTest(unittest.TestCase):
                 el[k] = EField( {"name":k, "units":"m"}, eFile)
 
             el[k].strategy = stt
-            el[k].content.append(str(attrs[k][0]))
+            ds = TestDataSource()
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
+                  "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            el[k].source = ds
+            el[k].grows = grow
 
             self.assertTrue(isinstance(el[k], Element))
             self.assertTrue(isinstance(el[k], FElement))
             self.assertTrue(isinstance(el[k], FElementWithAttr))
             self.assertEqual(el[k].tagName, "field")
-            self.assertEqual(el[k].content, [str(attrs[k][0])])
             self.assertEqual(el[k].rank, "0")
             self.assertEqual(el[k].lengths, {})
             self.assertEqual(el[k].strategy, stt)
             self.assertEqual(el[k].trigger, None)
-            self.assertEqual(el[k].grows, None)
+            self.assertEqual(el[k].grows, grow)
             self.assertEqual(el[k].compression, False)
             self.assertEqual(el[k].rate, 5)
             self.assertEqual(el[k].shuffle, True)
 
-            self.assertEqual(el[k].store(), None)
-            self.assertEqual(el[k].run(), None)
+            el[k].store()
+#            self.assertEqual(el[k].store(), None)
+            steps = 3
+            for i in range(steps):
+                self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            self.assertEqual(el[k].grows, None)
-            if stt != 'POSTRUN':
-                self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                             attrs[k][1], attrs[k][0], 
-                                             attrs[k][3] if len(attrs[k])> 3 else 0)
+            if stt == 'STEP':
+                self.assertEqual(el[k].grows, (grow if grow else 1))
+                self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                          attrs[k][1], [attrs[k][0]]*steps, 
+                                          attrs[k][3] if len(attrs[k])> 3 else 0,
+                                          attrs = {"type":attrs[k][1],"units":"m"}
+                                          )
+            elif stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][3] if len(attrs[k])> 3 else 0,
+                                                attrs = {"type":attrs[k][1],"units":"m"})
             else:
-                self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                             attrs[k][1], attrs[k][0], 
-                                             attrs[k][3] if len(attrs[k])> 3 else 0, 
-                                             attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-                                             )
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                          attrs[k][1], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                          )
             
             
         self._nxFile.close()
-        os.remove(self._fname)
+#        os.remove(self._fname)
 
         
 
