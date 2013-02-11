@@ -51,6 +51,7 @@ class DataHolder(object):
         if str(self.tangoDType) == 'DevEncoded':
             self.__setupEncoded()
 
+
     def __setupEncoded(self):    
         self.shape = None
         if self.encoding and self.decoders and \

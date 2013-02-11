@@ -76,21 +76,21 @@ class TestDataSource(DataSource):
     ## access to data
     # \brief It is an abstract method providing data   
     def getData(self):
-        self.dataTaken = True
-        if len(self.dims) == 0:
-            return {"format":NTP.rTf[0], "value":1, 
-                    "tangoDType":"DevLong", "shape":[0,0]}
-        elif numpy:
-            return {"format":NTP.rTf[len(self.dims)], "value":numpy.ones(self.dims), 
-                    "tangoDType":"DevLong", "shape":self.dims}
-        elif len(self.dims) == 1:
-            return {"format":NTP.rTf[1], "value":([1] * self.dims[0]), 
-                    "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-        elif len(self.dims) == 2:
-            return {"format":NTP.rTf[2], "value":([[1] * self.dims[1]]*self.dims[0] ), 
-                    "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-        
-        
+        if self.valid:
+            self.dataTaken = True
+            if len(self.dims) == 0:
+                return {"format":NTP.rTf[0], "value":1, 
+                        "tangoDType":"DevLong", "shape":[0,0]}
+            elif numpy:
+                return {"format":NTP.rTf[len(self.dims)], "value":numpy.ones(self.dims), 
+                        "tangoDType":"DevLong", "shape":self.dims}
+            elif len(self.dims) == 1:
+                return {"format":NTP.rTf[1], "value":([1] * self.dims[0]), 
+                        "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
+            elif len(self.dims) == 2:
+                return {"format":NTP.rTf[2], "value":([[1] * self.dims[1]]*self.dims[0] ), 
+                        "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
+                
 
     ## checks if the data is valid
     # \returns if the data is valid
@@ -1939,6 +1939,132 @@ class EFieldTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
+
+
+
+
+    ## default store method
+    # \brief It tests default settings
+    def test_run_noData(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        el = EField( {"name":"myfield", "units":"m"}, eFile)
+        ds = TestDataSource()
+        el.source = ds
+
+
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "field")
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.rank, "0")
+        self.assertEqual(el.lengths, {})
+        self.assertEqual(el.strategy, None)
+        self.assertEqual(el.trigger, None)
+        self.assertEqual(el.grows, None)
+        self.assertEqual(el.compression, False)
+        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.shuffle, True)
+        
+        self.assertEqual(el.error, None)
+        ds.valid = True
+        self.assertEqual(el.run(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object on Test DataSource not found')
+        self.assertEqual(el.error[1], 'PNI Object not created')            
+        ds.valid = False
+        self.assertEqual(el.run(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object on Test DataSource not found')
+        self.assertEqual(el.error[1], 'Data without value')            
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## default store method
+    # \brief It tests default settings
+    def test_run_noX_0d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "string2":["My string","NX_CHAR", ""],
+            "datetime":["12:34:34","NX_DATE_TIME", "string"],
+            "iso8601":["12:34:34","ISO8601", "string"],
+            "int":[-132,"NX_INT", self._bint],
+            "int8":[13,"NX_INT8", "int8"],
+            "int16":[-223,"NX_INT16", "int16"],
+            "int32":[13235,"NX_INT32", "int32"],
+            "int64":[-12425,"NX_INT64", "int64"],
+            "uint":[123,"NX_UINT", self._buint],
+            "uint8":[65,"NX_UINT8", "uint8"],
+            "uint16":[453,"NX_UINT16", "uint16"],
+            "uint32":[12235,"NX_UINT32", "uint32"],
+            "uint64":[14345,"NX_UINT64", "uint64"],
+            "float":[-16.345,"NX_FLOAT", self._bfloat,1.e-14],
+            "number":[-2.345e+2,"NX_NUMBER", self._bfloat,1.e-14],
+            "float32":[-4.355e-1,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[-2.345,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool"],
+            }
+
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        el = {} 
+        quin = 0
+        for k in attrs: 
+            quin = (quin+1) % 5 
+            stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+
+            el[k].strategy = stt
+            el[k].content.append(str(attrs[k][0]))
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].content, [str(attrs[k][0])])
+            self.assertEqual(el[k].rank, "0")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, None)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+            self.assertEqual(el[k].store(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].grows, None)
+            if stt != 'POSTRUN':
+                self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                             attrs[k][1], attrs[k][0], 
+                                             attrs[k][3] if len(attrs[k])> 3 else 0)
+            else:
+                self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                             attrs[k][1], attrs[k][0], 
+                                             attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                             attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                             )
+            
+            
+        self._nxFile.close()
+        os.remove(self._fname)
 
         
 

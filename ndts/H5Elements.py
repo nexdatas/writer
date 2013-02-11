@@ -401,11 +401,17 @@ class EField(FElementWithAttr):
     def run(self):
         try:
             if self.source:
-                dh = DataHolder(**self.source.getData())
+                dt = self.source.getData()
+                dh = None
+                if dt:
+                    dh = DataHolder(**dt)
 #                print "VAL", dh.value, type(dh.value)
                 if not dh:
-                    message = self.setMessage()
-                    print message[0]
+                    message = self.setMessage("Data without value")
+#                    message = self.setMessage()
+                    self.error = message
+                elif not hasattr(self.h5Object,'shape'):
+                    message = self.setMessage("PNI Object not created")
                     self.error = message
                 else:
                     if not self.__extraD:
@@ -525,8 +531,12 @@ class EField(FElementWithAttr):
             print message[0]
             print message[1]
             self.error = message
+
 #            self.error = sys.exc_info()
         finally:
+            if self.error:
+                print "ERROR", self.error
+
             pass
 
 
@@ -668,10 +678,17 @@ class EAttribute(FElement):
                 if not self.h5Object:
                     self.h5Object = self._last.h5Attribute(self.name)
                 if self.source:
-                    dh = DataHolder(**self.source.getData())
-
+                    dt = self.source.getData()
+                    dh = None
+                    if dt:
+                        dh = DataHolder(**dt)
+                #                print "VAL", dh.value, type(dh.value)
                     if not dh:
-                        message = self.setMessage()
+                        message = self.setMessage("Data without value")
+                    #                    message = self.setMessage()
+                        self.error = message
+                    elif not hasattr(self.h5Object,'shape'):
+                        message = self.setMessage("PNI Object not created")
                         print message[0]
                         self.error = message
                     else:
