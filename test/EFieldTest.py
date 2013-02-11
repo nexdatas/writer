@@ -2152,20 +2152,42 @@ class EFieldTest(unittest.TestCase):
         el = {} 
         quin = 0
         quot = 0
+        steps = 10
+
         for k in attrs: 
             quot = (quot + 1) %4
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
+
+
             stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
             if attrs[k][1]:
                 el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             else:    
                 el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+            if stt == 'STEP':
+                if attrs[k][2] == "string":
+                    attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3) for r in range(steps) ]
+                elif attrs[k][2] != "bool":
+                    attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(steps) ] 
+                else:    
+                    if k == 'bool':
+                        attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(steps) ]
+                    else:
+                        attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
+                                         for c in range(steps) ]
+
+
 
             el[k].strategy = stt
             ds = TestDataSource()
-            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
-                  "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            if stt != 'STEP':
+                ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
+                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            else:
+                ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][0], 
+                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2184,14 +2206,16 @@ class EFieldTest(unittest.TestCase):
 
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
-            steps = 3
             for i in range(steps):
+                if stt =='STEP':
+                    ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][i], 
+                                "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if stt == 'STEP':
                 self.assertEqual(el[k].grows, (grow if grow else 1))
                 self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                          attrs[k][1], [attrs[k][0]]*steps, 
+                                          attrs[k][1], attrs[k][0], 
                                           attrs[k][3] if len(attrs[k])> 3 else 0,
                                           attrs = {"type":attrs[k][1],"units":"m"}
                                           )
