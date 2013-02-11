@@ -2152,6 +2152,100 @@ class EFieldTest(unittest.TestCase):
         el = {} 
         quin = 0
         quot = 0
+
+        for k in attrs: 
+            quot = (quot + 1) %4
+            grow = quot-1  if quot else  None
+            quin = (quin+1) % 5 
+
+
+            stt = [None,'INIT','FINAL','POSTRUN'][quot]
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+
+
+            el[k].strategy = stt
+            ds = TestDataSource()
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            el[k].source = ds
+            el[k].grows = grow
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].rank, "0")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+            el[k].store()
+#            self.assertEqual(el[k].store(), None)
+            self.assertEqual(el[k].run(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][3] if len(attrs[k])> 3 else 0,
+                                                attrs = {"type":attrs[k][1],"units":"m"})
+            else:
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                          attrs[k][1], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                          )
+            
+            
+        self._nxFile.close()
+#        os.remove(self._fname)
+
+
+    ## default store method
+    # \brief It tests default settings
+    def test_run_X_0d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "string2":["My string","NX_CHAR", ""],
+            "datetime":["12:34:34","NX_DATE_TIME", "string"],
+            "iso8601":["12:34:34","ISO8601", "string"],
+            "int":[-132,"NX_INT", self._bint],
+            "int8":[13,"NX_INT8", "int8"],
+            "int16":[-223,"NX_INT16", "int16"],
+            "int32":[13235,"NX_INT32", "int32"],
+            "int64":[-12425,"NX_INT64", "int64"],
+            "uint":[123,"NX_UINT", self._buint],
+            "uint8":[65,"NX_UINT8", "uint8"],
+            "uint16":[453,"NX_UINT16", "uint16"],
+            "uint32":[12235,"NX_UINT32", "uint32"],
+            "uint64":[14345,"NX_UINT64", "uint64"],
+            "float":[-16.345,"NX_FLOAT", self._bfloat,1.e-14],
+            "number":[-2.345e+2,"NX_NUMBER", self._bfloat,1.e-14],
+            "float32":[-4.355e-1,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[-2.345,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool"],
+            }
+
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        el = {} 
+        quin = 0
+        quot = 0
         steps = 10
 
         for k in attrs: 
@@ -2160,34 +2254,29 @@ class EFieldTest(unittest.TestCase):
             quin = (quin+1) % 5 
 
 
-            stt = [None,'INIT','FINAL','STEP','POSTRUN'][quin]
+            stt = 'STEP'
             if attrs[k][1]:
                 el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
             else:    
                 el[k] = EField( {"name":k, "units":"m"}, eFile)
                 
-            if stt == 'STEP':
-                if attrs[k][2] == "string":
-                    attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3) for r in range(steps) ]
-                elif attrs[k][2] != "bool":
-                    attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(steps) ] 
-                else:    
-                    if k == 'bool':
-                        attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(steps) ]
-                    else:
-                        attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
-                                         for c in range(steps) ]
+            if attrs[k][2] == "string":
+                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3) for r in range(steps) ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(steps) ] 
+            else:    
+                if k == 'bool':
+                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(steps) ]
+                else:
+                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
+                                     for c in range(steps) ]
 
 
 
             el[k].strategy = stt
             ds = TestDataSource()
-            if stt != 'STEP':
-                ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
-            else:
-                ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][0], 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][0], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2207,31 +2296,16 @@ class EFieldTest(unittest.TestCase):
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
             for i in range(steps):
-                if stt =='STEP':
-                    ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][i], 
-                                "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][i], 
+                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if stt == 'STEP':
-                self.assertEqual(el[k].grows, (grow if grow else 1))
-                self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                          attrs[k][1], attrs[k][0], 
-                                          attrs[k][3] if len(attrs[k])> 3 else 0,
-                                          attrs = {"type":attrs[k][1],"units":"m"}
-                                          )
-            elif stt != 'POSTRUN':
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][3] if len(attrs[k])> 3 else 0,
-                                                attrs = {"type":attrs[k][1],"units":"m"})
-            else:
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                          attrs[k][1], attrs[k][0], 
-                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
-                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-                                          )
+            self.assertEqual(el[k].grows, (grow if grow else 1))
+            self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                      attrs[k][1], attrs[k][0], 
+                                      attrs[k][3] if len(attrs[k])> 3 else 0,
+                                      attrs = {"type":attrs[k][1],"units":"m"}
+                                      )
             
             
         self._nxFile.close()
