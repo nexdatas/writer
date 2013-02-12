@@ -611,7 +611,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 

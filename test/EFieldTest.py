@@ -2451,15 +2451,15 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,)],
             "uint16":[123,"NX_UINT16", "uint16", (1,)],
             "uint32":[12345,"NX_UINT32", "uint32", (1,)],
-#            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
             "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
-#            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
-#            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-#            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
-#            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
 
@@ -2508,7 +2508,6 @@ class EFieldTest(unittest.TestCase):
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0][0])]), 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
-#            print "VAL", ds.value, attrs[k][0][0]
 
             el[k].rank = "1"
             el[k].source = ds
@@ -2530,7 +2529,6 @@ class EFieldTest(unittest.TestCase):
             el[k].store()
 
             for i in range(steps):
-#                print k, "i", i,attrs[k][0][0]
                 ds.value = {"format":NTP.rTf[1], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool"\
                                          else [Converters.toBool(attrs[k][0][i][0]) ]), 
@@ -2538,17 +2536,15 @@ class EFieldTest(unittest.TestCase):
                             "shape":[attrs[k][3][0],0]}
                 self.assertEqual(el[k].run(), None)
 
-#            self.assertEqual(el[k].store(), None)
-#                self.assertEqual(el[k].grows, grow)
-#                self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-#                                          attrs[k][1], attrs[k][0], 
-#                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
-#                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-#                                          )
-           
+        self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                    attrs[k][1], attrs[k][0], 
+                                    attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                    attrs = {"type":attrs[k][1], "units":"m"}
+                                    )
+          
             
         self._nxFile.close()
-#       os.remove(self._fname)
+        os.remove(self._fname)
 
         
 
