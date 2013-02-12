@@ -134,18 +134,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field  units="m" name="pid_scalar_int32" type="NX_INT32">
-          <dimensions rank="1" />
-          <strategy mode="STEP"/>
-          <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SPECTRUM">
-              SELECT pid FROM device limit 1
-            </query>
-          </datasource>
-        </field>
-
-
         <field units="m" name="pid_scalar2_string" type="NX_CHAR">
           <dimensions rank="1" />
           <strategy mode="STEP"/>
@@ -189,16 +177,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field name="pid_image_uint" type="NX_UINT" units="m" >
-          <dimensions rank="2"/>
-          <strategy mode="STEP"/>
-          <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SCALAR">
-              SELECT pid FROM device limit 1
-            </query>
-          </datasource>
-        </field>
 
         <field name="pid2_image_string" type="NX_CHAR" units="m" >
           <dimensions rank="2">
@@ -283,16 +261,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
-        <field name="final_pid_image_float" type="NX_FLOAT" units="m" >
-          <dimensions rank="2" />
-          <strategy mode="FINAL"/>
-          <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SCALAR">
-              SELECT pid FROM device limit 1
-            </query>
-          </datasource>
-        </field>
 
 
 
@@ -318,17 +286,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
+        det = self._sc.checkFieldTree(f, fname , 12)
         self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar_uint", self._buint, "NX_UINT", [int(scalar)] *3)
         self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [float(scalar)] *3, 
                                   error = 1e-14)
-        self._sc.checkScalarField(det, "pid_scalar_int32", "int32", "NX_INT32", 
-                                  [int(scalar) ]*3)
-        self._sc.checkScalarField(det, "pid_image_uint", self._buint, "NX_UINT", 
-                                       [int(scalar)]*3)
         self._sc.checkScalarField(det, "pid2_image_string", "string", "NX_CHAR", 
                                        [str(scalar)]*3)
         self._sc.checkScalarField(det, "pid3_image_string", "string", "NX_CHAR", 
@@ -346,8 +310,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
 
-        self._sc.checkSingleScalarField(det, "final_pid_image_float", self._bfloat, "NX_FLOAT", 
-                                        float(scalar))
+
+
+
 
 
         f.close()
@@ -411,6 +376,18 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field  units="" name="pid_scalar_int32" type="NX_INT32">
+          <dimensions rank="1" />
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
 
 
 
@@ -449,17 +426,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
               SELECT name FROM device limit 10
-            </query>
-          </datasource>
-        </field>
-
-        <field name="pid_spectrum_float32" type="NX_FLOAT32" units="" >
-          <dimensions rank="2" />
-          <strategy mode="STEP" grows="2"/>
-          <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
             </query>
           </datasource>
         </field>
@@ -571,17 +537,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field name="init_pid_spectrum_float64" type="NX_FLOAT64" units="" >
-          <dimensions rank="2"/>
-          <strategy mode="INIT"/>
-          <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
-            </query>
-          </datasource>
-        </field>
-
 
 
 
@@ -617,7 +572,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 34)
+        det = self._sc.checkFieldTree(f, fname , 33)
         self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [[str(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
@@ -630,8 +585,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[float(scalar)] ]*3)
         self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
                                        [[str(sub[0]) for sub in name]]*3)
-        self._sc.checkSpectrumField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 
-                                       [[float(sub[0]) for sub in spectrum]]*3, grows=2)
         self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64", 
                                           [int(scalar)] )
         self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
@@ -650,11 +603,15 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [str(sub[0]) for sub in spectrum])
         self._sc.checkSingleStringSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
                                     [str(sub[0]) for sub in spectrum])
-        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64", 
-                                    [float(sub[0]) for sub in spectrum])
+
+
+        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", 
+                                  [[int(scalar)] ]*3)
+
+
 
         f.close()
-        os.remove(fname)
+#        os.remove(fname)
 
 
 
@@ -731,6 +688,29 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field name="pid_image_uint" type="NX_UINT" units="" >
+          <dimensions rank="2"/>
+          <strategy mode="STEP"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="init_pid_spectrum_float64" type="NX_FLOAT64" units="" >
+          <dimensions rank="2"/>
+          <strategy mode="INIT"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
+
 
 
         <field name="pid_image_float" type="NX_FLOAT" units="" >
@@ -804,6 +784,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field name="final_pid_image_float" type="NX_FLOAT" units="" >
+          <dimensions rank="2" />
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
 
         <field name="pid_exported_image_float32" type="NX_FLOAT32" units="">
           <dimensions rank="2" />
@@ -839,6 +830,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field name="pid_spectrum_float32" type="NX_FLOAT32" units="" >
+          <dimensions rank="2" />
+          <strategy mode="STEP" grows="2"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 10
+            </query>
+          </datasource>
+        </field>
 
 
 
@@ -920,6 +922,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
         cursor.close()
 
 
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 1")
+        scalar = str(cursor.fetchone()[0])
+        cursor.close()
+
+
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 10")
+        spectrum = cursor.fetchall()
+        cursor.close()
+
         tdw = self.openWriter(fname, xml)
 
         for c in range(3):
@@ -930,7 +943,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 53)
+        det = self._sc.checkFieldTree(f, fname , 57)
         self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
@@ -963,6 +976,20 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[float(pid[0][0])]])
 
 
+
+        self._sc.checkImageField(det, "pid_image_uint", self._buint, "NX_UINT", 
+                                       [[[int(scalar)]]]*3)
+        self._sc.checkSingleImageField(det, "final_pid_image_float", self._bfloat, "NX_FLOAT", 
+                                        [[float(scalar)]])
+
+
+
+
+        self._sc.checkSingleImageField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+                                    [[float(sub[0])] for sub in spectrum])
+
+        self._sc.checkImageField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 
+                                       [[[float(sub[0])] for sub in spectrum]]*3, grows=2)
 
         f.close()
         os.remove(fname)

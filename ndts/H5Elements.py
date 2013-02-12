@@ -75,9 +75,10 @@ class FElement(Element):
     # \param lengths dictionary with dimensions as a string data , e.g. {"1":"34","2":"40"}
     # \param extraD if the object grows
     # \param grows growing dimension        
+    # \param extends If True extends the shape up to rank value
     # \raise XMLSettingSyntaxError if shape cannot be found      
     # \returns shape of the object
-    def _findShape(self, rank, lengths=None, extraD = False, grows = None):
+    def _findShape(self, rank, lengths=None, extraD = False, grows = None, extends = False):
         shape = []
         if extraD:
             if grows and grows >1:
@@ -115,11 +116,14 @@ class FElement(Element):
                         for s in dsShape:
                             if s:
                                 shape.append(s)
+                    while extends and len(shape) < int(rank):
+                        shape.append(1)
+                        
                     if extraD:
-                        if shape == [1]:
-                            shape = [0]
-                        else:    
-                            shape.insert(exDim-1,0)    
+#                        if shape == [1]:
+#                            shape = [0]
+#                        else:    
+                        shape.insert(exDim-1,0)    
                 elif val:
                     if not rank or int(rank) == 0:
                         shape = [1]
@@ -310,7 +314,10 @@ class EField(FElementWithAttr):
 
         # shape and chunk
         try:
-            shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows)
+            if tp.encode() == "string":
+                shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows)
+            else:
+                shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows, True)
             if len(shape) > 1 and tp.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
@@ -327,7 +334,6 @@ class EField(FElementWithAttr):
                 raise
 
         chunk = [s if s > 0 else 1 for s in shape]  
-
         deflate = None
         # create Filter
         if self.compression:
@@ -476,15 +482,19 @@ class EField(FElementWithAttr):
                         # way around for a bug in pninx
                             
                             arr = dh.cast(self.h5Object.dtype)
-#                            print "arr", arr, type(arr), arr.dtype
                             if self.grows == 1:
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
                                     self.h5Object.grow()
+#                                    print "arr", arr, type(arr), arr.dtype, self.h5Object.shape
+                                    if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
+#                                        print "VA2", self.h5Object.dtype,self.h5Object.shape,  arr[0] 
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
                                     if len(self.h5Object.shape) == 2:
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
-                                    else:                                
-                                        self.h5Object[self.h5Object.shape[0]-1] = arr[0]
+#                                        print "VA", self.h5Object.dtype,self.h5Object.shape,  arr[0] 
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                                    else:                      
+                                        self.h5Object[self.h5Object.shape[0]-1] = arr
                                 else:
                                     self.h5Object.grow()
                                     if len(self.h5Object.shape) == 3:
@@ -501,7 +511,7 @@ class EField(FElementWithAttr):
                                 if isinstance(arr, numpy.ndarray) \
                                         and len(arr.shape) == 1 and arr.shape[0] == 1:
                                     self.h5Object.grow(1)
-                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
                                 else:
                                     if len(self.h5Object.shape) == 3: 
                                         if self.grows == 2:
@@ -661,7 +671,11 @@ class EAttribute(FElement):
             else:        
                 tp = "NX_CHAR"
                 
-            shape = self._findShape(self.rank, self.lengths)
+            if tp == "NX_CHAR":    
+                shape = self._findShape(self.rank, self.lengths)
+            else:
+                shape = self._findShape(self.rank, self.lengths, extends= True)
+                
             val = ("".join(self.content)).strip().encode()   
             if not shape:
                 self._last.tagAttributes[self.name] = (tp, val)
