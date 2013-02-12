@@ -112,7 +112,6 @@ class DataHolder(object):
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
             else:    
-#                print "casting ", self.tangoDType ," to ", tp
                 if str(self.format).split('.')[-1] == "SPECTRUM":
                     if tp == "string":
                         return [ NTP.convert[tp](el) for el in self.value]

@@ -156,6 +156,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+        <field units="m" name="pid_scalar4_string" type="NX_CHAR">
+          <dimensions rank="0" />
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
         <field  units="m" name="pid_scalar_uint" type="NX_UINT">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
@@ -167,7 +178,32 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+
+        <field  units="m" name="pid_scalar_int64" type="NX_INT64">
+          <strategy mode="STEP"/>
+          <dimensions rank="0" />
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
         <field  units="m" name="pid_scalar_float64" type="NX_FLOAT64">
+          <strategy mode="STEP"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="pid_scalar_float32" type="NX_FLOAT32">
+          <dimensions rank="0" /> 
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
@@ -236,6 +272,18 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field  units="m" name="final_pid_scalar_float64" type="NX_FLOAT64">
+          <dimensions rank="0" />
+          <strategy mode="FINAL"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
         <field name="final_pid_scalar_string" type="NX_CHAR" units="m" >
           <dimensions rank="2">
             <dim index="1" value="1"/>
@@ -252,6 +300,20 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="final_pid2_scalar_string" type="NX_CHAR" units="m" >
           <dimensions rank="2"/>
+          <strategy mode="FINAL"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+
+        <field name="final_pid3_scalar_string" type="NX_CHAR" units="m" >
+          <dimensions rank="0"/>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
@@ -286,13 +348,17 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 12)
+        det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
+        self._sc.checkScalarField(det, "pid_scalar4_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar_uint", self._buint, "NX_UINT", [int(scalar)] *3)
+        self._sc.checkScalarField(det, "pid_scalar_int64","int64", "NX_INT64", [int(scalar)] *3)
         self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [float(scalar)] *3, 
                                   error = 1e-14)
+        self._sc.checkScalarField(det, "pid_scalar_float32", "float32", "NX_FLOAT32", [float(scalar)] *3, 
+                                  error = 1e-5)
         self._sc.checkScalarField(det, "pid2_image_string", "string", "NX_CHAR", 
                                        [str(scalar)]*3)
         self._sc.checkScalarField(det, "pid3_image_string", "string", "NX_CHAR", 
@@ -303,9 +369,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", scalar)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
                                         float(scalar), error = 1e-6)
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64", 
+                                        float(scalar), error = 1e-14)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
                                         str(scalar))
         self._sc.checkSingleScalarField(det, "final_pid2_scalar_string", "string", "NX_CHAR", 
+                                        str(scalar))
+        self._sc.checkSingleScalarField(det, "final_pid3_scalar_string", "string", "NX_CHAR", 
                                         str(scalar))
 
 

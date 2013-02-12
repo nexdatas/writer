@@ -434,7 +434,12 @@ class EField(FElementWithAttr):
                         elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
                             sts = dh.cast(self.h5Object.dtype)
                             if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
-                                self.h5Object.write(sts[0])
+#                                print "NN", self.h5Object.name,self.h5Object.shape, sts[0], type(sts[0])
+                                if self.h5Object.dtype == "string":
+                                    self.h5Object.write(sts[0])
+                                else:
+                                    self.h5Object.write(sts)
+                                    
                             else:
                                 self.h5Object.write(sts)
                                 
@@ -452,6 +457,7 @@ class EField(FElementWithAttr):
                             else:            
                                 self.h5Object[:,:] = sts
                         else:
+#                            print "DT", self.h5Object.name, self.h5Object.shape, dh.cast(self.h5Object.dtype), type( dh.cast(self.h5Object.dtype))  
                             self.h5Object.write(dh.cast(self.h5Object.dtype))
 #                        print "DATA4"
                     else:
