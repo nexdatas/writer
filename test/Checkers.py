@@ -1047,7 +1047,6 @@ class Checker(object):
                 self._tc.assertEqual(at.name, a)
                 if atts[a] is not None:
                     self._tc.assertEqual(at.value,atts[a])
-                    self._tc.assertEqual(cnt.nattrs,3)
                     
 
         
