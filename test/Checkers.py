@@ -721,9 +721,12 @@ class Checker(object):
             
 
         
+#        print "VAL", values
         for i in range(len(values)):
             for j in range(len(values[i])):
-#                print i, j, cnt[i,j], lvalues[i][j]
+#                print "CNT", cnt[j]
+#                print i, j, cnts[j][i],"   "  , values[i][j]
+                self._tc.assertEqual(values[i][j], cnts[j][i])
                 self._tc.assertEqual(values[i][j], cnts[j][i])
             
 

@@ -114,12 +114,16 @@ class FElement(Element):
                     shape = []
                     if dsShape:    
                         for s in dsShape:
-                            if s:
+                            if s and extends:
                                 shape.append(s)
+                            elif not extends and s and s>1:
+                                shape.append(s)
+    
                     while extends and len(shape) < int(rank):
                         shape.append(1)
-                    if not extends and (shape == [1, 1] or shape == [1]):
-                        shape = []
+                        
+#                    if not extends and (shape == [1, 1] or shape == [1]):
+#                        shape = []
                         
                     if extraD:
 #                        if shape == [1]:
@@ -438,8 +442,15 @@ class EField(FElementWithAttr):
 #                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype)
                         if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
                             sts = dh.cast(self.h5Object.dtype)
-                            for i in range(len(sts)):
-                                self.h5Object[i] = sts[i] 
+                            if len(dh.shape) > 1 and dh.shape[0] == 1:
+                                for i in range(len(sts[0])):
+                                    self.h5Object[i] = sts[0][i] 
+                            elif len(dh.shape) > 1 and dh.shape[1] == 1:
+                                for i in range(len(sts)):
+                                    self.h5Object[i] = sts[i][0] 
+                            else:
+                                for i in range(len(sts)):
+                                    self.h5Object[i] = sts[i] 
 #                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
                         elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
                             sts = dh.cast(self.h5Object.dtype)
@@ -546,6 +557,7 @@ class EField(FElementWithAttr):
                                         self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
                         if str(dh.format).split('.')[-1] == "IMAGE":
+#                            print "DATA3", self.h5Object.name, self.h5Object.dtype,self.h5Object.shape, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype)
 
                             if self.grows == 1:
                                 self.h5Object.grow()
