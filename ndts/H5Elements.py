@@ -506,6 +506,7 @@ class EField(FElementWithAttr):
                                     if len(self.h5Object.shape) == 3:
                                         self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
                                     elif  len(self.h5Object.shape) == 2:
+#                                        print "arr", arr.shape, self.h5Object.shape
                                         self.h5Object[self.h5Object.shape[0]-1,:] = arr
                                     else:
                                         if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
