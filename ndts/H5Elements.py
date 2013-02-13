@@ -118,6 +118,8 @@ class FElement(Element):
                                 shape.append(s)
                     while extends and len(shape) < int(rank):
                         shape.append(1)
+                    if not extends and (shape == [1, 1] or shape == [1]):
+                        shape = []
                         
                     if extraD:
 #                        if shape == [1]:
@@ -137,9 +139,11 @@ class FElement(Element):
                 else:
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
-        
+                
         elif extraD:            
             shape = [0]
+
+#        print "SHAPE",shape    
         return shape
 
 
@@ -318,11 +322,16 @@ class EField(FElementWithAttr):
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows)
             else:
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows, True)
+#            print "ifstring", nm, shape, self.grows
+            if self.grows > len(shape):
+                self.grows = len(shape)
+
             if len(shape) > 1 and tp.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 if self.__extraD:
                     self.grows = 1
+#                print "string", nm, shape, self.grows
         except XMLSettingSyntaxError, ex:
             if self.strategy == "POSTRUN": 
                 self.__splitArray = False
@@ -411,6 +420,7 @@ class EField(FElementWithAttr):
         try:
             if self.source:
                 dt = self.source.getData()
+#                print "dt", dt
                 dh = None
                 if dt:
                     dh = DataHolder(**dt)
@@ -436,7 +446,11 @@ class EField(FElementWithAttr):
                             if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
 #                                print "NN", self.h5Object.name,self.h5Object.shape, sts[0], type(sts[0])
                                 if self.h5Object.dtype == "string":
-                                    self.h5Object.write(sts[0])
+                                    if hasattr(sts[0], "__iter__")  and type(sts[0]).__name__ != 'str':
+                                        self.h5Object.write(sts[0][0])
+                                    else:
+                                        self.h5Object.write(sts[0])
+                                        
                                 else:
                                     self.h5Object.write(sts)
                                     
@@ -535,10 +549,18 @@ class EField(FElementWithAttr):
 
                             if self.grows == 1:
                                 self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                                if len(self.h5Object.shape) == 3:
+                                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                                elif len(self.h5Object.shape) == 2:
+                                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
+                                elif len(self.h5Object.shape) == 1:
+                                    self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)[0][0]
                             elif self.grows == 2:
                                 self.h5Object.grow(1)
-                                self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
+                                if len(self.h5Object.shape) == 3:
+                                    self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
+                                elif len(self.h5Object.shape) == 2:
+                                    self.h5Object[:,self.h5Object.shape[1]-1] = dh.cast(self.h5Object.dtype)[0]
                             else:
                                 self.h5Object.grow(2)
                                 self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
