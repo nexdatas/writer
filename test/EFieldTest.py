@@ -2254,6 +2254,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].compression, False)
             self.assertEqual(el[k].rate, 5)
             self.assertEqual(el[k].shuffle, True)
+            self.assertEqual(el[k].error, None)
 
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
@@ -2272,6 +2273,7 @@ class EFieldTest(unittest.TestCase):
                                           attrs[k][3] if len(attrs[k])> 3 else 0, 
                                           attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
                                           )
+            self.assertEqual(el[k].error, None)
             
             
         self._nxFile.close()
@@ -2375,6 +2377,7 @@ class EFieldTest(unittest.TestCase):
                                       attrs = {"type":attrs[k][1],"units":"m"}
                                       )
             
+            self.assertEqual(el[k].error, None)
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -2480,6 +2483,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 #            print "nm",k
+            self.assertEqual(el[k].error, None)
             if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
@@ -2597,6 +2601,7 @@ class EFieldTest(unittest.TestCase):
 
             el[k].store()
 
+            self.assertEqual(el[k].error, None)
             for i in range(steps):
                 ds.value = {"format":NTP.rTf[1], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool"\
@@ -2605,6 +2610,7 @@ class EFieldTest(unittest.TestCase):
                             "shape":[attrs[k][3][0],0]}
                 self.assertEqual(el[k].run(), None)
 
+            self.assertEqual(el[k].error, None)
         self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                     attrs[k][1], attrs[k][0], 
                                     attrs[k][3] if len(attrs[k])> 3 else 0, 
@@ -2711,10 +2717,12 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
+            self.assertEqual(el[k].error, None)
             
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].error, None)
             if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
@@ -2843,6 +2851,7 @@ class EFieldTest(unittest.TestCase):
                             "shape":[attrs[k][3][0],0]}
                 self.assertEqual(el[k].run(), None)
 
+            self.assertEqual(el[k].error, None)
 
 #            self.assertEqual(el[k].store(), None)
 #            self.assertEqual(el[k].run(), None)
@@ -2961,6 +2970,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].error, None)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(self._nxFile, k, 
@@ -3092,6 +3102,7 @@ class EFieldTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
             
+            self.assertEqual(el[k].error, None)
 #            self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
@@ -3209,6 +3220,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].error, None)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
@@ -3344,6 +3356,7 @@ class EFieldTest(unittest.TestCase):
                             "shape":[1,attrs[k][3][1]]}
                 self.assertEqual(el[k].run(), None)
 
+            self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self._sc.checkStringSpectrumField(self._nxFile, k, 
@@ -3460,6 +3473,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].error, None)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
@@ -3597,6 +3611,7 @@ class EFieldTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
+            self.assertEqual(el[k].error, None)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
 
                 self._sc.checkStringSpectrumField(self._nxFile, k, 
@@ -3710,6 +3725,7 @@ class EFieldTest(unittest.TestCase):
             
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
+            self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
@@ -3740,7 +3756,129 @@ class EFieldTest(unittest.TestCase):
             
             
         self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+    ## run method tests
+    # \brief It tests default settings
+    def test_run_X_2d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        el = {} 
+        quin = 0
+        quot = 0
+        steps = 11
+
+        for k in attrs: 
+            quot = (quot + 1) %4
+            grow = quot-1  if quot else  None
+            quin = (quin+1) % 5 
+
+            mlen = [random.randint(2, 10),random.randint(2, 10)]
+            if attrs[k][2] == "string":
+                
+                attrs[k][0] =  [[[ attrs[k][0]*random.randint(1, 3)  for c in range(mlen[0])  ] for c2 in range(mlen[1])  ] for r in range(steps)  ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0, 3)  for c in range(mlen[0]) ] for c2 in range(mlen[1])] for r in range(steps)  ]
+            else:    
+                if k == 'bool':
+                    attrs[k][0] =  [[[ bool(random.randint(0,1))  for c in range(mlen[0]) ] for c2 in range(mlen[1])]  for r in range(steps)  ]
+                else:
+                    attrs[k][0] =  [[[ ("true" if random.randint(0,1) else "false")   for c in range(mlen[0]) ] for c2 in range(mlen[1])]for r in range(steps)  ]
+                    
+            attrs[k][3] =  (len(attrs[k][0][0]),len(attrs[k][0][0][0]))
+
+
+
+            stt = 'STEP'
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+
+#            print "nn",k    
+            el[k].strategy = stt
+            ds = TestDataSource()
+            ds.value = {"format":NTP.rTf[2], 
+                        "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in row] for row in attrs[k][0][0]]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            el[k].source = ds
+            el[k].rank = "2"
+            el[k].grows = grow
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].rank, "2")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+            el[k].store()
+            
+            for i in range(steps):
+                ds.value = {"format":NTP.rTf[2], 
+                            "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
+                                         else [[Converters.toBool(c) for c in row ] for row  in attrs[k][0][i]]), 
+                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "shape":[1,attrs[k][3][1]]}
+                self.assertEqual(el[k].run(), None)
+
+            self.assertEqual(el[k].error, None)
+            if  attrs[k][2] == "string" or not  attrs[k][2]:
+                self._sc.checkStringImageField(self._nxFile, k, 
+                                                      attrs[k][2] if attrs[k][2] else 'string', 
+                                                      attrs[k][1], attrs[k][0] ,
+                                                      attrs = {"type":attrs[k][1],"units":"m"})
+            else:
+                self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][3] if len(attrs[k])> 3 else 0,grow,
+                                                attrs = {"type":attrs[k][1],"units":"m"})
+            
+        self._nxFile.close()
 #        os.remove(self._fname)
+
 
 
 

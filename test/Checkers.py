@@ -954,8 +954,11 @@ class Checker(object):
     # \param nxtype nexus type
     # \param values  original values
     # \param attrs dictionary with string attributes    
-    def checkStringImageField(self, det, name, dtype, nxtype, values):
+    def checkStringImageField(self, det, name, dtype, nxtype, values, attrs = None):
 
+        atts = {"type":nxtype,"units":"","nexdatas_source":None}
+        if attrs:
+            atts = attrs
         
         cnts = [[ det.open(name +"_"+str(s1) +"_"+str(s2) ) for s2 in range(len(values[0][0]))] for s1 in range(len(values[0])) ]
 
@@ -974,33 +977,18 @@ class Checker(object):
                 self._tc.assertEqual(cnt.size, len(values))        
 
 
-                self._tc.assertEqual(cnt.nattrs,3)
+                self._tc.assertEqual(cnt.nattrs,len(atts))
+                for a in atts:
+                    at = cnt.attr(a)
+                    self._tc.assertTrue(at.valid)
+                    self._tc.assertTrue(hasattr(at.shape,"__iter__"))
+                    self._tc.assertEqual(len(at.shape),0)
+                    self._tc.assertEqual(at.dtype,"string")
+                    self._tc.assertEqual(at.name, a)
+                    if atts[a] is not None:
+                        self._tc.assertEqual(at.value,atts[a])
 
 
-                at = cnt.attr("units")
-                self._tc.assertTrue(at.valid)
-                self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-                self._tc.assertEqual(len(at.shape),0)
-                self._tc.assertEqual(at.dtype,"string")
-                self._tc.assertEqual(at.name,"units")
-                self._tc.assertEqual(at.value,"")
-                
-                at = cnt.attr("type")
-                self._tc.assertTrue(at.valid)
-                self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-                self._tc.assertEqual(len(at.shape),0)
-                self._tc.assertEqual(at.dtype,"string")
-                self._tc.assertEqual(at.name,"type")
-                self._tc.assertEqual(at.value,nxtype)
-                
-
-        
-                at = cnt.attr("nexdatas_source")
-                self._tc.assertTrue(at.valid)
-                self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-                self._tc.assertEqual(len(at.shape),0)
-                self._tc.assertEqual(at.dtype,"string")
-        
 
         
         for i in range(len(values)):
