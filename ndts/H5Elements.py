@@ -147,7 +147,7 @@ class FElement(Element):
         elif extraD:            
             shape = [0]
 
-#        print "SHAPE",shape    
+        print "SHAPE",shape    
         return shape
 
 
