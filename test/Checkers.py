@@ -727,7 +727,7 @@ class Checker(object):
 #                print "CNT", cnt[j]
 #                print i, j, cnts[j][i],"   "  , values[i][j]
                 self._tc.assertEqual(values[i][j], cnts[j][i])
-                self._tc.assertEqual(values[i][j], cnts[j][i])
+#                self._tc.assertEqual(values[i][j], cnts[j][i])
             
 
 

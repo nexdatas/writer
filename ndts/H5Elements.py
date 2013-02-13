@@ -147,7 +147,7 @@ class FElement(Element):
         elif extraD:            
             shape = [0]
 
-        print "SHAPE",shape    
+#        print "SHAPE",shape    
         return shape
 
 
@@ -557,12 +557,20 @@ class EField(FElementWithAttr):
                                         self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
                         if str(dh.format).split('.')[-1] == "IMAGE":
-#                            print "DATA3", self.h5Object.name, self.h5Object.dtype,self.h5Object.shape, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype)
+#                            print "DATA3", self.h5Object.name, self.h5Object.dtype,self.h5Object.shape, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype), dh.shape, type(self.h5Object)
 
                             if self.grows == 1:
                                 self.h5Object.grow()
                                 if len(self.h5Object.shape) == 3:
                                     self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                                elif len(self.h5Object.shape) == 2:
+                                    if len(dh.shape) == 1 :
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
+                                    elif len(dh.shape) > 1  and dh.shape[0] == 1:
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = [c[0] for c in dh.cast(self.h5Object.dtype)]
+#                                        print "W", self.h5Object[self.h5Object.shape[0]-1,:]
+                                    elif len(dh.shape) > 1  and dh.shape[1] == 1:
+                                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[:,0]
                                 elif len(self.h5Object.shape) == 2:
                                     self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
                                 elif len(self.h5Object.shape) == 1:

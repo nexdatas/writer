@@ -94,6 +94,7 @@ class FieldArray(object):
 
         if self.__fdim < 1:
             self.__fList.append(parent.create_field(name.encode(), dtype.encode(), self.shape))
+
         elif self.__fdim == 1:
             if self.shape[1] == 1:
                 self.__fList.append(parent.create_field(name.encode(),
@@ -113,7 +114,6 @@ class FieldArray(object):
                         self.__fList.append(parent.create_field(name.encode()+"_"+str(i)+"_"+str(j),
                                                               dtype.encode(), [self.shape[0]]))
         
-            
         
 
     
@@ -165,10 +165,10 @@ class FieldArray(object):
             
         if self.__fdim == 0:
             return numpy.array([self.__fList[0].__getitem__(k) for k in kr])
-        elif self.__fdim == 1:
-            return numpy.array([[self._fList[k].__getitem__(i) for i  in ir] for k in kr])
+        elif self.__fdim == 1: 
+            return numpy.array([[self.__fList[i].__getitem__(k) for i  in ir] for k in kr])
         elif self.__fdim == 2:
-            return numpy.array([[[self._fList[i*len(self.shape(2))+j].__getitem__(k)  
+            return numpy.array([[[self.__fList[i*len(self.shape(2))+j].__getitem__(k)  
                                 for j  in jr] for i  in ir] for k in kr])
         else: 
             return None
@@ -186,7 +186,6 @@ class FieldArray(object):
 
         ntp = NTP()    
         rank = ntp.arrayRank(value)            
-
 
         if self.__fdim < 1 :
             for k in range(len(value)):
@@ -259,10 +258,14 @@ class FieldArray(object):
     # \brief It reads the whole field array
     def read(self):
         key = []
+        print "RS", self.shape, self.__fdim
         for k in range(len(self.shape)):
             key.append(slice(0, self.shape[k], 1))
-
+        print "KEY", key    
         if key:
+#            v =  self.__getitem__(key)
+#            print "V",v
+#            return v
             return self.__getitem__(key)
     
                     

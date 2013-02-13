@@ -3348,7 +3348,7 @@ class EFieldTest(unittest.TestCase):
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self._sc.checkStringSpectrumField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
-                                            attrs[k][1], [c[0] for c in attrs[k][0]] ,
+                                            attrs[k][1],  [[ row[0]  for row in img]for img in attrs[k][0]] ,
                                             attrs = {"type":attrs[k][1],"units":"m"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
@@ -3503,8 +3503,8 @@ class EFieldTest(unittest.TestCase):
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", self._bint, (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -3561,7 +3561,7 @@ class EFieldTest(unittest.TestCase):
                 el[k] = EField( {"name":k, "units":"m"}, eFile)
                 
 
-            print "nn",k    
+#            print "nnn",k    
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"format":NTP.rTf[2], 
@@ -3598,9 +3598,10 @@ class EFieldTest(unittest.TestCase):
 
 #            self.myAssertRaise(ValueError, el[k].store)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
+
                 self._sc.checkStringSpectrumField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
-                                            attrs[k][1], [c[0] for c in attrs[k][0]] ,
+                                            attrs[k][1], [[ row[0]  for row in img]for img in attrs[k][0]] ,
                                             attrs = {"type":attrs[k][1],"units":"m"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
