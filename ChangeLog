@@ -1,5 +1,6 @@
 2013-XX-XX Jan Kotanski <jankotan@gmail.com>
 	* adding  support for separate group names in link targets
+	* making Elink.typesToNames private
 	* removing a name parameter from class inherited from Elements
 	* switches to pni.io library
 	* extending shapes up to a rank value

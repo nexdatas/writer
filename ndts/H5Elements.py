@@ -675,7 +675,7 @@ class ELink(FElement):
     # \param text original directory     
     # \param groupTypes dictionary with type:name group pairs
     # \returns directory defined by group namesS    
-    def typesToNames(self, text, groupTypes):
+    def __typesToNames(self, text, groupTypes):
         sp = text.split("/")
         res = "/"
         for gr in sp[:-1]:
@@ -698,7 +698,7 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
         if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            self.h5Object = (self._lastObject()).link((self.typesToNames(self._tagAttrs["target"], 
+            self.h5Object = (self._lastObject()).link((self.__typesToNames(self._tagAttrs["target"], 
                                                                          groupTypes)).encode(),
                                                       self._tagAttrs["name"].encode())
         else:
