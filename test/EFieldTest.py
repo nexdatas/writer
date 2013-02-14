@@ -388,6 +388,8 @@ class EFieldTest(unittest.TestCase):
         os.remove(self._fname)
 
 
+    ## default store method
+    # \brief It tests default settings
     def test_store_grows_7(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -421,6 +423,8 @@ class EFieldTest(unittest.TestCase):
         os.remove(self._fname)
 
 
+    ## default store method
+    # \brief It tests default settings
     def test_store_grows_6(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)

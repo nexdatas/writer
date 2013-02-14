@@ -1003,6 +1003,7 @@ class Checker(object):
     # \param dtype numpy type
     # \param nxtype nexus type
     # \param values  original values
+    # \param attrs dictionary with string attributes    
     def checkSingleStringImageField(self, det, name, dtype, nxtype, values, attrs= None):
 
         atts = {"type":nxtype,"units":"","nexdatas_source":None}
@@ -1052,6 +1053,7 @@ class Checker(object):
     # \param dtype numpy type
     # \param nxtype nexus type
     # \param values  original values
+    # \param attrs dictionary with string attributes    
     def checkXMLStringImageField(self, det, name, dtype, nxtype, values, attrs = None):
 
         atts = {"type":nxtype,"units":""}

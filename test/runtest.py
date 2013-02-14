@@ -35,10 +35,12 @@ DB_AVAILABLE = []
 try:
     import MySQLdb
     import MySQLdb    
+    ## connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
     args["host"] = 'localhost'
     args["read_default_file"] = '/etc/my.cnf'
+    ## inscance of MySQLdb
     mydb = MySQLdb.connect(**args)
     mydb.close()
     DB_AVAILABLE.append("MYSQL")
