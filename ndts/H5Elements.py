@@ -620,11 +620,17 @@ class EGroup(FElementWithAttr):
         else:
             raise XMLSettingSyntaxError, "File object for the last element does not exist"
             
-
         for key in attrs.keys() :
             if key not in ["name","type"]:
                 if key in NTP.aTn.keys():
-                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key].encode()
+                    if hasattr(attrs[key],"encode"):
+                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key].encode()
+                    else:
+                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key]
+                elif key in NTP.aTnv.keys():
+                    
+                    shape = (len(attrs[key]),)
+                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = numpy.array(attrs[key])
                 else:
                     (self.h5Object.attr(key.encode(), "string")).value = attrs[key].encode()
 

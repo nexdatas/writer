@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file EStrategyTest.py
+## \file EGroupTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -248,6 +248,8 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), (None, None))
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXField)
 
         self.assertEqual(el.grows, None)
         self._nxFile.close()
@@ -3877,7 +3879,7 @@ class EFieldTest(unittest.TestCase):
                                                 attrs = {"type":attrs[k][1],"units":"m"})
             
         self._nxFile.close()
-#        os.remove(self._fname)
+        os.remove(self._fname)
 
 
 
