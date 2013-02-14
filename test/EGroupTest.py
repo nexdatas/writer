@@ -379,7 +379,7 @@ class EGroupTest(unittest.TestCase):
                     self.assertEqual([at.value], attrs[nm][0])
 
         self._nxFile.close()
-#        os.remove(self._fname)
+        os.remove(self._fname)
 
     ## constructor test
     # \brief It tests default settings
@@ -594,6 +594,115 @@ class EGroupTest(unittest.TestCase):
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
                         self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## default constructor test
+    # \brief It tests default settings
+    def test_fetchName_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        el = EGroup( self._gattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "group")
+        self.assertEqual(el.content, [])
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXGroup)
+        self.assertEqual(el.h5Object.name, self._gattrs["name"])
+        self.assertEqual(el.h5Object.nattrs, 1)
+        self.assertEqual(el.h5Object.attr("NX_class").value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attr("NX_class").dtype, "string")
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+
+        gNames= {}
+        self.assertEqual(el.fetchName(gNames),None)
+        self.assertEqual(gNames[self._gattrs["type"]],self._gattrs["name"])
+        self.assertEqual(el.store(),None)
+
+        gNames= {}
+        self.assertEqual(el.fetchName(gNames),None)
+        self.assertEqual(gNames[self._gattrs["type"]],self._gattrs["name"])
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## default constructor test
+    # \brief It tests default settings
+    def test_fetchName_noname(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        gattrs = {"type":"NXentry"}
+        el = EGroup(gattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "group")
+        self.assertEqual(el.content, [])
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXGroup)
+        self.assertEqual(el.h5Object.name, gattrs["type"][2:])
+        self.assertEqual(el.h5Object.nattrs, 1)
+        self.assertEqual(el.h5Object.attr("NX_class").value, gattrs["type"])
+        self.assertEqual(el.h5Object.attr("NX_class").dtype, "string")
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+
+        gNames= {}
+        self.assertEqual(el.fetchName(gNames),None)
+        self.assertEqual(gNames[self._gattrs["type"]],gattrs["type"][2:])
+        self.assertEqual(el.store(),None)
+
+        gNames= {}
+        self.assertEqual(el.fetchName(gNames),None)
+        self.assertEqual(gNames[self._gattrs["type"]],gattrs["type"][2:])
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## default constructor test
+    # \brief It tests default settings
+    def test_fetchName_notype(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        gattrs = {"type":"NXentry"}
+        el = EGroup(gattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "group")
+        self.assertEqual(el.content, [])
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXGroup)
+        self.assertEqual(el.h5Object.name, gattrs["type"][2:])
+        self.assertEqual(el.h5Object.nattrs, 1)
+        self.assertEqual(el.h5Object.attr("NX_class").value, gattrs["type"])
+        self.assertEqual(el.h5Object.attr("NX_class").dtype, "string")
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+
+        gNames= {}
+        el._tagAttrs.pop("type")
+        self.myAssertRaise(XMLSettingSyntaxError, el.fetchName, gNames)
 
 
         self._nxFile.close()
