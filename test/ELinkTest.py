@@ -34,6 +34,8 @@ import pni.io.nx.h5 as nx
 
 from ndts.H5Elements import FElement
 from ndts.H5Elements import ELink
+from ndts.H5Elements import EField
+from ndts.H5Elements import EGroup
 from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters
@@ -59,9 +61,17 @@ class ELinkTest(unittest.TestCase):
         self._nxFile = None
         self._eFile = None        
 
-        self._gattrs = {"name":"test","type":"NXentry" }
-        self._gname = "testLink"
+        self._tfname = "field"
+        self._tfname = "group"
+        self._fattrs = {"name":"testField","units":"m" }
+        self._fattrs2 = {"name":"testField","type":"NX_INT","units":"m" }
+        self._gattrs = {"name":"testGroup","type":"NXentry" }
+        self._gname = "testGroup"
         self._gtype = "NXentry"
+        self._fdname = "testField"
+        self._fdtype = "int64"
+
+
 
 
         self._bint = "int64" if IS64BIT else "int32"
@@ -103,7 +113,7 @@ class ELinkTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile( [], None, self._nxFile)
-        li = ELink( self._gattrs, eFile)
+        li = ELink({}, eFile)
         self.assertTrue(isinstance(li, Element))
         self.assertTrue(isinstance(li, FElement))
         self.assertEqual(li.tagName, "link")
@@ -120,6 +130,129 @@ class ELinkTest(unittest.TestCase):
 
         self._nxFile.close()
         os.remove(self._fname)
+
+
+
+
+    ## default constructor test
+    # \brief It tests default settings
+    def test_createLink_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+        fi = EField( self._fattrs, eFile)
+        fi.content = ["1 "]
+        fi.store()
+        gr = EGroup( self._gattrs, eFile)
+        gr.store()
+        gr2 = EGroup({"type":"NXentry"}, eFile)
+        gr2.store()
+        gr3 = EGroup({"type":"NXentry", "name":"entry3"}, eFile)
+        gr3.store()
+
+        atts1 = {"name":"link1","target":"/NXentry/testField"}
+        atts2 = {"name":"link2","target":"/entry:NXentry/testField"}
+        atts3 = {"name":"link3","target":"entry3/testField"}
+        atts4 = {"name":"link4","target":"/testField"}
+        atts5 = {"name":"link5","target":"/testGroup"}
+        gT1 = {"NXentry":"testGroup"}
+        gT2 = {"NXentry":"entry3"}
+
+        li0 = ELink({}, eFile)
+        li1 = ELink(atts1, eFile)
+        li2 = ELink(atts2, eFile)
+        li3 = ELink(atts3, eFile)
+        li4 = ELink(atts4, eFile)
+        li5 = ELink(atts5, eFile)
+
+        fi2 = EField( self._fattrs, gr)
+        fi2.content = ["2 "]
+        fi2.store()
+
+        fi3 = EField( self._fattrs, gr2)
+        fi3.content = ["3 "]
+        fi3.store()
+
+
+        fi4 = EField( self._fattrs, gr3)
+        fi4.content = ["4 "]
+        fi4.store()
+
+        self.assertTrue(isinstance(li1, Element))
+        self.assertTrue(isinstance(li1, FElement))
+        self.assertEqual(li1.tagName, "link")
+        self.assertEqual(li1.content, [])
+
+        self.assertEqual(li0.h5Object, None)
+        self.assertEqual(li1.h5Object, None)
+        self.assertEqual(li2.h5Object, None)
+        self.myAssertRaise(XMLSettingSyntaxError, li1.createLink,{})
+        li1.createLink(gT1)
+        self.assertEqual(li1.h5Object, None)
+        li2.createLink({})
+        self.myAssertRaise(XMLSettingSyntaxError, li3.createLink,{})
+        li3.createLink(gT2)
+        li4.createLink({})
+        li5.createLink({})
+        self.assertEqual(li0.h5Object, None)
+        self.assertEqual(li1.h5Object, None)
+        self.assertEqual(li2.h5Object, None)
+        self.assertEqual(li3.h5Object, None)
+        self.assertEqual(li4.h5Object, None)
+        self.assertEqual(li5.h5Object, None)
+        
+        l1 = self._nxFile.open("link1")
+        self.assertEqual(l1.read(), fi2.h5Object.read() )
+        self.assertEqual(l1.dtype, fi2.h5Object.dtype )
+        self.assertEqual(l1.shape, fi2.h5Object.shape )
+        self.assertEqual(l1.nattrs, fi2.h5Object.nattrs )
+        self.assertEqual(l1.attr("units").value, fi2.h5Object.attr("units").value )
+        self.assertEqual(l1.attr("units").dtype, fi2.h5Object.attr("units").dtype )
+        self.assertEqual(l1.attr("units").shape, fi2.h5Object.attr("units").shape )
+
+        l2 = self._nxFile.open("link2")
+        self.assertEqual(l2.read(), fi3.h5Object.read() )
+        self.assertEqual(l2.dtype, fi3.h5Object.dtype )
+        self.assertEqual(l2.shape, fi3.h5Object.shape )
+        self.assertEqual(l2.nattrs, fi3.h5Object.nattrs )
+        self.assertEqual(l2.attr("units").value, fi3.h5Object.attr("units").value )
+        self.assertEqual(l2.attr("units").dtype, fi3.h5Object.attr("units").dtype )
+        self.assertEqual(l2.attr("units").shape, fi3.h5Object.attr("units").shape )
+
+
+        l3 = self._nxFile.open("link3")
+        self.assertEqual(l3.read(), fi4.h5Object.read() )
+        self.assertEqual(l3.dtype, fi4.h5Object.dtype )
+        self.assertEqual(l3.shape, fi4.h5Object.shape )
+        self.assertEqual(l3.nattrs, fi4.h5Object.nattrs )
+        self.assertEqual(l3.attr("units").value, fi4.h5Object.attr("units").value )
+        self.assertEqual(l3.attr("units").dtype, fi4.h5Object.attr("units").dtype )
+        self.assertEqual(l3.attr("units").shape, fi4.h5Object.attr("units").shape )
+
+
+
+        l4 = self._nxFile.open("link4")
+        self.assertEqual(l4.read(), fi.h5Object.read() )
+        self.assertEqual(l4.dtype, fi.h5Object.dtype )
+        self.assertEqual(l4.shape, fi.h5Object.shape )
+        self.assertEqual(l4.nattrs, fi.h5Object.nattrs )
+        self.assertEqual(l4.attr("units").value, fi.h5Object.attr("units").value )
+        self.assertEqual(l4.attr("units").dtype, fi.h5Object.attr("units").dtype )
+        self.assertEqual(l4.attr("units").shape, fi.h5Object.attr("units").shape )
+        
+
+        l5 = self._nxFile.open("testGroup")
+        self.assertEqual(l5.attr("NX_class").value, gr.h5Object.attr("NX_class").value )
+        self.assertEqual(l5.attr("NX_class").dtype, gr.h5Object.attr("NX_class").dtype )
+        self.assertEqual(l5.attr("NX_class").shape, gr.h5Object.attr("NX_class").shape )
+        self.assertEqual(l5.name, gr.h5Object.name )
+
+
+
+        self._nxFile.close()
+#        os.remove(self._fname)
 
 
 

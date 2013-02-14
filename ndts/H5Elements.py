@@ -677,20 +677,21 @@ class ELink(FElement):
     # \returns directory defined by group namesS    
     def __typesToNames(self, text, groupTypes):
         sp = text.split("/")
-        res = "/"
+        res = ""
         for gr in sp[:-1]:
-            sgr = gr.split(":")
-            if len(sgr)>1 :
-                res = "/".join([res,sgr[0]])
-            else:
-                if sgr[0] in groupTypes.keys():
-                    res = "/".join([res,groupTypes[sgr[0]]])
-                elif sgr[0] in groupTypes.values():    
+            if len(gr) > 0: 
+                sgr = gr.split(":")
+                if len(sgr)>1 :
                     res = "/".join([res,sgr[0]])
                 else:
-                    raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
+                    if sgr[0] in groupTypes.keys():
+                        res = "/".join([res,groupTypes[sgr[0]]])
+                    elif sgr[0] in groupTypes.values():    
+                        res = "/".join([res,sgr[0]])
+                    else:
+                        raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
         res = res + "/" + sp[-1]
-
+                
         return res
 
         
