@@ -371,7 +371,16 @@ class EField(FElementWithAttr):
         # create attributes
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
-                (self.h5Object.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
+                if key in NTP.aTn.keys():
+                    if hasattr(self._tagAttrs[key],"encode"):
+                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key].strip().encode()
+                    else:
+                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key]
+                elif key in NTP.aTnv.keys():
+                    shape = (len(self._tagAttrs[key]),)
+                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = numpy.array(self._tagAttrs[key])
+                else:
+                    (self.h5Object.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
 
         self._createAttributes()        
                 

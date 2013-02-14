@@ -1308,6 +1308,107 @@ class EFieldTest(unittest.TestCase):
         os.remove(self._fname)
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_store_createAttributes_aTn(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+        fattrs = {"name":"testfield", "type":"NX_INT"}
+        maTn = {"signal":1, "axis":2, "primary":3, "offset":4, 
+                "stride":6, "file_time":"12:34", 
+                "file_update_time":"12:45", "restricts":12, 
+                "ignoreExtraGroups":True, "ignoreExtraFields":False,
+                "ignoreExtraAttributes":True, "minOccus":1, "maxOccus":2
+                }
+
+        fattrs = dict(fattrs,**(maTn))
+        el = EField(fattrs, eFile)
+        
+        ds = TestDataSource()
+        ds.valid = True
+        el.source = ds
+        el.strategy = 'STEP'
+        
+        el.store() 
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXField)
+        self.assertEqual(el.h5Object.name, fattrs["name"])
+        self.assertEqual(el.h5Object.nattrs, 14)
+        self.assertEqual(el.h5Object.attr("type").value, fattrs["type"])
+        self.assertEqual(el.h5Object.attr("type").dtype, "string")
+        self.assertEqual(el.h5Object.attr("type").shape, ())
+            
+        for k in maTn.keys():
+            self.assertEqual(el.h5Object.attr(k).value, fattrs[k])
+            self.assertEqual(el.h5Object.attr(k).dtype, NTP.nTnp[NTP.aTn[k]])
+            self.assertEqual(el.h5Object.attr(k).shape, ())
+            
+
+
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_store_createAttributes_aTnv(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+        fattrs = {"name":"testfield", "type":"NX_INT"}
+        maTnv = {"vector":(1.2,12.3,13.3)}
+        error = 1.e-14
+        
+        fattrs = dict(fattrs,**(maTnv))
+        el = EField(fattrs, eFile)
+        
+        ds = TestDataSource()
+        ds.valid = True
+        el.source = ds
+        el.strategy = 'STEP'
+        
+        el.store() 
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXField)
+        self.assertEqual(el.h5Object.name, fattrs["name"])
+        self.assertEqual(el.h5Object.nattrs, 2)
+        self.assertEqual(el.h5Object.attr("type").value, fattrs["type"])
+        self.assertEqual(el.h5Object.attr("type").dtype, "string")
+        self.assertEqual(el.h5Object.attr("type").shape, ())
+
+        
+        for k in maTnv.keys():
+            for i in range(len(fattrs[k])):
+                self.assertTrue(abs(el.h5Object.attr(k).value[i]- fattrs[k][i]) <= error)
+            self.assertEqual(el.h5Object.attr(k).dtype, NTP.nTnp[NTP.aTnv[k]])
+            self.assertEqual(el.h5Object.attr(k).shape, (len(fattrs[k]),))
+            
+            
+            
+
+
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
 
     ## constructor test
     # \brief It tests default settings

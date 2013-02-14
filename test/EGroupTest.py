@@ -188,7 +188,7 @@ class EGroupTest(unittest.TestCase):
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
         maTn = {"signal":1, "axis":2, "primary":3, "offset":4, 
           "stride":6, "file_time":"12:34", 
-          "file_update_time":"12:45", "restricted":12, 
+          "file_update_time":"12:45", "restricts":12, 
           "ignoreExtraGroups":True, "ignoreExtraFields":False,
           "ignoreExtraAttributes":True, "minOccus":1, "maxOccus":2
         }
@@ -229,6 +229,9 @@ class EGroupTest(unittest.TestCase):
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
         maTnv = {"vector":[1,2,3,4,5]}
         gattrs = dict(gattrs,**(maTnv))
+        error = 1.e-14
+
+
         el = EGroup( gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -245,7 +248,7 @@ class EGroupTest(unittest.TestCase):
         
         for k in maTnv.keys():
             for i in range(len(gattrs[k])):
-                self.assertEqual(el.h5Object.attr(k).value[i], gattrs[k][i])
+                self.assertTrue(abs(el.h5Object.attr(k).value[i]- gattrs[k][i]) <= error)
             self.assertEqual(el.h5Object.attr(k).dtype, NTP.nTnp[NTP.aTnv[k]])
             self.assertEqual(el.h5Object.attr(k).shape, (len(gattrs[k]),))
             
