@@ -63,6 +63,7 @@ import FElementWithAttrTest
 import EStrategyTest
 import EFieldTest
 import EGroupTest
+import ELinkTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -106,6 +107,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EGroupTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ELinkTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
