@@ -670,6 +670,8 @@ class ELink(FElement):
             else:
                 if sgr[0] in groupTypes.keys():
                     res = "/".join([res,groupTypes[sgr[0]]])
+                elif sgr[0] in groupTypes.values():    
+                    res = "/".join([res,sgr[0]])
                 else:
                     raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
         res = res + "/" + sp[-1]
