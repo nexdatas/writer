@@ -96,6 +96,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         tdw = TangoDataWriter(fname)
         tdw.openNXFile()
         tdw.xmlSettings = xml
+#        tdw.numThreads = 1
         if json:
             tdw.json = json
         tdw.openEntry()

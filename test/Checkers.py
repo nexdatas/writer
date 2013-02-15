@@ -200,6 +200,7 @@ class Checker(object):
         if not isinstance(values, str):
             value = cnt.value
             if self._isNumeric(value):
+#                print "Val", name , values ,value
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)

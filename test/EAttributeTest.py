@@ -835,9 +835,10 @@ class EAttributeTest(unittest.TestCase):
 
  
 
+
     ## constructor test
     # \brief It tests default settings
-    def test_run_value_0d(self):
+    def test_run_value_noname(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -883,6 +884,8 @@ class EAttributeTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].strategy = 'STEP'
 
@@ -891,7 +894,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
                 self.assertEqual(Converters.toBool(str(0)),at.value)
-            
+                
             elif len(attrs[k]) > 3:
                 self.assertTrue(abs(at.value ) <= attrs[k][3])
             else: 
@@ -899,37 +902,33 @@ class EAttributeTest(unittest.TestCase):
 
 
         for k in attrs.keys():
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            self.assertEqual(ea[k].name,"")
+            
             ea[k].run()
-            at = el[k].h5Object.attr(k)
-#            at = el[k].h5Attribute(k)
-#            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-#                                          attrs[k][3] if len(attrs[k])>3 else 0)
-
-        for k in attrs.keys():
-            if attrs[k][2] == 'string':
-                "writing multi-dimensional string is not supported by pninx"
-                continue
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
-            el[k]._createAttributes() 
-#            at = el[k].h5Attribute(k)
-            at = el[k].h5Object.attr(k)
-            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
-                                            attrs[k][3] if len(attrs[k])>3 else 0)
-
+            self.assertEqual(ea[k].name,"")
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(0)),at.value)
+                
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value ) <= attrs[k][3])
+            else: 
+                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
         self._nxFile.close()
  
         os.remove(self._fname)
 
 
- 
+
     ## constructor test
     # \brief It tests default settings
-    def test_store_createAttributes_0d(self):
+    def test_run_value_0d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
-
+        
         attrs = {
             "string":["My string","NX_CHAR", "string"],
             "datetime":["12:34:34","NX_DATE_TIME", "string"],
@@ -953,58 +952,671 @@ class EAttributeTest(unittest.TestCase):
             "bool3":["false","NX_BOOLEAN", "bool"],
             "bool4":["true","NX_BOOLEAN", "bool"]
             }
-
+            
+            
+            
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile( [], None, self._nxFile)
 
 
 
         el = {}
+        ea = {}
         for k in attrs.keys():
-            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
 
             self.assertEqual(el[k].tagAttributes, {})
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]))
+            el[k].tagAttributes[k] = (attrs[k][1], '')
             ds = TestDataSource()
             ds.valid = True
-            el[k].source = ds
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else Converters.toBool(attrs[k][0]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[0,0]}
+            ea[k].source = ds
             el[k].strategy = 'STEP'
 
             el[k].store() 
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
-            
+                self.assertEqual(Converters.toBool(str(0)),at.value)
+                
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
+                self.assertTrue(abs(at.value ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, attrs[k][0])
+                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
 
 
         for k in attrs.keys():
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
-            el[k]._createAttributes() 
-            at = el[k].h5Object.attr(k)
-#            at = el[k].h5Attribute(k)
+#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                           attrs[k][3] if len(attrs[k])>3 else 0)
-
-        for k in attrs.keys():
-            if attrs[k][2] == 'string':
-                "writing multi-dimensional string is not supported by pninx"
-                continue
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
-            el[k]._createAttributes() 
-#            at = el[k].h5Attribute(k)
-            at = el[k].h5Object.attr(k)
-            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
-                                            attrs[k][3] if len(attrs[k])>3 else 0)
 
         self._nxFile.close()
  
         os.remove(self._fname)
 
+
+
+
+ 
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_1d_single(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+            "string":["My string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        for k in attrs.keys():
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            if attrs[k][2] and attrs[k][2] != 'string' :
+                el[k].tagAttributes[k] = (attrs[k][1], '',(1,))
+            else:
+                el[k].tagAttributes[k] = (attrs[k][1], '',)
+            ds = TestDataSource()
+            ds.valid = True
+            ds.value = {"format":NTP.rTf[1], "value":[attrs[k][0]] if attrs[k][2] != "bool"\
+                            else [Converters.toBool(attrs[k][0])], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[1,0]}
+            ea[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+#            self.assertEqual(ea[k].h5Object.shape,(1,))
+            if attrs[k][2] and attrs[k][2] != 'string' :
+                self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+                                                attrs[k][4] if len(attrs[k])>4 else 0)
+            else:
+                self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                                attrs[k][4] if len(attrs[k])>4 else 0)
+                
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_1d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+
+            if attrs[k][2] != "bool":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [attrs[k][0]*self.__rnd.randint(0,3)  for c in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(1, 10)]
+                if k == 'bool':
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
+                else:
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+
+            attrs[k][3] =  (mlen[0],)
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],))
+            ds = TestDataSource()
+            ds.valid = True
+
+            ds.value = {"format":NTP.rTf[1], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [Converters.toBool(c ) for c in attrs[k][0]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],0]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                                attrs[k][4] if len(attrs[k])>4 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d_single(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+
+
+            if attrs[k][2] == "string":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)   ] ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  ] ]
+            else:    
+                mlen = [1]
+                if k == 'bool':
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1)) ]]
+                else:
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  
+                                      ]]
+                    
+            attrs[k][3] =  (1,1)
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                                attrs[k][4] if len(attrs[k])>4 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d_doublwe(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+            "string":["My string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+            if attrs[k][2] == "string":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10))  ] ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10)) ] ]
+            else:    
+                mlen = [1]
+                if k == 'bool':
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1)) for c in range(self.__rnd.randint(2, 10)) ]]
+                else:
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  
+                                      for c in range(self.__rnd.randint(2, 10))  ]]
+                    
+            attrs[k][3] =  (1,len(attrs[k][0][0]))
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            if ea[k].h5Object.dtype != 'string':
+                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                             attrs[k][4] if len(attrs[k])>4 else 0)
+            else:
+                self.assertEqual(ea[k].error[0], 
+                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                self.assertEqual(ea[k].error[1], 
+                                'Storing multi-dimension string attributes not supported by pninx')
+
+        self._nxFile.close()
+ 
+#        os.remove(self._fname)
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d_double_2(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+            "string":["My string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+            if attrs[k][2] == "string":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)]  for c in range(self.__rnd.randint(2, 10))   ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)]  for c in range(self.__rnd.randint(2, 10))  ]
+            else:    
+                mlen = [1]
+                if k == 'bool':
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))] for c in range(self.__rnd.randint(2, 10)) ]
+                else:
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  ]
+                                      for c in range(self.__rnd.randint(2, 10))  ]
+                    
+            attrs[k][3] =  (len(attrs[k][0]),1)
+
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            print 
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c[0])] for c in attrs[k][0]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            if ea[k].h5Object.dtype != 'string':
+                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                             attrs[k][4] if len(attrs[k])>4 else 0)
+            else:
+                self.assertEqual(ea[k].error[0], 
+                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                self.assertEqual(ea[k].error[1], 
+                                'Storing multi-dimension string attributes not supported by pninx')
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+ 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+            "string":["My string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat,(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( [], None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+            mlen = self.__rnd.randint(2, 10)
+            if attrs[k][2] == "string":
+                
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 10))  ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
+            else:    
+                if k == 'bool':
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))] 
+                else:
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
+                    
+            attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
+
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            print 
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c) for c in row] for row in attrs[k][0]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+
+            if ea[k].h5Object.dtype != 'string':
+                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                             attrs[k][4] if len(attrs[k])>4 else 0)
+            else:
+                self.assertEqual(ea[k].error[0], 
+                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                self.assertEqual(ea[k].error[1], 
+                                'Storing multi-dimension string attributes not supported by pninx')
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+ 
 
 if __name__ == '__main__':
     unittest.main()

@@ -764,9 +764,10 @@ class EAttribute(FElement):
                 if self.source:
                     dt = self.source.getData()
                     dh = None
+#                    print "dt", dt
                     if dt:
                         dh = DataHolder(**dt)
-                #                print "VAL", dh.value, type(dh.value)
+#                        print "VAL", dh.value, type(dh.value)
                     if not dh:
                         message = self.setMessage("Data without value")
                     #                    message = self.setMessage()
@@ -776,13 +777,20 @@ class EAttribute(FElement):
                         print message[0]
                         self.error = message
                     else:
+#                        print "ARR",self.name
                         arr = dh.cast(self.h5Object.dtype)
+#                        print "ARR2",arr
+                        
                         if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
-                            self.h5Object.value = arr
+                            if self.h5Object.dtype == "string" and len(dh.shape)>0   and dh.shape[0] ==1:
+                                self.h5Object.value = arr[0]
+                            else:
+                                self.h5Object.value = arr
+        
                         else:
                             ## pninx does not support this case
-#                            self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
                             self.h5Object.value = arr
+#                            self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
                             raise Exception("Storing multi-dimension string attributes not supported by pninx")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
