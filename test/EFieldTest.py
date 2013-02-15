@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file EGroupTest.py
+## \file EFieldTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -156,7 +156,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -188,7 +188,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
@@ -222,7 +222,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
@@ -255,7 +255,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
@@ -289,7 +289,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         el.source = ds
@@ -321,7 +321,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
         ds.valid = False
@@ -354,7 +354,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField(self._fattrs, eFile)
         el.rank = '2'
         ds = TestDataSource()
@@ -389,7 +389,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         fattrs = {"name":"test","units":"m", "type":"NX_INT64" }
         el = EField(fattrs, eFile)
         el.rank = '2'
@@ -450,7 +450,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         for k in attrs: 
             el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
@@ -524,7 +524,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         flip = False
         for k in attrs: 
@@ -605,7 +605,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         for k in attrs: 
             stt = 'POSTRUN'
@@ -685,7 +685,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quot = 0
         for k in attrs: 
@@ -788,7 +788,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         flip = False
         for k in attrs: 
@@ -884,7 +884,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         flip = False
         for k in attrs: 
@@ -996,7 +996,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         for k in attrs: 
@@ -1106,7 +1106,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         flip = False
@@ -1213,7 +1213,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         flip = False
@@ -1280,7 +1280,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         fattrs = {"name":"testfield", "type":"NX_INT"}
         maTn = {"signal":1, "axis":2, "primary":3, "offset":4, 
@@ -1332,7 +1332,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         fattrs = {"name":"testfield", "type":"NX_INT"}
         maTnv = {"vector":(1.2,12.3,13.3)}
@@ -1405,7 +1405,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
@@ -1486,7 +1486,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
@@ -1562,7 +1562,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
@@ -1637,7 +1637,7 @@ class EFieldTest(unittest.TestCase):
 
             
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         el = {}
         for k in attrs.keys():
@@ -1715,7 +1715,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         for k in attrs: 
@@ -1796,7 +1796,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -1899,7 +1899,7 @@ class EFieldTest(unittest.TestCase):
             }
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2019,7 +2019,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2140,7 +2140,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2214,7 +2214,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"myfield", "units":"m"}, eFile)
         ds = TestDataSource()
         el.source = ds
@@ -2282,7 +2282,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2378,7 +2378,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2484,7 +2484,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2603,7 +2603,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2724,7 +2724,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2844,7 +2844,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -2973,7 +2973,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3097,7 +3097,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3223,7 +3223,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3353,7 +3353,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3476,7 +3476,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3607,7 +3607,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3730,7 +3730,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0
@@ -3862,7 +3862,7 @@ class EFieldTest(unittest.TestCase):
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
         quot = 0

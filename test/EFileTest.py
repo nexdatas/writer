@@ -93,7 +93,7 @@ class EFileTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
-        el = EFile( [], None, None)
+        el = EFile( {}, None, None)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertEqual(el.tagName, 'file')
@@ -153,7 +153,6 @@ class EFileTest(unittest.TestCase):
 
         self._nxFile.close()
         os.remove(self._fname)
-
 
 
 

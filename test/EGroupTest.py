@@ -115,7 +115,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -143,7 +143,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "short_name":"shortname" }
         el = EGroup( gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
@@ -186,7 +186,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
 
         gattrs = {"short_name":"shortname" }
         self.myAssertRaise(XMLSettingSyntaxError, EGroup, gattrs, eFile)
@@ -203,7 +203,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
         maTn = {"signal":1, "axis":2, "primary":3, "offset":4, 
           "stride":6, "file_time":"12:34", 
@@ -244,7 +244,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
         maTnv = {"vector":[1,2,3,4,5]}
         gattrs = dict(gattrs,**(maTnv))
@@ -284,7 +284,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -314,7 +314,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
@@ -400,7 +400,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
@@ -464,7 +464,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
@@ -538,7 +538,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
@@ -620,7 +620,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -657,7 +657,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry"}
         el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
@@ -695,7 +695,7 @@ class EGroupTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry"}
         el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))

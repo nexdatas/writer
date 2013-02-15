@@ -113,7 +113,7 @@ class ELinkTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         li = ELink({}, eFile)
         self.assertTrue(isinstance(li, Element))
         self.assertTrue(isinstance(li, FElement))
@@ -142,7 +142,7 @@ class ELinkTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
-        eFile = EFile( [], None, self._nxFile)
+        eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
         fi.store()
