@@ -25,6 +25,9 @@ import sys
 import subprocess
 import random
 import struct
+import binascii
+import time
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -48,14 +51,25 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
+        try:
+            ## random seed
+            self.seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.seed)
+
+
+
         self._counter =  [1,-2,6,-8,9,-11]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self._sc = Checker(self)
-        self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
-        self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
+        self._mca1 = [[self.__rnd.randint(-100, 100) for e in range(256)] for i in range(3)]
+        self._mca2 = [[self.__rnd.randint(0, 100) for e in range(256)] for i in range(3)]
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
-        self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
+        self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
         self._mydb = None
 
@@ -74,6 +88,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
         args["host"] = 'localhost'
         args["read_default_file"] = '/etc/my.cnf'
         self._mydb = MySQLdb.connect(**args)
+        print "SEED =", self.seed 
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down

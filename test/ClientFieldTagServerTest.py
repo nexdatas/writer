@@ -53,6 +53,8 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
+        print "SEED =", self.seed 
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down oif Tango Server

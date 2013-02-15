@@ -24,8 +24,9 @@ import os
 import sys
 import subprocess
 import random
-
 import PyTango
+import binascii
+import time
 
 from pni.io.nx.h5 import open_file
 from  xml.sax import SAXParseException
@@ -54,6 +55,8 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     def setUp(self):
         self._sv.setUp()
         self._simps.setUp()
+        print "SEED =", self.seed 
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down

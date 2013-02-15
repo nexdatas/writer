@@ -25,12 +25,14 @@ import sys
 import subprocess
 import random
 import struct
-import random
 import numpy
+import binascii
+import time
 
 
 import pni.io.nx.h5 as nx
 
+from TestDataSource import TestDataSource 
 
 from ndts.H5Elements import FElementWithAttr
 from ndts.H5Elements import FElement
@@ -51,61 +53,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 from  xml.sax import SAXParseException
 
 
-
-## test datasource
-class TestDataSource(DataSource):
-        ## constructor
-    # \brief It cleans all member variables
-    def __init__(self):
-        ## flag for running getData
-        self.dataTaken = False
-        ## list of dimensions
-        self.dims = [] 
-        ## if numpy  datasource
-        self.numpy = True
-        ## validity
-        self.valid = True
-        ## returned Data
-        self.value = None
-
-
-    ## sets the parameters up from xml
-    # \brief xml  datasource parameters
-    def setup(self, xml):
-        pass
-
-
-    ## access to data
-    # \brief It is an abstract method providing data   
-    def getData(self):
-        if self.valid:
-            self.dataTaken = True
-            if self.value:
-                return self.value
-            elif len(self.dims) == 0:
-                return {"format":NTP.rTf[0], "value":1, 
-                        "tangoDType":"DevLong", "shape":[0,0]}
-            elif numpy:
-                return {"format":NTP.rTf[len(self.dims)], "value":numpy.ones(self.dims), 
-                        "tangoDType":"DevLong", "shape":self.dims}
-            elif len(self.dims) == 1:
-                return {"format":NTP.rTf[1], "value":([1] * self.dims[0]), 
-                        "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-            elif len(self.dims) == 2:
-                return {"format":NTP.rTf[2], "value":([[1] * self.dims[1]]*self.dims[0] ), 
-                        "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-                
-
-    ## checks if the data is valid
-    # \returns if the data is valid
-    def isValid(self):
-        return self.valid
-
-
-    ## self-description 
-    # \returns self-describing string
-    def __str__(self):
-        return "Test DataSource"
 
 
 
@@ -137,11 +84,23 @@ class EFieldTest(unittest.TestCase):
 
         self._sc = Checker(self)
 
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
+
+
     ## test starter
     # \brief Common set up
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
+        print "CHECKER SEED =", self._sc.seed 
+
 
     ## test closer
     # \brief Common tear down
@@ -734,14 +693,14 @@ class EFieldTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(mlen[0]) ] 
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3) for r in range(mlen[0]) ] 
             else:    
-                mlen = [random.randint(1, 10)]
+                mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
 
             attrs[k][3] =  (mlen[0],)
 
@@ -837,14 +796,14 @@ class EFieldTest(unittest.TestCase):
             stt = 'INIT' if flip else 'FINAL'
             
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [attrs[k][0]*random.randint(0,3)  for c in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [attrs[k][0]*self.__rnd.randint(0,3)  for c in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10)]
+                mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
 
             attrs[k][3] =  (mlen[0],)
 
@@ -933,14 +892,14 @@ class EFieldTest(unittest.TestCase):
             stt = 'POSTRUN'
             
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for c in range(mlen[0] )]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
             else:    
-                mlen = [random.randint(1, 10)]
+                mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
 
             attrs[k][3] =  (mlen[0],)
 
@@ -1024,14 +983,14 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1134,14 +1093,14 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0,3) ] for r in range(mlen[1]) ] for c in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0,3) ] for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1241,14 +1200,14 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1590,14 +1549,14 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3)  for r in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for r in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10)]
+                mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
 
             attrs[k][3] =  (mlen[0],)
 
@@ -1665,14 +1624,14 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ]for r in range(mlen[0])]
+                    attrs[k][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ]for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -1847,17 +1806,17 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                mlen = [1,random.randint(1, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3)  ] 
+                mlen = [1,self.__rnd.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  ] 
             elif attrs[k][2] != "bool":
-                mlen = [1,random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3)  ] 
+                mlen = [1,self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  ] 
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
                                      ]
 
             attrs[k][3] =  (mlen[0],)
@@ -1950,17 +1909,17 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                mlen = [random.randint(1, 10),random.randint(1, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3) for r in range(mlen[0]) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3) for r in range(mlen[0]) ]
             elif attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(mlen[0]) ] 
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3) for r in range(mlen[0]) ] 
             else:    
-                mlen = [random.randint(1, 10)]
+                mlen = [self.__rnd.randint(1, 10)]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
                                      for c in range(mlen[0]) ]
 
             attrs[k][3] =  (mlen[0],)
@@ -2044,17 +2003,17 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] == "string":
-                mlen = [random.randint(1, 10), 1, random.randint(1,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10), 1, self.__rnd.randint(1,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             elif attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -2165,17 +2124,17 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] == "string":
-                mlen = [random.randint(1, 10),random.randint(2, 10), random.randint(1,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(2, 10), self.__rnd.randint(1,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             elif attrs[k][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), random.randint(0,3)]
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0,3) for c in range(mlen[1]) ] for i in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[k][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[k][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[k][3] =  (mlen[0],mlen[1])
 
@@ -2438,14 +2397,14 @@ class EFieldTest(unittest.TestCase):
                 el[k] = EField( {"name":k, "units":"m"}, eFile)
                 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3) for r in range(steps) ]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3) for r in range(steps) ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3) for r in range(steps) ] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3) for r in range(steps) ] 
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(steps) ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(steps) ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
                                      for c in range(steps) ]
 
 
@@ -2537,17 +2496,17 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                mlen = [1,random.randint(1, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3)  ] 
+                mlen = [1,self.__rnd.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  ] 
             elif attrs[k][2] != "bool":
-                mlen = [1,random.randint(0, 3)]
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3)  ] 
+                mlen = [1,self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  ] 
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  ]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  ]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
                                      ]
 
             attrs[k][3] =  (mlen[0],)
@@ -2659,14 +2618,14 @@ class EFieldTest(unittest.TestCase):
             stt = 'STEP'
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1, 3)]  for r in range(steps)  ] 
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)]  for r in range(steps)  ] 
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3)]  for r in range(steps)  ] 
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)]  for r in range(steps)  ] 
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))] for r in range(steps)   ]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))] for r in range(steps)   ]
                 else:
-                    attrs[k][0] =  [[ ("true" if random.randint(0,1) else "false")]  for r in range(steps) ]
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")]  for r in range(steps) ]
 
             attrs[k][3] =  (1,)
 
@@ -2777,16 +2736,16 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [ attrs[k][0]*random.randint(1, 3)  for c in range(random.randint(2, 10)) ] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10)) ] 
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0]*random.randint(0, 3)  for c in range(random.randint(2, 10))] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10))] 
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(random.randint(0,1))  for c in range(random.randint(2, 10))]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(self.__rnd.randint(2, 10))]
                 else:
-                    attrs[k][0] =  [ ("true" if random.randint(0,1) else "false")  
-                                      for c in range(random.randint(2, 10)) ]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
+                                      for c in range(self.__rnd.randint(2, 10)) ]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
@@ -2900,19 +2859,19 @@ class EFieldTest(unittest.TestCase):
             stt = 'STEP'
 
             if attrs[k][2] == "string":
-                mlen = random.randint(2, 10)
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1, 3)  for c in  range(mlen) ]  for r in range(steps)  ] 
+                mlen = self.__rnd.randint(2, 10)
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in  range(mlen) ]  for r in range(steps)  ] 
             elif attrs[k][2] != "bool":
-                mlen = random.randint(2, 10)
+                mlen = self.__rnd.randint(2, 10)
 #                print "ST",steps, mlen
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3)   for c in range(mlen)]   for r in range(steps)  ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)   for c in range(mlen)]   for r in range(steps)  ]
             else:    
                 if k == 'bool':
-                    mlen = random.randint(2, 10)
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen)] for r in range(steps)  ] 
+                    mlen = self.__rnd.randint(2, 10)
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen)] for r in range(steps)  ] 
                 else:
-                    mlen = random.randint(2, 10)
-                    attrs[k][0] =  [[ ("true" if random.randint(0,1) else "false")  
+                    mlen = self.__rnd.randint(2, 10)
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  
                                       for c in range(mlen) ] for r in range(steps)  ] 
                     
             attrs[k][3] =  (len(attrs[k][0][0]),)
@@ -3026,15 +2985,15 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1, 3)   ] ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)   ] ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3)  ] ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  ] ]
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1)) ]]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1)) ]]
                 else:
-                    attrs[k][0] =  [[ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  
                                       ]]
                     
             attrs[k][3] =  (1,1)
@@ -3151,15 +3110,15 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(1, 3)   ] ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)   ] ] for r in range(steps)  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0, 3)  ] ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  ] ] for r in range(steps)  ]
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [[[ bool(random.randint(0,1)) ]] for r in range(steps)  ]
+                    attrs[k][0] =  [[[ bool(self.__rnd.randint(0,1)) ]] for r in range(steps)  ]
                 else:
-                    attrs[k][0] =  [[[ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] =  [[[ ("true" if self.__rnd.randint(0,1) else "false")  
                                       ]] for r in range(steps)  ]
                     
             attrs[k][3] =  (1,1)
@@ -3276,16 +3235,16 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1, 3)  for c in range(random.randint(2, 10))  ] ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10))  ] ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3)  for c in range(random.randint(2, 10)) ] ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10)) ] ]
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1)) for c in range(random.randint(2, 10)) ]]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1)) for c in range(self.__rnd.randint(2, 10)) ]]
                 else:
-                    attrs[k][0] =  [[ ("true" if random.randint(0,1) else "false")  
-                                      for c in range(random.randint(2, 10))  ]]
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  
+                                      for c in range(self.__rnd.randint(2, 10))  ]]
                     
             attrs[k][3] =  (1,len(attrs[k][0][0]))
 
@@ -3406,16 +3365,16 @@ class EFieldTest(unittest.TestCase):
             quin = (quin+1) % 5 
 
 
-            mlen = random.randint(2, 10)
+            mlen = self.__rnd.randint(2, 10)
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(1, 3)  for c in range(mlen)  ] ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] ] for r in range(steps)  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0, 3)  for c in range(mlen) ] ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] ] for r in range(steps)  ]
             else:    
                 if k == 'bool':
-                    attrs[k][0] = [ [[ bool(random.randint(0,1)) for c in range(mlen) ]] for r in range(steps)  ]
+                    attrs[k][0] = [ [[ bool(self.__rnd.randint(0,1)) for c in range(mlen) ]] for r in range(steps)  ]
                 else:
-                    attrs[k][0] = [ [[ ("true" if random.randint(0,1) else "false")  
+                    attrs[k][0] = [ [[ ("true" if self.__rnd.randint(0,1) else "false")  
                                       for c in range(mlen)  ]] for r in range(steps)  ]
                     
             attrs[k][3] =  (1,len(attrs[k][0][0][0]))
@@ -3529,16 +3488,16 @@ class EFieldTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1, 3)]  for c in range(random.randint(2, 10))   ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)]  for c in range(self.__rnd.randint(2, 10))   ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3)]  for c in range(random.randint(2, 10))  ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)]  for c in range(self.__rnd.randint(2, 10))  ]
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))] for c in range(random.randint(2, 10)) ]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))] for c in range(self.__rnd.randint(2, 10)) ]
                 else:
-                    attrs[k][0] =  [[ ("true" if random.randint(0,1) else "false")  ]
-                                      for c in range(random.randint(2, 10))  ]
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  ]
+                                      for c in range(self.__rnd.randint(2, 10))  ]
                     
             attrs[k][3] =  (len(attrs[k][0]),1)
 
@@ -3660,16 +3619,16 @@ class EFieldTest(unittest.TestCase):
             quin = (quin+1) % 5 
 
 
-            mlen = random.randint(2, 10)
+            mlen = self.__rnd.randint(2, 10)
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(1, 3)]  for c in range(mlen)   ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)]  for c in range(mlen)   ] for r in range(steps)  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0, 3)]  for c in range(mlen)  ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)]  for c in range(mlen)  ] for r in range(steps)  ]
             else:    
                 if k == 'bool':
-                    attrs[k][0] = [ [[ bool(random.randint(0,1))] for c in range(mlen) ] for r in range(steps)  ]
+                    attrs[k][0] = [ [[ bool(self.__rnd.randint(0,1))] for c in range(mlen) ] for r in range(steps)  ]
                 else:
-                    attrs[k][0] = [ [[ ("true" if random.randint(0,1) else "false")]  
+                    attrs[k][0] = [ [[ ("true" if self.__rnd.randint(0,1) else "false")]  
                                       for c in range(mlen)  ] for r in range(steps)  ]
                     
             attrs[k][3] =  (len(attrs[k][0][0]),1)
@@ -3781,17 +3740,17 @@ class EFieldTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = random.randint(2, 10)
+            mlen = self.__rnd.randint(2, 10)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(1, 3)  for c in range(mlen)  ] for c2 in range(random.randint(2, 10))  ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 10))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*random.randint(0, 3)  for c in range(mlen) ] for c2 in range(random.randint(2, 10))]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(random.randint(0,1))  for c in range(mlen) ] for c2 in range(random.randint(2, 10))] 
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))] 
                 else:
-                    attrs[k][0] =  [[ ("true" if random.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(random.randint(2, 10))]
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
@@ -3914,17 +3873,17 @@ class EFieldTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = [random.randint(2, 10),random.randint(2, 10)]
+            mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10)]
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(1, 3)  for c in range(mlen[0])  ] for c2 in range(mlen[1])  ] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen[0])  ] for c2 in range(mlen[1])  ] for r in range(steps)  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[[ attrs[k][0]*random.randint(0, 3)  for c in range(mlen[0]) ] for c2 in range(mlen[1])] for r in range(steps)  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen[0]) ] for c2 in range(mlen[1])] for r in range(steps)  ]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[[ bool(random.randint(0,1))  for c in range(mlen[0]) ] for c2 in range(mlen[1])]  for r in range(steps)  ]
+                    attrs[k][0] =  [[[ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ] for c2 in range(mlen[1])]  for r in range(steps)  ]
                 else:
-                    attrs[k][0] =  [[[ ("true" if random.randint(0,1) else "false")   for c in range(mlen[0]) ] for c2 in range(mlen[1])]for r in range(steps)  ]
+                    attrs[k][0] =  [[[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen[0]) ] for c2 in range(mlen[1])]for r in range(steps)  ]
                     
             attrs[k][3] =  (len(attrs[k][0][0]),len(attrs[k][0][0][0]))
 

@@ -21,10 +21,12 @@
 #
 import os
 import random
-from pni.io.nx.h5 import open_file
 import unittest
-from ndts import Types
+import binascii
+import time
 
+from pni.io.nx.h5 import open_file
+from ndts import Types
 
 from math import exp
 
@@ -37,6 +39,15 @@ class Checker(object):
     def __init__(self, testCase):
         ## test case
         self._tc = testCase 
+
+        try:
+            ## random seed
+            self.seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.seed)
 
 
     ## checks field tree
@@ -283,7 +294,7 @@ class Checker(object):
     # \param nrGauss of Gaussians  
     # \returns list with the plot
     def nicePlot(self, xlen=2048, nrGauss=5):
-        pr = [ [ random.uniform(0.01,0.001), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
+        pr = [ [ self.__rnd.uniform(0.01,0.001), self.__rnd.uniform(0,xlen), self.__rnd.uniform(0.0,1.) ] \
                    for i in range(nrGauss) ]
         return [ sum([pr[j][2]*exp(-pr[j][0]*(i-pr[j][1])**2) for j in range(len(pr)) ]) \
                      for i in range(xlen)]
@@ -295,7 +306,7 @@ class Checker(object):
     # \param nrGauss of Gaussians  
     # \returns list with the plot
     def nicePlot2D(self, xlen=1024, ylen=1024, nrGauss=5):
-        pr = [ [ random.uniform(0.1,0.01), random.uniform(0.01,0.1), random.uniform(0,ylen), random.uniform(0,xlen), random.uniform(0.0,1.) ] \
+        pr = [ [ self.__rnd.uniform(0.1,0.01), self.__rnd.uniform(0.01,0.1), self.__rnd.uniform(0,ylen), self.__rnd.uniform(0,xlen), self.__rnd.uniform(0.0,1.) ] \
                    for i in range(nrGauss) ]
         return [[ sum([pr[j][4]*exp(-pr[j][0]*(i1-pr[j][2])**2-pr[j][1]*(i2-pr[j][3])**2) \
                            for j in range(len(pr)) ]) \

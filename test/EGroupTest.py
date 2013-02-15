@@ -25,8 +25,9 @@ import sys
 import subprocess
 import random
 import struct
-import random
 import numpy
+import binascii
+import time
 
 
 import pni.io.nx.h5 as nx
@@ -70,6 +71,15 @@ class EGroupTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
 
 
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+
+        self.__rnd = random.Random(self.__seed)
+
+
         self._sc = Checker(self)
 
     ## test starter
@@ -77,6 +87,8 @@ class EGroupTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down
@@ -484,14 +496,14 @@ class EGroupTest(unittest.TestCase):
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(0, 3)]
-                attrs[nm][0] =  [ attrs[nm][0]*random.randint(0, 3) for r in range(mlen[0])]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[nm][0] =  [ attrs[nm][0]*self.__rnd.randint(0, 3) for r in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10)]
+                mlen = [self.__rnd.randint(1, 10)]
                 if nm == 'bool':
-                    attrs[nm][0] =  [ bool(random.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[nm][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
-                    attrs[nm][0] =  [ ("true" if random.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[nm][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
 
             attrs[nm][3] =  (mlen[0],)
 
@@ -558,16 +570,16 @@ class EGroupTest(unittest.TestCase):
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [random.randint(1, 10),random.randint(1, 10), 
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), 
                         (2 << numpy.dtype(attrs[nm][2]).itemsize)  ]
 #                print "SH",nm,mlen[2]    
-                attrs[nm][0] =  [[ attrs[nm][0]*random.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+                attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
-                mlen = [random.randint(1, 10),random.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if nm == 'bool':
-                    attrs[nm][0] =  [[ bool(random.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] =  [[ ("True" if random.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[nm][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
             attrs[nm][3] =  (mlen[0],mlen[1])
 

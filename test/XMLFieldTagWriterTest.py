@@ -57,6 +57,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down

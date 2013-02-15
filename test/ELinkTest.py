@@ -86,6 +86,7 @@ class ELinkTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down
@@ -252,7 +253,7 @@ class ELinkTest(unittest.TestCase):
 
 
         self._nxFile.close()
-#        os.remove(self._fname)
+        os.remove(self._fname)
 
 
 
