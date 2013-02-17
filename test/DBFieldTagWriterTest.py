@@ -420,13 +420,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field units="" name="pid_spectrum_string" type="NX_CHAR">
           <dimensions rank="1">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -435,13 +435,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field units="" name="pid_spectrum_int32" type="NX_UINT32">
           <dimensions rank="1">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
           </dimensions>
           <strategy mode="STEP" grows="2"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -450,13 +450,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field units="" name="pid_spectrum_float64" type="NX_FLOAT64">
           <dimensions rank="1">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
           </dimensions>
           <strategy mode="STEP" comporession="true" rate="4" shuffle="true"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -511,7 +511,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT name FROM device limit 10
+              SELECT name FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -549,7 +549,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -557,13 +557,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field  units="" name="final_pid_spectrum_float64" type="NX_FLOAT64">
           <dimensions rank="1">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -590,7 +590,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -598,14 +598,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="final_pid_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -617,7 +617,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -639,12 +639,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
         cursor.close()
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT pid FROM device limit 10")
+        cursor.execute("SELECT pid FROM device limit 6")
         spectrum = cursor.fetchall()
         cursor.close()
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT name FROM device limit 10")
+        cursor.execute("SELECT name FROM device limit 6")
         name = cursor.fetchall()
         cursor.close()
         
@@ -658,7 +658,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 33)
+        det = self._sc.checkFieldTree(f, fname , 25)
         self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [[str(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
@@ -714,28 +714,28 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="name_pid_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="2"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT name, pid FROM device limit 10
+              SELECT name, pid FROM device limit 6
             </query>
           </datasource>
         </field>
 
         <field name="name_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT name FROM device limit 10
+              SELECT name FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -744,14 +744,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="pid_image_string" type="NX_CHAR" units="" >
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -792,7 +792,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -801,28 +801,28 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="pid_image_float" type="NX_FLOAT" units="" >
           <dimensions rank="2"> 
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
 
         <field name="pid_image_int32" type="NX_INT32" units="" >
           <dimensions rank="2"> 
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="STEP" grows="2" compression="true"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -830,42 +830,42 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="pid_image_int64" type="NX_INT64" units="" >
           <dimensions rank="2"> 
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="STEP" grows="3"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
 
         <field name="pid_exported_image_int" type="NX_INT" units="">
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="2"/>
           </dimensions>
           <strategy mode="STEP"  />
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT pid, exported FROM device limit 10
+              SELECT pid, exported FROM device limit 6
             </query>
           </datasource>
         </field>
 
         <field name="pid_exported_image_uint32" type="NX_UINT32" units="">
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="2"/>
           </dimensions>
           <strategy mode="STEP" compression="true" grows="3" />
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT pid, exported FROM device limit 10
+              SELECT pid, exported FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -888,7 +888,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT pid, exported FROM device limit 10
+              SELECT pid, exported FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -899,7 +899,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT pid, exported FROM device limit 10
+              SELECT pid, exported FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -911,7 +911,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT pid, exported FROM device limit 10
+              SELECT pid, exported FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -923,7 +923,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -932,14 +932,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="final_pid_exported_image_float64" type="NX_FLOAT64" units="">
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="2"/>
           </dimensions>
           <strategy mode="FINAL" compression="true" rate="2" shuffle="false" grows="2" />
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
-              SELECT pid, exported FROM device limit 10
+              SELECT pid, exported FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -948,14 +948,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         <field name="final_pid_image_float64" type="NX_FLOAT64" units="" >
           <dimensions rank="2">
-            <dim index="1" value="10"/>
+            <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
-              SELECT pid FROM device limit 10
+              SELECT pid FROM device limit 6
             </query>
           </datasource>
         </field>
@@ -987,23 +987,23 @@ class DBFieldTagWriterTest(unittest.TestCase):
 """
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT name, pid FROM device limit 10")
+        cursor.execute("SELECT name, pid FROM device limit 6")
         name_pid = cursor.fetchall()
         cursor.close()
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT name FROM device limit 10")
+        cursor.execute("SELECT name FROM device limit 6")
         name = cursor.fetchall()
         cursor.close()
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT pid FROM device limit 10")
+        cursor.execute("SELECT pid FROM device limit 6")
         pid = cursor.fetchall()
         cursor.close()
 
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT pid, exported FROM device limit 10")
+        cursor.execute("SELECT pid, exported FROM device limit 6")
         pid_exported = cursor.fetchall()
         cursor.close()
 
@@ -1015,7 +1015,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         cursor = self._mydb.cursor()
-        cursor.execute("SELECT pid FROM device limit 10")
+        cursor.execute("SELECT pid FROM device limit 6")
         spectrum = cursor.fetchall()
         cursor.close()
 
@@ -1029,7 +1029,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 57)
+        det = self._sc.checkFieldTree(f, fname , 41)
         self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
         self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
