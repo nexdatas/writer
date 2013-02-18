@@ -70,6 +70,7 @@ import EDocTest
 import ESymbolTest
 import EDimensionsTest
 import EDimTest
+import ConvertersTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -134,6 +135,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EDimTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ConvertersTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
