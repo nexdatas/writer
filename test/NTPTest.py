@@ -320,7 +320,6 @@ class NTPTest(unittest.TestCase):
         ]
         el = NTP()
         for a in arr:
-            print a[1:]
             self.assertEqual(el.arrayRankRShape(a[0])[0],a[1])
             self.assertEqual(el.arrayRankRShape(a[0])[1],a[2])
             self.assertEqual(el.arrayRankRShape(numpy.array(a[0]))[0], a[1])
