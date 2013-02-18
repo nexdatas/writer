@@ -23,6 +23,10 @@ import unittest
 import os
 import sys
 import struct
+import random
+import binascii
+import time
+import numpy
 
 
 #import pni.io.nx.h5 as nx
@@ -98,6 +102,15 @@ class NTPTest(unittest.TestCase):
         self._rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE"}
 
 
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
+
+
 
 
     ## test starter
@@ -105,6 +118,8 @@ class NTPTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
+
 
     ## test closer
     # \brief Common tear down
@@ -125,7 +140,7 @@ class NTPTest(unittest.TestCase):
         self.assertEqual(error, True)
 
 
-    ## toBool instance test
+    ## dictionary test
     # \brief It tests default settings
     def test_dict(self):
         fun = sys._getframe().f_code.co_name
@@ -169,6 +184,152 @@ class NTPTest(unittest.TestCase):
             self.assertEqual(NTP.rTf[it], self._rTf[it])
 
 
+
+    ## arrayRank test
+    # \brief It tests default settings
+    def test_arrayRank(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        mlen = [self.__rnd.randint(1, 100),self.__rnd.randint(1, 50),self.__rnd.randint(1, 20),self.__rnd.randint(2, 10)]
+        arr = [
+            [12, 0], 
+            [[], 1], 
+            [[[]], 2], 
+            [[[[]]], 3], 
+            [[[[[]]]], 4], 
+            [[0], 1], 
+            [[[0]], 2], 
+            [[[[0]]], 3], 
+            [[[[[0]]]], 4], 
+            [[-0.243], 1], 
+            [[1]*mlen[0], 1], 
+            [[-2.1233]*mlen[1], 1], 
+            [[-2.1233*self.__rnd.randint(2,  100) for c in range(mlen[2])], 1], 
+            [[[123.123]*mlen[0]], 2], 
+            [[[13.123]]*mlen[1], 2], 
+            [[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[2])]], 2], 
+            [[[13.123*self.__rnd.randint(2,  100)] for c in range(mlen[2])], 2], 
+            [[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])], 2], 
+            [[[[123.123]*mlen[0]]], 3], 
+            [[[[123.123]]*mlen[0]], 3], 
+            [[[[13.123]]]*mlen[1], 3],
+            [[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[2])]]], 3], 
+            [[[[13.123*self.__rnd.randint(2,  100)] for c in range(mlen[2])]], 3], 
+            [[[[13.123*self.__rnd.randint(2,  100)]] for c in range(mlen[2])], 3], 
+            [[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])]], 3], 
+            [[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])]] for cc in range(mlen[2])], 3], 
+            [[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])] 
+              for ccC in range(mlen[2])], 3] , 
+            [[[[ [123.123]*mlen[0] ]]], 4], 
+            [[[[[123.123]]*mlen[0]]], 4], 
+            [[[[[123.123]]]*mlen[0]], 4], 
+            [[[[[13.123]]]]*mlen[1], 4],
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[2])]]]], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100)] for c in range(mlen[2])]]], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100)]] for c in range(mlen[2])]], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100)]]] for c in range(mlen[2])], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])]]], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])]] for cc in range(mlen[2])]], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100)] for c in range(mlen[1])]] for cc in range(mlen[2])], 4], 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])] 
+               for ccc in range(mlen[3])]], 4] , 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])] ]
+               for ccc in range(mlen[3])], 4] , 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])]] for cc in range(mlen[2])] 
+               for ccc in range(mlen[3])], 4] , 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])] 
+              for ccc in range(mlen[3])] for cccc in range(mlen[0])], 4] , 
+        ]
+        el = NTP()
+        for a in arr:
+            
+            self.assertEqual(el.arrayRank(a[0]),a[1])
+            self.assertEqual(el.arrayRank(numpy.array(a[0])), a[1])
+
+
+
+    ## arrayRank test
+    # \brief It tests default settings
+    def test_arrayRankRShape(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        mlen = [self.__rnd.randint(2, 100),self.__rnd.randint(2, 50),self.__rnd.randint(2, 20),self.__rnd.randint(2, 10)]
+        arr = [
+            [12, 0, [], "int"], 
+            [[], 1, [0], None], 
+            [[[]], 2, [0,1], None], 
+            [[[[]]], 3, [0,1,1], None], 
+            [[[[[]]]], 4, [0,1,1,1], None], 
+            [[0], 1, [1], "int"], 
+            [[[1.0]], 2, [1,1], "float"], 
+            [[[["str"]]], 3, [1,1,1],"str"], 
+            [[[[[True]]]], 4, [1,1,1,1],"bool"], 
+            [[False], 1, [1], "bool"], 
+            [[1]*mlen[0], 1, [mlen[0]], "int"], 
+            [["sdf"]*mlen[1], 1, [mlen[1]], "str"], 
+            [[-2.1233*self.__rnd.randint(2,  100) for c in range(mlen[2])], 1, [mlen[2]], "float"], 
+            [[[123]*mlen[0]], 2, [mlen[0],1], "int"], 
+            [[["text"]]*mlen[1], 2, [1,mlen[1]], "str"], 
+            [[[13.12*self.__rnd.randint(2,  100) for c in range(mlen[2])]], 2, [mlen[2],1], "float"], 
+            [[[13*self.__rnd.randint(2,  100)] for c in range(mlen[2])], 2, [1,mlen[2]], "int"], 
+            [[["a"*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])], 2, 
+             [mlen[1],mlen[2]], "str"], 
+            [[[[True]*mlen[0]]], 3, [mlen[0],1,1], "bool"], 
+            [[[[123.123]]*mlen[0]], 3, [1,mlen[0],1], "float"], 
+            [[[["as"]]]*mlen[1], 3, [1,1,mlen[1]], "str"],
+            [[[[13*self.__rnd.randint(2,  100) for c in range(mlen[2])]]], 3, [mlen[2],1,1], "int"], 
+            [[[[13.123*self.__rnd.randint(2,  100)] for c in range(mlen[2])]], 3, [1,mlen[2],1], "float"], 
+            [[[["ta"*self.__rnd.randint(1,  100)]] for c in range(mlen[2])], 3, [1,1,mlen[2]],"str"], 
+            [[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])]], 3
+             , [mlen[1],mlen[2],1],"float"], 
+            [[[[13*self.__rnd.randint(2,  100) for c in range(mlen[1])]] for cc in range(mlen[2])], 3
+             , [mlen[1],1,mlen[2]],"int"], 
+            [[[["w"*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])]
+              for ccC in range(mlen[3])], 3 , [mlen[1],mlen[2],mlen[3]],"str"  ] , 
+            [[[[ [False]*mlen[0] ]]], 4, [mlen[0],1,1,1], "bool"], 
+            [[[[[123.123]]*mlen[0]]], 4, [1,mlen[0],1,1], "float"], 
+            [[[[[123]]]*mlen[0]], 4, [1,1,mlen[0],1], "int"], 
+            [[[[["bleble"]]]]*mlen[1], 4, [1,1,1,mlen[1]], "str"],
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[2])]]]], 4, [mlen[2],1,1,1], "float"], 
+            [[[[[13*self.__rnd.randint(2,  100)] for c in range(mlen[2])]]], 4, [1,mlen[2],1,1],"int"], 
+            [[[[["1"*self.__rnd.randint(2,  100)]] for c in range(mlen[2])]], 4, [1,1,mlen[2],1],"str"], 
+            [[[[[13.123*self.__rnd.randint(2,  100)]]] for c in range(mlen[2])], 4, [1,1,1,mlen[2]],"float"], 
+            [[[[[13*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])]]], 4,
+             [mlen[1],mlen[2],1,1],"int"], 
+            [[[[["t"*self.__rnd.randint(2,  100) for c in range(mlen[1])]] for cc in range(mlen[2])]], 4,
+             [mlen[1],1,mlen[2],1],"str"], 
+            [[[[[13.123*self.__rnd.randint(2,  100)] for c in range(mlen[1])]] for cc in range(mlen[2])], 4,
+             [1,mlen[1],1,mlen[2]],"float"], 
+            [[[[[13*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])] 
+               for ccc in range(mlen[3])]], 4,
+             [mlen[1],mlen[2],mlen[3],1],"int"] , 
+            [[[[["13"*self.__rnd.randint(2,  100) for c in range(mlen[1])] for cc in range(mlen[2])] ]
+               for ccc in range(mlen[3])], 4,
+             [mlen[1],mlen[2],1,mlen[3]],"str"] , 
+            [[[[[13.00*self.__rnd.randint(2,  100) for c in range(mlen[1])]] for cc in range(mlen[2])] 
+               for ccc in range(mlen[3])], 4,
+             [mlen[1],1,mlen[2],mlen[3]], "float"] , 
+            [[[[[13*self.__rnd.randint(2,  100)] for c in range(mlen[1])] for cc in range(mlen[2])] 
+               for ccc in range(mlen[3])], 4,
+             [1,mlen[1],mlen[2],mlen[3]],"int"] , 
+            [[[[[13.123*self.__rnd.randint(2,  100) for c in range(mlen[0])] for cc in range(mlen[1])] 
+              for ccc in range(mlen[2])] for cccc in range(mlen[3])], 4,
+             [mlen[0],mlen[1],mlen[2],mlen[3]],"float"] , 
+        ]
+        el = NTP()
+        for a in arr:
+            self.assertEqual(el.arrayRankRShape(a[0])[0],a[1])
+            self.assertEqual(el.arrayRankRShape(a[0])[1],a[2])
+            self.assertEqual(el.arrayRankRShape(numpy.array(a[0]))[0], a[1])
+            self.assertEqual(el.arrayRankRShape(numpy.array(a[0]))[1], a[2])
+            if a[3] == None:
+                self.assertEqual(el.arrayRankRShape(a[0])[2], a[3])
+                self.assertEqual(el.arrayRankRShape(numpy.array(a[0]))[2], a[3])
+            else:
+                self.assertEqual(el.arrayRankRShape(a[0])[2].__name__, a[3])
+                self.assertEqual(el.arrayRankRShape(numpy.array(a[0]))[2].__name__, a[3])
     
 if __name__ == '__main__':
     unittest.main()

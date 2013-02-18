@@ -91,22 +91,40 @@ class NTP(object):
     def arrayRank(self, array) :
         rank = 0
         if hasattr(array, "__iter__") and not isinstance(array, str):       
-            rank = 1 + self.arrayRank(array[0])
+            try:
+                rank = 1 + self.arrayRank(array[0])
+            except IndexError, e:
+                if hasattr(array, "shape") and len(array.shape) == 0:
+                    rank = 0
+                else:
+                    rank = 1
         return rank            
 
     
 
     ## array rank, inverse shape and type
-    # \brief It calculates the rank, inverse shape and type of the first element of the array
+    # \brief It calculates the rank, inverse shape and type of the first element of the list array
     # \param array given array
     def arrayRankRShape(self, array):        
         rank = 0
         shape = []
         pythonDType = None
         if hasattr(array, "__iter__") and not isinstance(array, str):
-            rank, shape, pythonDType = self.arrayRankRShape(array[0])
-            shape.append(len(array))
-            rank += 1
+            try:
+                rank, shape, pythonDType = self.arrayRankRShape(array[0])
+                rank += 1
+                shape.append(len(array))
+            except IndexError, e:
+                if hasattr(array, "shape") and len(array.shape) == 0:
+                    rank = 0
+                    pythonDType = type(array.tolist())
+                else:
+                    rank = 1
+                    shape.append(len(array))
+            
         else:
-            pythonDType = type(array)
+            if hasattr(array,"tolist"):
+                pythonDType = type(array.tolist())
+            else:
+                pythonDType = type(array)
         return (rank, shape, pythonDType)            
