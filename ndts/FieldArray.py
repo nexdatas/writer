@@ -22,9 +22,8 @@
 import numpy
 
 from Types import NTP
+from Errors import CorruptedFieldArrayError
 
-## exception for corrupted FieldArray
-class CorruptedFieldArrayError(Exception): pass
 
 ## Array of the attributes
 class AttributeArray(object):

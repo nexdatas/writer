@@ -56,13 +56,7 @@ except ImportError, e:
 
 #import copy
 
-
-
-## exception for fetching data from data source
-class PackageError(Exception): pass
-
-## exception for setting data source
-class DataSourceSetupError(Exception): pass
+from Errors import (PackageError, DataSourceSetupError)
 
 
 ## Data source

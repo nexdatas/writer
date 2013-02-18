@@ -23,8 +23,7 @@
 from ElementThread import ElementThread
 import Queue
 
-## exception for problems in thread
-class ThreadError(Exception): pass
+from Errors import ThreadError
 
 ## Pool with threads
 class ThreadPool(object):

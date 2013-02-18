@@ -34,12 +34,8 @@ from FieldArray import FieldArray
 
 from Types import NTP
 
+from Errors import (XMLSettingSyntaxError, DataSourceError )
 
-## exception for syntax in XML settings
-class XMLSettingSyntaxError(Exception): pass
-
-## exception for fetching data from data source
-class DataSourceError(Exception): pass
 
 
 

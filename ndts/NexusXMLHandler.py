@@ -29,8 +29,8 @@ from DataSourceFactory import DataSourceFactory
 from ThreadPool import ThreadPool
 from InnerXMLParser import InnerXMLHandler
 
-## unsupported tag exception
-class UnsupportedTagError(Exception): pass
+
+from Errors import UnsupportedTagError
     
 ## SAX2 parser 
 class NexusXMLHandler(sax.ContentHandler):

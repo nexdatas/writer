@@ -23,10 +23,7 @@ from xml import sax
 
 import sys, os
 
-
-## exception for syntax in XML settings
-class XMLSyntaxError(Exception): pass
-
+from Errors import  XMLSyntaxError
     
 ## SAX2 parser 
 class InnerXMLHandler(sax.ContentHandler):
