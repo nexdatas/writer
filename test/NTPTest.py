@@ -48,7 +48,7 @@ class NTPTest(unittest.TestCase):
         self._fname = "test.h5"
         self._nxDoc = None
         self._eDoc = None        
-        self._fattrs = {"short_name":"test","units":"m" }
+        self._fattrs = {"short_name":"test", "units":"m" }
         self._gname = "testDoc"
         self._gtype = "NXentry"
 
@@ -136,37 +136,37 @@ class NTPTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         
         for it in self._pTt:
-            self.assertEqual(el.pTt[it],self._pTt[it])
-            self.assertEqual(NTP.pTt[it],self._pTt[it])
+            self.assertEqual(el.pTt[it], self._pTt[it])
+            self.assertEqual(NTP.pTt[it], self._pTt[it])
 
 
         for it in self._npTt:
-            self.assertEqual(el.npTt[it],self._npTt[it])
-            self.assertEqual(NTP.npTt[it],self._npTt[it])
+            self.assertEqual(el.npTt[it], self._npTt[it])
+            self.assertEqual(NTP.npTt[it], self._npTt[it])
 
 
         for it in self._nTnp:
-            self.assertEqual(el.nTnp[it],self._nTnp[it])
-            self.assertEqual(NTP.nTnp[it],self._nTnp[it])
+            self.assertEqual(el.nTnp[it], self._nTnp[it])
+            self.assertEqual(NTP.nTnp[it], self._nTnp[it])
 
 
         for it in self._convert:
-            self.assertEqual(el.convert[it],self._convert[it])
-            self.assertEqual(NTP.convert[it],self._convert[it])
+            self.assertEqual(el.convert[it], self._convert[it])
+            self.assertEqual(NTP.convert[it], self._convert[it])
 
         for it in self._aTn:
-            self.assertEqual(el.aTn[it],self._aTn[it])
-            self.assertEqual(NTP.aTn[it],self._aTn[it])
+            self.assertEqual(el.aTn[it], self._aTn[it])
+            self.assertEqual(NTP.aTn[it], self._aTn[it])
 
 
         for it in self._aTnv:
-            self.assertEqual(el.aTnv[it],self._aTnv[it])
-            self.assertEqual(NTP.aTnv[it],self._aTnv[it])
+            self.assertEqual(el.aTnv[it], self._aTnv[it])
+            self.assertEqual(NTP.aTnv[it], self._aTnv[it])
 
 
         for it in self._rTf:
-            self.assertEqual(el.rTf[it],self._rTf[it])
-            self.assertEqual(NTP.rTf[it],self._rTf[it])
+            self.assertEqual(el.rTf[it], self._rTf[it])
+            self.assertEqual(NTP.rTf[it], self._rTf[it])
 
 
     
