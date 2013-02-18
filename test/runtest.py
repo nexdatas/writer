@@ -72,6 +72,7 @@ import EDimensionsTest
 import EDimTest
 import ConvertersTest
 import NTPTest
+import ErrorsTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -142,6 +143,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NTPTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ErrorsTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
