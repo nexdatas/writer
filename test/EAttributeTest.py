@@ -1299,7 +1299,7 @@ class EAttributeTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_run_value_2d_doublwe(self):
+    def test_run_value_2d_double(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -1396,7 +1396,7 @@ class EAttributeTest(unittest.TestCase):
 
         self._nxFile.close()
  
-#        os.remove(self._fname)
+        os.remove(self._fname)
 
 
 

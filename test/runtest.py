@@ -73,6 +73,7 @@ import EDimTest
 import ConvertersTest
 import NTPTest
 import ErrorsTest
+import DataSourceTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -158,6 +159,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
