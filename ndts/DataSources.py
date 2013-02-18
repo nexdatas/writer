@@ -405,7 +405,7 @@ class ClientSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " client record %s from JSON:  %s or %s " % (self.name, self.__localJSON , self.__globalJSON  )
+        return "Client record %s from JSON: %s or %s " % (self.name, self.__localJSON , self.__globalJSON  )
 
 
     ## sets JSON string

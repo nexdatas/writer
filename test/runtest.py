@@ -75,6 +75,7 @@ import NTPTest
 import ErrorsTest
 import DataSourceTest
 import TangoSourceTest
+import ClientSourceTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -166,6 +167,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
