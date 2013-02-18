@@ -110,7 +110,7 @@ class TangoSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## name of data
+        ## name of datar
         self.name = None
         ## name of the Tango device
         self.device = None
