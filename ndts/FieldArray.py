@@ -24,7 +24,7 @@ import numpy
 from Types import NTP
 
 ## exception for corrupted FieldArray
-class CorruptedFieldArray(Exception): pass
+class CorruptedFieldArrayError(Exception): pass
 
 ## Array of the attributes
 class AttributeArray(object):
@@ -180,7 +180,7 @@ class FieldArray(object):
     def __setitem__(self, key, value):
         
         if not self.__fList:
-            raise CorruptedFieldArray, "Field list without elements"
+            raise CorruptedFieldArrayError, "Field list without elements"
 
         kr, ir, jr = self.__fetchRanges(key)
 
