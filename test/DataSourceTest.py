@@ -26,6 +26,7 @@ import subprocess
 import random
 import struct
 import numpy
+from xml.dom import minidom
 
 
 #import pni.io.nx.h5 as nx
@@ -157,7 +158,26 @@ class DataSourceTest(unittest.TestCase):
         el = DataSource()
         self.assertTrue(isinstance(el, object))
         self.myAssertRaise(AttributeError,el._getText, None) 
-##        self.assertEqual(el._getText(),"") 
+
+        dom = minidom.parseString("<tag/>")
+        node = dom.getElementsByTagName("tag")
+        self.assertEqual(el._getText(node[0]).strip(),'') 
+
+        text = "My test \n text"
+        dom = minidom.parseString("<tag> %s</tag>" % text)
+        node = dom.getElementsByTagName("tag")
+        self.assertEqual(el._getText(node[0]).strip(),text) 
+
+
+        text = "My test text"
+        dom = minidom.parseString("<node> %s</node>" % text)
+        node = dom.getElementsByTagName("node")
+        self.assertEqual(el._getText(node[0]).strip(),text) 
+
+
+        dom = minidom.parseString("<node></node>" )
+        node = dom.getElementsByTagName("node")
+        self.assertEqual(el._getText(node[0]).strip(),'') 
 
 
     
