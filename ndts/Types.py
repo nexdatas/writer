@@ -118,6 +118,7 @@ class NTP(object):
                 if hasattr(array, "shape") and len(array.shape) == 0:
                     rank = 0
                     pythonDType = type(array.tolist())
+                    print "arr", array
                 else:
                     rank = 1
                     shape.append(len(array))
