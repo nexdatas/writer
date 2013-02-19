@@ -555,7 +555,6 @@ class TangoSourceTest(unittest.TestCase):
             el.memberType = 'property'
             el.name = k
             dt = el.getData()
-            print dt
             self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
                            'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 #            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
