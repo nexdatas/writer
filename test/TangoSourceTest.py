@@ -441,7 +441,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_iamge(self):
+    def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -485,6 +485,43 @@ class TangoSourceTest(unittest.TestCase):
             el.name = k
             dt = el.getData()
             self.checkData(dt,"IMAGE", arr[k][2],arr[k][1],arr[k][3],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_command(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "GetShort":["ScalarShort", "int16", "DevShort", -123],
+            "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
+            "GetLong":["ScalarLong", self._bint, "DevLong", -124],
+            "GetULong":["ScalarULong",self._buint , "DevULong", 234],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234],
+#            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            "GetFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
+            "GetDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02,1e-14],
+            "GetString":["ScalarString", "string", "DevString", "MyTrue"],
+            }
+
+
+
+        for k in arr :
+            self._simps.dp.write_attribute(arr[k][0], arr[k][3])
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.memberType = 'command'
+            el.name = k
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
 
 
 

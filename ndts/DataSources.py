@@ -201,8 +201,9 @@ class TangoSource(DataSource):
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
-                    return {"format":"SCALAR", "value":da, "tangoDType":cd.out_type, "shape":[1,0], 
-                                      "encoding":self.encoding, "decoders":self.__decoders}
+                    return {"format":"SCALAR", "value":da, 
+                            "tangoDType":str(cd.out_type).split('.')[-1],  "shape":[1,0], 
+                            "encoding":self.encoding, "decoders":self.__decoders}
                     
                         
 
