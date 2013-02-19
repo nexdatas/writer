@@ -431,7 +431,6 @@ class ClientSourceTest(unittest.TestCase):
             "float":[-1.223e-01,"IMAGE","DevDouble",[]],
             "str":['My String',"IMAGE","DevString",[]],
             "unicode":["Hello","IMAGE","DevString",[]],
-#            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
             "bool":['true',"IMAGE","DevBoolean",[]],
             }
 

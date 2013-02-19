@@ -74,7 +74,6 @@ import ConvertersTest
 import NTPTest
 import ErrorsTest
 import DataSourceTest
-import TangoSourceTest
 import ClientSourceTest
 
 if "MYSQL" in DB_AVAILABLE:
@@ -85,6 +84,7 @@ if PYTANGO_AVAILABLE:
     import ClientFieldTagServerTest
     import XMLFieldTagServerTest
     import TangoFieldTagServerTest
+    import TangoSourceTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
 
@@ -166,9 +166,6 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
-
-    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest) )
 
     if "MYSQL" in DB_AVAILABLE:
@@ -176,6 +173,9 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
 
     if PYTANGO_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
+
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
 

@@ -27,6 +27,9 @@ import random
 import struct
 import numpy
 from xml.dom import minidom
+import PyTango 
+
+import SimpleServerSetUp
 
 
 #import pni.io.nx.h5 as nx
@@ -48,6 +51,9 @@ class TangoSourceTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
+        self._simps = SimpleServerSetUp.SimpleServerSetUp()
+
+
         self._tfname = "doc"
         self._fname = "test.h5"
         self._nxDoc = None
@@ -67,13 +73,13 @@ class TangoSourceTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
+        self._simps.setUp()
         ## file handle
-        print "\nsetting up..."        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        self._simps.tearDown()
 
     ## Exception tester
     # \param exception expected exception
@@ -141,6 +147,35 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+
+    ## Data check 
+    # \brief It check the source Data
+    # \param data  tested data
+    # \param format data format
+    # \param value data value
+    # \param ttype data Tango type    
+    # \param shape data shape    
+    # \param shape data shape    
+    # \param encoding data encoding    
+    # \param encoding data encoding    
+    # \param decoders data decoders
+    # \param error data error
+    def checkData(self, data, format, value, ttype, shape, encoding = None, decoders = None, error = 0):
+        self.assertEqual(data["format"], format)
+        self.assertEqual(data["tangoDType"], ttype)
+        self.assertEqual(data["shape"], shape)
+        if format == 'SCALAR': 
+                if error:
+                    self.assertTrue(abs(data["value"]- value)<= error)
+                else:
+                    self.assertEqual(data["value"], value)
+        elif format == 'SPECTRUM': 
+            for i in range(len(value)):
+                if error:
+                    self.assertTrue(abs(data["value"][i]- value[i])<= error)
+                else:
+                    self.assertEqual(data["value"][i], value[i])
+                
 
     ## setup test
     # \brief It tests default settings
@@ -270,7 +305,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData(self):
+    def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -278,6 +313,67 @@ class TangoSourceTest(unittest.TestCase):
         el = TangoSource()
         self.assertTrue(isinstance(el, object))
         self.assertEqual(el.getData(), None)
+
+        el = TangoSource()
+        el.device = 'stestp09/testss/s1r228'
+        self.assertTrue(isinstance(el, object))
+        self.assertEqual(el.getData(), None)
+
+
+        el = TangoSource()
+        el.device = 'stestp09/testss/s1r228'
+        el.memberType = 'attribute'
+        el.name = 'ScalarString'
+        self.assertTrue(isinstance(el, object))
+        dt = el.getData()
+        self.checkData(dt,"SCALAR", "Hello!","DevString" ,[1,0],None,None)
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_scalar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr1 = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True],
+            "ScalarUChar":[ "uint8", "DevUChar", 23],
+            "ScalarShort":[ "int16", "DevShort", -123],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234],
+            "ScalarLong":[ self._bint, "DevLong", -124],
+            "ScalarULong":[self._buint , "DevULong", 234],
+            "ScalarLong64":[ "int64", "DevLong64", 234],
+#            "ScalarULong64":[ "uint64", "DevULong64", 23],
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTrue"],
+            }
+
+
+
+        arr2 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON]
+           }
+
+        for k in arr1 :
+            self._simps.dp.write_attribute( k, arr1[k][2])
+            
+        arr = dict(arr2,**(arr1))
+
+        print arr
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.memberType = 'attribute'
+            el.name = k
+            dt = el.getData()
+            print "WW",k ,arr[k][3] if len(arr[k])>3 else 0
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+
 
 
     ## isValid test
@@ -290,40 +386,6 @@ class TangoSourceTest(unittest.TestCase):
         el = TangoSource()
         self.assertTrue(isinstance(el, object))
         self.assertEqual(el.isValid(), True)
-
-
-
-
-    ## getText test
-    # \brief It tests default settings
-    def test_getText_default(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-        el = TangoSource()
-        self.assertTrue(isinstance(el, object))
-        self.myAssertRaise(AttributeError,el._getText, None) 
-
-        dom = minidom.parseString("<tag/>")
-        node = dom.getElementsByTagName("tag")
-        self.assertEqual(el._getText(node[0]).strip(),'') 
-
-        text = "My test \n text"
-        dom = minidom.parseString("<tag> %s</tag>" % text)
-        node = dom.getElementsByTagName("tag")
-        self.assertEqual(el._getText(node[0]).strip(),text) 
-
-
-        text = "My test text"
-        dom = minidom.parseString("<node> %s</node>" % text)
-        node = dom.getElementsByTagName("node")
-        self.assertEqual(el._getText(node[0]).strip(),text) 
-
-
-        dom = minidom.parseString("<node></node>" )
-        node = dom.getElementsByTagName("node")
-        self.assertEqual(el._getText(node[0]).strip(),'') 
 
 
     

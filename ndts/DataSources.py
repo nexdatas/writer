@@ -179,17 +179,14 @@ class TangoSource(DataSource):
                 proxy = PyTango.DeviceProxy(self.device.encode())
             da = None
             if self.memberType == "attribute":
+#                print "getting the attribute: ", self.name
                 alist = proxy.get_attribute_list()
 
                 if self.name.encode() in alist:
                     da = proxy.read_attribute( self.name.encode())
-#                    if str(da.data_format).split('.')[-1] == "SPECTRUM":
-#                        print "Spectrum Device: ", self.device.encode()
-#                    if str(da.data_format).split('.')[-1] == "IMAGE":
-#                        print "Image Device: ", self.device.encode()
-#                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self.__decoders
-                    return {"format":da.data_format, "value":da.value, "tangoDType":da.type, 
-                            "shape":[da.dim_y,da.dim_x],
+                    return {"format":str(da.data_format).split('.')[-1], 
+                            "value":da.value, "tangoDType":str(da.type).split('.')[-1], 
+                            "shape":([da.dim_y,da.dim_x] if da.dim_y else [da.dim_x, 0]),
                             "encoding": self.encoding, "decoders": self.__decoders}
 
             elif self.memberType == "property":
