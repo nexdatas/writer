@@ -27,7 +27,7 @@ import random
 import struct
 import numpy
 from xml.dom import minidom
-
+import json
 
 #import pni.io.nx.h5 as nx
 
@@ -109,6 +109,14 @@ class ClientSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,None,None))
 
+        gjson = '{"data":{"myrecord":"1"}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,None,json.loads(gjson)))
+
+        ljson = '{"data":{"myrecord2":1}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,json.loads(ljson),json.loads(gjson)))
+
 
     ## setup test
     # \brief It tests default settings
@@ -120,6 +128,16 @@ class ClientSourceTest(unittest.TestCase):
         ds = ClientSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource/>")
+
+        ds = ClientSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><record/></datasource>")
+
+        ds = ClientSource()
+        self.assertEqual(ds.name ,None)
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.setup("<datasource><record name='%s'/></datasource>" % dname),None)
+        self.assertEqual(ds.name ,dname)
 
 
 
