@@ -47,7 +47,29 @@ class SimpleServerSetUp(object):
         self._psub = None
         ## device proxy
         self.dp = None
+        ## device properties
+        self.device_prop = {
+            'DeviceBoolean':False,
+            'DeviceShort':12,
+            'DeviceLong':1234566,
+            'DeviceFloat':12.4345,
+            'DeviceDouble':3.453456,
+            'DeviceUShort':1,
+            'DeviceULong':23234,
+            'DeviceString':"My Sting"
+            }
 
+	self.class_prop = {
+            'ClassBoolean':True,
+            'ClassShort':1,
+            'ClassLong':-123555,
+            'ClassFloat':12.345,
+            'ClassDouble':1.23445,
+            'ClassUShort':1,
+            'ClassULong':12343,
+            'ClassString':"My ClassString",
+            }
+        
 
     ## test starter
     # \brief Common set up of Tango Server
@@ -56,6 +78,9 @@ class SimpleServerSetUp(object):
         db = PyTango.Database()
         db.add_device(self.new_device_info_writer)
         db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
+        db.put_device_property(self.new_device_info_writer.name, self.device_prop)
+        db.put_class_property(self.new_device_info_writer._class, self.class_prop)
+
 
         path = os.path.dirname(SimpleServer.__file__)
         

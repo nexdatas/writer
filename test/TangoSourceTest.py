@@ -524,6 +524,45 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_dev_prop(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "DeviceShort":["ScalarShort", "int16", "DevShort", -123],
+            "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
+            "DeviceLong":["ScalarLong", self._bint, "DevLong", -124],
+            "DeviceULong":["ScalarULong",self._buint , "DevULong", 234],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+#            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
+#            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02,1e-14],
+            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234],
+            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            "DeviceString":["ScalarString", "string", "DevString", "MyTrue"],
+            }
+
+
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.memberType = 'property'
+            el.name = k
+            dt = el.getData()
+            print dt
+            self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+#            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+
 
 
     ## isValid test

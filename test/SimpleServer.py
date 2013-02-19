@@ -1080,7 +1080,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #
 #	Description: Returns ScalarULong
 #                
-#	argout: DevULong	 ScalarULong
+#	argout: DevULong	ScalarULong
 #------------------------------------------------------------------
 	def GetULong(self):
 		print "In ", self.get_name(), "::GetULong()"
@@ -1126,11 +1126,75 @@ class SimpleServerClass(PyTango.DeviceClass):
 
 	#	Class Properties
 	class_property_list = {
+		'ClassBoolean':
+			[PyTango.DevBoolean,
+			"classBoolean",
+			[ True ] ],
+		'ClassShort':
+			[PyTango.DevShort,
+			"ClassShort",
+			[ 1 ] ],
+		'ClassLong':
+			[PyTango.DevLong,
+			"ClassLong",
+			[ -123555 ] ],
+		'ClassFloat':
+			[PyTango.DevFloat,
+			"ClassFloat",
+			[ 12.345 ] ],
+		'ClassDouble':
+			[PyTango.DevDouble,
+			"ClassDouble",
+			[ 1.23445 ] ],
+		'ClassUShort':
+			[PyTango.DevUShort,
+			"ClassUShort",
+			[ 1 ] ],
+		'ClassULong':
+			[PyTango.DevULong,
+			"ClassULong",
+			[ 12343 ] ],
+		'ClassString':
+			[PyTango.DevString,
+			"ClassString",
+			[ "My ClassString" ] ],
 		}
 
 
 	#	Device Properties
 	device_property_list = {
+		'DeviceBoolean':
+			[PyTango.DevBoolean,
+			"DeviceBoolean",
+			[ False ] ],
+		'DeviceShort':
+			[PyTango.DevShort,
+			"DeviceShort",
+			[ 12 ] ],
+		'DeviceLong':
+			[PyTango.DevLong,
+			"DeviceLong",
+			[ 1234566 ] ],
+		'DeviceFloat':
+			[PyTango.DevFloat,
+			"DeviceFloat",
+			[ 12.4345 ] ],
+		'DeviceDouble':
+			[PyTango.DevDouble,
+			"DeviceDouble",
+			[ 3.453456 ] ],
+		'DeviceUShort':
+			[PyTango.DevUShort,
+			"DeviceUShort",
+			[ 1 ] ],
+		'DeviceULong':
+			[PyTango.DevULong,
+			"DeviceULong",
+			[ 23234 ] ],
+		'DeviceString':
+			[PyTango.DevString,
+			"DeviceString",
+			[ "My Sting" ] ],
 		}
 
 
@@ -1159,7 +1223,7 @@ class SimpleServerClass(PyTango.DeviceClass):
 			[PyTango.DevUShort, "ScalarUShort"]],
 		'GetULong':
 			[[PyTango.DevVoid, ""],
-			[PyTango.DevULong, " ScalarULong"]],
+			[PyTango.DevULong, "ScalarULong"]],
 		'GetULong64':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevULong64, "ScalarULong64"]],

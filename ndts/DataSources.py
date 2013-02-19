@@ -194,7 +194,7 @@ class TangoSource(DataSource):
                 plist = proxy.get_property_list('*')
                 if self.name.encode() in plist:
                     da = proxy.get_property(self.name.encode())[self.name.encode()][0]
-                    return {"format":"SCALAR", "value":da, "tangoDType":"DevString", "shape":[1,0]}
+                    return {"format":"SCALAR", "value":str(da), "tangoDType":"DevString", "shape":[1,0]}
             elif self.memberType == "command":
 #                print "calling the command: ", self.name
 		clist = [cm.cmd_name for cm in proxy.command_list_query()]
