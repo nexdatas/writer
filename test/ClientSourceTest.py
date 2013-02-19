@@ -105,14 +105,17 @@ class ClientSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (None,None,None))
 
+        ds = ClientSource()
         ds.name = name                 
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,None,None))
 
+        ds = ClientSource()
         gjson = '{"data":{"myrecord":"1"}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)),None)
         self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,None,json.loads(gjson)))
 
+        ds = ClientSource()
         ljson = '{"data":{"myrecord2":1}}'
         self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
         self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,json.loads(ljson),json.loads(gjson)))
