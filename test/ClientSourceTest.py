@@ -28,6 +28,8 @@ import struct
 import numpy
 from xml.dom import minidom
 import json
+import binascii
+import time
 
 #import pni.io.nx.h5 as nx
 
@@ -35,6 +37,7 @@ import json
 from ndts.DataSources import DataSource
 from ndts.DataSources import ClientSource
 from ndts.Errors import DataSourceSetupError
+from ndts.Types import Converters
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -54,6 +57,16 @@ class ClientSourceTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
+
+
+
 
 
 
@@ -62,6 +75,7 @@ class ClientSourceTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
 
     ## test closer
     # \brief Common tear down
@@ -103,24 +117,28 @@ class ClientSourceTest(unittest.TestCase):
         name = 'myrecord'
         ds = ClientSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (None,None,None))
+        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " 
+                         % (None,None,None))
 
         ds = ClientSource()
         ds.name = name                 
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,None,None))
+        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " 
+                         % (name,None,None))
 
         ds = ClientSource()
         ds.name = name                 
         gjson = '{"data":{"myrecord":"1"}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)),None)
-        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,None,json.loads(gjson)))
+        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " 
+                         % (name,None,json.loads(gjson)))
 
         ds = ClientSource()
         ds.name = name                 
         ljson = '{"data":{"myrecord2":1}}'
         self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
-        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " % (name,json.loads(ljson),json.loads(gjson)))
+        self.assertEqual(ds.__str__(), "Client record %s from JSON: %s or %s " 
+                         % (name,json.loads(ljson),json.loads(gjson)))
 
 
     ## setup test
@@ -145,17 +163,307 @@ class ClientSourceTest(unittest.TestCase):
         self.assertEqual(ds.name ,dname)
 
 
+    ## Data check 
+    # \brief It check the source Data
+    # \param data  tested data
+    # \param format data format
+    # \param value data value
+    # \param ttype data Tango type    
+    # \param shape data shape    
+    def checkData(self, data, format, value, ttype, shape):
+        self.assertEqual(data["format"], format)
+        self.assertEqual(data["tangoDType"], ttype)
+        self.assertEqual(data["shape"], shape)
+        if format == 'SCALAR': 
+            self.assertEqual(data["value"], value)
+        elif format == 'SPECTRUM': 
+            for i in range(len(value)):
+                self.assertEqual(data["value"][i], value[i])
+                
 
-    ## getData test
-    # \brief It tests default settings
-    def test_getData(self):
+
+    def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
 
-        el = ClientSource()
-        self.assertTrue(isinstance(el, object))
-        self.assertEqual(el.getData(), None)
+        name = 'myrecord'
+        name2 = 'myrecord2'
+        ds = ClientSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.getData(), None)
+        ds.name = name     
+        self.assertEqual(ds.getData(), None)
+
+        ds = ClientSource()
+        ds.name = name 
+        gjson = '{"data":{"myrecord":"1"}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+        dt = ds.getData()
+        self.checkData(dt, "SCALAR", "1","DevString",[])        
+
+        ds = ClientSource()
+        ds.name = name2     
+        gjson = '{"data":{"myrecord":"1"}}'
+        ljson = '{"data":{"myrecord2":12}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        dt = ds.getData()
+        self.checkData(dt, "SCALAR", 12,"DevLong64",[])        
+
+        ds = ClientSource()
+        ds.name = name2     
+        gjson = '{}'
+        ljson = '{"data":{"myrecord2":12}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        dt = ds.getData()
+        self.checkData(dt, "SCALAR", 12,"DevLong64",[])        
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_getData_global_scalar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "int":[1243,"SCALAR","DevLong64",[]],
+            "long":[-10000000000000000000000003,"SCALAR","DevLong64",[]],
+            "float":[-1.223e-01,"SCALAR","DevDouble",[]],
+            "str":['My String',"SCALAR","DevString",[]],
+            "unicode":[u'12\xf8\xff\xf4',"SCALAR","DevString",[]],
+            "bool":['true',"SCALAR","DevBoolean",[]],
+            }
+
+        for a in arr:
+            ds = ClientSource()
+            ds.name = a
+            if arr[a][2] == "DevString" :
+                gjson = '{"data":{"%s":"%s"}}' % (a, arr[a][0])
+            else:
+                gjson = '{"data":{"%s":%s}}' % (a, arr[a][0])
+            self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+            dt = ds.getData()
+            if arr[a][2] == "DevBoolean" :
+                self.checkData(dt, arr[a][1], Converters.toBool(arr[a][0]), arr[a][2], arr[a][3])        
+            else:
+                self.checkData(dt, arr[a][1], arr[a][0], arr[a][2], arr[a][3])        
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_local_scalar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "int":[-23243,"SCALAR","DevLong64",[]],
+            "long":[10000023540000000000000003,"SCALAR","DevLong64",[]],
+            "float":[121.223e-01,"SCALAR","DevDouble",[]],
+            "str":['My String 2',"SCALAR","DevString",[]],
+            "unicode":[u'12\xf8\xff\xf4',"SCALAR","DevString",[]],
+            "bool":['true',"SCALAR","DevBoolean",[]],
+            }
+
+        for a in arr:
+            ds = ClientSource()
+            ds.name = a
+            gjson = '{"data":{"myrecord":"1"}}'
+            if arr[a][2] == "DevString" :
+                ljson = '{"data":{"%s":"%s"}}' % (a, arr[a][0])
+            else:
+                ljson = '{"data":{"%s":%s}}' % (a, arr[a][0])
+            self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = ds.getData()
+            if arr[a][2] == "DevBoolean" :
+                self.checkData(dt, arr[a][1], Converters.toBool(arr[a][0]), arr[a][2], arr[a][3])        
+            else:
+                self.checkData(dt, arr[a][1], arr[a][0], arr[a][2], arr[a][3])        
+
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_getData_global_spectrum(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "int":[1243,"SPECTRUM","DevLong64",[]],
+            "long":[-10000000000000000000000003,"SPECTRUM","DevLong64",[]],
+            "float":[-1.223e-01,"SPECTRUM","DevDouble",[]],
+            "str":['My String',"SPECTRUM","DevString",[]],
+            "unicode":["Hello","SPECTRUM","DevString",[]],
+#            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            "bool":['true',"SPECTRUM","DevBoolean",[]],
+            }
+
+        for k in arr:
+
+            if arr[k][2] != "DevBoolean":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                arr[k][0] =  [ arr[k][0]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
+            else:    
+                mlen = [self.__rnd.randint(1, 10)]
+                arr[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+
+            arr[k][3] =  [mlen[0]]
+
+
+            ds = ClientSource()
+            ds.name = k
+            if arr[k][2] == "DevString":
+                gjson = '{"data":{"%s":%s}}' % (k, str(arr[k][0]).replace("'","\""))
+            elif arr[k][2] == "DevBoolean":
+                gjson = '{"data":{"%s":%s}}' % (k, '['+''.join([a + ',' for a in arr[k][0]])[:-1]+"]")
+            else:
+                gjson = '{"data":{"%s":%s}}' % (k, '['+''.join([str(a) + ',' for a in arr[k][0]])[:-1]+"]")
+            self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+            dt = ds.getData()
+            if arr[k][2] == "DevBoolean" :
+                self.checkData(dt, arr[k][1], [Converters.toBool(a) for a in arr[k][0]], arr[k][2], arr[k][3])        
+            else:
+                self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])        
+
+
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_getData_local_spectrum(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "int":[1243,"SPECTRUM","DevLong64",[]],
+            "long":[-10000000000000000000000003,"SPECTRUM","DevLong64",[]],
+            "float":[-1.223e-01,"SPECTRUM","DevDouble",[]],
+            "str":['My String',"SPECTRUM","DevString",[]],
+            "unicode":["Hello","SPECTRUM","DevString",[]],
+#            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            "bool":['true',"SPECTRUM","DevBoolean",[]],
+            }
+
+        for k in arr:
+
+            if arr[k][2] != "DevBoolean":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                arr[k][0] =  [ arr[k][0]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
+            else:    
+                mlen = [self.__rnd.randint(1, 10)]
+                arr[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+
+            arr[k][3] =  [mlen[0]]
+
+
+            ds = ClientSource()
+            ds.name = k
+            if arr[k][2] == "DevString":
+                ljson = '{"data":{"%s":%s}}' % (k, str(arr[k][0]).replace("'","\""))
+            elif arr[k][2] == "DevBoolean":
+                ljson = '{"data":{"%s":%s}}' % (k, '['+''.join([a + ',' for a in arr[k][0]])[:-1]+"]")
+            else:
+                ljson = '{"data":{"%s":%s}}' % (k, '['+''.join([str(a) + ',' for a in arr[k][0]])[:-1]+"]")
+            gjson = '{"data":{"myrecord":"1"}}'
+            self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = ds.getData()
+            if arr[k][2] == "DevBoolean" :
+                self.checkData(dt, arr[k][1], [Converters.toBool(a) for a in arr[k][0]], arr[k][2], arr[k][3])        
+            else:
+                self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])        
+
+
+
+    def test_getData_global_image(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "int":[1243,"IMAGE","DevLong64",[]],
+            "long":[-10000000000000000000000003,"IMAGE","DevLong64",[]],
+            "float":[-1.223e-01,"IMAGE","DevDouble",[]],
+            "str":['My String',"IMAGE","DevString",[]],
+            "unicode":["Hello","IMAGE","DevString",[]],
+#            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
+            "bool":['true',"IMAGE","DevBoolean",[]],
+            }
+
+        for k in arr:
+
+            if arr[k][2] != "DevBoolean":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                arr[k][0] =  [[ arr[k][0]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                if arr[k][2] == 'DevBoolean':
+                    arr[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+            arr[k][3] =  [mlen[0],mlen[1]]
+
+            ds = ClientSource()
+            ds.name = k
+            if arr[k][2] == "DevString":
+                gjson = '{"data":{"%s":%s}}' % (k, str(arr[k][0]).replace("'","\""))
+            elif arr[k][2] == "DevBoolean":
+                gjson = '{"data":{"%s":%s}}' % (k, '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," for row in arr[k][0]])[:-1] +']')
+            else:
+                gjson = '{"data":{"%s":%s}}' % (k, '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," for row in arr[k][0]])[:-1] +']')
+            self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+            dt = ds.getData()
+            if arr[k][2] == "DevBoolean" :
+                self.checkData(dt, arr[k][1], [Converters.toBool(a) for a in arr[k][0]], arr[k][2], arr[k][3])        
+            else:
+                self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])        
+
+
+
+
+    def test_getData_local_image(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "int":[1243,"IMAGE","DevLong64",[]],
+            "long":[-10000000000000000000000003,"IMAGE","DevLong64",[]],
+            "float":[-1.223e-01,"IMAGE","DevDouble",[]],
+            "str":['My String',"IMAGE","DevString",[]],
+            "unicode":["Hello","IMAGE","DevString",[]],
+#            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
+            "bool":['true',"IMAGE","DevBoolean",[]],
+            }
+
+        for k in arr:
+
+            if arr[k][2] != "DevBoolean":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                arr[k][0] =  [[ arr[k][0]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                if arr[k][2] == 'DevBoolean':
+                    arr[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+            arr[k][3] =  [mlen[0],mlen[1]]
+
+            ds = ClientSource()
+            ds.name = k
+            if arr[k][2] == "DevString":
+                ljson = '{"data":{"%s":%s}}' % (k, str(arr[k][0]).replace("'","\""))
+            elif arr[k][2] == "DevBoolean":
+                ljson = '{"data":{"%s":%s}}' % (k, '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," for row in arr[k][0]])[:-1] +']')
+            else:
+                ljson = '{"data":{"%s":%s}}' % (k, '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," for row in arr[k][0]])[:-1] +']')
+            gjson = '{"data":{"myrecord":"1"}}'
+            self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = ds.getData()
+            if arr[k][2] == "DevBoolean" :
+                self.checkData(dt, arr[k][1], [Converters.toBool(a) for a in arr[k][0]], arr[k][2], arr[k][3])        
+            else:
+                self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])        
+
+
 
 
     ## isValid test
@@ -169,39 +477,6 @@ class ClientSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         self.assertEqual(el.isValid(), True)
 
-
-
-
-    ## getText test
-    # \brief It tests default settings
-    def test_getText_default(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-        el = ClientSource()
-        self.assertTrue(isinstance(el, object))
-        self.myAssertRaise(AttributeError,el._getText, None) 
-
-        dom = minidom.parseString("<tag/>")
-        node = dom.getElementsByTagName("tag")
-        self.assertEqual(el._getText(node[0]).strip(),'') 
-
-        text = "My test \n text"
-        dom = minidom.parseString("<tag> %s</tag>" % text)
-        node = dom.getElementsByTagName("tag")
-        self.assertEqual(el._getText(node[0]).strip(),text) 
-
-
-        text = "My test text"
-        dom = minidom.parseString("<node> %s</node>" % text)
-        node = dom.getElementsByTagName("node")
-        self.assertEqual(el._getText(node[0]).strip(),text) 
-
-
-        dom = minidom.parseString("<node></node>" )
-        node = dom.getElementsByTagName("node")
-        self.assertEqual(el._getText(node[0]).strip(),'') 
 
 
     

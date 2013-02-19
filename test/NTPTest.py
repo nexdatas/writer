@@ -64,7 +64,7 @@ class NTPTest(unittest.TestCase):
 
 
         ## map of Python:Tango types
-        self._pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
+        self._pTt = {"int":"DevLong64","long":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
                      "bool":"DevBoolean"}
 
         ## map of Numpy:Tango types

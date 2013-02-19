@@ -48,7 +48,7 @@ class NTP(object):
 
     ## map of Python:Tango types
 #    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
-    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
+    pTt = {"int":"DevLong64", "long":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
            "bool":"DevBoolean"}
 
     ## map of Numpy:Tango types
