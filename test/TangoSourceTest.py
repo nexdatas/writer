@@ -28,6 +28,10 @@ import struct
 import numpy
 from xml.dom import minidom
 import PyTango 
+import binascii
+import time
+
+
 
 import SimpleServerSetUp
 
@@ -66,6 +70,15 @@ class TangoSourceTest(unittest.TestCase):
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
+
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
+
 
 
 
@@ -355,23 +368,123 @@ class TangoSourceTest(unittest.TestCase):
 
         arr2 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON]
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+           "SpectrumEncoded":[ "string", "DevEncoded", 
+                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
         for k in arr1 :
             self._simps.dp.write_attribute( k, arr1[k][2])
             
-        arr = dict(arr2,**(arr1))
+        arr = dict(arr1,**(arr2))
 
-        print arr
         for k in arr:
             el = TangoSource()
             el.device = 'stestp09/testss/s1r228'
             el.memberType = 'attribute'
             el.name = k
             dt = el.getData()
-            print "WW",k ,arr[k][3] if len(arr[k])>3 else 0
             self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_spectrum(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arr = {
+            "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
+            "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
+            "SpectrumShort":[ "int16", "DevShort", -123, [1,0]],
+            "SpectrumUShort":[ "uint16", "DevUShort", 1234, [1,0]],
+            "SpectrumLong":[ self._bint, "DevLong", -124, [1,0]],
+            "SpectrumULong":[self._buint , "DevULong", 234, [1,0]],
+            "SpectrumLong64":[ "int64", "DevLong64", 234, [1,0]],
+            "SpectrumULong64":[ "uint64", "DevULong64", 23, [1,0]],
+            "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
+            "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
+            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
+            }
+
+
+
+
+        for k in arr :
+
+            if arr[k][1] != "DevBoolean":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                arr[k][2] =  [ arr[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
+            else:    
+                mlen = [self.__rnd.randint(1, 10)]
+                arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
+
+            arr[k][3] =  [mlen[0],0]
+            self._simps.dp.write_attribute( k, arr[k][2])
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.memberType = 'attribute'
+            el.name = k
+            dt = el.getData()
+            self.checkData(dt,"SPECTRUM", arr[k][2],arr[k][1],arr[k][3],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_iamge(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arr = {
+            "ImageBoolean":[ "bool", "DevBoolean", True, [1,0]],
+            "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
+            "ImageShort":[ "int16", "DevShort", -123, [1,0]],
+            "ImageUShort":[ "uint16", "DevUShort", 1234, [1,0]],
+            "ImageLong":[ self._bint, "DevLong", -124, [1,0]],
+            "ImageULong":[self._buint , "DevULong", 234, [1,0]],
+            "ImageLong64":[ "int64", "DevLong64", 234, [1,0]],
+            "ImageULong64":[ "uint64", "DevULong64", 23, [1,0]],
+            "ImageFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
+            "ImageDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
+            "ImageString":[ "string", "DevString", "MyTrue", [1,0]],
+            }
+
+
+
+
+        for k in arr :
+
+
+            mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+            if arr[k][1] != "DevBoolean":
+                arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                if arr[k][1] == 'DevBoolean':
+                    arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+            arr[k][3] =  [mlen[0],mlen[1]]
+            self._simps.dp.write_attribute( k, arr[k][2])
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.memberType = 'attribute'
+            el.name = k
+            dt = el.getData()
+            self.checkData(dt,"IMAGE", arr[k][2],arr[k][1],arr[k][3],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
 
 

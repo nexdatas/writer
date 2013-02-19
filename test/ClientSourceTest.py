@@ -439,12 +439,13 @@ class ClientSourceTest(unittest.TestCase):
             if arr[k][2] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
                 arr[k][0] =  [[ arr[k][0]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+                arr[k][3] =  [mlen[0],mlen[1]]
             else:    
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arr[k][2] == 'DevBoolean':
                     arr[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     
-            arr[k][3] =  [mlen[0],mlen[1]]
+                    arr[k][3] =  [mlen[0],mlen[1]]
 
             ds = ClientSource()
             ds.name = k
