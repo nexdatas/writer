@@ -303,6 +303,56 @@ class DataSourcePoolTest(unittest.TestCase):
         ds = el.get("W0")()
         self.assertTrue(isinstance(ds, W4DS))
 
+
+
+    ## append put test
+    # \brief It tests default settings
+    def test_put(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        el = DataSourcePool()
+        el.pop("CL")
+        ds = el.get("TANGO")()
+        self.assertTrue(isinstance(ds, TangoSource))
+        ds = el.get("DB")()
+        self.assertTrue(isinstance(ds, DBaseSource))
+        ds = el.get("CLIENT")()
+        self.assertTrue(isinstance(ds, ClientSource))
+        self.assertEqual(el.get("CL"),None)
+        el.pop("TANGO")
+        self.assertEqual(el.get("TANGO"),None)
+        ds = el.get("DB")()
+        self.assertTrue(isinstance(ds, DBaseSource))
+        ds = el.get("CLIENT")()
+        self.assertTrue(isinstance(ds, ClientSource))
+        self.assertEqual(el.get("CL"),None)
+
+
+        el = DataSourcePool()
+        el.append(W4DS, "W0")
+        ds = el.get("W0")()
+        self.assertTrue(isinstance(ds, W4DS))
+        ds = el.get("TANGO")()
+        self.assertTrue(isinstance(ds, TangoSource))
+        ds = el.get("DB")()
+        self.assertTrue(isinstance(ds, DBaseSource))
+        ds = el.get("CLIENT")()
+        self.assertTrue(isinstance(ds, ClientSource))
+        self.assertEqual(el.get("CL"),None)
+        el.pop("TANGO")
+        el.pop("W0")
+        self.assertEqual(el.get("TANGO"),None)
+        ds = el.get("DB")()
+        self.assertTrue(isinstance(ds, DBaseSource))
+        ds = el.get("CLIENT")()
+        self.assertTrue(isinstance(ds, ClientSource))
+        self.assertEqual(el.get("CL"),None)
+        self.assertEqual(el.get("W0"),None)
+        
+
+
         
 
 
