@@ -20,6 +20,33 @@
 # the unittest runner
 #
 
+import os 
+import unittest
+
+import TangoDataWriterTest
+import ClientFieldTagWriterTest
+import XMLFieldTagWriterTest
+import TangoFieldTagWriterTest
+import NexusXMLHandlerTest
+import ElementTest
+import FElementTest
+import FElementWithAttrTest
+import EStrategyTest
+import EFieldTest
+import EGroupTest
+import ELinkTest
+import EAttributeTest
+import EFileTest
+import EDocTest
+import ESymbolTest
+import EDimensionsTest
+import EDimTest
+import ConvertersTest
+import NTPTest
+import ErrorsTest
+import DataSourceTest
+import ClientSourceTest
+import DBaseSourceTest
 
 try:
     import PyTango
@@ -62,33 +89,28 @@ except ImportError, e:
     print "PGSQL not available: %s" % e
 except:
     print "PGSQL not available"
-    
-import unittest
 
-import TangoDataWriterTest
-import ClientFieldTagWriterTest
-import XMLFieldTagWriterTest
-import TangoFieldTagWriterTest
-import NexusXMLHandlerTest
-import ElementTest
-import FElementTest
-import FElementWithAttrTest
-import EStrategyTest
-import EFieldTest
-import EGroupTest
-import ELinkTest
-import EAttributeTest
-import EFileTest
-import EDocTest
-import ESymbolTest
-import EDimensionsTest
-import EDimTest
-import ConvertersTest
-import NTPTest
-import ErrorsTest
-import DataSourceTest
-import ClientSourceTest
-import DBaseSourceTest
+
+
+try:
+    import cx_Oracle
+    ## pwd
+    passwd = open('%s/pwd' % os.path.dirname(ElementTest.__file__)).read()[:-1]
+
+    ## connection arguments to ORACLE DB
+    args = {}
+    args["dsn"] = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+    args["user"] = "read"
+    args["password"] = passwd
+    ## inscance of cx_Oracle
+    ordb = cx_Oracle.connect(**args)
+    ordb.close()
+    DB_AVAILABLE.append("ORACLE")
+except ImportError, e:
+    print "ORACLE not available: %s" % e
+except:
+    print "ORACLE not available"
+    
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -96,6 +118,9 @@ if "MYSQL" in DB_AVAILABLE:
 
 if "PGSQL" in DB_AVAILABLE:
     import PGSQLSourceTest
+
+if "ORACLE" in DB_AVAILABLE:
+    import ORACLESourceTest
 
 if PYTANGO_AVAILABLE:
     import TangoDataServerTest
@@ -200,6 +225,10 @@ def main():
     if "PGSQL" in DB_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(PGSQLSourceTest) )
+
+    if "ORACLE" in DB_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ORACLESourceTest) )
 
     if PYTANGO_AVAILABLE:
         suite.addTests(

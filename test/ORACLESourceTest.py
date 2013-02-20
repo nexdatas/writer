@@ -30,9 +30,10 @@ from xml.dom import minidom
 import json
 import binascii
 import time
+import Checkers
 
 #import pni.io.nx.h5 as nx
-import MySQLdb
+import cx_Oracle
 
 from ndts.DataSources import DataSource
 from ndts.DataSources import DBaseSource
@@ -44,7 +45,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class MYSQLSourceTest(unittest.TestCase):
+class ORACLESourceTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -57,9 +58,11 @@ class MYSQLSourceTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-        self.dbtype = "MYSQL"
-        self.dbname = "tango"
-        self.mycnf  = '/etc/my.cnf'
+        self.dsn = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+
+        self.user = "read"
+        path = os.path.dirname(Checkers.__file__)
+        self.passwd = open('%s/pwd' % path).read()[:-1]
 
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
@@ -69,6 +72,7 @@ class MYSQLSourceTest(unittest.TestCase):
          
         self.__rnd = random.Random(self.__seed)
 
+        self.dbtype = 'ORACLE'
 
         self._mydb = None
 
@@ -80,12 +84,13 @@ class MYSQLSourceTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."       
-        ## connection arguments to MYSQL DB
+        ## connection arguments to ORACLE DB
         args = {}
-        args["db"] = 'tango'
-        args["host"] = 'localhost'
-        args["read_default_file"] = '/etc/my.cnf'
-        self._mydb = MySQLdb.connect(**args)
+        args["user"] = self.user
+        args["dsn"] = self.dsn
+        args["password"] = self.passwd
+        ## inscance of cx_Oracle
+        self._mydb = cx_Oracle.connect(**args)
         print "SEED =", self.__seed 
 
     ## test closer
@@ -141,12 +146,11 @@ class MYSQLSourceTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
 
-        query = "select pid from devices;"
-        query2 = "SELECT pid FROM device limit 1"
+        query = 'select * from (select IDENT from telefonbuch) where ROWNUM <= 1'
         format = "SPECTRUM"
         
         cursor = self._mydb.cursor()
-        cursor.execute(query2)
+        cursor.execute(query)
         scalar = cursor.fetchone()[0]
         cursor.close()
 
@@ -162,23 +166,26 @@ class MYSQLSourceTest(unittest.TestCase):
 
         ds = DBaseSource()
         ds.dbtype = self.dbtype
-        self.myAssertRaise(TypeError, ds.getData)
+#        dt = ds.getData()
+        self.myAssertRaise(cx_Oracle.DatabaseError, ds.getData)
 
 
         ds = DBaseSource()
         ds.dbtype = self.dbtype
         ds.query = query
-        self.myAssertRaise(MySQLdb.OperationalError, ds.getData)
+        self.myAssertRaise(cx_Oracle.DatabaseError, ds.getData)
 
 
         ds = DBaseSource()
         ds.dbtype = self.dbtype
-        ds.query = query2
+        ds.user = self.user
+        ds.passwd = self.passwd
+        ds.query = query
         ds.format = format
-        ds.dbname = self.dbname
+        ds.dsn = self.dsn
         dt = ds.getData()
 
-        self.checkData(dt,'SPECTRUM',[long(scalar)], 'DevLong64',[1,0])
+        self.checkData(dt,'SPECTRUM',[scalar], 'DevLong64',[1,0])
         
 
     ## setup test
@@ -189,14 +196,18 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
         arr = {
-            "int":["SELECT pid FROM device limit 1","SCALAR","DevLong64",[1,0]],
-            "long":["SELECT pid FROM device limit 1","SCALAR","DevLong64",[1,0]],
-            "float":["SELECT pid FROM device limit 1","SCALAR","DevLong64",[1,0]],
-#            "float":["SELECT pid FROM device limit 1","SCALAR","DevDouble",[1,0]],
-            "str":["SELECT name FROM device limit 1","SCALAR","DevString",[1,0]],
-            "unicode":["SELECT name FROM device limit 1","SCALAR","DevString",[1,0]],
-#            "bool":["SELECT exported FROM device limit 1","SCALAR","DevBoolean",[1,0]],
-            "bool":["SELECT exported FROM device limit 1","SCALAR","DevLong64",[1,0]],
+            "int":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SCALAR","DevLong64",[1,0]],
+            "long":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SCALAR","DevLong64",[1,0]],
+            "float":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SCALAR","DevLong64",[1,0]],
+            "str":['select NAME from telefonbuch where ROWNUM <= 1',
+                   "SCALAR","DevString",[1,0]],
+            "unicode":['select NAME from telefonbuch where ROWNUM <= 1',
+                   "SCALAR","DevString",[1,0]],
+            "bool":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SCALAR","DevLong64",[1,0]],
             }
 
         for a in arr:
@@ -206,12 +217,13 @@ class MYSQLSourceTest(unittest.TestCase):
             cursor.close()
 
 
-
             ds = DBaseSource()
             ds.query = arr[a][0]
             ds.dbtype = self.dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.user = self.user
+            ds.passwd = self.passwd
+            ds.dsn = self.dsn
             dt = ds.getData()
 
 #            print a, value, dt,arr[a][0]
@@ -225,17 +237,21 @@ class MYSQLSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-
         arr = {
-            "int":["SELECT pid FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
-            "long":["SELECT pid FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
-            "float":["SELECT pid FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
-#            "float":["SELECT pid FROM device limit 1","SPECTRUM","DevDouble",[1,0]],
-            "str":["SELECT name FROM device limit 1","SPECTRUM","DevString",[1,0]],
-            "unicode":["SELECT name FROM device limit 1","SPECTRUM","DevString",[1,0]],
-#            "bool":["SELECT exported FROM device limit 1","SPECTRUM","DevBoolean",[1,0]],
-            "bool":["SELECT exported FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
+            "int":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "long":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "float":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "str":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "unicode":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "bool":['select IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
             }
+
 
         for a in arr:
             cursor = self._mydb.cursor()
@@ -250,7 +266,9 @@ class MYSQLSourceTest(unittest.TestCase):
             ds.query = arr[a][0]
             ds.dbtype = self.dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.user = self.user
+            ds.passwd = self.passwd
+            ds.dsn = self.dsn
             dt = ds.getData()
 
 #            print a, value, dt,arr[a][0]
@@ -266,14 +284,20 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
         arr = {
-            "int":["SELECT pid,exported FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
-            "long":["SELECT pid,exported FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
-            "float":["SELECT pid,name FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
-#            "float":["SELECT pid,exported FROM device limit 1","SPECTRUM","DevDouble",[1,0]],
-            "str":["SELECT name,name FROM device limit 1","SPECTRUM","DevString",[1,0]],
-            "unicode":["SELECT name,pid FROM device limit 1","SPECTRUM","DevString",[1,0]],
-#            "bool":["SELECT exported,pid FROM device limit 1","SPECTRUM","DevBoolean",[1,0]],
-            "bool":["SELECT exported,pid FROM device limit 1","SPECTRUM","DevLong64",[1,0]],
+            "int":['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "long":['select IDENT,NAME from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "float":['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "str":['select NAME,VNAME from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevString",[1,0]],
+            "str":['select NAME,VNAME from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevString",[1,0]],
+            "unicode":['select NAME,IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevString",[1,0]],
+            "bool":['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
+                   "SPECTRUM","DevLong64",[1,0]],
             }
 
         for a in arr:
@@ -289,8 +313,11 @@ class MYSQLSourceTest(unittest.TestCase):
             ds.query = arr[a][0]
             ds.dbtype = self.dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.user = self.user
+            ds.passwd = self.passwd
+            ds.dsn = self.dsn
             dt = ds.getData()
+
 
             self.checkData(dt, arr[a][1], list(el for el in value[0]), arr[a][2], arr[a][3])        
 
@@ -301,17 +328,21 @@ class MYSQLSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-
         arr = {
-            "int":["SELECT pid FROM device limit 4","SPECTRUM","DevLong64",[1,0]],
-            "long":["SELECT pid FROM device limit 4","SPECTRUM","DevLong64",[1,0]],
-            "float":["SELECT pid FROM device limit 4","SPECTRUM","DevLong64",[1,0]],
-#            "float":["SELECT pid FROM device limit 4","SPECTRUM","DevDouble",[1,0]],
-            "str":["SELECT name FROM device limit 4","SPECTRUM","DevString",[1,0]],
-            "unicode":["SELECT name FROM device limit 4","SPECTRUM","DevString",[1,0]],
-#            "bool":["SELECT exported FROM device limit 4","SPECTRUM","DevBoolean",[1,0]],
-            "bool":["SELECT exported FROM device limit 4","SPECTRUM","DevLong64",[1,0]],
+            "int":['select IDENT from telefonbuch where ROWNUM <= 5',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "long":['select IDENT from telefonbuch where ROWNUM <= 5',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "float":['select IDENT from telefonbuch where ROWNUM <= 5',
+                   "SPECTRUM","DevLong64",[1,0]],
+            "str":['select NAME from telefonbuch where ROWNUM <= 5',
+                   "SPECTRUM","DevString",[1,0]],
+            "unicode":['select NAME from telefonbuch where ROWNUM <= 5',
+                   "SPECTRUM","DevString",[1,0]],
+            "bool":['select IDENT from telefonbuch where ROWNUM <= 5',
+                   "SPECTRUM","DevLong64",[1,0]],
             }
+
 
         for a in arr:
             cursor = self._mydb.cursor()
@@ -326,7 +357,9 @@ class MYSQLSourceTest(unittest.TestCase):
             ds.query = arr[a][0]
             ds.dbtype = self.dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.user = self.user
+            ds.passwd = self.passwd
+            ds.dsn = self.dsn
             dt = ds.getData()
 
             
@@ -345,15 +378,20 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
         arr = {
-            "int":["SELECT pid FROM device limit 4","IMAGE","DevLong64",[1,0]],
-            "long":["SELECT pid FROM device limit 4","IMAGE","DevLong64",[1,0]],
-            "float":["SELECT pid FROM device limit 4","IMAGE","DevLong64",[1,0]],
-#            "float":["SELECT pid FROM device limit 4","IMAGE","DevDouble",[1,0]],
-            "str":["SELECT name FROM device limit 4","IMAGE","DevString",[1,0]],
-            "unicode":["SELECT name FROM device limit 4","IMAGE","DevString",[1,0]],
-#            "bool":["SELECT exported FROM device limit 4","IMAGE","DevBoolean",[1,0]],
-            "bool":["SELECT exported FROM device limit 4","IMAGE","DevLong64",[1,0]],
+            "int":['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
+                   "IMAGE","DevLong64",[1,0]],
+            "long":['select IDENT,NAME from telefonbuch where ROWNUM <= 1',
+                   "IMAGE","DevLong64",[1,0]],
+            "float":['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
+                   "IMAGE","DevLong64",[1,0]],
+            "str":['select NAME,VNAME from telefonbuch where ROWNUM <= 1',
+                   "IMAGE","DevString",[1,0]],
+            "unicode":['select NAME,IDENT from telefonbuch where ROWNUM <= 1',
+                   "IMAGE","DevString",[1,0]],
+            "bool":['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
+                   "IMAGE","DevLong64",[1,0]],
             }
+
 
         for a in arr:
             cursor = self._mydb.cursor()
@@ -368,7 +406,9 @@ class MYSQLSourceTest(unittest.TestCase):
             ds.query = arr[a][0]
             ds.dbtype = self.dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.user = self.user
+            ds.passwd = self.passwd
+            ds.dsn = self.dsn
             dt = ds.getData()
 
             

@@ -90,6 +90,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
+        self._mydb.close()
 
     ## Exception tester
     # \param exception expected exception
