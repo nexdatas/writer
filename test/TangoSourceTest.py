@@ -183,13 +183,16 @@ class TangoSourceTest(unittest.TestCase):
                 else:
                     self.assertEqual(data["value"], value)
         elif format == 'SPECTRUM': 
+            self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
                 if error:
                     self.assertTrue(abs(data["value"][i]- value[i])<= error)
                 else:
                     self.assertEqual(data["value"][i], value[i])
         else:
+            self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
+                self.assertEqual(len(data["value"][i]), len(value[i]))
                 for j in range(len(value[i])):
                     if error:
                         self.assertTrue(abs(data["value"][i][j]-value[i][j])<=error)

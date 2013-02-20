@@ -351,7 +351,7 @@ class DBaseSource(DataSource):
             if not self.format or self.format == 'SCALAR':
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
-                dh = {"format":"SCALAR", "value":str(data[0]), "tangoDType":"DevString", "shape":[1,0]}
+                dh = {"format":"SCALAR", "value":data[0], "tangoDType":(NTP.pTt[type(data[0]).__name__]), "shape":[1,0]}
 #                print "SCALAR",dh
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
@@ -360,12 +360,12 @@ class DBaseSource(DataSource):
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
-                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":"DevString", "shape":[len(ldata),0]}
+                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":(NTP.pTt[type(ldata[0]).__name__]), "shape":[len(ldata),0]}
             else:
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
                 ldata = list(list(el) for el in data)
-                dh = {"format":"IMAGE", "value":ldata, "tangoDType":"DevString", "shape":[len(ldata), len(ldata[0])]}
+                dh = {"format":"IMAGE", "value":ldata, "tangoDType":NTP.pTt[type(ldata[0][0]).__name__], "shape":[len(ldata), len(ldata[0])]}
             cursor.close()
             db.close()
         return dh

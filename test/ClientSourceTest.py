@@ -177,10 +177,13 @@ class ClientSourceTest(unittest.TestCase):
         if format == 'SCALAR': 
             self.assertEqual(data["value"], value)
         elif format == 'SPECTRUM': 
+            self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
                 self.assertEqual(data["value"][i], value[i])
         else: 
+            self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
+                self.assertEqual(len(data["value"][i]), len(value[i]))
                 for j in range(len(value[i])):
                     self.assertEqual(data["value"][i][j], value[i][j])
                 
