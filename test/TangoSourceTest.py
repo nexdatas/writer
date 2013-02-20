@@ -232,9 +232,9 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.memberType, atype)
-        self.assertEqual(ds.hostname, '')
-        self.assertEqual(ds.port, '')
-        self.assertEqual(ds.encoding, '')
+        self.assertEqual(ds.hostname, None)
+        self.assertEqual(ds.port, None)
+        self.assertEqual(ds.encoding, None)
 
 
         ds.device = None
@@ -246,9 +246,9 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.memberType, ctype)
-        self.assertEqual(ds.hostname, '')
-        self.assertEqual(ds.port, '')
-        self.assertEqual(ds.encoding, '')
+        self.assertEqual(ds.hostname, None)
+        self.assertEqual(ds.port, None)
+        self.assertEqual(ds.encoding, None)
 
 
 
@@ -261,9 +261,9 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.memberType, atype)
-        self.assertEqual(ds.hostname, '')
-        self.assertEqual(ds.port, '')
-        self.assertEqual(ds.encoding, '')
+        self.assertEqual(ds.hostname, None)
+        self.assertEqual(ds.port, None)
+        self.assertEqual(ds.encoding, None)
 
 
         ds.device = None
@@ -276,8 +276,8 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.memberType, atype)
         self.assertEqual(ds.hostname, host)
-        self.assertEqual(ds.port, '')
-        self.assertEqual(ds.encoding, '')
+        self.assertEqual(ds.port, None)
+        self.assertEqual(ds.encoding, None)
 
 
 
@@ -295,7 +295,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.memberType, atype)
         self.assertEqual(ds.hostname, host)
         self.assertEqual(ds.port, port)
-        self.assertEqual(ds.encoding, '')
+        self.assertEqual(ds.encoding, None)
 
 
         ds.device = None
@@ -310,8 +310,8 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.memberType, atype)
-        self.assertEqual(ds.hostname, '')
-        self.assertEqual(ds.port, '')
+        self.assertEqual(ds.hostname, None)
+        self.assertEqual(ds.port, None)
         self.assertEqual(ds.encoding, encoding)
 
 

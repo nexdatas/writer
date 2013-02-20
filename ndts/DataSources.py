@@ -138,18 +138,18 @@ class TangoSource(DataSource):
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec)> 0:
-            self.name = rec[0].getAttribute("name")
+            self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
         if not self.name:
             raise  DataSourceSetupError, \
                 "Tango record name not defined: %s" % xml
 
         dv = dom.getElementsByTagName("device")
         if dv and len(dv)> 0:
-            self.device = dv[0].getAttribute("name")
-            self.hostname = dv[0].getAttribute("hostname")
-            self.port = dv[0].getAttribute("port")
-            self.encoding = dv[0].getAttribute("encoding")
-            self.memberType = dv[0].getAttribute("member")
+            self.device = dv[0].getAttribute("name") if dv[0].hasAttribute("name") else None
+            self.hostname = dv[0].getAttribute("hostname") if dv[0].hasAttribute("hostname") else None
+            self.port = dv[0].getAttribute("port") if dv[0].hasAttribute("port") else None
+            self.encoding = dv[0].getAttribute("encoding") if dv[0].hasAttribute("encoding") else None
+            self.memberType = dv[0].getAttribute("member") if dv[0].hasAttribute("member") else None
             if not self.memberType or self.memberType not in ["attribute", "command", "property"]:
                 self.memberType = "attribute" 
 #            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.memberType, self.encoding
@@ -255,7 +255,7 @@ class DBaseSource(DataSource):
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query)> 0:
-            self.format = query[0].getAttribute("format")
+            self.format = query[0].getAttribute("format") if query[0].hasAttribute("format") else None
 #            print "format:", self.format
             self.query = self._getText(query[0])
             
@@ -265,16 +265,16 @@ class DBaseSource(DataSource):
 
         db = dom.getElementsByTagName("database")
         if db and len(db)> 0:
-            self.dbname = db[0].getAttribute("dbname")
-            self.dbtype = db[0].getAttribute("dbtype")
-            self.user = db[0].getAttribute("user") 
-            self.passwd = db[0].getAttribute("passwd")
-            self.mode = db[0].getAttribute("mode")
-            mycnf = db[0].getAttribute("mycnf")
+            self.dbname = db[0].getAttribute("dbname") if db[0].hasAttribute("dbname") else None
+            self.dbtype = db[0].getAttribute("dbtype") if db[0].hasAttribute("dbtype") else None
+            self.user = db[0].getAttribute("user")  if db[0].hasAttribute("user") else None
+            self.passwd = db[0].getAttribute("passwd") if db[0].hasAttribute("passwd") else None
+            self.mode = db[0].getAttribute("mode") if db[0].hasAttribute("mode") else None
+            mycnf = db[0].getAttribute("mycnf") if db[0].hasAttribute("mycnf") else None
             if mycnf:
                 self.mycnf
-            self.hostname = db[0].getAttribute("hostname")
-            self.port = db[0].getAttribute("port")
+            self.hostname = db[0].getAttribute("hostname") if db[0].hasAttribute("hostname") else None
+            self.port = db[0].getAttribute("port") if db[0].hasAttribute("port") else None
             self.dsn = self._getText(db[0])
             
 #            print "DATABASE:", self.dbname, self.dbtype, self.user,self.passwd , self.hostname, self.port, self.mode, self.mycnf,self.dsn
@@ -392,7 +392,7 @@ class ClientSource(DataSource):
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec)> 0:
-            self.name = rec[0].getAttribute("name")
+            self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
 #            print "NAME:", self.name
         if not self.name:
             raise  DataSourceSetupError, \
