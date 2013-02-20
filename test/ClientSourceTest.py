@@ -179,6 +179,10 @@ class ClientSourceTest(unittest.TestCase):
         elif format == 'SPECTRUM': 
             for i in range(len(value)):
                 self.assertEqual(data["value"][i], value[i])
+        else: 
+            for i in range(len(value)):
+                for j in range(len(value[i])):
+                    self.assertEqual(data["value"][i][j], value[i][j])
                 
 
 
@@ -414,7 +418,7 @@ class ClientSourceTest(unittest.TestCase):
             self.assertEqual(ds.setJSON(json.loads(gjson)),None)
             dt = ds.getData()
             if arr[k][2] == "DevBoolean" :
-                self.checkData(dt, arr[k][1], [Converters.toBool(a) for a in arr[k][0]], arr[k][2], arr[k][3])        
+                self.checkData(dt, arr[k][1], [[Converters.toBool(a) for a in row ]for row in arr[k][0]], arr[k][2], arr[k][3])        
             else:
                 self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])        
 
@@ -459,7 +463,7 @@ class ClientSourceTest(unittest.TestCase):
             self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = ds.getData()
             if arr[k][2] == "DevBoolean" :
-                self.checkData(dt, arr[k][1], [Converters.toBool(a) for a in arr[k][0]], arr[k][2], arr[k][3])        
+                self.checkData(dt, arr[k][1], [[Converters.toBool(a) for a in row ]for row in arr[k][0]], arr[k][2], arr[k][3])        
             else:
                 self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])        
 

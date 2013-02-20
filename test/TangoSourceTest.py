@@ -188,6 +188,13 @@ class TangoSourceTest(unittest.TestCase):
                     self.assertTrue(abs(data["value"][i]- value[i])<= error)
                 else:
                     self.assertEqual(data["value"][i], value[i])
+        else:
+            for i in range(len(value)):
+                for j in range(len(value[i])):
+                    if error:
+                        self.assertTrue(abs(data["value"][i][j]-value[i][j])<=error)
+                    else:
+                        self.assertEqual(data["value"][i][j], value[i][j])
                 
 
     ## setup test

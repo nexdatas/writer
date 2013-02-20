@@ -298,7 +298,6 @@ class DBaseSource(DataSource):
             args["host"] = self.hostname.encode()
         if self.port:
             args["port"] = int(self.port)
-            
         return MySQLdb.connect(**args)
 
     ## connects to PGSQL database    
