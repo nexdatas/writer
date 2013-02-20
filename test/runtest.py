@@ -33,7 +33,6 @@ except ImportError, e:
 DB_AVAILABLE = []
     
 try:
-    import MySQLdb
     import MySQLdb    
     ## connection arguments to MYSQL DB
     args = {}
@@ -75,6 +74,7 @@ import NTPTest
 import ErrorsTest
 import DataSourceTest
 import ClientSourceTest
+import DBaseSourceTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
@@ -167,6 +167,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DBaseSourceTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
