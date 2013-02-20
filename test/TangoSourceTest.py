@@ -136,27 +136,27 @@ class TangoSourceTest(unittest.TestCase):
         mtype = 'attribute'
         ds = TangoSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), "Tango Device %s : %s (%s)" % (None, None, None))
+        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (None, None, None))
 
         ds.device = device
         ds.name = None
         ds.memberType = None
-        self.assertEqual(ds.__str__(), "Tango Device %s : %s (%s)" % (device, None, None))
+        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (device, None, None))
 
         ds.device = None
         ds.name = dname
         ds.memberType = None
-        self.assertEqual(ds.__str__(), "Tango Device %s : %s (%s)" % (None, dname, None))
+        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (None, dname, None))
 
         ds.device = None
         ds.name = None
         ds.memberType = mtype
-        self.assertEqual(ds.__str__(), "Tango Device %s : %s (%s)" % (None, None, mtype))
+        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (None, None, mtype))
 
         ds.device = device
         ds.name = dname
         ds.memberType = mtype
-        self.assertEqual(ds.__str__(), "Tango Device %s : %s (%s)" % (device, dname, mtype))
+        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (device, dname, mtype))
 
 
 
