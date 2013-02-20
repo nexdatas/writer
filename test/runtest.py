@@ -47,8 +47,22 @@ except ImportError, e:
     print "MYSQL not available: %s" % e
 except:
     print "MYSQL not available"
-    
 
+
+try:
+    import psycopg2
+    ## connection arguments to PGSQL DB
+    args = {}
+    args["database"] = 'mydb'
+    ## inscance of psycog2
+    pgdb = psycopg2.connect(**args)
+    pgdb.close()
+    DB_AVAILABLE.append("PGSQL")
+except ImportError, e:
+    print "PGSQL not available: %s" % e
+except:
+    print "PGSQL not available"
+    
 import unittest
 
 import TangoDataWriterTest
@@ -78,6 +92,10 @@ import DBaseSourceTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
+    import MYSQLSourceTest
+
+if "PGSQL" in DB_AVAILABLE:
+    import PGSQLSourceTest
 
 if PYTANGO_AVAILABLE:
     import TangoDataServerTest
@@ -175,6 +193,14 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
 
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(MYSQLSourceTest) )
+
+
+    if "PGSQL" in DB_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(PGSQLSourceTest) )
+
     if PYTANGO_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
@@ -197,6 +223,7 @@ def main():
         if "MYSQL" in DB_AVAILABLE:
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest) )
+
 
     
     ## test runner
