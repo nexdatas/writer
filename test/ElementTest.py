@@ -25,9 +25,15 @@ import sys
 import subprocess
 import random
 import struct
-import pni.io.nx.h5 as nx
+
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
+from ndts.Element import Element
+
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione
@@ -35,10 +41,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 
-from  xml.sax import SAXParseException
-
-
-from ndts.Element import Element
 
 ## test fixture
 class ElementTest(unittest.TestCase):

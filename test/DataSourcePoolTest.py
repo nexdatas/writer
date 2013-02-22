@@ -29,9 +29,6 @@ import json
 import numpy
 from xml.dom import minidom
 
-
-#import pni.io.nx.h5 as nx
-
 import ndts
 
 from ndts.DataSourcePool import DataSourcePool

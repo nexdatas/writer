@@ -28,8 +28,6 @@ import struct
 import numpy
 
 
-#import pni.io.nx.h5 as nx
-
 
 from ndts.Types import Converters
 

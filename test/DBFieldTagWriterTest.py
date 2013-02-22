@@ -32,12 +32,19 @@ import time
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+## True if pniio installed
+PNIIO = False
+try:
+    from pni.io.nx.h5 import open_file
+    PNIIO = True
+except:
+    from pni.nx.h5 import open_file
 
-from pni.io.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
 from ndts import TangoDataWriter, Types
 from ndts.TangoDataWriter  import TangoDataWriter 
+from ndts.Errors  import ThreadError
 from Checkers import Checker
 
 import MySQLdb
@@ -96,6 +103,20 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
         self._mydb.close()
+
+
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
 
     ## opens writer
     # \param fname file name     
@@ -517,30 +538,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
-        <field  units="" name="init_pid_scalar_int64" type="NX_INT64">
-          <dimensions rank="1"/>
-          <strategy mode="INIT"/>
-          <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SPECTRUM">
-              SELECT pid FROM device limit 1
-            </query>
-          </datasource>
-        </field>
 
-
-        <field  units="" name="final_pid_scalar_float32" type="NX_FLOAT32">
-          <dimensions rank="1">
-            <dim index="1" value="1"/>
-          </dimensions>
-          <strategy mode="FINAL"/>
-          <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SPECTRUM">
-              SELECT pid FROM device limit 1
-            </query>
-          </datasource>
-        </field>
 
 
         <field  units="" name="init_pid_spectrum_int32" type="NX_INT32">
@@ -658,7 +656,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 25)
+        det = self._sc.checkFieldTree(f, fname , 23)
         self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [[str(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
@@ -671,10 +669,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[float(scalar)] ]*3)
         self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
                                        [[str(sub[0]) for sub in name]]*3)
-        self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64", 
-                                          [int(scalar)] )
-        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
-                                          [float(scalar)] )
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
                                           [sub[0] for sub in spectrum ] )
         self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
@@ -698,6 +692,101 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         f.close()
         os.remove(fname)
+
+
+
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_dbSpectrum_single(self):
+        print "Run: %s.test_dbSpectrum() " % self.__class__.__name__
+        fname= '%s/dbspectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+
+
+
+        <field  units="" name="init_pid_scalar_int64" type="NX_INT64">
+          <dimensions rank="1"/>
+          <strategy mode="INIT"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="" name="final_pid_scalar_float32" type="NX_FLOAT32">
+          <dimensions rank="1">
+            <dim index="1" value="1"/>
+          </dimensions>
+          <strategy mode="FINAL"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT pid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 1")
+        scalar = str(cursor.fetchone()[0])
+        cursor.close()
+
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 6")
+        spectrum = cursor.fetchall()
+        cursor.close()
+
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT name FROM device limit 6")
+        name = cursor.fetchall()
+        cursor.close()
+        
+        if PNIIO:
+            tdw = self.openWriter(fname, xml)
+            
+            for c in range(3):
+                self.record(tdw,'{ }')
+                
+            self.closeWriter(tdw)
+        
+        # check the created file
+                
+            f = open_file(fname,readonly=True)
+            det = self._sc.checkFieldTree(f, fname , 2)
+            self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64", 
+                                              [int(scalar)] )
+            self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
+                                              [float(scalar)] )
+            f.close()
+        else:
+            if self.__class__.__name__ == "DBFieldTagWriterTest":
+                self.myAssertRaise(ThreadError,self.openWriter,fname, xml)
+            else:
+                import PyTango
+                self.myAssertRaise(PyTango.DevFailed,self.openWriter,fname, xml)
+        os.remove(fname)
+
+
+
 
 
 

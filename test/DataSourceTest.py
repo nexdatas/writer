@@ -29,9 +29,6 @@ import numpy
 from xml.dom import minidom
 
 
-#import pni.io.nx.h5 as nx
-
-
 from ndts.DataSources import DataSource
 
 

@@ -26,7 +26,13 @@ import subprocess
 
 import PyTango
 import time
-from pni.io.nx.h5 import open_file
+
+try:
+    from pni.io.nx.h5 import open_file
+except:
+    from pni.nx.h5 import open_file
+
+
 from  xml.sax import SAXParseException
 import struct
 

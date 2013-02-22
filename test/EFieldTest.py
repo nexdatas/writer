@@ -30,7 +30,13 @@ import binascii
 import time
 
 
-import pni.io.nx.h5 as nx
+## True if pniio installed
+PNIIO = False
+try:
+    import pni.io.nx.h5 as nx
+    PNIIO = True
+except:
+    import pni.nx.h5 as nx
 
 from TestDataSource import TestDataSource 
 
@@ -2456,7 +2462,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
-
+        
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -2482,6 +2488,8 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
+
+        supp = ["string", "datetime", "iso8601"]
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile( {}, None, self._nxFile)
@@ -2548,22 +2556,24 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-#            print "nm",k
-            self.assertEqual(el[k].error, None)
-            if stt != 'POSTRUN':
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][3] if len(attrs[k])> 3 else 0,
-                                                attrs = {"type":attrs[k][1],"units":"m"})
-            else:
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                          attrs[k][1], attrs[k][0], 
-                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
-                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-                                          )
+            if PNIIO or k in supp:
+                self.assertEqual(el[k].error, None)
+                if stt != 'POSTRUN':
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                      attrs[k][1], attrs[k][0],
+                                                      attrs[k][3] if len(attrs[k])> 3 else 0,
+                                                      attrs = {"type":attrs[k][1],"units":"m"})
+                else:
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                      attrs[k][1], attrs[k][0], 
+                                                      attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                                      attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                                      )
             
+            else:
+                self.assertEqual(el[k].error[0], 'WARNING: Data for %s on Test DataSource not found' % k)
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -2788,6 +2798,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
+
             self.assertEqual(el[k].error, None)
             if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
@@ -2971,6 +2982,8 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
+        supp = ["string", "datetime", "iso8601"]
+
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile( {}, None, self._nxFile)
@@ -3036,27 +3049,32 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                        attrs[k][2] if attrs[k][2] else 'string', 
-                                                        attrs[k][1], attrs[k][0][0][0],0 ,
-                                                        attrs = {"type":attrs[k][1],"units":"m"})
-                
-            elif stt != 'POSTRUN':
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][3] if len(attrs[k])> 3 else 0,
-                                                attrs = {"type":attrs[k][1],"units":"m"})
+
+            if PNIIO or k in supp:
+                self.assertEqual(el[k].error, None)
+
+                if  attrs[k][2] == "string" or not  attrs[k][2]:
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleScalarField(self._nxFile, k, 
+                                                    attrs[k][2] if attrs[k][2] else 'string', 
+                                                    attrs[k][1], attrs[k][0][0][0],0 ,
+                                                    attrs = {"type":attrs[k][1],"units":"m"})
+                    
+                elif stt != 'POSTRUN':
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                   attrs[k][1], attrs[k][0],
+                                                   attrs[k][3] if len(attrs[k])> 3 else 0,
+                                                   attrs = {"type":attrs[k][1],"units":"m"})
+                else:
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                   attrs[k][1], attrs[k][0], 
+                                                   attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                                   attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                                   )
             else:
-                self.assertEqual(el[k].grows, None)
-                self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                          attrs[k][1], attrs[k][0], 
-                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
-                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-                                          )
+                self.assertEqual(el[k].error[0], "WARNING: Data for %s on Test DataSource not found" % k)
             
             
         self._nxFile.close()

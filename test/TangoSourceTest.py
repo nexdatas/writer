@@ -36,8 +36,6 @@ import time
 import SimpleServerSetUp
 
 
-#import pni.io.nx.h5 as nx
-
 from ndts.DataSources import DataSource
 from ndts.DataSources import TangoSource
 from ndts.DecoderPool import DecoderPool

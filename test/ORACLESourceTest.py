@@ -32,7 +32,6 @@ import binascii
 import time
 import Checkers
 
-#import pni.io.nx.h5 as nx
 import cx_Oracle
 
 from ndts.DataSources import DataSource

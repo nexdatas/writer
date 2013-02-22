@@ -26,7 +26,7 @@ import subprocess
 import random
 
 import PyTango
-from pni.io.nx.h5 import open_file
+
 from  xml.sax import SAXParseException
 
 from Checkers import Checker

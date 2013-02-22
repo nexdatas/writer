@@ -25,9 +25,13 @@ import sys
 import subprocess
 import random
 import struct
-import pni.io.nx.h5 as nx
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
+
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione

@@ -24,7 +24,10 @@
 from NexusXMLHandler import NexusXMLHandler
 from FetchNameHandler import FetchNameHandler
 
-import pni.io.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 from xml import sax
 

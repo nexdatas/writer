@@ -30,7 +30,10 @@ import binascii
 import time
 
 
-import pni.io.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 from ndts.Element import Element
 from ndts.H5Elements import FElement

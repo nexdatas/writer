@@ -31,7 +31,6 @@ import json
 import binascii
 import time
 
-#import pni.io.nx.h5 as nx
 
 
 from ndts.DataSources import DataSource

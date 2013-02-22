@@ -20,7 +20,14 @@
 # NeXus runnable elements
 
 import sys                                                                       
-import pni.io.nx.h5 as nx
+
+## True if pniio installed
+PNIIO = False
+try:
+    import pni.io.nx.h5 as nx
+    PNIIO = True
+except:
+    import pni.nx.h5 as nx
 
 import numpy 
 
@@ -468,7 +475,10 @@ class EField(FElementWithAttr):
                                         self.h5Object.write(sts[0])
                                         
                                 else:
-                                    self.h5Object.write(sts)
+                                    try:
+                                        self.h5Object.write(sts)
+                                    except:    
+                                        raise Exception("Storing one-dimension single fields not supported by pninx")
                                     
                             else:
                                 self.h5Object.write(sts)
@@ -488,7 +498,11 @@ class EField(FElementWithAttr):
                                 self.h5Object[:,:] = sts
                         else:
 #                            print "DT", self.h5Object.name, self.h5Object.shape, dh.cast(self.h5Object.dtype), type( dh.cast(self.h5Object.dtype))  
-                            self.h5Object.write(dh.cast(self.h5Object.dtype))
+                            try:
+                                self.h5Object.write(dh.cast(self.h5Object.dtype))
+                            except:    
+                                raise Exception("Storing two-dimension single fields not supported by pninx")
+                            
 #                        print "DATA4"
                     else:
                         if str(dh.format).split('.')[-1] == "SCALAR":

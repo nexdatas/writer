@@ -28,7 +28,6 @@ import PyTango
 import binascii
 import time
 
-from pni.io.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
 

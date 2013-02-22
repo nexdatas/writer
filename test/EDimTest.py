@@ -28,7 +28,10 @@ import struct
 import numpy
 
 
-import pni.io.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 
 from ndts.H5Elements import FElement

@@ -30,8 +30,6 @@ import numpy
 from xml.dom import minidom
 
 
-#import pni.io.nx.h5 as nx
-
 from ndts.DataSourceFactory import DataSourceFactory
 from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
 from ndts.DataSourcePool import DataSourcePool

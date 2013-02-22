@@ -34,7 +34,11 @@ import time
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from pni.io.nx.h5 import open_file
+try:
+    from pni.io.nx.h5 import open_file
+except:
+    from pni.nx.h5 import open_file
+
 from  xml.sax import SAXParseException
 
 
