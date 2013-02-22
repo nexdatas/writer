@@ -97,7 +97,8 @@ class UINT32decoder(object):
     ## provides the data shape
     # \returns the data shape if data was loaded
     def shape(self):
-        return [len(self.__data[1])/4,0]
+        if self.__data:
+            return [len(self.__data[1])/4,0]
         
 
 
