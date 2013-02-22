@@ -304,51 +304,6 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='p09/tdw/r228' encoding='UTF8'/></datasource>") )
 
 
-
-    ## constructor test
-    # \brief It tests default settings
-    def test_setDecoders(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-        dname = 'writer'
-        device = 'p09/tdw/r228'
-        ctype = 'command'
-        atype = 'attribute'
-        host = 'haso.desy.de'
-        port = '10000'
-        encoding = 'UTF8'
-
-
-        atts = {"type":"TANGO"}
-        name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
-        gjson = json.loads('{"data":{"myRecord":"1"}}')
-        
-        el = EField(self._fattrs, None )
-        ds = DataSourceFactory(atts, el)
-        self.assertTrue(isinstance(ds, Element))
-        self.assertEqual(ds.tagName, "datasource")
-        self.assertEqual(ds._tagAttrs, atts)
-        self.assertEqual(ds.content, [])
-        self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
-        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
-        self.assertEqual(ds.store(["<datasource type='TANGO'>",
-                                   "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
-                                   "</datasource>"],gjson),None)
-        self.assertEqual(type(ds._last.source),DataSources.TangoSource)
-        self.assertEqual(ds._last.source.name,dname)
-        self.assertEqual(ds._last.source.device,device)
-        self.assertEqual(ds._last.source.encoding,encoding)
-        self.assertEqual(ds._last.source.__str__() , " Tango Device %s : %s (%s)" % (device, dname, atype))
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='p09/tdw/r228' encoding='UTF8'/></datasource>") )
-        dp = DecoderPool()
-        self.assertEqual(ds.setDecoders(dp),None)
-        
-
         
 if __name__ == '__main__':
     unittest.main()

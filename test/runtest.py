@@ -49,6 +49,7 @@ import ClientSourceTest
 import DBaseSourceTest
 import DataSourcePoolTest
 import DataSourceFactoryTest
+import DataSourceDecodersTest
 
 try:
     import PyTango
@@ -243,6 +244,9 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
 
         suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
+
+        suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
 
         suite.addTests(
@@ -256,6 +260,7 @@ def main():
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
+
 
         if "MYSQL" in DB_AVAILABLE:
             suite.addTests(
