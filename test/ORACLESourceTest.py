@@ -58,11 +58,11 @@ class ORACLESourceTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-        self.dsn = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+        self.__dsn = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
 
-        self.user = "read"
+        self.__user = "read"
         path = os.path.dirname(Checkers.__file__)
-        self.passwd = open('%s/pwd' % path).read()[:-1]
+        self.__passwd = open('%s/pwd' % path).read()[:-1]
 
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
@@ -72,7 +72,7 @@ class ORACLESourceTest(unittest.TestCase):
          
         self.__rnd = random.Random(self.__seed)
 
-        self.dbtype = 'ORACLE'
+        self.__dbtype = 'ORACLE'
 
         self._mydb = None
 
@@ -86,9 +86,9 @@ class ORACLESourceTest(unittest.TestCase):
         print "\nsetting up..."       
         ## connection arguments to ORACLE DB
         args = {}
-        args["user"] = self.user
-        args["dsn"] = self.dsn
-        args["password"] = self.passwd
+        args["user"] = self.__user
+        args["dsn"] = self.__dsn
+        args["password"] = self.__passwd
         ## inscance of cx_Oracle
         self._mydb = cx_Oracle.connect(**args)
         print "SEED =", self.__seed 
@@ -165,24 +165,24 @@ class ORACLESourceTest(unittest.TestCase):
         self.myAssertRaise(PackageError, ds.getData)
 
         ds = DBaseSource()
-        ds.dbtype = self.dbtype
+        ds.dbtype = self.__dbtype
 #        dt = ds.getData()
         self.myAssertRaise(cx_Oracle.DatabaseError, ds.getData)
 
 
         ds = DBaseSource()
-        ds.dbtype = self.dbtype
+        ds.dbtype = self.__dbtype
         ds.query = query
         self.myAssertRaise(cx_Oracle.DatabaseError, ds.getData)
 
 
         ds = DBaseSource()
-        ds.dbtype = self.dbtype
-        ds.user = self.user
-        ds.passwd = self.passwd
+        ds.dbtype = self.__dbtype
+        ds.user = self.__user
+        ds.passwd = self.__passwd
         ds.query = query
         ds.format = format
-        ds.dsn = self.dsn
+        ds.dsn = self.__dsn
         dt = ds.getData()
 
         self.checkData(dt,'SPECTRUM',[scalar], 'DevLong64',[1,0])
@@ -219,11 +219,11 @@ class ORACLESourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.user = self.user
-            ds.passwd = self.passwd
-            ds.dsn = self.dsn
+            ds.user = self.__user
+            ds.passwd = self.__passwd
+            ds.dsn = self.__dsn
             dt = ds.getData()
 
 #            print a, value, dt,arr[a][0]
@@ -264,11 +264,11 @@ class ORACLESourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.user = self.user
-            ds.passwd = self.passwd
-            ds.dsn = self.dsn
+            ds.user = self.__user
+            ds.passwd = self.__passwd
+            ds.dsn = self.__dsn
             dt = ds.getData()
 
 #            print a, value, dt,arr[a][0]
@@ -311,11 +311,11 @@ class ORACLESourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.user = self.user
-            ds.passwd = self.passwd
-            ds.dsn = self.dsn
+            ds.user = self.__user
+            ds.passwd = self.__passwd
+            ds.dsn = self.__dsn
             dt = ds.getData()
 
 
@@ -355,11 +355,11 @@ class ORACLESourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.user = self.user
-            ds.passwd = self.passwd
-            ds.dsn = self.dsn
+            ds.user = self.__user
+            ds.passwd = self.__passwd
+            ds.dsn = self.__dsn
             dt = ds.getData()
 
             
@@ -404,11 +404,11 @@ class ORACLESourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.user = self.user
-            ds.passwd = self.passwd
-            ds.dsn = self.dsn
+            ds.user = self.__user
+            ds.passwd = self.__passwd
+            ds.dsn = self.__dsn
             dt = ds.getData()
 
             

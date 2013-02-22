@@ -48,6 +48,7 @@ import DataSourceTest
 import ClientSourceTest
 import DBaseSourceTest
 import DataSourcePoolTest
+import DataSourceFactoryTest
 
 try:
     import PyTango
@@ -217,6 +218,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DataSourcePoolTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceFactoryTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(

@@ -38,9 +38,9 @@ import SimpleServerSetUp
 
 #import pni.io.nx.h5 as nx
 
-
 from ndts.DataSources import DataSource
 from ndts.DataSources import TangoSource
+from ndts.DecoderPool import DecoderPool
 from ndts.Errors import DataSourceSetupError
 
 ## if 64-bit machione
@@ -177,6 +177,10 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(data["format"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
+        if encoding is not None:
+            self.assertEqual(data["encoding"], encoding)
+        if decoders is not None:
+            self.assertEqual(data["decoders"], decoders)
         if format == 'SCALAR': 
                 if error:
                     self.assertTrue(abs(data["value"]- value)<= error)
@@ -377,8 +381,12 @@ class TangoSourceTest(unittest.TestCase):
 
 
         arr2 = {
-           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+           }
+
+
+        arr3 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
            "SpectrumEncoded":[ "string", "DevEncoded", 
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
@@ -395,6 +403,17 @@ class TangoSourceTest(unittest.TestCase):
             el.name = k
             dt = el.getData()
             self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+        for k in arr3:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.memberType = 'attribute'
+            el.name = k
+            el.encoding = arr3[k][2][0]
+            dp = DecoderPool()
+            dt = el.setDecoders(dp)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
 
 
 

@@ -44,7 +44,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class MYSQLSourceTest(unittest.TestCase):
+class PGSQLSourceTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -57,8 +57,8 @@ class MYSQLSourceTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-        self.dbtype = "PGSQL"
-        self.dbname = "mydb"
+        self.__dbtype = "PGSQL"
+        self.__dbname = "mydb"
 
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
@@ -158,22 +158,22 @@ class MYSQLSourceTest(unittest.TestCase):
         self.myAssertRaise(PackageError, ds.getData)
 
         ds = DBaseSource()
-        ds.dbtype = self.dbtype
+        ds.dbtype = self.__dbtype
 #        dt = ds.getData()
         self.myAssertRaise(psycopg2.InterfaceError, ds.getData)
 
 
         ds = DBaseSource()
-        ds.dbtype = self.dbtype
+        ds.dbtype = self.__dbtype
         ds.query = query
         self.myAssertRaise(psycopg2.InterfaceError, ds.getData)
 
 
         ds = DBaseSource()
-        ds.dbtype = self.dbtype
+        ds.dbtype = self.__dbtype
         ds.query = query
         ds.format = format
-        ds.dbname = self.dbname
+        ds.dbname = self.__dbname
         dt = ds.getData()
 
         self.checkData(dt,'SPECTRUM',[scalar], 'DevString',[1,0])
@@ -206,9 +206,9 @@ class MYSQLSourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.dbname = self.__dbname
             dt = ds.getData()
 
 #            print a, value, dt,arr[a][0]
@@ -243,9 +243,9 @@ class MYSQLSourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.dbname = self.__dbname
             dt = ds.getData()
 
 #            print a, value, dt,arr[a][0]
@@ -280,9 +280,9 @@ class MYSQLSourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.dbname = self.__dbname
             dt = ds.getData()
 
             self.checkData(dt, arr[a][1], list(el for el in value[0]), arr[a][2], arr[a][3])        
@@ -316,9 +316,9 @@ class MYSQLSourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.dbname = self.__dbname
             dt = ds.getData()
 
             
@@ -358,9 +358,9 @@ class MYSQLSourceTest(unittest.TestCase):
 
             ds = DBaseSource()
             ds.query = arr[a][0]
-            ds.dbtype = self.dbtype
+            ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
-            ds.dbname = self.dbname
+            ds.dbname = self.__dbname
             dt = ds.getData()
 
             

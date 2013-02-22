@@ -189,6 +189,8 @@ class ClientSourceTest(unittest.TestCase):
                 
 
 
+    ## getData test
+    # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -384,6 +386,8 @@ class ClientSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings with global json string
     def test_getData_global_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -428,6 +432,8 @@ class ClientSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings with local json string
     def test_getData_local_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)

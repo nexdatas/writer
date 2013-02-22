@@ -34,67 +34,16 @@ from xml.dom import minidom
 
 from ndts.DataSourceFactory import DataSourceFactory
 from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
+from ndts.DataSourcePool import DataSourcePool
 from ndts.Element import Element
+from ndts.H5Elements import EField
 from ndts import DataSources
+from ndts.Errors import DataSourceSetupError
+
+from ndts.DecoderPool import DecoderPool
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
-
-## Wrong DataSource
-class W0DS(object):
-    pass
-
-## Wrong DataSource
-class W1DS(object):
-    ## setup method
-    def setup(self):
-        pass
-
-## Wrong DataSource
-class W2DS(object):
-    ## setup method
-    def setup(self):
-        pass
-
-    ## getData method
-    def getData(self):
-        pass
-
-
-## Wrong DataSource
-class W3DS(object):
-    ## setup method
-    def setup(self):
-        pass
-
-    ## getData method
-    def getData(self):
-        pass
-
-    ## isValid method
-    def isValid(self):
-        pass
-
-
-
-## Wrong DataSource
-class W4DS(object):
-    ## setup method
-    def setup(self):
-        pass
-
-    ## getData method
-    def getData(self):
-        pass
-
-    ## isValid method
-    def isValid(self):
-        pass
-
-    ## str method
-    def __str__(self):
-        pass
 
 
 
@@ -193,6 +142,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._last, el)
         self.assertEqual(ds.store(["<datasource>","","</datasource>"]), None)
         self.assertEqual(type(ds._last.source),DataSources.DataSource)
+        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
 
         atts = {"type":"TANGO"}
         el = Element(self._tfname, self._fattrs )
@@ -205,8 +155,200 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._last, el)
         self.assertEqual(ds.store(["<datasource>","","</datasource>"]), None)
         self.assertEqual(type(ds._last.source),DataSources.DataSource)
+        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
 
 
-    
+        atts = {"type":"CLIENT"}
+        el = Element(self._tfname, self._fattrs )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.myAssertRaise(DataSourceSetupError,ds.store,["<datasource>","","</datasource>"])
+        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+
+
+        atts = {"type":"CLIENT"}
+        el = Element(self._tfname, self._fattrs )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.myAssertRaise(DataSourceSetupError,ds.store,["<datasource type='CLIENT'>","<record/>","</datasource>"])
+        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+
+
+        atts = {"type":"CLIENT"}
+        name = "myRecord"
+        el = Element(self._tfname, self._fattrs )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='CLIENT'>",
+                                   '<record name="%s"/>' %name,
+                                   "</datasource>"]),None)
+        self.assertEqual(type(ds._last.source),DataSources.ClientSource)
+        self.assertEqual(ds._last.source.name,name)
+        self.assertEqual(ds._last.source.name,name)
+        self.assertEqual(ds._last.source.__str__(), " Client record %s from JSON: %s or %s " 
+                         % (name,None,None))
+        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+
+
+
+        atts = {"type":"CLIENT"}
+        name = "myRecord"
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='CLIENT'>",
+                                   '<record name="%s"/>' %name,
+                                   "</datasource>"]),None)
+        self.assertEqual(type(ds._last.source),DataSources.ClientSource)
+        self.assertEqual(ds._last.source.name,name)
+        self.assertEqual(ds._last.source.name,name)
+        self.assertEqual(ds._last.source.__str__(), " Client record %s from JSON: %s or %s " 
+                         % (name,None,None)) 
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+
+
+
+        atts = {"type":"CLIENT"}
+        name = "myRecord"
+        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        gjson = json.loads('{"data":{"myRecord":"1"}}')
+        
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='CLIENT'>",
+                                   '<record name="%s"/>' %name,
+                                   "</datasource>"],gjson),None)
+        self.assertEqual(type(ds._last.source),DataSources.ClientSource)
+        self.assertEqual(ds._last.source.name,name)
+        self.assertEqual(ds._last.source.name,name)
+        self.assertEqual(ds._last.source.__str__(), " Client record %s from JSON: %s or %s " 
+                         % (name, None, str(gjson)))
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+
+        
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setDecoders_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        dname = 'writer'
+        device = 'p09/tdw/r228'
+        ctype = 'command'
+        atype = 'attribute'
+        host = 'haso.desy.de'
+        port = '10000'
+        encoding = 'UTF8'
+
+
+        atts = {"type":"TANGO"}
+        name = "myRecord"
+        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        gjson = json.loads('{"data":{"myRecord":"1"}}')
+        
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='TANGO'>",
+                                   "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
+                                   "</datasource>"],gjson),None)
+        self.assertEqual(type(ds._last.source),DataSources.TangoSource)
+        self.assertEqual(ds._last.source.name,dname)
+        self.assertEqual(ds._last.source.device,device)
+        self.assertEqual(ds._last.source.encoding,encoding)
+        self.assertEqual(ds._last.source.__str__() , " Tango Device %s : %s (%s)" % (device, dname, atype))
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='p09/tdw/r228' encoding='UTF8'/></datasource>") )
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setDecoders(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        dname = 'writer'
+        device = 'p09/tdw/r228'
+        ctype = 'command'
+        atype = 'attribute'
+        host = 'haso.desy.de'
+        port = '10000'
+        encoding = 'UTF8'
+
+
+        atts = {"type":"TANGO"}
+        name = "myRecord"
+        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        gjson = json.loads('{"data":{"myRecord":"1"}}')
+        
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='TANGO'>",
+                                   "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
+                                   "</datasource>"],gjson),None)
+        self.assertEqual(type(ds._last.source),DataSources.TangoSource)
+        self.assertEqual(ds._last.source.name,dname)
+        self.assertEqual(ds._last.source.device,device)
+        self.assertEqual(ds._last.source.encoding,encoding)
+        self.assertEqual(ds._last.source.__str__() , " Tango Device %s : %s (%s)" % (device, dname, atype))
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='p09/tdw/r228' encoding='UTF8'/></datasource>") )
+        dp = DecoderPool()
+        self.assertEqual(ds.setDecoders(dp),None)
+        
+
+        
 if __name__ == '__main__':
     unittest.main()
