@@ -50,6 +50,7 @@ import DBaseSourceTest
 import DataSourcePoolTest
 import DataSourceFactoryTest
 import DataSourceDecodersTest
+import UTF8decoderTest
 
 try:
     import PyTango
@@ -222,6 +223,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DataSourceFactoryTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(UTF8decoderTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
