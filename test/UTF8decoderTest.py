@@ -51,6 +51,9 @@ class UTF8decoderTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
         self.__name = 'UTF8'
 
+        self.__data =  ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")
+        self.__dtype = "string"
+
     ## test starter
     # \brief Common set up
     def setUp(self):
@@ -63,7 +66,7 @@ class UTF8decoderTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor(self):
+    def test_constructor_default(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
         dc = UTF8decoder()
         self.assertEqual(dc.name, self.__name)
@@ -72,7 +75,92 @@ class UTF8decoderTest(unittest.TestCase):
 
 
 
+    ## load method test
+    # \brief It tests default settings
+    def test_load(self):
+        print "Run: %s.test_constructor() " % self.__class__.__name__
+        data = {}
+        dc = UTF8decoder()
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
 
+        self.assertEqual(dc.load(self.__data),None)
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
+
+
+
+    ## shape method test
+    # \brief It tests default settings
+    def test_shape(self):
+        print "Run: %s.test_constructor() " % self.__class__.__name__
+        data = {}
+        dc = UTF8decoder()
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+        self.assertEqual(dc.shape(), [1,0])
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+
+
+        self.assertEqual(dc.load(self.__data),None)
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
+        self.assertEqual(dc.shape(), [1,0])
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
+
+
+
+    ## decode method test
+    # \brief It tests default settings
+    def test_decode(self):
+        print "Run: %s.test_constructor() " % self.__class__.__name__
+        data = {}
+        dc = UTF8decoder()
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+        self.assertEqual(dc.shape(), [1,0])
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+
+        self.assertEqual(dc.decode(),None)
+
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+        self.assertEqual(dc.shape(), [1,0])
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+
+        self.assertEqual(dc.load(self.__data),None)
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
+        self.assertEqual(dc.shape(), [1,0])
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
+
+
+        self.assertEqual(dc.decode(),self.__data[1])
+
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
+        self.assertEqual(dc.shape(), [1,0])
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, self.__data[0])
+        self.assertEqual(dc.dtype, self.__dtype)
 
 if __name__ == '__main__':
     unittest.main()
