@@ -89,6 +89,8 @@ class UINT32decoder(object):
     ## loads encoded data
     # \param data encoded data    
     def load(self, data):
+        if len(data[1]) % 4:
+            return
         self.__data = data
         self.format = data[0]
         self.__value = None

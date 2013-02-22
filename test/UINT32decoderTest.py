@@ -142,7 +142,6 @@ class UINT32decoderTest(unittest.TestCase):
     def test_decode_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -191,12 +190,26 @@ class UINT32decoderTest(unittest.TestCase):
 
     ## decode method test
     # \brief It tests default settings
+    def test_load_wrong_len(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        data = ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
+
+        dc = UINT32decoder()
+
+        self.assertEqual(dc.load(data),None)
+        self.assertEqual(dc.name, self.__name)
+        self.assertEqual(dc.format, None)
+        self.assertEqual(dc.dtype, None)
+        self.assertEqual(dc.shape(), None)
+
+
+
+    ## decode method test
+    # \brief It tests default settings
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        data = {}
-
-        
         
 
         arr =[[None,None]]*20
