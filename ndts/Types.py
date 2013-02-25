@@ -47,7 +47,6 @@ class NTP(object):
 
 
     ## map of Python:Tango types
-#    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
     pTt = {"int":"DevLong64", "long":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
            "bool":"DevBoolean"}
 
@@ -68,7 +67,7 @@ class NTP(object):
 
     ## map of type : converting function
     convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
-               "int16":long, "int8":int, "int":int, "uint64":long, "uint32":int, "uint16":long,
+               "int16":int, "int8":int, "int":int, "uint64":long, "uint32":long, "uint16":int,
                "uint8":int, "uint":int, "string":str, "bool":Converters.toBool}
 
     ## map of tag attribute types 

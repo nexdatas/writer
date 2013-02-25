@@ -82,7 +82,7 @@ class NTPTest(unittest.TestCase):
 
         ## map of type : converting function
         self._convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
-                         "int16":long, "int8":int, "int":int, "uint64":long, "uint32":int, "uint16":long,
+                         "int16":int, "int8":int, "int":int, "uint64":long, "uint32":int, "uint16":int,
                          "uint8":int, "uint":int, "string":str, "bool":Converters.toBool}
         
         ## map of tag attribute types 
