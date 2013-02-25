@@ -393,7 +393,7 @@ class DataHolderTest(unittest.TestCase):
             el = DataHolder(**data)
  
             self.assertTrue(isinstance(el, object))
-            self.assertEqual(el.format, 'SCALAR')
+            self.assertEqual(el.format, arr[a][4])
             self.assertEqual(el.tangoDType, arr[a][6])
             self.assertEqual(el.shape, arr[a][3])
             self.assertEqual(el.encoding, data["encoding"])

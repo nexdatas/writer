@@ -60,30 +60,13 @@ class DataHolder(object):
             decoder.load(self.value)
             self.shape = decoder.shape()
             if self.shape:
-                if len(self.shape) == 1:
-                    if self.shape[-1]  < 2:
-                        self.format = "SCALAR"
-                    else:
-                        self.format = "SPECTRUM"
-                elif len(self.shape) == 2:
-                    if self.shape[-1]  < 2:
-                        if self.shape[-2]  < 2:
-                            self.format = "SCALAR"
-                        else:
-                            self.format = "SPECTRUM"
-                    else:
-                        self.format = "IMAGE"
-                else:
-                    self.format = "SCALAR"
-                    
-                    
-                self.value = None    
                 self.value = decoder.decode()
-                rank = NTP.arrayRank(self.value)
+                rank = NTP().arrayRank(self.value)
                 self.format = ["SCALAR","SPECTRUM","IMAGE"][rank]
                 
             tp =  decoder.dtype
             if tp in NTP.npTt.keys():
+
                 self.tangoDType = NTP.npTt[tp]
                 
         if self.value is None:        
