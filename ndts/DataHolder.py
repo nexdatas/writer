@@ -79,7 +79,9 @@ class DataHolder(object):
                     
                 self.value = None    
                 self.value = decoder.decode()
-
+                rank = NTP.arrayRank(self.value)
+                self.format = ["SCALAR","SPECTRUM","IMAGE"][rank]
+                
             tp =  decoder.dtype
             if tp in NTP.npTt.keys():
                 self.tangoDType = NTP.npTt[tp]
@@ -88,7 +90,7 @@ class DataHolder(object):
             raise ValueError, "Encoding of DevEncoded variables not defined"
 
         if self.shape is None:
-            raise ValueError, "Shape not defined"
+            raise ValueError, "Encoding  or Shape not defined"
 
 
     ## casts the data into given type

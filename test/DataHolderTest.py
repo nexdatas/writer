@@ -219,7 +219,7 @@ class DataHolderTest(unittest.TestCase):
             data = {"format":"SPECTRUM", 
                     "value":arr[a][2], 
                     "tangoDType":arr[a][1], 
-                    "shape":arr[k][3],
+                    "shape":arr[a][3],
                     "encoding": None, 
                     "decoders": None}
             el = DataHolder(**data)
@@ -232,6 +232,8 @@ class DataHolderTest(unittest.TestCase):
             self.assertEqual(el.decoders, data["decoders"])
             self.assertEqual(el.value, data["value"])
             
+
+
 
 
 
@@ -360,6 +362,45 @@ class DataHolderTest(unittest.TestCase):
                 print "WARNING", a, "Case not supported"
                     
 
+
+    ## setup test
+    # \brief It tests default settings
+    def test_constructor_encode_single(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        dp = DecoderPool()
+        spectrum = numpy.array([1234], dtype=numpy.uint32)
+        image = numpy.array([[2]],dtype='uint16')
+        
+        arr = {
+           "ScalarEncoded":[ "UTF8", "DevEncoded", ("UTF8","\xc3\xb3"),
+                             [1,0], "SCALAR","\xc3\xb3", "DevString"],
+           "SpectrumEncoded":[ "UINT32", "DevEncoded", 
+                               ('INT32', '\xd2\x04\x00\x00') ,
+                               [1,0], "SPECTRUM",spectrum,"DevULong"],
+           "ImageEncoded":[ "LIMA_VIDEO_IMAGE", "DevEncoded",self.encodeImage(image),
+                               list(image.shape), "IMAGE",image,"DevUShort"],
+           }
+
+        for a in arr:
+            
+            data = {"format":"SCALAR", 
+                    "value":arr[a][2], 
+                    "tangoDType":arr[a][1], 
+                    "shape":[1,0], 
+                    "encoding": arr[a][0], 
+                    "decoders": dp}
+            el = DataHolder(**data)
+ 
+            self.assertTrue(isinstance(el, object))
+            self.assertEqual(el.format, 'SCALAR')
+            self.assertEqual(el.tangoDType, arr[a][6])
+            self.assertEqual(el.shape, arr[a][3])
+            self.assertEqual(el.encoding, data["encoding"])
+            self.assertEqual(el.decoders, data["decoders"])
+
+            print a ,el.value, arr[a][5]
+#                self.assertEqual(el.value, arr[a][5])
  
 
 
