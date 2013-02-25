@@ -56,7 +56,7 @@ class VDEOdecoderTest(unittest.TestCase):
 
         self.__imageUChar = numpy.array([[2,5],[3,4]],dtype='uint8')
 
-        self.__data = self.__encodeImage(self.__imageUChar)
+        self.__data = self.encodeImage(self.__imageUChar)
         self.__dtype = "uint8"
         self.__res = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
 
@@ -73,7 +73,7 @@ class VDEOdecoderTest(unittest.TestCase):
     ## Creates an encoded image from numpy array
     # \param image numpy array
     # \returns lima image  
-    def __encodeImage(self, image):
+    def encodeImage(self, image):
         modes = {'uint8':0, 'uint16':1, 'uint32':2, 'uint64':3}
         formatID = {0:'B', 1:'H', 2:'I', 3:'Q'}
         format = 'VIDEO_IMAGE'
@@ -149,7 +149,7 @@ class VDEOdecoderTest(unittest.TestCase):
             data[k][2] = numpy.array(
                 [[self.__rnd.randint(0,data[k][1]) for p in range(mlen[1])] 
                  for row in range(mlen[0])],dtype=k)
-            data[k][0]= self.__encodeImage(data[k][2])
+            data[k][0]= self.encodeImage(data[k][2])
 
         for k in data:
             dc = VDEOdecoder()
@@ -186,7 +186,7 @@ class VDEOdecoderTest(unittest.TestCase):
             data[k][2] = numpy.array(
                 [[self.__rnd.randint(0,data[k][1]) for p in range(mlen[1])] 
                  for row in range(mlen[0])],dtype=k)
-            data[k][0]= self.__encodeImage(data[k][2])
+            data[k][0]= self.encodeImage(data[k][2])
 
         for k in data:
             dc = VDEOdecoder()
@@ -251,7 +251,7 @@ class VDEOdecoderTest(unittest.TestCase):
             data[k][2] = numpy.array(
                 [[self.__rnd.randint(0,data[k][1]) for p in range(mlen[1])] 
                  for row in range(mlen[0])],dtype=k)
-            data[k][0]= self.__encodeImage(data[k][2])
+            data[k][0]= self.encodeImage(data[k][2])
 
         for k in data:
             dc = VDEOdecoder()
