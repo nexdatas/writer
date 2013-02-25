@@ -142,7 +142,7 @@ class VDEOdecoder(object):
         ## header data
         self.__header = {}
         ## format modes
-        self.__formatID = {0:'B', 1:'H', 2:'I', 3:'L'}
+        self.__formatID = {0:'B', 1:'H', 2:'I', 3:'Q'}
         ## dtype modes
         self.__dtypeID = {0:'uint8', 1:'uint16', 2:'uint32', 3:'uint64'}
 
