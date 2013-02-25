@@ -82,12 +82,11 @@ class VDEOdecoderTest(unittest.TestCase):
         version = 1
         endian = ord(struct.pack('=H', 1)[-1])
         hsize = struct.calcsize('!IHHqiiHHHH')
-        header = struct.pack(
-            '!IHHqiiHHHH', 0x5644454f, version, mode, -1, 
-            width,  height, endian, hsize, 0, 0)
+        header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1, 
+                             width,  height, endian, hsize, 0, 0)
         fimage = image.flatten()
 #  for uint32 and python2.6 one gets the struct.pack bug:
-#     test/VDEOdecoderTest.py:91: DeprecationWarning: struct integer overflow masking is deprecated
+#     test/VDEOdecoderTest.py:90: DeprecationWarning: struct integer overflow masking is deprecated
         ibuffer = struct.pack(formatID[mode]*fimage.size, *fimage)
 
 
