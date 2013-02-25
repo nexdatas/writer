@@ -399,8 +399,7 @@ class DataHolderTest(unittest.TestCase):
             self.assertEqual(el.encoding, data["encoding"])
             self.assertEqual(el.decoders, data["decoders"])
 
-            print a ,el.value, arr[a][5]
-#                self.assertEqual(el.value, arr[a][5])
+            self.assertEqual(el.value, arr[a][5])
  
 
 
