@@ -78,6 +78,20 @@ class UINT32decoderTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
     ## constructor test
     # \brief It tests default settings
     def test_constructor_default(self):
@@ -197,7 +211,8 @@ class UINT32decoderTest(unittest.TestCase):
 
         dc = UINT32decoder()
 
-        self.assertEqual(dc.load(data),None)
+        self.myAssertRaise(ValueError,dc.load,data)
+
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)

@@ -44,7 +44,7 @@ class DataHolder(object):
         ## data shape
         self.shape = shape 
         ## encoding type of Tango DevEncoded varibles
-        self.encoding = str(encoding)
+        self.encoding = str(encoding) if encoding else None
         ## pool with decoding algorithm
         self.decoders = decoders
 
@@ -57,7 +57,6 @@ class DataHolder(object):
         if self.encoding and self.decoders and \
                 self.decoders.hasDecoder(self.encoding):
             decoder = self.decoders.get(self.encoding)
-#                print "decoding", self.encoding
             decoder.load(self.value)
             self.shape = decoder.shape()
             if self.shape:

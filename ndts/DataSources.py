@@ -188,7 +188,7 @@ class TangoSource(DataSource):
                             "value":da.value, "tangoDType":str(da.type).split('.')[-1], 
                             "shape":([da.dim_y,da.dim_x] if da.dim_y else [da.dim_x, 0]),
                             "encoding": self.encoding, "decoders": self.__decoders}
-
+                  
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
                 plist = proxy.get_property_list('*')

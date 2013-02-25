@@ -89,8 +89,10 @@ class UINT32decoder(object):
     ## loads encoded data
     # \param data encoded data    
     def load(self, data):
+        if not hasattr(data,"__iter__"):
+            raise ValueError, "Wrong Data Format"
         if len(data[1]) % 4:
-            return
+            raise ValueError, "Wrong encoded UINT32 data length"
         self.__data = data
         self.format = data[0]
         self.__value = None
@@ -109,8 +111,8 @@ class UINT32decoder(object):
     def decode(self):        
         if not self.__data:
             return
-        if not len(self.__data) % 4:
-            return
+        if len(self.__data[1]) % 4:
+            raise ValueError, "Wrong encoded UINT32 data length"
         if not self.__value:
             self.__value = numpy.array(
                 struct.unpack('I'*(len(self.__data[1])/4), self.__data[1]), dtype=self.dtype
