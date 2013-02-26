@@ -37,14 +37,10 @@ class ElementThread(Thread):
         self.index = index
         ## queue with runnable elements
         self.__queue = queue
-        ## lock for safe printing messeges
-        #        self.__safeprint = thread.allocate_lock()
 
     ## runner
     # \brief It runs the defined thread
     def run(self):
-#        with self._safeprint:
-#            print "Running THREAD: %s" % self.index
         full = True    
         while full:
             time.sleep(0.0001)
