@@ -42,9 +42,11 @@ IS64BIT = (struct.calcsize("P") == 8)
 class Source(object):
     ## contructor
     def __init__(self):
+        ## local json
         self.ljson = None
+        ## global json
         self.gjson = None
-        
+    ## sets json string    
     def setJSON(self,gjson,ljson=None):
         self.ljson = ljson
         self.gjson = gjson

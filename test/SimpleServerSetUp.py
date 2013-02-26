@@ -59,6 +59,7 @@ class SimpleServerSetUp(object):
             'DeviceString':"My Sting"
             }
 
+        ##  class properties
 	self.class_prop = {
             'ClassBoolean':True,
             'ClassShort':1,

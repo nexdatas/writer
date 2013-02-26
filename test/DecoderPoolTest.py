@@ -43,6 +43,7 @@ class W0DS(object):
 
 ## Wrong Decoder
 class W1DS(object):
+    ## constructor
     def __init__(self):
         ##name attribute
         self.name = None
@@ -55,6 +56,7 @@ class W1DS(object):
 
 ## Wrong Decoder
 class W2DS(object):
+    ## constructor
     def __init__(self):
         ##name attribute
         self.name = None
@@ -70,6 +72,7 @@ class W2DS(object):
 
 ## Wrong Decoder
 class W3DS(object):
+    ## constructor
     def __init__(self):
         ##name attribute
         self.name = None
@@ -91,6 +94,7 @@ class W3DS(object):
 
 ## Wrong Decoder
 class W4DS(object):
+    ## constructor
     def __init__(self):
         ##name attribute
         self.name = None
