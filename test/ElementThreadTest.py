@@ -134,8 +134,7 @@ class ElementThreadTest(unittest.TestCase):
 
         el = ElementThread(index, elementQueue)
         self.assertEqual(el.index,index)
-        for c in jlist:
-            self.assertEqual(el.run() ,None)
+        self.assertEqual(el.run() ,None)
 
 
 
@@ -156,8 +155,7 @@ class ElementThreadTest(unittest.TestCase):
 
         el = ElementThread(index, elementQueue)
         self.assertEqual(el.index,index)
-        for c in jlist:
-            self.assertEqual(el.run() ,None)
+        self.assertEqual(el.run() ,None)
 
         for c in jlist:    
             self.assertEqual(c.counter , 1)
