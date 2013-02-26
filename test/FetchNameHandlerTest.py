@@ -1,0 +1,285 @@
+#!/usr/bin/env python
+#   This file is part of nexdatas - Tango Server for NeXus data writer
+#
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#
+#    nexdatas is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    nexdatas is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
+## \package test nexdatas
+## \file FetchNameHandlerTest.py
+# unittests for field Tags running Tango Server
+#
+import unittest
+import os
+import sys
+import subprocess
+import random
+import struct
+import binascii
+import time
+import Queue
+import json
+
+from ndts.FetchNameHandler import FetchNameHandler
+from ndts.Errors import XMLSyntaxError
+
+
+
+## if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
+## test fixture
+class FetchNameHandlerTest(unittest.TestCase):
+
+    ## constructor
+    # \param methodName name of the test method
+    def __init__(self, methodName):
+        unittest.TestCase.__init__(self, methodName)
+
+
+        self._tfname = "field"
+        self._tfname = "group"
+        self._fattrs = {"short_name":"test","units":"m" }
+
+
+        self._bint = "int64" if IS64BIT else "int32"
+        self._buint = "uint64" if IS64BIT else "uint32"
+        self._bfloat = "float64" if IS64BIT else "float32"
+
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
+
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+
+    ## test starter
+    # \brief Common set up
+    def setUp(self):
+        print "\nsetting up..."        
+        print "SEED =",self.__seed 
+
+    ## test closer
+    # \brief Common tear down
+    def tearDown(self):
+        print "tearing down ..."
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_constructor(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_names(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"instrument","type":"NXinstrument"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("group",attr2), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_no_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"type":"NXentry"}
+        sattr1 = {attr1["type"]:"entry"}
+
+        attr2 = {"name":"instrument1","type":"NXinstrument"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("group",attr2), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_name_only_types(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"type":"NXentry"}
+        sattr1 = {attr1["type"]:"entry"}
+
+        attr2 = {"type":"NXinstrument","units":"m"}
+        sattr2 = {attr2["type"]:"instrument"}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("group",attr2), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_name_notype(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry"}
+        sattr1 = {"1":attr1["name"]}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.myAssertRaise(XMLSyntaxError,el.endElement,"group")
+        self.assertEqual(el.groupTypes, {"":""})
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_attribute_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"type":"NXentry"}
+        sattr1 = {attr1["type"]:"entry1"}
+
+        attr2 = {"name":"name"}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("attribute",attr2), None)
+        self.assertEqual(el.characters("entry1"), None)
+        self.assertEqual(el.endElement("attribute"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_attribute_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1"}
+        sattr1 = {"NXentry":"entry1"}
+
+        attr2 = {"name":"type"}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("attribute",attr2), None)
+        self.assertEqual(el.characters("NXentry"), None)
+        self.assertEqual(el.endElement("attribute"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_attribute_name_type(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {}
+        sattr1 = {"NXentry":"entry1"}
+
+        at1 = {"name":"name"}
+        at2 = {"name":"type"}
+
+        nth = self.__rnd.randint(1, 10)
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("attribute",at1), None)
+        self.assertEqual(el.characters("entry1"), None)
+        self.assertEqual(el.endElement("attribute"), None)
+
+        self.assertEqual(el.startElement("attribute",at2), None)
+        self.assertEqual(el.characters("NXentry"), None)
+        self.assertEqual(el.endElement("attribute"), None)
+
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+if __name__ == '__main__':
+    unittest.main()
