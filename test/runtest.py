@@ -57,6 +57,7 @@ import DataHolderTest
 import ElementThreadTest
 import ThreadPoolTest
 import FetchNameHandlerTest
+import InnerXMLParserTest
 
 try:
     import PyTango
@@ -257,6 +258,10 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FetchNameHandlerTest) )
+
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(

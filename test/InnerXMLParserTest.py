@@ -98,7 +98,7 @@ class InnerXMLParserTest(unittest.TestCase):
         parser = sax.make_parser()
         handler = sax.ContentHandler()
         name = "datasource"
-        attrs = {}
+        attrs = {"type":"TANGO"}
         el = InnerXMLHandler(parser, handler, name, attrs)
         parser.setContentHandler(el) 
         self.assertEqual(el.xml,None)
@@ -110,7 +110,10 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(parser.getContentHandler(),el)
 
         self.assertEqual(el.endElement("datasource"), None)
-        self.assertEqual(el.xml,('<datasource >', '<device > Something</device>', '</datasource>'))
+        self.assertEqual(len(el.xml),3)
+        self.assertEqual(el.xml[0],'<datasource  type="TANGO">')
+        self.assertEqual(el.xml[1],'<device > Something</device>')
+        self.assertEqual(el.xml[2],'</datasource>')
 
         self.assertEqual(parser.getContentHandler(),handler)
 
