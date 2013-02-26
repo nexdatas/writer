@@ -584,5 +584,238 @@ class DataHolderTest(unittest.TestCase):
                         else:        
                             self.myAssertRaise(ValueError,el.cast,it)
 
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_cast_spectrum(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        arrs["b"] = {
+            "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
+            }
+
+
+        arrs["i"] = {
+            "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
+            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
+            }
+
+        arrs["u"] = {
+            "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
+            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
+            "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
+            }
+
+
+        arrs["f"] = {
+            "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
+            "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
+            }
+
+        arrs["s"] = {
+            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
+#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            }
+
+        types = {}
+
+        types["i"] = {"int":0,"int8":0,"int16":0,"int32":0,"int64":0}
+        types["u"] = {"uint":0,"uint8":0,"uint16":0,"uint32":0,"uint64":0}
+        types["f"] = {"float":1e-5,"float16":1e-01,"float32":1e-5,"float64":1e-14}
+        types["s"] = {"string":0}
+        types["b"] = {"bool":0}
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "u":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+
+
+        for s in arrs:
+            arr = arrs[s]
+            for k in arr :
+                
+                if arr[k][1] != "DevBoolean":
+                    mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                    arr[k][2] =  [ arr[k][2]*self.__rnd.randint(1, 3) for c in range(mlen[0] )]
+                else:    
+                    mlen = [self.__rnd.randint(1, 10)]
+                    arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
+                    
+                arr[k][3] =  [mlen[0],0]
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                data = {"format":"SPECTRUM", 
+                        "value":arr[a][2], 
+                        "tangoDType":arr[a][1], 
+                        "shape":arr[a][3],
+                        "encoding": None, 
+                        "decoders": None}
+                el = DataHolder(**data)
+
+                self.assertTrue(isinstance(el, object))
+                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.value, data["value"])
+                self.assertEqual(el.tangoDType, data["tangoDType"])
+                self.assertEqual(el.shape, data["shape"])
+                self.assertEqual(el.encoding, data["encoding"])
+                self.assertEqual(el.decoders, data["decoders"])
+                for c in ca:
+                    for it in types[c]:
+#                        print "CAST", arr[a][1] ,"to", it ,ca[c][k], c,k
+                        if ca[c][k] == True:
+                            elc  = el.cast(it)
+                            evalue  = numpy.array([ NTP.convert[it](e) for e in el.value], dtype=it)
+                            self.assertEqual(len(evalue),len(elc) )
+                            for i in range(len(evalue)):
+                                if types[c][it]:
+                                    self.assertTrue(abs(evalue[i]-elc[i]) <= types[c][it] )
+                                else:
+                                    self.assertEqual(evalue[i],elc[i] )
+                        else:        
+                            self.myAssertRaise(Exception,el.cast,it)
+
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_cast_image(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        arrs["b"] = {
+            "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
+            }
+
+
+        arrs["i"] = {
+            "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
+            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
+            }
+
+        arrs["u"] = {
+            "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
+            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
+            "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
+            }
+
+
+        arrs["f"] = {
+            "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
+            "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
+            }
+
+        arrs["s"] = {
+            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
+#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            }
+
+        types = {}
+
+        types["i"] = {"int":0,"int8":0,"int16":0,"int32":0,"int64":0}
+        types["u"] = {"uint":0,"uint8":0,"uint16":0,"uint32":0,"uint64":0}
+        types["f"] = {"float":1e-5,"float16":1e-01,"float32":1e-5,"float64":1e-14}
+        types["s"] = {"string":0}
+        types["b"] = {"bool":0}
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "u":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+
+
+        for s in arrs:
+            arr = arrs[s]
+
+            for k in arr :
+
+
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                if arr[k][1] != "DevBoolean":
+                    arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+                else:    
+                    mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                    if arr[k][1] == 'DevBoolean':
+                        arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+                arr[k][3] =  [mlen[0],mlen[1]]
+
+
+
+
+
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                data = {"format":"IMAGE", 
+                        "value":arr[a][2], 
+                        "tangoDType":arr[a][1], 
+                        "shape":arr[a][3],
+                        "encoding": None, 
+                        "decoders": None}
+                el = DataHolder(**data)
+
+                self.assertTrue(isinstance(el, object))
+                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.value, data["value"])
+                self.assertEqual(el.tangoDType, data["tangoDType"])
+                self.assertEqual(el.shape, data["shape"])
+                self.assertEqual(el.encoding, data["encoding"])
+                self.assertEqual(el.decoders, data["decoders"])
+                for c in ca:
+                    for it in types[c]:
+#                        print "CAST", arr[a][1] ,"to", it ,ca[c][k], c,k
+                        if ca[c][k] == True:
+                            elc  = el.cast(it)
+                            evalue  =numpy.array([ [ NTP.convert[it](e) \
+                                                         for e in row ] \
+                                                       for row in el.value ], dtype=it)
+
+                            for i in range(len(evalue)):                                
+                                self.assertEqual(len(evalue[i]),len(elc[i]) )
+                                for j in range(len(evalue[i])):
+                                    if types[c][it]:
+                                        self.assertTrue(abs(evalue[i][j]-elc[i][j]) <= types[c][it] )
+                                    else:
+                                        self.assertEqual(evalue[i][j],elc[i][j] )
+                        else:        
+                            self.myAssertRaise(Exception,el.cast,it)
+
+
+
+
+
 if __name__ == '__main__':
     unittest.main()

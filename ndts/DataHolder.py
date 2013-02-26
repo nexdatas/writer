@@ -92,8 +92,6 @@ class DataHolder(object):
                     return NTP.convert[tp](self.value)
             
         else:
-#            if str(self.tangoDType) == 'DevEncoded':
-#                raise ValueError, "Array of DevEncoded variables not supported"
 
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
