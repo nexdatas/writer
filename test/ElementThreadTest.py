@@ -43,10 +43,30 @@ class Job:
     def __init__(self):
         ## counter
         self.counter = 0
+        ## error
+        self.error = None
 
     ## run method    
     def run(self):
         self.counter += 1
+
+
+## class job with error
+class EJob:
+    ## contructor
+    def __init__(self):
+        ## counter
+        self.counter = 0
+        ## error
+        self.error = None
+        ## message
+        self.message = ("Error","My Error")
+
+    ## run method    
+    def run(self):
+        self.counter += 1
+        self.error = self.message
+
 
 ## job without run method
 class WJob:
@@ -159,6 +179,30 @@ class ElementThreadTest(unittest.TestCase):
 
         for c in jlist:    
             self.assertEqual(c.counter , 1)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_jobs_with_error(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        jlist = [ EJob() for c in range(self.__rnd.randint(1, 20))]
+
+        index = self.__rnd.randint(1, 1000)
+        elementQueue = Queue.Queue()
+
+        for eth in jlist:
+            elementQueue.put(eth)
+
+        el = ElementThread(index, elementQueue)
+        self.assertEqual(el.index,index)
+        self.assertEqual(el.run() ,None)
+
+        for c in jlist:    
+            self.assertEqual(c.counter , 1)
+            self.assertEqual(c.error , c.message)
 
 
 
