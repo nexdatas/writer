@@ -26,7 +26,6 @@ import unittest
 import TangoDataWriterTest
 import ClientFieldTagWriterTest
 import XMLFieldTagWriterTest
-import TangoFieldTagWriterTest
 import NexusXMLHandlerTest
 import ElementTest
 import FElementTest
@@ -55,6 +54,7 @@ import UINT32decoderTest
 import VDEOdecoderTest
 import DecoderPoolTest
 import DataHolderTest
+import ElementThreadTest
 
 try:
     import PyTango
@@ -131,6 +131,7 @@ if "ORACLE" in DB_AVAILABLE:
     import ORACLESourceTest
 
 if PYTANGO_AVAILABLE:
+    import TangoFieldTagWriterTest
     import TangoDataServerTest
     import ClientFieldTagServerTest
     import XMLFieldTagServerTest
@@ -243,6 +244,12 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DataHolderTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
+
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
@@ -263,8 +270,6 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
 
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
