@@ -30,6 +30,8 @@ import time
 import Queue
 import json
 
+from xml import sax
+
 from ndts.FetchNameHandler import FetchNameHandler
 from ndts.Errors import XMLSyntaxError
 
@@ -102,6 +104,7 @@ class FetchNameHandlerTest(unittest.TestCase):
         sattr1 = {attr1["type"]:attr1["name"]}
 
         el = FetchNameHandler()
+        self.assertTrue(isinstance(el,sax.ContentHandler))
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.endElement("group"), None)
@@ -120,7 +123,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr2 = {"name":"instrument","type":"NXinstrument"}
         sattr2 = {attr2["type"]:attr2["name"]}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -164,7 +166,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr2 = {"name":"instrument1","type":"NXinstrument"}
         sattr2 = {attr2["type"]:attr2["name"]}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -225,7 +226,6 @@ class FetchNameHandlerTest(unittest.TestCase):
 
         attr2 = {"name":"name"}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -239,7 +239,7 @@ class FetchNameHandlerTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_attribute_name(self):
+    def test_attribute_type(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -272,7 +272,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         at1 = {"name":"name"}
         at2 = {"name":"type"}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -295,24 +294,191 @@ class FetchNameHandlerTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-
-
-
         attr1 = {"name":"entry","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
 
 
         parser = sax.make_parser()
-        
-        fetcher = FetchNameHandler()
-        sax.parseString(self.xmlSettings, fetcher)
-
-
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
-        self.assertEqual(el.startElement("group",attr1), None)
-        self.assertEqual(el.endElement("group"), None)
+        sax.parseString('<group type="%s" name="%s" />' % (attr1["type"],attr1["name"]), el)
+ 
+
         self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_names(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"instrument","type":"NXinstrument"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group type="%s" name="%s"><group type="%s" name="%s"/></group>' 
+                        % (attr1["type"],attr1["name"],attr2["type"],attr2["name"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"scan","type":"NX_FLOAT"}
+
+
+
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group type="%s" name="%s"><field type="%s" name="%s"/></group>' 
+                        % (attr1["type"],attr1["name"],attr2["type"],attr2["name"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_no_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"type":"NXentry"}
+        sattr1 = {attr1["type"]:"entry"}
+
+        attr2 = {"name":"instrument1","type":"NXinstrument"}
+        sattr2 = {attr2["type"]:attr2["name"]} 
+
+
+
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group type="%s" ><group type="%s" name="%s"/></group>' 
+                        % (attr1["type"],attr2["type"],attr2["name"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_only_types(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        attr1 = {"type":"NXentry"}
+        sattr1 = {attr1["type"]:"entry"}
+
+        attr2 = {"type":"NXinstrument","units":"m"}
+        sattr2 = {attr2["type"]:"instrument"}
+
+
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group type="%s" ><group type="%s"/></group>' 
+                        % (attr1["type"],attr2["type"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_notype(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry"}
+        sattr1 = {"1":attr1["name"]}
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        self.myAssertRaise(XMLSyntaxError,sax.parseString,'<group name="%s" />'% (attr1["name"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, {"":""})
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_attribute_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"type":"NXentry"}
+        sattr1 = {attr1["type"]:"entry1"}
+
+        attr2 = {"name":"name"}
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group type="%s" ><attribute name="name">entry1</attribute></group>' 
+                        % (attr1["type"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_attribute_type(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1"}
+        sattr1 = {"NXentry":"entry1"}
+
+        attr2 = {"name":"type"}
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group name="%s" ><attribute name="type">NXentry</attribute></group>' 
+                        % (attr1["name"]), el)
+ 
+
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_attribute_name_type(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        attr1 = {}
+        sattr1 = {"NXentry":"entry1"}
+
+        at1 = {"name":"name"}
+        at2 = {"name":"type"}
+
+        parser = sax.make_parser()
+        el = FetchNameHandler()
+        sax.parseString('<group><attribute name="type">NXentry</attribute><attribute name="name">entry1</attribute></group>' , el)
+ 
+
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
 
 if __name__ == '__main__':
     unittest.main()
