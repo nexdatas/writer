@@ -57,14 +57,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-        try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
-        except NotImplementedError:
-            import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
-         
-        self.__rnd = random.Random(self.__seed)
-
     ## Exception tester
     # \param exception expected exception
     # \param method called method      
@@ -84,7 +76,6 @@ class FetchNameHandlerTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
-        print "SEED =",self.__seed 
 
     ## test closer
     # \brief Common tear down
@@ -97,7 +88,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
 
@@ -111,7 +101,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr1 = {"name":"entry","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -139,6 +128,27 @@ class FetchNameHandlerTest(unittest.TestCase):
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"scan","type":"NX_FLOAT"}
+
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("field",attr2), None)
+        self.assertEqual(el.endElement("field"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
         
 
 
@@ -179,7 +189,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr2 = {"type":"NXinstrument","units":"m"}
         sattr2 = {attr2["type"]:"instrument"}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -198,7 +207,6 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr1 = {"name":"entry"}
         sattr1 = {"1":attr1["name"]}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -240,7 +248,6 @@ class FetchNameHandlerTest(unittest.TestCase):
 
         attr2 = {"name":"type"}
 
-        nth = self.__rnd.randint(1, 10)
         el = FetchNameHandler()
         self.assertEqual(el.groupTypes, {"":""})
         self.assertEqual(el.startElement("group",attr1), None)
@@ -280,6 +287,32 @@ class FetchNameHandlerTest(unittest.TestCase):
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+
+
+        attr1 = {"name":"entry","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+
+        parser = sax.make_parser()
+        
+        fetcher = FetchNameHandler()
+        sax.parseString(self.xmlSettings, fetcher)
+
+
+        el = FetchNameHandler()
+        self.assertEqual(el.groupTypes, {"":""})
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
 
 if __name__ == '__main__':
     unittest.main()
