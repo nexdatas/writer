@@ -70,9 +70,9 @@ class InnerXMLHandler(sax.ContentHandler):
     def __openTag(self, name, attrs, eol = False):
         xml = ""
         if eol:
-            xml += "\n<%s "% name
+            xml += "\n<%s"% name
         else:
-            xml += "<%s "% name
+            xml += "<%s"% name
             
         for k in attrs.keys():
             xml += " %s=\"%s\"" % (k, self.__replaceAttr(attrs[k]))

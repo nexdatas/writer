@@ -111,8 +111,8 @@ class InnerXMLParserTest(unittest.TestCase):
 
         self.assertEqual(el.endElement("datasource"), None)
         self.assertEqual(len(el.xml),3)
-        self.assertEqual(el.xml[0],'<datasource  type="TANGO">')
-        self.assertEqual(el.xml[1],'<device > Something</device>')
+        self.assertEqual(el.xml[0],'<datasource type="TANGO">')
+        self.assertEqual(el.xml[1],'<device> Something</device>')
         self.assertEqual(el.xml[2],'</datasource>')
 
         self.assertEqual(parser.getContentHandler(),handler)
@@ -138,8 +138,8 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("datasource"), None)
-        self.assertEqual(el.xml,('<datasource >', 
-                                 '<group  type="NXentry" name="entry"></group>', '</datasource>'))
+        self.assertEqual(el.xml,('<datasource>', 
+                                 '<group type="NXentry" name="entry"></group>', '</datasource>'))
 
 
     ## constructor test
@@ -168,8 +168,8 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.endElement("field"), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(len(el.xml),3)
-        self.assertEqual(el.xml[0],'<group >')
-        self.assertEqual(el.xml[1],'<group  type="NXentry" name="entry1"></group><field  type="NXinstrument" name="instrument"></field>')
+        self.assertEqual(el.xml[0],'<group>')
+        self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"></group><field type="NXinstrument" name="instrument"></field>')
         self.assertEqual(el.xml[2],'</group>')
 
 
