@@ -28,6 +28,7 @@ import struct
 import binascii
 import time
 import Queue
+from threading import Thread
 
 from ndts.ElementThread import ElementThread
 
@@ -126,6 +127,7 @@ class ElementThreadTest(unittest.TestCase):
         index = self.__rnd.randint(1, 1000)
         el = ElementThread(index, None)
         self.assertEqual(el.index,index)
+        self.assertTrue(isinstance(el,Thread))
 
 
 

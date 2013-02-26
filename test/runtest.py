@@ -55,6 +55,7 @@ import VDEOdecoderTest
 import DecoderPoolTest
 import DataHolderTest
 import ElementThreadTest
+import ThreadPoolTest
 
 try:
     import PyTango
@@ -249,6 +250,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
