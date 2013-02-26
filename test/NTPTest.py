@@ -70,7 +70,8 @@ class NTPTest(unittest.TestCase):
                       "int16":"DevShort", "int8":"DevUChar", "uint":"DevULong64", 
                       "uint64":"DevULong64", "uint32":"DevULong", "uint16":"DevUShort", 
                       "uint8":"DevUChar", "float":"DevDouble", "float64":"DevDouble", 
-                      "float32":"DevFloat", "string":"DevString", "bool":"DevBoolean"}
+                      "float32":"DevFloat","float16":"DevFloat", 
+                      "string":"DevString", "bool":"DevBoolean"}
         
         ## map of NEXUS : numpy types 
         self._nTnp = {"NX_FLOAT32":"float32", "NX_FLOAT64":"float64", "NX_FLOAT":"float64", 
@@ -81,8 +82,8 @@ class NTPTest(unittest.TestCase):
                       "NX_DATE_TIME":"string", "ISO8601":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
 
         ## map of type : converting function
-        self._convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
-                         "int16":int, "int8":int, "int":int, "uint64":long, "uint32":int, "uint16":int,
+        self._convert = {"float16":float,"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
+                         "int16":int, "int8":int, "int":int, "uint64":long, "uint32":long, "uint16":int,
                          "uint8":int, "uint":int, "string":str, "bool":Converters.toBool}
         
         ## map of tag attribute types 

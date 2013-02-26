@@ -31,6 +31,7 @@ import time
 
 
 from ndts.DataHolder import DataHolder
+from ndts.Types import NTP
 from ndts.DecoderPool import DecoderPool
 
 ## if 64-bit machione
@@ -402,6 +403,186 @@ class DataHolderTest(unittest.TestCase):
             self.assertEqual(el.value, arr[a][5])
  
 
+
+    ## setup test
+    # \brief It tests default settings
+    def test_cast_scalar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        arrs["b"] = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True],
+            }
+
+
+        arrs["i"] = {
+            "ScalarShort":[ "int16", "DevShort", -123],
+            "ScalarLong":[ self._bint, "DevLong", -124],
+            "ScalarLong64":[ "int64", "DevLong64", 234],
+            }
+
+        arrs["u"] = {
+            "ScalarUChar":[ "uint8", "DevUChar", 23],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234],
+            "ScalarULong":[self._buint , "DevULong", 234],
+            "ScalarULong64":[ "uint64", "DevULong64", 23],
+            }
+
+
+        arrs["f"] = {
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
+            }
+
+        arrs["s"] = {
+            "ScalarString":[ "string", "DevString", "MyTrue"],
+#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            }
+
+        types = {}
+
+        types["i"] = ["int","int8","int16","int32","int64"]
+        types["u"] = ["uint","uint8","uint16","uint32","uint64"]
+        types["f"] = ["float","float16","float32","float64"]
+        types["s"] = ["string"]
+        types["b"] = ["bool"]
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "u":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                data = {"format":"SCALAR", 
+                        "value":arr[a][2], 
+                        "tangoDType":arr[a][1], 
+                        "shape":[1,0],
+                        "encoding": None, 
+                        "decoders": None}
+                el = DataHolder(**data)
+
+                self.assertTrue(isinstance(el, object))
+                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.value, data["value"])
+                self.assertEqual(el.tangoDType, data["tangoDType"])
+                self.assertEqual(el.shape, data["shape"])
+                self.assertEqual(el.encoding, data["encoding"])
+                self.assertEqual(el.decoders, data["decoders"])
+                for c in ca:
+                    if ca[c][k] == True:
+                        for it in types[c]:
+                            
+#                            print "CAST", arr[a][1] ,"to", it
+#                            print  "VAL",NTP.convert[it](el.value), el.cast(it)
+                            self.assertEqual(NTP.convert[it](el.value), el.cast(it))
+                    else:        
+                        for it in types[c]:
+#                            print "CAST", arr[a][1] ,"to", it
+#                            el.cast(it)
+                            self.myAssertRaise(ValueError,el.cast,it)
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_cast_scalar_from_string(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        
+        arrs["f"] = {
+            "ScalarString1":[ "string", "DevString", "12.3243"],
+            "ScalarString2":[ "string", "DevString", "-12.3243"],
+            "ScalarString3":[ "string", "DevString", "12.3243"],
+            }
+
+
+        arrs["i"] = {
+            "ScalarString1":[ "string", "DevString", "-1"],
+            "ScalarString2":[ "string", "DevString", "-125"],
+            "ScalarString3":[ "string", "DevString", "-124"],
+            }
+
+        arrs["u"] = {
+            "ScalarString1":[ "string", "DevString", "-1"],
+            "ScalarString2":[ "string", "DevString", "-125"],
+            "ScalarString3":[ "string", "DevString", "-124"],
+            }
+
+        arrs["s"] = {
+            "ScalarString1":[ "string", "DevString", "bnle"],
+            "ScalarString2":[ "string", "DevString", "What"],
+            "ScalarString3":[ "string", "DevString", "Cos"],
+            }
+
+
+        arrs["b"] = {
+            "ScalarString1":[ "string", "DevString", "True"],
+            "ScalarString2":[ "string", "DevString", "False"],
+            "ScalarString3":[ "string", "DevString", "true"],
+            }
+
+        types = {}
+
+        types["i"] = ["int","int8","int16","int32","int64"]
+        types["u"] = ["uint","uint8","uint16","uint32","uint64"]
+        types["f"] = ["float","float16","float32","float64"]
+        types["s"] = ["string"]
+        types["b"] = ["bool"]
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":False,"s":False,"b":False}, 
+            "u":{"i":True,"u":True,"f":False,"s":False,"b":False}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":False}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                data = {"format":"SCALAR", 
+                        "value":arr[a][2], 
+                        "tangoDType":arr[a][1], 
+                        "shape":[1,0],
+                        "encoding": None, 
+                        "decoders": None}
+                el = DataHolder(**data)
+
+                self.assertTrue(isinstance(el, object))
+                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.value, data["value"])
+                self.assertEqual(el.tangoDType, data["tangoDType"])
+                self.assertEqual(el.shape, data["shape"])
+                self.assertEqual(el.encoding, data["encoding"])
+                self.assertEqual(el.decoders, data["decoders"])
+                for c in ca:
+                    for it in types[c]:
+#                        print "CAST",k, arr[a][1] ,"to", c, it,":", el.value, ca[c][k]
+                        if ca[c][k] == True:
+                            self.assertEqual(NTP.convert[it](el.value), el.cast(it))
+#                            print  "VAL",NTP.convert[it](el.value), el.cast(it)
+                        else:        
+                            self.myAssertRaise(ValueError,el.cast,it)
 
 if __name__ == '__main__':
     unittest.main()
