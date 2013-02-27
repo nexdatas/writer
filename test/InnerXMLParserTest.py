@@ -174,5 +174,166 @@ class InnerXMLParserTest(unittest.TestCase):
 
 
 
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_group(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"instrument","type":"NXinstrument"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+        parser = sax.make_parser()
+        handler = sax.ContentHandler()
+        name = "group"
+        attrs = {"type":"NXentry"}
+        el = InnerXMLHandler(parser, handler, name, attrs)
+        parser.setContentHandler(el) 
+        self.assertEqual(el.xml,None)
+        self.assertTrue(isinstance(el,sax.ContentHandler))
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("group",attr2), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(len(el.xml),3)
+        self.assertEqual(el.xml[0],'<group type="NXentry">')
+        self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"><group type="NXinstrument" name="instrument"></group></group>')
+        self.assertEqual(el.xml[2],'</group>')
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"instrument","type":"NXinstrument"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+        parser = sax.make_parser()
+        handler = sax.ContentHandler()
+        name = "group"
+        attrs = {}
+        el = InnerXMLHandler(parser, handler, name, attrs)
+        parser.setContentHandler(el) 
+        self.assertEqual(el.xml,None)
+        self.assertTrue(isinstance(el,sax.ContentHandler))
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(el.startElement("attribute",attr2), None)
+        self.assertEqual(el.endElement("attribute"), None)
+        self.assertEqual(el.endElement("group"), None)
+        self.assertEqual(len(el.xml),3)
+        self.assertEqual(el.xml[0],'<group>')
+        self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"></group><attribute type="NXinstrument" name="instrument"></attribute>')
+        self.assertEqual(el.xml[2],'</group>')
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        parser = sax.make_parser()
+        handler = sax.ContentHandler()
+        name = "datasource"
+
+        el = InnerXMLHandler(parser, handler, name, {})
+        parser.setContentHandler(el) 
+        self.assertEqual(el.xml,None)
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO('<group type="NXentry" name="entry"></group>'))
+        parser.parse(inpsrc)
+
+        self.assertEqual(parser.getContentHandler(),el)
+
+        self.assertEqual(el.endElement("datasource"), None)
+
+
+        self.assertEqual(el.xml,('<datasource>', 
+                                 '<group type="NXentry" name="entry"></group>', '</datasource>'))
+
+
+        self.assertEqual(parser.getContentHandler(),handler)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_names(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        parser = sax.make_parser()
+        handler = sax.ContentHandler()
+        name = "group"
+        xml = '<group type="NXentry" name="entry1"><field type="NXinstrument" name="instrument"></field></group>'
+#        xml = '<group type="NXentry" name="entry1"></group>'
+
+        el = InnerXMLHandler(parser, handler, name, {})
+        parser.setContentHandler(el) 
+        self.assertEqual(el.xml,None)
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+        self.assertEqual(parser.getContentHandler(),el)
+        self.assertEqual(el.endElement("group"), None)
+
+        self.assertEqual(len(el.xml),3)
+        self.assertEqual(el.xml[0],'<group>')
+        self.assertEqual(el.xml[1],xml)
+        self.assertEqual(el.xml[2],'</group>')
+
+
+        self.assertEqual(parser.getContentHandler(),handler)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_group_group(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        parser = sax.make_parser()
+        handler = sax.ContentHandler()
+        attrs = {"type":"NXentry"}
+
+        name = "group"
+        xml = '<group type="NXentry" name="entry1"><group type="NXinstrument" name="instrument"></group></group>'
+
+        el = InnerXMLHandler(parser, handler, name, attrs)
+        parser.setContentHandler(el) 
+        self.assertEqual(el.xml,None)
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+        self.assertEqual(parser.getContentHandler(),el)
+        self.assertEqual(el.endElement("group"), None)
+
+        self.assertEqual(len(el.xml),3)
+        self.assertEqual(el.xml[0],'<group type="NXentry">')
+        self.assertEqual(el.xml[1],xml)
+        self.assertEqual(el.xml[2],'</group>')
+
+
+        self.assertEqual(parser.getContentHandler(),handler)
+
+
 if __name__ == '__main__':
     unittest.main()
