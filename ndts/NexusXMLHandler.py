@@ -27,7 +27,7 @@ from xml import sax
 import sys, os
 
 from Element import Element
-from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy)
+from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy, FElement, EFile)
 from DataSourceFactory import DataSourceFactory
 from ThreadPool import ThreadPool
 from InnerXMLParser import InnerXMLHandler

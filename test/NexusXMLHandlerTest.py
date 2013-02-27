@@ -77,10 +77,26 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+
+
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor(self):
+    def test_constructor_default(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
         fname = "test.h5"
         nh = NexusXMLHandler(self._eFile)
@@ -88,6 +104,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(isinstance(nh.stepPool,ThreadPool))
         self.assertTrue(isinstance(nh.finalPool,ThreadPool))
         self.assertEqual(nh.triggerPools, {})
+        self.assertEqual(nh.close(), None)
 
 if __name__ == '__main__':
     unittest.main()
