@@ -430,9 +430,11 @@ class EField(FElementWithAttr):
                         for j in range(len(sts[i])):
                             self.h5Object[i,j] = sts[i][j] 
 
-            elif self.strategy != "POSTRUN": 
-                raise ValueError,"Warning: Invalid datasource for %s" % nm
-#                print "Warning: Invalid datasource for ", nm
+            elif self.strategy != "POSTRUN":
+                if self.h5Object.dtype != "string": 
+                    raise ValueError,"Warning: Invalid datasource for %s" % nm
+                else:
+                    print "Warning: Empty value for the field:", nm
 
 
         
