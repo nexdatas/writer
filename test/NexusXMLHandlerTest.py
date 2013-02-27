@@ -776,7 +776,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(cnt.name,"counter")
         self.assertEqual(cnt.nattrs,1)
         self.assertEqual(cnt.read(),1234)
-        
+        self.assertTrue(hasattr(cnt.shape,"__iter__"))
+        self.assertEqual(len(cnt.shape),1)
+        self.assertEqual(cnt.shape[0],1)
+
         at = cnt.attr("type")
         self.assertTrue(at.valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
@@ -790,6 +793,68 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
         self._nxFile.close()
         os.remove(self._fname)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+ 
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT32"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+        self.assertEqual(el.startElement("group",attr1), None)
+        self.assertEqual(el.startElement("attribute",attr2), None)
+        self.assertEqual(el.characters("1234"), None)
+        self.assertEqual(el.endElement("attribute"), None)
+        self.assertEqual(el.endElement("group"), None)
+
+        self.assertEqual(el.triggerPools, {})
+        
+        en = self._nxFile.open(attr1["name"])
+        self.assertTrue(en.valid)
+        self.assertEqual(en.name,"entry1")
+        self.assertEqual(en.nattrs,2)
+
+        at = en.attr("NX_class")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"NX_class")
+        self.assertEqual(at.value,"NXentry")
+
+        at = en.attr(attr2["name"])
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.name,"counter")
+        self.assertEqual(at.dtype,"int32")
+        self.assertEqual(at.value,1234)
+        
+
+
+        self.assertEqual(el.close(), None)
+
+        self._nxFile.close()
+#        os.remove(self._fname)
+
+
 
 if __name__ == '__main__':
     unittest.main()
