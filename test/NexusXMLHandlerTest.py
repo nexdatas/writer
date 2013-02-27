@@ -797,7 +797,82 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_group_field(self):
+    def test_group_attribute(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+ 
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT32"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+  
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<attribute%s>' % (st)
+        xml +=  value
+        xml +=  '</attribute>'
+        xml +=  '</group>'
+        
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        en = self._nxFile.open(attr1["name"])
+        self.assertTrue(en.valid)
+        self.assertEqual(en.name,"entry1")
+        self.assertEqual(en.nattrs,2)
+
+        at = en.attr("NX_class")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"NX_class")
+        self.assertEqual(at.value,"NXentry")
+
+        at = en.attr(attr2["name"])
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.name,"counter")
+        self.assertEqual(at.dtype,"int32")
+        self.assertEqual(at.value,1234)
+        
+
+
+        self.assertEqual(el.close(), None)
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_xgroup_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -852,7 +927,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.close(), None)
 
         self._nxFile.close()
-#        os.remove(self._fname)
+        os.remove(self._fname)
 
 
 
