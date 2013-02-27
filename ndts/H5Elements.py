@@ -376,9 +376,16 @@ class EField(FElementWithAttr):
             if key not in ["name"]:
                 if key in NTP.aTn.keys():
                     if hasattr(self._tagAttrs[key],"encode"):
-                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key].strip().encode()
+                        try:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key].strip().encode()
+                        except:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key].strip().encode())
                     else:
-                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key]
+                        try:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key]
+                        except:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key])
+                            
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
                     (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = numpy.array(self._tagAttrs[key])
@@ -643,9 +650,17 @@ class EGroup(FElementWithAttr):
             if key not in ["name","type"]:
                 if key in NTP.aTn.keys():
                     if hasattr(attrs[key],"encode"):
-                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key].encode()
+                        try:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key].encode()
+                        except:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](attrs[key].encode())
+                            
                     else:
-                        (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key]
+                        try:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key]
+                        except:
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](attrs[key])
+                            
                 elif key in NTP.aTnv.keys():
                     
                     shape = (len(attrs[key]),)
@@ -657,6 +672,8 @@ class EGroup(FElementWithAttr):
     # \param xml xml setting 
     def store(self, xml = None):
         self._createAttributes()
+
+
 
 
     ## fetches the type and the name of the current group            

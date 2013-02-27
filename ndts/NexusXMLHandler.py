@@ -27,7 +27,8 @@ from xml import sax
 import sys, os
 
 from Element import Element
-from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy, FElement, EFile)
+from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
+                        EDimensions, EDim, EStrategy, FElement, EFile)
 from DataSourceFactory import DataSourceFactory
 from ThreadPool import ThreadPool
 from InnerXMLParser import InnerXMLHandler
@@ -46,7 +47,8 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param groupTypes map of NXclass : name
     # \param parser instance of sax.xmlreader
     # \param globalJSON global json string
-    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , parser = None, globalJSON = None):
+    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , 
+                 parser = None, globalJSON = None):
         sax.ContentHandler.__init__(self)
 
         
@@ -160,7 +162,7 @@ class NexusXMLHandler(sax.ContentHandler):
                 self.__unsupportedTag = name
                 
 
-    ## parses an closing tag
+    ## parses the closing tag
     # \param name tag name
     def endElement(self, name):
         if self.__inner == True:
