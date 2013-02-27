@@ -403,6 +403,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(en.name,"counter")
         self.assertEqual(en.nattrs,2)
         self.assertEqual(en.read(), value)
+        self.assertTrue(hasattr(en.shape,"__iter__"))
+        self.assertEqual(len(en.shape),1)
+        self.assertEqual(en.shape[0],1)
         
 
         at = en.attr("type")
@@ -460,6 +463,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(en.name,"counter")
         self.assertEqual(en.nattrs,1)
         self.assertEqual(en.read(),"field")
+        self.assertTrue(hasattr(en.shape,"__iter__"))
+        self.assertEqual(len(en.shape),1)
+        self.assertEqual(en.shape[0],1)
         
 
         at = en.attr("type")
@@ -508,6 +514,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(en.name,"counter")
         self.assertEqual(en.nattrs,1)
         self.assertEqual(en.read(),"")
+        self.assertTrue(hasattr(en.shape,"__iter__"))
+        self.assertEqual(len(en.shape),1)
+        self.assertEqual(en.shape[0],1)
         
 
         at = en.attr("type")
@@ -562,6 +571,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(en.name,"counter")
         self.assertEqual(en.nattrs,1)
         self.assertEqual(en.read(),"")
+        self.assertTrue(hasattr(en.shape,"__iter__"))
+        self.assertEqual(len(en.shape),1)
+        self.assertEqual(en.shape[0],1)
         
 
         at = en.attr("type")
@@ -696,6 +708,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(cnt.name,"counter")
         self.assertEqual(cnt.nattrs,1)
         self.assertEqual(cnt.read(),1234)
+        self.assertTrue(hasattr(cnt.shape,"__iter__"))
+        self.assertEqual(len(cnt.shape),1)
+        self.assertEqual(cnt.shape[0],1)
         
         at = cnt.attr("type")
         self.assertTrue(at.valid)
@@ -797,7 +812,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_group_attribute(self):
+    def test_XML_group_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -872,7 +887,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_XML_xgroup_attribute(self):
+    def test_group_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -928,6 +943,158 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
         self._nxFile.close()
         os.remove(self._fname)
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_field_attribute(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+ 
+        attr1 = {"name":"entry1","type":"NX_CHAR"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT32"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+  
+
+
+        value1 = '1234'
+        value2 = '34'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value1
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<attribute%s>' % (st)
+        xml +=  value2
+        xml +=  '</attribute>'
+        xml +=  '</field>'
+        
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        en = self._nxFile.open(attr1["name"])
+        self.assertTrue(en.valid)
+        self.assertEqual(en.name,"entry1")
+        self.assertEqual(en.nattrs,2)
+        self.assertEqual(en.read(),'1234')
+        self.assertTrue(hasattr(en.shape,"__iter__"))
+        self.assertEqual(len(en.shape),1)
+        self.assertEqual(en.shape[0],1)
+
+        at = en.attr("type")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"type")
+        self.assertEqual(at.value,"NX_CHAR")
+
+        at = en.attr(attr2["name"])
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.name,"counter")
+        self.assertEqual(at.dtype,"int32")
+        self.assertEqual(at.value,34)
+        
+
+
+        self.assertEqual(el.close(), None)
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_field_attribute(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+ 
+        attr1 = {"name":"entry1","type":"NX_INT"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT32"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+        self.assertEqual(el.startElement("field",attr1), None)
+        self.assertEqual(el.characters("12"), None)
+        self.assertEqual(el.startElement("attribute",attr2), None)
+        self.assertEqual(el.characters("1234"), None)
+        self.assertEqual(el.endElement("attribute"), None)
+        self.assertEqual(el.endElement("field"), None)
+
+        self.assertEqual(el.triggerPools, {})
+        
+        en = self._nxFile.open(attr1["name"])
+        self.assertTrue(en.valid)
+        self.assertEqual(en.name,"entry1")
+        self.assertEqual(en.nattrs,2)
+        self.assertTrue(hasattr(en.shape,"__iter__"))
+        self.assertEqual(len(en.shape),1)
+        self.assertEqual(en.shape[0],1)
+        self.assertEqual(en.read(),12)
+
+        at = en.attr("type")
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.dtype,"string")
+        self.assertEqual(at.name,"type")
+        self.assertEqual(at.value,"NX_INT")
+
+        at = en.attr(attr2["name"])
+        self.assertTrue(at.valid)
+        self.assertTrue(hasattr(at.shape,"__iter__"))
+        self.assertEqual(len(at.shape),0)
+        self.assertEqual(at.name,"counter")
+        self.assertEqual(at.dtype,"int32")
+        self.assertEqual(at.value,1234)
+        
+
+
+        self.assertEqual(el.close(), None)
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
 
 
 
