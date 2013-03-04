@@ -27,6 +27,10 @@ import random
 import struct
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
+from ndts.Element import Element
+from ndts.H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
+                        EDimensions, EDim, EStrategy, FElement, EFile, FElement)
+from ndts.DataSourceFactory import DataSourceFactory
 
 from xml import sax
 
@@ -45,6 +49,53 @@ from  xml.sax import SAXParseException
 
 
 from ndts.NexusXMLHandler import NexusXMLHandler
+
+## test element
+class TElement(Element):
+    ## The last TElement instance
+    instance = None
+    ## groupTypes
+    groupTypes = {"NXmyentry":"myentry1"}
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        TElement.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## fetchName flag
+        self.fetched = False
+        ## createLink flag
+        self.linked = False
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## groupTypes
+        self.groupTypes = {}
+
+    ## fetches names   
+    def fetchName(self, groupTypes):
+        self.fetched = True
+        for k in TElement.groupTypes:
+            groupTypes[k] = TElement.groupTypes[k]
+
+
+    ## creates links
+    def createLink(self, groupTypes):
+        self.linked = True
+        self.groupTypes = {}
+        for k in groupTypes:
+            self.groupTypes[k] = groupTypes[k]
+
+    ## stores names   
+    def store(self):
+        self.stored = True
+
+
 
 ## test fixture
 class NexusXMLHandlerTest(unittest.TestCase):
@@ -107,6 +158,15 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(isinstance(nh.stepPool,ThreadPool))
         self.assertTrue(isinstance(nh.finalPool,ThreadPool))
         self.assertEqual(nh.triggerPools, {})
+        self.assertEqual(nh.withXMLinput, {'datasource':DataSourceFactory, 'doc':EDoc} )
+        self.assertEqual(nh.elementClass, {'group':EGroup, 'field':EField, 'attribute':EAttribute,
+                                           'link':ELink,
+                                           'symbols':Element, 'symbol':ESymbol, 
+                                           'dimensions':EDimensions, 
+                                           'dim':EDim, 'enumeration':Element, 'item':Element,
+                                           'strategy':EStrategy
+                                           })
+        self.assertEqual(nh.transparentTags, ['definition'] )
         self.assertEqual(nh.close(), None)
 
         self._nxFile.close()
@@ -1095,6 +1155,65 @@ class NexusXMLHandlerTest(unittest.TestCase):
         os.remove(self._fname)
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_XML_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        el.elementClass = {"field":TElement}
+
+
+        attr1 = {"name":"counter","type":"NX_CHAR", "axis":1}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        value = 'myfield'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+        self.assertEqual(el.triggerPools, {})
+        
+        ins = TElement.instance
+        self.assertTrue(isinstance(ins, TElement))
+        self.assertTrue(ins.constructed)
+        self.assertEqual(len(attr1), len(ins.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), ins.attrs[a])
+        self.assertEqual(ins.last, self._eFile)
+        self.assertEqual(ins.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(ins.fetched)
+        self.assertTrue(ins.linked)
+        self.assertTrue(ins.stored)
+        self.assertEqual(len(TElement.groupTypes)+1, len(ins.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), ins.groupTypes[a])
+        self.assertEqual("", ins.groupTypes[""])
+        
+        
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
 
 
 
