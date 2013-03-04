@@ -74,14 +74,14 @@ class NexusXMLHandler(sax.ContentHandler):
         self.__json = globalJSON
 
         ## tags with innerxml as its input
-        self.__withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
+        self.withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
         ##  stored attributes
         self.__storedAttrs = None
         ##  stored name
         self.__storedName = None
 
         ## map of tag names to related classes
-        self.__elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
+        self.elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
                               'link':ELink,
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
@@ -90,7 +90,7 @@ class NexusXMLHandler(sax.ContentHandler):
                               }
 
         ## transparent tags
-        self.__transparentTags = ['definition']
+        self.transparentTags = ['definition']
 
 
         ## thread pool with INIT elements
@@ -143,19 +143,19 @@ class NexusXMLHandler(sax.ContentHandler):
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag :
-            if self.__parser and  name in self.__withXMLinput:
+            if self.__parser and  name in self.withXMLinput:
                 self.__storedAttrs = attrs
                 self.__storedName = name
                 self.__innerHandler = InnerXMLHandler(self.__parser, self, name, attrs)
                 self.__parser.setContentHandler(self.__innerHandler) 
                 self.__inner = True
-            elif name in self.__elementClass:
-                self.__stack.append(self.__elementClass[name](attrs, self.__last()))
+            elif name in self.elementClass:
+                self.__stack.append(self.elementClass[name](attrs, self.__last()))
                 if self.__fetching and hasattr(self.__last(), "fetchName") and callable(self.__last().fetchName):
                     self.__last().fetchName(self.__groupTypes)
                 if hasattr(self.__last(), "createLink") and callable(self.__last().createLink):
                     self.__last().createLink(self.__groupTypes)
-            elif name not in self.__transparentTags:
+            elif name not in self.transparentTags:
                 if self.__raiseUnsupportedTag:
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
                 print "Unsupported tag: ", name ,attrs.keys()
@@ -169,14 +169,14 @@ class NexusXMLHandler(sax.ContentHandler):
 #            print "XML:\n", self.__innerHandler.xml
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
-        if not self.__unsupportedTag and self.__parser and  name in self.__withXMLinput:
+        if not self.__unsupportedTag and self.__parser and  name in self.withXMLinput:
             print "XML", self.__innerHandler.xml
-        elif not self.__unsupportedTag and name in self.__elementClass:
+        elif not self.__unsupportedTag and name in self.elementClass:
             res = self.__last().store()
             if res:
                 self.__addToPool(res, self.__last())
             self.__stack.pop()
-        elif name not in self.__transparentTags:
+        elif name not in self.transparentTags:
             if self.__unsupportedTag == name:
                 self.__unsupportedTag = ""
 
@@ -206,8 +206,8 @@ class NexusXMLHandler(sax.ContentHandler):
     ## creates class instance of the current inner xml
     # \param xml inner xml
     def __createInnerTag(self, xml):
-        if self.__storedName in self.__withXMLinput:
-            inner = self.__withXMLinput[self.__storedName](self.__storedAttrs, self.__last())
+        if self.__storedName in self.withXMLinput:
+            inner = self.withXMLinput[self.__storedName](self.__storedAttrs, self.__last())
             if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
                 inner.setDataSources(self.__datasources)
             res = inner.store(xml, self.__json)
