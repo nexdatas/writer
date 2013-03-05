@@ -65,6 +65,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## unsupported tag tracer
         self.__unsupportedTag=""
+        ## True if raise exception on unsupported tag
         self.raiseUnsupportedTag=True
 
         ## xmlreader
