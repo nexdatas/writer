@@ -51,7 +51,7 @@ from  xml.sax import SAXParseException
 from ndts.NexusXMLHandler import NexusXMLHandler
 
 ## test element
-class TElement(Element):
+class TElement(object):
     ## The last TElement instance
     instance = None
     ## groupTypes
@@ -94,6 +94,118 @@ class TElement(Element):
     ## stores names   
     def store(self):
         self.stored = True
+
+
+
+
+
+## test element
+class TElementOS(object):
+    ## The last TElement instance
+    instance = None
+    ## groupTypes
+    groupTypes = {"NXmyentry":"myentry1"}
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        TElementOS.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## fetchName flag
+        self.fetched = False
+        ## createLink flag
+        self.linked = False
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## groupTypes
+        self.groupTypes = {}
+
+    ## fetches names   
+    def fetchName(self, groupTypes):
+        self.fetched = True
+        for k in TElement.groupTypes:
+            groupTypes[k] = TElementOS.groupTypes[k]
+
+
+    ## creates links
+    def createLink(self, groupTypes):
+        self.linked = True
+        self.groupTypes = {}
+        for k in groupTypes:
+            self.groupTypes[k] = groupTypes[k]
+
+
+
+
+## test element
+class TElementOL(object):
+    ## The last TElement instance
+    instance = None
+    ## groupTypes
+    groupTypes = {"NXmyentry":"myentry1"}
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        TElementOL.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## fetchName flag
+        self.fetched = False
+        ## createLink flag
+        self.linked = False
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## groupTypes
+        self.groupTypes = {}
+
+    ## fetches names   
+    def fetchName(self, groupTypes):
+        self.fetched = True
+        for k in TElement.groupTypes:
+            groupTypes[k] = TElementOL.groupTypes[k]
+
+
+
+
+## test element
+class TElementOF(object):
+    ## The last TElement instance
+    instance = None
+    ## groupTypes
+    groupTypes = {"NXmyentry":"myentry1"}
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        TElementOF.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## fetchName flag
+        self.fetched = False
+        ## createLink flag
+        self.linked = False
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## groupTypes
+        self.groupTypes = {}
+
 
 
 
@@ -1159,7 +1271,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_XML_field(self):
+    def test_TE_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -1211,6 +1323,167 @@ class NexusXMLHandlerTest(unittest.TestCase):
         
         
 
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_TEOS_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElementOS.instance = None
+        el.elementClass = {"field":TElementOS}
+
+
+        attr1 = {"name":"counter","type":"NX_CHAR", "axis":1}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        value = 'myfield'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+        self.assertEqual(el.triggerPools, {})
+        
+        ins = TElementOS.instance
+        self.assertTrue(isinstance(ins, TElementOS))
+        self.assertTrue(ins.constructed)
+        self.assertEqual(len(attr1), len(ins.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), ins.attrs[a])
+        self.assertEqual(ins.last, self._eFile)
+        self.assertEqual(ins.content, [value])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(ins.fetched)
+        self.assertTrue(ins.linked)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(ins.groupTypes))
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), ins.groupTypes[a])
+        self.assertEqual("", ins.groupTypes[""])
+                
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_TEOL_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElementOL.instance = None
+        el.elementClass = {"field":TElementOL}
+
+
+        attr1 = {"name":"counter","type":"NX_CHAR", "axis":1}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        value = 'myfield'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+        self.assertEqual(el.triggerPools, {})
+        
+        ins = TElementOL.instance
+        self.assertTrue(isinstance(ins, TElementOL))
+        self.assertTrue(ins.constructed)
+        self.assertEqual(len(attr1), len(ins.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), ins.attrs[a])
+        self.assertEqual(ins.last, self._eFile)
+        self.assertEqual(ins.content, [value])
+        self.assertEqual(TElementOL.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(ins.fetched)
+        self.assertEqual(len(ins.groupTypes), 0)
+                
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_TEOF_field(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElementOF.instance = None
+        el.elementClass = {"field":TElementOF}
+
+
+        attr1 = {"name":"counter","type":"NX_CHAR", "axis":1}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        value = 'myfield'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+        self.assertEqual(el.triggerPools, {})
+        
+        ins = TElementOF.instance
+        self.assertTrue(isinstance(ins, TElementOF))
+        self.assertTrue(ins.constructed)
+        self.assertEqual(len(attr1), len(ins.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), ins.attrs[a])
+        self.assertEqual(ins.last, self._eFile)
+        self.assertEqual(ins.content, [value])
+        self.assertEqual(TElementOF.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertEqual(len(ins.groupTypes), 0)
+                
 
         self._nxFile.close()
         os.remove(self._fname)

@@ -172,7 +172,7 @@ class NexusXMLHandler(sax.ContentHandler):
         if not self.__unsupportedTag and self.__parser and  name in self.withXMLinput:
             print "XML", self.__innerHandler.xml
         elif not self.__unsupportedTag and name in self.elementClass:
-            res = self.__last().store()
+            res = self.__last().store() if  hasattr(self.__last(),"store") else None
             if res:
                 self.__addToPool(res, self.__last())
             self.__stack.pop()
