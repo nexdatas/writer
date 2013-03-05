@@ -73,6 +73,7 @@ class NexusXMLHandler(sax.ContentHandler):
         self.__innerHander = None
         
         self.__json = globalJSON
+        print "JSS",self.__json
 
         ## tags with innerxml as its input
         self.withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
@@ -114,6 +115,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## if innerparse was running
         self.__inner = False
+
 
     ## the last stack element 
     # \returns the last stack element 

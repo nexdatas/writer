@@ -25,6 +25,7 @@ import sys
 import subprocess
 import random
 import struct
+import json
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 from ndts.Element import Element
@@ -34,6 +35,12 @@ from ndts.DataSourceFactory import DataSourceFactory
 from ndts.Errors import UnsupportedTagError
 
 from xml import sax
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 
 try:
     import pni.io.nx.h5 as nx
@@ -131,6 +138,235 @@ class TElement(FElement):
         self.started = True
 
 
+## test element
+class InnerTag(object):
+    ## The last TElement instance
+    instance = None
+    ## strategy 
+    strategy = None
+    ## trigger 
+    trigger = None
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        InnerTag.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## strategy 
+        self.strategy = None
+        ## trigger
+        self.trigger = None
+        ## h5object
+        self.h5Object = Closeable()
+        ## xml string
+        self.xml = None
+        ## json
+        self.json = None
+
+        
+    ## stores names   
+    def store(self, xml, myjson):
+        self.xml = xml
+        self.json = myjson
+        self.stored = True
+        if InnerTag.trigger:
+            self.strategy,self.trigger = InnerTag.strategy,InnerTag.trigger
+            return InnerTag.strategy,InnerTag.trigger
+        if InnerTag.strategy:
+            self.strategy = InnerTag.strategy
+            return InnerTag.strategy
+
+
+
+## test element
+class InnerTagDSDC(object):
+    ## The last TElement instance
+    instance = None
+    ## strategy 
+    strategy = None
+    ## trigger 
+    trigger = None
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        InnerTagDSDC.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## strategy 
+        self.strategy = None
+        ## trigger
+        self.trigger = None
+        ## h5object
+        self.h5Object = Closeable()
+        ## xml string
+        self.xml = None
+        ## json
+        self.json = None
+        ## datasources
+        self.datasources = None
+        ## decoders
+        self.decoders = None
+
+
+        
+    ## stores names   
+    def store(self, xml, myjson):
+        self.xml = xml
+        print "JSON",self.json
+        self.json = myjson
+        self.stored = True
+        if InnerTagDC.trigger:
+            self.strategy,self.trigger = InnerTagDC.strategy,InnerTagDC.trigger
+            return InnerTagDC.strategy,InnerTagDC.trigger
+        if InnerTagDC.strategy:
+            self.strategy = InnerTagDC.strategy
+            return InnerTagDC.strategy
+
+    ## sets the used datasources
+    # \param datasources pool to be set
+    def setDataSources(self,datasources):
+        self.datasources = datasources
+        
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        self.decoders = decoders
+
+
+## test element
+class InnerTagDS(object):
+    ## The last TElement instance
+    instance = None
+    ## strategy 
+    strategy = None
+    ## trigger 
+    trigger = None
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        InnerTagDS.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## strategy 
+        self.strategy = None
+        ## trigger
+        self.trigger = None
+        ## h5object
+        self.h5Object = Closeable()
+        ## xml string
+        self.xml = None
+        ## json
+        self.json = None
+        ## datasources
+        self.datasources = None
+        ## decoders
+        self.decoders = None
+
+
+        
+    ## stores names   
+    def store(self, xml, myjson):
+        self.xml = xml
+        print "JSON",self.json
+        self.json = myjson
+        self.stored = True
+        if InnerTagDS.trigger:
+            self.strategy,self.trigger = InnerTagDS.strategy,InnerTagDS.trigger
+            return InnerTagDS.strategy,InnerTagDS.trigger
+        if InnerTagDS.strategy:
+            self.strategy = InnerTagDS.strategy
+            return InnerTagDS.strategy
+
+    ## sets the used datasources
+    # \param datasources pool to be set
+    def setDataSources(self,datasources):
+        self.datasources = datasources
+        
+
+
+## test element
+class InnerTagDC(object):
+    ## The last TElement instance
+    instance = None
+    ## strategy 
+    strategy = None
+    ## trigger 
+    trigger = None
+
+    ## consturctor
+    def __init__(self, attrs, last):
+        InnerTagDC.instance = self
+        ## costructor flag
+        self.constructed = True
+        ## store flag
+        self.stored=False
+        ## sax attributes
+        self.attrs = attrs
+        ## tag content 
+        self.content = []
+        ## the last object
+        self.last = last
+        ## strategy 
+        self.strategy = None
+        ## trigger
+        self.trigger = None
+        ## h5object
+        self.h5Object = Closeable()
+        ## xml string
+        self.xml = None
+        ## json
+        self.json = None
+        ## datasources
+        self.datasources = None
+        ## decoders
+        self.decoders = None
+
+
+        
+    ## stores names   
+    def store(self, xml, myjson):
+        self.xml = xml
+        print "JSON",self.json
+        self.json = myjson
+        self.stored = True
+        if InnerTagDC.trigger:
+            self.strategy,self.trigger = InnerTagDC.strategy,InnerTagDC.trigger
+            return InnerTagDC.strategy,InnerTagDC.trigger
+        if InnerTagDC.strategy:
+            self.strategy = InnerTagDC.strategy
+            return InnerTagDC.strategy
+
+        
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        self.decoders = decoders
 
 
 
@@ -2452,6 +2688,669 @@ class NexusXMLHandlerTest(unittest.TestCase):
         sax.parseString(xml, el)
 
 
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_inner(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        parser = sax.make_parser()
+        errorHandler = sax.ErrorHandler()
+
+        el = NexusXMLHandler(self._eFile, parser=parser)
+
+
+        parser.setContentHandler(el)
+        parser.setErrorHandler(errorHandler)
+        
+
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"group":TElementOS,"field":TElement}
+        el.withXMLinput = {"datasource":InnerTag}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        dsstart = '<datasource myname="testdatasource">'
+        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsend = '</datasource>'
+
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml += dsstart
+        xml += dsvalue
+        xml += dsend
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        ds = InnerTag.instance
+        ds = InnerTag.instance
+        self.assertEqual(len(ds.xml),3)
+        self.assertEqual(ds.xml[0],dsstart)
+        self.assertEqual(ds.xml[1],dsvalue)
+        self.assertEqual(ds.xml[2],dsend)
+        self.assertEqual(ds.json,None)
+        self.assertEqual(ds.constructed,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.stored,True)
+
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_inner_DSDC (self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        parser = sax.make_parser()
+        errorHandler = sax.ErrorHandler()
+
+        gjson = json.loads('{"data":{"myrecord":"1"}}')
+        el = NexusXMLHandler(self._eFile, parser=parser, globalJSON = gjson)
+
+
+        parser.setContentHandler(el)
+        parser.setErrorHandler(errorHandler)
+        
+
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"group":TElementOS,"field":TElement}
+        el.withXMLinput = {"datasource":InnerTagDSDC}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        dsstart = '<datasource myname="testdatasource">'
+        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsend = '</datasource>'
+
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml += dsstart
+        xml += dsvalue
+        xml += dsend
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        ds = InnerTagDSDC.instance
+        self.assertEqual(len(ds.xml),3)
+        self.assertEqual(ds.xml[0],dsstart)
+        self.assertEqual(ds.xml[1],dsvalue)
+        self.assertEqual(ds.xml[2],dsend)
+        self.assertEqual(ds.json,gjson)
+        self.assertEqual(ds.constructed,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.datasources,None)
+        self.assertEqual(ds.decoders,None)
+
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_inner_DSDC_2 (self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        parser = sax.make_parser()
+        errorHandler = sax.ErrorHandler()
+
+        datasources = "SOMETHING"
+        decoders = "SOMETHING2"
+        gjson = json.loads('{"data":{"myrecord":"1"}}')
+        el = NexusXMLHandler(self._eFile, parser=parser, globalJSON = gjson, datasources = datasources, decoders = decoders)
+
+
+        parser.setContentHandler(el)
+        parser.setErrorHandler(errorHandler)
+        
+
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"group":TElementOS,"field":TElement}
+        el.withXMLinput = {"datasource":InnerTagDSDC}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        dsstart = '<datasource myname="testdatasource">'
+        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsend = '</datasource>'
+
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml += dsstart
+        xml += dsvalue
+        xml += dsend
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        ds = InnerTagDSDC.instance
+        self.assertEqual(len(ds.xml),3)
+        self.assertEqual(ds.xml[0],dsstart)
+        self.assertEqual(ds.xml[1],dsvalue)
+        self.assertEqual(ds.xml[2],dsend)
+        self.assertEqual(ds.json,gjson)
+        self.assertEqual(ds.constructed,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.datasources,datasources)
+        self.assertEqual(ds.decoders,decoders)
+
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_inner_DS(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        parser = sax.make_parser()
+        errorHandler = sax.ErrorHandler()
+
+        datasources = "SOMETHING"
+        decoders = "SOMETHING2"
+        gjson = json.loads('{"data":{"myrecord":"1"}}')
+        el = NexusXMLHandler(self._eFile, parser=parser, globalJSON = gjson, datasources = datasources, decoders = decoders)
+
+
+        parser.setContentHandler(el)
+        parser.setErrorHandler(errorHandler)
+        
+
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"group":TElementOS,"field":TElement}
+        el.withXMLinput = {"datasource":InnerTagDS}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        dsstart = '<datasource myname="testdatasource">'
+        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsend = '</datasource>'
+
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml += dsstart
+        xml += dsvalue
+        xml += dsend
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        ds = InnerTagDS.instance
+        self.assertEqual(len(ds.xml),3)
+        self.assertEqual(ds.xml[0],dsstart)
+        self.assertEqual(ds.xml[1],dsvalue)
+        self.assertEqual(ds.xml[2],dsend)
+        self.assertEqual(ds.json,gjson)
+        self.assertEqual(ds.constructed,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.datasources,datasources)
+        self.assertEqual(ds.decoders,None)
+
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_inner_DC(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        parser = sax.make_parser()
+        errorHandler = sax.ErrorHandler()
+
+        datasources = "SOMETHING"
+        decoders = "SOMETHING2"
+        gjson = json.loads('{"data":{"myrecord":"1"}}')
+        el = NexusXMLHandler(self._eFile, parser=parser, globalJSON = gjson, datasources = datasources, decoders = decoders)
+
+
+        parser.setContentHandler(el)
+        parser.setErrorHandler(errorHandler)
+        
+
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"group":TElementOS,"field":TElement}
+        el.withXMLinput = {"datasource":InnerTagDC}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        dsstart = '<datasource myname="testdatasource">'
+        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsend = '</datasource>'
+
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml += dsstart
+        xml += dsvalue
+        xml += dsend
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        inpsrc = sax.InputSource()
+        inpsrc.setByteStream(StringIO(xml))
+        parser.parse(inpsrc)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        ds = InnerTagDC.instance
+        self.assertEqual(len(ds.xml),3)
+        self.assertEqual(ds.xml[0],dsstart)
+        self.assertEqual(ds.xml[1],dsvalue)
+        self.assertEqual(ds.xml[2],dsend)
+        self.assertEqual(ds.json,gjson)
+        self.assertEqual(ds.constructed,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.stored,True)
+        self.assertEqual(ds.datasources,None)
+        self.assertEqual(ds.decoders,decoders)
+
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
 
 
         self._nxFile.close()

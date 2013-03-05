@@ -36,7 +36,7 @@ class DataSourceFactory(Element):
         self.__dsPool = None
 
 
-    ## sets the used decoders
+    ## sets the used datasources
     # \param datasources pool to be set
     def setDataSources(self, datasources):
         self.__dsPool = datasources
