@@ -65,7 +65,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## unsupported tag tracer
         self.__unsupportedTag=""
-        self.__raiseUnsupportedTag=True
+        self.raiseUnsupportedTag=True
 
         ## xmlreader
         self.__parser = parser
@@ -156,7 +156,7 @@ class NexusXMLHandler(sax.ContentHandler):
                 if hasattr(self.__last(), "createLink") and callable(self.__last().createLink):
                     self.__last().createLink(self.__groupTypes)
             elif name not in self.transparentTags:
-                if self.__raiseUnsupportedTag:
+                if self.raiseUnsupportedTag:
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
                 print "Unsupported tag: ", name ,attrs.keys()
                 self.__unsupportedTag = name
@@ -172,9 +172,10 @@ class NexusXMLHandler(sax.ContentHandler):
         if not self.__unsupportedTag and self.__parser and  name in self.withXMLinput:
             print "XML", self.__innerHandler.xml
         elif not self.__unsupportedTag and name in self.elementClass:
-            res = self.__last().store() if  hasattr(self.__last(),"store") else None
-            if res:
-                self.__addToPool(res, self.__last())
+            if hasattr(self.__last(), "store") and callable(self.__last().store):
+                res = self.__last().store() 
+                if res:
+                    self.__addToPool(res, self.__last())
             self.__stack.pop()
         elif name not in self.transparentTags:
             if self.__unsupportedTag == name:
@@ -207,10 +208,12 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param xml inner xml
     def __createInnerTag(self, xml):
         if self.__storedName in self.withXMLinput:
+            res = None
             inner = self.withXMLinput[self.__storedName](self.__storedAttrs, self.__last())
             if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
                 inner.setDataSources(self.__datasources)
-            res = inner.store(xml, self.__json)
+            if hasattr(inner, "store") and callable(inner.store):
+                res = inner.store(xml, self.__json)
             if hasattr(inner, "setDecoders") and callable(inner.setDecoders):
                 inner.setDecoders(self.__decoders)
             if res:

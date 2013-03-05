@@ -31,6 +31,7 @@ from ndts.Element import Element
 from ndts.H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
                         EDimensions, EDim, EStrategy, FElement, EFile, FElement)
 from ndts.DataSourceFactory import DataSourceFactory
+from ndts.Errors import UnsupportedTagError
 
 from xml import sax
 
@@ -50,8 +51,19 @@ from  xml.sax import SAXParseException
 
 from ndts.NexusXMLHandler import NexusXMLHandler
 
+class Closeable(object):
+    ## consturctor
+    def __init__(self):
+        ## close flag
+        self.closed = False
+    
+    ## close method
+    def close(self):
+        self.closed = True
+
+
 ## test element
-class TElement(object):
+class TElement(FElement):
     ## The last TElement instance
     instance = None
     ## groupTypes
@@ -86,6 +98,8 @@ class TElement(object):
         self.trigger = None
         ## run flag
         self.started = False
+        ## h5object
+        self.h5Object = Closeable()
         
 
     ## fetches names   
@@ -118,8 +132,10 @@ class TElement(object):
 
 
 
+
+
 ## test element
-class TElementOS(object):
+class TElementOS(FElement):
     ## The last TElement instance
     instance = None
     ## groupTypes
@@ -144,6 +160,8 @@ class TElementOS(object):
         self.last = last
         ## groupTypes
         self.groupTypes = {}
+        ## h5object
+        self.h5Object = Closeable()
 
     ## fetches names   
     def fetchName(self, groupTypes):
@@ -158,7 +176,6 @@ class TElementOS(object):
         self.groupTypes = {}
         for k in groupTypes:
             self.groupTypes[k] = groupTypes[k]
-
 
 
 
@@ -1581,6 +1598,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(fl.fetched)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
         self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
         for a in TElement.groupTypes:
             self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
@@ -1599,6 +1617,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
         self.assertTrue(gr.fetched)
         self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
         self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
         for a in TElementOS.groupTypes:
             print a , TElementOS.groupTypes[a]
@@ -1606,6 +1625,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual("", gr.groupTypes[""])
         
         
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
 
 
         self._nxFile.close()
@@ -1839,7 +1862,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_TE_field_STEP_TRIGGER(self):
+    def test_TE_field_STEP_trigger(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
@@ -1908,6 +1931,527 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(ins.started)
         
         
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_transparent(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"field":TElement,"group":TElementOS}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml += '<definition></definition>'
+        xml +=  value
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_transparent_2(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"field":TElement,"group":TElementOS}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        xml += '<definition></definition>'
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        xml +=  '</group>'
+        
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_transparent_3(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"field":TElement,"group":TElementOS}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<group%s>' % (st)
+        xml += '<definition>'
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        xml +=  '</definition>'
+        xml +=  '</group>'
+        
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_transparent_4(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"field":TElement,"group":TElementOS}
+        el.transparentTags = ['mydefinition']
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<mydefinition>'
+        xml += '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        xml +=  '</group>'
+        xml +=  '</mydefinition>'
+        
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+
+        self.assertEqual(el.triggerPools, {})
+        
+        fl = TElement.instance
+        gr = TElementOS.instance
+        self.assertTrue(isinstance(fl, TElement))
+        self.assertTrue(fl.constructed)
+        self.assertEqual(len(attr2), len(fl.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr2[a]), fl.attrs[a])
+        self.assertEqual(fl.last, gr)
+        self.assertEqual(fl.content, [value])
+        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
+        self.assertTrue(fl.fetched)
+        self.assertTrue(fl.linked)
+        self.assertTrue(fl.stored)
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
+        for a in TElement.groupTypes:
+            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
+        for a in TElementOS.groupTypes:
+            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
+        self.assertEqual("", fl.groupTypes[""])
+
+
+        self.assertTrue(isinstance(gr, TElementOS))
+        self.assertTrue(gr.constructed)
+        self.assertEqual(len(attr1), len(gr.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertEqual(gr.last, self._eFile)
+        self.assertEqual(gr.content, [])
+        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
+        self.assertTrue(gr.fetched)
+        self.assertTrue(gr.linked)
+        self.assertTrue(not gr.h5Object.closed)
+        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
+        for a in TElementOS.groupTypes:
+            print a , TElementOS.groupTypes[a]
+            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
+        self.assertEqual("", gr.groupTypes[""])
+        
+        
+        el.close()
+
+        self.assertTrue(not fl.h5Object.closed)
+        self.assertTrue(not gr.h5Object.closed)
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_unsupported(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"field":TElement,"group":TElementOS}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<mydefinition>'
+        xml += '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        xml +=  '</group>'
+        xml +=  '</mydefinition>'
+        
+        parser = sax.make_parser()
+        self.assertTrue(el.raiseUnsupportedTag)
+        self.myAssertRaise(UnsupportedTagError, sax.parseString,xml, el)
+
+
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_group_field_unsupported_false(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        el = NexusXMLHandler(self._eFile)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        el.elementClass = {"field":TElement,"group":TElementOS}
+        self.assertTrue('definition' in el.transparentTags)
+
+        attr1 = {"name":"entry1","type":"NXentry"}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        attr2 = {"name":"counter","type":"NX_INT"}
+        sattr2 = {attr2["type"]:attr2["name"]}
+
+
+        value = '1234'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<mydefinition>'
+        xml += '<group%s>' % (st)
+        st = ''
+        for a in attr2:
+            st += ' %s="%s"' % (a, attr2[a]) 
+        xml += '<field%s>' % (st)
+        xml +=  value
+        xml +=  '</field>'
+        xml +=  '</group>'
+        xml +=  '</mydefinition>'
+        
+        parser = sax.make_parser()
+        el.raiseUnsupportedTag=False
+        self.assertTrue(not el.raiseUnsupportedTag)
+        sax.parseString(xml, el)
+
+
 
 
         self._nxFile.close()
