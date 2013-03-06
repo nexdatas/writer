@@ -33,7 +33,6 @@ class AttributeArray(object):
     # \param dtype type of the attribute array
     def __init__(self, parents, name, dtype):
         ## parents
-        
         self.__parents = parents
         ## name of the attribute array
         self.name = name

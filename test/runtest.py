@@ -58,6 +58,7 @@ import ElementThreadTest
 import ThreadPoolTest
 import FetchNameHandlerTest
 import InnerXMLParserTest
+import AttributeArrayTest
 
 try:
     import PyTango
@@ -83,6 +84,8 @@ try:
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
     print "MYSQL not available: %s" % e
+except Exception, e:
+    print "MYSQL not available: %s" % e
 except:
     print "MYSQL not available"
 
@@ -97,6 +100,8 @@ try:
     pgdb.close()
     DB_AVAILABLE.append("PGSQL")
 except ImportError, e:
+    print "PGSQL not available: %s" % e
+except Exception,e:
     print "PGSQL not available: %s" % e
 except:
     print "PGSQL not available"
@@ -118,6 +123,8 @@ try:
     ordb.close()
     DB_AVAILABLE.append("ORACLE")
 except ImportError, e:
+    print "ORACLE not available: %s" % e
+except Exception,e:
     print "ORACLE not available: %s" % e
 except:
     print "ORACLE not available"
@@ -262,6 +269,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(AttributeArrayTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
