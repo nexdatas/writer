@@ -113,31 +113,65 @@ class AttributeArrayTest(unittest.TestCase):
         fname = '%s/%s.h5' % (os.getcwd(), fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
+
+
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "datetime":["12:34:34","NX_DATE_TIME", "string"],
+            "iso8601":["12:34:34","ISO8601", "string"],
+            "int":[-132,"NX_INT", self._bint],
+            "int8":[13,"NX_INT8", "int8"],
+            "int16":[-223,"NX_INT16", "int16"],
+            "int32":[13235,"NX_INT32", "int32"],
+            "int64":[-12425,"NX_INT64", "int64"],
+            "uint":[123,"NX_UINT", self._buint],
+            "uint8":[65,"NX_UINT8", "uint8"],
+            "uint16":[453,"NX_UINT16", "uint16"],
+            "uint32":[12235,"NX_UINT32", "uint32"],
+            "uint64":[14345,"NX_UINT64", "uint64"],
+            "float":[-16.345,"NX_FLOAT", self._bfloat,1.e-14],
+            "number":[-2.345e+2,"NX_NUMBER", self._bfloat,1.e-14],
+            "float32":[-4.355e-1,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[-2.345,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool"],
+            }
+
+
+
         parent = []
         for i in range(10):
             parent.append(nxFile.create_field("data_%s" % i,"string"))
         
-        aname = 'myattr2'
-        dtype = 'int64'
-        avalue = 1233
 
-        el = AttributeArray(parent, aname, dtype)
-        self.assertEqual(el.name, aname)
-        self.assertEqual(el.dtype, dtype)
-        el.value = avalue
-        self.assertEqual(el.value, avalue)
+        cnt = 0    
+        for a in attrs:
+            cnt += 1
 
-        for i in range(10):
-            self.assertEqual(parent[i].nattrs, 1)
-            at = parent[i].attr(aname)
-            self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
-            self.assertTrue(at.valid)
-            self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
-            self.assertEqual(at.dtype,dtype)
-            self.assertEqual(at.name,aname)
-            self.assertEqual(at.value,avalue)
+            el = AttributeArray(parent, a, attrs[a][2])
+            el.value = attrs[a][0]
 
+            self.assertEqual(el.name, a)
+            self.assertEqual(el.dtype, attrs[a][2])
+            if len(attrs[a]) <= 3:
+                self.assertEqual(el.value, attrs[a][0])
+            else:
+                self.assertTrue(abs(el.value-attrs[a][0])<attrs[a][3])
+            
+            
+            for i in range(10):
+                self.assertEqual(parent[i].nattrs, cnt)
+                at = parent[i].attr(a)
+                self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
+                self.assertTrue(at.valid)
+                self.assertTrue(hasattr(at.shape,"__iter__"))
+                self.assertEqual(len(at.shape),0)
+                self.assertEqual(at.dtype,attrs[a][2])
+                self.assertEqual(at.name,a)
+                if len(attrs[a]) <= 3:
+                    self.assertEqual(at.value, attrs[a][0])
+                else:
+                    self.assertTrue(abs(at.value-attrs[a][0])<attrs[a][3])
+                
         nxFile.close()
         os.remove(fname)
 
