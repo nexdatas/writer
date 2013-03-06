@@ -59,6 +59,7 @@ import ThreadPoolTest
 import FetchNameHandlerTest
 import InnerXMLParserTest
 import AttributeArrayTest
+import FieldArrayTest
 
 try:
     import PyTango
@@ -272,6 +273,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeArrayTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FieldArrayTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(

@@ -113,7 +113,6 @@ class FieldArray(object):
                                                               dtype.encode(), [self.shape[0]]))
         
         
-
     
     ## access to attrributes Array    
     # \param name name of the attribute
@@ -249,24 +248,28 @@ class FieldArray(object):
             key.append(slice(0, self.shape[k], 1))
 
         if key:
-            elf.__setitem__(key, value)
+            self.__setitem__(key, value)
+        else:
+            self.__fList[0].write( value)
+            
 
 
     ## reads the field value
     # \brief It reads the whole field array
     def read(self):
         key = []
-        print "RS", self.shape, self.__fdim
+#        print "RS", self.shape, self.__fdim
         for k in range(len(self.shape)):
             key.append(slice(0, self.shape[k], 1))
-        print "KEY", key    
+#        print "KEY", key    
         if key:
 #            v =  self.__getitem__(key)
 #            print "V",v
 #            return v
             return self.__getitem__(key)
-    
-                    
+        else:
+            return self.__fList[0].read()
+
     ## growing method
     # \brief It enlage the field
     # \param dim growing dimension

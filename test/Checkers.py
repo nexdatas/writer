@@ -330,7 +330,7 @@ class Checker(object):
     def checkScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
         atts = {"type":nxtype,"units":"m","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
         cnt = det.open(name)
         self._tc.assertTrue(cnt.valid)
@@ -386,7 +386,7 @@ class Checker(object):
     def checkSingleScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
         atts = {"type":nxtype,"units":"m","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
         cnt = det.open(name)
         self._tc.assertTrue(cnt.valid)
@@ -443,7 +443,7 @@ class Checker(object):
     def checkPostScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
         atts = {"type":nxtype,"units":"m","postrun":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -484,7 +484,7 @@ class Checker(object):
     def checkXMLScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
         atts = {"type":nxtype,"units":"m"}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -543,7 +543,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
         atts = {"type":nxtype,"units":"","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -603,7 +603,7 @@ class Checker(object):
     def checkSingleSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs=None):
 
         atts = {"type":nxtype,"units":"", "nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -657,7 +657,7 @@ class Checker(object):
     def checkXMLSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
 
         atts = {"type":nxtype,"units":""}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -707,7 +707,7 @@ class Checker(object):
     def checkStringSpectrumField(self, det, name, dtype, nxtype, values, attrs = None):
 
         atts = {"type":nxtype,"units":"", "nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnts = [ det.open(name +"_"+str(sz) ) for sz in range(len(values[0]))] 
@@ -758,7 +758,7 @@ class Checker(object):
     def checkSingleStringSpectrumField(self, det, name, dtype, nxtype, values, attrs = None):
 
         atts = {"type":nxtype,"units":"", "nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name) 
@@ -807,7 +807,7 @@ class Checker(object):
     def checkImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0 ,attrs = None):
 
         atts = {"type":nxtype,"units":"","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -869,7 +869,7 @@ class Checker(object):
     def checkSingleImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
 
         atts = {"type":nxtype,"units":"","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -923,7 +923,7 @@ class Checker(object):
     def checkXMLImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0 ,attrs = None):
 
         atts = {"type":nxtype,"units":""}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
         cnt = det.open(name)
@@ -974,7 +974,7 @@ class Checker(object):
     def checkStringImageField(self, det, name, dtype, nxtype, values, attrs = None):
 
         atts = {"type":nxtype,"units":"","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
         
         cnts = [[ det.open(name +"_"+str(s1) +"_"+str(s2) ) for s2 in range(len(values[0][0]))] for s1 in range(len(values[0])) ]
@@ -1024,7 +1024,7 @@ class Checker(object):
     def checkSingleStringImageField(self, det, name, dtype, nxtype, values, attrs= None):
 
         atts = {"type":nxtype,"units":"","nexdatas_source":None}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
 
@@ -1074,7 +1074,7 @@ class Checker(object):
     def checkXMLStringImageField(self, det, name, dtype, nxtype, values, attrs = None):
 
         atts = {"type":nxtype,"units":""}
-        if attrs:
+        if attrs is not None:
             atts = attrs
 
 
