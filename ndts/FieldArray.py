@@ -192,7 +192,10 @@ class FieldArray(object):
             if rank == 2:
                 for i in range(len(value[0])):
                     for k in range(len(value)):
+#                        print  i,k, kr[k], value[k][i],self.__fList[ir[i]].shape
                         self.__fList[ir[i]].__setitem__(kr[k], value[k][i])
+#                        print self.__fList[ir[i]][kr[k]], value[k][i]
+#                        self.__fList[ir[i]][kr[k]] = value[k][i]
             elif rank == 1 :
                 if len(ir) == 1:
                     for k in range(len(value)):
