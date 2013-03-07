@@ -160,13 +160,14 @@ class FieldArray(object):
 
         kr, ir, jr = self.__fetchRanges(key)
             
+
         if self.__fdim == 0:
             return numpy.array([self.__fList[0].__getitem__(k) for k in kr])
         elif self.__fdim == 1: 
             return numpy.array([[self.__fList[i].__getitem__(k) for i  in ir] for k in kr])
         elif self.__fdim == 2:
-            return numpy.array([[[self.__fList[i*len(self.shape(2))+j].__getitem__(k)  
-                                for j  in jr] for i  in ir] for k in kr])
+            return numpy.array([[[self.__fList[i*self.shape[2]+j].__getitem__(k)  
+                                  for j  in jr] for i  in ir] for k in kr])
         else: 
             return None
            
@@ -206,8 +207,8 @@ class FieldArray(object):
             if rank == 3:
                 for k in range(len(value)):
                     for i in range(len(value[0])):
-                        for j in range(len(value[0,0])):
-                            self.__fList[ir[i]*self.shape[2]+jr[j]].__setitem__([kr[k]], value[k][i][j])
+                        for j in range(len(value[0][0])):
+                            self.__fList[ir[i]*self.shape[2]+jr[j]].__setitem__(kr[k], value[k][i][j])
 
             elif rank == 2:
                 if len(kr) == 1:
