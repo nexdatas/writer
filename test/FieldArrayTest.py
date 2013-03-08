@@ -1000,7 +1000,7 @@ class FieldArrayTest(unittest.TestCase):
                                       for c in range(self.__rnd.randint(2, 10)) ]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
-            nr = self.__rnd.randint(0, 10)
+            nr = self.__rnd.randint(1, 10)
             attrs[k][4] =  (len(attrs[k][0])+nr,)
             attrs[k][5] =  (self.__rnd.randint(0, nr),)
 
@@ -1097,7 +1097,7 @@ class FieldArrayTest(unittest.TestCase):
                                        ]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
-            nr = self.__rnd.randint(0, 10)
+            nr = self.__rnd.randint(1, 10)
             attrs[k][4] =  (len(attrs[k][0])+nr,)
             attrs[k][5] =  (self.__rnd.randint(0, nr),)
 
@@ -1204,7 +1204,7 @@ class FieldArrayTest(unittest.TestCase):
                     attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],len(attrs[k][0][0])+nr[1])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]))
 
@@ -1633,7 +1633,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]),len(attrs[k][0][0][0]))
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0, 10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],len(attrs[k][0][0])+nr[1],len(attrs[k][0][0][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -1755,7 +1755,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],len(attrs[k][0][0])+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -1879,7 +1879,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],1+nr[1],len(attrs[k][0][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -1998,7 +1998,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (1+nr[0],len(attrs[k][0])+nr[1],len(attrs[k][0][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2116,7 +2116,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],1+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2229,7 +2229,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (1+nr[0],len(attrs[k][0])+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2349,7 +2349,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (1+nr[0],1+nr[1],len(attrs[k][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2453,7 +2453,7 @@ class FieldArrayTest(unittest.TestCase):
             mlen2 = self.__rnd.randint(2, 10)
             attrs[k][3] =  ()
 
-            nr = (self.__rnd.randint(0, 10),self.__rnd.randint(0, 10),self.__rnd.randint(0,10))
+            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
             attrs[k][4] =  (1+nr[0],1+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
