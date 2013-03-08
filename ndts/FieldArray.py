@@ -192,10 +192,7 @@ class FieldArray(object):
             if rank == 2:
                 for i in range(len(value[0])):
                     for k in range(len(value)):
-#                        print  i,k, kr[k], value[k][i],self.__fList[ir[i]].shape
                         self.__fList[ir[i]].__setitem__(kr[k], value[k][i])
-#                        print self.__fList[ir[i]][kr[k]], value[k][i]
-#                        self.__fList[ir[i]][kr[k]] = value[k][i]
             elif rank == 1 :
                 if len(ir) == 1:
                     for k in range(len(value)):
@@ -265,14 +262,9 @@ class FieldArray(object):
     # \brief It reads the whole field array
     def read(self):
         key = []
-#        print "RS", self.shape, self.__fdim
         for k in range(len(self.shape)):
             key.append(slice(0, self.shape[k], 1))
-#        print "KEY", key    
         if key:
-#            v =  self.__getitem__(key)
-#            print "V",v
-#            return v
             return self.__getitem__(key)
         else:
             return self.__fList[0].read()
@@ -281,11 +273,16 @@ class FieldArray(object):
     # \brief It enlage the field
     # \param dim growing dimension
     # \param ln a number of grow units    
-    def grow(self, dim=0,ln=1):
+    def grow(self, dim=0, ln=1):
+        if dim:
+            raise ValueError, "dim >0  not supported by FieldArray.grow "
         for f in self.__fList:
             f.grow(dim, ln)
         shape = list(self.shape)    
-        shape[dim] = shape[dim] + ln
+        if shape:
+            shape[dim] = shape[dim] + ln
+        else:
+            shape = [1+ln]
         self.shape = tuple(shape)
 
     ## closing method

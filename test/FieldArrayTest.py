@@ -88,6 +88,20 @@ class FieldArrayTest(unittest.TestCase):
         print "tearing down ..."
 
 
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
+
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
@@ -175,6 +189,7 @@ class FieldArrayTest(unittest.TestCase):
             el.write(attrs[name][0])
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
+            el.close()
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -273,6 +288,7 @@ class FieldArrayTest(unittest.TestCase):
             el.write(attrs[name][0])
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
+            el.close()
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -468,6 +484,7 @@ class FieldArrayTest(unittest.TestCase):
             el.write(attrs[name][0])
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
+            el.close()
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -871,6 +888,7 @@ class FieldArrayTest(unittest.TestCase):
             el.write(attrs[name][0])
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
+            el.close()
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -2467,6 +2485,447 @@ class FieldArrayTest(unittest.TestCase):
         f.close()
         os.remove(fname)
 
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_attr_1d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat, (1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            }
+
+
+
+        
+        for k in attrs:
+            slen = self.__rnd.randint(0, 3)
+            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            
+
+            el = FieldArray(nxFile, k, "string",attrs[k][3])
+            self.assertEqual(el.name, k)
+            self.assertEqual(el.dtype, "string")
+            self.assertEqual(el.shape, attrs[k][3])
+            self.assertEqual(el.chunk, None)
+            el.attr(k,attrs[k][2]).value= attrs[k][0]
+        nxFile.close()
+    
+        f = nx.open_file(fname,readonly=True)
+        self.assertEqual(6, f.nattrs)
+        self.assertEqual( f.attr("file_name").value, fname)
+        self.assertTrue(f.attr("NX_class").value,"NXroot")
+        
+        for k in attrs:
+            if len(attrs[k][3]) <= 1:
+                fl = f.open(k)
+                at = fl.attr(k)
+                self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
+                self.assertTrue(at.valid)
+                self.assertTrue(hasattr(at.shape,"__iter__"))
+                self.assertEqual(len(at.shape),0)
+                self.assertEqual(at.dtype,attrs[k][2])
+                self.assertEqual(at.name,k)
+                if len(attrs[k]) > 4 :
+                    self.assertTrue(abs(at.value-attrs[k][0])<= attrs[k][4])
+                else:
+                    self.assertEqual(at.value,attrs[k][0])
+            elif len(attrs[k][3]) == 2:
+                for i in range(attrs[k][3][1]):
+                    fl = f.open("%s_%s" %(k,i))
+                    at = fl.attr(k)
+                    self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
+                    self.assertTrue(at.valid)
+                    self.assertTrue(hasattr(at.shape,"__iter__"))
+                    self.assertEqual(len(at.shape),0)
+                    self.assertEqual(at.dtype,attrs[k][2])
+                    self.assertEqual(at.name,k)
+                    if len(attrs[k]) > 4 :
+                        self.assertTrue(abs(at.value-attrs[k][0])<= attrs[k][4])
+                    else:
+                        self.assertEqual(at.value,attrs[k][0])
+                        
+            elif len(attrs[k][3]) == 3:
+                for i in range(attrs[k][3][1]):
+                    for j in range(attrs[k][3][2]):
+                        fl = f.open("%s_%s_%s" %(k,i,j))
+                        at = fl.attr(k)
+                        self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
+                        self.assertTrue(at.valid)
+                        self.assertTrue(hasattr(at.shape,"__iter__"))
+                        self.assertEqual(len(at.shape),0)
+                        self.assertEqual(at.dtype,attrs[k][2])
+                        self.assertEqual(at.name,k)
+                        if len(attrs[k]) > 4 :
+                            self.assertTrue(abs(at.value-attrs[k][0])<= attrs[k][4])
+                        else:
+                            self.assertEqual(at.value,attrs[k][0])
+            
+        f.close()
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_grow(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,), (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,), (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,), (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,), (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,), (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,), (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,), (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,), (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,), (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,), (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,), (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,), (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat, (1,), (1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,), (1,)],
+            }
+
+
+
+        
+        for k in attrs:
+            slen = self.__rnd.randint(0, 3)
+            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            dim, val = (self.__rnd.randint(0, max(0,slen-1)),self.__rnd.randint(0, 10))
+            attrs[k][4] = list(attrs[k][3])
+            print k ,dim,val
+            if slen:
+                attrs[k][4][dim] = attrs[k][3][dim] + val
+                attrs[k][4] = tuple(attrs[k][4])
+            else:
+                attrs[k][4] = (1+val,)
+            print k,  attrs[k][3],attrs[k][4]
+
+            el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
+            self.assertEqual(el.name, k)
+            self.assertEqual(el.dtype, attrs[k][2])
+            self.assertEqual(el.shape, attrs[k][3])
+            self.assertEqual(el.chunk, None)
+            if dim ==0 :
+                self.assertEqual(el.grow(dim,val), None)
+            else:
+                self.myAssertRaise(ValueError,el.grow,dim,val)
+                attrs[k][4] = attrs[k][3]
+            self.assertEqual(el.shape, attrs[k][4])
+            
+            
+        nxFile.close()
+    
+        f = nx.open_file(fname,readonly=True)
+        self.assertEqual(6, f.nattrs)
+        self.assertEqual( f.attr("file_name").value, fname)
+        self.assertTrue(f.attr("NX_class").value,"NXroot")
+        
+        for k in attrs:
+            print k , attrs[k][3],attrs[k][4]
+            if len(attrs[k][4]) <= 1:
+                fl = f.open(k)
+                self.assertEqual(fl.shape, attrs[k][4])
+            elif len(attrs[k][4]) == 2:
+                for i in range(attrs[k][4][1]):
+                    fl = f.open("%s_%s" %(k,i))
+                    self.assertEqual(fl.shape, (attrs[k][4][0],))
+                        
+            elif len(attrs[k][4]) == 3:
+                for i in range(attrs[k][4][1]):
+                    for j in range(attrs[k][4][2]):
+                        fl = f.open("%s_%s_%s" %(k,i,j))
+                        self.assertEqual(fl.shape, (attrs[k][4][0],))
+            
+        f.close()
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_grow_dim0(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,), (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,), (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,), (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,), (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,), (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,), (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,), (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,), (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,), (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,), (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,), (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,), (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat, (1,), (1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,), (1,)],
+            }
+
+
+
+        
+        for k in attrs:
+            slen = self.__rnd.randint(0, 3)
+            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            dim, val = (0,self.__rnd.randint(0, 10))
+            attrs[k][4] = list(attrs[k][3])
+            print k ,dim,val
+            if slen:
+                attrs[k][4][dim] = attrs[k][3][dim] + val
+                attrs[k][4] = tuple(attrs[k][4])
+            else:
+                attrs[k][4] = (1+val,)
+            print k,  attrs[k][3],attrs[k][4]
+
+            el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
+            self.assertEqual(el.name, k)
+            self.assertEqual(el.dtype, attrs[k][2])
+            self.assertEqual(el.shape, attrs[k][3])
+            self.assertEqual(el.chunk, None)
+            if dim ==0 :
+                self.assertEqual(el.grow(dim,val), None)
+            else:
+                self.myAssertRaise(ValueError,el.grow,dim,val)
+                attrs[k][4] = attrs[k][3]
+            self.assertEqual(el.shape, attrs[k][4])
+            
+            
+        nxFile.close()
+    
+        f = nx.open_file(fname,readonly=True)
+        self.assertEqual(6, f.nattrs)
+        self.assertEqual( f.attr("file_name").value, fname)
+        self.assertTrue(f.attr("NX_class").value,"NXroot")
+        
+        for k in attrs:
+            print k , attrs[k][3],attrs[k][4]
+            if len(attrs[k][4]) <= 1:
+                fl = f.open(k)
+                self.assertEqual(fl.shape, attrs[k][4])
+            elif len(attrs[k][4]) == 2:
+                for i in range(attrs[k][4][1]):
+                    fl = f.open("%s_%s" %(k,i))
+                    self.assertEqual(fl.shape, (attrs[k][4][0],))
+                        
+            elif len(attrs[k][4]) == 3:
+                for i in range(attrs[k][4][1]):
+                    for j in range(attrs[k][4][2]):
+                        fl = f.open("%s_%s_%s" %(k,i,j))
+                        self.assertEqual(fl.shape, (attrs[k][4][0],))
+            
+        f.close()
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_grow_val1(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,), (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,), (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,), (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,), (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,), (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,), (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,), (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,), (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,), (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,), (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,), (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,), (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat, (1,), (1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,), (1,)],
+            }
+
+
+
+        
+        for k in attrs:
+            slen = self.__rnd.randint(0, 3)
+            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            dim, val = (0,1)
+            attrs[k][4] = list(attrs[k][3])
+            print k ,dim,val
+            if slen:
+                attrs[k][4][dim] = attrs[k][3][dim] + val
+                attrs[k][4] = tuple(attrs[k][4])
+            else:
+                attrs[k][4] = (1+val,)
+            print k,  attrs[k][3],attrs[k][4]
+
+            el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
+            self.assertEqual(el.name, k)
+            self.assertEqual(el.dtype, attrs[k][2])
+            self.assertEqual(el.shape, attrs[k][3])
+            self.assertEqual(el.chunk, None)
+            if dim ==0 :
+                self.assertEqual(el.grow(dim), None)
+            else:
+                self.myAssertRaise(ValueError,el.grow,dim,val)
+                attrs[k][4] = attrs[k][3]
+            self.assertEqual(el.shape, attrs[k][4])
+            
+            
+        nxFile.close()
+    
+        f = nx.open_file(fname,readonly=True)
+        self.assertEqual(6, f.nattrs)
+        self.assertEqual( f.attr("file_name").value, fname)
+        self.assertTrue(f.attr("NX_class").value,"NXroot")
+        
+        for k in attrs:
+            print k , attrs[k][3],attrs[k][4]
+            if len(attrs[k][4]) <= 1:
+                fl = f.open(k)
+                self.assertEqual(fl.shape, attrs[k][4])
+            elif len(attrs[k][4]) == 2:
+                for i in range(attrs[k][4][1]):
+                    fl = f.open("%s_%s" %(k,i))
+                    self.assertEqual(fl.shape, (attrs[k][4][0],))
+                        
+            elif len(attrs[k][4]) == 3:
+                for i in range(attrs[k][4][1]):
+                    for j in range(attrs[k][4][2]):
+                        fl = f.open("%s_%s_%s" %(k,i,j))
+                        self.assertEqual(fl.shape, (attrs[k][4][0],))
+            
+        f.close()
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_grow_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,), (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,), (1,)],
+            "int":[-123,"NX_INT", self._bint, (1,), (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,), (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,), (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,), (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,), (1,)],
+            "uint":[123,"NX_UINT", self._buint, (1,), (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,), (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,), (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,), (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), (1,)],
+            "float":[-12.345,"NX_FLOAT", self._bfloat, (1,), (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  self._bfloat, (1,), (1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,), (1,)],
+            }
+
+
+
+        
+        for k in attrs:
+            slen = self.__rnd.randint(0, 3)
+            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            dim, val = (0,1)
+            attrs[k][4] = list(attrs[k][3])
+            print k ,dim,val
+            if slen:
+                attrs[k][4][dim] = attrs[k][3][dim] + val
+                attrs[k][4] = tuple(attrs[k][4])
+            else:
+                attrs[k][4] = (1+val,)
+            print k,  attrs[k][3],attrs[k][4]
+
+            el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
+            self.assertEqual(el.name, k)
+            self.assertEqual(el.dtype, attrs[k][2])
+            self.assertEqual(el.shape, attrs[k][3])
+            self.assertEqual(el.chunk, None)
+            if dim ==0 :
+                self.assertEqual(el.grow(), None)
+            else:
+                self.myAssertRaise(ValueError,el.grow,dim,val)
+                attrs[k][4] = attrs[k][3]
+            self.assertEqual(el.shape, attrs[k][4])
+            
+            
+        nxFile.close()
+    
+        f = nx.open_file(fname,readonly=True)
+        self.assertEqual(6, f.nattrs)
+        self.assertEqual( f.attr("file_name").value, fname)
+        self.assertTrue(f.attr("NX_class").value,"NXroot")
+        
+        for k in attrs:
+            print k , attrs[k][3],attrs[k][4]
+            if len(attrs[k][4]) <= 1:
+                fl = f.open(k)
+                self.assertEqual(fl.shape, attrs[k][4])
+            elif len(attrs[k][4]) == 2:
+                for i in range(attrs[k][4][1]):
+                    fl = f.open("%s_%s" %(k,i))
+                    self.assertEqual(fl.shape, (attrs[k][4][0],))
+                        
+            elif len(attrs[k][4]) == 3:
+                for i in range(attrs[k][4][1]):
+                    for j in range(attrs[k][4][2]):
+                        fl = f.open("%s_%s_%s" %(k,i,j))
+                        self.assertEqual(fl.shape, (attrs[k][4][0],))
+            
+        f.close()
 
 if __name__ == '__main__':
     unittest.main()
