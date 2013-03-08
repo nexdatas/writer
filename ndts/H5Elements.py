@@ -21,14 +21,6 @@
 
 import sys                                                                       
 
-## True if pniio installed
-PNIIO = False
-try:
-    import pni.io.nx.h5 as nx
-    PNIIO = True
-except:
-    import pni.nx.h5 as nx
-
 import numpy 
 
 #from DataSource import DataSource

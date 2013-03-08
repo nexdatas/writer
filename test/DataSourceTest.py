@@ -30,7 +30,40 @@ from xml.dom import minidom
 
 
 from ndts.DataSources import DataSource
+from ndts.DataSources import PYTANGO_AVAILABLE as PYTANGO
+from ndts.DataSources import DB_AVAILABLE as DB
 
+
+
+try:
+    import PyTango
+    ## global variable if PyTango module installed
+    PYTANGO_AVAILABLE = True
+except ImportError, e:
+    PYTANGO_AVAILABLE = False
+    print "PYTANGO not available: %s" % e
+
+
+## list of available databases
+DB_AVAILABLE = []
+
+try:
+    import MySQLdb
+    DB_AVAILABLE.append("MYSQL")
+except ImportError, e:
+    print "MYSQL not available: %s" % e
+    
+try:
+    import psycopg2
+    DB_AVAILABLE.append("PGSQL")
+except ImportError, e:
+    print "PGSQL not available: %s" % e
+
+try:
+    import cx_Oracle
+    DB_AVAILABLE.append("ORACLE")
+except ImportError, e:
+    print "ORACLE not available: %s" % e
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -57,7 +90,7 @@ class DataSourceTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-
+        
 
 
     ## test starter
@@ -93,6 +126,11 @@ class DataSourceTest(unittest.TestCase):
 
         el = DataSource()
         self.assertTrue(isinstance(el, object))
+        self.assertEqual(PYTANGO_AVAILABLE,PYTANGO)
+        self.assertEqual(len(DB),len(DB_AVAILABLE))
+        for db in range(len(DB)):
+            self.assertEqual(DB[db],DB_AVAILABLE[db])
+            
 
 
 

@@ -166,6 +166,8 @@ class TangoDataWriter(object):
                 lfield = self.__logGroup.create_field("Nexus__entry__%s_XML" % str(self.__entryCounter),"string")
                 lfield.write(self.xmlSettings)
                 lfield.close()
+            if self.__nxFile:
+                self.__nxFile.flush()
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
@@ -192,6 +194,9 @@ class TangoDataWriter(object):
                     self.__triggerPools[pool].setJSON(json.loads(self.json), localJSON)
                     self.__triggerPools[pool].runAndWait()
                     self.__triggerPools[pool].checkErrors()
+
+        if self.__nxFile:
+            self.__nxFile.flush()
         gc.collect()
 
 

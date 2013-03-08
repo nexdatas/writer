@@ -98,6 +98,21 @@ class FieldArrayTest(unittest.TestCase):
             error =  False
             method(*args, **kwargs)
         except exception, e:
+            print "exception", type(e)
+            error = True
+        self.assertEqual(error, True)
+
+
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertURaise(self, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except :
             error = True
         self.assertEqual(error, True)
 
@@ -187,9 +202,12 @@ class FieldArrayTest(unittest.TestCase):
             self.assertEqual(el.shape, shape)
             self.assertEqual(el.chunk, None)
             el.write(attrs[name][0])
-#            print name ,attrs[name][0], "read", el.read()
+            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
             el.close()
+#            self.myAssertRaise(nx.NXGroupError, el.write,attrs[name][0])
+            self.myAssertURaise(el.write,attrs[name][0])
+            
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -289,6 +307,9 @@ class FieldArrayTest(unittest.TestCase):
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
             el.close()
+#            el.write(attrs[name][0])
+#            self.myAssertRaise(nx.NXGroupError, el.write,attrs[name][0])
+            self.myAssertURaise(el.write,attrs[name][0])
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -485,6 +506,8 @@ class FieldArrayTest(unittest.TestCase):
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
             el.close()
+#            self.myAssertRaise(nx.NXGroupError, el.write,attrs[name][0])
+            self.myAssertURaise(el.write,attrs[name][0])
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -889,6 +912,8 @@ class FieldArrayTest(unittest.TestCase):
 #            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
             el.close()
+#            self.myAssertRaise(nx.NXGroupError, el.write,attrs[name][0])
+            self.myAssertURaise(el.write,attrs[name][0])
         nxFile.close()
     
         f = nx.open_file(fname,readonly=True)
@@ -1015,6 +1040,7 @@ class FieldArrayTest(unittest.TestCase):
                                             )
             
         f.close()
+        os.remove(fname)
 
 
     ## constructor test
@@ -2586,6 +2612,7 @@ class FieldArrayTest(unittest.TestCase):
                             self.assertEqual(at.value,attrs[k][0])
             
         f.close()
+        os.remove(fname)
 
 
     ## constructor test
@@ -2626,13 +2653,11 @@ class FieldArrayTest(unittest.TestCase):
             attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
             dim, val = (self.__rnd.randint(0, max(0,slen-1)),self.__rnd.randint(0, 10))
             attrs[k][4] = list(attrs[k][3])
-            print k ,dim,val
             if slen:
                 attrs[k][4][dim] = attrs[k][3][dim] + val
                 attrs[k][4] = tuple(attrs[k][4])
             else:
                 attrs[k][4] = (1+val,)
-            print k,  attrs[k][3],attrs[k][4]
 
             el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
             self.assertEqual(el.name, k)
@@ -2655,7 +2680,6 @@ class FieldArrayTest(unittest.TestCase):
         self.assertTrue(f.attr("NX_class").value,"NXroot")
         
         for k in attrs:
-            print k , attrs[k][3],attrs[k][4]
             if len(attrs[k][4]) <= 1:
                 fl = f.open(k)
                 self.assertEqual(fl.shape, attrs[k][4])
@@ -2671,6 +2695,7 @@ class FieldArrayTest(unittest.TestCase):
                         self.assertEqual(fl.shape, (attrs[k][4][0],))
             
         f.close()
+        os.remove(fname)
 
     ## constructor test
     # \brief It tests default settings
@@ -2710,13 +2735,11 @@ class FieldArrayTest(unittest.TestCase):
             attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
             dim, val = (0,self.__rnd.randint(0, 10))
             attrs[k][4] = list(attrs[k][3])
-            print k ,dim,val
             if slen:
                 attrs[k][4][dim] = attrs[k][3][dim] + val
                 attrs[k][4] = tuple(attrs[k][4])
             else:
                 attrs[k][4] = (1+val,)
-            print k,  attrs[k][3],attrs[k][4]
 
             el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
             self.assertEqual(el.name, k)
@@ -2739,7 +2762,6 @@ class FieldArrayTest(unittest.TestCase):
         self.assertTrue(f.attr("NX_class").value,"NXroot")
         
         for k in attrs:
-            print k , attrs[k][3],attrs[k][4]
             if len(attrs[k][4]) <= 1:
                 fl = f.open(k)
                 self.assertEqual(fl.shape, attrs[k][4])
@@ -2755,6 +2777,7 @@ class FieldArrayTest(unittest.TestCase):
                         self.assertEqual(fl.shape, (attrs[k][4][0],))
             
         f.close()
+        os.remove(fname)
 
 
 
@@ -2841,6 +2864,7 @@ class FieldArrayTest(unittest.TestCase):
                         self.assertEqual(fl.shape, (attrs[k][4][0],))
             
         f.close()
+        os.remove(fname)
 
 
     ## constructor test
@@ -2926,6 +2950,7 @@ class FieldArrayTest(unittest.TestCase):
                         self.assertEqual(fl.shape, (attrs[k][4][0],))
             
         f.close()
+        os.remove(fname)
 
 if __name__ == '__main__':
     unittest.main()
