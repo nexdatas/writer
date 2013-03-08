@@ -217,7 +217,10 @@ class FieldArray(object):
                 if len(kr) == 1:
                         for i in range(len(value)):
                             for j in range(len(value[0])):
-                                self.__fList[ir[i]*self.shape[2]+jr[j]][kr[0]] = value[i][j].encode()
+                                if hasattr(value[i][j],"encode"):
+                                    self.__fList[ir[i]*self.shape[2]+jr[j]][kr[0]] = value[i][j].encode()
+                                else:
+                                    self.__fList[ir[i]*self.shape[2]+jr[j]][kr[0]] = value[i][j]
                 elif len(ir) == 1 :        
                     for k in range(len(value)):
                         for j in range(len(value[0])):
