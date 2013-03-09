@@ -170,7 +170,8 @@ class TangoDataWriterTest(unittest.TestCase):
     # \brief It tests validation of opening and closing H5 files.
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
         directory = '#nexdatas_test_directory#'
         dirCreated = False
         if not os.path.exists(directory):
@@ -180,7 +181,6 @@ class TangoDataWriterTest(unittest.TestCase):
             except:
                 pass
 
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         if dirCreated:
             fname = '%s/%s/%s.h5' % (os.getcwd(), directory, fun )  
         else:
