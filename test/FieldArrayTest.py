@@ -98,7 +98,6 @@ class FieldArrayTest(unittest.TestCase):
             error =  False
             method(*args, **kwargs)
         except exception, e:
-            print "exception", type(e)
             error = True
         self.assertEqual(error, True)
 
@@ -202,7 +201,6 @@ class FieldArrayTest(unittest.TestCase):
             self.assertEqual(el.shape, shape)
             self.assertEqual(el.chunk, None)
             el.write(attrs[name][0])
-            print name ,attrs[name][0], "read", el.read()
             value[name] = el.read()
             el.close()
 #            self.myAssertRaise(nx.NXGroupError, el.write,attrs[name][0])
@@ -382,16 +380,16 @@ class FieldArrayTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10)) ] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 6)) ] 
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10))] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 6))] 
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(self.__rnd.randint(2, 6))]
                 else:
                     attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
-                                      for c in range(self.__rnd.randint(2, 10)) ]
+                                      for c in range(self.__rnd.randint(2, 6)) ]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
@@ -581,16 +579,16 @@ class FieldArrayTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10))  ] ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 6))  ] ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10)) ] ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 6)) ] ]
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1)) for c in range(self.__rnd.randint(2, 10)) ]]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1)) for c in range(self.__rnd.randint(2, 6)) ]]
                 else:
                     attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  
-                                      for c in range(self.__rnd.randint(2, 10))  ]]
+                                      for c in range(self.__rnd.randint(2, 6))  ]]
                     
             attrs[k][3] =  (1,len(attrs[k][0][0]))
 
@@ -681,16 +679,16 @@ class FieldArrayTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)]  for c in range(self.__rnd.randint(2, 10))   ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)]  for c in range(self.__rnd.randint(2, 6))   ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)]  for c in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)]  for c in range(self.__rnd.randint(2, 6))  ]
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))] for c in range(self.__rnd.randint(2, 10)) ]
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))] for c in range(self.__rnd.randint(2, 6)) ]
                 else:
                     attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  ]
-                                      for c in range(self.__rnd.randint(2, 10))  ]
+                                      for c in range(self.__rnd.randint(2, 6))  ]
                     
             attrs[k][3] =  (len(attrs[k][0]),1)
 
@@ -777,17 +775,17 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 6))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 6))]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))] 
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 6))] 
                 else:
-                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 6))]
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
@@ -881,18 +879,18 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] for c3 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] for c3 in range(self.__rnd.randint(2, 6))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 6))  ]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(mlen2)]  for c3 in range(self.__rnd.randint(2, 10))  ]
+                    attrs[k][0] =  [[[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(mlen2)]  for c3 in range(self.__rnd.randint(2, 6))  ]
                 else:
-                    attrs[k][0] =  [[[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 10))  ]
+                    attrs[k][0] =  [[[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 6))  ]
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]),len(attrs[k][0][0][0]))
 
@@ -988,19 +986,19 @@ class FieldArrayTest(unittest.TestCase):
 
 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10)) ] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 6)) ] 
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10))] 
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 6))] 
             else:    
                 mlen = [1]
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(self.__rnd.randint(2, 6))]
                 else:
                     attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
-                                      for c in range(self.__rnd.randint(2, 10)) ]
+                                      for c in range(self.__rnd.randint(2, 6)) ]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
-            nr = self.__rnd.randint(1, 10)
+            nr = self.__rnd.randint(1, 6)
             attrs[k][4] =  (len(attrs[k][0])+nr,)
             attrs[k][5] =  (self.__rnd.randint(0, nr),)
 
@@ -1097,7 +1095,7 @@ class FieldArrayTest(unittest.TestCase):
                                        ]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
-            nr = self.__rnd.randint(1, 10)
+            nr = self.__rnd.randint(1, 6)
             attrs[k][4] =  (len(attrs[k][0])+nr,)
             attrs[k][5] =  (self.__rnd.randint(0, nr),)
 
@@ -1191,20 +1189,20 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 6))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 6))]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))] 
+                    attrs[k][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 6))] 
                 else:
-                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(self.__rnd.randint(2, 6))]
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],len(attrs[k][0][0])+nr[1])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]))
 
@@ -1302,20 +1300,20 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c2 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c2 in range(self.__rnd.randint(2, 6))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c2 in range(self.__rnd.randint(2, 10))]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c2 in range(self.__rnd.randint(2, 6))]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1)) for c2 in range(self.__rnd.randint(2, 10))] 
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1)) for c2 in range(self.__rnd.randint(2, 6))] 
                 else:
-                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false") for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false") for c2 in range(self.__rnd.randint(2, 6))]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6))
             attrs[k][4] =  (len(attrs[k][0])+nr[0], 1+nr[1])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]))
 
@@ -1411,20 +1409,20 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c2 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c2 in range(self.__rnd.randint(2, 6))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c2 in range(self.__rnd.randint(2, 10))]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c2 in range(self.__rnd.randint(2, 6))]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1)) for c2 in range(self.__rnd.randint(2, 10))] 
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1)) for c2 in range(self.__rnd.randint(2, 6))] 
                 else:
-                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false") for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false") for c2 in range(self.__rnd.randint(2, 6))]
                     
             attrs[k][3] =  (len(attrs[k][0]),)
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6))
             attrs[k][4] =  (1+nr[0], len(attrs[k][0])+nr[1])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]))
 
@@ -1522,7 +1520,7 @@ class FieldArrayTest(unittest.TestCase):
 
                     
             attrs[k][3] =  ()
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6))
             attrs[k][4] =  (1+nr[0], 1+nr[1])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]))
 
@@ -1618,22 +1616,22 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
-                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] for c3 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] for c3 in range(self.__rnd.randint(2, 6))  ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 10))  ]
+                attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 6))  ]
             else:    
                 if k == 'bool':
-                    attrs[k][0] =  [[[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(mlen2)]  for c3 in range(self.__rnd.randint(2, 10))  ]
+                    attrs[k][0] =  [[[ bool(self.__rnd.randint(0,1))  for c in range(mlen) ] for c2 in range(mlen2)]  for c3 in range(self.__rnd.randint(2, 6))  ]
                 else:
-                    attrs[k][0] =  [[[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 10))  ]
+                    attrs[k][0] =  [[[ ("true" if self.__rnd.randint(0,1) else "false")   for c in range(mlen) ] for c2 in range(mlen2)] for c3 in range(self.__rnd.randint(2, 6))  ]
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]),len(attrs[k][0][0][0]))
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1, 10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1, 6))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],len(attrs[k][0][0])+nr[1],len(attrs[k][0][0][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -1740,8 +1738,8 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
                 attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] 
@@ -1755,7 +1753,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],len(attrs[k][0][0])+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -1864,8 +1862,8 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
                 attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] 
@@ -1879,7 +1877,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],1+nr[1],len(attrs[k][0][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -1983,8 +1981,8 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
                 attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] for c2 in range(mlen2)  ] 
@@ -1998,7 +1996,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (1+nr[0],len(attrs[k][0])+nr[1],len(attrs[k][0][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2101,8 +2099,8 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
                 attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ]
@@ -2116,7 +2114,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (len(attrs[k][0])+nr[0],1+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2214,8 +2212,8 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
                 attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ]
@@ -2229,7 +2227,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (1+nr[0],len(attrs[k][0])+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2334,8 +2332,8 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             if attrs[k][2] == "string":
                 
                 attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ]
@@ -2349,7 +2347,7 @@ class FieldArrayTest(unittest.TestCase):
                     
             attrs[k][3] =  (len(attrs[k][0]),)
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (1+nr[0],1+nr[1],len(attrs[k][0])+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2449,11 +2447,11 @@ class FieldArrayTest(unittest.TestCase):
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
 
-            mlen = self.__rnd.randint(2, 10)
-            mlen2 = self.__rnd.randint(2, 10)
+            mlen = self.__rnd.randint(2, 6)
+            mlen2 = self.__rnd.randint(2, 6)
             attrs[k][3] =  ()
 
-            nr = (self.__rnd.randint(1, 10),self.__rnd.randint(1, 10),self.__rnd.randint(1,10))
+            nr = (self.__rnd.randint(1, 6),self.__rnd.randint(1, 6),self.__rnd.randint(1,6))
             attrs[k][4] =  (1+nr[0],1+nr[1],1+nr[2])
             attrs[k][5] =  (self.__rnd.randint(0, nr[0]),self.__rnd.randint(0, nr[1]),self.__rnd.randint(0, nr[2]))
 
@@ -2550,7 +2548,7 @@ class FieldArrayTest(unittest.TestCase):
         
         for k in attrs:
             slen = self.__rnd.randint(0, 3)
-            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            attrs[k][3] = tuple([self.__rnd.randint(2, 6) for s in range(slen)])
             
 
             el = FieldArray(nxFile, k, "string",attrs[k][3])
@@ -2650,8 +2648,8 @@ class FieldArrayTest(unittest.TestCase):
         
         for k in attrs:
             slen = self.__rnd.randint(0, 3)
-            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
-            dim, val = (self.__rnd.randint(0, max(0,slen-1)),self.__rnd.randint(0, 10))
+            attrs[k][3] = tuple([self.__rnd.randint(2, 6) for s in range(slen)])
+            dim, val = (self.__rnd.randint(0, max(0,slen-1)),self.__rnd.randint(0, 6))
             attrs[k][4] = list(attrs[k][3])
             if slen:
                 attrs[k][4][dim] = attrs[k][3][dim] + val
@@ -2732,8 +2730,8 @@ class FieldArrayTest(unittest.TestCase):
         
         for k in attrs:
             slen = self.__rnd.randint(0, 3)
-            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
-            dim, val = (0,self.__rnd.randint(0, 10))
+            attrs[k][3] = tuple([self.__rnd.randint(2, 6) for s in range(slen)])
+            dim, val = (0,self.__rnd.randint(0, 6))
             attrs[k][4] = list(attrs[k][3])
             if slen:
                 attrs[k][4][dim] = attrs[k][3][dim] + val
@@ -2816,16 +2814,14 @@ class FieldArrayTest(unittest.TestCase):
         
         for k in attrs:
             slen = self.__rnd.randint(0, 3)
-            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            attrs[k][3] = tuple([self.__rnd.randint(2, 6) for s in range(slen)])
             dim, val = (0,1)
             attrs[k][4] = list(attrs[k][3])
-            print k ,dim,val
             if slen:
                 attrs[k][4][dim] = attrs[k][3][dim] + val
                 attrs[k][4] = tuple(attrs[k][4])
             else:
                 attrs[k][4] = (1+val,)
-            print k,  attrs[k][3],attrs[k][4]
 
             el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
             self.assertEqual(el.name, k)
@@ -2848,7 +2844,6 @@ class FieldArrayTest(unittest.TestCase):
         self.assertTrue(f.attr("NX_class").value,"NXroot")
         
         for k in attrs:
-            print k , attrs[k][3],attrs[k][4]
             if len(attrs[k][4]) <= 1:
                 fl = f.open(k)
                 self.assertEqual(fl.shape, attrs[k][4])
@@ -2902,16 +2897,14 @@ class FieldArrayTest(unittest.TestCase):
         
         for k in attrs:
             slen = self.__rnd.randint(0, 3)
-            attrs[k][3] = tuple([self.__rnd.randint(2, 10) for s in range(slen)])
+            attrs[k][3] = tuple([self.__rnd.randint(2, 6) for s in range(slen)])
             dim, val = (0,1)
             attrs[k][4] = list(attrs[k][3])
-            print k ,dim,val
             if slen:
                 attrs[k][4][dim] = attrs[k][3][dim] + val
                 attrs[k][4] = tuple(attrs[k][4])
             else:
                 attrs[k][4] = (1+val,)
-            print k,  attrs[k][3],attrs[k][4]
 
             el = FieldArray(nxFile, k, attrs[k][2], attrs[k][3])
             self.assertEqual(el.name, k)
@@ -2934,7 +2927,6 @@ class FieldArrayTest(unittest.TestCase):
         self.assertTrue(f.attr("NX_class").value,"NXroot")
         
         for k in attrs:
-            print k , attrs[k][3],attrs[k][4]
             if len(attrs[k][4]) <= 1:
                 fl = f.open(k)
                 self.assertEqual(fl.shape, attrs[k][4])

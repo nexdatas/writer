@@ -182,7 +182,7 @@ class TangoDataWriterTest(unittest.TestCase):
 
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         if dirCreated:
-            fname = '%s/%s/%s.h5' % (os.getcwd(), dircetory, fun )  
+            fname = '%s/%s/%s.h5' % (os.getcwd(), directory, fun )  
         else:
             fname = '%s/%s.h5' % (os.getcwd(), fun )  
             
