@@ -21,7 +21,7 @@
 #
 import unittest
 import os
-
+import sys
 
 try:
     from pni.io.nx.h5 import open_file
@@ -33,6 +33,8 @@ from  xml.sax import SAXParseException
 from ndts import TangoDataWriter 
 from ndts.TangoDataWriter  import TangoDataWriter 
 import struct
+
+    
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -163,6 +165,80 @@ class TangoDataWriterTest(unittest.TestCase):
             os.remove(fname)
 
 
+
+    ## openFile test
+    # \brief It tests validation of opening and closing H5 files.
+    def test_openFileDir(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.test_openFile() " % self.__class__.__name__
+        directory = '#nexdatas_test_directory#'
+        dirCreated = False
+        if not os.path.exists(directory):
+            try:
+                os.makedirs(directory)
+                dirCreated = True
+            except:
+                pass
+
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        if dirCreated:
+            fname = '%s/%s/%s.h5' % (os.getcwd(), dircetory, fun )  
+        else:
+            fname = '%s/%s.h5' % (os.getcwd(), fun )  
+            
+        try:
+            tdw = TangoDataWriter(fname)
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.json, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            
+            tdw.openNXFile()
+            self.assertTrue(tdw.getNXFile() is not None)
+            self.assertTrue(tdw.getNXFile().valid)
+            self.assertFalse(tdw.getNXFile().readonly)
+            
+            tdw.closeNXFile()
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.json, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertTrue(tdw.getNXFile() is None)
+            
+
+            # check the created file
+
+            f = open_file(fname,readonly=True)
+
+#            print "\nFile attributes:"
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+#                print at.name,"=",at.value
+            self.assertEqual(cnt, f.nattrs)
+            self.assertEqual(6, f.nattrs)
+#            print ""    
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 1)
+
+            cnt = 0
+            for ch in f.children:
+                cnt += 1
+            self.assertEqual(cnt, f.nchildren)
+
+            f.close()
+
+        finally:
+            os.remove(fname)
+            if dirCreated:
+                os.removedirs(directory)
 
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
