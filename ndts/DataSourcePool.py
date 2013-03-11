@@ -56,8 +56,8 @@ class DataSourcePool(object):
 
 
     ## checks it the datasource is registered        
-    # \param datasource the given datasource
-    # \returns True if it the datasource is registered        
+    # \param datasource the given datasource name
+    # \returns datasource type if it the datasource is registered        
     def get(self, datasource):
         if datasource in self.__pool.keys():
             return self.__pool[datasource]
@@ -70,7 +70,7 @@ class DataSourcePool(object):
     def append(self, datasource, name):
         self.__pool[name] = datasource
         if not hasattr(datasource,"setup") or not hasattr(datasource,"getData") \
-                or not hasattr(datasource,"isValid") or not hasattr(datasource,"__str__"):
+                or not hasattr(datasource,"isValid"):
             self.pop(name)
             return 
         return name

@@ -25,11 +25,15 @@ import sys
 import subprocess
 import random
 import struct
-import random
 import numpy
+import binascii
+import time
 
 
-import pni.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 from ndts.Element import Element
 from ndts.H5Elements import FElement
@@ -39,61 +43,14 @@ from ndts.DataSources import DataSource
 from ndts.H5Elements import XMLSettingSyntaxError
 from ndts.Types import NTP
 
+from TestDataSource import TestDataSource 
+
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
 
 from  xml.sax import SAXParseException
-
-
-## test datasource
-class TestDataSource(DataSource):
-        ## constructor
-    # \brief It cleans all member variables
-    def __init__(self):
-        ## flag for running getData
-        self.dataTaken = False
-        ## list of dimensions
-        self.dims = [] 
-        ## if numpy  datasource
-        self.numpy = True
-
-    ## sets the parameters up from xml
-    # \brief xml  datasource parameters
-    def setup(self, xml):
-        pass
-
-
-    ## access to data
-    # \brief It is an abstract method providing data   
-    def getData(self):
-        self.dataTaken = True
-        if len(self.dims) == 0:
-                return {"format":NTP.rTf[0], "value":1, 
-                        "tangoDType":"DevLong", "shape":[0,0]}
-        elif numpy:
-            return {"format":NTP.rTf[len(self.dims)], "value":numpy.ones(self.dims), 
-                    "tangoDType":"DevLong", "shape":self.dims}
-        elif len(self.dims) == 1:
-            return {"format":NTP.rTf[1], "value":([1] * self.dims[0]), 
-                    "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-        elif len(self.dims) == 2:
-            return {"format":NTP.rTf[2], "value":([[1] * self.dims[1]]*self.dims[0] ), 
-                    "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-            
-        
-
-    ## checks if the data is valid
-    # \returns if the data is valid
-    def isValid(self):
-        return True
-
-
-    ## self-description 
-    # \returns self-describing string
-    def __str__(self):
-        return "Test DataSource"
 
 
 
@@ -122,6 +79,15 @@ class FElementTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
+
+
     ## test starter
     # \brief Common set up
     def setUp(self):
@@ -131,6 +97,7 @@ class FElementTest(unittest.TestCase):
         self._group = self._nxFile.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
 
     ## test closer
     # \brief Common tear down
@@ -186,7 +153,7 @@ class FElementTest(unittest.TestCase):
 
 
 
-    ## constructor test
+    ## store method test
     # \brief It tests default settings
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
@@ -237,7 +204,7 @@ class FElementTest(unittest.TestCase):
 
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1")
         
-        mlen = random.randint(1, 10000)        
+        mlen = self.__rnd.randint(1, 10000)        
         lens = {'1':str(mlen)}
         self.assertEqual(el._findShape("1",lengths = lens, extraD=False), [mlen] )
         for i in range(-2, 5):
@@ -253,7 +220,7 @@ class FElementTest(unittest.TestCase):
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=False)
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=True)
 
-        mlen = random.randint(-10000, 0)        
+        mlen = self.__rnd.randint(-10000, 0)        
         lens = {'1':str(mlen)}
 
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=False)
@@ -262,11 +229,11 @@ class FElementTest(unittest.TestCase):
         for i in range(-2, 5):
             self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens, extraD=True, grows=i)
 
-        mlen = random.randint(1, 1000)        
+        mlen = self.__rnd.randint(1, 1000)        
         lens = {'2':str(mlen)}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens)
 
-        mlen = random.randint(1, 1000)        
+        mlen = self.__rnd.randint(1, 1000)        
         lens = {'2':str(mlen)}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "1", lengths = lens,  extraD = True)
 
@@ -285,7 +252,7 @@ class FElementTest(unittest.TestCase):
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2")
 
         
-        mlen = [random.randint(1, 1000),random.randint(1, 1000) ]
+        mlen = [self.__rnd.randint(1, 1000),self.__rnd.randint(1, 1000) ]
         lens = {'1':str(mlen[0]),'2':str(mlen[1])}
         self.assertEqual(el._findShape("2",lengths = lens, extraD=False), mlen )
         for i in range(-2, 5):
@@ -317,7 +284,7 @@ class FElementTest(unittest.TestCase):
         lens = {'1':'0', '2':'0'}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
 
-        nlen = [random.randint(-1000, 0), random.randint(-1000, 0)]
+        nlen = [self.__rnd.randint(-1000, 0), self.__rnd.randint(-1000, 0)]
         lens = {'1':str(mlen[0]),'2':str(nlen[1])}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = False)
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
@@ -327,11 +294,11 @@ class FElementTest(unittest.TestCase):
                 
 
 
-        mlen = random.randint(1, 1000)        
+        mlen = self.__rnd.randint(1, 1000)        
         lens = {'2':str(mlen), '3':str(mlen)}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens)
 
-        mlen = random.randint(1, 1000)        
+        mlen = self.__rnd.randint(1, 1000)        
         lens = {'2':str(mlen)}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "2",lengths = lens, extraD = True)
 
@@ -347,7 +314,7 @@ class FElementTest(unittest.TestCase):
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3")
 
         
-        mlen = [random.randint(1, 100),random.randint(1, 100), random.randint(1, 100) ]
+        mlen = [self.__rnd.randint(1, 100),self.__rnd.randint(1, 100), self.__rnd.randint(1, 100) ]
         lens = {'1':str(mlen[0]),'2':str(mlen[1]),'3':str(mlen[2])}
         self.assertEqual(el._findShape("3",lengths = lens, extraD=False), mlen )
         for i in range(-2, 5):
@@ -388,7 +355,7 @@ class FElementTest(unittest.TestCase):
 
 
 
-        nlen = [random.randint(-100, 0), random.randint(-100, 0)]
+        nlen = [self.__rnd.randint(-100, 0), self.__rnd.randint(-100, 0)]
         lens = {'1':str(mlen[0]),'2':str(nlen[1]),'3':str(mlen[1])}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=False)
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
@@ -396,11 +363,11 @@ class FElementTest(unittest.TestCase):
             self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True,grows = i)
 
 
-        mlen = random.randint(1, 1000)        
+        mlen = self.__rnd.randint(1, 1000)        
         lens = {'2':str(mlen), '3':str(mlen), '4':str(mlen)}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens)
 
-        mlen = random.randint(1, 1000)        
+        mlen = self.__rnd.randint(1, 1000)        
         lens = {'2':str(mlen)}
         self.myAssertRaise(XMLSettingSyntaxError, el._findShape, "3", lengths = lens, extraD=True)
 
@@ -423,7 +390,7 @@ class FElementTest(unittest.TestCase):
 
         
 
-        mlen = random.randint(1, 10000)        
+        mlen = self.__rnd.randint(1, 10000)        
         el.source.dims = [mlen]
         self.assertEqual(el._findShape("1", extraD=False), [mlen] )
         for i in range(-2, 5):
@@ -441,7 +408,7 @@ class FElementTest(unittest.TestCase):
         el.source.numpy = False
 
 
-        mlen = random.randint(1, 10000)        
+        mlen = self.__rnd.randint(1, 10000)        
         el.source.dims = [mlen]
         self.assertEqual(el._findShape("1", extraD=False), [mlen] )
         for i in range(-2, 5):
@@ -468,7 +435,7 @@ class FElementTest(unittest.TestCase):
 
         el.source.numpy = True
 
-        mlen = [random.randint(1, 1000),random.randint(1, 1000) ]
+        mlen = [self.__rnd.randint(1, 1000),self.__rnd.randint(1, 1000) ]
         el.source.dims = mlen
         self.assertEqual(el._findShape("2", extraD=False), mlen )
         for i in range(-2, 5):
@@ -482,7 +449,7 @@ class FElementTest(unittest.TestCase):
 
         el.source.numpy = False
 
-        mlen = [random.randint(1, 1000),random.randint(1, 1000) ]
+        mlen = [self.__rnd.randint(1, 1000),self.__rnd.randint(1, 1000) ]
         el.source.dims = mlen
         self.assertEqual(el._findShape("2", extraD=False), mlen )
         for i in range(-2, 5):
@@ -514,7 +481,7 @@ class FElementTest(unittest.TestCase):
 
         
             
-        mlen = random.randint(1, 10000)        
+        mlen = self.__rnd.randint(1, 10000)        
         el.content = ["123 "* mlen ]
         self.assertEqual(el._findShape("1", extraD=False), [mlen] )
         for i in range(-2, 5):
@@ -524,7 +491,7 @@ class FElementTest(unittest.TestCase):
             self.assertEqual(el._findShape("1", extraD=True, grows = i), [mlen] )
 
 
-        mlen = [random.randint(1, 1000),random.randint(1, 1000) ]
+        mlen = [self.__rnd.randint(1, 1000),self.__rnd.randint(1, 1000) ]
         el.content = ["123 "* mlen[1] + "\n " ]*mlen[0]
         self.assertEqual(el._findShape("2", extraD=False), mlen )
         for i in range(-2, 5):

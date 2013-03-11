@@ -18,14 +18,15 @@
 ## \package ndts nexdatas
 # \file FetchNameHandler.py
 # An example of SAX Nexus parser
-import pni.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 from xml import sax
 
 import sys, os
 
-
-## exception for syntax in XML settings
-class XMLSyntaxError(Exception): pass
+from Errors import  XMLSyntaxError
 
     
 ## SAX2 parser 

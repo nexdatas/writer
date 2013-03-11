@@ -28,44 +28,24 @@ from Element import Element
 ## Data source creator
 class DataSourceFactory(Element):        
     ## constructor
-    # \param name name of the tag
     # \param attrs dictionary with the tag attributes
     # \param last the last element on the stack
-    def __init__(self, name, attrs, last):
-        Element.__init__(self, name, attrs, last)
+    def __init__(self, attrs, last):
+        Element.__init__(self, "datasource", attrs, last)
         ## datasource pool
         self.__dsPool = None
 
 
-    ##  sets the datasource form xml string
-    # \param xml input parameter   
-    # \param globalJSON global JSON string
-    def store(self, xml, globalJSON = None):
-        self.createDSource(self.tagName, self._tagAttrs)
-        jxml = "".join(xml)
-        self._last.source.setup(jxml)
-        if hasattr(self._last.source,"setJSON") and globalJSON:
-            self._last.source.setJSON(globalJSON)
-        if self._last and hasattr(self._last,"tagAttributes"):
-            self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
-
-    ## sets the used decoders
+    ## sets the used datasources
     # \param datasources pool to be set
     def setDataSources(self, datasources):
         self.__dsPool = datasources
         
 
-    ## sets the used decoders
-    # \param decoders pool to be set
-    def setDecoders(self, decoders):
-        if self._last and self._last.source and self._last.source.isValid() \
-                and hasattr(self._last.source,"setDecoders"):
-            self._last.source.setDecoders(decoders)
-            
     ## creates data source   
     # \param name name of the tag
     # \param attrs dictionary with the tag attributes
-    def createDSource(self, name, attrs):
+    def __createDSource(self, name, attrs):
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
                 self._last.source = self.__dsPool.get(attrs["type"])()
@@ -76,5 +56,26 @@ class DataSourceFactory(Element):
             print "Typeless data source"
             self._last.source = DataSources.DataSource()
 
+
+    ##  sets the datasource form xml string
+    # \param xml input parameter   
+    # \param globalJSON global JSON string
+    def store(self, xml, globalJSON = None):
+        self.__createDSource(self.tagName, self._tagAttrs)
+        jxml = "".join(xml)
+        self._last.source.setup(jxml)
+        if hasattr(self._last.source,"setJSON") and globalJSON:
+            self._last.source.setJSON(globalJSON)
+        if self._last and hasattr(self._last,"tagAttributes"):
+            self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
+
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        if self._last and self._last.source and self._last.source.isValid() \
+                and hasattr(self._last.source,"setDecoders"):
+            self._last.source.setDecoders(decoders)
+            
 
 

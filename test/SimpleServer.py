@@ -115,6 +115,12 @@ class SimpleServer(PyTango.Device_4Impl):
 		self.attr_ImageString = [['True']]
 		self.attr_ImageEncoded = self.encodeImage()
 
+#------------------------------------------------------------------
+#	Always excuted hook method
+#------------------------------------------------------------------
+	def always_executed_hook(self):
+		print "In ", self.get_name(), "::always_excuted_hook()"
+
 
 	def encodeSpectrum(self):
 		format = 'INT32'
@@ -125,7 +131,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		# uint32 I 
 		mode = 2
 		fspectrum = numpy.array(self.attr_SpectrumULong, dtype='int32')
-		ibuffer = struct.pack('i'*(fspectrum.size), *fspectrum)
+		ibuffer = struct.pack('i'*fspectrum.size, *fspectrum)
 		return [format, ibuffer]
 
 
@@ -145,15 +151,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		fimage = self.attr_ImageUChar.flatten()
 		ibuffer = struct.pack('B'*fimage.size, *fimage)
 		return [format, header+ibuffer]
-		
-
-  
-
-#------------------------------------------------------------------
-#	Always excuted hook method
-#------------------------------------------------------------------
-	def always_executed_hook(self):
-		print "In ", self.get_name(), "::always_excuted_hook()"
 
 #==================================================================
 #
@@ -785,7 +782,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		print self.attr_ImageShort
 
 
-
 #------------------------------------------------------------------
 #	Write ImageShort attribute
 #------------------------------------------------------------------
@@ -794,6 +790,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		self.attr_ImageShort = attr.get_write_value()
 		print "Attribute value = ", self.attr_ImageShort
+
 
 #------------------------------------------------------------------
 #	Read ImageUShort attribute
@@ -873,7 +870,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_ImageLong64) 
 		print self.attr_ImageLong64
-		
 
 
 #------------------------------------------------------------------
@@ -895,7 +891,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_ImageULong64)
 		print self.attr_ImageULong64
-		
 
 
 #------------------------------------------------------------------
@@ -918,7 +913,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_ImageFloat)
 		print self.attr_ImageFloat
-		
 
 
 #------------------------------------------------------------------
@@ -941,7 +935,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_ImageDouble)
 		print self.attr_ImageDouble
-		
 
 
 #------------------------------------------------------------------
@@ -964,7 +957,6 @@ class SimpleServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		attr.set_value(self.attr_ImageString)
 		print self.attr_ImageString
-		
 
 
 #------------------------------------------------------------------
@@ -985,6 +977,146 @@ class SimpleServer(PyTango.Device_4Impl):
 #
 #==================================================================
 
+#------------------------------------------------------------------
+#	GetBoolean command:
+#
+#	Description: Returns ScalarBoolean
+#                
+#	argout: DevBoolean	ScalarBoolean
+#------------------------------------------------------------------
+	def GetBoolean(self):
+		print "In ", self.get_name(), "::GetBoolean()"
+		#	Add your own code here
+		
+		return self.attr_ScalarBoolean
+
+
+#------------------------------------------------------------------
+#	GetShort command:
+#
+#	Description: Returns ScalarShort
+#                
+#	argout: DevShort	ScalarShort
+#------------------------------------------------------------------
+	def GetShort(self):
+		print "In ", self.get_name(), "::GetShort()"
+		#	Add your own code here
+		
+		return self.attr_ScalarShort
+
+
+#------------------------------------------------------------------
+#	GetLong command:
+#
+#	Description: Returns ScalarLong
+#                
+#	argout: DevLong	ScalarLong
+#------------------------------------------------------------------
+	def GetLong(self):
+		print "In ", self.get_name(), "::GetLong()"
+		#	Add your own code here
+		
+		return self.attr_ScalarLong
+
+
+#------------------------------------------------------------------
+#	GetLong64 command:
+#
+#	Description: Returns ScalarLong64
+#                
+#	argout: DevLong64	ScalarLong64
+#------------------------------------------------------------------
+	def GetLong64(self):
+		print "In ", self.get_name(), "::GetLong64()"
+		#	Add your own code here
+		
+		return self.attr_ScalarLong64
+
+
+#------------------------------------------------------------------
+#	GetFloat command:
+#
+#	Description: Returns ScalarFloat
+#                
+#	argout: DevFloat	ScalarFloat
+#------------------------------------------------------------------
+	def GetFloat(self):
+		print "In ", self.get_name(), "::GetFloat()"
+		#	Add your own code here
+		
+		return self.attr_ScalarFloat
+
+
+#------------------------------------------------------------------
+#	GetDouble command:
+#
+#	Description: Returns ScalarDouble
+#                
+#	argout: DevDouble	ScalarDouble
+#------------------------------------------------------------------
+	def GetDouble(self):
+		print "In ", self.get_name(), "::GetDouble()"
+		#	Add your own code here
+		
+		return self.attr_ScalarDouble
+
+
+#------------------------------------------------------------------
+#	GetUShort command:
+#
+#	Description: Returns ScalarUShort
+#                
+#	argout: DevUShort	ScalarUShort
+#------------------------------------------------------------------
+	def GetUShort(self):
+		print "In ", self.get_name(), "::GetUShort()"
+		#	Add your own code here
+		
+		return self.attr_ScalarUShort
+
+
+#------------------------------------------------------------------
+#	GetULong command:
+#
+#	Description: Returns ScalarULong
+#                
+#	argout: DevULong	ScalarULong
+#------------------------------------------------------------------
+	def GetULong(self):
+		print "In ", self.get_name(), "::GetULong()"
+		#	Add your own code here
+		
+		return self.attr_ScalarULong
+
+
+#------------------------------------------------------------------
+#	GetULong64 command:
+#
+#	Description: Returns ScalarULong64
+#                
+#	argout: DevULong64	ScalarULong64
+#------------------------------------------------------------------
+	def GetULong64(self):
+		print "In ", self.get_name(), "::GetULong64()"
+		#	Add your own code here
+		
+		return self.attr_ScalarULong64
+
+
+#------------------------------------------------------------------
+#	GetString command:
+#
+#	Description: Returns ScalarString
+#                
+#	argout: DevString	ScalarString
+#------------------------------------------------------------------
+	def GetString(self):
+		print "In ", self.get_name(), "::GetString()"
+		#	Add your own code here
+		
+		return self.attr_ScalarString
+
+
 #==================================================================
 #
 #	SimpleServerClass class definition
@@ -994,16 +1126,110 @@ class SimpleServerClass(PyTango.DeviceClass):
 
 	#	Class Properties
 	class_property_list = {
+		'ClassBoolean':
+			[PyTango.DevBoolean,
+			"classBoolean",
+			[ True ] ],
+		'ClassShort':
+			[PyTango.DevShort,
+			"ClassShort",
+			[ 1 ] ],
+		'ClassLong':
+			[PyTango.DevLong,
+			"ClassLong",
+			[ -123555 ] ],
+		'ClassFloat':
+			[PyTango.DevFloat,
+			"ClassFloat",
+			[ 12.345 ] ],
+		'ClassDouble':
+			[PyTango.DevDouble,
+			"ClassDouble",
+			[ 1.23445 ] ],
+		'ClassUShort':
+			[PyTango.DevUShort,
+			"ClassUShort",
+			[ 1 ] ],
+		'ClassULong':
+			[PyTango.DevULong,
+			"ClassULong",
+			[ 12343 ] ],
+		'ClassString':
+			[PyTango.DevString,
+			"ClassString",
+			[ "My ClassString" ] ],
 		}
 
 
 	#	Device Properties
 	device_property_list = {
+		'DeviceBoolean':
+			[PyTango.DevBoolean,
+			"DeviceBoolean",
+			[ False ] ],
+		'DeviceShort':
+			[PyTango.DevShort,
+			"DeviceShort",
+			[ 12 ] ],
+		'DeviceLong':
+			[PyTango.DevLong,
+			"DeviceLong",
+			[ 1234566 ] ],
+		'DeviceFloat':
+			[PyTango.DevFloat,
+			"DeviceFloat",
+			[ 12.4345 ] ],
+		'DeviceDouble':
+			[PyTango.DevDouble,
+			"DeviceDouble",
+			[ 3.453456 ] ],
+		'DeviceUShort':
+			[PyTango.DevUShort,
+			"DeviceUShort",
+			[ 1 ] ],
+		'DeviceULong':
+			[PyTango.DevULong,
+			"DeviceULong",
+			[ 23234 ] ],
+		'DeviceString':
+			[PyTango.DevString,
+			"DeviceString",
+			[ "My Sting" ] ],
 		}
 
 
 	#	Command definitions
 	cmd_list = {
+		'GetBoolean':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevBoolean, "ScalarBoolean"]],
+		'GetShort':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevShort, "ScalarShort"]],
+		'GetLong':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevLong, "ScalarLong"]],
+		'GetLong64':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevLong64, "ScalarLong64"]],
+		'GetFloat':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevFloat, "ScalarFloat"]],
+		'GetDouble':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevDouble, "ScalarDouble"]],
+		'GetUShort':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevUShort, "ScalarUShort"]],
+		'GetULong':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevULong, "ScalarULong"]],
+		'GetULong64':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevULong64, "ScalarULong64"]],
+		'GetString':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevString, "ScalarString"]],
 		}
 
 

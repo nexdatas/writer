@@ -26,12 +26,19 @@ import subprocess
 import random
 import numpy
 import struct
+import binascii
+import time
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from pni.nx.h5 import open_file
+try:
+    from pni.io.nx.h5 import open_file
+except:
+    from pni.nx.h5 import open_file
+
 from  xml.sax import SAXParseException
 
 
@@ -51,6 +58,17 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._simps = SimpleServerSetUp.SimpleServerSetUp()
 
+        try:
+            ## random seed
+            self.seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.seed)
+
+
+
         self._counter =  [1,-2,6,-8,9,-11]
         self._bools =  ["TruE","0","1","False","false", "True"]
         self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
@@ -62,8 +80,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                            [[True,False,True,True], [False,False,True,False]]]
 
         self._sc = Checker(self)
-        self._mca1 = [[random.randint(-100, 100) for e in range(256)] for i in range(3)]
-        self._mca2 = [[random.randint(0, 100) for e in range(256)] for i in range(3)]
+        self._mca1 = [[self.__rnd.randint(-100, 100) for e in range(256)] for i in range(3)]
+        self._mca2 = [[self.__rnd.randint(0, 100) for e in range(256)] for i in range(3)]
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
 
@@ -87,7 +105,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                          ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
                           "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]]]
 
-        self._pco1 = [[[random.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
+        self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
         self._bint = "int64" if IS64BIT else "int32"
@@ -100,6 +118,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         self._simps.setUp()
+        print "SEED =", self.seed 
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down

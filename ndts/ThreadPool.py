@@ -23,16 +23,15 @@
 from ElementThread import ElementThread
 import Queue
 
-## exception for problems in thread
-class ThreadError(Exception): pass
+from Errors import ThreadError
 
 ## Pool with threads
 class ThreadPool(object):
     ## constructor
     # \brief It cleans the member variables
-    def __init__(self, numThreads=10):
+    def __init__(self, numThreads=None):
         ## maximal number of threads
-        self.numThreads = -1
+        self.numThreads  = numThreads if numThreads >=1 else -1
         ## queue of the appended elements
         self.__elementQueue = Queue.Queue()
         ## list of the appended elements

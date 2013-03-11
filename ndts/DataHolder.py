@@ -44,51 +44,38 @@ class DataHolder(object):
         ## data shape
         self.shape = shape 
         ## encoding type of Tango DevEncoded varibles
-        self.encoding = str(encoding)
+        self.encoding = str(encoding) if encoding else None
         ## pool with decoding algorithm
         self.decoders = decoders
 
         if str(self.tangoDType) == 'DevEncoded':
             self.__setupEncoded()
 
+
     def __setupEncoded(self):    
         self.shape = None
         if self.encoding and self.decoders and \
                 self.decoders.hasDecoder(self.encoding):
             decoder = self.decoders.get(self.encoding)
-#                print "decoding", self.encoding
             decoder.load(self.value)
             self.shape = decoder.shape()
             if self.shape:
-                if len(self.shape) == 1:
-                    if self.shape[-1]  < 2:
-                        self.format = "SCALAR"
-                    else:
-                        self.format = "SPECTRUM"
-                elif len(self.shape) == 2:
-                    if self.shape[-1]  < 2:
-                        if self.shape[-2]  < 2:
-                            self.format = "SCALAR"
-                        else:
-                            self.format = "SPECTRUM"
-                    else:
-                        self.format = "IMAGE"
-                else:
-                    self.format = "SCALAR"
-                    
-                    
-                self.value = None    
                 self.value = decoder.decode()
-
+                rank = NTP().arrayRank(self.value)
+                if rank > 2 :
+                    raise ValueError, "Unsupported variables format"
+                self.format = ["SCALAR","SPECTRUM","IMAGE"][rank]
+                
             tp =  decoder.dtype
             if tp in NTP.npTt.keys():
+
                 self.tangoDType = NTP.npTt[tp]
                 
         if self.value is None:        
             raise ValueError, "Encoding of DevEncoded variables not defined"
 
         if self.shape is None:
-            raise ValueError, "Shape not defined"
+            raise ValueError, "Encoding  or Shape not defined"
 
 
     ## casts the data into given type
@@ -105,13 +92,10 @@ class DataHolder(object):
                     return NTP.convert[tp](self.value)
             
         else:
-#            if str(self.tangoDType) == 'DevEncoded':
-#                raise ValueError, "Array of DevEncoded variables not supported"
 
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
             else:    
-#                print "casting ", self.tangoDType ," to ", tp
                 if str(self.format).split('.')[-1] == "SPECTRUM":
                     if tp == "string":
                         return [ NTP.convert[tp](el) for el in self.value]

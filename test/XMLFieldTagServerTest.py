@@ -22,14 +22,8 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 
 import PyTango
-from pni.nx.h5 import open_file
-from  xml.sax import SAXParseException
-
-from Checkers import Checker
 
 import ServerSetUp
 import XMLFieldTagWriterTest
@@ -53,6 +47,7 @@ class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down oif Tango Server

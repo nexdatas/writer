@@ -37,6 +37,8 @@ class Converters(object):
         elif value:
             return True
         return False
+
+
   
 ## type converter
 class NTP(object):
@@ -45,8 +47,7 @@ class NTP(object):
 
 
     ## map of Python:Tango types
-#    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString"}
-    pTt = {"int":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
+    pTt = {"int":"DevLong64", "long":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
            "bool":"DevBoolean"}
 
     ## map of Numpy:Tango types
@@ -54,7 +55,8 @@ class NTP(object):
             "int16":"DevShort", "int8":"DevUChar", "uint":"DevULong64", 
             "uint64":"DevULong64", "uint32":"DevULong", "uint16":"DevUShort", 
             "uint8":"DevUChar", "float":"DevDouble", "float64":"DevDouble", 
-            "float32":"DevFloat", "string":"DevString", "bool":"DevBoolean"}
+            "float32":"DevFloat","float16":"DevFloat", 
+            "string":"DevString", "bool":"DevBoolean"}
 
     ## map of NEXUS : numpy types 
     nTnp = {"NX_FLOAT32":"float32", "NX_FLOAT64":"float64", "NX_FLOAT":"float64", 
@@ -65,17 +67,20 @@ class NTP(object):
             "NX_DATE_TIME":"string", "ISO8601":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
 
     ## map of type : converting function
-    convert = {"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
-               "int16":long, "int8":int, "int":int, "uint64":long, "uint32":int, "uint16":long,
+    convert = {"float16":float,"float32":float, "float64":float, "float":float, "int64":long, "int32":int,  
+               "int16":int, "int8":int, "int":int, "uint64":long, "uint32":long, "uint16":int,
                "uint8":int, "uint":int, "string":str, "bool":Converters.toBool}
 
     ## map of tag attribute types 
     aTn = {"signal":"NX_INT", "axis":"NX_INT", "primary":"NX_INT32", "offset":"NX_INT", 
-          "stride":"NX_INT", "vector":"NX_FLOATVECTOR", "file_time":"NX_DATE_TIME", 
-          "file_update_time":"NX_DATE_TIME", "restricted":"NX_INT", 
+          "stride":"NX_INT", "file_time":"NX_DATE_TIME", 
+          "file_update_time":"NX_DATE_TIME", "restricts":"NX_INT", 
           "ignoreExtraGroups":"NX_BOOLEAN", "ignoreExtraFields":"NX_BOOLEAN", 
           "ignoreExtraAttributes":"NX_BOOLEAN", "minOccus":"NX_INT", "maxOccus":"NX_INT"
         }
+
+    ## map of vector tag attribute types 
+    aTnv = {"vector":"NX_FLOAT"}
 
     ## map of rank : data format
     rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE"}
@@ -86,22 +91,40 @@ class NTP(object):
     def arrayRank(self, array) :
         rank = 0
         if hasattr(array, "__iter__") and not isinstance(array, str):       
-            rank = 1 + self.arrayRank(array[0])
+            try:
+                rank = 1 + self.arrayRank(array[0])
+            except IndexError, e:
+                if hasattr(array, "shape") and len(array.shape) == 0:
+                    rank = 0
+                else:
+                    rank = 1
         return rank            
 
     
 
     ## array rank, inverse shape and type
-    # \brief It calculates the rank, inverse shape and type of the first element of the array
+    # \brief It calculates the rank, inverse shape and type of the first element of the list array
     # \param array given array
     def arrayRankRShape(self, array):        
         rank = 0
         shape = []
         pythonDType = None
         if hasattr(array, "__iter__") and not isinstance(array, str):
-            rank, shape, pythonDType = self.arrayRankRShape(array[0])
-            shape.append(len(array))
-            rank += 1
+            try:
+                rank, shape, pythonDType = self.arrayRankRShape(array[0])
+                rank += 1
+                shape.append(len(array))
+            except IndexError, e:
+                if hasattr(array, "shape") and len(array.shape) == 0:
+                    rank = 0
+                    pythonDType = type(array.tolist())
+                else:
+                    rank = 1
+                    shape.append(len(array))
+            
         else:
-            pythonDType = type(array)
+            if hasattr(array,"tolist"):
+                pythonDType = type(array.tolist())
+            else:
+                pythonDType = type(array)
         return (rank, shape, pythonDType)            

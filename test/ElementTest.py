@@ -25,9 +25,15 @@ import sys
 import subprocess
 import random
 import struct
-import pni.nx.h5 as nx
+
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
+from ndts.Element import Element
+
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione
@@ -35,10 +41,6 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 
-from  xml.sax import SAXParseException
-
-
-from ndts.Element import Element
 
 ## test fixture
 class ElementTest(unittest.TestCase):
@@ -71,7 +73,8 @@ class ElementTest(unittest.TestCase):
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         el = Element(self._tfname, self._fattrs)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -83,7 +86,8 @@ class ElementTest(unittest.TestCase):
     ## store method test
     # \brief It tests executing store method
     def test_store(self):
-        print "Run: %s.test_store() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         el = Element(self._tfname, self._fattrs )
         el2 = Element(self._tfname, self._fattrs,  el )
         self.assertEqual(el2.tagName, self._tfname)
@@ -99,7 +103,8 @@ class ElementTest(unittest.TestCase):
     ## _lastObject method test
     # \brief It tests executing _lastObject method
     def test_lastObject(self):
-        print "Run: %s.test_last() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
         fname = "test.h5"
         nxFile = None
@@ -114,7 +119,7 @@ class ElementTest(unittest.TestCase):
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
         ## element file objects
-        eFile = EFile("NXfile", [], None, nxFile)
+        eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
         field = group.create_field(fdname, fdtype)
 
@@ -136,7 +141,8 @@ class ElementTest(unittest.TestCase):
     ## _beforeLast method test
     # \brief It tests executing _beforeLast method
     def test_beforeLast(self):
-        print "Run: %s.test_last() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
 
 

@@ -56,13 +56,7 @@ except ImportError, e:
 
 #import copy
 
-
-
-## exception for fetching data from data source
-class PackageError(Exception): pass
-
-## exception for setting data source
-class DataSourceSetupError(Exception): pass
+from Errors import (PackageError, DataSourceSetupError)
 
 
 ## Data source
@@ -116,7 +110,7 @@ class TangoSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## name of data
+        ## name of datar
         self.name = None
         ## name of the Tango device
         self.device = None
@@ -134,7 +128,7 @@ class TangoSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return "Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
+        return " Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
 
 
     ## sets the parrameters up from xml
@@ -144,18 +138,18 @@ class TangoSource(DataSource):
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec)> 0:
-            self.name = rec[0].getAttribute("name")
+            self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
         if not self.name:
             raise  DataSourceSetupError, \
                 "Tango record name not defined: %s" % xml
 
         dv = dom.getElementsByTagName("device")
         if dv and len(dv)> 0:
-            self.device = dv[0].getAttribute("name")
-            self.hostname = dv[0].getAttribute("hostname")
-            self.port = dv[0].getAttribute("port")
-            self.encoding = dv[0].getAttribute("encoding")
-            self.memberType = dv[0].getAttribute("member")
+            self.device = dv[0].getAttribute("name") if dv[0].hasAttribute("name") else None
+            self.hostname = dv[0].getAttribute("hostname") if dv[0].hasAttribute("hostname") else None
+            self.port = dv[0].getAttribute("port") if dv[0].hasAttribute("port") else None
+            self.encoding = dv[0].getAttribute("encoding") if dv[0].hasAttribute("encoding") else None
+            self.memberType = dv[0].getAttribute("member") if dv[0].hasAttribute("member") else None
             if not self.memberType or self.memberType not in ["attribute", "command", "property"]:
                 self.memberType = "attribute" 
 #            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.memberType, self.encoding
@@ -185,33 +179,31 @@ class TangoSource(DataSource):
                 proxy = PyTango.DeviceProxy(self.device.encode())
             da = None
             if self.memberType == "attribute":
+#                print "getting the attribute: ", self.name
                 alist = proxy.get_attribute_list()
 
                 if self.name.encode() in alist:
                     da = proxy.read_attribute( self.name.encode())
-#                    if str(da.data_format).split('.')[-1] == "SPECTRUM":
-#                        print "Spectrum Device: ", self.device.encode()
-#                    if str(da.data_format).split('.')[-1] == "IMAGE":
-#                        print "Image Device: ", self.device.encode()
-#                    print "DH:",da.data_format, da.value, da.type, [da.dim_x,da.dim_y],self.encoding, self.__decoders
-                    return {"format":da.data_format, "value":da.value, "tangoDType":da.type, 
-                            "shape":[da.dim_y,da.dim_x],
+                    return {"format":str(da.data_format).split('.')[-1], 
+                            "value":da.value, "tangoDType":str(da.type).split('.')[-1], 
+                            "shape":([da.dim_y,da.dim_x] if da.dim_y else [da.dim_x, 0]),
                             "encoding": self.encoding, "decoders": self.__decoders}
-
+                  
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
                 plist = proxy.get_property_list('*')
                 if self.name.encode() in plist:
                     da = proxy.get_property(self.name.encode())[self.name.encode()][0]
-                    return {"format":"SCALAR", "value":da, "tangoDType":"DevString", "shape":[1,0]}
+                    return {"format":"SCALAR", "value":str(da), "tangoDType":"DevString", "shape":[1,0]}
             elif self.memberType == "command":
 #                print "calling the command: ", self.name
 		clist = [cm.cmd_name for cm in proxy.command_list_query()]
                 if self.name in clist:
                     cd = proxy.command_query(self.name.encode())
                     da = proxy.command_inout(self.name.encode())
-                    return {"format":"SCALAR", "value":da, "tangoDType":cd.out_type, "shape":[1,0], 
-                                      "encoding":self.encoding, "decoders":self.__decoders}
+                    return {"format":"SCALAR", "value":da, 
+                            "tangoDType":str(cd.out_type).split('.')[-1],  "shape":[1,0], 
+                            "encoding":self.encoding, "decoders":self.__decoders}
                     
                         
 
@@ -263,7 +255,7 @@ class DBaseSource(DataSource):
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query)> 0:
-            self.format = query[0].getAttribute("format")
+            self.format = query[0].getAttribute("format") if query[0].hasAttribute("format") else None
 #            print "format:", self.format
             self.query = self._getText(query[0])
             
@@ -273,16 +265,16 @@ class DBaseSource(DataSource):
 
         db = dom.getElementsByTagName("database")
         if db and len(db)> 0:
-            self.dbname = db[0].getAttribute("dbname")
-            self.dbtype = db[0].getAttribute("dbtype")
-            self.user = db[0].getAttribute("user") 
-            self.passwd = db[0].getAttribute("passwd")
-            self.mode = db[0].getAttribute("mode")
-            mycnf = db[0].getAttribute("mycnf")
+            self.dbname = db[0].getAttribute("dbname") if db[0].hasAttribute("dbname") else None
+            self.dbtype = db[0].getAttribute("dbtype") if db[0].hasAttribute("dbtype") else None
+            self.user = db[0].getAttribute("user")  if db[0].hasAttribute("user") else None
+            self.passwd = db[0].getAttribute("passwd") if db[0].hasAttribute("passwd") else None
+            self.mode = db[0].getAttribute("mode") if db[0].hasAttribute("mode") else None
+            mycnf = db[0].getAttribute("mycnf") if db[0].hasAttribute("mycnf") else None
             if mycnf:
-                self.mycnf
-            self.hostname = db[0].getAttribute("hostname")
-            self.port = db[0].getAttribute("port")
+                self.mycnf = mycnf
+            self.hostname = db[0].getAttribute("hostname") if db[0].hasAttribute("hostname") else None
+            self.port = db[0].getAttribute("port") if db[0].hasAttribute("port") else None
             self.dsn = self._getText(db[0])
             
 #            print "DATABASE:", self.dbname, self.dbtype, self.user,self.passwd , self.hostname, self.port, self.mode, self.mycnf,self.dsn
@@ -306,7 +298,6 @@ class DBaseSource(DataSource):
             args["host"] = self.hostname.encode()
         if self.port:
             args["port"] = int(self.port)
-            
         return MySQLdb.connect(**args)
 
     ## connects to PGSQL database    
@@ -360,8 +351,7 @@ class DBaseSource(DataSource):
             if not self.format or self.format == 'SCALAR':
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
-                dh = {"format":"SCALAR", "value":str(data[0]), "tangoDType":"DevString", "shape":[1,0]}
-#                print "SCALAR",dh
+                dh = {"format":"SCALAR", "value":data[0], "tangoDType":(NTP.pTt[type(data[0]).__name__]), "shape":[1,0]}
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
@@ -369,12 +359,12 @@ class DBaseSource(DataSource):
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
-                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":"DevString", "shape":[len(ldata),0]}
+                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":(NTP.pTt[type(ldata[0]).__name__]), "shape":[len(ldata),0]}
             else:
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
                 ldata = list(list(el) for el in data)
-                dh = {"format":"IMAGE", "value":ldata, "tangoDType":"DevString", "shape":[len(ldata), len(ldata[0])]}
+                dh = {"format":"IMAGE", "value":ldata, "tangoDType":NTP.pTt[type(ldata[0][0]).__name__], "shape":[len(ldata), len(ldata[0])]}
             cursor.close()
             db.close()
         return dh
@@ -400,7 +390,7 @@ class ClientSource(DataSource):
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec)> 0:
-            self.name = rec[0].getAttribute("name")
+            self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
 #            print "NAME:", self.name
         if not self.name:
             raise  DataSourceSetupError, \
@@ -411,7 +401,7 @@ class ClientSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " client record %s from JSON:  %s or %s " % (self.name, self.__localJSON , self.__globalJSON  )
+        return " Client record %s from JSON: %s or %s " % (self.name, self.__localJSON , self.__globalJSON  )
 
 
     ## sets JSON string
@@ -441,7 +431,7 @@ class ClientSource(DataSource):
             return    
         ntp = NTP()
         rank, shape, pythonDType = ntp.arrayRankRShape(rec)
-        
+
         if rank in NTP.rTf:
             shape.reverse()
             if  shape is None:

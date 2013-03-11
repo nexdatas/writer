@@ -89,6 +89,10 @@ class UINT32decoder(object):
     ## loads encoded data
     # \param data encoded data    
     def load(self, data):
+        if not hasattr(data,"__iter__"):
+            raise ValueError, "Wrong Data Format"
+        if len(data[1]) % 4:
+            raise ValueError, "Wrong encoded UINT32 data length"
         self.__data = data
         self.format = data[0]
         self.__value = None
@@ -97,7 +101,8 @@ class UINT32decoder(object):
     ## provides the data shape
     # \returns the data shape if data was loaded
     def shape(self):
-        return [len(self.__data[1])/4,0]
+        if self.__data:
+            return [len(self.__data[1])/4,0]
         
 
 
@@ -106,8 +111,8 @@ class UINT32decoder(object):
     def decode(self):        
         if not self.__data:
             return
-        if not len(self.__data) % 4:
-            return
+        if len(self.__data[1]) % 4:
+            raise ValueError, "Wrong encoded UINT32 data length"
         if not self.__value:
             self.__value = numpy.array(
                 struct.unpack('I'*(len(self.__data[1])/4), self.__data[1]), dtype=self.dtype
@@ -139,7 +144,7 @@ class VDEOdecoder(object):
         ## header data
         self.__header = {}
         ## format modes
-        self.__formatID = {0:'B', 1:'H', 2:'I', 3:'L'}
+        self.__formatID = {0:'B', 1:'H', 2:'I', 3:'Q'}
         ## dtype modes
         self.__dtypeID = {0:'uint8', 1:'uint16', 2:'uint32', 3:'uint64'}
 

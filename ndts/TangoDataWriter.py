@@ -24,7 +24,10 @@
 from NexusXMLHandler import NexusXMLHandler
 from FetchNameHandler import FetchNameHandler
 
-import pni.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 from xml import sax
 
@@ -107,7 +110,7 @@ class TangoDataWriter(object):
         ## file handle
         self.__nxFile = nx.create_file(self.fileName, overwrite=True)
         ## element file objects
-        self.__eFile = EFile("NXfile", [], None, self.__nxFile)
+        self.__eFile = EFile([], None, self.__nxFile)
         if self.addingLogs:    
             self.__logGroup = self.__nxFile.create_group("NexusConfigurationLogs")
 
@@ -163,6 +166,8 @@ class TangoDataWriter(object):
                 lfield = self.__logGroup.create_field("Nexus__entry__%s_XML" % str(self.__entryCounter),"string")
                 lfield.write(self.xmlSettings)
                 lfield.close()
+            if self.__nxFile:
+                self.__nxFile.flush()
 
     ## close the data writer        
     # \brief It runs threads from the STEP pool
@@ -189,6 +194,9 @@ class TangoDataWriter(object):
                     self.__triggerPools[pool].setJSON(json.loads(self.json), localJSON)
                     self.__triggerPools[pool].runAndWait()
                     self.__triggerPools[pool].checkErrors()
+
+        if self.__nxFile:
+            self.__nxFile.flush()
         gc.collect()
 
 
@@ -196,6 +204,10 @@ class TangoDataWriter(object):
     # \brief It runs threads from the FINAL pool and
     #  removes the thread pools 
     def closeEntry(self):
+
+        if self.addingLogs and self.__logGroup:    
+            self.__logGroup.close()
+            self.__logGroup = None
 
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.json))

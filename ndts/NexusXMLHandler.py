@@ -18,19 +18,23 @@
 ## \package ndts nexdatas
 # \file NexusXMLHandler.py
 # An example of SAX Nexus parser
-import pni.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 from xml import sax
 
 import sys, os
 
 from Element import Element
-from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, EDimensions, EDim, EStrategy)
+from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
+                        EDimensions, EDim, EStrategy, FElement, EFile)
 from DataSourceFactory import DataSourceFactory
 from ThreadPool import ThreadPool
 from InnerXMLParser import InnerXMLHandler
 
-## unsupported tag exception
-class UnsupportedTagError(Exception): pass
+
+from Errors import UnsupportedTagError
     
 ## SAX2 parser 
 class NexusXMLHandler(sax.ContentHandler):
@@ -43,7 +47,8 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param groupTypes map of NXclass : name
     # \param parser instance of sax.xmlreader
     # \param globalJSON global json string
-    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , parser = None, globalJSON = None):
+    def __init__(self, fileElement, datasources=None, decoders=None, groupTypes=None , 
+                 parser = None, globalJSON = None):
         sax.ContentHandler.__init__(self)
 
         
@@ -60,7 +65,8 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## unsupported tag tracer
         self.__unsupportedTag=""
-        self.__raiseUnsupportedTag=True
+        ## True if raise exception on unsupported tag
+        self.raiseUnsupportedTag=True
 
         ## xmlreader
         self.__parser = parser
@@ -69,14 +75,14 @@ class NexusXMLHandler(sax.ContentHandler):
         self.__json = globalJSON
 
         ## tags with innerxml as its input
-        self.__withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
+        self.withXMLinput = {'datasource':DataSourceFactory, 'doc':EDoc}
         ##  stored attributes
         self.__storedAttrs = None
         ##  stored name
         self.__storedName = None
 
         ## map of tag names to related classes
-        self.__elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
+        self.elementClass = {'group':EGroup, 'field':EField, 'attribute':EAttribute,
                               'link':ELink,
                               'symbols':Element, 'symbol':ESymbol, 
                               'dimensions':EDimensions, 
@@ -85,7 +91,7 @@ class NexusXMLHandler(sax.ContentHandler):
                               }
 
         ## transparent tags
-        self.__transparentTags = ['definition']
+        self.transparentTags = ['definition']
 
 
         ## thread pool with INIT elements
@@ -108,6 +114,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
         ## if innerparse was running
         self.__inner = False
+
 
     ## the last stack element 
     # \returns the last stack element 
@@ -138,40 +145,41 @@ class NexusXMLHandler(sax.ContentHandler):
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag :
-            if self.__parser and  name in self.__withXMLinput:
+            if self.__parser and  name in self.withXMLinput:
                 self.__storedAttrs = attrs
                 self.__storedName = name
                 self.__innerHandler = InnerXMLHandler(self.__parser, self, name, attrs)
                 self.__parser.setContentHandler(self.__innerHandler) 
                 self.__inner = True
-            elif name in self.__elementClass:
-                self.__stack.append(self.__elementClass[name](name, attrs, self.__last()))
+            elif name in self.elementClass:
+                self.__stack.append(self.elementClass[name](attrs, self.__last()))
                 if self.__fetching and hasattr(self.__last(), "fetchName") and callable(self.__last().fetchName):
                     self.__last().fetchName(self.__groupTypes)
                 if hasattr(self.__last(), "createLink") and callable(self.__last().createLink):
                     self.__last().createLink(self.__groupTypes)
-            elif name not in self.__transparentTags:
-                if self.__raiseUnsupportedTag:
+            elif name not in self.transparentTags:
+                if self.raiseUnsupportedTag:
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
                 print "Unsupported tag: ", name ,attrs.keys()
                 self.__unsupportedTag = name
                 
 
-    ## parses an closing tag
+    ## parses the closing tag
     # \param name tag name
     def endElement(self, name):
         if self.__inner == True:
 #            print "XML:\n", self.__innerHandler.xml
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
-        if not self.__unsupportedTag and self.__parser and  name in self.__withXMLinput:
+        if not self.__unsupportedTag and self.__parser and  name in self.withXMLinput:
             print "XML", self.__innerHandler.xml
-        elif not self.__unsupportedTag and name in self.__elementClass:
-            res = self.__last().store()
-            if res:
-                self.__addToPool(res, self.__last())
+        elif not self.__unsupportedTag and name in self.elementClass:
+            if hasattr(self.__last(), "store") and callable(self.__last().store):
+                res = self.__last().store() 
+                if res:
+                    self.__addToPool(res, self.__last())
             self.__stack.pop()
-        elif name not in self.__transparentTags:
+        elif name not in self.transparentTags:
             if self.__unsupportedTag == name:
                 self.__unsupportedTag = ""
 
@@ -201,11 +209,13 @@ class NexusXMLHandler(sax.ContentHandler):
     ## creates class instance of the current inner xml
     # \param xml inner xml
     def __createInnerTag(self, xml):
-        if self.__storedName in self.__withXMLinput:
-            inner = self.__withXMLinput[self.__storedName](self.__storedName, self.__storedAttrs, self.__last())
+        if self.__storedName in self.withXMLinput:
+            res = None
+            inner = self.withXMLinput[self.__storedName](self.__storedAttrs, self.__last())
             if hasattr(inner, "setDataSources") and callable(inner.setDataSources):
                 inner.setDataSources(self.__datasources)
-            res = inner.store(xml, self.__json)
+            if hasattr(inner, "store") and callable(inner.store):
+                res = inner.store(xml, self.__json)
             if hasattr(inner, "setDecoders") and callable(inner.setDecoders):
                 inner.setDecoders(self.__decoders)
             if res:
@@ -243,7 +253,7 @@ if __name__ == "__main__":
             ## file  handle
             nxFile = nx.create_file(self.self.fileName, overwrite=True)
             ## element file objects
-            fileElement = EFile("NXfile", [], None, self.nxFile)
+            fileElement = EFile([], None, self.nxFile)
             ## a SAX2 handler object
             handler = NexusXMLHandler(fileElement)
             parser.setContentHandler(handler)

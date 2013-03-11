@@ -20,6 +20,46 @@
 # the unittest runner
 #
 
+import os 
+import unittest
+
+import TangoDataWriterTest
+import ClientFieldTagWriterTest
+import XMLFieldTagWriterTest
+import NexusXMLHandlerTest
+import ElementTest
+import FElementTest
+import FElementWithAttrTest
+import EStrategyTest
+import EFieldTest
+import EGroupTest
+import ELinkTest
+import EAttributeTest
+import EFileTest
+import EDocTest
+import ESymbolTest
+import EDimensionsTest
+import EDimTest
+import ConvertersTest
+import NTPTest
+import ErrorsTest
+import DataSourceTest
+import ClientSourceTest
+import DBaseSourceTest
+import DataSourcePoolTest
+import DataSourceFactoryTest
+import DataSourceDecodersTest
+import UTF8decoderTest
+import UINT32decoderTest
+import VDEOdecoderTest
+import DecoderPoolTest
+import DataHolderTest
+import ElementThreadTest
+import ThreadPoolTest
+import FetchNameHandlerTest
+import InnerXMLParserTest
+import AttributeArrayTest
+import FieldArrayTest
 
 try:
     import PyTango
@@ -33,40 +73,81 @@ except ImportError, e:
 DB_AVAILABLE = []
     
 try:
-    import MySQLdb
+    import MySQLdb    
+    ## connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
     args["host"] = 'localhost'
     args["read_default_file"] = '/etc/my.cnf'
+    ## inscance of MySQLdb
     mydb = MySQLdb.connect(**args)
     mydb.close()
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
     print "MYSQL not available: %s" % e
+except Exception, e:
+    print "MYSQL not available: %s" % e
 except:
     print "MYSQL not available"
+
+
+try:
+    import psycopg2
+    ## connection arguments to PGSQL DB
+    args = {}
+    args["database"] = 'mydb'
+    ## inscance of psycog2
+    pgdb = psycopg2.connect(**args)
+    pgdb.close()
+    DB_AVAILABLE.append("PGSQL")
+except ImportError, e:
+    print "PGSQL not available: %s" % e
+except Exception,e:
+    print "PGSQL not available: %s" % e
+except:
+    print "PGSQL not available"
+
+
+
+try:
+    import cx_Oracle
+    ## pwd
+    passwd = open('%s/pwd' % os.path.dirname(ElementTest.__file__)).read()[:-1]
+
+    ## connection arguments to ORACLE DB
+    args = {}
+    args["dsn"] = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+    args["user"] = "read"
+    args["password"] = passwd
+    ## inscance of cx_Oracle
+    ordb = cx_Oracle.connect(**args)
+    ordb.close()
+    DB_AVAILABLE.append("ORACLE")
+except ImportError, e:
+    print "ORACLE not available: %s" % e
+except Exception,e:
+    print "ORACLE not available: %s" % e
+except:
+    print "ORACLE not available"
     
-
-import unittest
-
-import TangoDataWriterTest
-import ClientFieldTagWriterTest
-import XMLFieldTagWriterTest
-import TangoFieldTagWriterTest
-import NexusXMLHandlerTest
-import ElementTest
-import FElementTest
-import FElementWithAttrTest
-import EStrategyTest
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
+    import MYSQLSourceTest
+
+if "PGSQL" in DB_AVAILABLE:
+    import PGSQLSourceTest
+
+if "ORACLE" in DB_AVAILABLE:
+    import ORACLESourceTest
 
 if PYTANGO_AVAILABLE:
+    import TangoFieldTagWriterTest
     import TangoDataServerTest
     import ClientFieldTagServerTest
     import XMLFieldTagServerTest
     import TangoFieldTagServerTest
+    import TangoSourceTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
 
@@ -97,6 +178,42 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(FElementWithAttrTest) )
 
     suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EFieldTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EGroupTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ELinkTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EAttributeTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EFileTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EDocTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EDimensionsTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EDimTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ConvertersTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(NTPTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ErrorsTest) )
+
+    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
     
     suite.addTests(
@@ -108,11 +225,79 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DBaseSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourcePoolTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceFactoryTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(UTF8decoderTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(UINT32decoderTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(VDEOdecoderTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DecoderPoolTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataHolderTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FetchNameHandlerTest) )
+
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(AttributeArrayTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FieldArrayTest) )
+
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
 
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(MYSQLSourceTest) )
+
+
+    if "PGSQL" in DB_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(PGSQLSourceTest) )
+
+    if "ORACLE" in DB_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ORACLESourceTest) )
+
     if PYTANGO_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
+
+
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
 
@@ -128,9 +313,11 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
 
+
         if "MYSQL" in DB_AVAILABLE:
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest) )
+
 
     
     ## test runner

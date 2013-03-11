@@ -18,15 +18,15 @@
 ## \package ndts nexdatas
 # \file InnerXMLParser.py
 # An example of SAX Nexus parser
-import pni.nx.h5 as nx
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 from xml import sax
 
 import sys, os
 
-
-## exception for syntax in XML settings
-class XMLSyntaxError(Exception): pass
-
+from Errors import  XMLSyntaxError
     
 ## SAX2 parser 
 class InnerXMLHandler(sax.ContentHandler):
@@ -70,9 +70,9 @@ class InnerXMLHandler(sax.ContentHandler):
     def __openTag(self, name, attrs, eol = False):
         xml = ""
         if eol:
-            xml += "\n<%s "% name
+            xml += "\n<%s"% name
         else:
-            xml += "<%s "% name
+            xml += "<%s"% name
             
         for k in attrs.keys():
             xml += " %s=\"%s\"" % (k, self.__replaceAttr(attrs[k]))

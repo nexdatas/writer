@@ -29,8 +29,11 @@ import struct
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+try:
+    from pni.io.nx.h5 import open_file
+except:
+    from pni.nx.h5 import open_file
 
-from pni.nx.h5 import open_file
 from  xml.sax import SAXParseException
 
 
@@ -57,6 +60,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."
+        print "CHECKER SEED =", self._sc.seed 
 
     ## test closer
     # \brief Common tear down
@@ -588,7 +592,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
 #        self._sc.checkSpectrumAttribute(field, "flag_spectrum_string", "string", logical)
     
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
@@ -988,7 +992,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         # STRING NOT SUPPORTED BY PNINX
     
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 

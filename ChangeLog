@@ -1,3 +1,14 @@
+2013-03-11 Jan Kotanski <jankotan@gmail.com>
+	* adding  support for separate group names in link targets
+	* making Elink.typesToNames private
+	* removing a name parameter from class inherited from Elements
+	* switches to pni.io library
+	* extending shapes up to a rank value
+	* adding tests
+	* improving FieldArray class
+	* tagged as 1.1.0
+
+
 2013-02-06 Jan Kotanski <jankotan@gmail.com>
 	* adding support for dimension casting
 	* fetching a shape of the client datasource from the global JSON string
