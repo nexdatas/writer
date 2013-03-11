@@ -280,7 +280,12 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
     # \param v door v parameter
     # \returns dataRecord on STEP mode
     def recordDataReceived(self, s, t, v):
-        dataRecord = taurus.core.tango.sardana.macroserver.BaseDoor.recordDataReceived(self, s, t, v)
+        try:
+            dataRecord = taurus.core.tango.sardana.macroserver.BaseDoor.recordDataReceived(self, s, t, v)
+        except:
+            self.writing = False
+            raise Exception,"Problems in fetching dataRecord"
+
         if dataRecord == None:
             return
         print ">>> recordDataReceived "
