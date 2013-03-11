@@ -1,5 +1,25 @@
 #!/usr/bin/env python
+#   This file is part of nexdatas - Tango Server for NeXus data writer
 #
+#    Copyright (C) 2012-2013 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#
+#    nexdatas is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    nexdatas is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
+## \package ndts SardanaClient
+## \file nexusWriterDoor.py
+# nexus Door
+#
+
 
 
 import PyTango
@@ -51,6 +71,10 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         self.cnfServer = None
         ## Nexus writer
         self.nexusWriter=None
+        
+        ## writing status
+        self.writing = False
+
 
         env = self.getEnvironment()
         if not env.has_key('NexusWriterDevice'):
@@ -59,11 +83,11 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
             self.setEnvironment('NexusWriterDevice', self.device)
         else:
             ## Nexus writer device name
-            self.device = self.getEnvironment('NexusWriterDevice')
-            
-            
+            self.device = self.getEnvironment('NexusWriterDevice') 
 
-        env = self.getEnvironment()
+        if not env.has_key('ScanFinished'):
+            self.setEnvironment('ScanFinished', 'True')
+           
         if not env.has_key('ConfigurationServerDevice'):
             ## configuration server device name
             self.cnfdevice = 'haso228k.desy.de:10000/p09/mcs/r228'
@@ -259,23 +283,35 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         pp.pprint(dataRecord)
 
         # new scan 
-        if dataRecord[1]['type'] == "data_desc":
-            self.prepareNewScan(dataRecord)
+        
+        if "type" in dataRecord[1] and dataRecord[1]['type'] == "data_desc":
+            finished = False if self.getEnvironment('ScanFinished').upper() == "FALSE" else True
+
+            if finished:
+                self.setEnvironment('ScanFinished', 'False')
+                self.writing = True
+                print "Writing NeXus: INIT"
+                self.prepareNewScan(dataRecord)
             return dataRecord
 
+
         # end of the scan
-        if dataRecord[1]['type'] == "record_end":
-            self.closeScan(dataRecord)
-            env = self.getEnvironment()
-            if env.has_key('ScanFinished'):
+        if "type" in dataRecord[1] and dataRecord[1]['type'] == "record_end":
+            if self.writing:
+                print "Writing NeXus: FINAL"
+                self.closeScan(dataRecord)
+                env = self.getEnvironment()
                 self.setEnvironment('ScanFinished', 'True')
 
             return dataRecord
 
         # record step
-        if dataRecord[1]['type'] == "record_data":
-            jsonString = self.replaceAliases(json.dumps(dataRecord[1]))
-            self.nexusWriter.record(jsonString)
+        if "type" in dataRecord[1] and dataRecord[1]['type'] == "record_data":
+            if self.writing:
+                jsonString = self.replaceAliases(json.dumps(dataRecord[1]))
+                print "Writing NeXus: STEP"
+                self.nexusWriter.record(jsonString)
+                
 
             return dataRecord
 
