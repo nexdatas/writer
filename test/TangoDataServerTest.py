@@ -169,12 +169,23 @@ class TangoDataServerTest(unittest.TestCase):
 
         directory = '#nexdatas_test_directory#'
         dirCreated = False
+        dirExists = False
+
         if not os.path.exists(directory):
             try:
                 os.makedirs(directory)
                 dirCreated = True
+                dirExists = True
             except:
                 pass
+        else:
+             dirExists = True
+             
+
+        if dirExists:
+            fname = '%s/%s/%s.h5' % (os.getcwd(), directory, fun )  
+        else:
+            fname = '%s/%s.h5' % (os.getcwd(), fun )  
 
 
         if dirCreated:

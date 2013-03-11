@@ -171,17 +171,22 @@ class TangoDataWriterTest(unittest.TestCase):
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-        directory = '#nexdatas_test_directory#'
+        
+        directory = '#nexdatas_test_directoryS#' 
         dirCreated = False
+        dirExists = False
         if not os.path.exists(directory):
             try:
                 os.makedirs(directory)
                 dirCreated = True
+                dirExists = True
             except:
                 pass
+        else:
+             dirExists = True
+             
 
-        if dirCreated:
+        if dirExists:
             fname = '%s/%s/%s.h5' % (os.getcwd(), directory, fun )  
         else:
             fname = '%s/%s.h5' % (os.getcwd(), fun )  
