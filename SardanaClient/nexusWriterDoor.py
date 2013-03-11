@@ -27,7 +27,7 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         self.call__init__(taurus.core.tango.sardana.macroserver.BaseDoor, name, **kw)
 
         ## Nexus scan directory
-        self.scanDir = ""
+        self.scandir = ""
         ## Nexus file name
         self.filename = ""
         ## serial number
@@ -96,12 +96,12 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
     def prepareFileName(self, dataRecord):
 
         if type(dataRecord[1]['data'][ 'scanfile']).__name__ == 'list':
-            self.scanfile = dataRecord[1]['data'][ 'scanfile'][0]
+            scanfile = dataRecord[1]['data'][ 'scanfile'][0]
         else:
-            self.scanfile = dataRecord[1]['data'][ 'scanfile']
+            scanfile = dataRecord[1]['data'][ 'scanfile']
         self.scandir = dataRecord[1]['data'][ 'scandir']
         self.serialno = dataRecord[1]['data'][ 'serialno']
-        self.filename = "%s_%05d.%s" % (self.scanfile.rpartition('.')[0], self.serialno, "h5")
+        self.filename = "%s_%05d.%s" % (scanfile.rpartition('.')[0], self.serialno, "h5")
 #        startTime = dataRecord[1]['data']['starttime']
 #        title = dataRecord[1]['data']['title']
                 
@@ -199,7 +199,7 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         self.nexusWriter.Init()
         print " Connected to: ", self.device
         
-        fname= "%s/%s" % (self.scandir,self.filename )
+        fname= "%s/%s" % (self.scandir, self.filename)
         print "FILE:", fname
         self.nexusWriter.FileName=fname.encode()
         
@@ -217,12 +217,8 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
     ## prepares a new scan and performs the INIT mode writing
     # \param dataRecord Sardana data record
     def prepareNewScan(self, dataRecord):
-        """
-        this function is called, if a data_desc record is found
-        """
+
         self.prepareFileName(dataRecord)
-
-
         xml = self.createNexusConfiguration(dataRecord)
         self.initNexusWriter(xml)
         
@@ -239,6 +235,9 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         self.nexusWriter.CloseFile()
 
 
+    ## replaces alias but cut aliases according to self.toReplaces
+    # \param text with aliases
+    # \returns text with cut aliases    
     def replaceAliases(self, text):
         res = text
         if self.toReplace:
