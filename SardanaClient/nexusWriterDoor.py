@@ -28,6 +28,12 @@ import taurus.core.tango.sardana.macroserver
 import pprint
 import json
 
+PYQT = True
+try:
+    from PyQt4.QtCore import QObject, SIGNAL, QString
+except:
+    PYQT = False
+
 ## pretty print
 pp = pprint.PrettyPrinter()
 ## tango database
@@ -35,6 +41,10 @@ db = PyTango.Database()
 
 taurus.core.tango.sardana.macroserver.registerExtensions()
     
+
+
+
+
 ## Nexus Writer Door     
 class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
 
@@ -75,6 +85,13 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         ## writing status
         self.writing = False
 
+        ## signal emitter
+        if PYQT:
+            self.emitter = QObject()
+        else:
+            self.emitter = None
+    
+
 
         env = self.getEnvironment()
         if not env.has_key('NexusWriterDevice'):
@@ -87,16 +104,17 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
 
         if not env.has_key('ScanFinished'):
             self.setEnvironment('ScanFinished', 'True')
+
+        env = self.getEnvironment()
            
         if not env.has_key('ConfigurationServerDevice'):
             ## configuration server device name
             self.cnfdevice = 'haso228k.desy.de:10000/p09/mcs/r228'
-            self.setEnvironment('ConfigurationServerDevcie', self.cnfdevice) 
+            self.setEnvironment('ConfigurationServerDevice', self.cnfdevice) 
         else:
             ## configuration server device name
-            self.cnfdevice = self.getEnvironment('ConfigurationServerDevcie')
+            self.cnfdevice = self.getEnvironment('ConfigurationServerDevice')
             
-
 
 
 
@@ -189,6 +207,10 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
         dsFound = {}
         cpReq = {}
         self.cnfServer = PyTango.DeviceProxy(self.cnfdevice)
+
+        if PYQT:
+            self.emitter.emit(SIGNAL("updateCServer(QString)"), QString(self.cnfdevice))
+
         if self.cnfServer.State() == PyTango.DevState.ON:
             self.cnfServer.Open()
             
@@ -220,12 +242,19 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
     def initNexusWriter(self, xml):
 
         self.nexusWriter=PyTango.DeviceProxy(self.device)
+
+        if PYQT:
+            self.emitter.emit(SIGNAL("updateNWriter(QString)"), QString(self.device))
+
         self.nexusWriter.Init()
         print " Connected to: ", self.device
         
         fname= "%s/%s" % (self.scandir, self.filename)
         print "FILE:", fname
         self.nexusWriter.FileName=fname.encode()
+
+        if PYQT:
+            self.emitter.emit(SIGNAL("updateFile(QString)"), QString(fname))
         
         print "opening the H5 file"
         self.nexusWriter.OpenFile()
@@ -242,7 +271,12 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
     # \param dataRecord Sardana data record
     def prepareNewScan(self, dataRecord):
 
+        self.indexScan = 0
         self.prepareFileName(dataRecord)
+        self.findScanLimits( dataRecord)
+        if PYQT:
+            self.emitter.emit(SIGNAL("updateNP(int,int)"), self.indexScan, self.np)
+
         try:
             xml = self.createNexusConfiguration(dataRecord)
             self.initNexusWriter(xml)
@@ -321,6 +355,10 @@ class nexusDoor(taurus.core.tango.sardana.macroserver.BaseDoor):
                 print "Writing NeXus: STEP"
                 self.nexusWriter.record(jsonString)
                 
+
+                self.indexScan += 1
+                if PYQT:
+                    self.emitter.emit(SIGNAL("updateNP(int,int)"), self.indexScan, self.np)
 
             return dataRecord
 

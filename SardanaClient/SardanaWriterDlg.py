@@ -41,9 +41,23 @@ class SardanaWriterDlg(QDialog, Ui_SardanaWriterDlg):
 
         self.connect(self.closePushButton, SIGNAL("clicked()"), self.accept)     
         
-    ## updates a file name     
+    ## updates the file name     
     def updateFile(self,fname):
-        self.fileLabel("File: %s" % fname) 
+        self.fileLabel.setText("File: %s" % fname) 
+
+
+    ## updates the nexus writer device name
+    def updateNWriter(self, text):
+        self.nwLabel.setText("Nexus Writer: %s" % text) 
+
+    ## updates the configuration server device name
+    def updateCServer(self, text):
+        self.csLabel.setText("Configuration server: %s" % text) 
+
+
+    ## updates the configuration server device name
+    def updateNP(self, iscan, np):
+        self.ofLabel.setText("Step: %s of %s" %  (iscan, np)) 
 
 
 if __name__ == "__main__":

@@ -39,13 +39,19 @@ def signal_handler(signal, frame):
         print '\nBye !'
         sys.exit(0)
 
+def getFinished(door):
+    env = door.getEnvironment()
+    return False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+
+
 
 if __name__ == "__main__":
     ## door factory
     factory = taurus.Factory()
     factory.registerDeviceClass('Door',  nexusDoor)
-    print "DR", factory.getExistingDevices()
-
+    door = factory.findObjectClass('Door')
+    print "Type", door
+    
     ## door name
     doorName = "<>"
     ## door instance
@@ -92,14 +98,16 @@ if __name__ == "__main__":
     door.setEnvironment('ScanFinished', 'True')
 
     i = 0
-#    print "SYS", sys.argv
+    print "SYS", sys.argv
     for elm in sys.argv:
         if sys.argv[i] == '-d':
             sys.argv.pop(i+1)
             sys.argv.pop(i)
-            break
+        if sys.argv[i] == '-n':
+            sys.argv.pop(i)
         i += 1 
-#    print "SYS2", sys.argv
+
+    print "SYS2", sys.argv
 #    app = TaurusApplication(sys.argv)
 
     try: 
@@ -116,23 +124,26 @@ if __name__ == "__main__":
     from PyQt4.QtGui import QApplication
     from SardanaWriterDlg import SardanaWriterDlg
 
-    env = door.getEnvironment()
-    finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+    finished = getFinished(door)
     if options.widget:
+        from PyQt4.QtCore import (SIGNAL, QString)
         ## Qt application
         app = QApplication(sys.argv)
         ## dialog form
         form = SardanaWriterDlg()
         form.createGUI()
-#        form.connect(, SIGNAL("updateFile(QString)"), self.updateFile)     
+        form.update()
+#        print "WW", door.emitter
+        form.connect(door.emitter, SIGNAL("updateFile(QString)"), form.updateFile)     
+        form.connect(door.emitter, SIGNAL("updateNWriter(QString)"), form.updateNWriter)     
+        form.connect(door.emitter, SIGNAL("updateCServer(QString)"), form.updateCServer)     
+        form.connect(door.emitter, SIGNAL("updateNP(int,int)"), form.updateNP)     
         form.show()
         app.exec_()
  
-        env = door.getEnvironment()
-        finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+        finished = getFinished(door)
         while not finished:
-            env = door.getEnvironment()
-            finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+            finished = getFinished(door)
             time.sleep(1)
 #            print "FINISHED", finished
 
@@ -140,7 +151,6 @@ if __name__ == "__main__":
     
         signal.signal(signal.SIGINT, signal_handler)
         while True:
-            env = door.getEnvironment()
-            finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+            finished = getFinished(door)
             
             time.sleep(1)

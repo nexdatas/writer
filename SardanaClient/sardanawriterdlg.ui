@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
-    <height>221</height>
+    <width>534</width>
+    <height>152</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,13 +20,6 @@
       <widget class="QLabel" name="fileLabel">
        <property name="text">
         <string>File:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="idLabel">
-       <property name="text">
-        <string>ID:</string>
        </property>
       </widget>
      </item>
@@ -45,30 +38,12 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <item>
-        <widget class="QLabel" name="startLabel">
-         <property name="text">
-          <string>Start:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="endLabel">
-         <property name="text">
-          <string>End:</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
       <widget class="QLabel" name="ofLabel">
        <property name="text">
-        <string>0 of 0</string>
+        <string>Step: 0 of 0</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
