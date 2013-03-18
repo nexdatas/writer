@@ -52,7 +52,7 @@ class SardanaWriterDlg(QDialog, Ui_SardanaWriterDlg):
 
     ## updates the configuration server device name
     def updateCServer(self, text):
-        self.csLabel.setText("Configuration server: %s" % text) 
+        self.csLabel.setText("Configuration Server: %s" % text) 
 
 
     ## updates the configuration server device name
