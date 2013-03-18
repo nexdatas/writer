@@ -50,7 +50,6 @@ if __name__ == "__main__":
     factory = taurus.Factory()
     factory.registerDeviceClass('Door',  nexusDoor)
     door = factory.findObjectClass('Door')
-    print "Type", door
     
     ## door name
     doorName = "<>"
@@ -98,7 +97,7 @@ if __name__ == "__main__":
     door.setEnvironment('ScanFinished', 'True')
 
     i = 0
-    print "SYS", sys.argv
+#    print "SYS", sys.argv
     for elm in sys.argv:
         if sys.argv[i] == '-d':
             sys.argv.pop(i+1)
@@ -107,7 +106,7 @@ if __name__ == "__main__":
             sys.argv.pop(i)
         i += 1 
 
-    print "SYS2", sys.argv
+#    print "SYS2", sys.argv
 #    app = TaurusApplication(sys.argv)
 
     try: 
