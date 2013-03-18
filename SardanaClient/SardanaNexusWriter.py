@@ -17,9 +17,6 @@ import PyTango
 import Hasylab
 
 from nexusWriterDoor import nexusDoor
-## door factory
-factory = taurus.Factory()
-factory.registerDeviceClass('Door',  nexusDoor)
 
 
 ## finished flag
@@ -44,6 +41,10 @@ def signal_handler(signal, frame):
 
 
 if __name__ == "__main__":
+    ## door factory
+    factory = taurus.Factory()
+    factory.registerDeviceClass('Door',  nexusDoor)
+
     ## door name
     doorName = "<>"
     ## door instance
@@ -55,22 +56,28 @@ if __name__ == "__main__":
     ## run options
     options = None
     ## usage example
-    usage = "usage: %prog -d <doorName>\n e.g.: %prog -d p09/door/exp.01"
+    usage = "usage: %prog [-d <doorName>] [-nw] \n e.g.: %prog -d p09/door/exp.01 -nw"
     ## option parser
     parser = OptionParser(usage=usage)
-    parser.add_option("-d", action="store", type="string", dest="doorName", help="name of a door, e.g. p09/door/exp.01")
+    parser.add_option("-d", action="store", type="string", dest="doorName", 
+                      help="name of a door, e.g. p09/door/exp.01")
+    parser.add_option("-n","--no-widget", action="store_false", 
+                      default=True, dest="widget", help="do not show graphic widget")
 
     (options, args) = parser.parse_args()
     if options.doorName is None:
         ## local door names
         lst = Hasylab.getLocalDoorNames()
         if len(lst) == 1:
-            options.doorName = lst[0]
+            doorName = lst[0]
         else:
             parser.print_help()
             sys.exit(255)
+    else:
+        doorName = options.doorName
 
-    doorName = options.doorName
+        
+
     print "DOOR", doorName        
     door = taurus.Device(doorName)
 
@@ -83,15 +90,15 @@ if __name__ == "__main__":
         
     door.setEnvironment('ScanFinished', 'True')
 
-#   i = 0
-#   print "SYS", sys.argv
-#   for elm in sys.argv:
-#       if sys.argv[i] == '-d':
-#           sys.argv.pop(i+1)
-#           sys.argv.pop(i)
-#           break
-#       i += 1 
-#   print "SYS2", sys.argv
+    i = 0
+    print "SYS", sys.argv
+    for elm in sys.argv:
+        if sys.argv[i] == '-d':
+            sys.argv.pop(i+1)
+            sys.argv.pop(i)
+            break
+        i += 1 
+    print "SYS2", sys.argv
 #    app = TaurusApplication(sys.argv)
 
     try: 
@@ -104,10 +111,26 @@ if __name__ == "__main__":
     macroServerName = msproperties['MacroServerName'][0]
 
 
-    signal.signal(signal.SIGINT, signal_handler)
-    while True:
-        env = door.getEnvironment()
-        finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
-#        print "FINISHED", finished
+    import sys
+    from PyQt4.QtGui import QApplication
+    from SardanaWriterDlg import SardanaWriterDlg
 
-        time.sleep(1)
+    print "W:", options.widget
+    if options.widget:
+        ## Qt application
+        app = QApplication(sys.argv)
+        ## attribute form
+        form = SardanaWriterDlg()
+        form.createGUI()
+        form.show()
+        app.exec_()
+
+    else:
+    
+        signal.signal(signal.SIGINT, signal_handler)
+        while True:
+            env = door.getEnvironment()
+            finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+#        print "FINISHED", finished
+            
+            time.sleep(1)
