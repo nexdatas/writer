@@ -44,6 +44,7 @@ if __name__ == "__main__":
     ## door factory
     factory = taurus.Factory()
     factory.registerDeviceClass('Door',  nexusDoor)
+    print "DR", factory.getExistingDevices()
 
     ## door name
     doorName = "<>"
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     ## run options
     options = None
     ## usage example
-    usage = "usage: %prog [-d <doorName>] [-nw] \n e.g.: %prog -d p09/door/exp.01 -nw"
+    usage = "usage: %prog [-d <doorName>] [-n] \n e.g.: %prog -d p09/door/exp.01 -n"
     ## option parser
     parser = OptionParser(usage=usage)
     parser.add_option("-d", action="store", type="string", dest="doorName", 
@@ -78,7 +79,7 @@ if __name__ == "__main__":
 
         
 
-    print "DOOR", doorName        
+#    print "DOOR", doorName        
     door = taurus.Device(doorName)
 
     ## environment variables
@@ -91,14 +92,14 @@ if __name__ == "__main__":
     door.setEnvironment('ScanFinished', 'True')
 
     i = 0
-    print "SYS", sys.argv
+#    print "SYS", sys.argv
     for elm in sys.argv:
         if sys.argv[i] == '-d':
             sys.argv.pop(i+1)
             sys.argv.pop(i)
             break
         i += 1 
-    print "SYS2", sys.argv
+#    print "SYS2", sys.argv
 #    app = TaurusApplication(sys.argv)
 
     try: 
@@ -115,15 +116,25 @@ if __name__ == "__main__":
     from PyQt4.QtGui import QApplication
     from SardanaWriterDlg import SardanaWriterDlg
 
-    print "W:", options.widget
+    env = door.getEnvironment()
+    finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
     if options.widget:
         ## Qt application
         app = QApplication(sys.argv)
-        ## attribute form
+        ## dialog form
         form = SardanaWriterDlg()
         form.createGUI()
+#        form.connect(, SIGNAL("updateFile(QString)"), self.updateFile)     
         form.show()
         app.exec_()
+ 
+        env = door.getEnvironment()
+        finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+        while not finished:
+            env = door.getEnvironment()
+            finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
+            time.sleep(1)
+#            print "FINISHED", finished
 
     else:
     
@@ -131,6 +142,5 @@ if __name__ == "__main__":
         while True:
             env = door.getEnvironment()
             finished = False if str(door.getEnvironment('ScanFinished')).upper() == 'FALSE' else True
-#        print "FINISHED", finished
             
             time.sleep(1)

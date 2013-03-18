@@ -34,7 +34,6 @@ class SardanaWriterDlg(QDialog, Ui_SardanaWriterDlg):
         super(SardanaWriterDlg, self).__init__(parent)
 
 
-
     ##  creates GUI
     # \brief It calls setupUi and  connects signals and slots    
     def createGUI(self):
@@ -42,6 +41,9 @@ class SardanaWriterDlg(QDialog, Ui_SardanaWriterDlg):
 
         self.connect(self.closePushButton, SIGNAL("clicked()"), self.accept)     
         
+    ## updates a file name     
+    def updateFile(self,fname):
+        self.fileLabel("File: %s" % fname) 
 
 
 if __name__ == "__main__":
