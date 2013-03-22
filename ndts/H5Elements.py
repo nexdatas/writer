@@ -220,6 +220,8 @@ class FElementWithAttr(FElement):
                             lines = val.split("\n")
                             image = [ln.split() for ln in lines ]
                             dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+                        else:    
+                            raise XMLSettingSyntaxError, "Case not supported"
                             
                         self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
                     
@@ -299,15 +301,9 @@ class EField(FElementWithAttr):
         ## compression shuffle
         self.shuffle = True
 
-
-
-
-    ## stores the tag content
-    # \param xml xml setting 
-    # \returns (strategy, trigger)
-    def store(self, xml = None):
-        
-        # if growing in extra dimension
+    ## checks if it is growing in extra dimension
+    # \brief It checks if it is growing in extra dimension and setup internal variables     
+    def __isgrowing(self):
         self.__extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
             self.__extraD = True
@@ -316,17 +312,23 @@ class EField(FElementWithAttr):
         else:
             self.grows = None
 
-        #  type and name
+    ## provides type and name of the field
+    # \returns (type, name) tuple        
+    def __typeAndName(self):
         if "name" in self._tagAttrs.keys():
             nm = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys():
                 tp = NTP.nTnp[self._tagAttrs["type"]]
             else:
                 tp = "string"
+            return tp, nm    
         else:
             raise XMLSettingSyntaxError, " Field without a name"
 
-        # shape and chunk
+    ## provides shape
+    # \param tp object type    
+    # \returns object shape    
+    def __getShape(self, tp):
         try:
             if tp.encode() == "string":
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows)
@@ -341,7 +343,8 @@ class EField(FElementWithAttr):
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 if self.__extraD:
                     self.grows = 1
-#                print "string", nm, shape, self.grows
+                    
+            return shape
         except XMLSettingSyntaxError, ex:
             if self.strategy == "POSTRUN": 
                 self.__splitArray = False
@@ -349,9 +352,17 @@ class EField(FElementWithAttr):
                     shape = [0 for d in range(int(self.rank))]
                 else:
                     shape = [0]
+                return shape
             else:
                 raise
+            
 
+    ## creates H5 object
+    # \param tp object type    
+    # \param nm object name
+    # \param shape object shape    
+    # \returns H5 object
+    def __createObject(self, tp, nm, shape):
         chunk = [s if s > 0 else 1 for s in shape]  
         deflate = None
         # create Filter
@@ -360,7 +371,6 @@ class EField(FElementWithAttr):
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
             
-        # create h5 object
         if shape:
             if self.__splitArray:
                 f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
@@ -372,26 +382,33 @@ class EField(FElementWithAttr):
         else:
             f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
 
-        self.h5Object = f
+        return f
         
-        # create attributes
+
+    ## creates attributes 
+    # \brief It creates attributes in h5Object
+    def __setAttributes(self):
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
                 if key in NTP.aTn.keys():
                     if hasattr(self._tagAttrs[key],"encode"):
                         try:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key].strip().encode()
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                self._tagAttrs[key].strip().encode()
                         except:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key].strip().encode())
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key].strip().encode())
                     else:
                         try:
                             (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key]
                         except:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key])
+                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key])
                             
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
-                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = numpy.array(self._tagAttrs[key])
+                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = \
+                        numpy.array(self._tagAttrs[key])
                 else:
                     (self.h5Object.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
 
@@ -400,9 +417,13 @@ class EField(FElementWithAttr):
         if self.strategy == "POSTRUN":
             self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
 
-            
 
-        # return strategy or fill the value in
+
+
+    ## provides strategy or fill the value in
+    # \param nm object name
+    # \returns strategy or strategy,trigger it trigger defined 
+    def __setStrategy(self, nm):
         if self.source:
             if  self.source.isValid() :
                 return self.strategy, self.trigger
@@ -418,6 +439,8 @@ class EField(FElementWithAttr):
                     lines = val.split("\n")
                     image = [ln.split() for ln in lines ]
                     dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+                else:    
+                    raise XMLSettingSyntaxError, "Case not supported"
 
 
                 if self.h5Object.dtype != "string" or not self.rank or int(self.rank) == 0:
@@ -438,6 +461,26 @@ class EField(FElementWithAttr):
                     raise ValueError,"Warning: Invalid datasource for %s" % nm
                 else:
                     print "Warning: Empty value for the field:", nm
+
+            
+    ## stores the tag content
+    # \param xml xml setting 
+    # \returns (strategy, trigger)
+    def store(self, xml = None):
+        
+        # if it is growing in extra dimension
+        self.__isgrowing()
+        # type and name
+        tp, nm = self.__typeAndName()
+        # shape
+        shape = self.__getShape(tp)
+        # create h5 object
+        self.h5Object = self.__createObject(tp, nm, shape)
+        # create attributes
+        self.__setAttributes()
+
+        # return strategy or fill the value in
+        return self.__setStrategy(nm)
 
 
         
