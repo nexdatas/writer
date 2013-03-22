@@ -548,104 +548,124 @@ class EField(FElementWithAttr):
                 raise Exception("Storing two-dimension single fields not supported by pninx")
 
 
+    ## writes growing scalar data
+    # \param dh data holder
+    def __writeScalarGrowingData(self, dh):
+            
+        arr = dh.cast(self.h5Object.dtype)
+        if len(self.h5Object.shape) == 1:
+            self.h5Object.grow()
+            self.h5Object[self.h5Object.shape[0]-1] = arr
+        elif  len(self.h5Object.shape) == 2:
+            if self.grows == 2:
+                self.h5Object.grow()
+                self.h5Object[:,self.h5Object.shape[0]-1] = arr
+            else:
+                self.h5Object.grow()
+                self.h5Object[self.h5Object.shape[0]-1,:] = arr
+        elif  len(self.h5Object.shape) == 3:
+            if self.grows == 3:
+                self.h5Object.grow()
+                self.h5Object[:,:,self.h5Object.shape[0]-1] = arr
+            if self.grows == 2:
+                self.h5Object.grow()
+                self.h5Object[:,self.h5Object.shape[0]-1,:] = arr
+            else:
+                self.h5Object.grow()
+                self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+
+
+    ## writes growing spectrum data
+    # \param dh data holder
+    def __writeSpectrumGrowingData(self, dh):
+
+        # way around for a bug in pninx
+
+        arr = dh.cast(self.h5Object.dtype)
+        if self.grows == 1:
+            if isinstance(arr, numpy.ndarray) \
+                    and len(arr.shape) == 1 and arr.shape[0] == 1:
+                self.h5Object.grow()
+                if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
+                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                if len(self.h5Object.shape) == 2:
+                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                else:                      
+                    self.h5Object[self.h5Object.shape[0]-1] = arr
+            else:
+                self.h5Object.grow()
+                if len(self.h5Object.shape) == 3:
+                    self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+                elif  len(self.h5Object.shape) == 2:
+                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                else:
+                    if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
+                        self.h5Object[self.h5Object.shape[0]-1] = arr[0]
+                    else:
+                        self.h5Object[self.h5Object.shape[0]-1] = arr
+
+        else:
+            if isinstance(arr, numpy.ndarray) \
+                    and len(arr.shape) == 1 and arr.shape[0] == 1:
+                self.h5Object.grow(1)
+                self.h5Object[:,self.h5Object.shape[1]-1] = arr
+            else:
+                if len(self.h5Object.shape) == 3: 
+                    if self.grows == 2:
+                        self.h5Object.grow(1)
+                        self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
+                    else:
+                        self.h5Object.grow(2)
+                        self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
+                else:
+                    self.h5Object.grow(1)
+                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
+
+
+    ## writes growing spectrum data
+    # \param dh data holder
+    def __writeImageGrowingData(self, dh):
+
+        arr = dh.cast(self.h5Object.dtype)
+        if self.grows == 1:
+            self.h5Object.grow()
+            if len(self.h5Object.shape) == 3:
+                self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+            elif len(self.h5Object.shape) == 2:
+                if len(dh.shape) == 1 :
+                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                elif len(dh.shape) > 1  and dh.shape[0] == 1:
+                    self.h5Object[self.h5Object.shape[0]-1,:] = [c[0] for c in arr]
+                elif len(dh.shape) > 1  and dh.shape[1] == 1:
+                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[:,0]
+            elif len(self.h5Object.shape) == 2:
+                self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+            elif len(self.h5Object.shape) == 1:
+                self.h5Object[self.h5Object.shape[0]-1] = arr[0][0]
+        elif self.grows == 2:
+            self.h5Object.grow(1)
+            if len(self.h5Object.shape) == 3:
+                self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
+            elif len(self.h5Object.shape) == 2:
+                self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
+        else:
+            self.h5Object.grow(2)
+            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr        
+
+
 
     ## writes growing data
     # \param dh data holder
     def __writeGrowingData(self, dh):
         if str(dh.format).split('.')[-1] == "SCALAR":
-            if len(self.h5Object.shape) == 1:
-                self.h5Object.grow()
-                self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
-            elif  len(self.h5Object.shape) == 2:
-                if self.grows == 2:
-                    self.h5Object.grow()
-                    self.h5Object[:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
-                else:
-                    self.h5Object.grow()
-                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
-            elif  len(self.h5Object.shape) == 3:
-                if self.grows == 3:
-                    self.h5Object.grow()
-                    self.h5Object[:,:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
-                if self.grows == 2:
-                    self.h5Object.grow()
-                    self.h5Object[:,self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
-                else:
-                    self.h5Object.grow()
-                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
-
-
-        if str(dh.format).split('.')[-1] == "SPECTRUM":
-        # way around for a bug in pninx
-
-            arr = dh.cast(self.h5Object.dtype)
-            if self.grows == 1:
-                if isinstance(arr, numpy.ndarray) \
-                        and len(arr.shape) == 1 and arr.shape[0] == 1:
-                    self.h5Object.grow()
-                    if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
-                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
-                    if len(self.h5Object.shape) == 2:
-                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
-                    else:                      
-                        self.h5Object[self.h5Object.shape[0]-1] = arr
-                else:
-                    self.h5Object.grow()
-                    if len(self.h5Object.shape) == 3:
-                        self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
-                    elif  len(self.h5Object.shape) == 2:
-                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
-                    else:
-                        if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
-                            self.h5Object[self.h5Object.shape[0]-1] = arr[0]
-                        else:
-                            self.h5Object[self.h5Object.shape[0]-1] = arr
-
-            else:
-                if isinstance(arr, numpy.ndarray) \
-                        and len(arr.shape) == 1 and arr.shape[0] == 1:
-                    self.h5Object.grow(1)
-                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
-                else:
-                    if len(self.h5Object.shape) == 3: 
-                        if self.grows == 2:
-                            self.h5Object.grow(1)
-                            self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
-                        else:
-                            self.h5Object.grow(2)
-                            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
-                    else:
-                        self.h5Object.grow(1)
-                        self.h5Object[:,self.h5Object.shape[1]-1] = arr
-
-        if str(dh.format).split('.')[-1] == "IMAGE":
-
-            if self.grows == 1:
-                self.h5Object.grow()
-                if len(self.h5Object.shape) == 3:
-                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
-                elif len(self.h5Object.shape) == 2:
-                    if len(dh.shape) == 1 :
-                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
-                    elif len(dh.shape) > 1  and dh.shape[0] == 1:
-                        self.h5Object[self.h5Object.shape[0]-1,:] = [c[0] for c in dh.cast(self.h5Object.dtype)]
-                    elif len(dh.shape) > 1  and dh.shape[1] == 1:
-                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[:,0]
-                elif len(self.h5Object.shape) == 2:
-                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
-                elif len(self.h5Object.shape) == 1:
-                    self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)[0][0]
-            elif self.grows == 2:
-                self.h5Object.grow(1)
-                if len(self.h5Object.shape) == 3:
-                    self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
-                elif len(self.h5Object.shape) == 2:
-                    self.h5Object[:,self.h5Object.shape[1]-1] = dh.cast(self.h5Object.dtype)[0]
-            else:
-                self.h5Object.grow(2)
-                self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)        
-
-
+            self.__writeScalarGrowingData(dh)
+        elif str(dh.format).split('.')[-1] == "SPECTRUM":
+            self.__writeSpectrumGrowingData(dh)
+        elif str(dh.format).split('.')[-1] == "IMAGE":
+            self.__writeImageGrowingData(dh)
+        else:
+            raise XMLSettingSyntaxError, "Case not supported"
+            
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
