@@ -483,7 +483,169 @@ class EField(FElementWithAttr):
         return self.__setStrategy(nm)
 
 
-        
+
+    ## writes non-growing data
+    # \param dh data holder
+    def __writeData(self, dh):
+        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
+            sts = dh.cast(self.h5Object.dtype)
+            if len(dh.shape) > 1 and dh.shape[0] == 1:
+                for i in range(len(sts[0])):
+                    self.h5Object[i] = sts[0][i] 
+            elif len(dh.shape) > 1 and dh.shape[1] == 1:
+                for i in range(len(sts)):
+                    self.h5Object[i] = sts[i][0] 
+            else:
+                for i in range(len(sts)):
+                    self.h5Object[i] = sts[i] 
+        elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
+            sts = dh.cast(self.h5Object.dtype)
+            if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
+                if self.h5Object.dtype == "string":
+                    if hasattr(sts[0], "__iter__")  and type(sts[0]).__name__ != 'str':
+                        self.h5Object.write(sts[0][0])
+                    else:
+                        self.h5Object.write(sts[0])
+                else:
+                    try:
+                        self.h5Object.write(sts)
+                    except:    
+                        raise Exception("Storing one-dimension single fields not supported by pninx")
+            else:
+                self.h5Object.write(sts)
+
+        elif  len(self.h5Object.shape) == 2 and self.h5Object.dtype == "string":       
+            sts = dh.cast(self.h5Object.dtype)
+            if str(dh.format).split('.')[-1] == "IMAGE":
+                for i in range(len(sts)):
+                    for j in range(len(sts[i])):
+                        self.h5Object[i,j] = sts[i][j] 
+            elif str(dh.format).split('.')[-1] == "SPECTRUM":
+                for i in range(len(sts)):
+                        self.h5Object[i,:] = sts[i]
+            else:            
+                self.h5Object[:,:] = sts
+        elif  len(self.h5Object.shape) == 3 and self.h5Object.dtype == "string":       
+            sts = dh.cast(self.h5Object.dtype)
+            if str(dh.format).split('.')[-1] == "VERTEX":
+                for i in range(len(sts)):
+                    for j in range(len(sts[i])):
+                        for k in range(len(sts[i][j])):
+                            self.h5Object[i,j,k] = sts[i][j][k] 
+            if str(dh.format).split('.')[-1] == "IMAGE":
+                for i in range(len(sts)):
+                    for j in range(len(sts[i])):
+                        self.h5Object[i,j,:] = sts[i][j] 
+            elif str(dh.format).split('.')[-1] == "SPECTRUM":
+                for i in range(len(sts)):
+                        self.h5Object[i,:,:] = sts[i]
+            else:            
+                self.h5Object[:,:,:] = sts
+        else:
+            try:
+                self.h5Object.write(dh.cast(self.h5Object.dtype))
+            except:    
+                raise Exception("Storing two-dimension single fields not supported by pninx")
+
+
+
+    ## writes growing data
+    # \param dh data holder
+    def __writeGrowingData(self, dh):
+        if str(dh.format).split('.')[-1] == "SCALAR":
+            if len(self.h5Object.shape) == 1:
+                self.h5Object.grow()
+                self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+            elif  len(self.h5Object.shape) == 2:
+                if self.grows == 2:
+                    self.h5Object.grow()
+                    self.h5Object[:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+                else:
+                    self.h5Object.grow()
+                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
+            elif  len(self.h5Object.shape) == 3:
+                if self.grows == 3:
+                    self.h5Object.grow()
+                    self.h5Object[:,:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
+                if self.grows == 2:
+                    self.h5Object.grow()
+                    self.h5Object[:,self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
+                else:
+                    self.h5Object.grow()
+                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+
+
+        if str(dh.format).split('.')[-1] == "SPECTRUM":
+        # way around for a bug in pninx
+
+            arr = dh.cast(self.h5Object.dtype)
+            if self.grows == 1:
+                if isinstance(arr, numpy.ndarray) \
+                        and len(arr.shape) == 1 and arr.shape[0] == 1:
+                    self.h5Object.grow()
+                    if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
+                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                    if len(self.h5Object.shape) == 2:
+                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                    else:                      
+                        self.h5Object[self.h5Object.shape[0]-1] = arr
+                else:
+                    self.h5Object.grow()
+                    if len(self.h5Object.shape) == 3:
+                        self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+                    elif  len(self.h5Object.shape) == 2:
+                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                    else:
+                        if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
+                            self.h5Object[self.h5Object.shape[0]-1] = arr[0]
+                        else:
+                            self.h5Object[self.h5Object.shape[0]-1] = arr
+
+            else:
+                if isinstance(arr, numpy.ndarray) \
+                        and len(arr.shape) == 1 and arr.shape[0] == 1:
+                    self.h5Object.grow(1)
+                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
+                else:
+                    if len(self.h5Object.shape) == 3: 
+                        if self.grows == 2:
+                            self.h5Object.grow(1)
+                            self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
+                        else:
+                            self.h5Object.grow(2)
+                            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
+                    else:
+                        self.h5Object.grow(1)
+                        self.h5Object[:,self.h5Object.shape[1]-1] = arr
+
+        if str(dh.format).split('.')[-1] == "IMAGE":
+
+            if self.grows == 1:
+                self.h5Object.grow()
+                if len(self.h5Object.shape) == 3:
+                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
+                elif len(self.h5Object.shape) == 2:
+                    if len(dh.shape) == 1 :
+                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
+                    elif len(dh.shape) > 1  and dh.shape[0] == 1:
+                        self.h5Object[self.h5Object.shape[0]-1,:] = [c[0] for c in dh.cast(self.h5Object.dtype)]
+                    elif len(dh.shape) > 1  and dh.shape[1] == 1:
+                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[:,0]
+                elif len(self.h5Object.shape) == 2:
+                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
+                elif len(self.h5Object.shape) == 1:
+                    self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)[0][0]
+            elif self.grows == 2:
+                self.h5Object.grow(1)
+                if len(self.h5Object.shape) == 3:
+                    self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
+                elif len(self.h5Object.shape) == 2:
+                    self.h5Object[:,self.h5Object.shape[1]-1] = dh.cast(self.h5Object.dtype)[0]
+            else:
+                self.h5Object.grow(2)
+                self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)        
+
+
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
@@ -491,173 +653,20 @@ class EField(FElementWithAttr):
         try:
             if self.source:
                 dt = self.source.getData()
-#                print "dt", dt
                 dh = None
                 if dt:
                     dh = DataHolder(**dt)
-#                print "VAL", dh.value, type(dh.value)
                 if not dh:
                     message = self.setMessage("Data without value")
-#                    message = self.setMessage()
                     self.error = message
                 elif not hasattr(self.h5Object,'shape'):
                     message = self.setMessage("PNI Object not created")
                     self.error = message
                 else:
                     if not self.__extraD:
-                        
-#                        print "DATA3", self.h5Object.name, self.h5Object.dtype, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype)
-                        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
-                            sts = dh.cast(self.h5Object.dtype)
-                            if len(dh.shape) > 1 and dh.shape[0] == 1:
-                                for i in range(len(sts[0])):
-                                    self.h5Object[i] = sts[0][i] 
-                            elif len(dh.shape) > 1 and dh.shape[1] == 1:
-                                for i in range(len(sts)):
-                                    self.h5Object[i] = sts[i][0] 
-                            else:
-                                for i in range(len(sts)):
-                                    self.h5Object[i] = sts[i] 
-#                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
-                        elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
-                            sts = dh.cast(self.h5Object.dtype)
-                            if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
-#                                print "NN", self.h5Object.name,self.h5Object.shape, sts[0], type(sts[0])
-                                if self.h5Object.dtype == "string":
-                                    if hasattr(sts[0], "__iter__")  and type(sts[0]).__name__ != 'str':
-                                        self.h5Object.write(sts[0][0])
-                                    else:
-                                        self.h5Object.write(sts[0])
-                                        
-                                else:
-                                    try:
-                                        self.h5Object.write(sts)
-                                    except:    
-                                        raise Exception("Storing one-dimension single fields not supported by pninx")
-                                    
-                            else:
-                                self.h5Object.write(sts)
-                                
-#                            self.h5Object[:] = dh.cast(self.h5Object.dtype)
-
-                        elif  len(self.h5Object.shape) == 2 and self.h5Object.dtype == "string":       
-                            sts = dh.cast(self.h5Object.dtype)
-                            if str(dh.format).split('.')[-1] == "IMAGE":
-                                for i in range(len(sts)):
-                                    for j in range(len(sts[i])):
-                                        self.h5Object[i,j] = sts[i][j] 
-                            elif str(dh.format).split('.')[-1] == "SPECTRUM":
-                                for i in range(len(sts)):
-                                        self.h5Object[i,:] = sts[i]
-                            else:            
-                                self.h5Object[:,:] = sts
-                        else:
-#                            print "DT", self.h5Object.name, self.h5Object.shape, dh.cast(self.h5Object.dtype), type( dh.cast(self.h5Object.dtype))  
-                            try:
-                                self.h5Object.write(dh.cast(self.h5Object.dtype))
-                            except:    
-                                raise Exception("Storing two-dimension single fields not supported by pninx")
-                            
-#                        print "DATA4"
+                        self.__writeData(dh)
                     else:
-                        if str(dh.format).split('.')[-1] == "SCALAR":
-                            if len(self.h5Object.shape) == 1:
-                                self.h5Object.grow()
-                                self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
-                            elif  len(self.h5Object.shape) == 2:
-                                if self.grows == 2:
-                                    self.h5Object.grow()
-                                    self.h5Object[:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
-                                else:
-                                    self.h5Object.grow()
-                                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
-                            elif  len(self.h5Object.shape) == 3:
-                                if self.grows == 3:
-                                    self.h5Object.grow()
-                                    self.h5Object[:,:,self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)
-                                if self.grows == 2:
-                                    self.h5Object.grow()
-                                    self.h5Object[:,self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)
-                                else:
-                                    self.h5Object.grow()
-                                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
-
-                                    
-                        if str(dh.format).split('.')[-1] == "SPECTRUM":
-                        # way around for a bug in pninx
-                            
-                            arr = dh.cast(self.h5Object.dtype)
-                            if self.grows == 1:
-                                if isinstance(arr, numpy.ndarray) \
-                                        and len(arr.shape) == 1 and arr.shape[0] == 1:
-                                    self.h5Object.grow()
-#                                    print "arr", arr, type(arr), arr.dtype, self.h5Object.shape
-                                    if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
-#                                        print "VA2", self.h5Object.dtype,self.h5Object.shape,  arr[0] 
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
-                                    if len(self.h5Object.shape) == 2:
-#                                        print "VA", self.h5Object.dtype,self.h5Object.shape,  arr[0] 
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
-                                    else:                      
-                                        self.h5Object[self.h5Object.shape[0]-1] = arr
-                                else:
-                                    self.h5Object.grow()
-                                    if len(self.h5Object.shape) == 3:
-                                        self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
-                                    elif  len(self.h5Object.shape) == 2:
-#                                        print "arr", arr.shape, self.h5Object.shape
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = arr
-                                    else:
-                                        if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
-                                            self.h5Object[self.h5Object.shape[0]-1] = arr[0]
-                                        else:
-                                            self.h5Object[self.h5Object.shape[0]-1] = arr
-                                        
-                            else:
-                                if isinstance(arr, numpy.ndarray) \
-                                        and len(arr.shape) == 1 and arr.shape[0] == 1:
-                                    self.h5Object.grow(1)
-                                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
-                                else:
-                                    if len(self.h5Object.shape) == 3: 
-                                        if self.grows == 2:
-                                            self.h5Object.grow(1)
-                                            self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
-                                        else:
-                                            self.h5Object.grow(2)
-                                            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
-                                    else:
-                                        self.h5Object.grow(1)
-                                        self.h5Object[:,self.h5Object.shape[1]-1] = arr
-
-                        if str(dh.format).split('.')[-1] == "IMAGE":
-#                            print "DATA3", self.h5Object.name, self.h5Object.dtype,self.h5Object.shape, len(self.h5Object.shape), self.__splitArray, dh.cast(self.h5Object.dtype), dh.shape, type(self.h5Object)
-
-                            if self.grows == 1:
-                                self.h5Object.grow()
-                                if len(self.h5Object.shape) == 3:
-                                    self.h5Object[self.h5Object.shape[0]-1,:,:] = dh.cast(self.h5Object.dtype)
-                                elif len(self.h5Object.shape) == 2:
-                                    if len(dh.shape) == 1 :
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
-                                    elif len(dh.shape) > 1  and dh.shape[0] == 1:
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = [c[0] for c in dh.cast(self.h5Object.dtype)]
-#                                        print "W", self.h5Object[self.h5Object.shape[0]-1,:]
-                                    elif len(dh.shape) > 1  and dh.shape[1] == 1:
-                                        self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[:,0]
-                                elif len(self.h5Object.shape) == 2:
-                                    self.h5Object[self.h5Object.shape[0]-1,:] = dh.cast(self.h5Object.dtype)[0]
-                                elif len(self.h5Object.shape) == 1:
-                                    self.h5Object[self.h5Object.shape[0]-1] = dh.cast(self.h5Object.dtype)[0][0]
-                            elif self.grows == 2:
-                                self.h5Object.grow(1)
-                                if len(self.h5Object.shape) == 3:
-                                    self.h5Object[:,self.h5Object.shape[1]-1,:] = dh.cast(self.h5Object.dtype)
-                                elif len(self.h5Object.shape) == 2:
-                                    self.h5Object[:,self.h5Object.shape[1]-1] = dh.cast(self.h5Object.dtype)[0]
-                            else:
-                                self.h5Object.grow(2)
-                                self.h5Object[:,:,self.h5Object.shape[2]-1] = dh.cast(self.h5Object.dtype)
+                        self.__writeGrowingData(dh)
         except:
             info = sys.exc_info()
             import traceback
@@ -673,7 +682,7 @@ class EField(FElementWithAttr):
             if self.error:
                 print "ERROR", self.error
 
-            pass
+#            pass
 
 
 ## group H5 tag element        
