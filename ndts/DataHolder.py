@@ -64,7 +64,7 @@ class DataHolder(object):
                 rank = NTP().arrayRank(self.value)
                 if rank > 2 :
                     raise ValueError, "Unsupported variables format"
-                self.format = ["SCALAR","SPECTRUM","IMAGE"][rank]
+                self.format = ["SCALAR","SPECTRUM", "IMAGE", "VERTEX"][rank]
                 
             tp =  decoder.dtype
             if tp in NTP.npTt.keys():
