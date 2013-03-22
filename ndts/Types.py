@@ -83,7 +83,7 @@ class NTP(object):
     aTnv = {"vector":"NX_FLOAT"}
 
     ## map of rank : data format
-    rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE", 3:"VECTOR"}
+    rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE", 3:"VERTEX"}
 
     ## array rank
     # \brief It calculates the rank of the array

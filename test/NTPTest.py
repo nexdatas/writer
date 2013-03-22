@@ -98,7 +98,7 @@ class NTPTest(unittest.TestCase):
         self._aTnv = {"vector":"NX_FLOAT"}
         
         ## map of rank : data format
-        self._rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE"}
+        self._rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE", 3:"VERTEX"}
 
 
         try:
