@@ -68,6 +68,45 @@ class FElement(Element):
             self.source.getData()
             
 
+    ## recalculates shape
+    # \param dsShape origin shape of the object
+    # \param rank rank of the object
+    # \param extends If True extends the shape up to rank value
+    # \param exDim grows growing dimension + 1        
+    # \param extraD if the object grows
+    # \returns shape of the  h5 field
+    def __reshape(self, dsShape, rank, extends, extraD, exDim):        
+        shape = []
+        if dsShape:    
+            for s in dsShape:
+                if s and extends:
+                    shape.append(s)
+                elif not extends and s and s>1:
+                    shape.append(s)
+    
+            while extends and len(shape) < int(rank):
+                shape.append(1)
+            if extraD:
+                shape.insert(exDim-1,0)    
+        return shape       
+
+
+    ## fetches shape from value and rank
+    # \param rank rank of the object
+    # \param value of the object
+    def __fetchShape(self, value, rank):
+        if not rank or int(rank) == 0:
+            return [1]
+        elif  int(rank) == 1:
+            spec = value.split()
+            return [len(spec)]
+        elif int(rank) == 2:
+            lines = value.split("\n")
+            image = [ln.split() for ln in lines ]
+            return [len(image),len(image[0])]
+        else:    
+            raise XMLSettingSyntaxError, "Case not supported"
+
 
     ## creates shape object from rank and lengths variables
     # \param rank rank of the object
@@ -87,7 +126,6 @@ class FElement(Element):
         else:
             exDim = 0
                     
-#            shape.append(0)
         if  int(rank) > 0:
             try:
                 for i in range(int(rank)):
@@ -105,40 +143,10 @@ class FElement(Element):
             except:
                 val = ("".join(self.content)).strip().encode()   
                 if self.source and self.source.isValid():
-#                    try:
                     dh = DataHolder(**self.source.getData())
-                    dsShape = dh.shape
-#                    except:
-#                        raise DataSourceError, "Problem with fetching the data shape"
-                    shape = []
-                    if dsShape:    
-                        for s in dsShape:
-                            if s and extends:
-                                shape.append(s)
-                            elif not extends and s and s>1:
-                                shape.append(s)
-    
-                    while extends and len(shape) < int(rank):
-                        shape.append(1)
-                        
-#                    if not extends and (shape == [1, 1] or shape == [1]):
-#                        shape = []
-                        
-                    if extraD:
-#                        if shape == [1]:
-#                            shape = [0]
-#                        else:    
-                        shape.insert(exDim-1,0)    
+                    shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)
                 elif val:
-                    if not rank or int(rank) == 0:
-                        shape = [1]
-                    elif  int(rank) == 1:
-                        spec = val.split()
-                        shape = [len(spec)]
-                    elif int(rank) == 2:
-                        lines = val.split("\n")
-                        image = [ln.split() for ln in lines ]
-                        shape = [len(image),len(image[0])]
+                    shape = self.__fetchShape(val,rank)
                 else:
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
@@ -146,7 +154,6 @@ class FElement(Element):
         elif extraD:            
             shape = [0]
 
-#        print "SHAPE",shape    
         return shape
 
 

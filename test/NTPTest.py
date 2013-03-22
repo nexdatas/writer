@@ -660,10 +660,6 @@ class NTPTest(unittest.TestCase):
                 arr[k][3] =  [mlen[0],mlen[1]]
 
 
-
-
-
-
         
 
         for k in arrs:
