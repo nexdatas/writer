@@ -96,22 +96,10 @@ class DataHolder(object):
             if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
                     return numpy.array(self.value, dtype=tp)
             else:    
-                if str(self.format).split('.')[-1] == "SPECTRUM":
-                    if tp == "string":
-                        return [ NTP.convert[tp](el) for el in self.value]
-                    else:
-                        return numpy.array([ NTP.convert[tp](el) for el in self.value], dtype=tp)
-                
-                if str(self.format).split('.')[-1] == "IMAGE":
-                    if tp == "string":
-                        return [ [ NTP.convert[tp](self.value[j][i]) \
-                                       for i in range(len(self.value[j])) ] \
-                                     for j in range(len(self.value)) ]
-                    else:
-                        
-                        return numpy.array([ [ NTP.convert[tp](self.value[j][i]) \
-                                                   for i in range(len(self.value[j])) ] \
-                                                 for j in range(len(self.value)) ], dtype=tp)
+                if tp == "string":
+                    return NTP().createArray(self.value, NTP.convert[tp])
+                else:
+                    return numpy.array(NTP().createArray(self.value, NTP.convert[tp]), dtype=tp)
 
         
 

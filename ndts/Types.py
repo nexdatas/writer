@@ -134,8 +134,8 @@ class NTP(object):
     # \param value given array
     # \fun applied function
     # \returns created array
-    def createArray(value, fun=None):
+    def createArray(self, value, fun=None):
         if not hasattr(value, "__iter__") or isinstance(value, str):
             return fun(value) if fun else value
         else:
-            return [createArray(v, fun) for v in value]
+            return [self.createArray(v, fun) for v in value]
