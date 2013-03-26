@@ -1,5 +1,6 @@
 2013-03-26 Jan Kotanski <jankotan@gmail.com>
-	* support for vertex
+	* adding support for vertices
+	* changing TDS into TangoDataServer
 	* adding tests
 	* tagged as 1.1.1
 
