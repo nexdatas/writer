@@ -52,13 +52,13 @@ class ServerSetUp(object):
         db.add_device(self.new_device_info_writer)
         db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
         
-        if os.path.isfile("../TDS"):
+        if os.path.isfile("../TangoDataServer"):
             self._psub = subprocess.call(
-                "cd ..; ./TDS TDWTEST &",stdout =  None, 
+                "cd ..; ./TangoDataServer TDWTEST &",stdout =  None, 
                 stderr =  None,  shell= True)
         else:
             self._psub = subprocess.call(
-                "TDS TDWTEST &",stdout =  None, 
+                "TangoDataServer TDWTEST &",stdout =  None, 
                 stderr = None , shell= True)
         print "waiting for server",
         
