@@ -1,6 +1,7 @@
-2013-XX-XX Jan Kotanski <jankotan@gmail.com>
-	* adding SardanaNexusWriter
-	* tagged as 1.X.X
+2013-03-26 Jan Kotanski <jankotan@gmail.com>
+	* support for vertex
+	* adding tests
+	* tagged as 1.1.1
 
 2013-03-11 Jan Kotanski <jankotan@gmail.com>
 	* adding  support for separate group names in link targets
