@@ -33,6 +33,8 @@ import numpy
 from ndts.Types import NTP
 from ndts.Types import Converters
 
+##
+from ndts.DataHolder import DataHolder
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -98,7 +100,7 @@ class NTPTest(unittest.TestCase):
         self._aTnv = {"vector":"NX_FLOAT"}
         
         ## map of rank : data format
-        self._rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE"}
+        self._rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE", 3:"VERTEX"}
 
 
         try:
@@ -329,6 +331,374 @@ class NTPTest(unittest.TestCase):
             else:
                 self.assertEqual(el.arrayRankRShape(a[0])[2].__name__, a[3])
                 self.assertEqual(el.arrayRankRShape(numpy.array(a[0]))[2].__name__, a[3])
+
+
+
+
+    ## arrayRank test
+    # \brief It tests default settings
+    def test_createArray_scalar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        arrs["b"] = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True],
+            }
+
+
+        arrs["i"] = {
+            "ScalarShort":[ "int16", "DevShort", -123],
+            "ScalarLong":[ self._bint, "DevLong", -124],
+            "ScalarLong64":[ "int64", "DevLong64", 234],
+            }
+
+        arrs["u"] = {
+            "ScalarUChar":[ "uint8", "DevUChar", 23],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234],
+            "ScalarULong":[self._buint , "DevULong", 234],
+            "ScalarULong64":[ "uint64", "DevULong64", 23],
+            }
+
+
+        arrs["f"] = {
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
+            }
+
+        arrs["s"] = {
+            "ScalarString":[ "string", "DevString", "MyTrue"],
+#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            }
+
+        types = {}
+
+        types["i"] = ["int","int8","int16","int32","int64"]
+        types["u"] = ["uint","uint8","uint16","uint32","uint64"]
+        types["f"] = ["float","float16","float32","float64"]
+        types["s"] = ["string"]
+        types["b"] = ["bool"]
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "u":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                value = arr[a][2]
+                for c in ca:
+                    if ca[c][k] == True:
+                        for it in types[c]:
+                            res=NTP().createArray(value,NTP.convert[it])
+                            self.assertEqual(NTP.convert[it](value), res)
+                    res=NTP().createArray(value)
+                    self.assertEqual(value, res)
+                                
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_createArray_scalar_from_string(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        
+        arrs["f"] = {
+            "ScalarString1":[ "string", "DevString", "12.3243"],
+            "ScalarString2":[ "string", "DevString", "-12.3243"],
+            "ScalarString3":[ "string", "DevString", "12.3243"],
+            }
+
+
+        arrs["i"] = {
+            "ScalarString1":[ "string", "DevString", "-1"],
+            "ScalarString2":[ "string", "DevString", "-125"],
+            "ScalarString3":[ "string", "DevString", "-124"],
+            }
+
+        arrs["u"] = {
+            "ScalarString1":[ "string", "DevString", "-1"],
+            "ScalarString2":[ "string", "DevString", "-125"],
+            "ScalarString3":[ "string", "DevString", "-124"],
+            }
+
+        arrs["s"] = {
+            "ScalarString1":[ "string", "DevString", "bnle"],
+            "ScalarString2":[ "string", "DevString", "What"],
+            "ScalarString3":[ "string", "DevString", "Cos"],
+            }
+
+
+        arrs["b"] = {
+            "ScalarString1":[ "string", "DevString", "True"],
+            "ScalarString2":[ "string", "DevString", "False"],
+            "ScalarString3":[ "string", "DevString", "true"],
+            }
+
+        types = {}
+
+        types["i"] = ["int","int8","int16","int32","int64"]
+        types["u"] = ["uint","uint8","uint16","uint32","uint64"]
+        types["f"] = ["float","float16","float32","float64"]
+        types["s"] = ["string"]
+        types["b"] = ["bool"]
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":False,"s":False,"b":False}, 
+            "u":{"i":True,"u":True,"f":False,"s":False,"b":False}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":False}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                value = arr[a][2]
+                for c in ca:
+                    for it in types[c]:
+                        if ca[c][k] == True:
+                            res=NTP().createArray(value,NTP.convert[it])
+                            self.assertEqual(NTP.convert[it](value), res)
+                    res=NTP().createArray(value)
+                    self.assertEqual(value, res)
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_createArray_spectrum(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        arrs["b"] = {
+            "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
+            }
+
+
+        arrs["i"] = {
+            "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
+            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
+            }
+
+        arrs["u"] = {
+            "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
+            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
+            "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
+            }
+
+
+        arrs["f"] = {
+            "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
+            "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
+            }
+
+        arrs["s"] = {
+            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
+#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            }
+
+        types = {}
+
+        types["i"] = {"int":0,"int8":0,"int16":0,"int32":0,"int64":0}
+        types["u"] = {"uint":0,"uint8":0,"uint16":0,"uint32":0,"uint64":0}
+        types["f"] = {"float":1e-5,"float16":1e-01,"float32":1e-5,"float64":1e-14}
+        types["s"] = {"string":0}
+        types["b"] = {"bool":0}
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "u":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+
+
+        for s in arrs:
+            arr = arrs[s]
+            for k in arr :
+                
+                if arr[k][1] != "DevBoolean":
+                    mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                    arr[k][2] =  [ arr[k][2]*self.__rnd.randint(1, 3) for c in range(mlen[0] )]
+                else:    
+                    mlen = [self.__rnd.randint(1, 10)]
+                    arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
+                    
+                arr[k][3] =  [mlen[0],0]
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+
+                value = arr[a][2]
+
+                for c in ca:
+                    for it in types[c]:
+                        if ca[c][k] == True:
+                            evalue  = [ NTP.convert[it](e) for e in value]
+                            elc=NTP().createArray(value,NTP.convert[it])
+                            self.assertEqual(len(evalue),len(elc) )
+                            for i in range(len(evalue)):
+                                if types[c][it]:
+                                    self.assertTrue(abs(evalue[i]-elc[i]) <= types[c][it] )
+                                else:
+                                    self.assertEqual(evalue[i],elc[i] )
+                evalue  = [e for e in value]
+                elc=NTP().createArray(value)
+                self.assertEqual(len(evalue),len(elc) )
+                for i in range(len(evalue)):
+                    if k !=  "s":
+                        self.assertTrue(abs(evalue[i]-elc[i]) <= types[c][it] )
+                    else:
+                        self.assertEqual(evalue[i],elc[i] )
+
+
+
+
+    ## setup test
+    # \brief It tests default settings
+    def test_createArray_image(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        
+        arrs = {}
+        
+
+        arrs["b"] = {
+            "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
+            }
+
+
+        arrs["i"] = {
+            "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
+            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
+            }
+
+        arrs["u"] = {
+            "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
+            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
+            "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
+            }
+
+
+        arrs["f"] = {
+            "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
+            "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
+            }
+
+        arrs["s"] = {
+            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
+#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            }
+
+        types = {}
+
+        types["i"] = {"int":0,"int8":0,"int16":0,"int32":0,"int64":0}
+        types["u"] = {"uint":0,"uint8":0,"uint16":0,"uint32":0,"uint64":0}
+        types["f"] = {"float":1e-5,"float16":1e-01,"float32":1e-5,"float64":1e-14}
+        types["s"] = {"string":0}
+        types["b"] = {"bool":0}
+
+
+        ca = {
+            "i":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "u":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "f":{"i":True,"u":True,"f":True,"s":False,"b":True}, 
+            "s":{"i":True,"u":True,"f":True,"s":True,"b":True}, 
+            "b":{"i":True,"u":True,"f":True,"s":True,"b":True}
+            }
+
+
+
+        for s in arrs:
+            arr = arrs[s]
+
+            for k in arr :
+
+
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                if arr[k][1] != "DevBoolean":
+                    arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+                else:    
+                    mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                    if arr[k][1] == 'DevBoolean':
+                        arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+                arr[k][3] =  [mlen[0],mlen[1]]
+
+
+        
+
+        for k in arrs:
+            arr = arrs[k]
+            for a in arr:
+                value = arr[a][2]
+
+                for c in ca:
+                    for it in types[c]:
+                        if ca[c][k] == True:
+                            elc=NTP().createArray(value,NTP.convert[it])
+                            evalue = [ [ NTP.convert[it](e) \
+                                                         for e in row ] \
+                                                       for row in value ]
+
+                            for i in range(len(evalue)):                                
+                                self.assertEqual(len(evalue[i]),len(elc[i]) )
+                                for j in range(len(evalue[i])):
+                                    if types[c][it]:
+                                        self.assertTrue(abs(evalue[i][j]-elc[i][j]) <= types[c][it] )
+                                    else:
+                                        self.assertEqual(evalue[i][j],elc[i][j] )
+
+
+                elc=NTP().createArray(value)
+                evalue = [ [e for e in row ] for row in value ]
+                
+                for i in range(len(evalue)):                                
+                    self.assertEqual(len(evalue[i]),len(elc[i]) )
+                    for j in range(len(evalue[i])):
+                        if k != 's':
+                            self.assertTrue(abs(evalue[i][j]-elc[i][j]) <= types[c][it] )
+                        else:
+                            self.assertEqual(evalue[i][j],elc[i][j] )
+                            
+
+
+
+
     
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,8 @@
+2013-03-26 Jan Kotanski <jankotan@gmail.com>
+	* adding support for vertices
+	* adding tests
+	* tagged as 1.1.1
+
 2013-03-11 Jan Kotanski <jankotan@gmail.com>
 	* adding  support for separate group names in link targets
 	* making Elink.typesToNames private

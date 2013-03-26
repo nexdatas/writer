@@ -83,7 +83,7 @@ class NTP(object):
     aTnv = {"vector":"NX_FLOAT"}
 
     ## map of rank : data format
-    rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE"}
+    rTf = {0:"SCALAR", 1:"SPECTRUM", 2:"IMAGE", 3:"VERTEX"}
 
     ## array rank
     # \brief It calculates the rank of the array
@@ -128,3 +128,14 @@ class NTP(object):
             else:
                 pythonDType = type(array)
         return (rank, shape, pythonDType)            
+
+
+    ## creates python array from the given array with applied the given function to it elements
+    # \param value given array
+    # \fun applied function
+    # \returns created array
+    def createArray(self, value, fun=None):
+        if not hasattr(value, "__iter__") or isinstance(value, str):
+            return fun(value) if fun else value
+        else:
+            return [self.createArray(v, fun) for v in value]
