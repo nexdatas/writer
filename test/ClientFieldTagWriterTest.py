@@ -255,12 +255,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 14)
-        self._sc.checkScalarField(det, "counter", self._bint, "NX_INT", self._counter)
+        self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
         self._sc.checkScalarField(det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
         self._sc.checkScalarField(det, "counter32", "int32", "NX_INT32", self._counter)
         self._sc.checkScalarField(det, "counter64", "int64", "NX_INT64", self._counter)
-        self._sc.checkScalarField(det, "ucounter", self._buint, "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
@@ -356,11 +356,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         f = open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 4,3)
-        self._sc.checkScalarAttribute(det, "scalar_float", self._bfloat, self._fcounter[steps-1],
+        self._sc.checkScalarAttribute(det, "scalar_float", "float64", self._fcounter[steps-1],
                                       error = 1.e-14)
         self._sc.checkScalarAttribute(det, "scalar_string", "string", 
                                       str(self._fcounter[steps-1]))
-        self._sc.checkScalarAttribute(det, "init_scalar_int", self._bint, self._counter[0])
+        self._sc.checkScalarAttribute(det, "init_scalar_int", "int64", self._counter[0])
         self._sc.checkScalarAttribute(det, "flag", "bool", logical[0])
         self._sc.checkScalarAttribute(field, "scalar_float32", "float32", self._fcounter[steps-1],
                                       error = 1.e-6)
@@ -440,7 +440,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname, 6)
-        self._sc.checkScalarField(det, "counter", self._bfloat, "NX_FLOAT", self._fcounter, 1.0e-14)
+        self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
         self._sc.checkScalarField(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
@@ -718,12 +718,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 14)
-        self._sc.checkSpectrumField(det, "mca_int",  self._bint, "NX_INT", self._mca1)
+        self._sc.checkSpectrumField(det, "mca_int",  "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
         self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int32", "int32", "NX_INT32", self._mca1, grows = 2 )
         self._sc.checkSpectrumField(det, "mca_int64", "int64", "NX_INT64", self._mca1)
-        self._sc.checkSpectrumField(det, "mca_uint",  self._buint, "NX_UINT", mca2)
+        self._sc.checkSpectrumField(det, "mca_uint",  "uint64", "NX_UINT", mca2)
         self._sc.checkSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows = 2)
         self._sc.checkSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", mca2)
         self._sc.checkSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", mca2, grows = 2 )
@@ -847,9 +847,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 8)
-        self._sc.checkSpectrumField(det, "mca_float", self._bfloat, "NX_FLOAT", self._fmca1, 
+        self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
-        self._sc.checkSpectrumField(det, "mca_float_dim", self._bfloat, "NX_FLOAT", self._fmca1, 
+        self._sc.checkSpectrumField(det, "mca_float_dim", "float64", "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
         self._sc.checkSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1, 
                                     error = 1.0e-6, grows = 2)
@@ -863,7 +863,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                           error = 1.0e-6)
         self._sc.checkSingleSpectrumField(det, "final_mca_float64", "float64", "NX_FLOAT64", self._fmca1[0],
                                           error = 1.0e-14)
-        self._sc.checkSingleSpectrumField(det, "final_mca_float", self._bfloat, "NX_FLOAT", self._fmca1[0],
+        self._sc.checkSingleSpectrumField(det, "final_mca_float", "float64", "NX_FLOAT", self._fmca1[0],
                                           error = 1.0e-14)
 
 
@@ -1150,7 +1150,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         f = open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
-        self._sc.checkSpectrumAttribute(det, "spectrum_float", self._bfloat, self._fmca1[steps-1],
+        self._sc.checkSpectrumAttribute(det, "spectrum_float", "float64", self._fmca1[steps-1],
                                       error = 1.e-14)
         self._sc.checkSpectrumAttribute(det, "init_spectrum_int32", "int32", self._mca1[0])
         self._sc.checkSpectrumAttribute(det, "spectrum_bool", "bool", logical)
@@ -1320,12 +1320,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 12)
-        self._sc.checkImageField(det, "pco_int",  self._bint, "NX_INT", self._pco1)
+        self._sc.checkImageField(det, "pco_int",  "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
         self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
         self._sc.checkImageField(det, "pco_int32", "int32", "NX_INT32", self._pco1, grows = 2 )
         self._sc.checkImageField(det, "pco_int64", "int64", "NX_INT64", self._pco1)
-        self._sc.checkImageField(det, "pco_uint",  self._buint, "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint",  "uint64", "NX_UINT", pco2)
         self._sc.checkImageField(det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows = 3)
         self._sc.checkImageField(det, "pco_uint16", "uint16", "NX_UINT16", pco2 )
         self._sc.checkImageField(det, "pco_uint32", "uint32", "NX_UINT32", pco2, grows = 2 )
@@ -1333,7 +1333,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
 
         self._sc.checkSingleImageField(det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
-        self._sc.checkSingleImageField(det, "final_pco_uint",  self._buint, "NX_UINT", pco2[0])
+        self._sc.checkSingleImageField(det, "final_pco_uint",  "uint64", "NX_UINT", pco2[0])
         
         f.close()
         os.remove(fname)
@@ -1429,7 +1429,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 6)
-        self._sc.checkImageField(det, "pco_float", self._bfloat, "NX_FLOAT", self._fpco1, 
+        self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
                                     error = 1.0e-14)
         self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
                                     error = 1.0e-6, grows = 2)
@@ -1775,9 +1775,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         f = open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
-        self._sc.checkImageAttribute(det, "image_float", self._bfloat, self._fpco1[steps-1],
+        self._sc.checkImageAttribute(det, "image_float", "float64", self._fpco1[steps-1],
                                       error = 1.e-14)
-        self._sc.checkImageAttribute(det, "image_int",  self._bint, self._pco1[0])
+        self._sc.checkImageAttribute(det, "image_int",  "int64", self._pco1[0])
         self._sc.checkImageAttribute(det, "image_bool", "bool", logical)
         self._sc.checkImageAttribute(det, "image_int32", "int32", self._pco1[steps-1])
         self._sc.checkImageAttribute(field, "image_float32", "float32", self._fpco1[steps-1],

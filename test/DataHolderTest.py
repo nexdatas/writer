@@ -144,8 +144,8 @@ class DataHolderTest(unittest.TestCase):
             "ScalarUChar":[ "uint8", "DevUChar", 23],
             "ScalarShort":[ "int16", "DevShort", -123],
             "ScalarUShort":[ "uint16", "DevUShort", 1234],
-            "ScalarLong":[ self._bint, "DevLong", -124],
-            "ScalarULong":[self._buint , "DevULong", 234],
+            "ScalarLong":[ "int64", "DevLong", -124],
+            "ScalarULong":["uint64" , "DevULong", 234],
             "ScalarLong64":[ "int64", "DevLong64", 234],
             "ScalarULong64":[ "uint64", "DevULong64", 23],
             "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
@@ -189,8 +189,8 @@ class DataHolderTest(unittest.TestCase):
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
             "SpectrumShort":[ "int16", "DevShort", -123, [1,0]],
             "SpectrumUShort":[ "uint16", "DevUShort", 1234, [1,0]],
-            "SpectrumLong":[ self._bint, "DevLong", -124, [1,0]],
-            "SpectrumULong":[self._buint , "DevULong", 234, [1,0]],
+            "SpectrumLong":[ "int64", "DevLong", -124, [1,0]],
+            "SpectrumULong":["uint64" , "DevULong", 234, [1,0]],
             "SpectrumLong64":[ "int64", "DevLong64", 234, [1,0]],
             "SpectrumULong64":[ "uint64", "DevULong64", 23, [1,0]],
             "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
@@ -252,8 +252,8 @@ class DataHolderTest(unittest.TestCase):
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
             "ImageShort":[ "int16", "DevShort", -123, [1,0]],
             "ImageUShort":[ "uint16", "DevUShort", 1234, [1,0]],
-            "ImageLong":[ self._bint, "DevLong", -124, [1,0]],
-            "ImageULong":[self._buint , "DevULong", 234, [1,0]],
+            "ImageLong":[ "int64", "DevLong", -124, [1,0]],
+            "ImageULong":["uint64" , "DevULong", 234, [1,0]],
             "ImageLong64":[ "int64", "DevLong64", 234, [1,0]],
             "ImageULong64":[ "uint64", "DevULong64", 23, [1,0]],
             "ImageFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
@@ -421,14 +421,14 @@ class DataHolderTest(unittest.TestCase):
 
         arrs["i"] = {
             "ScalarShort":[ "int16", "DevShort", -123],
-            "ScalarLong":[ self._bint, "DevLong", -124],
+            "ScalarLong":[ "int64", "DevLong", -124],
             "ScalarLong64":[ "int64", "DevLong64", 234],
             }
 
         arrs["u"] = {
             "ScalarUChar":[ "uint8", "DevUChar", 23],
             "ScalarUShort":[ "uint16", "DevUShort", 1234],
-            "ScalarULong":[self._buint , "DevULong", 234],
+            "ScalarULong":["uint64" , "DevULong", 234],
             "ScalarULong64":[ "uint64", "DevULong64", 23],
             }
 
@@ -603,13 +603,13 @@ class DataHolderTest(unittest.TestCase):
 
         arrs["i"] = {
             "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
-            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong":[ "int64", "DevLong", -14, [1,0]],
             "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
             }
 
         arrs["u"] = {
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
-            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumULong":["uint64" , "DevULong", 2, [1,0]],
             "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
             "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
             }
@@ -712,13 +712,13 @@ class DataHolderTest(unittest.TestCase):
 
         arrs["i"] = {
             "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
-            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong":[ "int64", "DevLong", -14, [1,0]],
             "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
             }
 
         arrs["u"] = {
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
-            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumULong":["uint64" , "DevULong", 2, [1,0]],
             "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
             "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
             }
