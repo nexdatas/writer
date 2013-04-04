@@ -166,7 +166,7 @@ class TangoDataWriter(object):
                 lfield = self.__logGroup.create_field("Nexus__entry__%s_XML" % str(self.__entryCounter),"string")
                 lfield.write(self.xmlSettings)
                 lfield.close()
-            if self.__nxFile:
+            if self.__nxFile and hasattr(self.__nxFile, "flush"):
                 self.__nxFile.flush()
 
     ## close the data writer        
@@ -195,7 +195,7 @@ class TangoDataWriter(object):
                     self.__triggerPools[pool].runAndWait()
                     self.__triggerPools[pool].checkErrors()
 
-        if self.__nxFile:
+        if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
         gc.collect()
 
@@ -236,7 +236,7 @@ class TangoDataWriter(object):
         if self.addingLogs and self.__logGroup:    
             self.__logGroup.close()
 
-        if self.__nxFile:
+        if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
 
         gc.collect()
