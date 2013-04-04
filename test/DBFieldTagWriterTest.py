@@ -390,7 +390,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar4_string", "string", "NX_CHAR", [scalar] *3)
-        self._sc.checkScalarField(det, "pid_scalar_uint", self._buint, "NX_UINT", [int(scalar)] *3)
+        self._sc.checkScalarField(det, "pid_scalar_uint", "uint64", "NX_UINT", [int(scalar)] *3)
         self._sc.checkScalarField(det, "pid_scalar_int64","int64", "NX_INT64", [int(scalar)] *3)
         self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [float(scalar)] *3, 
                                   error = 1e-14)
@@ -1125,15 +1125,15 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                        [[[str(it) for it in sub] for sub in name]]*3)
         self._sc.checkStringImageField(det, "pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in pid]]*3)
-        self._sc.checkImageField(det, "pid_image_float", self._bfloat, "NX_FLOAT", 
+        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
                                        [[[float(it) for it in sub] for sub in pid]]*3)
         self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32", 
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=2)
-        self._sc.checkImageField(det, "pid_image_int", self._bint, "NX_INT", 
+        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT", 
                                        [[[int(pid[0][0])]]]*3)
         self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64", 
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=3)
-        self._sc.checkImageField(det, "pid_exported_image_int", self._bint, "NX_INT", 
+        self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT", 
                                     [pid_exported]*3)
         self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32", 
                                     [pid_exported]*3, grows=3)
@@ -1147,14 +1147,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     pid_exported, grows=2, error=1e-6)
         self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64", 
                                     [[float(sub[0])] for sub in pid])
-        self._sc.checkSingleImageField(det, "init_pid_image_float", self._bfloat, "NX_FLOAT", 
+        self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT", 
                                     [[float(pid[0][0])]])
 
 
 
-        self._sc.checkImageField(det, "pid_image_uint", self._buint, "NX_UINT", 
+        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT", 
                                        [[[int(scalar)]]]*3)
-        self._sc.checkSingleImageField(det, "final_pid_image_float", self._bfloat, "NX_FLOAT", 
+        self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT", 
                                         [[float(scalar)]])
 
 

@@ -187,18 +187,18 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 19)
-        self._sc.checkXMLScalarField(det, "counter", self._bint, "NX_INT", mc)
+        self._sc.checkXMLScalarField(det, "counter", "int64", "NX_INT", mc)
         self._sc.checkXMLScalarField(det, "counter8", "int8", "NX_INT8", mc)
         self._sc.checkXMLScalarField(det, "counter16", "int16", "NX_INT16", mc)
         self._sc.checkXMLScalarField(det, "counter32", "int32", "NX_INT32", mc)
         self._sc.checkXMLScalarField(det, "counter64", "int64", "NX_INT64", mc)
-        self._sc.checkXMLScalarField(det, "ucounter",  self._buint, "NX_UINT", uc)
+        self._sc.checkXMLScalarField(det, "ucounter",  "uint64", "NX_UINT", uc)
         self._sc.checkXMLScalarField(det, "ucounter8", "uint8", "NX_UINT8", uc)
         self._sc.checkXMLScalarField(det, "ucounter16", "uint16", "NX_UINT16", uc)
         self._sc.checkXMLScalarField(det, "ucounter32", "uint32", "NX_UINT32", uc)
         self._sc.checkXMLScalarField(det, "ucounter64", "uint64", "NX_UINT64",uc)
 
-        self._sc.checkXMLScalarField(det, "float", self._bfloat, "NX_FLOAT", fc, 1.0e-14)
+        self._sc.checkXMLScalarField(det, "float", "float64", "NX_FLOAT", fc, 1.0e-14)
         self._sc.checkXMLScalarField(det, "float64", "float64", "NX_FLOAT64", fc, 1.0e-14)
         self._sc.checkXMLScalarField(det, "float32", "float32", "NX_FLOAT32", fc, 1.0e-06)
         self._sc.checkXMLScalarField(det, "number", "float64", "NX_NUMBER", fc, 1.0e-14)
@@ -267,9 +267,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         # check the created file
         f = open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 4,3)
-        self._sc.checkScalarAttribute(det, "scalar_float",  self._bfloat, fls,  error = 1.e-14)
+        self._sc.checkScalarAttribute(det, "scalar_float",  "float64", fls,  error = 1.e-14)
         self._sc.checkScalarAttribute(det, "scalar_string", "string", sts)
-        self._sc.checkScalarAttribute(det, "scalar_int",  self._bint, ins)
+        self._sc.checkScalarAttribute(det, "scalar_int",  "int64", ins)
         self._sc.checkScalarAttribute(det, "flag", "bool", ls)
         self._sc.checkScalarAttribute(field, "scalar_float32", "float32", fls, error = 1.e-6)
         self._sc.checkScalarAttribute(field, "scalar_string", "string", sts)
@@ -467,12 +467,12 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 22)
-        self._sc.checkXMLSpectrumField(det, "mca_int", self._bint, "NX_INT", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int", "int64", "NX_INT", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int8", "int8", "NX_INT8",  [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int16", "int16", "NX_INT16", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int32", "int32", "NX_INT32", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_int64", "int64", "NX_INT64", [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_uint",  self._buint, "NX_UINT",  [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint",  "uint64", "NX_UINT",  [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8",  [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", [1,2,3,4,5])
         self._sc.checkXMLSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", [1,2,3,4,5])
@@ -480,9 +480,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         self._sc.checkXMLSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", [1,2,3,4,5])
 
 
-        self._sc.checkXMLSpectrumField(det, "mca_float", self._bfloat, "NX_FLOAT", spec,
+        self._sc.checkXMLSpectrumField(det, "mca_float", "float64", "NX_FLOAT", spec,
                                     error = 1.0e-14)
-        self._sc.checkXMLSpectrumField(det, "mca_float_dim", self._bfloat, "NX_FLOAT", spec,
+        self._sc.checkXMLSpectrumField(det, "mca_float_dim", "float64", "NX_FLOAT", spec,
                                     error = 1.0e-14)
         self._sc.checkXMLSpectrumField(det, "mca_float32", "float32", "NX_FLOAT32", spec,
                                     error = 1.0e-5)
@@ -580,7 +580,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         # check the created file
         f = open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
-        self._sc.checkSpectrumAttribute(det, "spectrum_float", self._bfloat, spec,
+        self._sc.checkSpectrumAttribute(det, "spectrum_float", "float64", spec,
                                       error = 1.e-14)
         self._sc.checkSpectrumAttribute(det, "init_spectrum_int32", "int32", ins)
         self._sc.checkSpectrumAttribute(det, "spectrum_bool", "bool", ls)
@@ -824,18 +824,18 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 28)
-        self._sc.checkXMLImageField(det, "pco_int",  self._bint, "NX_INT", image)
+        self._sc.checkXMLImageField(det, "pco_int",  "int64", "NX_INT", image)
         self._sc.checkXMLImageField(det, "pco_int8", "int8", "NX_INT8", image)
         self._sc.checkXMLImageField(det, "pco_int16", "int16", "NX_INT16", image)
         self._sc.checkXMLImageField(det, "pco_int32", "int32", "NX_INT32", image)
         self._sc.checkXMLImageField(det, "pco_int64", "int64", "NX_INT64", image)
-        self._sc.checkXMLImageField(det, "pco_uint",  self._buint, "NX_UINT", image)
+        self._sc.checkXMLImageField(det, "pco_uint",  "uint64", "NX_UINT", image)
         self._sc.checkXMLImageField(det, "pco_uint8", "uint8", "NX_UINT8", image)
         self._sc.checkXMLImageField(det, "pco_uint16", "uint16", "NX_UINT16", image)
         self._sc.checkXMLImageField(det, "pco_uint32", "uint32", "NX_UINT32", image)
         self._sc.checkXMLImageField(det, "pco_uint64", "uint64", "NX_UINT64", image)
 
-        self._sc.checkXMLImageField(det, "pco_float",  self._bfloat, "NX_FLOAT", fimage, 
+        self._sc.checkXMLImageField(det, "pco_float",  "float64", "NX_FLOAT", fimage, 
                                     error = 1.0e-14)
         self._sc.checkXMLImageField(det, "pco_float32", "float32", "NX_FLOAT32",  fimage, 
                                     error = 1.0e-5)
@@ -979,9 +979,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         # check the created file
         f = open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
-        self._sc.checkImageAttribute(det, "image_float",  self._bfloat, fimage,
+        self._sc.checkImageAttribute(det, "image_float",  "float64", fimage,
                                       error = 1.e-14)
-        self._sc.checkImageAttribute(det, "image_int", self._bint, image)
+        self._sc.checkImageAttribute(det, "image_int", "int64", image)
         self._sc.checkImageAttribute(det, "image_bool", "bool", bimage)
         self._sc.checkImageAttribute(det, "image_int32", "int32", image)
         self._sc.checkImageAttribute(field, "image_float32", "float32", fimage,

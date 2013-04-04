@@ -352,14 +352,14 @@ class NTPTest(unittest.TestCase):
 
         arrs["i"] = {
             "ScalarShort":[ "int16", "DevShort", -123],
-            "ScalarLong":[ self._bint, "DevLong", -124],
+            "ScalarLong":[ "int64", "DevLong", -124],
             "ScalarLong64":[ "int64", "DevLong64", 234],
             }
 
         arrs["u"] = {
             "ScalarUChar":[ "uint8", "DevUChar", 23],
             "ScalarUShort":[ "uint16", "DevUShort", 1234],
-            "ScalarULong":[self._buint , "DevULong", 234],
+            "ScalarULong":["uint64" , "DevULong", 234],
             "ScalarULong64":[ "uint64", "DevULong64", 23],
             }
 
@@ -500,13 +500,13 @@ class NTPTest(unittest.TestCase):
 
         arrs["i"] = {
             "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
-            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong":[ "int64", "DevLong", -14, [1,0]],
             "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
             }
 
         arrs["u"] = {
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
-            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumULong":["uint64" , "DevULong", 2, [1,0]],
             "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
             "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
             }
@@ -602,13 +602,13 @@ class NTPTest(unittest.TestCase):
 
         arrs["i"] = {
             "SpectrumShort":[ "int16", "DevShort", -13, [1,0]],
-            "SpectrumLong":[ self._bint, "DevLong", -14, [1,0]],
+            "SpectrumLong":[ "int64", "DevLong", -14, [1,0]],
             "SpectrumLong64":[ "int64", "DevLong64", -24, [1,0]],
             }
 
         arrs["u"] = {
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
-            "SpectrumULong":[self._buint , "DevULong", 2, [1,0]],
+            "SpectrumULong":["uint64" , "DevULong", 2, [1,0]],
             "SpectrumUShort":[ "uint16", "DevUShort", 1, [1,0]],
             "SpectrumULong64":[ "uint64", "DevULong64", 3, [1,0]],
             }

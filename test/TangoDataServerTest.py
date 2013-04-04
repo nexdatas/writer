@@ -520,7 +520,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
-            self.assertEqual(cnt.dtype, self._bfloat)
+            self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
 #            print cnt.read()
             value = cnt[:]
@@ -568,7 +568,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype, self._bfloat)
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for j in range(len(value[0])):
@@ -629,7 +629,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
-            self.assertEqual(cnt.dtype, self._bfloat)
+            self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
 #            print cnt.read()
             value = cnt[:]
@@ -675,7 +675,7 @@ class TangoDataServerTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype, self._bfloat)
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for j in range(len(value[0])):
