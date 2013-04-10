@@ -40,61 +40,6 @@ def getText(node):
 
 
 ## the main function
-def main2():
-
-
-
-    df = XMLFile("scan.xml")
-    
-    en = NGroup(df, "entry1", "NXentry")
-
-    ## instrument
-    ins = NGroup(en, "instrument", "NXinstrument")
-#    NXsource    
-    dt = NGroup(ins, "detector", "NXdetector")
-    f = NField(dt, "counter1", "NX_FLOAT")
-    f.setUnits("m")
-#    f.setText("0.2")
-    f.setStrategy("STEP")
-    sr = NDSource(f)
-
-    sr.initClient("exp_c01","exp_c01");
-
-
-    f = NField(dt, "counter2", "NX_FLOAT")
-    f.setUnits("s")
-#    f.setText("0.2")
-    f.setStrategy("STEP")
-    sr = NDSource(f)
-    sr.initClient("exp_c02","exp_c02");
-    
-
-    f = NField(dt, "mca", "NX_FLOAT")
-    f.setUnits("")
-    d = NDimensions(f, "1")
-    d.dim("1", "2048")
-    f.setStrategy("STEP")
-    sr = NDSource(f)
-    sr.initTango("p09/mca/exp.02","p09/mca/exp.02", "attribute", "Data")
-#    sr.initClient("p09/mca/exp.02","p09/mca/exp.02")
-
-        ##    NXdata
-    da = NGroup(en, "data", "NXdata")
-    ## link
-    l = NLink(da, "data", "/NXentry/NXinstrument/NXdetector/mca")
-    l.addDoc("Link to mca in /NXentry/NXinstrument/NXdetector")
-    l = NLink(da, "counter1", "/NXentry/NXinstrument/NXdetector/counter1")
-    l.addDoc("Link to counter1 in /NXentry/NXinstrument/NXdetector")
-    l = NLink(da, "counter2", "/NXentry/NXinstrument/NXdetector/counter2")
-    l.addDoc("Link to counter2 in /NXentry/NXinstrument/NXdetector")
-
-
-
-    df.dump()
-
-
-
-
 def main():
     ## usage example
     usage = "usage: %prog [options] inputFile"
@@ -171,7 +116,6 @@ def main():
                 print "##", [device.data.strip() for c in comment]
                 
             df.dump()
-#            pass
         elif device.nodeName =='#comment':
             print "COMMENT:",  "'%s'" % device.data.strip()
         else:
@@ -179,47 +123,6 @@ def main():
             pass
         device = device.nextSibling
         
-#    devices = hw.getElementsByTagName("device")
-
-
-# <name>eh1a_ireg13</name>
-# <type>input_register</type>
-# <module>sis3610</module>
-# <device>p02/register/eh1a.in13</device>
-# <control>tango</control>
-# <hostname>haspp02oh1:10000</hostname>
-# <pool>pool_haspp02ch1a</pool>
-# <controller>sis3610in_eh1a</controller>
-# <channel>13</channel>
-# <rootdevicename>p02/register/eh1a.in</rootdevicename>
-
-
-#<name>gpib</name>
-# <type>type_tango</type>
-# <module>module_tango</module>
-# <device>p02/gpib/eh1.1</device>
-# <control>tango</control>
-# <hostname>haspp02oh1:10000</hostname>
-
-# <name>gpib</name>
-# <type>type_tango</type>
-# <module>module_tango</module>
-# <device>p02/gpib/eh1.1</device>
-# <control>tango</control>
-# <hostname>haspp02oh1:10000</hostname>
-
-#    print len(devices)
-
-#    for dv in devices:
-#        name = dv.getElementsByTagName("name")
-#        if name:
-#            print getText(name[0])
-#            continue
-#        else:
-#            print "No Name:",dv.toxml()
-#        df = XMLFile("scan.xml")
-#        sr = NDSource(f)
-#        sr.initTango("p09/mca/exp.02","p09/mca/exp.02", "attribute", "Data")
         
 
 
