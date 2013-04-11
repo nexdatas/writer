@@ -92,6 +92,8 @@ def main():
             encoding = None
             if tdevice.find("eurotherm") != -1:
                 record = "Temperature"
+            elif tdevice.find("mca") != -1:
+                record = "Data"
             elif module.find("tip830") != -1:
                 record = "Value"
             elif module.find("tip551") != -1:
@@ -100,15 +102,15 @@ def main():
                 record = None
 
 
-            if pool:
-                df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
-                sr = NDSource(df)
-                sr.initClient(name, tdevice)
-                df.dump()
-            elif record:    
+            if record:    
                 df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
                 sr = NDSource(df)
                 sr.initTango(name, tdevice, "attribute", record,host, port, encoding)
+                df.dump()
+            elif pool:
+                df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
+                sr = NDSource(df)
+                sr.initClient(name, tdevice)
                 df.dump()
             else:                
                 print "WARNING: No record source for ", name ,tdevice 
