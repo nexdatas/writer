@@ -50,11 +50,11 @@ def main():
                       dest="dir", default=".")
 
     (options, args) = parser.parse_args()
-    print "INPUT:", args
-    print "OUTPUT DIR:", options.dir
     if not len(args):
         parser.print_help()
         sys.exit(255)
+    print "INPUT:", args
+    print "OUTPUT DIR:", options.dir
 
 
     indom = parse(args[0])
@@ -94,23 +94,29 @@ def main():
                 record = "Temperature"
             elif tdevice.find("mca") != -1:
                 record = "Data"
-            elif module.find("tip830") != -1:
+            elif name.find("adc_tk") != -1:
                 record = "Value"
-            elif module.find("tip551") != -1:
+            elif name.find("dac_tk") != -1:
                 record = "Voltage"
             else:
                 record = None
 
 
-            if record:    
-                df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
-                sr = NDSource(df)
-                sr.initTango(name, tdevice, "attribute", record,host, port, encoding)
-                df.dump()
-            elif pool:
+            if pool and record:
+                if record:    
+                    df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
+                    sr = NDSource(df)
+                    sr.initTango(name, tdevice, "attribute", record,host, port, encoding)
+                    df.dump()
+            elif pool:        
                 df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
                 sr = NDSource(df)
                 sr.initClient(name, tdevice)
+                df.dump()
+            elif record:    
+                df = XMLFile("%s/%s.ds.xml" %(options.dir, name))
+                sr = NDSource(df)
+                sr.initTango(name, tdevice, "attribute", record,host, port, encoding)
                 df.dump()
             else:                
                 print "WARNING: No record source for ", name ,tdevice 
