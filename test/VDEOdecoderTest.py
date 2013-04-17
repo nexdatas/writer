@@ -99,27 +99,6 @@ class VDEOdecoderTest(unittest.TestCase):
 
 
 
-    ## Creates an encoded image from numpy array
-    # \param image numpy array
-    # \returns lima image  
-    def encodeImage(self, image):
-        modes = {'uint8':0, 'uint16':1, 'uint32':2, 'uint64':3}
-        formatID = {0:'B', 1:'H', 2:'I', 3:'Q'}
-        format = 'VIDEO_IMAGE'
-        mode = modes[str(image.dtype)]
-        width,height  = image.shape
-        version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
-        hsize = struct.calcsize('!IHHqiiHHHH')
-        header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1, 
-                             width,  height, endian, hsize, 0, 0)
-        fimage = image.flatten()
-#  for uint32 and python2.6 one gets the struct.pack bug:
-#     test/VDEOdecoderTest.py:90: DeprecationWarning: struct integer overflow masking is deprecated
-        ibuffer = struct.pack(formatID[mode]*fimage.size, *fimage)
-
-
-        return [format, header+ibuffer]
 
 
 
