@@ -19,6 +19,7 @@
 ## \file DataSources.py
 # data-source types
 
+import time
 import json
 from xml.dom import minidom
 from Types import NTP
@@ -124,6 +125,8 @@ class TangoSource(DataSource):
         self.encoding = None
         ## decoder pool
         self.__decoders = None
+        ## device proxy
+        self.__proxy = None
 
     ## self-description 
     # \returns self-describing string
@@ -157,6 +160,33 @@ class TangoSource(DataSource):
             raise  DataSourceSetupError, \
                 "Tango device name not defined: %s" % xml
 
+        found = False
+        cnt = 0
+
+        if self.hostname and self.port:
+            self.__proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
+                                                             self.port.encode(),
+                                                             self.device.encode()))
+        else:
+            self.__proxy = PyTango.DeviceProxy(self.device.encode())
+            
+        while not found and cnt < 1000:
+            if cnt > 1:
+                time.sleep(0.01)
+            try:
+                if self.__proxy.state() != PyTango.DevState.RUNNING:
+                    found = True
+            except:    
+                time.sleep(0.01)
+                found = False
+            cnt +=1
+
+        if not found:
+            raise  DataSourceSetupError, \
+                "Setting up lasts to long: %s" % xml
+
+
+
 
     ## sets the used decoders
     # \param decoders pool to be set
@@ -171,19 +201,39 @@ class TangoSource(DataSource):
             raise PackageError, "Support for PyTango datasources not available" 
 
         if self.device and self.memberType and self.name:
-            if self.hostname and self.port:
-                proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
-                                                          self.port.encode(),
-                                                          self.device.encode()))
-            else:
-                proxy = PyTango.DeviceProxy(self.device.encode())
+            if not self.__proxy:
+                found = False
+                cnt = 0
+
+                if self.hostname and self.port:
+                    self.__proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
+                                                                     self.port.encode(),
+                                                                     self.device.encode()))
+                else:
+                    self.__proxy = PyTango.DeviceProxy(self.device.encode())
+
+                while not found and cnt < 1000:
+                    if cnt > 1:
+                        time.sleep(0.01)
+                    try:
+                        if self.__proxy.state() != PyTango.DevState.RUNNING:
+                            found = True
+                    except:    
+                        time.sleep(0.01)
+                        found = False
+                    cnt +=1
+
+                if not found:
+                    raise  DataSourceSetupError, \
+                        "Setting up lasts to long: %s" % xml
+
             da = None
             if self.memberType == "attribute":
 #                print "getting the attribute: ", self.name
-                alist = proxy.get_attribute_list()
+                alist = self.__proxy.get_attribute_list()
 
                 if self.name.encode() in alist:
-                    da = proxy.read_attribute( self.name.encode())
+                    da = self.__proxy.read_attribute( self.name.encode())
                     return {"format":str(da.data_format).split('.')[-1], 
                             "value":da.value, "tangoDType":str(da.type).split('.')[-1], 
                             "shape":([da.dim_y,da.dim_x] if da.dim_y else [da.dim_x, 0]),
@@ -191,16 +241,16 @@ class TangoSource(DataSource):
                   
             elif self.memberType == "property":
 #                print "getting the property: ", self.name
-                plist = proxy.get_property_list('*')
+                plist = self.__proxy.get_property_list('*')
                 if self.name.encode() in plist:
-                    da = proxy.get_property(self.name.encode())[self.name.encode()][0]
+                    da = self.__proxy.get_property(self.name.encode())[self.name.encode()][0]
                     return {"format":"SCALAR", "value":str(da), "tangoDType":"DevString", "shape":[1,0]}
             elif self.memberType == "command":
 #                print "calling the command: ", self.name
-		clist = [cm.cmd_name for cm in proxy.command_list_query()]
+		clist = [cm.cmd_name for cm in self.__proxy.command_list_query()]
                 if self.name in clist:
-                    cd = proxy.command_query(self.name.encode())
-                    da = proxy.command_inout(self.name.encode())
+                    cd = self.__proxy.command_query(self.name.encode())
+                    da = self.__proxy.command_inout(self.name.encode())
                     return {"format":"SCALAR", "value":da, 
                             "tangoDType":str(cd.out_type).split('.')[-1],  "shape":[1,0], 
                             "encoding":self.encoding, "decoders":self.__decoders}

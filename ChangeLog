@@ -1,3 +1,7 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* creating DeviceProxy for Tango DataSource in setup method
+	* tagged as 1.1.2
+
 2013-03-26 Jan Kotanski <jankotan@gmail.com>
 	* adding support for vertices
 	* changing TDS into TangoDataServer
