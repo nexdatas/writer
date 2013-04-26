@@ -213,7 +213,7 @@ class TangoSourceTest(unittest.TestCase):
         device = 'p09/tdw/r228'
         ctype = 'command'
         atype = 'attribute'
-        host = 'haso.desy.de'
+        host = 'localhost'
         port = '10000'
         encoding = 'UTF8'
 
