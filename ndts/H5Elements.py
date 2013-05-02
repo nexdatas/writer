@@ -60,6 +60,8 @@ class FElement(Element):
         self.source = None
         ## notification of error in the run method
         self.error = None
+        ##  flag for devices for which is allowed to failed
+        self.canfail = False
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
@@ -250,6 +252,8 @@ class EStrategy(Element):
             self._last.grows = int(attrs["grows"])
             if self._last.grows < 1:
                 self._last.grows = 1
+        if "canfail" in attrs.keys():
+            self._last.canfail = True if attrs["canfail"].upper() == "TRUE" else False
         if "compression" in attrs.keys() and hasattr(self._last,"compression"):
             self._last.compression = True if attrs["compression"].upper() == "TRUE" else False
             if self._last.compression:

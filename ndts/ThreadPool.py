@@ -92,8 +92,10 @@ class ThreadPool(object):
         errors = []
         for el in self.__elementList:
             if el.error:
-                errors.append(el.error)
-
+                if not el.canfail:
+                    errors.append(el.error)
+                else:
+                    print el.error
         if errors:
             raise ThreadError("Problems in storing data: %s" %  str(errors)  )
 
