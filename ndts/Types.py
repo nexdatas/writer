@@ -132,7 +132,7 @@ class NTP(object):
 
     ## creates python array from the given array with applied the given function to it elements
     # \param value given array
-    # \fun applied function
+    # \param fun applied function
     # \returns created array
     def createArray(self, value, fun=None):
         if not hasattr(value, "__iter__") or isinstance(value, str):
