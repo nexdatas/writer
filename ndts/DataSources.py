@@ -23,6 +23,7 @@ import time
 import json
 from xml.dom import minidom
 from Types import NTP
+import Streams
 
 try:
     import PyTango
@@ -30,7 +31,9 @@ try:
     PYTANGO_AVAILABLE = True
 except ImportError, e:
     PYTANGO_AVAILABLE = False
-    print "PYTANGO not available: %s" % e
+    print >> sys.stdout, "PYTANGO not available: %s" % e
+    if Streams.log_info:
+        print >> Streams.log_info, "PYTANGO not available: %s" % e
 
 
 ## list of available databases
@@ -40,19 +43,26 @@ try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
-    print "MYSQL not available: %s" % e
+    print >> sys.stdout, "MYSQL not available: %s" % e
+    if Streams.log_info:
+        print >> Streams.log_info, "MYSQL not available: %s" % e
     
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
 except ImportError, e:
-    print "PGSQL not available: %s" % e
+    print >> sys.stdout, "PGSQL not available: %s" % e
+    if Streams.log_info:
+        print >> Streams.log_info,  "PGSQL not available: %s" % e
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
 except ImportError, e:
-    print "ORACLE not available: %s" % e
+    print >> sys.stdout, "ORACLE not available: %s" % e
+    if Streams.log_info:
+        print >> Streams.log_info, "ORACLE not available: %s" % e
+        
 
 
 #import copy

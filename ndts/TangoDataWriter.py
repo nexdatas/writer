@@ -23,7 +23,7 @@
 
 from NexusXMLHandler import NexusXMLHandler
 from FetchNameHandler import FetchNameHandler
-
+import Streams
 try:
     import pni.io.nx.h5 as nx
 except:
@@ -48,10 +48,12 @@ from DataSourcePool import DataSourcePool
 class TangoDataWriter(object):
     ## constructor
     # \brief It initialize the data writer for the H5 output file
-    # \param fileName name of the H5 output file
-    def __init__(self, fileName):
+    # \param server Tango server
+    def __init__(self, server = None):
         ## output file name
-        self.fileName = fileName
+        self.fileName = ""
+        ## Tango server
+        self.__server = server
         ## XML string with file settings
         self.xmlSettings = ""
         ## global JSON string with data records
@@ -87,7 +89,18 @@ class TangoDataWriter(object):
         ## group with Nexus log Info
         self.__logGroup = None
 
-        
+        if server:
+            if  hasattr(self.__server, "log_fatal"):
+                Streams.log_fatal = server.log_fatal
+            if  hasattr(self.__server, "log_error"):
+                Streams.log_error = server.log_error
+            if  hasattr(self.__server, "log_warn"):
+                Streams.log_warn = server.log_warn
+            if  hasattr(self.__server, "log_info"):
+                Streams.log_info = server.log_info
+            if  hasattr(self.__server, "log_debug"):
+                Streams.log_debug = server.log_debug
+            
 
     ## the H5 file handle 
     # \returns the H5 file handle 
@@ -178,7 +191,9 @@ class TangoDataWriter(object):
             localJSON = json.loads(jsonstring)
             
         if self.__stepPool:
-            print "Default trigger"
+            if Streams.log_info:
+                print >> Streams.log_info , "TangoDataWriter::record() - Default trigger"
+            print "TangoDataWriter::record() - Default trigger"
             self.__stepPool.setJSON(json.loads(self.json), localJSON)
             self.__stepPool.runAndWait()
             self.__stepPool.checkErrors()
@@ -190,7 +205,9 @@ class TangoDataWriter(object):
         if hasattr(triggers, "__iter__"):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
-                    print "Trigger: %s" % pool 
+                    if log_info:
+                        print >> self.__server.log_info , "TangoDataWriter:record() - Trigger: %s" % pool 
+                    print "TangoDataWriter:record() - Trigger: %s" % pool 
                     self.__triggerPools[pool].setJSON(json.loads(self.json), localJSON)
                     self.__triggerPools[pool].runAndWait()
                     self.__triggerPools[pool].checkErrors()

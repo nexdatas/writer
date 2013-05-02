@@ -35,7 +35,7 @@ from Types import NTP
 
 from Errors import (XMLSettingSyntaxError, DataSourceError )
 
-
+import Streams
 
 try:
     import pni.io.nx.h5 as nx
@@ -247,6 +247,8 @@ class EStrategy(Element):
             self._last.strategy = attrs["mode"]
         if "trigger" in attrs.keys():
             self._last.trigger = attrs["trigger"]
+            if Streams.log_info:
+                print >> Streams.log_info, "TRIGGER" , attrs["trigger"]
             print "TRIGGER" , attrs["trigger"]
         if "grows" in attrs.keys() and hasattr(self._last,"grows"):
             self._last.grows = int(attrs["grows"])
@@ -462,9 +464,11 @@ class EField(FElementWithAttr):
 
             elif self.strategy != "POSTRUN":
                 if self.h5Object.dtype != "string": 
+                    if Streams.log_error:
+                        print >> Streams.log_error, "Field::__setStrategy() - Warning: Invalid datasource for %s" % nm
                     raise ValueError,"Warning: Invalid datasource for %s" % nm
                 else:
-                    print "Warning: Empty value for the field:", nm
+                    print >> sys.stderr, "Field::__setStrategy() - Warning: Empty value for the field:", nm
 
             
     ## stores the tag content
@@ -697,14 +701,19 @@ class EField(FElementWithAttr):
             message = self.setMessage(str(info[1].__str__()) +"\n "+ (" ").join(traceback.format_tb(sys.exc_info()[2]) ))
 #            message = self.setMessage(  sys.exc_info()[1].__str__()  )
             del info
-            print message[0]
-            print message[1]
+            print >> sys.stderr, "Field::run() - %s\n %s " % (message[0],message[1])
             self.error = message
 
 #            self.error = sys.exc_info()
         finally:
             if self.error:
-                print "ERROR", self.error
+                if self.canfail:
+                    if Streams.log_warn:
+                        print >> Streams.log_warn, "Field::run() - %s  " % str(self.error)
+                else:
+                    if Streams.log_error:
+                        print >> Streams.log_error, "Field::run() - %s  " % str(self.error)
+                print >> sys.stderr, "Field::run() - ERROR", str(self.error)
 
 #            pass
 
@@ -882,7 +891,7 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object,'shape'):
                         message = self.setMessage("PNI Object not created")
-                        print message[0]
+                        print >> sys.stderr , "Group::run() - %s " % message[0]
                         self.error = message
                     else:
 #                        print "ARR",self.name
@@ -902,9 +911,18 @@ class EAttribute(FElement):
                             raise Exception("Storing multi-dimension string attributes not supported by pninx")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
-            print message[0]
+            print >> sys.stderr , "Group::run() - %s " % message[0]
             self.error = message
                                 #            self.error = sys.exc_info()
+        finally:
+            if self.error:
+                if self.canfail:
+                    if Streams.log_warn:
+                        print >> Streams.log_warn, "Group::run() - %s  " % str(self.error)
+                else:
+                    if Streams.log_error:
+                        print >> Streams.log_error, "Group::run() - %s  " % str(self.error)
+                print >> sys.stderr, "Group::run() - ERROR", str(self.error)
             
 
 

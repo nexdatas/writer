@@ -20,6 +20,9 @@
 # Element
                                                                       
 
+import sys
+import Streams
+
 ## Tag element stored on our stack 
 class Element(object):
 
@@ -46,8 +49,10 @@ class Element(object):
         if hasattr(self._last, "h5Object"):
             return self._last.h5Object
         else:
-            print "H5 Object not found :", self.tagName
-
+            print >> sys.stderr, "Element::_lastObject() -  H5 Object not found :", self.tagName
+            if Streams.log_warn:
+                print >> Streams.log_warn, "Element::_lastObject() - H5 Object not found :", self.tagName
+                
 
     ## before last stack element
     # \returns  before last element placed on the stack

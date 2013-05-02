@@ -22,6 +22,8 @@
 #from threading import *                                                                      
 from ElementThread import ElementThread
 import Queue
+import Streams
+import sys
 
 from Errors import ThreadError
 
@@ -94,8 +96,12 @@ class ThreadPool(object):
             if el.error:
                 if not el.canfail:
                     errors.append(el.error)
+                    if Streams.log_error:
+                        print >> Streams.log_error,  "ThreadPool::checkErrors() - %s" % str(el.error)
                 else:
-                    print el.error
+                    print >> sys.stderr, el.error
+                    if Streams.log_warn:
+                        print >> Streams.log_warn,  "ThreadPool::checkErrors() - %s" %   str(el.error)
         if errors:
             raise ThreadError("Problems in storing data: %s" %  str(errors)  )
 

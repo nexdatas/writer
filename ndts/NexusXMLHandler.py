@@ -25,6 +25,7 @@ except:
 from xml import sax
 
 import sys, os
+import Streams
 
 from Element import Element
 from H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
@@ -141,7 +142,7 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
         if self.__inner == True:
-            print "XML:\n", self.__innerHandler.xml
+#            print "XML:\n", self.__innerHandler.xml
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag :
@@ -159,8 +160,10 @@ class NexusXMLHandler(sax.ContentHandler):
                     self.__last().createLink(self.__groupTypes)
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
+                    print >> Streams.log_error, "NexusXMLHandler::startElement() - %s" % "Unsupported tag: %s, %s " % ( name, attrs.keys())
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
-                print "Unsupported tag: ", name ,attrs.keys()
+                print >> sys.sterr, "NexusXMLHandler::startElement() - Unsupported tag: ", name, attrs.keys()
+                print >> Streams.log_warn,  "NexusXMLHandler::startElement() - %s" % "Unsupported tag: %s, %s " % ( name, attrs.keys())
                 self.__unsupportedTag = name
                 
 
@@ -172,7 +175,8 @@ class NexusXMLHandler(sax.ContentHandler):
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag and self.__parser and  name in self.withXMLinput:
-            print "XML", self.__innerHandler.xml
+            pass
+#           print "XML", self.__innerHandler.xml
         elif not self.__unsupportedTag and name in self.elementClass:
             if hasattr(self.__last(), "store") and callable(self.__last().store):
                 res = self.__last().store() 

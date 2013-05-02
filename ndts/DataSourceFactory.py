@@ -22,7 +22,7 @@
 import DataSources
 from DataSourcePool import DataSourcePool
 from Element import Element
-
+import Streams
 
 
 ## Data source creator
@@ -50,10 +50,15 @@ class DataSourceFactory(Element):
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
                 self._last.source = self.__dsPool.get(attrs["type"])()
             else:
-                print "Unknown data source"
+                print >> sys.stderr, "DataSourceFactory::__createDSource - Unknown data source"
+                if Streams.log_error:
+                    print >> Streams.log_error, "DataSourceFactory::__createDSource - Unknown data source"
+                    
                 self._last.source = DataSources.DataSource()
         else:
-            print "Typeless data source"
+            print >> sys.stderr, "DataSourceFactory::__createDSource - Typeless data source"
+            if Streams.log_error:
+                print >> Streams.log_error, "DataSourceFactory::__createDSource - Typeless data source"
             self._last.source = DataSources.DataSource()
 
 

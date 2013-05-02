@@ -89,7 +89,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 					self.tdw.closeNXFile()
 				del self.tdw
 				self.tdw = None
-			self.tdw = TDW("name.h5")
+			self.tdw = TDW(self)
 			self.set_state(PyTango.DevState.ON)
  		finally:
 			if self.get_state() == PyTango.DevState.RUNNING:
@@ -109,7 +109,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def __init__(self, cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
-		self.tdw = TDW("name.h5")
+		self.tdw = TDW(self)
 		TangoDataServer.init_device(self)
 
 

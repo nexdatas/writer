@@ -209,7 +209,10 @@ class DecoderPool(object):
     # \brief It creates know decoders    
     # \param configJSON string with decoders    
     def __init__(self, configJSON = None):
-        self.__knowDecoders = { "LIMA_VIDEO_IMAGE":VDEOdecoder, "UTF8":UTF8decoder , "UINT32":UINT32decoder } 
+        self.__knowDecoders = { 
+            "LIMA_VIDEO_IMAGE":VDEOdecoder, 
+            "UTF8":UTF8decoder , 
+            "UINT32":UINT32decoder } 
         self.__pool = {}
 
         self.__createDecoders()
