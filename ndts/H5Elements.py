@@ -107,7 +107,11 @@ class FElement(Element):
             image = [ln.split() for ln in lines ]
             return [len(image),len(image[0])]
         else:    
-            raise XMLSettingSyntaxError, "Case not supported"
+            if Streams.log_error:
+                print >> Streams.log_error,\
+                    "FElement::__fetchShape() - Case with not supported rank = %s" % rank
+
+            raise XMLSettingSyntaxError, "Case with not supported rank = %s" % rank
 
 
     ## creates shape object from rank and lengths variables
@@ -150,6 +154,9 @@ class FElement(Element):
                 elif val:
                     shape = self.__fetchShape(val,rank)
                 else:
+                    if Streams.log_error:
+                        print >> Streams.log_error,\
+                            "FElement::_findShape() - Wrongly defined shape"
                     raise XMLSettingSyntaxError, "Wrongly defined shape"
                 
                 
@@ -223,7 +230,10 @@ class FElementWithAttr(FElement):
                             image = [ln.split() for ln in lines ]
                             dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
                         else:    
-                            raise XMLSettingSyntaxError, "Case not supported"
+                            if Streams.log_error:
+                                print >> Streams.log_error,\
+                                    "FElement::_createAttributes() - Case with not supported rank = %s", rank
+                            raise XMLSettingSyntaxError, "Case with not supported rank = %s", rank
                             
                         self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
                     
@@ -329,7 +339,11 @@ class EField(FElementWithAttr):
                 tp = "string"
             return tp, nm    
         else:
-            raise XMLSettingSyntaxError, " Field without a name"
+            if Streams.log_error:
+                print >> Streams.log_error,\
+                    "FElement::__typeAndName() - Field without a name"
+
+            raise XMLSettingSyntaxError, "Field without a name"
 
     ## provides shape
     # \param tp object type    
@@ -360,6 +374,9 @@ class EField(FElementWithAttr):
                     shape = [0]
                 return shape
             else:
+                if Streams.log_error:
+                    print >> Streams.log_error,\
+                        "FElement::__getShape() - Shape of %s cannot be found  " % self._tagAttrs["name"]
                 raise
             
 
@@ -446,7 +463,11 @@ class EField(FElementWithAttr):
                     image = [ln.split() for ln in lines ]
                     dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
                 else:    
-                    raise XMLSettingSyntaxError, "Case not supported"
+                    if Streams.log_error:
+                        print >> Streams.log_error,\
+                            "EField::__setStrategy() - Case with not supported rank = %s" % self.rank
+
+                    raise XMLSettingSyntaxError, "Case with not supported rank = %s" % self.rank
 
 
                 if self.h5Object.dtype != "string" or not self.rank or int(self.rank) == 0:
@@ -518,6 +539,9 @@ class EField(FElementWithAttr):
                     try:
                         self.h5Object.write(sts)
                     except:    
+                        if Streams.log_error:
+                            print >> Streams.log_error,\
+                                "EField::__writedata() - Storing one-dimension single fields not supported by pninx"
                         raise Exception("Storing one-dimension single fields not supported by pninx")
             else:
                 self.h5Object.write(sts)
@@ -553,6 +577,9 @@ class EField(FElementWithAttr):
             try:
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
             except:    
+                if Streams.log_error:
+                    print >> Streams.log_error,\
+                        "EField::__writedata() - Storing two-dimension single fields not supported by pninx"
                 raise Exception("Storing two-dimension single fields not supported by pninx")
 
 
@@ -672,8 +699,11 @@ class EField(FElementWithAttr):
         elif str(dh.format).split('.')[-1] == "IMAGE":
             self.__writeImageGrowingData(dh)
         else:
-            raise XMLSettingSyntaxError, "Case not supported"
-            
+            if Streams.log_error:
+                print >> Streams.log_error,\
+                    "Case with %s format not supported " % str(dh.format).split('.')[-1] 
+            raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
+
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
@@ -732,8 +762,14 @@ class EGroup(FElementWithAttr):
             elif "type" in attrs.keys() :
                 self.h5Object = self._lastObject().create_group(attrs["type"][2:].encode(), attrs["type"].encode())
             else:
+                if Streams.log_error:
+                    print >> Streams.log_error,\
+                        "EGroup::__init__() - The group type not defined"
                 raise XMLSettingSyntaxError, "The group type not defined"
         else:
+            if Streams.log_error:
+                print >> Streams.log_error,\
+                    "EGroup::__init__() - File object for the last element does not exist"
             raise XMLSettingSyntaxError, "File object for the last element does not exist"
             
         for key in attrs.keys() :
@@ -774,7 +810,10 @@ class EGroup(FElementWithAttr):
         elif "type" in self._tagAttrs.keys():
             groupTypes[self._tagAttrs["type"]] = self._tagAttrs["type"][2:]
         else:
-            raise XMLSettingSyntaxError, "The group type not defined"
+            if Streams.log_error:
+                print >> Streams.log_error,\
+                    "EGroup::fetchName() - The group type attribute not defined"
+            raise XMLSettingSyntaxError, "The group type attribute not defined"
         
         
 
@@ -806,6 +845,9 @@ class ELink(FElement):
                     elif sgr[0] in groupTypes.values():    
                         res = "/".join([res,sgr[0]])
                     else:
+                        if Streams.log_error:
+                            print >> Streams.log_error,\
+                                "ELink::__typesToNames() - No %s in  groupTypes " %  str(sgr[0])
                         raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
         res = res + "/" + sp[-1]
                 
@@ -820,6 +862,9 @@ class ELink(FElement):
                                                                          groupTypes)).encode(),
                                                       self._tagAttrs["name"].encode())
         else:
+            if Streams.log_error:
+                print >> Streams.log_error,\
+                    "ELink::createLink() - No name or type"
             raise XMLSettingSyntaxError, "No name or type"
           
                 
@@ -908,6 +953,9 @@ class EAttribute(FElement):
                             ## pninx does not support this case
                             self.h5Object.value = arr
 #                            self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
+                            if Streams.log_error:
+                                print >> Streams.log_error,\
+                                    "EAttribute::run() - Storing multi-dimension string attributes not supported by pninx"
                             raise Exception("Storing multi-dimension string attributes not supported by pninx")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )

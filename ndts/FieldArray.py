@@ -21,6 +21,8 @@
 
 import numpy
 
+import Streams
+
 from Types import NTP
 from Errors import CorruptedFieldArrayError
 
@@ -178,6 +180,9 @@ class FieldArray(object):
     def __setitem__(self, key, value):
         
         if not self.__fList:
+            if Streams.log_error:
+                print >> Streams.log_error, "FieldArray::__setitem__() - Field list without elements"
+
             raise CorruptedFieldArrayError, "Field list without elements"
 
         kr, ir, jr = self.__fetchRanges(key)
@@ -275,6 +280,8 @@ class FieldArray(object):
     # \param ln a number of grow units    
     def grow(self, dim=0, ln=1):
         if dim:
+            if Streams.log_error:
+                print >> Streams.log_error, "FieldArray::grow() - dim >0  not supported"
             raise ValueError, "dim >0  not supported by FieldArray.grow "
         for f in self.__fList:
             f.grow(dim, ln)

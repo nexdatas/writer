@@ -25,6 +25,7 @@ except:
 from xml import sax
 
 import sys, os
+import Streams
 
 from Errors import  XMLSyntaxError
 
@@ -93,7 +94,9 @@ class FetchNameHandler(sax.ContentHandler):
                 self.groupTypes[self.__tstack[-1]] = self.__tstack[-1][2:]
                 
             else:
-                 raise XMLSyntaxError, "The group type not defined"        
+                if Streams.log_error:
+                    print >> Streams.log_error, "FetchNameHandler::endElement() - The group type not defined"
+                raise XMLSyntaxError, "The group type not defined"        
             self.__tstack.pop()
             self.__nstack.pop()
             self.__stack.pop()

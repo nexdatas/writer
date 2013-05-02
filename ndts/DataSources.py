@@ -222,7 +222,8 @@ class TangoSource(DataSource):
     def getData(self):
         if not PYTANGO_AVAILABLE:
             if Streams.log_error:
-                print >> Streams.log_error,  "TangoSource::getData() - Support for PyTango datasources not available" 
+                print >> Streams.log_error, \
+                    "TangoSource::getData() - Support for PyTango datasources not available" 
             raise PackageError, "Support for PyTango datasources not available" 
 
         if self.device and self.memberType and self.name:

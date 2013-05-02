@@ -205,8 +205,8 @@ class TangoDataWriter(object):
         if hasattr(triggers, "__iter__"):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
-                    if log_info:
-                        print >> self.__server.log_info , "TangoDataWriter:record() - Trigger: %s" % pool 
+                    if Streams.log_info:
+                        print >> Streams.log_info , "TangoDataWriter:record() - Trigger: %s" % pool 
                     print "TangoDataWriter:record() - Trigger: %s" % pool 
                     self.__triggerPools[pool].setJSON(json.loads(self.json), localJSON)
                     self.__triggerPools[pool].runAndWait()
