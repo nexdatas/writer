@@ -22,7 +22,7 @@
 from Types import NTP
 
 import numpy
-
+import Streams
 ## Holder for passing data 
 class DataHolder(object):
 
@@ -63,6 +63,8 @@ class DataHolder(object):
                 self.value = decoder.decode()
                 rank = NTP().arrayRank(self.value)
                 if rank > 2 :
+                    if Streams.log_error:
+                        print >> Streams.log_error,  "DataHolder::__setupEncoded() - Unsupported variables format"
                     raise ValueError, "Unsupported variables format"
                 self.format = ["SCALAR","SPECTRUM", "IMAGE", "VERTEX"][rank]
                 
@@ -72,10 +74,14 @@ class DataHolder(object):
                 self.tangoDType = NTP.npTt[tp]
                 
         if self.value is None:        
+            if Streams.log_error:
+                print >> Streams.log_error,  "DataHolder::__setupEncoded() - Encoding of DevEncoded variables not defined"
             raise ValueError, "Encoding of DevEncoded variables not defined"
 
         if self.shape is None:
-            raise ValueError, "Encoding  or Shape not defined"
+            if Streams.log_error:
+                print >> Streams.log_error,  "DataHolder::__setupEncoded() - Encoding or Shape not defined"
+            raise ValueError, "Encoding or Shape not defined"
 
 
     ## casts the data into given type

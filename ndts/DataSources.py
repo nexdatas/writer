@@ -153,6 +153,9 @@ class TangoSource(DataSource):
         if rec and len(rec)> 0:
             self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
         if not self.name:
+            if Streams.log_error:
+                print >> Streams.log_error,  "TangoSource::setup() - Tango record name not defined: %s" % xml
+
             raise  DataSourceSetupError, \
                 "Tango record name not defined: %s" % xml
 
@@ -167,6 +170,8 @@ class TangoSource(DataSource):
                 self.memberType = "attribute" 
 #            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.memberType, self.encoding
         if not self.device :
+            if Streams.log_error:
+                print >> Streams.log_error,  "TangoSource::setup() - Tango device name not defined: %s" % xml
             raise  DataSourceSetupError, \
                 "Tango device name not defined: %s" % xml
 
@@ -174,12 +179,18 @@ class TangoSource(DataSource):
         cnt = 0
 
         if self.hostname and self.port:
-            self.__proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
-                                                             self.port.encode(),
-                                                             self.device.encode()))
+            dv = "%s:%s/%s" % (self.hostname.encode(), self.port.encode(),self.device.encode())
         else:
-            self.__proxy = PyTango.DeviceProxy(self.device.encode())
+            dv = "%s" % (self.hostname.encode())
             
+        try:
+            self.__proxy = PyTango.DeviceProxy(dv)
+
+        except:
+            if Streams.log_error:
+                print >> Streams.log_error, "TangoSource::setup() - Cannot connect to %s " % dv
+            raise
+
         while not found and cnt < 1000:
             if cnt > 1:
                 time.sleep(0.01)
@@ -192,6 +203,8 @@ class TangoSource(DataSource):
             cnt +=1
 
         if not found:
+            if Streams.log_error:
+                print >> Streams.log_error,  "TangoSource::setup() - Setting up lasts to long: %s" % xml
             raise  DataSourceSetupError, \
                 "Setting up lasts to long: %s" % xml
 
@@ -208,6 +221,8 @@ class TangoSource(DataSource):
     # \returns dictionary with collected data  
     def getData(self):
         if not PYTANGO_AVAILABLE:
+            if Streams.log_error:
+                print >> Streams.log_error,  "TangoSource::getData() - Support for PyTango datasources not available" 
             raise PackageError, "Support for PyTango datasources not available" 
 
         if self.device and self.memberType and self.name:
@@ -234,6 +249,8 @@ class TangoSource(DataSource):
                     cnt +=1
 
                 if not found:
+                    if Streams.log_error:
+                        print >> Streams.log_error,  "TangoSource::getData() - Setting up lasts to long: %s" % xml
                     raise  DataSourceSetupError, \
                         "Setting up lasts to long: %s" % xml
 
@@ -320,6 +337,8 @@ class DBaseSource(DataSource):
             self.query = self._getText(query[0])
             
         if not self.format or not self.query:
+            if Streams.log_error:
+                print >> Streams.log_error,  "DBaseSource::setup() - Database query or its format not defined: %s" % xml
             raise  DataSourceSetupError, \
                 "Database query or its format not defined: %s" % xml
 
@@ -402,6 +421,8 @@ class DBaseSource(DataSource):
         if self.dbtype in self.__dbConnect.keys() and self.dbtype in DB_AVAILABLE:
             db = self.__dbConnect[self.dbtype]()
         else:
+            if Streams.log_error:
+                print >> Streams.log_error,  "DBaseSource::getData() - Support for %s database not available" % self.dbtype
             raise PackageError, "Support for %s database not available" % self.dbtype
 
 
@@ -453,6 +474,8 @@ class ClientSource(DataSource):
             self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
 #            print "NAME:", self.name
         if not self.name:
+            if Streams.log_error:
+                print >> Streams.log_error, "ClientSource::setup() - Client record name not defined: %s" % xml
             raise  DataSourceSetupError, \
                 "Client record name not defined: %s" % xml
             
