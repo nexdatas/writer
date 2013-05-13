@@ -750,11 +750,10 @@ class EField(FElementWithAttr):
     ## marks the field as failed
     # \brief It marks the field as failed            
     def markFailed(self):          
-        if Streams.log_info:
-            print >> Streams.log_info, "EField::markFailed() - marked as failed  "
-        
         if self.h5Object:
             self.h5Object.attr("nexdatas_canfail","string").value = "FAILED"
+            if Streams.log_info:
+                print >> Streams.log_info, "EField::markFailed() - marked as failed  "
 
 
 ## group H5 tag element        
@@ -986,10 +985,10 @@ class EAttribute(FElement):
     # \brief It marks the field as failed            
     def markFailed(self):          
         field = self._lastObject()
-        if Streams.log_info:
-            print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
         if field:
             field.attr("nexdatas_canfail","string").value = "FAILED"
+            if Streams.log_info:
+                print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
 
 
 ## file H5 element        
