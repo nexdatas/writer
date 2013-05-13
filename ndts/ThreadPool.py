@@ -89,6 +89,7 @@ class ThreadPool(object):
         self.run()
         self.join()
 
+
     ## checks errors from threads
     def checkErrors(self):
         errors = []
@@ -102,6 +103,8 @@ class ThreadPool(object):
                     print >> sys.stderr, el.error
                     if Streams.log_warn:
                         print >> Streams.log_warn,  "ThreadPool::checkErrors() - %s" %   str(el.error)
+                    if hasattr(el,"markFailed"):
+                        el.markFailed()
         if errors:
             raise ThreadError("Problems in storing data: %s" %  str(errors)  )
 

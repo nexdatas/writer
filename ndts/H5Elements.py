@@ -486,10 +486,10 @@ class EField(FElementWithAttr):
             elif self.strategy != "POSTRUN":
                 if self.h5Object.dtype != "string": 
                     if Streams.log_error:
-                        print >> Streams.log_error, "Field::__setStrategy() - Warning: Invalid datasource for %s" % nm
+                        print >> Streams.log_error, "EField::__setStrategy() - Warning: Invalid datasource for %s" % nm
                     raise ValueError,"Warning: Invalid datasource for %s" % nm
                 else:
-                    print >> sys.stderr, "Field::__setStrategy() - Warning: Empty value for the field:", nm
+                    print >> sys.stderr, "EField::__setStrategy() - Warning: Empty value for the field:", nm
 
             
     ## stores the tag content
@@ -731,7 +731,7 @@ class EField(FElementWithAttr):
             message = self.setMessage(str(info[1].__str__()) +"\n "+ (" ").join(traceback.format_tb(sys.exc_info()[2]) ))
 #            message = self.setMessage(  sys.exc_info()[1].__str__()  )
             del info
-            print >> sys.stderr, "Field::run() - %s\n %s " % (message[0],message[1])
+            print >> sys.stderr, "EField::run() - %s\n %s " % (message[0],message[1])
             self.error = message
 
 #            self.error = sys.exc_info()
@@ -739,13 +739,22 @@ class EField(FElementWithAttr):
             if self.error:
                 if self.canfail:
                     if Streams.log_warn:
-                        print >> Streams.log_warn, "Field::run() - %s  " % str(self.error)
+                        print >> Streams.log_warn, "EField::run() - %s  " % str(self.error)
                 else:
                     if Streams.log_error:
-                        print >> Streams.log_error, "Field::run() - %s  " % str(self.error)
-                print >> sys.stderr, "Field::run() - ERROR", str(self.error)
+                        print >> Streams.log_error, "EField::run() - %s  " % str(self.error)
+                print >> sys.stderr, "EField::run() - ERROR", str(self.error)
 
 #            pass
+
+    ## marks the field as failed
+    # \brief It marks the field as failed            
+    def markFailed(self):          
+        if Streams.log_info:
+            print >> Streams.log_info, "EField::markFailed() - marked as failed  "
+        
+        if self.h5Object:
+            self.h5Object.attr("nexdatas_canfail","string").value = "FAILED"
 
 
 ## group H5 tag element        
@@ -972,6 +981,15 @@ class EAttribute(FElement):
                         print >> Streams.log_error, "Group::run() - %s  " % str(self.error)
                 print >> sys.stderr, "Group::run() - ERROR", str(self.error)
             
+
+    ## marks the field as failed
+    # \brief It marks the field as failed            
+    def markFailed(self):          
+        field = self._lastObject()
+        if Streams.log_info:
+            print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
+        if field:
+            field.attr("nexdatas_canfail","string").value = "FAILED"
 
 
 ## file H5 element        
