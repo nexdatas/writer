@@ -753,7 +753,7 @@ class EField(FElementWithAttr):
         if self.h5Object:
             self.h5Object.attr("nexdatas_canfail","string").value = "FAILED"
             if Streams.log_info:
-                print >> Streams.log_info, "EField::markFailed() - marked as failed  "
+                print >> Streams.log_info, "EField::markFailed() - %s marked as failed" % (self.h5Object.name) 
 
 
 ## group H5 tag element        
@@ -988,6 +988,7 @@ class EAttribute(FElement):
         if field:
             field.attr("nexdatas_canfail","string").value = "FAILED"
             if Streams.log_info:
+                print >> Streams.log_info, "EAttribute::markFailed() - %s of %s marked as failed" % (self.h5Object.name, field.name)
                 print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
 
 
