@@ -298,7 +298,8 @@ if __name__ == "__main__":
 
     # Create a TDW object
     ## instance of TangoDataWriter
-    tdw = TangoDataWriter("test.h5")
+    tdw = TangoDataWriter()
+    tdw.fileName = 'test.h5'
 
     tdw.numThreads = 1
 

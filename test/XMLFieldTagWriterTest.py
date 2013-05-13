@@ -73,7 +73,8 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \param json JSON Record with client settings
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
-        tdw = TangoDataWriter(fname)
+        tdw = TangoDataWriter()
+        tdw.fileName = fname
         tdw.openNXFile()
         tdw.xmlSettings = xml
         if json:

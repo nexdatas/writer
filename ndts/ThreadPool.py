@@ -95,16 +95,16 @@ class ThreadPool(object):
         errors = []
         for el in self.__elementList:
             if el.error:
-                if not el.canfail:
-                    errors.append(el.error)
-                    if Streams.log_error:
-                        print >> Streams.log_error,  "ThreadPool::checkErrors() - %s" % str(el.error)
-                else:
+                if hasattr(el,"canfail") and el.canfail:
                     print >> sys.stderr, el.error
                     if Streams.log_warn:
                         print >> Streams.log_warn,  "ThreadPool::checkErrors() - %s" %   str(el.error)
                     if hasattr(el,"markFailed"):
                         el.markFailed()
+                else:
+                    errors.append(el.error)
+                    if Streams.log_error:
+                        print >> Streams.log_error,  "ThreadPool::checkErrors() - %s" % str(el.error)
         if errors:
             raise ThreadError("Problems in storing data: %s" %  str(errors)  )
 

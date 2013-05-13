@@ -19,6 +19,8 @@
 ## \file DataSourceFactory.py
 # data-source types
 
+import sys 
+
 import DataSources
 from DataSourcePool import DataSourcePool
 from Element import Element

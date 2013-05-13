@@ -112,7 +112,8 @@ class TangoDataWriterTest(unittest.TestCase):
         print "Run: %s.test_openFile() " % self.__class__.__name__
         fname = "test.h5"
         try:
-            tdw = TangoDataWriter(fname)
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
             self.assertEqual(tdw.fileName, fname)
             self.assertEqual(tdw.xmlSettings, "")
             self.assertEqual(tdw.json, "{}")
@@ -192,7 +193,8 @@ class TangoDataWriterTest(unittest.TestCase):
             fname = '%s/%s.h5' % (os.getcwd(), fun )  
             
         try:
-            tdw = TangoDataWriter(fname)
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
             self.assertEqual(tdw.fileName, fname)
             self.assertEqual(tdw.xmlSettings, "")
             self.assertEqual(tdw.json, "{}")
@@ -252,8 +254,8 @@ class TangoDataWriterTest(unittest.TestCase):
         fname = "test.h5"
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
-            tdw = TangoDataWriter(fname)
-            
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
             tdw.openNXFile()
 
             tdw.xmlSettings = xml
@@ -324,8 +326,9 @@ class TangoDataWriterTest(unittest.TestCase):
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
         try:
-            tdw = TangoDataWriter(fname)
-            
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
+
             tdw.openNXFile()
 
             tdw.xmlSettings = wrongXml
@@ -393,7 +396,8 @@ class TangoDataWriterTest(unittest.TestCase):
         print "Run: TangoDataWriterTest.test_scanRecord() "
         fname = "scantest.h5"
         try:
-            tdw = TangoDataWriter(fname)
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
             
             tdw.openNXFile()
 

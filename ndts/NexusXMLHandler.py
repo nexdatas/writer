@@ -163,7 +163,7 @@ class NexusXMLHandler(sax.ContentHandler):
                     if Streams.log_error:
                         print >> Streams.log_error, "NexusXMLHandler::startElement() - Unsupported tag: %s, %s " % ( name, attrs.keys())
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " % ( name, attrs.keys())
-                print >> sys.sterr, "NexusXMLHandler::startElement() - Unsupported tag: ", name, attrs.keys()
+                print >> sys.stderr, "NexusXMLHandler::startElement() - Unsupported tag: ", name, attrs.keys()
                 if Streams.log_warn:
                     print >> Streams.log_warn,  "NexusXMLHandler::startElement() - Unsupported tag: %s, %s " % ( name, attrs.keys())
                 self.__unsupportedTag = name

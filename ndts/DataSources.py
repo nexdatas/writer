@@ -181,8 +181,8 @@ class TangoSource(DataSource):
 
         if self.hostname and self.port:
             dv = "%s:%s/%s" % (self.hostname.encode(), self.port.encode(),self.device.encode())
-        else:
-            dv = "%s" % (self.hostname.encode())
+        elif self.device:
+            dv = "%s" % (self.device.encode())
             
         try:
             self.__proxy = PyTango.DeviceProxy(dv)
