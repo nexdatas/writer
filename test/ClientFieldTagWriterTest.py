@@ -102,7 +102,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         tdw.xmlSettings = xml
 #        tdw.numThreads = 1
         if json:
-            tdw.json = json
+            tdw.thejson = json
         tdw.openEntry()
         return tdw
 
@@ -111,7 +111,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         if json:
-            tdw.json = json
+            tdw.thejson = json
         tdw.closeEntry()
         tdw.closeNXFile()
 

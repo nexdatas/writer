@@ -172,7 +172,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		
 		#	Add your own code here
 		
-		attr.set_value(self.tdw.json)
+		attr.set_value(self.tdw.thejson)
 
 
 #------------------------------------------------------------------
@@ -180,8 +180,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_TheJSONRecord(self, attr):
 		print "In ", self.get_name(), "::write_TheJSONRecord()"
-		self.tdw.json = attr.get_write_value()
-		print "Attribute value = ", self.tdw.json
+		self.tdw.thejson = attr.get_write_value()
+		print "Attribute value = ", self.tdw.thejson
 
 		#	Add your own code here
 
