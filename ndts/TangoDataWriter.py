@@ -55,7 +55,7 @@ class TangoDataWriter(object):
         ## Tango server
         self.__server = server
         ## XML string with file settings
-        self.xmlSettings = ""
+        self.__xmlSettings = ""
         ## global JSON string with data records
         self.__json = "{}"
         ## maximal number of threads
@@ -81,6 +81,9 @@ class TangoDataWriter(object):
         ## pool with decoders
         self.__datasources = DataSourcePool()
 
+        ## group name parser
+        self.__fetcher = None
+
 
         ## adding logs
         self.addingLogs = True
@@ -101,18 +104,45 @@ class TangoDataWriter(object):
             if  hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
     
+    ## get method for thejson attribute
+    # \returns value of thejson            
     def __getJSON(self):
         return self.__json
 
+    ## set method for thejson attribute
+    # \param jsonstring value of thejson            
     def __setJSON(self, jsonstring):
-        js = json.loads(jsonstring)        
+        self.__decoders = DecoderPool(json.loads(jsonstring))            
+        self.__datasources = DataSourcePool(json.loads(jsonstring))            
         self.__json = jsonstring
 
+    ## del method for thejson attribute
     def __delJSON(self):
         del self.__json 
 
     ## the json data string
     thejson = property(__getJSON, __setJSON, __delJSON)
+
+
+
+    ## get method for xmlSettings attribute
+    # \returns value of thejson            
+    def __getXML(self):
+        return self.__xmlSettings
+
+    ## set method for xmlSettings attribute
+    # \param xml xml settings
+    def __setXML(self, xml):
+        self.__fetcher = FetchNameHandler()
+        sax.parseString(xml, self.__fetcher)
+        self.__xmlSettings = xml
+
+    ## del method for xmlSettings attribute
+    def __delXML(self):
+        del self.__xmlSettings 
+
+    ## the xmlSettings
+    xmlSettings = property(__getXML, __setXML, __delXML)
 
 
     ## the H5 file handle 
@@ -146,22 +176,12 @@ class TangoDataWriter(object):
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
         if self.xmlSettings:
-            self.__decoders = DecoderPool(json.loads(self.thejson))            
-            self.__datasources = DataSourcePool(json.loads(self.thejson))            
-
-            parser = sax.make_parser()
-        
-            fetcher = FetchNameHandler()
-            sax.parseString(self.xmlSettings, fetcher)
-
-#            handler = NexusXMLHandler(self.__eFile, self.__decoders, fetcher.groupTypes)
-#            sax.parseString(self.xmlSettings, handler)
 
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
  
             handler = NexusXMLHandler(self.__eFile, self.__datasources, self.__decoders, 
-                                      fetcher.groupTypes, parser, json.loads(self.thejson))
+                                      self.__fetcher.groupTypes, parser, json.loads(self.thejson))
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
 
@@ -181,7 +201,6 @@ class TangoDataWriter(object):
 
             for pool in self.__triggerPools.keys():
                 self.__triggerPools[pool].numThreads = self.numThreads
-
 
             self.__initPool.setJSON(json.loads(self.thejson))
             self.__initPool.runAndWait()

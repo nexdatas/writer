@@ -482,10 +482,9 @@ class TangoDataWriterTest(unittest.TestCase):
 
             tdw.openNXFile()
 
-            tdw.xmlSettings = wrongXml
             try:
                 error = None
-                tdw.openEntry()
+                tdw.xmlSettings = wrongXml
             except SAXParseException,e:
                 error = True
             except Exception, e:
@@ -495,8 +494,8 @@ class TangoDataWriterTest(unittest.TestCase):
                 
 
 
-            tdw.xmlSettings = xml
             try:
+                tdw.xmlSettings = xml
                 error = None
                 tdw.openEntry()
             except SAXParseException,e:

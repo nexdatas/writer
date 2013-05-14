@@ -333,15 +333,10 @@ class TangoDataServerTest(unittest.TestCase):
 
             dp.OpenFile()
 
-            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
-
-            dp.TheXMLSettings = wrongXml
-            self.assertEqual(dp.state(),PyTango.DevState.OPEN)
-
 
             try:
                 error = None
-                dp.OpenEntry()
+                dp.TheXMLSettings = wrongXml
             except PyTango.DevFailed,e:
                 error = True
             except Exception, e: 
