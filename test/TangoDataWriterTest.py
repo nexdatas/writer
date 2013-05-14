@@ -106,6 +106,22 @@ class TangoDataWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method      
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
+
+
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
@@ -126,6 +142,141 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertTrue(tdw.getNXFile().valid)
             self.assertFalse(tdw.getNXFile().readonly)
             
+            tdw.closeNXFile()
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.thejson, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertTrue(tdw.getNXFile() is None)
+            
+
+            # check the created file
+
+            f = open_file(fname,readonly=True)
+            self.assertEqual(f.name, fname)
+
+#            print "\nFile attributes:"
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+#                print at.name,"=",at.value
+            self.assertEqual(cnt, f.nattrs)
+            self.assertEqual(6, f.nattrs)
+#            print ""    
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 1)
+
+            cnt = 0
+            for ch in f.children:
+                cnt += 1
+            self.assertEqual(cnt, f.nchildren)
+
+            f.close()
+
+        finally:
+            os.remove(fname)
+
+
+
+    ## openFile test
+    # \brief It tests validation of opening and closing H5 files.
+    def test_openFile_valueerror(self):
+        print "Run: %s.test_openFile() " % self.__class__.__name__
+        fname = "test.h5"
+        try:
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.thejson, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            
+            tdw.openNXFile()
+            self.assertTrue(tdw.getNXFile() is not None)
+            self.assertTrue(tdw.getNXFile().valid)
+            self.assertFalse(tdw.getNXFile().readonly)
+            try:
+                error = False
+                tdw.thejson =  "}"
+            except ValueError, e:
+                error = True
+            self.assertEqual(error, True)
+
+            tdw.closeNXFile()
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.thejson, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertTrue(tdw.getNXFile() is None)
+            
+
+            # check the created file
+
+            f = open_file(fname,readonly=True)
+            self.assertEqual(f.name, fname)
+
+#            print "\nFile attributes:"
+            cnt = 0
+            for at in f.attributes:
+                cnt += 1
+#                print at.name,"=",at.value
+            self.assertEqual(cnt, f.nattrs)
+            self.assertEqual(6, f.nattrs)
+#            print ""    
+
+            self.assertEqual(f.attr("file_name").value, fname)
+            self.assertTrue(f.attr("NX_class").value,"NXroot")
+
+            self.assertEqual(f.nchildren, 1)
+
+            cnt = 0
+            for ch in f.children:
+                cnt += 1
+            self.assertEqual(cnt, f.nchildren)
+
+            f.close()
+
+        finally:
+            os.remove(fname)
+
+
+
+
+    ## openFile test
+    # \brief It tests validation of opening and closing H5 files.
+    def test_openFile_typeerror(self):
+        print "Run: %s.test_openFile() " % self.__class__.__name__
+        fname = "test.h5"
+        try:
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
+            self.assertEqual(tdw.fileName, fname)
+            self.assertEqual(tdw.xmlSettings, "")
+            self.assertEqual(tdw.thejson, "{}")
+            self.assertTrue(tdw.getNXFile() is None)
+            self.assertTrue(tdw.numThreads > 0)
+            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            
+            tdw.openNXFile()
+            self.assertTrue(tdw.getNXFile() is not None)
+            self.assertTrue(tdw.getNXFile().valid)
+            self.assertFalse(tdw.getNXFile().readonly)
+            try:
+                error = False
+                tdw.thejson =  1223
+            except TypeError, e:
+                error = True
+            self.assertEqual(error, True)
+
             tdw.closeNXFile()
             self.assertEqual(tdw.fileName, fname)
             self.assertEqual(tdw.xmlSettings, "")

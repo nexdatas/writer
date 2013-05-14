@@ -104,12 +104,14 @@ class TangoDataWriter(object):
     def __getJSON(self):
         return self.__json
 
-    def __setJSON(self, json):
-        self.__json = json
+    def __setJSON(self, jsonstring):
+        js = json.loads(jsonstring)        
+        self.__json = jsonstring
 
     def __delJSON(self):
         del self.__json 
 
+    ## the json data string
     thejson = property(__getJSON, __setJSON, __delJSON)
 
 
