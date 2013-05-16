@@ -246,7 +246,7 @@ class TangoDataWriter(object):
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
-        gc.collect()
+#        gc.collect()
 
 
     ## closes the data entry        
