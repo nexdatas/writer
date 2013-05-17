@@ -20,7 +20,7 @@
 # NeXuS H5 Data Writer
 #
 
-import cProfile, pstats, io
+import  cProfile, pstats, io
 
 from NexusXMLHandler import NexusXMLHandler
 from FetchNameHandler import FetchNameHandler
@@ -176,7 +176,7 @@ class TangoDataWriter(object):
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
-        self.pr = cProfile.Profile()
+        self.pr = cProfile.Profile() 
         if self.xmlSettings:
 
             errorHandler = sax.ErrorHandler()
@@ -266,7 +266,7 @@ class TangoDataWriter(object):
         ps = pstats.Stats(self.pr, stream=s)
         ps.print_stats()
 
-        from H5Elements import pr
+        from ElementThread import pr
         s = io.open("/tmp/writescalarnexuslog.log",mode='wb')
         ps = pstats.Stats(pr, stream=s)
         ps.print_stats()

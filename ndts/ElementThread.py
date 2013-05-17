@@ -24,6 +24,9 @@ import Queue
 import thread
 import time
 
+import  cProfile, pstats, io
+
+pr = cProfile.Profile()
 
 ## Single Thread Element
 class ElementThread(Thread):
@@ -41,9 +44,10 @@ class ElementThread(Thread):
     ## runner
     # \brief It runs the defined thread
     def run(self):
+        pr.enable()
         full = True    
         while full:
-            time.sleep(0.0001)
+#            time.sleep(0.00001)
             try:
                 elem = self.__queue.get(block=False)
                 if hasattr(elem, "run") and callable(elem.run):
@@ -54,5 +58,6 @@ class ElementThread(Thread):
                 full = False    
                 pass
                 
+        pr.disable()
 
 

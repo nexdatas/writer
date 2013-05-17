@@ -695,7 +695,7 @@ class EField(FElementWithAttr):
     ## writes growing data
     # \param dh data holder
     def __writeGrowingData(self, dh):
-        pr.enable()
+#        pr.enable()
         if str(dh.format).split('.')[-1] == "SCALAR":
             self.__writeScalarGrowingData(dh)
         elif str(dh.format).split('.')[-1] == "SPECTRUM":
@@ -707,13 +707,13 @@ class EField(FElementWithAttr):
                 print >> Streams.log_error,\
                     "Case with %s format not supported " % str(dh.format).split('.')[-1] 
             raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
-        pr.disable()
+#        pr.disable()
 
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
-        st = time.time()
+#        pr.enable()
         try:
             if self.source:
                 dt = self.source.getData()
@@ -751,8 +751,8 @@ class EField(FElementWithAttr):
                         print >> Streams.log_error, "EField::run() - %s  " % str(self.error)
                 print >> sys.stderr, "EField::run() - ERROR", str(self.error)
 
+#        pr.disable()
 #            pass
-        print >> logs,  "run(): ",time.time() - st
 
 
     ## marks the field as failed
