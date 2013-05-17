@@ -19,10 +19,12 @@
 ## \file H5Elements.py
 # NeXus runnable elements
 
+import cProfile, pstats, io
+
 import sys                                                                       
 
 import numpy 
-
+import time
 #from DataSource import DataSource
 
 from DataHolder import DataHolder
@@ -42,6 +44,8 @@ try:
 except:
     import pni.nx.h5 as nx
 
+pr = cProfile.Profile()
+logs = io.open("/tmp/writerunnexuslog.log",mode='ab')
 
 ## NeXuS runnable tag element
 # tag element corresponding to one of H5 objects 
@@ -586,7 +590,6 @@ class EField(FElementWithAttr):
     ## writes growing scalar data
     # \param dh data holder
     def __writeScalarGrowingData(self, dh):
-            
         arr = dh.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
             self.h5Object.grow()
@@ -660,7 +663,7 @@ class EField(FElementWithAttr):
     ## writes growing spectrum data
     # \param dh data holder
     def __writeImageGrowingData(self, dh):
-
+        
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
             self.h5Object.grow()
@@ -692,6 +695,7 @@ class EField(FElementWithAttr):
     ## writes growing data
     # \param dh data holder
     def __writeGrowingData(self, dh):
+        pr.enable()
         if str(dh.format).split('.')[-1] == "SCALAR":
             self.__writeScalarGrowingData(dh)
         elif str(dh.format).split('.')[-1] == "SPECTRUM":
@@ -703,11 +707,13 @@ class EField(FElementWithAttr):
                 print >> Streams.log_error,\
                     "Case with %s format not supported " % str(dh.format).split('.')[-1] 
             raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
+        pr.disable()
 
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
+        st = time.time()
         try:
             if self.source:
                 dt = self.source.getData()
@@ -746,6 +752,8 @@ class EField(FElementWithAttr):
                 print >> sys.stderr, "EField::run() - ERROR", str(self.error)
 
 #            pass
+        print >> logs,  "run(): ",time.time() - st
+
 
     ## marks the field as failed
     # \brief It marks the field as failed            
