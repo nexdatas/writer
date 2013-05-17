@@ -43,7 +43,7 @@ class ElementThread(Thread):
     def run(self):
         full = True    
         while full:
-            time.sleep(0.0001)
+#            time.sleep(0.0001)
             try:
                 elem = self.__queue.get(block=False)
                 if hasattr(elem, "run") and callable(elem.run):
