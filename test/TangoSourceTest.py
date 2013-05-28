@@ -30,7 +30,7 @@ from xml.dom import minidom
 import PyTango 
 import binascii
 import time
-
+import json
 
 
 import SimpleServerSetUp
@@ -39,7 +39,13 @@ import SimpleServerSetUp
 from ndts.DataSources import DataSource
 from ndts.DataSources import TangoSource
 from ndts.DecoderPool import DecoderPool
+from ndts.Element import Element
+from ndts.H5Elements import EField
+from ndts.DataSourceFactory import DataSourceFactory
 from ndts.Errors import DataSourceSetupError
+from ndts.DataSourcePool import DataSourcePool
+from ndts import DataSources
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -203,6 +209,7 @@ class TangoSourceTest(unittest.TestCase):
                         self.assertEqual(data["value"][i][j], value[i][j])
                 
 
+
     ## setup test
     # \brief It tests default settings
     def test_setup_default(self):
@@ -210,7 +217,7 @@ class TangoSourceTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
         dname = 'writer'
-        device = 'p09/tdw/r228'
+        device = 'stestp09/testss/s1r228'
         ctype = 'command'
         atype = 'attribute'
         host = 'localhost'
@@ -603,6 +610,50 @@ class TangoSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         self.assertEqual(el.isValid(), True)
 
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_setDecoders_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        dname = 'writer'
+        device = 'stestp09/testss/s1r228'
+        ctype = 'command'
+        atype = 'attribute'
+        host = 'haso.desy.de'
+        port = '10000'
+        encoding = 'UTF8'
+
+
+        atts = {"type":"TANGO"}
+        name = "myRecord"
+        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        gjson = json.loads('{"data":{"myRecord":"1"}}')
+        
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='TANGO'>",
+                                   "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
+                                   "</datasource>"],gjson),None)
+        self.assertEqual(type(ds._last.source),DataSources.TangoSource)
+        self.assertEqual(ds._last.source.name,dname)
+        self.assertEqual(ds._last.source.device,device)
+        self.assertEqual(ds._last.source.encoding,encoding)
+        self.assertEqual(ds._last.source.__str__() , " Tango Device %s : %s (%s)" % (device, dname, atype))
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>") )
 
     
 if __name__ == '__main__':
