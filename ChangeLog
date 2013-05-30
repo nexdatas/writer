@@ -1,3 +1,7 @@
+2013-05-30 Jan Kotanski <jankotan@gmail.com>
+	* speed up writing by removing time.sleep() and gc.collect()
+	* tagged as 1.1.5
+
 2013-05-15 Jan Kotanski <jankotan@gmail.com>
 	* adding checks during writing thejson and xmlSettings TangoDataWriter attributes
 	* changing TangoDataWriter.json into TangoDataWriter.thejson
