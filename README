@@ -17,7 +17,7 @@ Installation from sources
 
 Install the dependencies:
 
-    libpninx-python, PyTango, numpy 
+    pni-libraries, PyTango, numpy 
 
 Download the latest NexDaTaS version from
 
