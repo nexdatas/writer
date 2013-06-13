@@ -149,7 +149,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def write_TheXMLSettings(self, attr):
 		print "In ", self.get_name(), "::write_TheXMLSettings()"
 		self.tdw.xmlSettings = attr.get_write_value()
-		self.set_state(PyTango.DevState.OPEN)
 		print "Attribute value = ", self.tdw.xmlSettings
 
 
