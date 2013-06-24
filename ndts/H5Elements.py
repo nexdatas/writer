@@ -437,7 +437,7 @@ class EField(FElementWithAttr):
 
         self._createAttributes()        
                 
-        if self.strategy == "POSTRUN" and self.postrun.encode().strip():
+        if self.strategy == "POSTRUN":
             self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode().strip()
 
 
