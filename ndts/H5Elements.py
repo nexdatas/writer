@@ -438,7 +438,7 @@ class EField(FElementWithAttr):
         self._createAttributes()        
                 
         if self.strategy == "POSTRUN":
-            self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode()
+            self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode().strip()
 
 
 
@@ -952,7 +952,7 @@ class EAttribute(FElement):
 #                        print "ARR2",arr
                         
                         if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
-                            if self.h5Object.dtype == "string" and len(dh.shape)>0   and dh.shape[0] ==1:
+                            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1 and type(arr).__name__ != "str":
                                 self.h5Object.value = arr[0]
                             else:
                                 self.h5Object.value = arr
