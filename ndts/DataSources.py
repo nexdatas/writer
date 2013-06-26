@@ -142,7 +142,7 @@ class TangoSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " Tango Device %s : %s (%s)" % (self.device, self.name, self.memberType )
+        return " TANGO Device %s : %s (%s)" % (self.device, self.name, self.memberType )
 
 
     ## sets the parrameters up from xml
@@ -325,7 +325,7 @@ class DBaseSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " %s DataBase %s with %s " % (self.dbtype, self.dbname if self.dbname else "" , self.query )
+        return " %s DB %s with %s " % (self.dbtype, self.dbname if self.dbname else "" , self.query )
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
@@ -486,7 +486,7 @@ class ClientSource(DataSource):
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " Client record %s from JSON: %s or %s " % (self.name, self.__localJSON , self.__globalJSON  )
+        return " CLIENT record %s" % (self.name)
 
 
     ## sets JSON string

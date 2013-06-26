@@ -127,12 +127,12 @@ class DBaseSourceTest(unittest.TestCase):
 
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " %s DataBase %s with %s "  % (None,"",None))
+        self.assertEqual(ds.__str__(), " %s DB %s with %s "  % (None,"",None))
 
         ds = DBaseSource()
         ds.dbtype = dbtype                 
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " %s DataBase %s with %s "
+        self.assertEqual(ds.__str__(), " %s DB %s with %s "
                          % (dbtype,"",None))
 
 
@@ -140,7 +140,7 @@ class DBaseSourceTest(unittest.TestCase):
         ds.dbtype = dbtype                 
         ds.dbname = dbname                 
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " %s DataBase %s with %s "
+        self.assertEqual(ds.__str__(), " %s DB %s with %s "
                          % (dbtype, dbname, None))
 
 
@@ -149,7 +149,7 @@ class DBaseSourceTest(unittest.TestCase):
         ds.dbname = dbname                 
         ds.query = query                 
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " %s DataBase %s with %s "
+        self.assertEqual(ds.__str__(), " %s DB %s with %s "
                          % (dbtype, dbname, query))
 
 

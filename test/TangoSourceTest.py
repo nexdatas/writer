@@ -141,27 +141,27 @@ class TangoSourceTest(unittest.TestCase):
         mtype = 'attribute'
         ds = TangoSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (None, None, None))
+        self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (None, None, None))
 
         ds.device = device
         ds.name = None
         ds.memberType = None
-        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (device, None, None))
+        self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (device, None, None))
 
         ds.device = None
         ds.name = dname
         ds.memberType = None
-        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (None, dname, None))
+        self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (None, dname, None))
 
         ds.device = None
         ds.name = None
         ds.memberType = mtype
-        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (None, None, mtype))
+        self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (None, None, mtype))
 
         ds.device = device
         ds.name = dname
         ds.memberType = mtype
-        self.assertEqual(ds.__str__(), " Tango Device %s : %s (%s)" % (device, dname, mtype))
+        self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (device, dname, mtype))
 
 
 
@@ -651,7 +651,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds._last.source.name,dname)
         self.assertEqual(ds._last.source.device,device)
         self.assertEqual(ds._last.source.encoding,encoding)
-        self.assertEqual(ds._last.source.__str__() , " Tango Device %s : %s (%s)" % (device, dname, atype))
+        self.assertEqual(ds._last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, dname, atype))
         self.assertEqual(len(ds._last.tagAttributes),1)
         self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>") )
 

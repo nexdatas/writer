@@ -509,7 +509,7 @@ class FElementTest(unittest.TestCase):
     def test_setMessage(self):
         print "Run: %s.test_setMessage() " % self.__class__.__name__
         message = "My Exception"
-        text = "WARNING: Data for %s on %s not found"
+        text = "WARNING: Data for %s not found. DATASOURCE:%s"
         uob = "unnamed object"
         uds = "unknown datasource"
         ds = TestDataSource()
@@ -521,11 +521,11 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(el.setMessage(message),(text % (uob, str(ds)), message))
 
         el2 = FElement(self._tfname, self._fattrs, el, self._group )
-        self.assertEqual(el2.setMessage(),(text % (self._group.name, uds), None))
-        self.assertEqual(el2.setMessage(message),(text % (self._group.name, uds), message))
+        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name, uds), None))
+        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name, uds), message))
         el2.source = ds
-        self.assertEqual(el2.setMessage(),(text % (self._group.name, str(ds)), None))
-        self.assertEqual(el2.setMessage(message),(text % (self._group.name, str(ds)), message))
+        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name, str(ds)), None))
+        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name, str(ds)), message))
         
 
 

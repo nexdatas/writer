@@ -2276,12 +2276,12 @@ class EFieldTest(unittest.TestCase):
         ds.valid = True
         self.assertEqual(el.run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object on Test DataSource not found')
+        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object not found. DATASOURCE:Test DataSource')
         self.assertEqual(el.error[1], 'PNI Object not created')            
         ds.valid = False
         self.assertEqual(el.run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object on Test DataSource not found')
+        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object not found. DATASOURCE:Test DataSource')
         self.assertEqual(el.error[1], 'Data without value')            
         self._nxFile.close()
         os.remove(self._fname)

@@ -148,16 +148,28 @@ class FElement(Element):
                     shape.insert(exDim-1,0)    
             except:
                 val = ("".join(self.content)).strip().encode()   
+                found = False
                 if self.source and self.source.isValid():
-                    dh = DataHolder(**self.source.getData())
-                    shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)
-                elif val:
+                    data = self.source.getData()
+
+                    if isinstance(data, dict):                        
+                        dh = DataHolder(**data)
+                        shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)
+                        if shape is not None:
+                            found = True
+                if val and not found:
                     shape = self.__fetchShape(val,rank)
-                else:
+                    if shape is not None:
+                        found = True
+                    
+                if not found:
+                    nm = "unnamed"
+                    if "name" in self._tagAttrs.keys():
+                        nm = self._tagAttrs["name"] + " "
                     if Streams.log_error:
                         print >> Streams.log_error,\
-                            "FElement::_findShape() - Wrongly defined shape"
-                    raise XMLSettingSyntaxError, "Wrongly defined shape"
+                            "FElement::_findShape() - Wrongly defined %sshape:%s" % (nm, str(self.source) if self.source else val)
+                    raise XMLSettingSyntaxError, "Wrongly defined %sshape:%s"% (nm, str(self.source) if self.source else val) 
                 
                 
         elif extraD:            
@@ -169,9 +181,11 @@ class FElement(Element):
     ## creates the error message
     # \param exceptionMessage additional message of exception
     def setMessage(self, exceptionMessage=None):
-        if hasattr(self.h5Object, "name"):
+        if hasattr(self.h5Object, "path"):
+            name = self.h5Object.path
+        elif hasattr(self.h5Object, "name"):
             name = self.h5Object.name
-        else:
+        else:    
             name = "unnamed object"
         if self.source:
             dsource = str(self.source)
@@ -179,7 +193,7 @@ class FElement(Element):
             dsource = "unknown datasource"
             
             
-        message = ("WARNING: Data for %s on %s not found" % (name, dsource), exceptionMessage )
+        message = ("WARNING: Data for %s not found. DATASOURCE:%s" % (name, dsource), exceptionMessage )
         return message
 
 

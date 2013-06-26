@@ -1393,7 +1393,7 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                                 'WARNING: Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
                                 'Storing multi-dimension string attributes not supported by pninx')
 
@@ -1500,7 +1500,7 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                                 'WARNING: Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
                                 'Storing multi-dimension string attributes not supported by pninx')
         self._nxFile.close()
@@ -1608,8 +1608,8 @@ class EAttributeTest(unittest.TestCase):
                 self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
-                self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                self.assertEqual(ea[k].error[0],
+                                 'WARNING: Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
                                 'Storing multi-dimension string attributes not supported by pninx')
         self._nxFile.close()
