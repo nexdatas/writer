@@ -945,7 +945,7 @@ class EAttribute(FElement):
                 if self.source:
                     dt = self.source.getData()
                     dh = None
-#                    print "dt", dt
+                    print "dt", dt, self.h5Object.shape
                     if dt:
                         dh = DataHolder(**dt)
 #                        print "VAL", dh.value, type(dh.value)
@@ -963,11 +963,12 @@ class EAttribute(FElement):
 #                        print "ARR2",arr
                         
                         if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
-                            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1 and type(arr).__name__ != "str":
-#                            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1:
-
+#                            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1 and type(arr).__name__ != "str":
+                            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1:
+                                print "AOO"
                                 self.h5Object.value = arr[0]
                             else:
+                                print "AAA"
                                 self.h5Object.value = arr
         
                         else:
