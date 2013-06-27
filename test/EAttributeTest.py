@@ -822,7 +822,7 @@ class EAttributeTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] == 'string':
-                "writing multi-dimensional string is not supported by pninx"
+                "writing multi-dimensional string is not supported by pniio"
                 continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
@@ -1393,9 +1393,9 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s not found. DATASOURCE:Test DataSource' %k)
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pninx')
+                                'Storing multi-dimension string attributes not supported by pniio')
 
         self._nxFile.close()
  
@@ -1500,9 +1500,9 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s not found. DATASOURCE:Test DataSource' %k)
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pninx')
+                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)
@@ -1609,9 +1609,9 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0],
-                                 'WARNING: Data for %s not found. DATASOURCE:Test DataSource' %k)
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pninx')
+                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)

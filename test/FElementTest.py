@@ -509,7 +509,7 @@ class FElementTest(unittest.TestCase):
     def test_setMessage(self):
         print "Run: %s.test_setMessage() " % self.__class__.__name__
         message = "My Exception"
-        text = "WARNING: Data for %s not found. DATASOURCE:%s"
+        text = "Data for %s not found. DATASOURCE:%s"
         uob = "unnamed object"
         uds = "unknown datasource"
         ds = TestDataSource()
