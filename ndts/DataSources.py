@@ -148,7 +148,7 @@ class TangoSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-#        print "TG XML" , xml
+#        print "TG XML" , xml 
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec)> 0:
@@ -198,6 +198,7 @@ class TangoSource(DataSource):
             try:
                 if self.__proxy.state() != PyTango.DevState.RUNNING:
                     found = True
+                found = True
             except:    
                 time.sleep(0.01)
                 found = False
@@ -205,9 +206,9 @@ class TangoSource(DataSource):
 
         if not found:
             if Streams.log_error:
-                print >> Streams.log_error,  "TangoSource::setup() - Setting up lasts to long: %s" % xml
+                print >> Streams.log_error,  "TangoSource::setup() - Cannot connect to: %s \ndefined by %s" % (dv, xml)
             raise  DataSourceSetupError, \
-                "Setting up lasts to long: %s" % xml
+                "Cannot connect to: %s \ndefined by %s" % (dv, xml)
 
 
 
@@ -245,6 +246,7 @@ class TangoSource(DataSource):
                     try:
                         if self.__proxy.state() != PyTango.DevState.RUNNING:
                             found = True
+                        found = True
                     except:    
                         time.sleep(0.01)
                         found = False
