@@ -328,6 +328,9 @@ class EAttributeTest(unittest.TestCase):
 
 
 
+
+
+
     ## store default
     # \brief It tests default settings
     def test_store_Attributes_1d_single(self):
@@ -377,6 +380,10 @@ class EAttributeTest(unittest.TestCase):
 
         self._nxFile.close()
         os.remove(self._fname) 
+
+ 
+
+
 
  
 
@@ -822,7 +829,7 @@ class EAttributeTest(unittest.TestCase):
 
         for k in attrs.keys():
             if attrs[k][2] == 'string':
-                "writing multi-dimensional string is not supported by pninx"
+                "writing multi-dimensional string is not supported by pniio"
                 continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
@@ -979,6 +986,93 @@ class EAttributeTest(unittest.TestCase):
                             else Converters.toBool(attrs[k][0]), 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[0,0]}
+            ea[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(0)),at.value)
+                
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value ) <= attrs[k][3])
+            else: 
+                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
+
+
+        for k in attrs.keys():
+#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])>3 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_0d_single(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "datetime":["12:34:34","NX_DATE_TIME", "string"],
+            "iso8601":["12:34:34","ISO8601", "string"],
+            "int":[-123,"NX_INT", "int64"],
+            "int8":[12,"NX_INT8", "int8"],
+            "int16":[-123,"NX_INT16", "int16"],
+            "int32":[12345,"NX_INT32", "int32"],
+            "int64":[-12345,"NX_INT64", "int64"],
+            "uint":[123,"NX_UINT", "uint64"],
+            "uint8":[12,"NX_UINT8", "uint8"],
+            "uint16":[123,"NX_UINT16", "uint16"],
+            "uint32":[12345,"NX_UINT32", "uint32"],
+            "uint64":[12345,"NX_UINT64", "uint64"],
+            "float":[-12.345,"NX_FLOAT", "float64",1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER", "float64",1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool"],
+            "bool2":["FaLse","NX_BOOLEAN", "bool"],
+            "bool3":["false","NX_BOOLEAN", "bool"],
+            "bool4":["true","NX_BOOLEAN", "bool"]
+            }
+            
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        for k in attrs.keys():
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '')
+            ds = TestDataSource()
+            ds.valid = True
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else Converters.toBool(attrs[k][0]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[1,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
 
@@ -1393,9 +1487,9 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pninx')
+                                'Storing multi-dimension string attributes not supported by pniio')
 
         self._nxFile.close()
  
@@ -1500,9 +1594,9 @@ class EAttributeTest(unittest.TestCase):
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pninx')
+                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)
@@ -1608,10 +1702,10 @@ class EAttributeTest(unittest.TestCase):
                 self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                              attrs[k][4] if len(attrs[k])>4 else 0)
             else:
-                self.assertEqual(ea[k].error[0], 
-                                 'WARNING: Data for %s on Test DataSource not found' % k)
+                self.assertEqual(ea[k].error[0],
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
                 self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pninx')
+                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)

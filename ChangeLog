@@ -1,6 +1,11 @@
+2013-06-27 Jan Kotanski <jankotan@gmail.com>
+	* changing error messages
+	* adding tests for string attribute
+	* tagged as 1.1.7
+
 2013-06-24 Jan Kotanski <jankotan@gmail.com>
 	* status fixes for writing XMLSettings
-	* fixes for writing of string attribute 
+	* fixes for writing of string attribute
 	* tagged as 1.1.6
 
 2013-05-30 Jan Kotanski <jankotan@gmail.com>

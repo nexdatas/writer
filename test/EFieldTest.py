@@ -2276,12 +2276,12 @@ class EFieldTest(unittest.TestCase):
         ds.valid = True
         self.assertEqual(el.run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object on Test DataSource not found')
+        self.assertEqual(el.error[0], 'Data for unnamed object not found. DATASOURCE:Test DataSource')
         self.assertEqual(el.error[1], 'PNI Object not created')            
         ds.valid = False
         self.assertEqual(el.run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-        self.assertEqual(el.error[0], 'WARNING: Data for unnamed object on Test DataSource not found')
+        self.assertEqual(el.error[0], 'Data for unnamed object not found. DATASOURCE:Test DataSource')
         self.assertEqual(el.error[1], 'Data without value')            
         self._nxFile.close()
         os.remove(self._fname)
@@ -2605,7 +2605,7 @@ class EFieldTest(unittest.TestCase):
                                                       )
             
             else:
-                self.assertEqual(el[k].error[0], 'WARNING: Data for %s on Test DataSource not found' % k)
+                self.assertEqual(el[k].error[0], 'Data for %s on Test DataSource not found' % k)
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -3106,7 +3106,7 @@ class EFieldTest(unittest.TestCase):
                                                    attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
                                                    )
             else:
-                self.assertEqual(el[k].error[0], "WARNING: Data for %s on Test DataSource not found" % k)
+                self.assertEqual(el[k].error[0], "Data for %s on Test DataSource not found" % k)
             
             
         self._nxFile.close()

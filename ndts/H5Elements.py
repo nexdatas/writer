@@ -148,16 +148,25 @@ class FElement(Element):
                     shape.insert(exDim-1,0)    
             except:
                 val = ("".join(self.content)).strip().encode()   
+                found = False
                 if self.source and self.source.isValid():
-                    dh = DataHolder(**self.source.getData())
-                    shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)
-                elif val:
+                    data = self.source.getData()
+
+                    if isinstance(data, dict):                        
+                        dh = DataHolder(**data)
+                        shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)
+                        if shape is not None:
+                            found = True
+                if val and not found:
                     shape = self.__fetchShape(val,rank)
-                else:
-                    if Streams.log_error:
-                        print >> Streams.log_error,\
-                            "FElement::_findShape() - Wrongly defined shape"
-                    raise XMLSettingSyntaxError, "Wrongly defined shape"
+                    if shape is not None:
+                        found = True
+                    
+                if not found:
+                    nm = "unnamed"
+                    if "name" in self._tagAttrs.keys():
+                        nm = self._tagAttrs["name"] + " "
+                    raise XMLSettingSyntaxError, "Wrongly defined %sshape: %s"% (nm, str(self.source) if self.source else val) 
                 
                 
         elif extraD:            
@@ -169,9 +178,11 @@ class FElement(Element):
     ## creates the error message
     # \param exceptionMessage additional message of exception
     def setMessage(self, exceptionMessage=None):
-        if hasattr(self.h5Object, "name"):
+        if hasattr(self.h5Object, "path"):
+            name = self.h5Object.path
+        elif hasattr(self.h5Object, "name"):
             name = self.h5Object.name
-        else:
+        else:    
             name = "unnamed object"
         if self.source:
             dsource = str(self.source)
@@ -179,7 +190,7 @@ class FElement(Element):
             dsource = "unknown datasource"
             
             
-        message = ("WARNING: Data for %s on %s not found" % (name, dsource), exceptionMessage )
+        message = ("Data for %s not found. DATASOURCE:%s" % (name, dsource), exceptionMessage )
         return message
 
 
@@ -377,7 +388,7 @@ class EField(FElementWithAttr):
                 if Streams.log_error:
                     print >> Streams.log_error,\
                         "FElement::__getShape() - Shape of %s cannot be found  " % self._tagAttrs["name"]
-                raise
+                raise XMLSettingSyntaxError, "Wrongly defined %sshape: %s"% (self._tagAttrs["name"] + " " , str(self.source)) 
             
 
     ## creates H5 object
@@ -541,8 +552,8 @@ class EField(FElementWithAttr):
                     except:    
                         if Streams.log_error:
                             print >> Streams.log_error,\
-                                "EField::__writedata() - Storing one-dimension single fields not supported by pninx"
-                        raise Exception("Storing one-dimension single fields not supported by pninx")
+                                "EField::__writedata() - Storing one-dimension single fields not supported by pniio"
+                        raise Exception("Storing one-dimension single fields not supported by pniio")
             else:
                 self.h5Object.write(sts)
 
@@ -579,8 +590,8 @@ class EField(FElementWithAttr):
             except:    
                 if Streams.log_error:
                     print >> Streams.log_error,\
-                        "EField::__writedata() - Storing two-dimension single fields not supported by pninx"
-                raise Exception("Storing two-dimension single fields not supported by pninx")
+                        "EField::__writedata() - Storing two-dimension single fields not supported by pniio"
+                raise Exception("Storing two-dimension single fields not supported by pniio")
 
 
     ## writes growing scalar data
@@ -614,7 +625,7 @@ class EField(FElementWithAttr):
     # \param dh data holder
     def __writeSpectrumGrowingData(self, dh):
 
-        # way around for a bug in pninx
+        # way around for a bug in pniio
 
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
@@ -912,7 +923,6 @@ class EAttribute(FElement):
                 shape = self._findShape(self.rank, self.lengths)
             else:
                 shape = self._findShape(self.rank, self.lengths, extends= True)
-                
             val = ("".join(self.content)).strip().encode()   
             if not shape:
                 self._last.tagAttributes[self.name] = (tp, val)
@@ -934,7 +944,7 @@ class EAttribute(FElement):
                 if self.source:
                     dt = self.source.getData()
                     dh = None
-#                    print "dt", dt
+#                    print "dt", dt, self.h5Object.shape
                     if dt:
                         dh = DataHolder(**dt)
 #                        print "VAL", dh.value, type(dh.value)
@@ -958,13 +968,14 @@ class EAttribute(FElement):
                                 self.h5Object.value = arr
         
                         else:
-                            ## pninx does not support this case
+                            ## pniio does not support this case
+#                                print "ARR", arr
                             self.h5Object.value = arr
-#                            self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
+#                                self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
                             if Streams.log_error:
                                 print >> Streams.log_error,\
-                                    "EAttribute::run() - Storing multi-dimension string attributes not supported by pninx"
-                            raise Exception("Storing multi-dimension string attributes not supported by pninx")
+                                    "EAttribute::run() - Storing multi-dimension string attributes not supported by pniio"
+                            raise Exception("Storing multi-dimension string attributes not supported by pniio")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print >> sys.stderr , "Group::run() - %s " % message[0]

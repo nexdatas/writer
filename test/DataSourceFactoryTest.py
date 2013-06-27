@@ -201,8 +201,8 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(type(ds._last.source),DataSources.ClientSource)
         self.assertEqual(ds._last.source.name,name)
         self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.__str__(), " Client record %s from JSON: %s or %s " 
-                         % (name,None,None))
+        self.assertEqual(ds._last.source.__str__(), " CLIENT record %s" 
+                         % (name))
         self.assertTrue(not hasattr(ds._last,"tagAttributes"))
 
 
@@ -224,8 +224,8 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(type(ds._last.source),DataSources.ClientSource)
         self.assertEqual(ds._last.source.name,name)
         self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.__str__(), " Client record %s from JSON: %s or %s " 
-                         % (name,None,None)) 
+        self.assertEqual(ds._last.source.__str__(), " CLIENT record %s" 
+                         % (name)) 
         self.assertEqual(len(ds._last.tagAttributes),1)
         self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
 
@@ -251,8 +251,8 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(type(ds._last.source),DataSources.ClientSource)
         self.assertEqual(ds._last.source.name,name)
         self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.__str__(), " Client record %s from JSON: %s or %s " 
-                         % (name, None, str(gjson)))
+        self.assertEqual(ds._last.source.__str__(), " CLIENT record %s" 
+                         % (name))
         self.assertEqual(len(ds._last.tagAttributes),1)
         self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
 
