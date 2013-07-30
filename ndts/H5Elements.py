@@ -701,7 +701,7 @@ class EField(FElementWithAttr):
             raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
 
     ## grows the h5 field    
-    # \brief Ir runs grow command of h5Object with grows-1 parameter
+    # \brief Ir runs the grow command of h5Object with grows-1 parameter
     def __grow(self):
         if self.grows and self.grows>0 and hasattr(self.h5Object,"grow"):
             self.h5Object.grow(self.grows-1)
