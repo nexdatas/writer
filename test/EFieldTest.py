@@ -2384,6 +2384,104 @@ class EFieldTest(unittest.TestCase):
         os.remove(self._fname)
 
 
+
+
+    ## run method tests
+    # \brief It tests default settings
+    def test_run_noX_0d_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["","NX_CHAR", "string"],
+            "string2":["","NX_CHAR", ""],
+            "datetime":["","NX_DATE_TIME", "string"],
+            "iso8601":["","ISO8601", "string"],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64"],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8"],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64"],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64",1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[False, "NX_BOOLEAN", "bool"],
+            }
+
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+        el = {} 
+        quin = 0
+        quot = 0
+
+        for k in attrs: 
+            quot = (quot + 1) %4
+            grow = quot-1  if quot else  None
+            quin = (quin+1) % 5 
+
+
+            stt = [None,'INIT','FINAL','POSTRUN'][quot]
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+
+
+            el[k].strategy = stt
+            ds = TestDataSource()
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            el[k].source = ds
+            el[k].grows = grow
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].rank, "0")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+            self.assertEqual(el[k].error, None)
+
+            el[k].store()
+#            self.assertEqual(el[k].store(), None)
+            self.assertEqual(el[k].markFailed(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][3] if len(attrs[k])> 3 else 0,
+                                                attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+            else:
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                          attrs[k][1], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"}
+                                          )
+            self.assertEqual(el[k].error, None)
+            
+            
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
     ## run method tests
     # \brief It tests default settings
     def test_run_X_0d(self):
@@ -2479,6 +2577,109 @@ class EFieldTest(unittest.TestCase):
                                       attrs[k][1], attrs[k][0], 
                                       attrs[k][3] if len(attrs[k])> 3 else 0,
                                       attrs = {"type":attrs[k][1],"units":"m"}
+                                      )
+            
+            self.assertEqual(el[k].error, None)
+            
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+    ## run method tests
+    # \brief It tests default settings
+    def test_run_X_0d_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["","NX_CHAR", "string"],
+            "string2":["","NX_CHAR", ""],
+            "datetime":["","NX_DATE_TIME", "string"],
+            "iso8601":["","ISO8601", "string"],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64"],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8"],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64"],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64",1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'number')).max,"NX_NUMBER", "float64",1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool"],
+            }
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+        el = {} 
+        quin = 0
+        quot = 0
+        steps = 10
+
+        for k in attrs: 
+            quot = (quot + 1) %4
+            grow = 1
+            quin = (quin+1) % 5 
+
+
+            stt = 'STEP'
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+            if attrs[k][2] == "string":
+                attrs[k][0] =  [ attrs[k][0] for r in range(steps) ]
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [ attrs[k][0] for r in range(steps) ] 
+            else:    
+                if k == 'bool':
+                    attrs[k][0] =  [ False  for c in range(steps) ]
+                else:
+                    attrs[k][0] =  [ ("false")  
+                                     for c in range(steps) ]
+
+
+
+            el[k].strategy = stt
+            ds = TestDataSource()
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][0], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+            el[k].source = ds
+            el[k].grows = grow
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].rank, "0")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+            el[k].store()
+#            self.assertEqual(el[k].store(), None)
+            for i in range(steps):
+                ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][i], 
+                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                self.assertEqual(el[k].h5Object.grow(grow-1 if grow > 0 else 0), None)
+                self.assertEqual(el[k].markFailed(), None)
+            self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                      attrs[k][1], attrs[k][0], 
+                                      attrs[k][3] if len(attrs[k])> 3 else 0,
+                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"}
                                       )
             
             self.assertEqual(el[k].error, None)
@@ -2602,6 +2803,134 @@ class EFieldTest(unittest.TestCase):
                                                       attrs[k][1], attrs[k][0], 
                                                       attrs[k][3] if len(attrs[k])> 3 else 0, 
                                                       attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                                      )
+            
+            else:
+                self.assertEqual(el[k].error[0], 'Data for %s on Test DataSource not found' % k)
+            
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+
+
+
+    ## run method tests
+    # \brief It tests default settings
+    def test_run_noX_1d_single_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+
+        attrs = {
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["false","NX_BOOLEAN", "bool", (1,)]
+            }
+
+
+        supp = ["string", "datetime", "iso8601"]
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+        el = {} 
+        quin = 0
+        quot = 0
+
+        for k in attrs: 
+            quot = (quot + 1) %4
+            grow = None
+            quin = (quin+1) % 5 
+
+
+            if attrs[k][2] == "string":
+                mlen = [1,self.__rnd.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]  ] 
+            elif attrs[k][2] != "bool":
+                mlen = [1,self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [ attrs[k][0]  ] 
+            else:    
+                mlen = [1]
+                if k == 'bool':
+                    attrs[k][0] =  [ False ]
+                else:
+                    attrs[k][0] =  [ ( "false")  
+                                     ]
+
+            attrs[k][3] =  (mlen[0],)
+
+
+
+            stt = [None,'INIT','FINAL','POSTRUN'][quot]
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+
+
+            el[k].strategy = stt
+            ds = TestDataSource()
+            ds.value = {"format":NTP.rTf[1], 
+                        "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0])]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],0]}
+            el[k].source = ds
+            el[k].rank = "1"
+            el[k].grows = grow
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].rank, "1")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+            el[k].store()
+#            self.assertEqual(el[k].store(), None)
+            self.assertEqual(el[k].markFailed(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+            if PNIIO or k in supp:
+                self.assertEqual(el[k].error, None)
+                if stt != 'POSTRUN':
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                      attrs[k][1], attrs[k][0],
+                                                      attrs[k][3] if len(attrs[k])> 3 else 0,
+                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+                else:
+                    self.assertEqual(el[k].grows, None)
+                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                      attrs[k][1], attrs[k][0], 
+                                                      attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                                      attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"}
                                                       )
             
             else:

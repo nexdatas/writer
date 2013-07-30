@@ -344,9 +344,10 @@ class Checker(object):
         if not isinstance(values[0], str):
             value = cnt.read()
             for i in range(len(value)):
-                #            print values[i].__repr__(),  value[i].__repr__(), values[i] - value[i]
+#                print values[i].__repr__(),  value[i].__repr__()
+#                print values[i].__repr__(),  value[i].__repr__(), value[i] - values[i] 
                 if self._isNumeric(value[i]):
-                    self._tc.assertTrue(abs(values[i] - value[i]) <= error)
+                    self._tc.assertTrue(abs(value[i] - values[i] ) <= error)
                 else:
                     self._tc.assertEqual(values[i],value[i])
         for i in range(len(values)):

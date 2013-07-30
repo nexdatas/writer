@@ -750,6 +750,53 @@ class EField(FElementWithAttr):
 
 #            pass
 
+    ## fills object with maximum value            
+    # \brief It fills object or an extend part of object by default value 
+    def __fillMax(self):
+        shape = list(self.h5Object.shape)
+        nptype = self.h5Object.dtype
+        value = ''
+
+        if self.grows:
+            shape.pop(self.grows-1)
+
+        if nptype != "string":
+            try:
+                value = numpy.iinfo(getattr(numpy, nptype)).max
+            except:
+                try:
+                    value = numpy.finfo(getattr(numpy, nptype)).max
+                except:    
+                    value = 0
+        else:
+            nptype = "str"
+
+        if shape and  len(shape) > 0  and shape[0] > 1:
+            arr = np.empty(shape, dtype=nptype)
+            arr.fill(value)
+        else:
+            arr = value
+            
+        if not self.grows:
+            self.h5Object.write(arr)
+        elif self.grows == 1:
+            if not shape:
+                self.h5Object[-1] = arr 
+            else:
+                self.h5Object[-1,...] = arr
+        elif self.grows == 2:
+            if len(shape) == 1:
+                self.h5Object[:,-1] = arr 
+            else:
+                self.h5Object[:,-1,...] = arr 
+        elif self.grows == 3:
+            if len(shape) == 2:
+                self.h5Object[:,:,-1] = arr 
+            else:
+                self.h5Object[:,:,-1,...] = arr 
+            
+
+
     ## marks the field as failed
     # \brief It marks the field as failed            
     def markFailed(self):          
@@ -757,8 +804,8 @@ class EField(FElementWithAttr):
             self.h5Object.attr("nexdatas_canfail","string").value = "FAILED"
             if Streams.log_info:
                 print >> Streams.log_info, "EField::markFailed() - %s marked as failed" % (self.h5Object.name) 
-
-
+            self.__fillMax()
+                
 ## group H5 tag element        
 class EGroup(FElementWithAttr):        
     ## constructor
@@ -982,6 +1029,34 @@ class EAttribute(FElement):
                     if Streams.log_error:
                         print >> Streams.log_error, "Group::run() - %s  " % str(self.error)
                 print >> sys.stderr, "Group::run() - ERROR", str(self.error)
+
+
+    ## fills object with maximum value            
+    # \brief It fills object or an extend part of object by default value 
+    def __fillMax(self):
+        shape = list(self.h5Object.shape)
+        nptype = self.h5Object.dtype
+        value = ''
+
+
+        if nptype != "string":
+            try:
+                value = numpy.iinfo(getattr(numpy, nptype)).max
+            except:
+                try:
+                    value = numpy.finfo(getattr(numpy, nptype)).max
+                except:    
+                    value = 0
+        else:
+            nptype = "str"
+
+        if shape and  len(shape) > 0  and shape[0] > 1:
+            arr = np.empty(shape, dtype=nptype)
+            arr.fill(value)
+        else:
+            arr = value
+            
+        self.h5Object.write(arr)
             
 
     ## marks the field as failed
@@ -993,7 +1068,7 @@ class EAttribute(FElement):
             if Streams.log_info:
                 print >> Streams.log_info, "EAttribute::markFailed() - %s of %s marked as failed" % (self.h5Object.name, field.name)
                 print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
-
+            self.__fillMax()    
 
 ## file H5 element        
 class EFile(FElement):        
