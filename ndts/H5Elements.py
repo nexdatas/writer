@@ -600,24 +600,18 @@ class EField(FElementWithAttr):
             
         arr = dh.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
-            self.h5Object.grow()
             self.h5Object[self.h5Object.shape[0]-1] = arr
         elif  len(self.h5Object.shape) == 2:
             if self.grows == 2:
-                self.h5Object.grow(1)
                 self.h5Object[:,self.h5Object.shape[0]-1] = arr
             else:
-                self.h5Object.grow()
                 self.h5Object[self.h5Object.shape[0]-1,:] = arr
         elif  len(self.h5Object.shape) == 3:
             if self.grows == 3:
-                self.h5Object.grow(2)
                 self.h5Object[:,:,self.h5Object.shape[0]-1] = arr
             if self.grows == 2:
-                self.h5Object.grow(1)
                 self.h5Object[:,self.h5Object.shape[0]-1,:] = arr
             else:
-                self.h5Object.grow()
                 self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
 
 
@@ -631,7 +625,6 @@ class EField(FElementWithAttr):
         if self.grows == 1:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                self.h5Object.grow()
                 if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0]-1,:] = arr
                 if len(self.h5Object.shape) == 2:
@@ -639,7 +632,6 @@ class EField(FElementWithAttr):
                 else:                      
                     self.h5Object[self.h5Object.shape[0]-1] = arr
             else:
-                self.h5Object.grow()
                 if len(self.h5Object.shape) == 3:
                     self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
                 elif  len(self.h5Object.shape) == 2:
@@ -653,18 +645,14 @@ class EField(FElementWithAttr):
         else:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                self.h5Object.grow(1)
                 self.h5Object[:,self.h5Object.shape[1]-1] = arr
             else:
                 if len(self.h5Object.shape) == 3: 
                     if self.grows == 2:
-                        self.h5Object.grow(1)
                         self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
                     else:
-                        self.h5Object.grow(2)
                         self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
                 else:
-                    self.h5Object.grow(1)
                     self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
 
@@ -674,7 +662,6 @@ class EField(FElementWithAttr):
 
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
-            self.h5Object.grow()
             if len(self.h5Object.shape) == 3:
                 self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
             elif len(self.h5Object.shape) == 2:
@@ -689,13 +676,11 @@ class EField(FElementWithAttr):
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0]-1] = arr[0][0]
         elif self.grows == 2:
-            self.h5Object.grow(1)
             if len(self.h5Object.shape) == 3:
                 self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
             elif len(self.h5Object.shape) == 2:
                 self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
         else:
-            self.h5Object.grow(2)
             self.h5Object[:,:,self.h5Object.shape[2]-1] = arr        
 
 
@@ -715,12 +700,19 @@ class EField(FElementWithAttr):
                     "Case with %s format not supported " % str(dh.format).split('.')[-1] 
             raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
 
+    ## grows the h5 field    
+    # \brief Ir runs grow command of h5Object with grows-1 parameter
+    def __grow(self):
+        if self.grows and self.grows>0 and hasattr(self.h5Object,"grow"):
+            self.h5Object.grow(self.grows-1)
+                
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
         try:
             if self.source:
+                self.__grow()
                 dt = self.source.getData()
                 dh = None
                 if dt:
