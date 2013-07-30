@@ -604,17 +604,17 @@ class EField(FElementWithAttr):
             self.h5Object[self.h5Object.shape[0]-1] = arr
         elif  len(self.h5Object.shape) == 2:
             if self.grows == 2:
-                self.h5Object.grow()
+                self.h5Object.grow(1)
                 self.h5Object[:,self.h5Object.shape[0]-1] = arr
             else:
                 self.h5Object.grow()
                 self.h5Object[self.h5Object.shape[0]-1,:] = arr
         elif  len(self.h5Object.shape) == 3:
             if self.grows == 3:
-                self.h5Object.grow()
+                self.h5Object.grow(2)
                 self.h5Object[:,:,self.h5Object.shape[0]-1] = arr
             if self.grows == 2:
-                self.h5Object.grow()
+                self.h5Object.grow(1)
                 self.h5Object[:,self.h5Object.shape[0]-1,:] = arr
             else:
                 self.h5Object.grow()
