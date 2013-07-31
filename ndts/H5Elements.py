@@ -620,7 +620,6 @@ class EField(FElementWithAttr):
     def __writeSpectrumGrowingData(self, dh):
 
         # way around for a bug in pniio
-
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
             if isinstance(arr, numpy.ndarray) \
@@ -637,7 +636,7 @@ class EField(FElementWithAttr):
                 elif  len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0]-1,:] = arr
                 else:
-                    if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
+                    if hasattr(arr,"__iter__") and type(arr).__name__!= 'str' and len(arr) == 1:
                         self.h5Object[self.h5Object.shape[0]-1] = arr[0]
                     else:
                         self.h5Object[self.h5Object.shape[0]-1] = arr
@@ -760,7 +759,9 @@ class EField(FElementWithAttr):
         if self.grows:
             shape.pop(self.grows-1)
 
-        if nptype != "string":
+        if nptype == "bool":
+            value = False
+        elif nptype != "string":
             try:
                 value = numpy.iinfo(getattr(numpy, nptype)).max
             except:
@@ -771,29 +772,25 @@ class EField(FElementWithAttr):
         else:
             nptype = "str"
 
+        format = 'SCALAR'
         if shape and  len(shape) > 0  and shape[0] > 1:
-            arr = np.empty(shape, dtype=nptype)
+            arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
+            if len(shape) == 1:
+                format = 'SPECTRUM'
+            else:
+                format = 'IMAGE'
         else:
             arr = value
-            
-        if not self.grows:
-            self.h5Object.write(arr)
-        elif self.grows == 1:
-            if not shape:
-                self.h5Object[-1] = arr 
-            else:
-                self.h5Object[-1,...] = arr
-        elif self.grows == 2:
-            if len(shape) == 1:
-                self.h5Object[:,-1] = arr 
-            else:
-                self.h5Object[:,-1,...] = arr 
-        elif self.grows == 3:
-            if len(shape) == 2:
-                self.h5Object[:,:,-1] = arr 
-            else:
-                self.h5Object[:,:,-1,...] = arr 
+
+        dh = DataHolder(format,arr,NTP.npTt[self.h5Object.dtype],shape)    
+        
+        
+        if not self.__extraD:
+            self.__writeData(dh)
+        else:
+            self.__writeGrowingData(dh)
+
             
 
 
@@ -1051,7 +1048,7 @@ class EAttribute(FElement):
             nptype = "str"
 
         if shape and  len(shape) > 0  and shape[0] > 1:
-            arr = np.empty(shape, dtype=nptype)
+            arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
         else:
             arr = value

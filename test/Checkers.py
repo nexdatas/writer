@@ -571,7 +571,7 @@ class Checker(object):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(Types.Converters.toBool(lvalues[i][j]),cnt[i,j])
                     else:
-                        self._tc.assertTrue(abs(lvalues[i][j] - cnt[i,j]) <= error)
+                        self._tc.assertTrue(abs(cnt[i,j] - lvalues[i][j] ) <= error)
                 else:
                     self._tc.assertEqual(lvalues[i][j], cnt[i,j])
             
