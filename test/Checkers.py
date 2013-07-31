@@ -345,7 +345,7 @@ class Checker(object):
             value = cnt.read()
             for i in range(len(value)):
 #                print values[i].__repr__(),  value[i].__repr__()
-#                print values[i].__repr__(),  value[i].__repr__(), value[i] - values[i] 
+#                print values[i].__repr__(),  value[i].__repr__(), value[i] - values[i] ,error
                 if self._isNumeric(value[i]):
                     self._tc.assertTrue(abs(value[i] - values[i] ) <= error)
                 else:
@@ -893,7 +893,8 @@ class Checker(object):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
                     else:
-                        self._tc.assertTrue(abs(values[i][j] - cnt[i,j]) <= error)
+#                        print "CK",cnt[i,j],  values[i][j],cnt[i,j] - values[i][j]
+                        self._tc.assertTrue(abs(cnt[i,j] - values[i][j] ) <= error)
                 else:
                     self._tc.assertEqual(values[i][j], cnt[i,j])
             
