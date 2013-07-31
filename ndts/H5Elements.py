@@ -1055,8 +1055,14 @@ class EAttribute(FElement):
             arr.fill(value)
         else:
             arr = value
+
+
+        if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
+            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1 and type(arr).__name__ != "str":
+                self.h5Object.value = arr[0]
+            else:
+                self.h5Object.value = arr
             
-        self.h5Object.write(arr)
             
 
     ## marks the field as failed
