@@ -94,7 +94,8 @@ class EFieldTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-        self.__seed =  301263149747468622670176785428789875333        
+#        self.__seed =241361343400098333007607831038323262554
+            
         self.__rnd = random.Random(self.__seed)
 
 
@@ -2595,26 +2596,27 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-            "string":["","NX_CHAR", "string"],
-            "string2":["","NX_CHAR", ""],
-            "datetime":["","NX_DATE_TIME", "string"],
-            "iso8601":["","ISO8601", "string"],
-            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64"],
-            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8"],
-            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
-            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
-            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64"],
-            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
-            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
-            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
-            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64",1.e-14],
-            "number":[numpy.finfo(getattr(numpy, 'number')).max,"NX_NUMBER", "float64",1.e-14],
-            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
-            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64",1.e-14],
-            "bool":[False,"NX_BOOLEAN", "bool"],
+            "string":["My string","NX_CHAR", "string",""],
+            "string2":["My string","NX_CHAR", "",""],
+            "datetime":["12:34:34","NX_DATE_TIME", "string",""],
+            "iso8601":["12:34:34","ISO8601", "string",""],
+            "int":[-132,"NX_INT", "int64",numpy.iinfo(getattr(numpy, 'int')).max],
+            "int8":[13,"NX_INT8", "int8",numpy.iinfo(getattr(numpy, 'int8')).max],
+            "int16":[-223,"NX_INT16", "int16",numpy.iinfo(getattr(numpy, 'int16')).max],
+            "int32":[13235,"NX_INT32", "int32",numpy.iinfo(getattr(numpy, 'int32')).max],
+            "int64":[-12425,"NX_INT64", "int64",numpy.iinfo(getattr(numpy, 'int64')).max],
+            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'uint')).max],
+            "uint8":[65,"NX_UINT8", "uint8",numpy.iinfo(getattr(numpy, 'uint8')).max],
+            "uint16":[453,"NX_UINT16", "uint16",numpy.iinfo(getattr(numpy, 'uint16')).max],
+            "uint32":[12235,"NX_UINT32", "uint32",numpy.iinfo(getattr(numpy, 'uint32')).max],
+            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "float":[-16.345,"NX_FLOAT", "float64",numpy.finfo(getattr(numpy, 'float')).max,1.e-14],
+            "number":[-2.345e+2,"NX_NUMBER", "float64",numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
+            "float32":[-4.355e-1,"NX_FLOAT32", "float32",numpy.finfo(getattr(numpy, 'float32')).max,1.e-5],
+            "float64":[-2.345,"NX_FLOAT64", "float64",numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", False],
             }
+
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
@@ -2637,15 +2639,11 @@ class EFieldTest(unittest.TestCase):
                 el[k] = EField( {"name":k, "units":"m"}, eFile)
                 
             if attrs[k][2] == "string":
-                attrs[k][0] =  [ attrs[k][0] for r in range(steps) ]
+                attrs[k][0] =  [ (attrs[k][0] if r%2 else attrs[k][3]) for r in range(steps) ]
             elif attrs[k][2] != "bool":
-                attrs[k][0] =  [ attrs[k][0] for r in range(steps) ] 
+                attrs[k][0] =  [ (attrs[k][0] if r%2 else attrs[k][3])for r in range(steps) ] 
             else:    
-                if k == 'bool':
-                    attrs[k][0] =  [ False  for c in range(steps) ]
-                else:
-                    attrs[k][0] =  [ ("false")  
-                                     for c in range(steps) ]
+                attrs[k][0] =  [(attrs[k][0] if r%2 else attrs[k][3])for r in range(steps)  ]
 
 
 
@@ -2674,11 +2672,15 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"format":NTP.rTf[0], "value":attrs[k][0][i], 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
-                self.assertEqual(el[k].h5Object.grow(grow-1 if grow > 0 else 0), None)
-                self.assertEqual(el[k].markFailed(), None)
+                if i%2:
+                    self.assertEqual(el[k].run(), None)
+                else:
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow > 0 else 0), None)
+                    self.assertEqual(el[k].markFailed(), None)
+
             self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                       attrs[k][1], attrs[k][0], 
-                                      attrs[k][3] if len(attrs[k])> 3 else 0,
+                                      attrs[k][4] if len(attrs[k])> 4 else 0,
                                       attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"}
                                       )
             
@@ -2988,9 +2990,7 @@ class EFieldTest(unittest.TestCase):
 
             stt = 'STEP'
 
-            if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1, 3)]  for r in range(steps)  ] 
-            elif attrs[k][2] != "bool":
+            if attrs[k][2] != "bool":
                 attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0, 3)]  for r in range(steps)  ] 
             else:    
                 if k == 'bool':
@@ -3089,27 +3089,27 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
-
         attrs = {
-            "string":["","NX_CHAR", "string" , (1,)],
-            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-            "iso8601":["","ISO8601", "string", (1,)],
-            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64", (1,)],
-            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
-            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
-            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
-            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
-            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
-            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
-            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
-            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
-            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+#            "string":["Mystring","NX_CHAR", "string" , (1,),""],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
+            "int":[-123,"NX_INT", "int64", (1,), numpy.iinfo(getattr(numpy, 'int')).max],
+            "int8":[12,"NX_INT8", "int8", (1,), numpy.iinfo(getattr(numpy, 'int8')).max],
+            "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
+            "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
+            "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint')).max],
+            "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
+            "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "float":[-12.345,"NX_FLOAT", "float64", (1,),numpy.finfo(getattr(numpy, 'float')).max,1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,),numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,),False],
             }
+
 
 
         self._nxFile = nx.create_file(self._fname, overwrite=True)
@@ -3128,16 +3128,8 @@ class EFieldTest(unittest.TestCase):
 
             stt = 'STEP'
 
-            if attrs[k][2] == "string":
-                attrs[k][0] =  [[ attrs[k][0]]  for r in range(steps)  ] 
-            elif attrs[k][2] != "bool":
-                attrs[k][0] =  [[ attrs[k][0]]  for r in range(steps)  ] 
-            else:    
-                attrs[k][0] =  [[ False] for r in range(steps)   ]
-
+            attrs[k][0] =  [ [(attrs[k][0] if r%2 else attrs[k][4])]  for r in range(steps)  ] 
             attrs[k][3] =  (1,)
-
-
 
             stt = 'STEP'
             if attrs[k][1]:
@@ -3152,7 +3144,7 @@ class EFieldTest(unittest.TestCase):
 
 
             ds.value = {"format":NTP.rTf[1], 
-                        "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0][0])]), 
+                        "value":attrs[k][0][0], 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
 
@@ -3181,13 +3173,17 @@ class EFieldTest(unittest.TestCase):
                                          else [Converters.toBool(attrs[k][0][i][0]) ]), 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
-                self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
-                self.assertEqual(el[k].markFailed(), None)
+                if i%2:
+                    
+                    self.assertEqual(el[k].run(), None)
+                else:
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
             if attrs[k][2] == "string":
                 val = [a[0] for a  in attrs[k][0]]
-                self._sc.checkStringSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                self._sc.checkSingleStringSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], val, 
                                             attrs = {"type":attrs[k][1], "units":"m", "nexdatas_canfail":"FAILED"}
                                             )
@@ -3199,7 +3195,7 @@ class EFieldTest(unittest.TestCase):
                     val = attrs[k][0]
                 self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], val, 
-                                            attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                            attrs[k][4] if len(attrs[k])> 4 else 0, 
                                             attrs = {"type":attrs[k][1], "units":"m", "nexdatas_canfail":"FAILED"}
                                             )
           

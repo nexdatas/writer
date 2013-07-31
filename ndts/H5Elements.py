@@ -327,6 +327,8 @@ class EField(FElementWithAttr):
         self.rate = 5
         ## compression shuffle
         self.shuffle = True
+        ## data format
+        self.__format = ''
 
     ## checks if it is growing in extra dimension
     # \brief It checks if it is growing in extra dimension and setup internal variables     
@@ -758,7 +760,7 @@ class EField(FElementWithAttr):
 
         if self.grows:
             shape.pop(self.grows-1)
-
+            
         if nptype == "bool":
             value = False
         elif nptype != "string":
@@ -772,8 +774,9 @@ class EField(FElementWithAttr):
         else:
             nptype = "str"
 
+            
         format = 'SCALAR'
-        if shape and  len(shape) > 0  and shape[0] > 1:
+        if shape and  len(shape) > 0  and shape[0] >= 1:
             arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
             if len(shape) == 1:
