@@ -1019,6 +1019,93 @@ class EAttributeTest(unittest.TestCase):
 
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_0d_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+
+
+        attrs = {
+            "string":["","NX_CHAR", "string"],
+            "datetime":["","NX_DATE_TIME", "string"],
+            "iso8601":["","ISO8601", "string"],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64"],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8"],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64"],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64",1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[False, "NX_BOOLEAN", "bool"],
+            }
+            
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        for k in attrs.keys():
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '')
+            ds = TestDataSource()
+            ds.valid = True
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else Converters.toBool(attrs[k][0]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[0,0]}
+            ea[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2] if attrs[k][2] else "string" )
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(0)),at.value)
+                
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value ) <= attrs[k][3])
+            else: 
+                self.assertEqual(at.value, '' if attrs[k][2] == 'string'  or not attrs[k][2] else 0)
+
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])>3 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
     ## constructor test
     # \brief It tests default settings
     def test_run_value_0d_single(self):
@@ -1093,6 +1180,92 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                          attrs[k][3] if len(attrs[k])>3 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_0d_single_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+            "string":["","NX_CHAR", "string"],
+            "datetime":["","NX_DATE_TIME", "string"],
+            "iso8601":["","ISO8601", "string"],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max,"NX_INT", "int64"],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8"],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64"],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64",1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64",1.e-14],
+            "bool":[False, "NX_BOOLEAN", "bool"],
+            }
+            
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        for k in attrs.keys():
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '')
+            ds = TestDataSource()
+            ds.valid = True
+            ds.value = {"format":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else Converters.toBool(attrs[k][0]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[1,0]}
+            ea[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2] if attrs[k][2] else "string")
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(0)),at.value)
+                
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at.value ) <= attrs[k][3])
+            else: 
+                self.assertEqual(at.value, '' if attrs[k][2] == 'string' or not attrs[k][2] else 0)
+
+
+        for k in attrs.keys():
+#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
             self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
@@ -1202,6 +1375,92 @@ class EAttributeTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
+    def test_run_value_1d_single_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+        attrs = {
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max, "NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        for k in attrs.keys():
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            if attrs[k][2] and attrs[k][2] != 'string' :
+                el[k].tagAttributes[k] = (attrs[k][1], '',(1,))
+            else:
+                el[k].tagAttributes[k] = (attrs[k][1], '',)
+            ds = TestDataSource()
+            ds.valid = True
+            ds.value = {"format":NTP.rTf[1], "value":[attrs[k][0]] if attrs[k][2] != "bool"\
+                            else [Converters.toBool(attrs[k][0])], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[1,0]}
+            ea[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            self.assertEqual(ea[k].markFailed(),None)
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+#            self.assertEqual(ea[k].h5Object.shape,(1,))
+            if attrs[k][2] and attrs[k][2] != 'string' :
+                self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+                                                attrs[k][5] if len(attrs[k])>5 else 0)
+            else:
+                self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                                attrs[k][5] if len(attrs[k])>5 else 0)
+                
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
     def test_run_value_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -1288,6 +1547,100 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][4] if len(attrs[k])>4 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_1d_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+#            "string":["","NX_CHAR", "string" , (1,)],
+#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max, "NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+
+            if attrs[k][2] != "bool":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                attrs[k][0] =  [attrs[k][0]  for c in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(1, 10)]
+                if k == 'bool':
+                    attrs[k][0] =  [ False  for c in range(mlen[0]) ]
+
+            attrs[k][3] =  (mlen[0],)
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],))
+            ds = TestDataSource()
+            ds.valid = True
+
+            ds.value = {"format":NTP.rTf[1], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [Converters.toBool(c ) for c in attrs[k][0]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],0]}
+            ea[k].source = ds
+            el[k].strategy = stt
+            
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                                attrs[k][5] if len(attrs[k])>5 else 0)
 
         self._nxFile.close()
  
@@ -1396,6 +1749,91 @@ class EAttributeTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
+    def test_run_value_2d_single_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        attrs = {
+#            "string":["","NX_CHAR", "string" , (1,)],
+#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max, "NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            }
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+
+
+            attrs[k][0] =  [[ attrs[k][0] ] ]
+                    
+            attrs[k][3] =  (1,1)
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                                attrs[k][5] if len(attrs[k])>5 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
     def test_run_value_2d_double(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -1494,6 +1932,101 @@ class EAttributeTest(unittest.TestCase):
         self._nxFile.close()
  
         os.remove(self._fname)
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d_double_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+#            "string":["","NX_CHAR", "string" , (1,)],
+#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max, "NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            }
+
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+            attrs[k][0] =  [[ attrs[k][0]for c in range(self.__rnd.randint(2, 10))  ] ]
+
+            attrs[k][3] =  (1,len(attrs[k][0][0]))
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            if ea[k].h5Object.dtype != 'string':
+                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                             attrs[k][5] if len(attrs[k])>5 else 0)
+            else:
+                self.assertEqual(ea[k].error[0], 
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+                self.assertEqual(ea[k].error[1], 
+                                'Storing multi-dimension string attributes not supported by pniio')
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
 
 
 
@@ -1607,6 +2140,104 @@ class EAttributeTest(unittest.TestCase):
  
 
 
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d_double_2_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        
+        attrs = {
+#            "string":["","NX_CHAR", "string" , (1,)],
+#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max, "NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            }
+
+
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+            attrs[k][0] =  [[ attrs[k][0]]  for c in range(self.__rnd.randint(2, 10))   ]
+                    
+            attrs[k][3] =  (len(attrs[k][0]),1)
+
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            print 
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c[0])] for c in attrs[k][0]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+            if ea[k].h5Object.dtype != 'string':
+                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                             attrs[k][5] if len(attrs[k])>5 else 0)
+            else:
+                self.assertEqual(ea[k].error[0], 
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+                self.assertEqual(ea[k].error[1], 
+                                'Storing multi-dimension string attributes not supported by pniio')
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+ 
+
+
     ## constructor test
     # \brief It tests default settings
     def test_run_value_2d(self):
@@ -1701,6 +2332,99 @@ class EAttributeTest(unittest.TestCase):
             if ea[k].h5Object.dtype != 'string':
                 self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                              attrs[k][4] if len(attrs[k])>4 else 0)
+            else:
+                self.assertEqual(ea[k].error[0],
+                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+                self.assertEqual(ea[k].error[1], 
+                                'Storing multi-dimension string attributes not supported by pniio')
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_run_value_2d_markFailed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        attrs = {
+#            "string":["","NX_CHAR", "string" , (1,)],
+#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["","ISO8601", "string", (1,)],
+            "int":[numpy.iinfo(getattr(numpy, 'int')).max, "NX_INT", "int64", (1,)],
+            "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
+            "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
+            "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
+            "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'uint')).max,"NX_UINT", "uint64", (1,)],
+            "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
+            "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
+            "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "float":[numpy.finfo(getattr(numpy, 'float')).max,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[False,"NX_BOOLEAN", "bool", (1,)],
+            }
+            
+            
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        ea = {}
+        quin = 0
+        for k in attrs.keys():
+
+            quin = (quin + 1) %4
+            stt = [None,'INIT','STEP','FINAL','POSTRUN'][quin]
+
+            mlen = self.__rnd.randint(2, 10)
+            attrs[k][0] =  [[ attrs[k][0] for c in range(mlen)  ] for c2 in range(self.__rnd.randint(2, 10))  ]
+
+            attrs[k][3] =  (len(attrs[k][0]),len(attrs[k][0][0]))
+
+
+
+            el[k] = EField( {"name":k,  "units":"m"}, eFile)
+            el[k].content =  ["Test"]
+            ea[k] = EAttribute({"name":k,"type":attrs[k][1]}, el[k])
+            ea[k].name = k
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '',(attrs[k][3][0],attrs[k][3][1]))
+            ds = TestDataSource()
+            ds.valid = True
+
+            print 
+            ds.value = {"format":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
+                            else [[Converters.toBool(c) for c in row] for row in attrs[k][0]], 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
+            ea[k].source = ds
+            el[k].strategy = stt
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+
+        for k in attrs.keys():
+            self.assertEqual(ea[k].name, k)
+            self.assertEqual(ea[k].h5Object, None)
+            ea[k].markFailed()
+            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(ea[k].h5Object.name,k)
+
+            if ea[k].h5Object.dtype != 'string':
+                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                             attrs[k][5] if len(attrs[k])>5 else 0)
             else:
                 self.assertEqual(ea[k].error[0],
                                  'Data for %s not found. DATASOURCE:Test DataSource' %k)

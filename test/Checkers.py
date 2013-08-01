@@ -243,7 +243,8 @@ class Checker(object):
                 if dtype == "bool":
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt.value[i])
                 else:
-                    self._tc.assertTrue(abs(values[i] - cnt.value[i]) <= error)
+#                    print "CMP",cnt.value[i] , values[i] ,cnt.value[i] - values[i] , error
+                    self._tc.assertTrue(abs(cnt.value[i] - values[i] ) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt.value[i])
             
@@ -276,7 +277,7 @@ class Checker(object):
                     if dtype == "bool":
                         self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt.value[i,j])
                     else:
-                        self._tc.assertTrue(abs(values[i][j] - cnt.value[i,j]) <= error)
+                        self._tc.assertTrue(abs(cnt.value[i,j] -values[i][j]) <= error)
                 else:
                     self._tc.assertEqual(values[i][j], cnt.value[i,j])
             

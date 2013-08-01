@@ -1034,10 +1034,12 @@ class EAttribute(FElement):
     ## fills object with maximum value            
     # \brief It fills object or an extend part of object by default value 
     def __fillMax(self):
+        if self.name and not self.h5Object:
+            self.h5Object = self._last.h5Attribute(self.name)
         shape = list(self.h5Object.shape)
+        
         nptype = self.h5Object.dtype
         value = ''
-
 
         if nptype != "string":
             try:
@@ -1050,18 +1052,15 @@ class EAttribute(FElement):
         else:
             nptype = "str"
 
-        if shape and  len(shape) > 0  and shape[0] > 1:
+        if shape and  len(shape) > 0:
             arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
         else:
             arr = value
 
 
-        if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
-            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1 and type(arr).__name__ != "str":
-                self.h5Object.value = arr[0]
-            else:
-                self.h5Object.value = arr
+        self.h5Object.value = arr
+        
             
             
 
