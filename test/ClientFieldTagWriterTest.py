@@ -1659,6 +1659,20 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="pco_uint"/>
           </datasource>
         </field>
+
+        <field units="" type="NX_UINT64" name="pco_uint64">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" rate="3"  grows="3"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint"/>
+          </datasource>
+        </field>
+
+
+
         <field units="" type="NX_UINT8" name="pco_uint8">
           <dimensions rank="2">
             <dim value="10" index="1"/>
@@ -1689,16 +1703,42 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="pco_uint"/>
           </datasource>
         </field>
-        <field units="" type="NX_UINT64" name="pco_uint64">
+
+
+
+        <field units="" type="NX_UINT8" name="pco_uint8_canfail">
           <dimensions rank="2">
             <dim value="10" index="1"/>
             <dim value="8" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true" rate="3"  grows="3"/>
+          <strategy mode="STEP" grows="3" canfail="true"/>
           <datasource type="CLIENT">
-            <record name="pco_uint"/>
+            <record name="pco_uint_canfail"/>
           </datasource>
         </field>
+        <field units="" type="NX_UINT16" name="pco_uint16_canfail">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint_canfail"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_UINT32" name="pco_uint32_canfail">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false"  canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint_canfail"/>
+          </datasource>
+        </field>
+
+
+
 
 
         <field units="" type="NX_INT64" name="init_pco_int64">
@@ -1720,6 +1760,30 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+
+        <field units="" type="NX_INT64" name="init_pco_int64_canfail">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_int_canfail"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT" name="final_pco_uint_canfail">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_uint_canfail"/>
+          </datasource>
+        </field>
+
       </group>
     </group>
   </group>
@@ -1731,11 +1795,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         tdw = self.openWriter(fname, xml, json = '{"data": { "pco_int":' + str(self._pco1[0])  + '  } }')
 
         pco2 = [[[(el+100)/2 for el in rpco] for rpco in pco] for pco in self._pco1  ]
+        flip = True
         for pco in self._pco1:
             self.record(tdw,'{"data": { "pco_int":' + str(pco)
                        + ', "pco_uint":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) 
+                       + (', "pco_uint_canfail":' + str([[(el+100)/2 for el in rpco] for rpco in pco]) if flip else "")
                        + '  } }')
-        
+            flip =not flip
         self.closeWriter(tdw, json = '{"data": { "pco_uint":' + str(pco2[0])  + '  } }')
             
 
@@ -1744,7 +1810,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 12)
+        det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkImageField(det, "pco_int",  "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
         self._sc.checkImageField(det, "pco_int16", "int16", "NX_INT16", self._pco1, grows = 3)
@@ -1759,7 +1825,44 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleImageField(det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(det, "final_pco_uint",  "uint64", "NX_UINT", pco2[0])
+
+#        self._sc.checkSingleImageField(det, "init_pco_int64_canfail", "int64", "NX_INT64", self._pco1[0])
+        self._sc.checkSingleImageField(
+            det, "init_pco_int64_canfail",  "int64", "NX_INT64", 
+            [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco] for rpco in self._pco1[0]],
+            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         
+        self._sc.checkSingleImageField(
+            det, "final_pco_uint_canfail",  "uint64", "NX_UINT", 
+            [[numpy.iinfo(getattr(numpy, 'uint64')).max for el in rpco] for rpco in self._pco1[0]],
+            attrs = {"type":"NX_UINT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        
+        self._sc.checkImageField(
+            det, "pco_uint8_canfail", "uint8", "NX_UINT8", 
+            [[[((el+100)/2 if not j%2 else 
+               numpy.iinfo(getattr(numpy, 'uint8')).max )
+               for el in rpco] for rpco in self._pco1[j]] for j in range(len(self._pco1))  ],
+            grows = 3 ,
+            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkImageField(
+            det, "pco_uint16_canfail", "uint16", "NX_UINT16", 
+            [[[((el+100)/2 if not j%2 else 
+               numpy.iinfo(getattr(numpy, 'uint16')).max )
+               for el in rpco] for rpco in self._pco1[j]] for j in range(len(self._pco1))  ],
+            grows = 1 ,
+            attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkImageField(
+            det, "pco_uint32_canfail", "uint32", "NX_UINT32", 
+            [[[((el+100)/2 if not j%2 else 
+               numpy.iinfo(getattr(numpy, 'uint32')).max )
+               for el in rpco] for rpco in self._pco1[j]] for j in range(len(self._pco1))  ],
+            grows = 2 ,
+            attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+
+
         f.close()
         os.remove(fname)
 
@@ -1783,6 +1886,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="pco_float"/>
           </datasource>
         </field>
+
         <field units="" type="NX_FLOAT32" name="pco_float32">
           <dimensions rank="2">
             <dim value="20" index="1"/>
@@ -1812,6 +1916,41 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+
+       <field units="" type="NX_FLOAT32" name="pco_float32_canfail">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"  canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float_canfail"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="pco_float64_canfail">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" grows="3" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float_canfail"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_NUMBER" name="pco_number_canfail">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP"  grows = "1"  canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float_canfail"/>
+          </datasource>
+        </field>
+
+
+
+
         <field units="" type="NX_FLOAT32" name="init_pco_float32">
           <dimensions rank="2">
             <dim value="20" index="1"/>
@@ -1829,6 +1968,32 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="pco_float"/>
           </datasource>
         </field>
+
+
+
+
+        <field units="" type="NX_FLOAT32" name="init_pco_float32_canfail">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions> 
+         <strategy mode="INIT" compression="true" shuffle="true" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float_canfail"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="final_pco_float64_canfail">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL" canfail="true" />
+          <datasource type="CLIENT">
+            <record name="pco_float_canfail"/>
+          </datasource>
+        </field>
+
+
       </group>
     </group>
   </group>
@@ -1842,9 +2007,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         tdw = self.openWriter(fname, xml, json = '{"data": { "pco_float":' + str(self._fpco1[0])  + '  } }')
 
+        flip = True
         for pco in self._fpco1:
-            self.record(tdw,'{"data": { "pco_float":' + str(pco) + '  } }')
-        
+            self.record(tdw,
+                        '{"data": { "pco_float":' + str(pco) 
+                        + (', "pco_float_canfail":' + str(pco) if flip else "")
+                        + '  } }')
+            flip = not flip
         self.closeWriter(tdw, json = '{"data": { "pco_float":' + str(self._fpco1[0])  + '  } }')
             
 
@@ -1853,7 +2022,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 6)
+        det = self._sc.checkFieldTree(f, fname , 11)
         self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
                                     error = 1.0e-14)
         self._sc.checkImageField(det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1, 
@@ -1868,6 +2037,49 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                     error = 1.0e-6)
         self._sc.checkSingleImageField(det, "final_pco_float64", "float64", "NX_FLOAT64", self._fpco1[0], 
                                     error = 1.0e-14)
+
+
+        self._sc.checkSingleImageField(
+            det, "init_pco_float32_canfail", "float32", "NX_FLOAT32", 
+            [[numpy.finfo(getattr(numpy, 'float32')).max for el in rpco] for rpco in self._fpco1[0]],
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-6)
+        self._sc.checkSingleImageField(
+            det, "final_pco_float64_canfail", "float64", "NX_FLOAT64", 
+            [[numpy.finfo(getattr(numpy, 'float64')).max for el in rpco] for rpco in self._fpco1[0]],
+            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-14)
+
+
+        self._sc.checkImageField(
+            det, "pco_float32_canfail", "float32", "NX_FLOAT32", 
+            [[[(el if not j%2 else 
+               numpy.finfo(getattr(numpy, 'float32')).max )
+               for el in rpco] for rpco in self._fpco1[j]] for j in range(len(self._fpco1))  ],
+            grows = 2 ,
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-6)
+        self._sc.checkImageField(
+            det, "pco_float64_canfail", "float64", "NX_FLOAT64", 
+            [[[(el if not j%2 else 
+               numpy.finfo(getattr(numpy, 'float64')).max )
+               for el in rpco] for rpco in self._fpco1[j]] for j in range(len(self._fpco1))  ],
+            grows = 3 ,
+            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-14)
+        self._sc.checkImageField(
+            det, "pco_number_canfail", "float64", "NX_NUMBER", 
+            [[[(el if not j%2 else 
+               numpy.finfo(getattr(numpy, 'float64')).max )
+               for el in rpco] for rpco in self._fpco1[j]] for j in range(len(self._fpco1))  ],
+            grows = 1 ,
+            attrs = {"type":"NX_NUMBER","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-14)
+
+
+
+
+
 
         
         f.close()
@@ -1910,6 +2122,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <dim value="4" index="2"/>
           </dimensions>
         </field>
+
+
+
+
+
         <field units="" type="NX_BOOLEAN" name="flags">
           <strategy mode="STEP"/>
           <dimensions rank="2">
@@ -1920,6 +2137,44 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="logicals"/>
           </datasource>
         </field>
+
+
+
+
+
+        <field units="" type="NX_DATE_TIME" name="time_canfail">
+          <strategy mode="STEP" compression="true" rate="3" canfail="true"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="timestamps_canfail"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_CHAR" name="string_time_canfail">
+          <strategy mode="STEP" grows="2" canfail="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps_canfail"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags_canfail">
+          <strategy mode="STEP" grows="3" canfail="true"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals_canfail"/>
+          </datasource>
+        </field>
+
+
+
 
 
         <field units="" type="NX_BOOLEAN" name="bool_flags">
@@ -1986,6 +2241,30 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+
+        <field units="" type="NX_CHAR" name="final_string_time_canfail">
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps_canfail"/>
+          </datasource>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="init_flags_canfail">
+          <strategy mode="INIT" canfail="true"/>
+          <dimensions rank="2">
+            <dim value="3" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals_canfail"/>
+          </datasource>
+        </field>
+
+
       </group>
     </group>
   </group>
@@ -2018,13 +2297,15 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                   + '  } }')
 
         
-
+        flip = True
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
+                       + (', "timestamps_canfail":' + str(dates[i]).replace("'","\"") if flip else "")
+                       + (', "logicals_canfail":' + str(logical[i]).replace("'","\"") if flip else "")
                         + ', "logicals":' + str(logical[i]).replace("'","\"")
                         + ', "bool":' + bools[i]
                         + ' } }')
-            
+            flip = not flip
 
         
         self.closeWriter(tdw, json = '{"data": {'\
@@ -2038,7 +2319,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 49)
+        det = self._sc.checkFieldTree(f, fname , 79)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkImageField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
@@ -2048,11 +2329,46 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleStringImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleImageField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
-        self._sc.checkSingleStringImageField(det, "final_string_time", "string", "NX_CHAR", dates[0])
-        self._sc.checkSingleImageField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
+
+        self._sc.checkSingleStringImageField(
+            det, "final_string_time_canfail", "string", "NX_CHAR", 
+            [['' for el in rpco] for rpco in dates[0]],
+            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleImageField(
+            det, "init_flags_canfail", "bool", "NX_BOOLEAN", 
+            [[False for el in rpco] for rpco in logical[0]],
+            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
+        self._sc.checkImageField(
+            det, "flags_canfail", "bool", "NX_BOOLEAN", 
+            [[[(el if not j%2 else False )
+               for el in rpco] for rpco in logical[j]] for j in range(len(logical))  ],
+            grows = 3 ,
+            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
+
+        self._sc.checkStringImageField(
+            det, "string_time_canfail", "string", "NX_CHAR", 
+            [[[(el if not j%2 else '' )
+               for el in rpco] for rpco in dates[j]] for j in range(len(dates))  ],
+            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkStringImageField(
+            det, "time_canfail", "string", "NX_DATE_TIME", 
+            [[[(el if not j%2 else '' )
+               for el in rpco] for rpco in dates[j]] for j in range(len(dates))  ],
+            attrs = {"type":"NX_DATE_TIME","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
+
         
         f.close()
         os.remove(fname)
+
+#        <field units="" type="NX_DATE_TIME" name="time_canfail">
+#        <field units="" type="NX_CHAR" name="string_time_canfail">
+#        <field units="" type="NX_BOOLEAN" name="flags_canfail">
+
+
+
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
@@ -2063,6 +2379,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
+
         <attribute type="NX_FLOAT" name="image_float">
           <dimensions rank="2">
             <dim value="20" index="1"/>
@@ -2084,6 +2401,31 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="pco_int"/>
           </datasource>
         </attribute>
+
+
+
+        <attribute type="NX_FLOAT" name="image_float_canfail">
+          <dimensions rank="2">
+            <dim value="20" index="1"/>
+            <dim value="30" index="2"/>
+          </dimensions>
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_float_canfail"/>
+          </datasource>
+        </attribute>
+
+        <attribute type="NX_INT" name="image_int_canfail">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_int_canfail"/>
+          </datasource>
+        </attribute>
+
 
         <attribute type="NX_INT32" name="image_int32">
           <dimensions rank="2">
@@ -2156,6 +2498,33 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </attribute>
 
+
+
+        <attribute type="NX_UINT64" name="image_uint64_canfail">
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="pco_int_canfail"/>
+          </datasource>
+        </attribute>
+
+
+        <attribute type="NX_BOOLEAN" name="image_bool_canfail">
+          <dimensions rank="2">
+            <dim value="2" index="1"/>
+            <dim value="4" index="2"/>
+          </dimensions>
+          <strategy mode="INIT" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="flags_canfail"/>
+          </datasource>
+        </attribute>
+
+
+
         1.2
       </field>
     </group>
@@ -2199,7 +2568,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         # check the created file
         f = open_file(fname,readonly=True)
-        det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
+        det, field = self._sc.checkAttributeTree(f, fname, 7, 7)
         self._sc.checkImageAttribute(det, "image_float", "float64", self._fpco1[steps-1],
                                       error = 1.e-14)
         self._sc.checkImageAttribute(det, "image_int",  "int64", self._pco1[0])
@@ -2210,8 +2579,25 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageAttribute(field, "image_uint32", "uint32", self._pco1[steps-1])
         self._sc.checkImageAttribute(field, "image_uint64", "uint64", self._pco1[0])
         self._sc.checkImageAttribute(field, "image_bool", "bool", logical)
+
+
+
+        self._sc.checkImageAttribute(
+            field, "image_uint64_canfail", "uint64", 
+            [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]))
+        self._sc.checkImageAttribute(
+            field, "image_bool_canfail", "bool", 
+            [[False]*len(logical[0])]*len(logical))
+        self._sc.checkImageAttribute(
+            det, "image_float_canfail", "float64", 
+            [[numpy.finfo(getattr(numpy, 'float64')).max]*30]*20)
+        self._sc.checkImageAttribute(
+            det, "image_int_canfail", "int64", 
+            [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]))
         # STRING NOT SUPPORTED BY PNINX
     
+        self._sc.checkScalarAttribute(det, "nexdatas_canfail", "string",  "FAILED")
+        self._sc.checkScalarAttribute(field, "nexdatas_canfail", "string",  "FAILED")
         f.close()
         os.remove(fname)
 
