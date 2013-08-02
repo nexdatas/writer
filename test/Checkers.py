@@ -564,7 +564,9 @@ class Checker(object):
         # pninx is not supporting reading string areas 
 
 
-        
+#        print "VAL", lvalues
+#        print "VAL2", cnt.read()
+
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
 #                print i, j, cnt[i,j], lvalues[i][j]

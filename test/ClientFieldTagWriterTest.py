@@ -738,6 +738,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="mca_int"/>
           </datasource>
         </field>
+
+
+        <field units="" type="NX_INT16" name="mca_int16_canfail">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_int_canfail"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_INT32" name="mca_int32">
           <dimensions rank="1">
             <dim value="256" index="1"/>
@@ -784,6 +796,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="mca_uint"/>
           </datasource>
         </field>
+
         <field units="" type="NX_UINT32" name="mca_uint32">
           <dimensions rank="1">
             <dim value="256" index="1"/>
@@ -793,6 +806,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="mca_uint"/>
           </datasource>
         </field>
+
+        <field units="" type="NX_UINT32" name="mca_uint32_canfail" >
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint_canfail"/>
+          </datasource>
+        </field>
+
+
         <field units="" type="NX_UINT64" name="mca_uint64">
           <dimensions rank="1">
             <dim value="256" index="1"/>
@@ -833,6 +858,28 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+
+        <field units="" type="NX_INT64" name="init_mca_int64_canfail">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" rate="3" canfail="true" />
+          <datasource type="CLIENT">
+            <record name="mca_int_canfail"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT32" name="final_mca_uint32_canfail">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint_canfail"/>
+          </datasource>
+        </field>
+
+
         <field units="" type="NX_INT32" name="init_mca_int32">
           <dimensions rank="1"/>
           <strategy mode="INIT" compression="true" rate="3"/>
@@ -851,11 +898,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         tdw = self.openWriter(fname, xml, json = '{"data": { "mca_int":' + str(self._mca1[0]) + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
 
         mca2 = [[(el+100)/2 for el in mca] for mca in self._mca1  ]
+        flip = True
         for mca in self._mca1:
             self.record(tdw,'{"data": { "mca_int":' + str(mca)
                        + ', "mca_uint":' + str([(el+100)/2 for el in mca]) 
+                       + (', "mca_int_canfail":' + str(mca) if flip else "" )
+                       + (', "mca_uint_canfail":' + str([(el+100)/2 for el in mca]) if flip else "" )
                        + '  } }')
-        
+            flip = not flip
         self.closeWriter(tdw, json = '{"data": { "mca_uint":' + str(mca2[0]) + '  } }')
             
 
@@ -864,7 +914,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 14)
+        det = self._sc.checkFieldTree(f, fname , 18)
         self._sc.checkSpectrumField(det, "mca_int",  "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
         self._sc.checkSpectrumField(det, "mca_int16", "int16", "NX_INT16", self._mca1)
@@ -880,6 +930,28 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleSpectrumField(det, "init_mca_int64", "int64", "NX_INT64", self._mca1[0])
         self._sc.checkSingleSpectrumField(det, "init_mca_int32", "int32", "NX_INT32", self._mca1[0])
         self._sc.checkSingleSpectrumField(det, "final_mca_uint32", "uint32", "NX_UINT32", mca2[0])
+
+        self._sc.checkSpectrumField(det, "mca_int16_canfail", "int16", "NX_INT16", 
+                                    [[(self._mca1[j][i] if not j%2 else 
+                                       numpy.iinfo(getattr(numpy, 'int16')).max ) 
+                                      for i in range(len(self._mca1[j]))] for j in range(len(self._mca1))  ],
+                                    grows = 1 ,attrs = {"type":"NX_INT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
+
+        self._sc.checkSpectrumField(det, "mca_uint32_canfail", "uint32", "NX_UINT32", 
+                                    [[((self._mca1[j][i]+100)/2 if not j%2 else 
+                                       numpy.iinfo(getattr(numpy, 'uint32')).max ) 
+                                      for i in range(len(self._mca1[j]))] for j in range(len(self._mca1))  ],
+                                    grows = 2 ,attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
+        self._sc.checkSingleSpectrumField(
+            det, "final_mca_uint32_canfail", "uint32", "NX_UINT32",             
+            [numpy.iinfo(getattr(numpy, 'uint32')).max]*256 , 
+            attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleSpectrumField(
+            det, "init_mca_int64_canfail", "int64", "NX_INT64",
+            [numpy.iinfo(getattr(numpy, 'int64')).max]*256 , 
+            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
         
         f.close()
@@ -925,6 +997,28 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </field>
+
+
+        <field units="" type="NX_FLOAT32" name="mca_float32_canfail">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float_canfail"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT64" name="mca_float64_canfail">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" grows="1" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float_canfail"/>
+          </datasource>
+        </field>
+
+
         <field units="" type="NX_NUMBER" name="mca_number">
           <dimensions rank="1">
             <dim value="1024" index="1"/>
@@ -963,6 +1057,28 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+
+        <field units="" type="NX_FLOAT32" name="init_mca_float32_canfail">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" compression="true" shuffle="true" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_float_canfail"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_FLOAT64" name="final_mca_float64_canfail">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"  canfail="true" />
+          <datasource type="CLIENT">
+            <record name="mca_float_canfail"/>
+          </datasource>
+        </field>
+
         <field units="" type="NX_FLOAT" name="final_mca_float">
           <dimensions rank="1"/>
           <strategy mode="FINAL" />
@@ -981,10 +1097,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         tdw = self.openWriter(fname, xml, json = '{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
 
+        flip = True
         for mca in self._fmca1:
-            self.record(tdw,'{"data": { "mca_float":' + str(mca)
-                       + '  } }')
-        
+            self.record(tdw,
+                        '{"data": { "mca_float":' + str(mca)
+                        + (', "mca_float_canfail":' + str(mca) if flip else "" )
+                        + '  } }')
+            flip = not flip
         self.closeWriter(tdw, json = '{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
             
 
@@ -993,7 +1112,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 8)
+        det = self._sc.checkFieldTree(f, fname , 12)
         self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
         self._sc.checkSpectrumField(det, "mca_float_dim", "float64", "NX_FLOAT", self._fmca1, 
@@ -1012,6 +1131,37 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                           error = 1.0e-14)
         self._sc.checkSingleSpectrumField(det, "final_mca_float", "float64", "NX_FLOAT", self._fmca1[0],
                                           error = 1.0e-14)
+
+
+        self._sc.checkSingleSpectrumField(
+            det, "init_mca_float32_canfail", "float32", "NX_FLOAT32",
+            [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]), 
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSingleSpectrumField(
+            det, "final_mca_float64_canfail", "float64", "NX_FLOAT64",
+            [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[0]), 
+            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkSpectrumField(
+            det, "mca_float32_canfail", "float32", "NX_FLOAT32", 
+            [[(self._fmca1[j][i] if not j%2 else 
+               numpy.finfo(getattr(numpy, 'float32')).max ) 
+              for i in range(len(self._fmca1[j]))] for j in range(len(self._fmca1))  ],
+            grows = 2 ,
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-6)
+
+
+        self._sc.checkSpectrumField(
+            det, "mca_float64_canfail", "float64", "NX_FLOAT64", 
+            [[(self._fmca1[j][i] if not j%2 else 
+               numpy.finfo(getattr(numpy, 'float64')).max ) 
+              for i in range(len(self._fmca1[j]))] for j in range(len(self._fmca1))  ],
+            grows = 1 ,
+            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
+            error = 1.0e-6)
+
+
 
 
         f.close()
@@ -1046,6 +1196,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="timestamps"/>
           </datasource>
         </field>
+
         <field units="" type="NX_CHAR" name="string_time">
           <strategy mode="STEP" grows="2"/>
           <datasource type="CLIENT">
@@ -1055,16 +1206,37 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <dim value="4" index="1"/>
           </dimensions>
         </field>
+
         <field units="" type="NX_BOOLEAN" name="flags">
           <strategy mode="STEP"/>
           <dimensions rank="1">
             <dim value="4" index="1"/>
           </dimensions>
-          <strategy mode="STEP" />
           <datasource type="CLIENT">
             <record name="logicals"/>
           </datasource>
         </field>
+
+
+        <field units="" type="NX_CHAR" name="string_time_canfail">
+          <strategy mode="STEP" grows="2" canfail="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps_canfail"/>
+          </datasource>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="flags_canfail">
+          <strategy mode="STEP" canfail="true"/>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <datasource type="CLIENT">
+            <record name="logicals_canfail"/>
+          </datasource>
+        </field>
+
 
 
         <field units="" type="NX_BOOLEAN" name="bool_flags">
@@ -1072,7 +1244,6 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="4" index="1"/>
           </dimensions>
-          <strategy mode="STEP" />
           <datasource type="CLIENT">
             <record name="bool"/>
           </datasource>
@@ -1081,7 +1252,6 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         <field units="" type="NX_BOOLEAN" name="flags_dim">
           <strategy mode="STEP"/>
           <dimensions rank="1" />
-          <strategy mode="STEP" />
           <datasource type="CLIENT">
             <record name="logicals"/>
           </datasource>
@@ -1114,6 +1284,29 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           <strategy mode="FINAL" />
           <datasource type="CLIENT">
             <record name="logicals"/>
+          </datasource>
+        </field>
+
+
+
+
+
+        <field units="" type="NX_CHAR" name="init_string_time_canfail">
+          <strategy mode="INIT" compression="true" shuffle="true" canfail="true"/>
+          <datasource type="CLIENT">
+           <record name="timestamps_canfail"/>
+          </datasource>
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+        </field>
+        <field units="" type="NX_BOOLEAN" name="final_flags_canfail">
+          <dimensions rank="1">
+            <dim value="4" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL"  canfail="true" />
+          <datasource type="CLIENT">
+            <record name="logicals_canfail"/>
           </datasource>
         </field>
 
@@ -1154,12 +1347,17 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                   + ', "logicals":' + str(logical[0]).replace("'","\"")
                                   + '  } }')
 
+        flip = True
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamps":' + str(dates[i]).replace("'","\"")
                        + ', "logicals":' + str(logical[i]).replace("'","\"")
+                       + (', "logicals_canfail":' + str(logical[i]).replace("'","\"") 
+                          if flip else '' )
+                       + (', "timestamps_canfail":' + str(dates[i]).replace("'","\"")
+                          if flip else '' )
                        + ', "bool":' + bools[i]
                        + ' } }')
-            
+            flip = not flip
 
         
         self.closeWriter(tdw, json = '{"data": {'\
@@ -1173,18 +1371,44 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 23)
-        self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
+        det = self._sc.checkFieldTree(f, fname , 30)
         self._sc.checkSpectrumField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
         self._sc.checkStringSpectrumField(det, "string_time_dim", "string", "NX_CHAR", dates)
 
         self._sc.checkSingleStringSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
+
+        self._sc.checkSingleStringSpectrumField(
+            det, "init_string_time_canfail", 
+            "string", "NX_CHAR", ['']*len(dates[0]),
+            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleSpectrumField(
+            det, "final_flags_canfail", "bool", 
+            "NX_BOOLEAN", [False]*len(logical[0]),
+            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
         self._sc.checkSingleStringSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
+
+
+        self._sc.checkSpectrumField(
+            det, "flags_canfail", "bool", "NX_BOOLEAN", 
+            [[(logical[j][i] if not j%2 else False ) 
+              for i in range(len(logical[j]))] for j in range(len(logical))  ],
+            grows = 1 ,
+            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+        self._sc.checkStringSpectrumField(
+            det, "string_time_canfail", "string", "NX_CHAR", 
+            [[(dates[j][i] if not j%2 else '') 
+              for i in range(len(dates[j]))] for j in range(len(dates))  ],
+            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
 
         
         f.close()
@@ -1226,6 +1450,25 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </attribute>
 
+        <attribute type="NX_UINT64" name="spectrum_uint64_canfail">
+          <dimensions rank="1">
+            <dim value="1024" index="1"/>
+          </dimensions>
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint_canfail"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="spectrum_bool_canfail">
+          <dimensions rank="1">
+            <dim value="8" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="flags_canfail"/>
+          </datasource>
+        </attribute>
+
       </group>
       <field type="NX_FLOAT" name="counter">
         <attribute type="NX_FLOAT32" name="spectrum_float32">
@@ -1235,6 +1478,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="mca_float"/>
           </datasource>
         </attribute>
+
         <attribute type="NX_UINT64" name="final_spectrum_uint64">
           <dimensions rank="1">
             <dim value="256" index="1"/>
@@ -1244,15 +1488,35 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="mca_uint"/>
           </datasource>
         </attribute>
-        <attribute type="NX_BOOLEAN" name="final_spectrum_bool">
+        <attribute type="NX_BOOLEAN" name="init_spectrum_bool">
           <dimensions rank="1">
             <dim value="8" index="1"/>
           </dimensions>
-          <strategy mode="FINAL"/>
+          <strategy mode="INIT"/>
           <datasource type="CLIENT">
             <record name="flags"/>
           </datasource>
         </attribute>
+
+       <attribute type="NX_UINT64" name="final_spectrum_uint64_canfail">
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="mca_uint_canfail"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_BOOLEAN" name="init_spectrum_bool_canfail">
+          <dimensions rank="1">
+            <dim value="8" index="1"/>
+          </dimensions>
+          <strategy mode="INIT" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="flags_canfail"/>
+          </datasource>
+        </attribute>
+
         1.2
       </field>
     </group>
@@ -1279,12 +1543,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                   +', "mca_int":' + str(self._mca1[0]) \
                                   + '  } }')
         steps = min(len(self._fmca1), len(self._fmca1))
+        flip = True
         for i in range(steps):
             self.record(tdw,'{"data": {'\
                             +' "mca_float":' + str(self._fmca1[i]) \
                             +',  "flags":' + str(logical).replace("'","\"") \
                             + '  } }')
-        
+            flip = not flip
         self.closeWriter(tdw, json = '{"data": {'\
                              +' "mca_float":' + str(self._fmca1[0]) \
                              +', "mca_int":' + str(self._mca1[0]) \
@@ -1296,7 +1561,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         # check the created file
         f = open_file(fname,readonly=True)
-        det, field = self._sc.checkAttributeTree(f, fname, 3, 3)
+        det, field = self._sc.checkAttributeTree(f, fname, 6, 6)
         self._sc.checkSpectrumAttribute(det, "spectrum_float", "float64", self._fmca1[steps-1],
                                       error = 1.e-14)
         self._sc.checkSpectrumAttribute(det, "init_spectrum_int32", "int32", self._mca1[0])
@@ -1304,10 +1569,23 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumAttribute(field, "spectrum_float32", "float32", self._fmca1[steps-1],
                                       error = 1.e-6)
         self._sc.checkSpectrumAttribute(field, "final_spectrum_uint64", "uint64", self._mca2[0])
-        self._sc.checkSpectrumAttribute(field, "final_spectrum_bool", "bool", logical)
+        self._sc.checkSpectrumAttribute(field, "init_spectrum_bool", "bool", logical)
         ## NOT SUPPORTED BY PNINX
 #        self._sc.checkSpectrumAttribute(field, "flag_spectrum_string", "string", logical)
     
+        self._sc.checkSpectrumAttribute(det, "spectrum_uint64_canfail", "uint64", 
+                                        [numpy.iinfo(getattr(numpy, 'uint64')).max]*1024)
+        self._sc.checkSpectrumAttribute(det, "spectrum_bool_canfail", "bool", 
+                                        [False]*8)
+
+
+        self._sc.checkSpectrumAttribute(field, "final_spectrum_uint64_canfail", "uint64", 
+                                        [numpy.iinfo(getattr(numpy, 'uint64')).max]*256)
+        self._sc.checkSpectrumAttribute(field, "init_spectrum_bool_canfail", "bool", 
+                                        [False]*8)
+
+        self._sc.checkScalarAttribute(det, "nexdatas_canfail", "string",  "FAILED")
+        self._sc.checkScalarAttribute(field, "nexdatas_canfail", "string",  "FAILED")
         f.close()
         os.remove(fname)
 
