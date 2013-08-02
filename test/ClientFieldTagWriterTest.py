@@ -27,6 +27,7 @@ import random
 import struct
 import binascii
 import time
+import numpy
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -196,6 +197,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_UINT64" name="ucounter64_canfail">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="cnt_u64_canfail"/>
+          </datasource>
+        </field>
+
         <field units="m" type="NX_INT64" name="init64">
           <strategy mode="INIT"/>
           <datasource type="CLIENT">
@@ -210,6 +219,20 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_INT32" name="final32_canfail">
+          <strategy mode="FINAL"  canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="cnt_32_canfail"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_INT64" name="init64_canfail">
+          <strategy mode="INIT" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64_canfail"/>
+          </datasource>
+        </field>
 
         <field units="m" type="NX_INT32" name="postrun_counter32">
           <strategy mode="POSTRUN">
@@ -243,7 +266,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                         + ', "cnt_u8":' + str(uc) 
                         + ', "cnt_u16":' + str(uc) 
                         + ', "cnt_u32":' + str(uc) 
-                        + ',  "cnt_u64":' + str(uc)
+                        + ((', "cnt_u64_canfail":' + str(uc)) if flip else ' ')
+                        + ',  "cnt_u64":' + str(uc) 
                         + ' } '
                         + str(trigstr if flip else ' ')
                         +'  }')
@@ -255,7 +279,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 14)
+        det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
         self._sc.checkScalarField(det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
@@ -263,12 +287,28 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "counter64", "int64", "NX_INT64", self._counter)
         self._sc.checkScalarField(det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", [abs(c) for c in self._counter]) 
-        self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64", [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16", 
+                                  [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "mclient_ucounter32", "uint32", "NX_UINT32", 
+                                  [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64", 
+                                  [abs(c) for c in self._counter]) 
+        self._sc.checkScalarField(
+            det, "ucounter64_canfail", "uint64", "NX_UINT64", 
+            [self._counter[i] if not i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max 
+             for i in range(len(self._counter))], 
+            attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ) 
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
         self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
-        self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", "https://haso.desy.de/counters/counter32.dat" )
+        self._sc.checkSingleScalarField(
+            det, "final32_canfail", "int32", "NX_INT32", numpy.iinfo(getattr(numpy, 'int32')).max , 
+            attrs = {"type":"NX_INT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleScalarField(
+            det, "init64_canfail", "int64", "NX_INT64", 
+            numpy.iinfo(getattr(numpy, 'int64')).max , 
+            attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", 
+                                      "https://haso.desy.de/counters/counter32.dat" )
        
         f.close()
         os.remove(fname)
@@ -290,6 +330,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="fcnt"/>
           </datasource>
         </attribute>
+        <attribute type="NX_FLOAT32" name="scalar_float32_canfail">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="fcnt_canfail"/>
+          </datasource>
+        </attribute>
         <attribute type="NX_CHAR" name="scalar_string">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
@@ -300,6 +346,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           <strategy mode="INIT"/>
           <datasource type="CLIENT">
             <record name="cnt"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_INT64" name="final_scalar_int64_canfail">
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="cnt_canfail"/>
           </datasource>
         </attribute>
         <attribute type="NX_BOOLEAN" name="flag">
@@ -316,6 +368,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="fcnt"/>
           </datasource>
         </attribute>
+        <attribute type="NX_FLOAT64" name="init_scalar_float64_canfail">
+          <strategy mode="INIT" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="fcnt_canfail"/>
+          </datasource>
+        </attribute>
+        <attribute type="NX_UINT32" name="scalar_uint32_canfail">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="fcnt_canfail"/>
+          </datasource>
+        </attribute>
         <attribute type="NX_CHAR" name="scalar_string">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
@@ -323,7 +387,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </attribute>
         <attribute type="NX_INT8" name="final_scalar_int8">
-          <strategy mode="INIT"/>
+          <strategy mode="FINAL"/>
           <datasource type="CLIENT">
             <record name="cnt"/>
           </datasource>
@@ -356,7 +420,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         # check the created file
         f = open_file(fname,readonly=True)
-        det, field = self._sc.checkAttributeTree(f, fname, 4,3)
+        det, field = self._sc.checkAttributeTree(f, fname, 7,6)
         self._sc.checkScalarAttribute(det, "scalar_float", "float64", self._fcounter[steps-1],
                                       error = 1.e-14)
         self._sc.checkScalarAttribute(det, "scalar_string", "string", 
@@ -365,9 +429,19 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarAttribute(det, "flag", "bool", logical[0])
         self._sc.checkScalarAttribute(field, "scalar_float32", "float32", self._fcounter[steps-1],
                                       error = 1.e-6)
+        self._sc.checkScalarAttribute(field, "init_scalar_float64_canfail", "float64", 
+                                      numpy.finfo(getattr(numpy, 'float64')).max)
         self._sc.checkScalarAttribute(field, "scalar_string", "string", 
                                       str(self._fcounter[steps-1]))
         self._sc.checkScalarAttribute(field, "final_scalar_int8", "int8", self._counter[0])
+        self._sc.checkScalarAttribute(det, "final_scalar_int64_canfail", "int64",  
+                                      numpy.iinfo(getattr(numpy, 'int64')).max)
+        self._sc.checkScalarAttribute(field, "scalar_uint32_canfail", "uint32",  
+                                      numpy.iinfo(getattr(numpy, 'uint32')).max)
+        self._sc.checkScalarAttribute(det, "scalar_float32_canfail", "float32",  
+                                      numpy.finfo(getattr(numpy, 'float32')).max)
+        self._sc.checkScalarAttribute(det, "nexdatas_canfail", "string",  "FAILED")
+        self._sc.checkScalarAttribute(field, "nexdatas_canfail", "string",  "FAILED")
     
         f.close()
         os.remove(fname)
@@ -407,6 +481,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="cnt_64"/>
           </datasource>
         </field>
+        <field units="m" type="NX_NUMBER" name="counter_nb_canfail">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="cnt_64_canfail"/>
+          </datasource>
+        </field>
         <field units="m" type="NX_FLOAT32" name="init_32">
           <strategy mode="INIT"/>
           <datasource type="CLIENT">
@@ -419,6 +499,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="cnt_64"/>
           </datasource>
         </field>
+        <field units="m" type="NX_FLOAT32" name="final_32_canfail">
+          <strategy mode="FINAL"  canfail="true" />
+          <datasource type="CLIENT">
+            <record name="cnt_32_canfail"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_FLOAT64" name="init_64_canfail">
+          <strategy mode="INIT" canfail="true" /> 
+          <datasource type="CLIENT">
+            <record name="cnt_64_canfail"/>
+          </datasource>
+        </field>
       </group>
     </group>
   </group>
@@ -427,12 +519,15 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
 
         tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_32":' + str(self._fcounter[0]) + ' } }')
+        flip = True
         for c in self._fcounter:
             self.record(tdw,'{"data": {"cnt":' + str(c) 
-                       + ', "cnt_32":' + str(c) 
-                       + ', "cnt_64":' + str(c) 
-                       + ' } }')
-        
+                        + ', "cnt_32":' + str(c) 
+                        + ', "cnt_64":' + str(c) 
+                        + ((', "cnt_64_canfail":' + str(c)) if flip else ' ')
+                        + ' } }')
+            flip = not flip
+
         self.closeWriter(tdw, json = '{"data": { "cnt_64":' + str(self._fcounter[0]) + ' } }')
             
 
@@ -440,15 +535,30 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname, 6)
+        det = self._sc.checkFieldTree(f, fname, 9)
         self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
         self._sc.checkScalarField(det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
 
-        self._sc.checkSingleScalarField(det, "init_32", "float32", "NX_FLOAT32", self._fcounter[0], 1.0e-06)
-        self._sc.checkSingleScalarField(det, "final_64", "float64", "NX_FLOAT64", self._fcounter[0], 1.0e-14)
+        self._sc.checkSingleScalarField(det, "init_32", "float32", "NX_FLOAT32", 
+                                        self._fcounter[0], 1.0e-06)
+        self._sc.checkSingleScalarField(det, "final_64", "float64", "NX_FLOAT64", 
+                                        self._fcounter[0], 1.0e-14)
         
+        self._sc.checkScalarField(
+            det, "counter_nb_canfail", "float64", "NX_NUMBER", 
+            [self._fcounter[i] if not i%2 else numpy.finfo(getattr(numpy, 'float64')).max 
+             for i in range(len(self._fcounter))], 
+            attrs = {"type":"NX_NUMBER","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ) 
+        self._sc.checkSingleScalarField(
+            det, "init_64_canfail", "float64", "NX_FLOAT64", 
+            numpy.finfo(getattr(numpy, 'float64')).max , 
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleScalarField(
+            det, "final_32_canfail", "float32", "NX_FLOAT32", 
+            numpy.finfo(getattr(numpy, 'float32')).max , 
+            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         f.close()
 
             
@@ -484,6 +594,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             <record name="timestamp"/>
           </datasource>
         </field>
+        <field units="m" type="NX_CHAR" name="string_time_canfail">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="CLIENT">
+            <record name="timestamp_canfail"/>
+          </datasource>
+        </field>
         <field units="m" type="NX_BOOLEAN" name="flags">
           <strategy mode="STEP"/>
           <datasource type="CLIENT">
@@ -511,6 +627,22 @@ class ClientFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_CHAR" name="final_string_canfail">
+          <strategy mode="FINAL" canfail ="true"  />
+          <datasource type="CLIENT">
+            <record name="timestamp_canfail"/>
+          </datasource>
+        </field>
+        <field units="m" type="NX_BOOLEAN" name="init_flag_canfail">
+          <strategy mode="INIT"  canfail ="true" />
+          <datasource type="CLIENT">
+            <record name="logical_canfail"/>
+          </datasource>
+        </field>
+
+
+
       </group>
     </group>
   </group>
@@ -527,13 +659,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         tdw = self.openWriter(fname, xml, json = '{"data": { "timestamp":"' + str(dates[0]) + '" } }')
         
-        
+        flip = True
         for i in range(min(len(dates),len(logical))):
             self.record(tdw,'{"data": {"timestamp":"' + str(dates[i]) 
-                       + '", "logical":"' + str(logical[i])
-                       + '", "bool":true'
-                       + ' } }')
-            
+                        + '", "logical":"' + str(logical[i])
+                        + '", "bool":true'
+                        + ((', "timestamp_canfail":"' + str(dates[i])+ '"') if flip else ' ')
+                        + ' } }')
+            flip = not flip
         self.closeWriter(tdw, json = '{"data": { "logical":"' + str(logical[0]) + '" } }')
             
 
@@ -542,12 +675,25 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname, 7)
+        det = self._sc.checkFieldTree(f, fname, 10)
         self._sc.checkScalarField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkScalarField(det, "isotime", "string", "ISO8601", dates)
         self._sc.checkScalarField(det, "string_time", "string", "NX_CHAR", dates)
         self._sc.checkScalarField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkScalarField(det, "bool_flags", "bool", "NX_BOOLEAN", [True for c in range(8)])
+
+        self._sc.checkScalarField(
+            det, "string_time_canfail", "string", "NX_CHAR", 
+            [dates[i] if not i%2 else ''for i in range(len(dates))], 
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ) 
+
+        self._sc.checkSingleScalarField(
+            det, "final_string_canfail", "string", "NX_CHAR", '', 
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleScalarField(
+            det, "init_flag_canfail", "bool", "NX_BOOLEAN", False, 
+            attrs = {"type":"NX_BOOLEAN","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
 
         self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
         self._sc.checkSingleScalarField(det, "final_flag", "bool", "NX_BOOLEAN", logical[0])
