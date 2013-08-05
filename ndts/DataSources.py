@@ -97,11 +97,6 @@ class DataSource(object):
         return True
 
 
-    ## resets datasource 
-    # \brief It resets local varibles to get data after error
-    def reset(self):
-        pass
-
 
     ## self-description 
     # \returns self-describing string
@@ -150,10 +145,6 @@ class TangoSource(DataSource):
     def __str__(self):
         return " TANGO Device %s : %s (%s)" % (self.device, self.name, self.memberType )
 
-    ## resets datasource 
-    # \brief It resets proxy for tango server
-    def reset(self):
-        self.__proxy = None
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
@@ -237,9 +228,15 @@ class TangoSource(DataSource):
                 print >> Streams.log_error, \
                     "TangoSource::getData() - Support for PyTango datasources not available" 
             raise PackageError, "Support for PyTango datasources not available" 
-
+        failed = True
+        try:
+            if self.__proxy:
+                alist = self.__proxy.get_attribute_list()
+                failed = False
+        except:
+            failed = True
         if self.device and self.memberType and self.name:
-            if not self.__proxy:
+            if not self.__proxy or failed:
                 found = False
                 cnt = 0
 
@@ -271,8 +268,8 @@ class TangoSource(DataSource):
             da = None
             if self.memberType == "attribute":
 #                print "getting the attribute: ", self.name
-                alist = self.__proxy.get_attribute_list()
-
+                if failed or not alist:
+                    alist = self.__proxy.get_attribute_list()
                 if self.name.encode() in alist:
                     da = self.__proxy.read_attribute( self.name.encode())
                     return {"format":str(da.data_format).split('.')[-1], 
