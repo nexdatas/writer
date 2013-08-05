@@ -363,6 +363,226 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_tangoScalar_canfail(self):
+        print "Run: %s.test_tangoScalar() " % self.__class__.__name__
+        fname= '%s/tangoscalar.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+       <field units="m" type="NX_BOOLEAN" name="ScalarBoolean">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarBoolean"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_UINT8" name="ScalarUChar">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarUChar"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_INT16" name="ScalarShort">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarShort"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_UINT16" name="ScalarUShort">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarUShort"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_INT" name="ScalarLong">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarLong"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_UINT" name="ScalarULong">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarULong"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_INT64" name="ScalarLong64">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarLong64"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_FLOAT32" name="ScalarFloat">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarFloat"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_FLOAT64" name="ScalarDouble">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarDouble"/>
+          </datasource>
+        </field>
+
+
+        <field units="m" type="NX_CHAR" name="ScalarString">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarString"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_CHAR" name="ScalarEncoded">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+            <record name="ScalarEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UTF8"/>
+          </datasource>
+        </field>
+
+
+        <field units="m" type="NX_CHAR" name="ScalarEncoded_MUTF8">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+            <record name="ScalarEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUTF8"/>
+          </datasource>
+        </field>
+
+
+        <field units="m" type="NX_CHAR" name="ScalarState">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="State"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_UINT32" name="InitScalarULong">
+          <strategy mode="INIT" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarULong_canfail"/>
+          </datasource>
+        </field>
+
+        <field units="m" type="NX_FLOAT64" name="FinalScalarDouble">
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarDouble"/>
+          </datasource>
+        </field>
+
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+#        <field units="m" type="NX_UINT64" name="ScalarULong64">
+#          <strategy mode="STEP"/>
+#          <datasource type="TANGO">
+#           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+#           <record name="ScalarULong64"/>
+#          </datasource>
+#        </field>
+        self._simps.dp.ScalarULong = abs(self._counter[0])
+
+        decoder = '"decoders":{"MUTF8":"ndts.DecoderPool.UTF8decoder"}'
+
+        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+
+        
+        steps = min(len(self._counter), len(self._fcounter), len(self._bools))
+        for i in range(steps):
+            if i%2 :
+                self._simps.setUp()
+                self._simps.dp.ScalarBoolean = Types.Converters.toBool(self._bools[i])
+                self._simps.dp.ScalarUChar = abs(self._counter[i])
+                self._simps.dp.ScalarShort = self._counter[i]
+                self._simps.dp.ScalarUShort = abs(self._counter[i])
+                self._simps.dp.ScalarLong = self._counter[i]
+                self._simps.dp.ScalarULong = abs(self._counter[i])
+                self._simps.dp.ScalarLong64 = self._counter[i]
+                self._simps.dp.ScalarFloat = self._fcounter[i]
+                self._simps.dp.ScalarDouble = self._dcounter[i]
+                self._simps.dp.ScalarString = self._bools[i]
+            else:
+                self._simps.tearDown()
+                
+            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
+#            self._simps.dp.ScalarULong64 =abs(self._counter[i])
+            self.record(tdw,'{}')
+#            self._fcounter[i] = self._simps.dp.ScalarFloat 
+#            self._dcounter[i] = self._simps.dp.ScalarDouble 
+
+        self._simps.tearDown()
+        self.closeWriter(tdw)
+        self._simps.setUp()
+        # check the created file
+        
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 15)
+#        self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
+#        self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
+#        self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
+#        self._sc.checkScalarField(det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
+#        self._sc.checkScalarField(det, "ScalarLong", "int64", "NX_INT", self._counter)
+#        self._sc.checkScalarField(det, "ScalarULong","uint64" , "NX_UINT", [abs(c) for c in self._counter])
+#        self._sc.checkScalarField(det, "ScalarLong64", "int64", "NX_INT64", self._counter)
+##        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
+#        self._sc.checkScalarField(det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error = 1e-6)
+#        self._sc.checkScalarField(det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error = 1e-14)
+#        self._sc.checkScalarField(det, "ScalarString", "string", "NX_CHAR", self._bools)
+#        self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
+#        self._sc.checkScalarField(det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
+#        self._sc.checkScalarField(det, "ScalarState", "string", "NX_CHAR", ["ON"  for c in self._bools])
+        
+        # writing encoded attributes not supported for PyTango 7.2.3
+
+#        self._sc.checkSingleScalarField(det, "InitScalarULong", "uint32", "NX_UINT32", abs(self._counter[0]))
+#        self._sc.checkSingleScalarField(det, "FinalScalarDouble", "float64", "NX_FLOAT64",
+#                                        self._dcounter[steps-1], error = 1e-14)
+
+
+        f.close()
+#        os.remove(fname)
+
+
+
+
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum(self):

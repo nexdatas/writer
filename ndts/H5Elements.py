@@ -805,7 +805,9 @@ class EField(FElementWithAttr):
             if Streams.log_info:
                 print >> Streams.log_info, "EField::markFailed() - %s marked as failed" % (self.h5Object.name) 
             self.__fillMax()
-                
+        if hasattr(self, "source") and hasattr(self.source,"reset"):
+            self.source.reset()
+    
 ## group H5 tag element        
 class EGroup(FElementWithAttr):        
     ## constructor
@@ -1074,6 +1076,8 @@ class EAttribute(FElement):
                 print >> Streams.log_info, "EAttribute::markFailed() - %s of %s marked as failed" % (self.h5Object.name, field.name)
                 print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
             self.__fillMax()    
+        if hasattr(self, "source") and hasattr(self.source,"reset"):
+            self.source.reset()
 
 ## file H5 element        
 class EFile(FElement):        

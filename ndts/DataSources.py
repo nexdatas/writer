@@ -97,6 +97,12 @@ class DataSource(object):
         return True
 
 
+    ## resets datasource 
+    # \brief It resets local varibles to get data after error
+    def reset(self):
+        pass
+
+
     ## self-description 
     # \returns self-describing string
     def __str__(self):
@@ -144,6 +150,10 @@ class TangoSource(DataSource):
     def __str__(self):
         return " TANGO Device %s : %s (%s)" % (self.device, self.name, self.memberType )
 
+    ## resets datasource 
+    # \brief It resets proxy for tango server
+    def reset(self):
+        self.__proxy = None
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
