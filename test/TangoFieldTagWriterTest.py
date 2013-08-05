@@ -642,6 +642,347 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
+    def test_tangoSpectrum_canfail(self):
+        print "Run: %s.test_tangoSpectrum() " % self.__class__.__name__
+        fname= '%s/tangospectrum.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+       <field units="" type="NX_BOOLEAN" name="SpectrumBoolean">
+          <strategy mode="STEP" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumBoolean"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT8" name="SpectrumUChar">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="false" canfail="true" />
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumUChar"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT16" name="SpectrumShort">
+          <strategy mode="STEP"  compression="true"  grows="3" shuffle="True"  canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumShort"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT16" name="SpectrumUShort">
+          <strategy mode="STEP"   grows="2"  canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumUShort"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_INT32" name="SpectrumLong">
+          <strategy mode="STEP"  compression="true"   shuffle="false"  canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumLong"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT32" name="SpectrumULong">
+          <strategy mode="STEP"   compression="true"  grows="1"  canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumULong"/>
+          </datasource>
+        </field>
+
+
+
+
+       <field units="" type="NX_INT64" name="SpectrumLong64">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT64" name="SpectrumULong64">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="True" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumULong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT32" name="SpectrumFloat">
+          <strategy mode="STEP"  canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="SpectrumDouble">
+          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumDouble"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_CHAR" name="SpectrumString">
+          <strategy mode="STEP" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumString"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_INT32" name="SpectrumEncoded">
+          <strategy mode="STEP" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+            <record name="SpectrumEncoded"/>
+            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="UINT32"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_INT32" name="SpectrumEncoded_MUINT32">
+          <strategy mode="STEP" canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+            <record name="SpectrumEncoded"/>
+            <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MUINT32"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_INT64" name="InitSpectrumLong64">
+          <strategy mode="INIT"  compression="true"  shuffle="True" canfail="true"/>
+          <dimensions rank="1">
+            <dim value="256" index="1"/>
+          </dimensions>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumLong64_canfail"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT32" name="FinalSpectrumFloat">
+          <strategy mode="FINAL"  canfail="true"/>
+          <dimensions rank="1" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="SpectrumFloat"/>
+          </datasource>
+        </field>
+
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+
+
+
+
+
+
+
+
+
+        self._simps.dp.SpectrumBoolean = self._logical[0]
+        self._simps.dp.SpectrumUChar = self._mca2[0]
+        self._simps.dp.SpectrumShort = self._mca1[0]
+        self._simps.dp.SpectrumUShort = self._mca2[0]
+        self._simps.dp.SpectrumLong = self._mca1[0]
+        self._simps.dp.SpectrumULong = self._mca2[0]
+        self._simps.dp.SpectrumLong64 = self._mca1[0]
+        self._simps.dp.SpectrumULong64 = self._mca2[0]
+        self._simps.dp.SpectrumFloat = self._fmca1[0]
+        self._simps.dp.SpectrumDouble = self._fmca1[0]
+        self._simps.dp.SpectrumString = self._dates[0]
+
+        decoder = '"decoders":{"MUINT32":"ndts.DecoderPool.UINT32decoder"}'
+        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+
+        import PyTango
+        dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
+
+        steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
+        for i in range(steps):
+            if i%2 :
+                self._simps.setUp()
+
+                self._simps.dp.SpectrumBoolean = self._logical[i]
+                self._simps.dp.SpectrumUChar = self._mca2[i]
+                self._simps.dp.SpectrumShort = self._mca1[i]
+                self._simps.dp.SpectrumUShort = self._mca2[i]
+                self._simps.dp.SpectrumLong = self._mca1[i]
+                self._simps.dp.SpectrumULong = self._mca2[i]
+                self._simps.dp.SpectrumLong64 = self._mca1[i]
+                self._simps.dp.SpectrumULong64 = self._mca2[i]
+                self._simps.dp.SpectrumFloat = self._fmca1[i]
+                self._simps.dp.SpectrumDouble = self._fmca1[i]
+                self._simps.dp.SpectrumString = self._dates[i]
+
+            else:
+                self._simps.tearDown()
+                
+
+            self.record(tdw,'{}')
+
+#        self._simps.tearDown()
+        self.closeWriter(tdw)
+        self._simps.setUp()
+        
+        # check the created file
+        
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 18)
+        self._sc.checkSpectrumField(
+            det, "SpectrumBoolean", "bool", "NX_BOOLEAN", 
+            [(self._logical[i] if i%2 else [False]*len(self._logical[i])) for  i in range(steps)],
+            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSpectrumField(
+            det, "SpectrumUChar", "uint8", "NX_UINT8", 
+            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._mca2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows=2)
+        self._sc.checkSpectrumField(
+            det, "SpectrumShort", "int16", "NX_INT16", 
+            [(self._mca1[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._mca1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            grows=3)
+        self._sc.checkSpectrumField(
+            det, "SpectrumUShort", "uint16", "NX_UINT16", 
+            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._mca2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            grows=2)
+
+
+        self._sc.checkSpectrumField(
+            det, "SpectrumLong", "int32", "NX_INT32", 
+            [(self._mca1[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSpectrumField(
+            det, "SpectrumULong", "uint32", "NX_UINT32", 
+            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._mca2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            grows=1)
+
+
+
+        self._sc.checkSpectrumField(
+            det, "SpectrumLong64", "int64", "NX_INT64", 
+            [(self._mca1[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows=2)
+        self._sc.checkSpectrumField(
+            det, "SpectrumULong64", "uint64", "NX_UINT64", 
+            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._mca2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            grows=2)
+
+
+
+        self._sc.checkSpectrumField(
+            det, "SpectrumFloat", "float32", "NX_FLOAT32", 
+            [(self._fmca1[i] if i%2 else  [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows=0, error = 1e-6)
+
+        self._sc.checkSpectrumField(
+            det, "SpectrumDouble", "float64", "NX_FLOAT64", 
+            [(self._fmca1[i] if i%2 else  [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows=1, error = 1e-14)
+
+
+
+
+        self._sc.checkStringSpectrumField(
+            det, "SpectrumString", "string", "NX_CHAR", 
+            [(self._dates[i] if i%2 else  ['']*len(self._dates[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        # writing encoded attributes not supported for PyTango 7.2.3
+
+        self._sc.checkSpectrumField(
+            det, "SpectrumEncoded", "int32", "NX_INT32", 
+            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkSpectrumField(
+            det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32", 
+            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkSingleSpectrumField(
+            det, "InitSpectrumLong64", "int64", "NX_INT64", 
+            [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[0]),
+            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkSingleSpectrumField(
+            det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", 
+            [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]),
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            error =1.0e-06)
+            
+        
+
+
+
+
+        f.close()
+        os.remove(fname)
+
+
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
     def test_tangoSpectrum(self):
         print "Run: %s.test_tangoSpectrum() " % self.__class__.__name__
         fname= '%s/tangospectrum.h5' % os.getcwd()   
@@ -889,6 +1230,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         f.close()
         os.remove(fname)
+
 
 
 
