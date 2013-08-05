@@ -1815,7 +1815,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
-#        self._sc.checkSingleImageField(det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps-1], error = 1.0e-6)
         f.close()
         os.remove(fname)
 
