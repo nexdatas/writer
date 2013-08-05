@@ -1479,5 +1479,347 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_tangoImage_canfail(self):
+        print "Run: %s.test_tangoImage() " % self.__class__.__name__
+        fname= '%s/tangoimage.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+
+       <field units="" type="NX_BOOLEAN" name="ImageBoolean">
+          <strategy mode="STEP"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageBoolean"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_UINT8" name="ImageUChar">
+          <strategy mode="STEP"   compression="true"  grows="2"  canfail="true"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUChar"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT16" name="ImageShort">
+          <strategy mode="STEP"    compression="true"  grows="3" shuffle="false" canfail="true"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageShort"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT16" name="ImageUShort">
+          <strategy mode="STEP"   grows="1"  canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageUShort"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_INT32" name="ImageLong">
+          <strategy mode="STEP"  compression="true"  grows="2" shuffle="true"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT32" name="ImageULong">
+          <strategy mode="STEP"  grows="3"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_INT64" name="ImageLong64">
+          <strategy mode="STEP"  compression="true"  grows="1" shuffle="false"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageLong64"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_UINT64" name="ImageULong64">
+          <strategy mode="STEP"  compression="true"  grows="2" canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="ImageFloat">
+          <strategy mode="STEP"  compression="true"  grows="3" shuffle="true"  canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+       <field units="" type="NX_FLOAT64" name="ImageDouble">
+          <strategy mode="STEP"  compression="true"  grows="1"  canfail="true"  />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageDouble"/>
+          </datasource>
+        </field>
+
+       <field units="" type="NX_CHAR" name="ImageString">
+          <strategy mode="STEP"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageString"/>
+          </datasource>
+        </field>
+
+        <field units="" type="NX_UINT8" name="ImageEncoded">
+          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"  canfail="true"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+            <record name="ImageEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="LIMA_VIDEO_IMAGE"/>
+          </datasource>
+        </field>
+
+
+        <field units="" type="NX_UINT8" name="ImageEncoded_MLIMA">
+          <strategy mode="STEP"  compression="true"  shuffle="false" grows="3"  canfail="true"/>
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+            <record name="ImageEncoded"/>
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" encoding="MLIMA"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_UINT64" name="InitImageULong64">
+          <strategy mode="INIT"  canfail="true" />
+          <dimensions rank="2">
+            <dim value="10" index="1"/>
+            <dim value="8" index="2"/>
+          </dimensions>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageULong64_canfail"/>
+          </datasource>
+        </field>
+
+
+
+       <field units="" type="NX_FLOAT32" name="FinalImageFloat">
+          <strategy mode="FINAL"  compression="true"  shuffle="true"  canfail="true" />
+          <dimensions rank="2" />
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ImageFloat"/>
+          </datasource>
+        </field>
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+
+        self._simps.dp.ImageBoolean = self._logical2[0]
+        self._simps.dp.ImageUChar = self._pco1[0]
+        self._simps.dp.ImageShort = self._pco1[0]
+        self._simps.dp.ImageUShort = self._pco1[0]
+        self._simps.dp.ImageLong = self._pco1[0]
+        self._simps.dp.ImageULong = self._pco1[0]
+        self._simps.dp.ImageLong64 = self._pco1[0]
+        self._simps.dp.ImageULong64 = self._pco1[0]
+        self._simps.dp.ImageFloat = self._fpco1[0]
+        self._simps.dp.ImageDouble = self._fpco1[0]
+        self._simps.dp.ImageString = self._dates2[0]
+
+#        print self._fmca1[0]
+
+        decoder = '"decoders":{"MLIMA":"ndts.DecoderPool.VDEOdecoder"}'
+        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+
+        import PyTango
+        dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
+
+        steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
+        for i in range(steps):
+            if i%2 :
+                self._simps.setUp()
+
+                self._simps.dp.ImageBoolean = self._logical2[i]
+                self._simps.dp.ImageUChar = self._pco1[i]
+                self._simps.dp.ImageShort = self._pco1[i]
+                self._simps.dp.ImageUShort = self._pco1[i]
+                self._simps.dp.ImageLong = self._pco1[i]
+                self._simps.dp.ImageULong = self._pco1[i]
+                self._simps.dp.ImageLong64 = self._pco1[i]
+                self._simps.dp.ImageULong64 = self._pco1[i]
+                self._simps.dp.ImageFloat = self._fpco1[i]
+                self._simps.dp.ImageDouble = self._fpco1[i]
+                self._simps.dp.ImageString = self._dates2[i]
+            else:
+                self._simps.tearDown()
+
+            self.record(tdw,'{}')
+
+#        self._simps.tearDown()
+        self.closeWriter(tdw)
+        self._simps.setUp()
+        
+        # check the created file
+        
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 22)
+        self._sc.checkImageField(
+            det, "ImageBoolean", "bool", "NX_BOOLEAN", 
+            [(self._logical2[i] if i%2 else [[False]*len(self._logical2[i][0])]*len(self._logical2[i])) for  i in range(steps)],
+            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+
+
+        self._sc.checkImageField(
+            det, "ImageUChar", "uint8", "NX_UINT8", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 2 )
+
+        self._sc.checkImageField(
+            det, "ImageShort", "int16", "NX_INT16", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 3 )
+        self._sc.checkImageField(
+            det, "ImageUShort", "uint16", "NX_UINT16", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 1 )
+
+
+        self._sc.checkImageField(
+            det, "ImageLong", "int32", "NX_INT32", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 2 )
+        self._sc.checkImageField(
+            det, "ImageULong", "uint32", "NX_UINT32", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 3 )
+
+
+        self._sc.checkImageField(
+            det, "ImageLong64", "int64", "NX_INT64", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 1 )
+        self._sc.checkImageField(
+            det, "ImageULong64", "uint64", "NX_UINT64", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 2 )
+
+
+        self._sc.checkImageField(
+            det, "ImageFloat", "float32", "NX_FLOAT32", 
+            [(self._fpco1[i] if i%2 else 
+              [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 3, error = 1.0e-6 )
+        self._sc.checkImageField(
+            det, "ImageDouble", "float64", "NX_FLOAT64", 
+            [(self._fpco1[i] if i%2 else 
+              [[numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 1, error = 1.0e-14 )
+
+
+
+        self._sc.checkStringImageField(
+            det, "ImageString", "string", "NX_CHAR", 
+            [(self._dates2[i] if i%2 else 
+              [['']*len(self._dates2[i][0])]*len(self._dates2[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+        self._sc.checkImageField(
+            det, "ImageEncoded", "uint8", "NX_UINT8", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 3 )
+
+
+        self._sc.checkImageField(
+            det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", 
+            [(self._pco1[i] if i%2 else 
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+             for  i in range(steps)],
+            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows = 3 )
+
+        self._sc.checkSingleImageField(
+            det, "InitImageULong64", "uint64", "NX_UINT64", 
+             [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]) ,
+            attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSingleImageField(
+            det, "FinalImageFloat", "float32", "NX_FLOAT32", 
+             [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[0][0])]*len(self._fpco1[0]) ,
+            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+
+#        self._sc.checkSingleImageField(det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps-1], error = 1.0e-6)
+        f.close()
+        os.remove(fname)
+
+
+
 if __name__ == '__main__':
     unittest.main()
