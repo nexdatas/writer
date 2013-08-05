@@ -538,14 +538,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                 self._simps.dp.ScalarFloat = self._fcounter[i]
                 self._simps.dp.ScalarDouble = self._dcounter[i]
                 self._simps.dp.ScalarString = self._bools[i]
+            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
+            #            self._simps.dp.ScalarULong64 =abs(self._counter[i])
             else:
                 self._simps.tearDown()
                 
-            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
-#            self._simps.dp.ScalarULong64 =abs(self._counter[i])
             self.record(tdw,'{}')
-#            self._fcounter[i] = self._simps.dp.ScalarFloat 
-#            self._dcounter[i] = self._simps.dp.ScalarDouble 
 
         self._simps.tearDown()
         self.closeWriter(tdw)
@@ -555,30 +553,89 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 15)
-#        self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
-#        self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
-#        self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
-#        self._sc.checkScalarField(det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
-#        self._sc.checkScalarField(det, "ScalarLong", "int64", "NX_INT", self._counter)
-#        self._sc.checkScalarField(det, "ScalarULong","uint64" , "NX_UINT", [abs(c) for c in self._counter])
-#        self._sc.checkScalarField(det, "ScalarLong64", "int64", "NX_INT64", self._counter)
-##        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
-#        self._sc.checkScalarField(det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error = 1e-6)
-#        self._sc.checkScalarField(det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error = 1e-14)
-#        self._sc.checkScalarField(det, "ScalarString", "string", "NX_CHAR", self._bools)
-#        self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
-#        self._sc.checkScalarField(det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", ["Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"  for c in self._bools])
-#        self._sc.checkScalarField(det, "ScalarState", "string", "NX_CHAR", ["ON"  for c in self._bools])
+        self._sc.checkScalarField(
+            det, "ScalarBoolean", "bool", "NX_BOOLEAN", 
+            [(Types.Converters.toBool(self._bools[i]) if i%2 else False) for  i in range(steps)],
+            attrs = {"type":"NX_BOOLEAN","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarUChar", "uint8", "NX_UINT8", 
+            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint8')).max) for  i in range(steps)],
+            attrs = {"type":"NX_UINT8","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarShort", "int16", "NX_INT16", 
+            [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int16')).max) for  i in range(steps)],
+            attrs = {"type":"NX_INT16","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarUShort", "uint16", "NX_UINT16", 
+            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint16')).max) for  i in range(steps)],
+            attrs = {"type":"NX_UINT16","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarLong", "int64", "NX_INT", 
+            [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
+            attrs = {"type":"NX_INT","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarULong", "uint64", "NX_UINT", 
+            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max) for  i in range(steps)],
+            attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarLong64", "int64", "NX_INT64", 
+            [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
+            attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+#        self._sc.checkScalarField(
+#            det, "ScalarULong64", "uint64", "NX_UINT", 
+#            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max) for  i in range(steps)],
+#            attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarFloat", "float32", "NX_FLOAT32", 
+            [(self._fcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float32')).max) for  i in range(steps)],
+            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} , 
+            error = 1e-6)
+
+        self._sc.checkScalarField(
+            det, "ScalarDouble", "float64", "NX_FLOAT64", 
+            [(self._dcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float64')).max) for  i in range(steps)],
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} , 
+            error = 1e-14)
+
+
+        self._sc.checkScalarField(
+            det, "ScalarString", "string", "NX_CHAR", 
+            [(self._bools[i] if i%2 else '') for  i in range(steps)],
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkScalarField(
+            det, "ScalarEncoded", "string", "NX_CHAR", 
+            [("Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" if i%2 else '') for  i in range(steps)],
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+        self._sc.checkScalarField(
+            det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", 
+            [("Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" if i%2 else '') for  i in range(steps)],
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+        self._sc.checkScalarField(
+            det, "ScalarState", "string", "NX_CHAR", 
+            [("ON" if i%2 else '') for  i in range(steps)],
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+
         
         # writing encoded attributes not supported for PyTango 7.2.3
+        self._sc.checkSingleScalarField(
+            det, "InitScalarULong", "uint32", "NX_UINT32", 
+            numpy.iinfo(getattr(numpy, 'uint32')).max,
+            attrs = {"type":"NX_UINT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkSingleScalarField(
+            det, "FinalScalarDouble", "float64", "NX_FLOAT64", 
+            numpy.finfo(getattr(numpy, 'float64')).max,
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
-#        self._sc.checkSingleScalarField(det, "InitScalarULong", "uint32", "NX_UINT32", abs(self._counter[0]))
-#        self._sc.checkSingleScalarField(det, "FinalScalarDouble", "float64", "NX_FLOAT64",
-#                                        self._dcounter[steps-1], error = 1e-14)
 
 
         f.close()
-#        os.remove(fname)
+        os.remove(fname)
 
 
 
