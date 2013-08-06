@@ -916,9 +916,9 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
         if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            self.h5Object = (self._lastObject()).link((self.__typesToNames(self._tagAttrs["target"], 
-                                                                         groupTypes)).encode(),
-                                                      self._tagAttrs["name"].encode())
+            self.h5Object = (self._lastObject()).link(
+                (self.__typesToNames(self._tagAttrs["target"], groupTypes)).encode(),
+                self._tagAttrs["name"].encode())
         else:
             if Streams.log_error:
                 print >> Streams.log_error,\
