@@ -124,7 +124,6 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
-        print "Run: %s.test_clientIntScalar() " % self.__class__.__name__
         fname= '%s/clientintscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -318,7 +317,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientAttrScalar(self):
-        print "Run: %s.test_clientAttrScalar() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientattrscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -451,7 +451,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
-        print "Run: %s.test_clientFloatScalar() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientfloatscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -570,7 +571,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
-        print "Run: %s.test_clientScalar() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -705,7 +707,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
-        print "Run: %s.test_clientIntSpectrum() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientintspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -964,7 +967,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
-        print "Run: %s.test_clientFloatSpectrum() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientfloatspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -1172,7 +1176,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientSpectrum(self):
-        print "Run: %s.test_clientSpectrum() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -1418,7 +1423,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientAttrSpectrum(self):
-        print "Run: %s.test_clientAttrSpectrum() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientattrspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -1595,7 +1601,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientIntImage(self):
-        print "Run: %s.test_clientIntImage() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientintimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -1870,7 +1877,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientFloatImage(self):
-        print "Run: %s.test_clientFloatImage() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientfloatimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -2089,7 +2097,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientImage(self):
-        print "Run: %s.test_clientImage() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -2373,7 +2382,8 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_clientAttrImage(self):
-        print "Run: %s.test_clientAttrImage() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/clientattrimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">

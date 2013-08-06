@@ -27,7 +27,7 @@ import random
 import struct
 import binascii
 import time
-
+import numpy
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -151,7 +151,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_dbScalar(self):
-        print "Run: %s.test_dbScalar() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/dbscalar.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -428,10 +429,302 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
 
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_dbScalar_canfail(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname= '%s/dbscalar.h5' % os.getcwd()   
+        xml= """<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <group type="NXdetector" name="detector">
+
+        <field units="m" name="pid_scalar_string" type="NX_CHAR">
+          <dimensions rank="1">
+            <dim index="1" value="1"/>
+          </dimensions>
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field units="m" name="pid_scalar2_string" type="NX_CHAR">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="pid_scalar3_string" type="NX_CHAR">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field units="m" name="pid_scalar4_string" type="NX_CHAR">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_string" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SPECTRUM">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field  units="m" name="pid_scalar_uint" type="NX_UINT">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+        <field  units="m" name="pid_scalar_int64" type="NX_INT64">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="pid_scalar_float64" type="NX_FLOAT64">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="pid_scalar_float32" type="NX_FLOAT32">
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field name="pid2_image_string" type="NX_CHAR" units="m" >
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="pid3_image_string" type="NX_CHAR" units="m" >
+          <strategy mode="STEP" canfail="true"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="init_pid_scalar_int32" type="NX_INT32">
+          <strategy mode="INIT" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="init_pid_scalar_string" type="NX_CHAR">
+          <strategy mode="INIT" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="final_pid_scalar_float32" type="NX_FLOAT32">
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+        <field  units="m" name="final_pid_scalar_float64" type="NX_FLOAT64">
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource name="single_mysql_record_int" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="final_pid_scalar_string" type="NX_CHAR" units="m" >
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+        <field name="final_pid2_scalar_string" type="NX_CHAR" units="m" >
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+
+        <field name="final_pid3_scalar_string" type="NX_CHAR" units="m" >
+          <strategy mode="FINAL" canfail="true"/>
+          <datasource name="mysql_record" type="DB">
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <query format="SCALAR">
+              SELECT ppid FROM device limit 1
+            </query>
+          </datasource>
+        </field>
+
+
+
+
+      </group>
+    </group>
+  </group>
+</definition>
+"""
+        
+        cursor = self._mydb.cursor()
+        cursor.execute("SELECT pid FROM device limit 1")
+        scalar = str(cursor.fetchone()[0])
+        cursor.close()
+
+
+        tdw = self.openWriter(fname, xml)
+
+        for c in range(3):
+            self.record(tdw,'{ }')
+
+        self.closeWriter(tdw)
+        
+        # check the created file
+        
+        f = open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 17)
+        self._sc.checkScalarField(
+            det, "pid_scalar_string", "string", "NX_CHAR", [''] *3,
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid_scalar2_string", "string", "NX_CHAR", [''] *3,
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid_scalar3_string", "string", "NX_CHAR", [''] *3,
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid_scalar4_string", "string", "NX_CHAR", [''] *3,
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid_scalar_uint", "uint64", "NX_UINT", [numpy.iinfo(getattr(numpy, 'uint64')).max] *3,
+            attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid_scalar_int64","int64", "NX_INT64", [numpy.iinfo(getattr(numpy, 'int64')).max] *3,
+            attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid_scalar_float64", "float64", "NX_FLOAT64", [numpy.finfo(getattr(numpy, 'float64')).max] *3,
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            error = 1e-14)
+        self._sc.checkScalarField(
+            det, "pid_scalar_float32", "float32", "NX_FLOAT32", [numpy.finfo(getattr(numpy, 'float32')).max] *3,
+            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+                                  error = 1e-5)
+        self._sc.checkScalarField(
+            det, "pid2_image_string", "string", "NX_CHAR", ['']*3,
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkScalarField(
+            det, "pid3_image_string", "string", "NX_CHAR", ['']*3,
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+#
+        self._sc.checkSingleScalarField(
+            det, "init_pid_scalar_int32", "int32", "NX_INT32", numpy.iinfo(getattr(numpy, 'int32')).max,
+            attrs = {"type":"NX_INT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", '',
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
+                                        numpy.finfo(getattr(numpy, 'float32')).max,
+            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+                                        error = 1e-6)
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
+                                        numpy.finfo(getattr(numpy, 'float64')).max,
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+                                         error = 1e-14)
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_string", "string", "NX_CHAR",'',
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSingleScalarField(det, "final_pid2_scalar_string", "string", "NX_CHAR",'',
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+        self._sc.checkSingleScalarField(det, "final_pid3_scalar_string", "string", "NX_CHAR",'',
+            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+
+
+
+
+
+
+
+
+        f.close()
+        os.remove(fname)
+
+
+
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_dbSpectrum(self):
-        print "Run: %s.test_dbSpectrum() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/dbspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -704,7 +997,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_dbSpectrum_single(self):
-        print "Run: %s.test_dbSpectrum() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/dbspectrum.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -796,7 +1090,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_dbImage(self):
-        print "Run: %s.test_dbImage() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname= '%s/dbimage.h5' % os.getcwd()   
         xml= """<definition>
   <group type="NXentry" name="entry1">
