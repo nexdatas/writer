@@ -97,6 +97,7 @@ class DataSource(object):
         return True
 
 
+
     ## self-description 
     # \returns self-describing string
     def __str__(self):
@@ -227,9 +228,15 @@ class TangoSource(DataSource):
                 print >> Streams.log_error, \
                     "TangoSource::getData() - Support for PyTango datasources not available" 
             raise PackageError, "Support for PyTango datasources not available" 
-
+        failed = True
+        try:
+            if self.__proxy:
+                alist = self.__proxy.get_attribute_list()
+                failed = False
+        except:
+            failed = True
         if self.device and self.memberType and self.name:
-            if not self.__proxy:
+            if not self.__proxy or failed:
                 found = False
                 cnt = 0
 
@@ -261,8 +268,8 @@ class TangoSource(DataSource):
             da = None
             if self.memberType == "attribute":
 #                print "getting the attribute: ", self.name
-                alist = self.__proxy.get_attribute_list()
-
+                if failed or not alist:
+                    alist = self.__proxy.get_attribute_list()
                 if self.name.encode() in alist:
                     da = self.__proxy.read_attribute( self.name.encode())
                     return {"format":str(da.data_format).split('.')[-1], 

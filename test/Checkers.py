@@ -243,7 +243,8 @@ class Checker(object):
                 if dtype == "bool":
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt.value[i])
                 else:
-                    self._tc.assertTrue(abs(values[i] - cnt.value[i]) <= error)
+#                    print "CMP",cnt.value[i] , values[i] ,cnt.value[i] - values[i] , error
+                    self._tc.assertTrue(abs(cnt.value[i] - values[i] ) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt.value[i])
             
@@ -276,7 +277,7 @@ class Checker(object):
                     if dtype == "bool":
                         self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt.value[i,j])
                     else:
-                        self._tc.assertTrue(abs(values[i][j] - cnt.value[i,j]) <= error)
+                        self._tc.assertTrue(abs(cnt.value[i,j] -values[i][j]) <= error)
                 else:
                     self._tc.assertEqual(values[i][j], cnt.value[i,j])
             
@@ -344,9 +345,10 @@ class Checker(object):
         if not isinstance(values[0], str):
             value = cnt.read()
             for i in range(len(value)):
-                #            print values[i].__repr__(),  value[i].__repr__(), values[i] - value[i]
+#                print values[i].__repr__(),  value[i].__repr__()
+#                print values[i].__repr__(),  value[i].__repr__(), value[i] - values[i] ,error
                 if self._isNumeric(value[i]):
-                    self._tc.assertTrue(abs(values[i] - value[i]) <= error)
+                    self._tc.assertTrue(abs(value[i] - values[i] ) <= error)
                 else:
                     self._tc.assertEqual(values[i],value[i])
         for i in range(len(values)):
@@ -562,7 +564,9 @@ class Checker(object):
         # pninx is not supporting reading string areas 
 
 
-        
+#        print "VAL", lvalues
+#        print "VAL2", cnt.read()
+
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
 #                print i, j, cnt[i,j], lvalues[i][j]
@@ -570,7 +574,7 @@ class Checker(object):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(Types.Converters.toBool(lvalues[i][j]),cnt[i,j])
                     else:
-                        self._tc.assertTrue(abs(lvalues[i][j] - cnt[i,j]) <= error)
+                        self._tc.assertTrue(abs(cnt[i,j] - lvalues[i][j] ) <= error)
                 else:
                     self._tc.assertEqual(lvalues[i][j], cnt[i,j])
             
@@ -892,7 +896,8 @@ class Checker(object):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
                     else:
-                        self._tc.assertTrue(abs(values[i][j] - cnt[i,j]) <= error)
+#                        print "CK",cnt[i,j],  values[i][j],cnt[i,j] - values[i][j]
+                        self._tc.assertTrue(abs(cnt[i,j] - values[i][j] ) <= error)
                 else:
                     self._tc.assertEqual(values[i][j], cnt[i,j])
             

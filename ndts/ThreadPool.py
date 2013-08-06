@@ -101,6 +101,7 @@ class ThreadPool(object):
                         print >> Streams.log_warn,  "ThreadPool::checkErrors() - %s" %   str(el.error)
                     if hasattr(el,"markFailed"):
                         el.markFailed()
+                            
                 else:
                     errors.append(el.error)
                     if Streams.log_error:

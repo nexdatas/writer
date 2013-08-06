@@ -1,3 +1,7 @@
+2013-08-06 Jan Kotanski <jankotan@gmail.com>
+	* adding filling failed object by its maximal value
+	* tagged as 1.1.8
+
 2013-06-27 Jan Kotanski <jankotan@gmail.com>
 	* changing error messages
 	* adding tests for string attribute

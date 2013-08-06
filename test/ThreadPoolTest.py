@@ -87,11 +87,21 @@ class EJob(object):
         self.error = None
         ## message
         self.message = ("Error","My Error")
+        ## canfail flag
+        self.canfail = None
+        ## markfail flag
+        self.markfail = 0
 
     ## run method    
     def run(self):
         self.counter += 1
         self.error = self.message
+
+
+
+    ## run method    
+    def markFailed(self):
+        self.markfail += 1
 
 ## class job with error
 class SOJob(object):
@@ -266,6 +276,53 @@ class ThreadPoolTest(unittest.TestCase):
         
 
         self.myAssertRaise(ThreadError,el.checkErrors)    
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_errors_canfail(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        nth = self.__rnd.randint(1, 10)
+        el = ThreadPool(nth)
+        self.assertEqual(el.numThreads,nth)
+
+        jlist = [EJob() for c in range(self.__rnd.randint(1, 20))]
+        for jb in jlist:
+            self.assertEqual(el.append(jb),None)
+
+            
+        self.assertEqual(el.checkErrors(),None)    
+
+        self.assertEqual(el.run(),None)    
+        self.assertEqual(el.join(),None)    
+        
+        for c in jlist:    
+            self.assertEqual(c.counter , 1)
+
+        self.myAssertRaise(ThreadError,el.checkErrors)    
+
+        for jb in jlist:
+            self.assertEqual(jb.markfail,0)    
+            jb.canfail=True
+
+
+        self.assertEqual(el.run(),None)    
+        self.assertEqual(el.join(),None)    
+        
+        for c in jlist:    
+            self.assertEqual(c.counter , 2)
+
+        self.assertEqual(el.runAndWait(),None)    
+        
+
+        el.checkErrors()
+        for jb in jlist:
+            self.assertEqual(jb.markfail,1)    
+
 
 
     ## constructor test

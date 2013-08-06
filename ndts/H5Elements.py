@@ -327,6 +327,8 @@ class EField(FElementWithAttr):
         self.rate = 5
         ## compression shuffle
         self.shuffle = True
+        ## data format
+        self.__format = ''
 
     ## checks if it is growing in extra dimension
     # \brief It checks if it is growing in extra dimension and setup internal variables     
@@ -600,24 +602,18 @@ class EField(FElementWithAttr):
             
         arr = dh.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
-            self.h5Object.grow()
             self.h5Object[self.h5Object.shape[0]-1] = arr
         elif  len(self.h5Object.shape) == 2:
             if self.grows == 2:
-                self.h5Object.grow()
                 self.h5Object[:,self.h5Object.shape[0]-1] = arr
             else:
-                self.h5Object.grow()
                 self.h5Object[self.h5Object.shape[0]-1,:] = arr
         elif  len(self.h5Object.shape) == 3:
             if self.grows == 3:
-                self.h5Object.grow()
                 self.h5Object[:,:,self.h5Object.shape[0]-1] = arr
             if self.grows == 2:
-                self.h5Object.grow()
                 self.h5Object[:,self.h5Object.shape[0]-1,:] = arr
             else:
-                self.h5Object.grow()
                 self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
 
 
@@ -626,12 +622,10 @@ class EField(FElementWithAttr):
     def __writeSpectrumGrowingData(self, dh):
 
         # way around for a bug in pniio
-
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                self.h5Object.grow()
                 if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0]-1,:] = arr
                 if len(self.h5Object.shape) == 2:
@@ -639,13 +633,12 @@ class EField(FElementWithAttr):
                 else:                      
                     self.h5Object[self.h5Object.shape[0]-1] = arr
             else:
-                self.h5Object.grow()
                 if len(self.h5Object.shape) == 3:
                     self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
                 elif  len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0]-1,:] = arr
                 else:
-                    if hasattr(arr,"__iter__") and type(arr).__name__ != 'str' and len(arr) == 1:
+                    if hasattr(arr,"__iter__") and type(arr).__name__!= 'str' and len(arr) == 1:
                         self.h5Object[self.h5Object.shape[0]-1] = arr[0]
                     else:
                         self.h5Object[self.h5Object.shape[0]-1] = arr
@@ -653,18 +646,14 @@ class EField(FElementWithAttr):
         else:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                self.h5Object.grow(1)
                 self.h5Object[:,self.h5Object.shape[1]-1] = arr
             else:
                 if len(self.h5Object.shape) == 3: 
                     if self.grows == 2:
-                        self.h5Object.grow(1)
                         self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
                     else:
-                        self.h5Object.grow(2)
                         self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
                 else:
-                    self.h5Object.grow(1)
                     self.h5Object[:,self.h5Object.shape[1]-1] = arr
 
 
@@ -674,7 +663,6 @@ class EField(FElementWithAttr):
 
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
-            self.h5Object.grow()
             if len(self.h5Object.shape) == 3:
                 self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
             elif len(self.h5Object.shape) == 2:
@@ -689,13 +677,11 @@ class EField(FElementWithAttr):
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0]-1] = arr[0][0]
         elif self.grows == 2:
-            self.h5Object.grow(1)
             if len(self.h5Object.shape) == 3:
                 self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
             elif len(self.h5Object.shape) == 2:
                 self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
         else:
-            self.h5Object.grow(2)
             self.h5Object[:,:,self.h5Object.shape[2]-1] = arr        
 
 
@@ -715,12 +701,19 @@ class EField(FElementWithAttr):
                     "Case with %s format not supported " % str(dh.format).split('.')[-1] 
             raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
 
+    ## grows the h5 field    
+    # \brief Ir runs the grow command of h5Object with grows-1 parameter
+    def __grow(self):
+        if self.grows and self.grows>0 and hasattr(self.h5Object,"grow"):
+            self.h5Object.grow(self.grows-1)
+                
 
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
         try:
             if self.source:
+                self.__grow()
                 dt = self.source.getData()
                 dh = None
                 if dt:
@@ -758,6 +751,52 @@ class EField(FElementWithAttr):
 
 #            pass
 
+    ## fills object with maximum value            
+    # \brief It fills object or an extend part of object by default value 
+    def __fillMax(self):
+        shape = list(self.h5Object.shape)
+        nptype = self.h5Object.dtype
+        value = ''
+
+        if self.grows:
+            shape.pop(self.grows-1)
+            
+        if nptype == "bool":
+            value = False
+        elif nptype != "string":
+            try:
+                value = numpy.iinfo(getattr(numpy, nptype)).max
+            except:
+                try:
+                    value = numpy.finfo(getattr(numpy, nptype)).max
+                except:    
+                    value = 0
+        else:
+            nptype = "str"
+
+            
+        format = 'SCALAR'
+        if shape and  len(shape) > 0  and shape[0] >= 1:
+            arr = numpy.empty(shape, dtype=nptype)
+            arr.fill(value)
+            if len(shape) == 1:
+                format = 'SPECTRUM'
+            else:
+                format = 'IMAGE'
+        else:
+            arr = value
+
+        dh = DataHolder(format,arr,NTP.npTt[self.h5Object.dtype],shape)    
+        
+        
+        if not self.__extraD:
+            self.__writeData(dh)
+        else:
+            self.__writeGrowingData(dh)
+
+            
+
+
     ## marks the field as failed
     # \brief It marks the field as failed            
     def markFailed(self):          
@@ -765,8 +804,8 @@ class EField(FElementWithAttr):
             self.h5Object.attr("nexdatas_canfail","string").value = "FAILED"
             if Streams.log_info:
                 print >> Streams.log_info, "EField::markFailed() - %s marked as failed" % (self.h5Object.name) 
-
-
+            self.__fillMax()
+    
 ## group H5 tag element        
 class EGroup(FElementWithAttr):        
     ## constructor
@@ -877,9 +916,9 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
         if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            self.h5Object = (self._lastObject()).link((self.__typesToNames(self._tagAttrs["target"], 
-                                                                         groupTypes)).encode(),
-                                                      self._tagAttrs["name"].encode())
+            self.h5Object = (self._lastObject()).link(
+                (self.__typesToNames(self._tagAttrs["target"], groupTypes)).encode(),
+                self._tagAttrs["name"].encode())
         else:
             if Streams.log_error:
                 print >> Streams.log_error,\
@@ -990,6 +1029,39 @@ class EAttribute(FElement):
                     if Streams.log_error:
                         print >> Streams.log_error, "Group::run() - %s  " % str(self.error)
                 print >> sys.stderr, "Group::run() - ERROR", str(self.error)
+
+
+    ## fills object with maximum value            
+    # \brief It fills object or an extend part of object by default value 
+    def __fillMax(self):
+        if self.name and not self.h5Object:
+            self.h5Object = self._last.h5Attribute(self.name)
+        shape = list(self.h5Object.shape)
+        
+        nptype = self.h5Object.dtype
+        value = ''
+
+        if nptype != "string":
+            try:
+                value = numpy.iinfo(getattr(numpy, nptype)).max
+            except:
+                try:
+                    value = numpy.finfo(getattr(numpy, nptype)).max
+                except:    
+                    value = 0
+        else:
+            nptype = "str"
+
+        if shape and  len(shape) > 0:
+            arr = numpy.empty(shape, dtype=nptype)
+            arr.fill(value)
+        else:
+            arr = value
+
+
+        self.h5Object.value = arr
+        
+            
             
 
     ## marks the field as failed
@@ -1001,7 +1073,7 @@ class EAttribute(FElement):
             if Streams.log_info:
                 print >> Streams.log_info, "EAttribute::markFailed() - %s of %s marked as failed" % (self.h5Object.name, field.name)
                 print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
-
+            self.__fillMax()    
 
 ## file H5 element        
 class EFile(FElement):        
