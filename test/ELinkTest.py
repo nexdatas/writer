@@ -43,6 +43,7 @@ from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters
 from ndts.H5Elements import XMLSettingSyntaxError
+from ndts.FetchNameHandler import TNObject
 
 from Checkers import Checker 
 
@@ -161,8 +162,10 @@ class ELinkTest(unittest.TestCase):
         atts3 = {"name":"link3","target":"entry3/testField"}
         atts4 = {"name":"link4","target":"/testField"}
         atts5 = {"name":"link5","target":"/testGroup"}
-        gT1 = {"NXentry":"testGroup"}
-        gT2 = {"NXentry":"entry3"}
+        gT1 = TNObject()
+        ch  = TNObject("testGroup","NXentry",gT1)
+        gT2 = TNObject()
+        ch = TNObject("entry3","NXentry",gT2)
 
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
@@ -192,14 +195,14 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li0.h5Object, None)
         self.assertEqual(li1.h5Object, None)
         self.assertEqual(li2.h5Object, None)
-        self.myAssertRaise(XMLSettingSyntaxError, li1.createLink,{})
+        self.myAssertRaise(XMLSettingSyntaxError, li1.createLink,TNObject())
         li1.createLink(gT1)
         self.assertEqual(li1.h5Object, None)
-        li2.createLink({})
-        self.myAssertRaise(XMLSettingSyntaxError, li3.createLink,{})
+        li2.createLink(TNObject())
+        self.myAssertRaise(XMLSettingSyntaxError, li3.createLink,TNObject())
         li3.createLink(gT2)
-        li4.createLink({})
-        li5.createLink({})
+        li4.createLink(TNObject())
+        li5.createLink(TNObject())
         self.assertEqual(li0.h5Object, None)
         self.assertEqual(li1.h5Object, None)
         self.assertEqual(li2.h5Object, None)

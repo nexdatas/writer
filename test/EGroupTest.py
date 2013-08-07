@@ -640,13 +640,9 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.h5Object.attr("NX_class").shape, ())
 
         gNames= {}
-        self.assertEqual(el.fetchName(gNames),None)
-        self.assertEqual(gNames[self._gattrs["type"]],self._gattrs["name"])
         self.assertEqual(el.store(),None)
 
         gNames= {}
-        self.assertEqual(el.fetchName(gNames),None)
-        self.assertEqual(gNames[self._gattrs["type"]],self._gattrs["name"])
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -678,13 +674,9 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.h5Object.attr("NX_class").shape, ())
 
         gNames= {}
-        self.assertEqual(el.fetchName(gNames),None)
-        self.assertEqual(gNames[self._gattrs["type"]],gattrs["type"][2:])
         self.assertEqual(el.store(),None)
 
         gNames= {}
-        self.assertEqual(el.fetchName(gNames),None)
-        self.assertEqual(gNames[self._gattrs["type"]],gattrs["type"][2:])
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -717,8 +709,6 @@ class EGroupTest(unittest.TestCase):
 
         gNames= {}
         el._tagAttrs.pop("type")
-        self.myAssertRaise(XMLSettingSyntaxError, el.fetchName, gNames)
-
 
         self._nxFile.close()
         os.remove(self._fname)

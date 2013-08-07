@@ -860,18 +860,6 @@ class EGroup(FElementWithAttr):
 
 
 
-    ## fetches the type and the name of the current group            
-    # \param groupTypes dictionary with the group type:name pairs            
-    def fetchName(self, groupTypes):
-        if ("type" in self._tagAttrs.keys()) and ("name" in self._tagAttrs.keys()):
-            groupTypes[self._tagAttrs["type"]] = self._tagAttrs["name"]
-        elif "type" in self._tagAttrs.keys():
-            groupTypes[self._tagAttrs["type"]] = self._tagAttrs["type"][2:]
-        else:
-            if Streams.log_error:
-                print >> Streams.log_error,\
-                    "EGroup::fetchName() - The group type attribute not defined"
-            raise XMLSettingSyntaxError, "The group type attribute not defined"
         
         
 
@@ -887,26 +875,41 @@ class ELink(FElement):
 
     ## converts types to Names using groupTypes dictionary
     # \param text original directory     
-    # \param groupTypes dictionary with type:name group pairs
-    # \returns directory defined by group namesS    
+    # \param groupTypes tree of TNObject with name:nxtype 
+    # \returns directory defined by group names    
     def __typesToNames(self, text, groupTypes):
         sp = text.split("/")
         res = ""
+        ch = groupTypes
+        valid = True if ch.name  == "root" else False
+
         for gr in sp[:-1]:
             if len(gr) > 0: 
                 sgr = gr.split(":")
                 if len(sgr)>1 :
                     res = "/".join([res,sgr[0]])
+                    if valid:
+                        ch = ch.child(name = sgr[0])
+                        if not ch:
+                            valid = False
                 else:
-                    if sgr[0] in groupTypes.keys():
-                        res = "/".join([res,groupTypes[sgr[0]]])
-                    elif sgr[0] in groupTypes.values():    
-                        res = "/".join([res,sgr[0]])
-                    else:
+                    if valid:
+                        c = ch.child(nxtype = sgr[0])
+                        if c:
+                            res = "/".join([res,c.name])
+                            ch = c
+                        else:
+                            c = ch.child(name = sgr[0])
+                            if c:
+                                res = "/".join([res,sgr[0]])
+                                ch = c
+                            else:
+                                valid = False
+                    if not valid:
                         if Streams.log_error:
                             print >> Streams.log_error,\
                                 "ELink::__typesToNames() - No %s in  groupTypes " %  str(sgr[0])
-                        raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ "in  groupTypes " 
+                        raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ " in groupTypes " 
         res = res + "/" + sp[-1]
                 
         return res
