@@ -141,8 +141,109 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el3.children, [])
 
 
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_child(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        root = TNObject()
+        self.assertEqual(root.name, 'root')
+        self.assertEqual(root.nxtype, None)
+        self.assertEqual(root.parent, None)
+        self.assertEqual(root.children, [])
+
+        nn = self.__rnd.randint(1, 10)
+        mname = "myname%s" % nn
+        mtype = "NXtype%s" % nn
+        el = TNObject(mname)
+        self.assertEqual(el.name, mname)
+        self.assertEqual(el.nxtype, None)
+        self.assertEqual(el.parent, None)
+        self.assertEqual(el.children, [])
+
+        nn = self.__rnd.randint(1, 10)
+        mname = "myname%s" % nn
+        mtype = "NXtype%s" % nn
+        self.assertEqual(root.children, [])
+        el = TNObject(mname, mtype, root)
+        self.assertEqual(root.children, [el])
+        self.assertEqual(el.name, mname)
+        self.assertEqual(el.nxtype, mtype)
+        self.assertEqual(el.parent, root)
+        self.assertEqual(el.children, [])
+
+
+
+        nn = self.__rnd.randint(1, 10)
+        mname2 = "myname%s" % nn
+        mtype2 = "NXtype%s" % nn
+        self.assertEqual(root.children, [el])
+        el2 = TNObject(mname2, mtype2, root)
+        self.assertEqual(root.children, [el, el2])
+        self.assertEqual(el2.name, mname2)
+        self.assertEqual(el2.nxtype, mtype2)
+        self.assertEqual(el2.parent, root)
+        self.assertEqual(el2.children, [])
+
+
+        nn = self.__rnd.randint(1, 10)
+        mname3 = "myname%s" % nn
+        mtype3 = "NXtype%s" % nn
+        self.assertEqual(root.children, [el,el2])
+        self.assertEqual(el2.children, [])
+        el3 = TNObject(mname3, mtype3, el2)
+        self.assertEqual(el2.children, [el3])
+        self.assertEqual(root.children, [el, el2])
+        self.assertEqual(el3.name, mname3)
+        self.assertEqual(el3.nxtype, mtype3)
+        self.assertEqual(el3.parent, el2)
+        self.assertEqual(el3.children, [])
+
+        ch = root.child()
+        self.assertEqual(ch, el)
+        ch = root.child(mname)
+        self.assertEqual(ch, el)
+        ch = root.child(mname2)
+        self.assertEqual(ch, el2)
+        ch = root.child(mname3)
+        self.assertEqual(ch, None)
         
 
+        ch = root.child(nxtype = mtype)
+        self.assertEqual(ch, el)
+        ch = root.child(nxtype = mtype2)
+        self.assertEqual(ch, el2)
+        ch = root.child(nxtype = mtype3)
+        self.assertEqual(ch, None)
+        
+
+
+        ch = el2.child()
+        self.assertEqual(ch, el3)
+        ch = el2.child(mname3)
+        self.assertEqual(ch, el3)
+        ch = el2.child(mname2)
+        self.assertEqual(ch, None)
+        
+
+        ch = el2.child(nxtype = mtype3)
+        self.assertEqual(ch, el3)
+        ch = el2.child(nxtype = mtype2)
+        self.assertEqual(ch, None)
+
+
+        ch = el3.child()
+        self.assertEqual(ch, None)
+        ch = el3.child(mname2)
+        self.assertEqual(ch, None)
+        
+
+        ch = el3.child(nxtype = mtype2)
+        self.assertEqual(ch, None)
+        
 
 
 
