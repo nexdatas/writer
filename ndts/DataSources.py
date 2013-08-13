@@ -159,7 +159,6 @@ class TangoSource(DataSource):
 
             raise  DataSourceSetupError, \
                 "Tango record name not defined: %s" % xml
-
         dv = dom.getElementsByTagName("device")
         if dv and len(dv)> 0:
             self.device = dv[0].getAttribute("name") if dv[0].hasAttribute("name") else None
@@ -579,7 +578,7 @@ class PyEvalSource(DataSource):
                 if len(name)>0:
                     if len(name)>3 and name[:2] == 'ds.':
                         name = name[3:]
-                    self.__sources[name] = (dstype, self._getText(inp))
+                    self.__sources[name] = (dstype, inp.toxml())
                 else:
                     if Streams.log_error:
                         print >> Streams.log_error, "PyEvalSource::setup() - PyEval input %s not defined" % name
@@ -657,10 +656,11 @@ class PyEvalSource(DataSource):
         for name, source in self.__datasources.items():
             if hasattr(source, "setDecorders"):
                 source.setDecoders(decoders)
-
+        
     ## sets the datasources
     # \param pool datasource pool
     def setDataSources(self, pool):
+        
         for name, inp in self.__sources.items():
             if pool and pool.hasDataSource(inp[0]):
                 self.__datasources[name] = pool.get(inp[0])()
