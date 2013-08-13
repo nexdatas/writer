@@ -23,8 +23,6 @@ import sys
 
 import numpy 
 
-#from DataSource import DataSource
-
 from DataHolder import DataHolder
 
 from Element import Element
@@ -952,6 +950,7 @@ class EAttribute(FElement):
 
     ## stores the tag content
     # \param xml xml setting
+    # \returns (strategy,trigger)
     def store(self, xml = None):
 
         if "name" in self._tagAttrs.keys(): 

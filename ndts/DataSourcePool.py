@@ -34,7 +34,7 @@ class DataSourcePool(object):
     # \param configJSON string with datasources    
     def __init__(self, configJSON = None):
         self.__pool = {"DB":DataSources.DBaseSource, "TANGO":DataSources.TangoSource,
-                      "CLIENT":DataSources.ClientSource}
+                      "CLIENT":DataSources.ClientSource, "PYEVAL":DataSources.PyEvalSource}
         self.__appendUserDataSources(configJSON)
 
     ## loads user datasources
