@@ -1,7 +1,8 @@
 2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding group to TANGOPYEVAL datasources
 	* adding PYEVAL datasource for evaluating data by python script
 	* changing linking system
-	* tagged as 1.1.9
+	* tagged as 1.2.0
 
 2013-08-06 Jan Kotanski <jankotan@gmail.com>
 	* adding filling failed object by its maximal value
