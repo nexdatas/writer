@@ -149,7 +149,6 @@ class FElement(Element):
                 found = False
                 if self.source and self.source.isValid():
                     data = self.source.getData()
-
                     if isinstance(data, dict):                        
                         dh = DataHolder(**data)
                         shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)

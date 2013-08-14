@@ -114,35 +114,37 @@ class DataSource(object):
             return ""
         return xml[start + 1:end].replace("&lt;","<").replace("&gt;",">").replace("&amp;","&")
 
-
-
 ## Tango data source
 class TangoSource(DataSource):
     ## constructor
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-        ## name of data record
-        self.name = None
-        ## name of the Tango device
-        self.device = None
-        ## member type of the data, i.e. attribute, property,...
-        self.memberType = None
-        ## host name of Tango server
-        self.hostname = None
-        ## port of Tango server
-        self.port = None
-        ## encoding of Tango DevEncoded variables
-        self.encoding = None
-        ## decoder pool
-        self.__decoders = None
+
+        ## Tango device member
+        self.member = TgMember(None)
+
+        ## datasource tango group
+        self.group = None
+        ## global tango group for TANGO datasources
+        self.__tngrp = None
+        ## datasource pool
+        self.__pool = None
+
+        ## full device name
+        self.dv = None
         ## device proxy
         self.__proxy = None
+
+        ## decoder pool
+        self.__decoders = None
+
+
 
     ## self-description 
     # \returns self-describing string
     def __str__(self):
-        return " TANGO Device %s : %s (%s)" % (self.device, self.name, self.memberType )
+        return " TANGO Device %s : %s (%s)" % (self.dv, self.member.name, self.member.memberType )
 
 
     ## sets the parrameters up from xml
@@ -151,44 +153,69 @@ class TangoSource(DataSource):
 #        print "TG XML" , xml 
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
+        name = None
         if rec and len(rec)> 0:
-            self.name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
-        if not self.name:
+            name = rec[0].getAttribute("name") if rec[0].hasAttribute("name") else None
+        if not name:
             if Streams.log_error:
                 print >> Streams.log_error,  "TangoSource::setup() - Tango record name not defined: %s" % xml
 
             raise  DataSourceSetupError, \
                 "Tango record name not defined: %s" % xml
         dv = dom.getElementsByTagName("device")
+        device = None
         if dv and len(dv)> 0:
-            self.device = dv[0].getAttribute("name") if dv[0].hasAttribute("name") else None
-            self.hostname = dv[0].getAttribute("hostname") if dv[0].hasAttribute("hostname") else None
-            self.port = dv[0].getAttribute("port") if dv[0].hasAttribute("port") else None
-            self.encoding = dv[0].getAttribute("encoding") if dv[0].hasAttribute("encoding") else None
-            self.memberType = dv[0].getAttribute("member") if dv[0].hasAttribute("member") else None
-            if not self.memberType or self.memberType not in ["attribute", "command", "property"]:
-                self.memberType = "attribute" 
-#            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.memberType, self.encoding
-        if not self.device :
+            device = dv[0].getAttribute("name") if dv[0].hasAttribute("name") else None
+            hostname = dv[0].getAttribute("hostname") if dv[0].hasAttribute("hostname") else None
+            port = dv[0].getAttribute("port") if dv[0].hasAttribute("port") else None
+            self.group = dv[0].getAttribute("group") if dv[0].hasAttribute("group") else None
+            encoding = dv[0].getAttribute("encoding") if dv[0].hasAttribute("encoding") else None
+            memberType = dv[0].getAttribute("member") if dv[0].hasAttribute("member") else None
+            if not memberType or memberType not in ["attribute", "command", "property"]:
+                memberType = "attribute" 
+            self.member = TgMember(name, memberType, encoding)
+#            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.member.memberType, self.member.encoding
+        if not device :
             if Streams.log_error:
                 print >> Streams.log_error,  "TangoSource::setup() - Tango device name not defined: %s" % xml
             raise  DataSourceSetupError, \
                 "Tango device name not defined: %s" % xml
 
+        if hostname and port:
+            self.dv = "%s:%s/%s" % (hostname.encode(), port.encode(),device.encode())
+        elif device:
+            self.dv = "%s" % (device.encode())
+            
+        found = self.__proxySetup(self.dv)    
+
+        if not found:
+            if Streams.log_error:
+                print >> Streams.log_error,  "TangoSource::setup() - Cannot connect to: %s \ndefined by %s" \
+                    % (self.dv, xml)
+            raise  DataSourceSetupError, \
+                "Cannot connect to: %s \ndefined by %s" % (self.dv, xml)
+
+
+
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        self.__decoders = decoders
+
+    ## sets the Tango proxy up
+    ## device tango device    
+    # \returns if proxy is set up    
+    def __proxySetup(self, device):    
         found = False
         cnt = 0
 
-        if self.hostname and self.port:
-            dv = "%s:%s/%s" % (self.hostname.encode(), self.port.encode(),self.device.encode())
-        elif self.device:
-            dv = "%s" % (self.device.encode())
-            
         try:
-            self.__proxy = PyTango.DeviceProxy(dv)
+            self.__proxy = PyTango.DeviceProxy(self.dv)
 
         except:
             if Streams.log_error:
-                print >> Streams.log_error, "TangoSource::setup() - Cannot connect to %s " % dv
+                print >> Streams.log_error, "TangoSource::__proxySetup() - Cannot connect to %s " % self.dv
             raise
 
         while not found and cnt < 1000:
@@ -202,21 +229,7 @@ class TangoSource(DataSource):
                 time.sleep(0.01)
                 found = False
             cnt +=1
-
-        if not found:
-            if Streams.log_error:
-                print >> Streams.log_error,  "TangoSource::setup() - Cannot connect to: %s \ndefined by %s" % (dv, xml)
-            raise  DataSourceSetupError, \
-                "Cannot connect to: %s \ndefined by %s" % (dv, xml)
-
-
-
-
-    ## sets the used decoders
-    # \param decoders pool to be set
-    def setDecoders(self, decoders):
-        self.__decoders = decoders
-
+        return found    
 
     ## data provider
     # \returns dictionary with collected data  
@@ -229,69 +242,216 @@ class TangoSource(DataSource):
         failed = True
         try:
             if self.__proxy:
-                alist = self.__proxy.get_attribute_list()
+                self.__proxy.state()
                 failed = False
         except:
             failed = True
-        if self.device and self.memberType and self.name:
+        if self.dv and self.member.memberType and self.member.name:
             if not self.__proxy or failed:
-                found = False
-                cnt = 0
-
-                if self.hostname and self.port:
-                    self.__proxy = PyTango.DeviceProxy("%s:%s/%s" % (self.hostname.encode(),
-                                                                     self.port.encode(),
-                                                                     self.device.encode()))
-                else:
-                    self.__proxy = PyTango.DeviceProxy(self.device.encode())
-
-                while not found and cnt < 1000:
-                    if cnt > 1:
-                        time.sleep(0.01)
-                    try:
-                        if self.__proxy.state() != PyTango.DevState.RUNNING:
-                            found = True
-                        found = True
-                    except:    
-                        time.sleep(0.01)
-                        found = False
-                    cnt +=1
-
+                found = self.__proxySetup(self.dv)    
                 if not found:
                     if Streams.log_error:
                         print >> Streams.log_error,  "TangoSource::getData() - Setting up lasts to long: %s" % xml
                     raise  DataSourceSetupError, \
                         "Setting up lasts to long: %s" % xml
 
-            da = None
-            if self.memberType == "attribute":
-#                print "getting the attribute: ", self.name
-                if failed or not alist:
-                    alist = self.__proxy.get_attribute_list()
-                if self.name.encode() in alist:
-                    da = self.__proxy.read_attribute( self.name.encode())
-                    return {"format":str(da.data_format).split('.')[-1], 
-                            "value":da.value, "tangoDType":str(da.type).split('.')[-1], 
-                            "shape":([da.dim_y,da.dim_x] if da.dim_y else [da.dim_x, 0]),
-                            "encoding": self.encoding, "decoders": self.__decoders}
-                  
-            elif self.memberType == "property":
-#                print "getting the property: ", self.name
-                plist = self.__proxy.get_property_list('*')
-                if self.name.encode() in plist:
-                    da = self.__proxy.get_property(self.name.encode())[self.name.encode()][0]
-                    return {"format":"SCALAR", "value":str(da), "tangoDType":"DevString", "shape":[1,0]}
-            elif self.memberType == "command":
-#                print "calling the command: ", self.name
-		clist = [cm.cmd_name for cm in self.__proxy.command_list_query()]
-                if self.name in clist:
-                    cd = self.__proxy.command_query(self.name.encode())
-                    da = self.__proxy.command_inout(self.name.encode())
-                    return {"format":"SCALAR", "value":da, 
-                            "tangoDType":str(cd.out_type).split('.')[-1],  "shape":[1,0], 
-                            "encoding":self.encoding, "decoders":self.__decoders}
+            if self.group is None:
+                self.member.getData(self.__proxy)
+            else:
+                self.__tngrp.getData(self.__pool.counter, self.__proxy)
+            return self.member.getValue(self.__decoders)
                     
+    ## sets the datasources
+    # \param pool datasource pool
+    def setDataSources(self, pool):
+        self.__pool = pool
+        if 'TANGO' not in self.__pool.common.keys():
+            self.__pool.common['TANGO'] = {}
+        if self.group:
+            if self.group not in self.__pool.common['TANGO'].keys():
+                self.__pool.common['TANGO'][self.group] = TgGroup()
+            self.__tngrp = self.__pool.common['TANGO'][self.group]
+
+            tdv = self.__tngrp.getDevice(self.dv)
+            self.member = tdv.setMember(self.member)
+
+
+## Group of tango devices                
+class TgGroup(object):
+    ## default constructor
+    # \param counter of steps
+    def __init__(self, counter = 0):
+        self.counter = conter
+        self.devices = {}
+
+    ## provides tango device
+    # \param device tango device name    
+    # \returns TgDevice instance of tango device
+    def getDevice(self, device):
+        if device not in self.devices:
+            self.devices[device] = TgDevice(device)
+        return self.devices[device]    
+
+    ## reads data from device proxy
+    # \param counter counter of scan steps
+    # \param proxy device proxy
+    def getData(self, counter, proxy):
+        if counter == self.counter:
+            return
+        self.counter = counter
+        errors = []
+        for dv in devices:
+            for mb in dv.members:
+                mb.reset()
+            if hasAttributes:
+                attr = dv.attributes
+                alist = proxy.get_attribute_list()
+                
+                for a in attr:
+                    if a.encode() not in alist:
+                        errors.append((a, dv.device))
+                if errors:                
+                    if Streams.log_error:
+                        print >> Streams.log_error, "TgGroup::getData() - attribute not in tango device attributes:%s" % errors
+                    raise DataSourceSetupError, ("TgGroup::getData() - attribute not in tango device attributes:%s" % errors )
+
+                res = proxy.read_attributes(attr)
+                for i in range(len(attr)):
+                    mb = dv.members[attr[i]]
+                    mb.setData(res[i])
+
+
+                
+
+            for mb in dv.members:
+                if mb.memberType == "property":
+            #                print "getting the property: ", self.name
+                    plist = proxy.get_property_list('*')
+                    if mb.name.encode() in plist:
+                        da = proxy.get_property(self.name.encode())[self.name.encode()][0]
+                        mb.setData(da)
+                elif self.memberType == "command":
+                    #                print "calling the command: ", self.name
+                    clist = [cm.cmd_name for cm in proxy.command_list_query()]
+                    if self.name in clist:
+                        cd = proxy.command_query(self.name.encode())
+                        da = proxy.command_inout(self.name.encode())
+                        mb.setData(da, cd)
                         
+
+## tango device
+class TgDevice(object):
+    ## default constructor
+    # \param device tango device name
+    def __init__(self, device):
+        ## tango device name
+        self.device = device
+        ## dictionary with tango members
+        self.members = {}
+        ## device attribute names
+        self.attributes = []
+        ## device property names
+        self.properties = []
+        ## device command names
+        self.commands = []
+        
+
+
+    ## provides tango device member
+    # \param member tango  device member 
+    # \returns TgMember instance of tango device member
+    def setMember(self, member):
+        if member.name not in self.members:
+            self.members[member.name] = member
+            self.setFlag(member)
+        return self.members[member.name]    
+        
+    ## sets corresponding flag related to member type
+    # \param member given tango device member
+    def setFlags(self, member):
+        if member.memberType == 'attribute':
+            self.hasAttributes.append(member.name)
+        elif member.memberType == 'property':
+            self.hasProperties.append(member.name)
+        elif member.memberType == 'command':
+            self.hasCommands.append(member.name)
+            
+            
+
+## tango device member
+class TgMember(object):
+    ## default constructor
+    def __init__(self, name, memberType='attribute', encoding = None):
+        ## name of data record
+        self.name = name
+        ## member type of the data, i.e. attribute, property,...
+        self.memberType = memberType
+        ## encoding of Tango DevEncoded variables
+        self.encoding = encoding
+        ## data value
+        self.__value = None
+        ## output data
+        self.__da = None
+        ## input command data
+        self.__cd = None 
+
+    ## cleans output value
+    def reset(self):
+        self.__value = None
+        self.__da = None
+        self.__cd = None 
+        
+    ## sets tango data    
+    # \param da output tango data
+    # \param input command data
+    def setData(self, da, cd=None):
+        self.__da = da
+        self.__cd = cd
+    
+
+    ## provides value of tango member    
+    # \returns dictionary with {"format":, "value":, "tangoDType":,  "shape":, "encoding":, "decoders":}
+    # \param decoders decoder pool
+    def getValue(self, decoders = None):
+        if self.__value:
+            return value
+        
+        if self.memberType == "attribute":
+            self.__value = {"format":str(self.__da.data_format).split('.')[-1], 
+                          "value":self.__da.value, "tangoDType":str(self.__da.type).split('.')[-1], 
+                          "shape":([self.__da.dim_y,self.__da.dim_x] \
+                                       if self.__da.dim_y else [self.__da.dim_x, 0]),
+                          "encoding": self.encoding, "decoders": decoders}
+        elif self.memberType == "property":
+            self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1,0]}
+        elif self.memberType == "command":
+            self.__value = {"format":"SCALAR", "value":self.__da, 
+                          "tangoDType":str(self.__cd.out_type).split('.')[-1],  "shape":[1,0], 
+                          "encoding":self.encoding, "decoders":decoders}
+        return self.__value
+        
+    ## reads data from device proxy
+    # \param proxy device proxy
+    def getData(self, proxy):
+        self.reset()
+        
+        if self.memberType == "attribute":
+            #            print "getting the attribute: ", self.name
+            alist = proxy.get_attribute_list()
+            if self.name.encode() in alist:
+                self.__da = proxy.read_attribute( self.name.encode())
+        elif self.memberType == "property":
+            #                print "getting the property: ", self.name
+            plist = proxy.get_property_list('*')
+            if self.name.encode() in plist:
+                self.__da = proxy.get_property(self.name.encode())[self.name.encode()][0]
+        elif self.memberType == "command":
+            #                print "calling the command: ", self.name
+            clist = [cm.cmd_name for cm in proxy.command_list_query()]
+            if self.name in clist:
+                self.__cd = proxy.command_query(self.name.encode())
+                self.__da = proxy.command_inout(self.name.encode())
+
 
 ## DataBase data source
 class DBaseSource(DataSource):
@@ -458,6 +618,8 @@ class DBaseSource(DataSource):
             cursor.close()
             db.close()
         return dh
+
+
 
 ## Client data source
 class ClientSource(DataSource):

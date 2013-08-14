@@ -36,6 +36,10 @@ class DataSourcePool(object):
         self.__pool = {"DB":DataSources.DBaseSource, "TANGO":DataSources.TangoSource,
                       "CLIENT":DataSources.ClientSource, "PYEVAL":DataSources.PyEvalSource}
         self.__appendUserDataSources(configJSON)
+        ## global variables for specific datasources
+        self.common = {}
+        ## step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2; 
+        self.counter = 0
 
     ## loads user datasources
     # \param configJSON string with datasources    
