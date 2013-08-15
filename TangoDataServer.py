@@ -119,6 +119,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def read_attr_hardware(self, data):
 		print "In ", self.get_name(), "::read_attr_hardware()"
 
+
 #==================================================================
 #
 #	TangoDataServer read/write attribute methods
@@ -341,6 +342,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
+			self.tdw.numThreads = self.NumberOfThreads
 			self.tdw.openEntry()
 			self.set_state(PyTango.DevState.EXTRACT)
  		finally:
@@ -404,6 +406,10 @@ class TangoDataServerClass(PyTango.DeviceClass):
 
 	#	Device Properties
 	device_property_list = {
+		'NumberOfThreads':
+			[PyTango.DevLong,
+			"maximal number of threads",
+			[ 100 ] ],
 		}
 
 
