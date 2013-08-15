@@ -21,6 +21,7 @@
 
 import struct
 import numpy
+import threading
 
 import DataSources
 
@@ -40,6 +41,8 @@ class DataSourcePool(object):
         self.common = {}
         ## step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2; 
         self.counter = 0
+        ## pool lock
+        self.lock = threading.Lock()
 
     ## loads user datasources
     # \param configJSON string with datasources    

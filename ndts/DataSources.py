@@ -25,6 +25,7 @@ import sys
 from xml.dom import minidom
 from Types import NTP
 import Streams
+import threading
 
 try:
     import PyTango
@@ -174,7 +175,6 @@ class TangoSource(DataSource):
             if not memberType or memberType not in ["attribute", "command", "property"]:
                 memberType = "attribute" 
             self.member = TgMember(name, memberType, encoding)
-#            print "Tango Device:", self.name, self.device, self.hostname,self.port, self.member.memberType, self.member.encoding
         if not device :
             if Streams.log_error:
                 print >> Streams.log_error,  "TangoSource::setup() - Tango device name not defined: %s" % xml
@@ -255,42 +255,43 @@ class TangoSource(DataSource):
                     raise  DataSourceSetupError, \
                         "Setting up lasts to long: %s" % xml
 
-#            print "getData", self.member.name, self.dv, self.group
             if self.group is None:
                 self.member.getData(self.__proxy)
             else:
                 self.__tngrp.getData(self.__pool.counter)
-#            vv = self.member.getValue(self.__decoders)
-#            print "VV", vv
-#            return  vv
 
-            return self.member.getValue(self.__decoders)
+            if hasattr(self.__tngrp, "lock"):
+                self.__tngrp.lock.acquire()
+            try:
+                val = self.member.getValue(self.__decoders)
+            finally:
+                if hasattr(self.__tngrp,"lock"):
+                    self.__tngrp.lock.release()
+            return  val
+
                     
     ## sets the datasources
     # \param pool datasource pool
     def setDataSources(self, pool):
         self.__pool = pool
-        if 'TANGO' not in self.__pool.common.keys():
-            self.__pool.common['TANGO'] = {}
-        if self.group:
-            if "LOCK" not in self.__pool.common['TANGO']:
-                self.__pool.common['TANGO']["LOCK"] = True
-            elif self.__pool.common['TANGO']["LOCK"]:
-                while(self.__pool.common['TANGO']["LOCK"]):
-                    time.sleep(0.001)
-                self.__pool.common['TANGO']["LOCK"] = True
-            if self.group not in self.__pool.common['TANGO'].keys():
-                self.__pool.common['TANGO'][self.group] = TgGroup()
-            self.__pool.common['TANGO']["LOCK"] = False
-            self.__tngrp = self.__pool.common['TANGO'][self.group]
+        pool.lock.acquire()
+        try:
+            if 'TANGO' not in self.__pool.common.keys():
+                self.__pool.common['TANGO'] = {}
+            if self.group:
+                if self.group not in self.__pool.common['TANGO'].keys():
+                    self.__pool.common['TANGO'][self.group] = TgGroup()
+                self.__tngrp = self.__pool.common['TANGO'][self.group]
 
-            while(self.__tngrp.lock):
-                time.sleep(0.001)
-            self.__tngrp.lock = True
-            tdv = self.__tngrp.getDevice(self.dv)
-            tdv.proxy = self.__proxy
-            self.member = tdv.setMember(self.member)
-            self.__tngrp.lock = False
+                self.__pool.common['TANGO']["LOCK"] = threading.Lock()
+                self.__tngrp.lock.acquire()
+                tdv = self.__tngrp.getDevice(self.dv)
+                tdv.proxy = self.__proxy
+                self.member = tdv.setMember(self.member)
+        finally:
+            if self.group:
+                self.__tngrp.lock.release()
+            pool.lock.release()
 
 
 ## Group of tango devices                
@@ -298,7 +299,7 @@ class TgGroup(object):
     ## default constructor
     # \param counter of steps
     def __init__(self, counter = 0):
-        self.lock = False
+        self.lock = threading.Lock()
         self.counter = counter
         self.devices = {}
 
@@ -318,70 +319,75 @@ class TgGroup(object):
         if counter == self.counter:
 #            print "PASSING"  
             return
-        self.counter = counter
-        errors = []
-#        print "getDataG2", self.devices.keys()
-        for dv in self.devices.values():
-#            print "DV", dv.device
-            for mb in dv.members.values():
-                mb.reset()
+        try:
+            self.lock.acquire()
 
-
-            failed = True
-            try:
-                if dv.proxy:
-                    dv.proxy.state()
-                    failed = False
-            except:
-                failed = True
-            if not dv.proxy or failed:
-                found = self.__proxySetup(dv.name)    
-                if not found:
-                    if Streams.log_error:
-                        print >> Streams.log_error,  "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
-                    raise DataSourceSetupError, \
-                        "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
-
-
-
-
-
-            if dv.attributes:
-                attr = dv.attributes
-                alist = dv.proxy.get_attribute_list()
-                
-                for a in attr:
-                    if a.encode() not in alist:
-                        errors.append((a, dv.device))
-                if errors:                
-                    if Streams.log_error:
-                        print >> Streams.log_error, "TgGroup::getData() - attribute not in tango device attributes:%s" % errors
-                    raise DataSourceSetupError, ("TgGroup::getData() - attribute not in tango device attributes:%s" % errors )
-
-                res = dv.proxy.read_attributes(attr)
-#                print "ATTR", attr,res
-                for i in range(len(attr)):
-                    mb = dv.members[attr[i]]
-                    mb.setData(res[i])
-
-
-                
-
+            self.counter = counter
+            errors = []
+#            print "getDataG2", self.devices.keys()
+            for dv in self.devices.values():
+#                print "DV", dv.device
                 for mb in dv.members.values():
-                    if mb.memberType == "property":
+                    mb.reset()
+
+
+                failed = True
+                try:
+                    if dv.proxy:
+                        dv.proxy.state()
+                        failed = False
+                except:
+                    failed = True
+                if not dv.proxy or failed:
+                    found = self.__proxySetup(dv.name)    
+                    if not found:
+                        if Streams.log_error:
+                            print >> Streams.log_error,  "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
+                        raise DataSourceSetupError, \
+                            "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
+
+
+
+
+
+                if dv.attributes:
+                    attr = dv.attributes
+                    alist = dv.proxy.get_attribute_list()
+                
+                    for a in attr:
+                        if a.encode() not in alist:
+                            errors.append((a, dv.device))
+                    if errors:                
+                        if Streams.log_error:
+                            print >> Streams.log_error, "TgGroup::getData() - attribute not in tango device attributes:%s" % errors
+                        raise DataSourceSetupError, ("TgGroup::getData() - attribute not in tango device attributes:%s" % errors )
+
+                    res = dv.proxy.read_attributes(attr)
+#                    print "ATTR", attr,res
+                    for i in range(len(attr)):
+                        mb = dv.members[attr[i]]
+                        mb.setData(res[i])
+
+
+                
+
+                    for mb in dv.members.values():
+                        if mb.memberType == "property":
                         #                print "getting the property: ", self.name
-                        plist = dv.proxy.get_property_list('*')
-                        if mb.name.encode() in plist:
-                            da = dv.proxy.get_property(mb.name.encode())[mb.name.encode()][0]
-                            mb.setData(da)
-                    elif mb.memberType == "command":
+                            plist = dv.proxy.get_property_list('*')
+                            if mb.name.encode() in plist:
+                                da = dv.proxy.get_property(mb.name.encode())[mb.name.encode()][0]
+                                mb.setData(da)
+                        elif mb.memberType == "command":
                     #                print "calling the command: ", self.name
-                        clist = [cm.cmd_name for cm in proxy.command_list_query()]
-                        if mb.name in clist:
-                            cd = dv.proxy.command_query(mb.name.encode())
-                            da = dv.proxy.command_inout(mb.name.encode())
-                            mb.setData(da, cd)
-                        
+                            clist = [cm.cmd_name for cm in proxy.command_list_query()]
+                            if mb.name in clist:
+                                cd = dv.proxy.command_query(mb.name.encode())
+                                da = dv.proxy.command_inout(mb.name.encode())
+                                mb.setData(da, cd)
+    
+        finally:
+            self.lock.release()
 
 ## tango device
 class TgDevice(object):
@@ -458,7 +464,7 @@ class TgMember(object):
     # \param decoders decoder pool
     def getValue(self, decoders = None):
         if self.__value:
-            return value
+            return self.__value
         
         if self.memberType == "attribute":
             self.__value = {"format":str(self.__da.data_format).split('.')[-1], 
