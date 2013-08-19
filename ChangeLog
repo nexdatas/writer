@@ -2,6 +2,7 @@
 	* adding group to TANGOPYEVAL datasources
 	* adding PYEVAL datasource for evaluating data by python script
 	* adding NumberOfThreads device property
+	* adding python_version field into nexus logs
 	* changing linking system
 	* tagged as 1.2.0
 
