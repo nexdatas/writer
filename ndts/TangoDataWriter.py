@@ -169,6 +169,9 @@ class TangoDataWriter(object):
         self.__eFile = EFile([], None, self.__nxFile)
         if self.addingLogs:    
             self.__logGroup = self.__nxFile.create_group("NexusConfigurationLogs")
+            vfield = self.__logGroup.create_field("python_version", "string")
+            vfield.write(str(sys.version))
+            vfield.close()
 
 
 
