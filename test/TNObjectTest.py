@@ -58,7 +58,7 @@ class ElementTest(unittest.TestCase):
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             self.__seed  = long(time.time() * 256) 
-         
+
         self.__rnd = random.Random(self.__seed)
 
 
@@ -66,6 +66,7 @@ class ElementTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
 
     ## test closer
     # \brief Common tear down
@@ -83,7 +84,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.parent, None)
         self.assertEqual(root.children, [])
 
-        nn = self.__rnd.randint(1, 10)
+        nn = self.__rnd.randint(1, 9)
         mname = "myname%s" % nn
         mtype = "NXtype%s" % nn
         el = TNObject(mname)
@@ -92,9 +93,9 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.parent, None)
         self.assertEqual(el.children, [])
 
-        nn = self.__rnd.randint(1, 10)
-        mname = "myname%s" % nn
-        mtype = "NXtype%s" % nn
+        nn = self.__rnd.randint(1, 9)
+        mname = "mywname%s" % nn
+        mtype = "NXwtype%s" % nn
         el = TNObject(mname, mtype)
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, mtype)
@@ -102,9 +103,9 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.children, [])
 
 
-        nn = self.__rnd.randint(1, 10)
-        mname = "myname%s" % nn
-        mtype = "NXtype%s" % nn
+        nn = self.__rnd.randint(1, 9)
+        mname = "myename%s" % nn
+        mtype = "NXetype%s" % nn
         self.assertEqual(root.children, [])
         el = TNObject(mname, mtype, root)
         self.assertEqual(root.children, [el])
@@ -115,9 +116,9 @@ class ElementTest(unittest.TestCase):
 
 
 
-        nn = self.__rnd.randint(1, 10)
-        mname = "myname%s" % nn
-        mtype = "NXtype%s" % nn
+        nn = self.__rnd.randint(1, 9)
+        mname = "mysname%s" % nn
+        mtype = "NXstype%s" % nn
         self.assertEqual(root.children, [el])
         el2 = TNObject(mname, mtype, root)
         self.assertEqual(root.children, [el, el2])
@@ -127,9 +128,9 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.children, [])
 
 
-        nn = self.__rnd.randint(1, 10)
-        mname = "myname%s" % nn
-        mtype = "NXtype%s" % nn
+        nn = self.__rnd.randint(1, 9)
+        mname = "mygname%s" % nn
+        mtype = "NXgtype%s" % nn
         self.assertEqual(root.children, [el,el2])
         self.assertEqual(el2.children, [])
         el3 = TNObject(mname, mtype, el2)
@@ -156,8 +157,8 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(root.children, [])
 
         nn = self.__rnd.randint(1, 10)
-        mname = "myname%s" % nn
-        mtype = "NXtype%s" % nn
+        mname = "myaname%s" % nn
+        mtype = "NXatype%s" % nn
         el = TNObject(mname)
         self.assertEqual(el.name, mname)
         self.assertEqual(el.nxtype, None)
@@ -178,8 +179,8 @@ class ElementTest(unittest.TestCase):
 
 
         nn = self.__rnd.randint(1, 10)
-        mname2 = "myname%s" % nn
-        mtype2 = "NXtype%s" % nn
+        mname2 = "myename%s" % nn
+        mtype2 = "NXetype%s" % nn
         self.assertEqual(root.children, [el])
         el2 = TNObject(mname2, mtype2, root)
         self.assertEqual(root.children, [el, el2])
@@ -190,8 +191,8 @@ class ElementTest(unittest.TestCase):
 
 
         nn = self.__rnd.randint(1, 10)
-        mname3 = "myname%s" % nn
-        mtype3 = "NXtype%s" % nn
+        mname3 = "mywname%s" % nn
+        mtype3 = "NXwtype%s" % nn
         self.assertEqual(root.children, [el,el2])
         self.assertEqual(el2.children, [])
         el3 = TNObject(mname3, mtype3, el2)
