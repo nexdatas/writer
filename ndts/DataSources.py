@@ -124,16 +124,15 @@ class TangoSource(DataSource):
 
         ## Tango device member
         self.member = TgMember(None)
-
         ## datasource tango group
         self.group = None
+        ## full device name
+        self.dv = None
+
         ## global tango group for TANGO datasources
         self.__tngrp = None
         ## datasource pool
         self.__pool = None
-
-        ## full device name
-        self.dv = None
         ## device proxy
         self.__proxy = None
 
@@ -258,6 +257,12 @@ class TangoSource(DataSource):
             if self.group is None:
                 self.member.getData(self.__proxy)
             else:
+                if not hasattr(self.__tngrp, "getData"): 
+                    if Streams.log_error:
+                        print >> Streams.log_error, \
+                            "TangoSource::getData() - DataSource pool not set up" 
+                raise DataSourceSetupError, "DataSource pool not set up" 
+
                 self.__tngrp.getData(self.__pool.counter)
 
             if hasattr(self.__tngrp, "lock"):
@@ -283,7 +288,6 @@ class TangoSource(DataSource):
                     self.__pool.common['TANGO'][self.group] = TgGroup()
                 self.__tngrp = self.__pool.common['TANGO'][self.group]
 
-                self.__pool.common['TANGO']["LOCK"] = threading.Lock()
                 self.__tngrp.lock.acquire()
                 tdv = self.__tngrp.getDevice(self.dv)
                 tdv.proxy = self.__proxy
@@ -315,18 +319,14 @@ class TgGroup(object):
     # \param counter counter of scan steps
     # \param proxy device proxy
     def getData(self, counter):
-#        print "getDataG", counter, self.devices.keys()
         if counter == self.counter:
-#            print "PASSING"  
             return
         try:
             self.lock.acquire()
 
             self.counter = counter
             errors = []
-#            print "getDataG2", self.devices.keys()
             for dv in self.devices.values():
-#                print "DV", dv.device
                 for mb in dv.members.values():
                     mb.reset()
 
@@ -346,10 +346,6 @@ class TgGroup(object):
                         raise DataSourceSetupError, \
                             "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
 
-
-
-
-
                 if dv.attributes:
                     attr = dv.attributes
                     alist = dv.proxy.get_attribute_list()
@@ -363,12 +359,9 @@ class TgGroup(object):
                         raise DataSourceSetupError, ("TgGroup::getData() - attribute not in tango device attributes:%s" % errors )
 
                     res = dv.proxy.read_attributes(attr)
-#                    print "ATTR", attr,res
                     for i in range(len(attr)):
                         mb = dv.members[attr[i]]
                         mb.setData(res[i])
-
-
                 
 
                     for mb in dv.members.values():

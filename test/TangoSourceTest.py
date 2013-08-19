@@ -49,11 +49,21 @@ from ndts.Errors import DataSourceSetupError
 from ndts.DataSourcePool import DataSourcePool
 from ndts import DataSources
 
+import threading
+import thread
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
+## test pool
+class pool(object):
+
+    def __init__(self):
+        self.common = {}
+        self.lock = threading.Lock()
+        self.counter = 0
+    
 ## test fixture
 class TangoSourceTest(unittest.TestCase):
 
@@ -129,6 +139,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.member.memberType, 'attribute')
         self.assertEqual(ds.member.encoding, None)
         self.assertEqual(ds.dv, None)
+        self.assertEqual(ds.group, None)
 
 
     ## __str__ test
@@ -225,6 +236,7 @@ class TangoSourceTest(unittest.TestCase):
         host = 'localhost'
         port = '10000'
         encoding = 'UTF8'
+        group = 'common_motors'
 
         ds = TangoSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -233,39 +245,46 @@ class TangoSourceTest(unittest.TestCase):
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
+        ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup,
                            "<datasource> <device name='%s'/> </datasource>" % device)
 
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
+        ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup,
                            "<datasource> <record name='%s'/> </datasource>" % dname)
 
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
+        ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup, "<datasource> <record/>  <device/> </datasource>")
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
+        ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s'/> </datasource>" % (dname,device))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.dv, device)
         self.assertEqual(ds.dv, device)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, None)
+        self.assertEqual(ds.group, None)
 
 
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
+        ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" % 
                  (dname,device,ctype))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.dv, device)
         self.assertEqual(ds.member.memberType, ctype)
         self.assertEqual(ds.member.encoding, None)
+        self.assertEqual(ds.group, None)
 
 
 
@@ -277,16 +296,19 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.dv, device)
         self.assertEqual(ds.member.memberType, atype)
+        self.assertEqual(ds.group, None)
 
 
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
+        ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s'/> </datasource>" % 
                  (dname,device,host))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.dv, device)
         self.assertEqual(ds.member.memberType, atype)
+        self.assertEqual(ds.group, None)
 
 
 
@@ -300,16 +322,32 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.dv, "%s:%s/%s" %(host, port, device))
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, None)
+        self.assertEqual(ds.group, None)
 
 
         ds.dv = None
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
+        ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s'/> </datasource>" % 
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.member.memberType, atype)
+        self.assertEqual(ds.member.encoding, encoding)
+        self.assertEqual(ds.group, None)
+
+
+        ds.dv = None
+        ds.member.name = None
+        ds.member.memberType = None
+        ds.member.encoding = None
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group= '%s'/> </datasource>" % 
+                 (dname,device,encoding, group))
+        self.assertEqual(ds.member.name, dname)
+        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.group, group)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, encoding)
 
@@ -339,6 +377,95 @@ class TangoSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         dt = el.getData()
         self.checkData(dt,"SCALAR", "Hello!","DevString" ,[1,0],None,None)
+
+        el = TangoSource()
+        el.group = 'bleble'
+        el.dv = 'stestp09/testss/s1r228'
+        el.memberType = 'attribute'
+        el.member.name = 'ScalarString'
+        self.assertTrue(isinstance(el, object))
+        self.myAssertRaise(DataSourceSetupError, el.getData)
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_setDataSources_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        el = TangoSource()
+        self.assertTrue(isinstance(el, object))
+        pl = pool()
+        self.assertTrue(not 'TANGO' in pl.common.keys())
+    
+        self.assertEqual(el.setDataSources(pl), None)
+        self.assertTrue('TANGO' in pl.common.keys())
+        self.assertEqual(pl.common['TANGO'],{})
+
+        el = TangoSource()
+        el.device = 'stestp09/testss/s1r228'
+        self.assertTrue(isinstance(el, object))
+        self.assertTrue('TANGO' in pl.common.keys())
+        self.assertEqual(el.setDataSources(pl), None)
+        self.assertTrue('TANGO' in pl.common.keys())
+        self.assertEqual(pl.common['TANGO'],{})
+
+
+
+
+        el = TangoSource()
+        el.group = 'bleble'
+        el.dv = 'stestp09/testss/s1r228'
+        el.memberType = 'attribute'
+        el.member.name = 'ScalarString'
+        self.assertTrue(isinstance(el, object))
+        self.assertTrue('TANGO' in pl.common.keys())
+        self.assertEqual(el.setDataSources(pl), None)
+        self.assertTrue('TANGO' in pl.common.keys())
+        cm = pl.common['TANGO']
+        self.assertEqual(len(cm), 1)
+        gr = cm['bleble']
+        self.assertTrue(isinstance(gr,TgGroup))
+        self.assertEqual(type(gr.lock),thread.LockType)
+        self.assertEqual(gr.counter, 0)
+        self.assertEqual(len(gr.devices), 1)
+        dv = gr.devices[el.dv]
+        self.assertTrue(isinstance(dv,TgDevice))
+        self.assertEqual(dv.device, el.dv)
+        self.assertEqual(dv.device, el.dv)
+        self.assertEqual(dv.proxy, None)
+        self.assertEqual(dv.attributes, [el.member.name])
+        self.assertEqual(dv.commands, [])
+        self.assertEqual(dv.properties, [])
+
+        mbs = dv.members
+        self.assertEqual(len(mbs), 1)
+        self.assertTrue(isinstance(mbs[el.member.name], TgMember))
+        self.assertEqual(mbs[el.member.name].name, el.member.name)
+        self.assertEqual(mbs[el.member.name].memberType, el.member.memberType)
+        self.assertEqual(mbs[el.member.name].encoding, el.member.encoding)
+        
+
+## TODO proxy [setup] and ..
+
+        el = TangoSource()
+        el.group = 'bleble2'
+        el.dv = 'stestp09/testss/s1r228'
+        el.memberType = 'attribute'
+        el.member.name = 'ScalarString'
+        self.assertTrue(isinstance(el, object))
+        self.assertTrue('TANGO' in pl.common.keys())
+        self.assertEqual(el.setDataSources(pl), None)
+        self.assertTrue('TANGO' in pl.common.keys())
+        cm = pl.common['TANGO']
+        self.assertEqual(len(cm), 2)
+        self.assertTrue(isinstance(cm['bleble'],TgGroup))
+        self.assertTrue(isinstance(cm['bleble2'],TgGroup))
+
+
 
 
 
