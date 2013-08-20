@@ -34,6 +34,7 @@ from xml import sax
 
 from ndts.FetchNameHandler import FetchNameHandler
 from ndts.Errors import XMLSyntaxError
+from ndts.FetchNameHandler import TNObject
 
 
 
@@ -91,7 +92,10 @@ class FetchNameHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        self.assertEqual(el.groupTypes.children,[])
 
 
     ## constructor test
@@ -105,11 +109,21 @@ class FetchNameHandlerTest(unittest.TestCase):
 
         el = FetchNameHandler()
         self.assertTrue(isinstance(el,sax.ContentHandler))
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        self.assertEqual(el.groupTypes.children,[])
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
 
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        self.assertEqual(len(el.groupTypes.children),1)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["type"][2:])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),0)
 
     ## constructor test
     # \brief It tests default settings
@@ -124,12 +138,27 @@ class FetchNameHandlerTest(unittest.TestCase):
         sattr2 = {attr2["type"]:attr2["name"]}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        self.assertEqual(el.groupTypes.children,[])
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("group",attr2), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["name"])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),1)
+        ch = ch.child(name = attr2["name"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr2["name"])
+        self.assertEqual(ch.nxtype,attr2["type"])
+        self.assertEqual(len(ch.children),0)
         
 
 
@@ -145,12 +174,21 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr2 = {"name":"scan","type":"NX_FLOAT"}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("field",attr2), None)
         self.assertEqual(el.endElement("field"), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["name"])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),0)
+
         
 
 
@@ -167,12 +205,26 @@ class FetchNameHandlerTest(unittest.TestCase):
         sattr2 = {attr2["type"]:attr2["name"]}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("group",attr2), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["type"][2:])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),1)
+        ch = ch.child(name = attr2["name"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr2["name"])
+        self.assertEqual(ch.nxtype,attr2["type"])
+        self.assertEqual(len(ch.children),0)
+        
+#        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
         
 
 
@@ -191,12 +243,28 @@ class FetchNameHandlerTest(unittest.TestCase):
         sattr2 = {attr2["type"]:"instrument"}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("group",attr2), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+
+
+
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["type"][2:])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),1)
+        ch = ch.child(nxtype = attr2["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr2["type"][2:])
+        self.assertEqual(ch.nxtype,attr2["type"])
+        self.assertEqual(len(ch.children),0)
+
+
         
 
     ## constructor test
@@ -209,10 +277,10 @@ class FetchNameHandlerTest(unittest.TestCase):
         sattr1 = {"1":attr1["name"]}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.myAssertRaise(XMLSyntaxError,el.endElement,"group")
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
 
 
     ## constructor test
@@ -227,15 +295,21 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr2 = {"name":"name"}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("attribute",attr2), None)
         self.assertEqual(el.characters("entry1"), None)
         self.assertEqual(el.endElement("attribute"), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
 
 
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,sattr1["NXentry"])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),0)
 
     ## constructor test
     # \brief It tests default settings
@@ -249,14 +323,20 @@ class FetchNameHandlerTest(unittest.TestCase):
         attr2 = {"name":"type"}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("attribute",attr2), None)
         self.assertEqual(el.characters("NXentry"), None)
         self.assertEqual(el.endElement("attribute"), None)
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
 
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(name = attr1["name"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["name"])
+        self.assertEqual(ch.nxtype,"NXentry")
+        self.assertEqual(len(ch.children),0)
 
 
 
@@ -273,7 +353,7 @@ class FetchNameHandlerTest(unittest.TestCase):
         at2 = {"name":"type"}
 
         el = FetchNameHandler()
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.startElement("attribute",at1), None)
         self.assertEqual(el.characters("entry1"), None)
@@ -284,8 +364,15 @@ class FetchNameHandlerTest(unittest.TestCase):
         self.assertEqual(el.endElement("attribute"), None)
 
         self.assertEqual(el.endElement("group"), None)
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
 
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = "NXentry")
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,"entry1")
+        self.assertEqual(ch.nxtype,"NXentry")
+        self.assertEqual(len(ch.children),0)
+        
 
 
     ## constructor test
@@ -303,7 +390,16 @@ class FetchNameHandlerTest(unittest.TestCase):
         sax.parseString('<group type="%s" name="%s" />' % (attr1["type"],attr1["name"]), el)
  
 
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        self.assertEqual(len(el.groupTypes.children),1)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["type"][2:])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),0)
+
+
 
 
 
@@ -327,7 +423,18 @@ class FetchNameHandlerTest(unittest.TestCase):
                         % (attr1["type"],attr1["name"],attr2["type"],attr2["name"]), el)
  
 
-        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["name"])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),1)
+        ch = ch.child(name = attr2["name"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr2["name"])
+        self.assertEqual(ch.nxtype,attr2["type"])
+        self.assertEqual(len(ch.children),0)
 
 
     ## constructor test
@@ -350,7 +457,13 @@ class FetchNameHandlerTest(unittest.TestCase):
                         % (attr1["type"],attr1["name"],attr2["type"],attr2["name"]), el)
  
 
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["name"])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),0)
 
 
 
@@ -374,8 +487,18 @@ class FetchNameHandlerTest(unittest.TestCase):
         sax.parseString('<group type="%s" ><group type="%s" name="%s"/></group>' 
                         % (attr1["type"],attr2["type"],attr2["name"]), el)
  
-
-        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["type"][2:])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),1)
+        ch = ch.child(name = attr2["name"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr2["name"])
+        self.assertEqual(ch.nxtype,attr2["type"])
+        self.assertEqual(len(ch.children),0)
 
 
     ## constructor test
@@ -398,8 +521,18 @@ class FetchNameHandlerTest(unittest.TestCase):
         sax.parseString('<group type="%s" ><group type="%s"/></group>' 
                         % (attr1["type"],attr2["type"]), el)
  
-
-        self.assertEqual(el.groupTypes, dict(dict({"":""},**sattr1),**sattr2))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["type"][2:])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),1)
+        ch = ch.child(nxtype = attr2["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr2["type"][2:])
+        self.assertEqual(ch.nxtype,attr2["type"])
+        self.assertEqual(len(ch.children),0)
 
 
     ## constructor test
@@ -416,7 +549,12 @@ class FetchNameHandlerTest(unittest.TestCase):
         self.myAssertRaise(XMLSyntaxError,sax.parseString,'<group name="%s" />'% (attr1["name"]), el)
  
 
-        self.assertEqual(el.groupTypes, {"":""})
+        self.assertTrue(isinstance(el.groupTypes,TNObject))
+        self.assertEqual(len(el.groupTypes.children),1)
+        ch = el.groupTypes.child(name = "entry")
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,"entry")
+        self.assertEqual(ch.nxtype,"")
 
 
     ## constructor test
@@ -436,7 +574,14 @@ class FetchNameHandlerTest(unittest.TestCase):
                         % (attr1["type"]), el)
  
 
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = attr1["type"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,sattr1["NXentry"])
+        self.assertEqual(ch.nxtype,attr1["type"])
+        self.assertEqual(len(ch.children),0)
+
 
 
     ## constructor test
@@ -456,7 +601,13 @@ class FetchNameHandlerTest(unittest.TestCase):
                         % (attr1["name"]), el)
  
 
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(name = attr1["name"])
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,attr1["name"])
+        self.assertEqual(ch.nxtype,"NXentry")
+        self.assertEqual(len(ch.children),0)
 
 
     ## constructor test
@@ -476,8 +627,17 @@ class FetchNameHandlerTest(unittest.TestCase):
         el = FetchNameHandler()
         sax.parseString('<group><attribute name="type">NXentry</attribute><attribute name="name">entry1</attribute></group>' , el)
  
+        self.assertEqual(el.groupTypes.name,"root")
+        self.assertEqual(el.groupTypes.nxtype,None)
+        ch = el.groupTypes.child(nxtype = "NXentry")
+        self.assertTrue(isinstance(ch,TNObject))
+        self.assertEqual(ch.name,"entry1")
+        self.assertEqual(ch.nxtype,"NXentry")
+        self.assertEqual(len(ch.children),0)
+        
 
-        self.assertEqual(el.groupTypes, dict({"":""},**sattr1))
+
+ 
 
 
 if __name__ == '__main__':

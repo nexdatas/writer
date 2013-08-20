@@ -29,6 +29,46 @@ import Streams
 
 from Errors import  XMLSyntaxError
 
+## Type Name object
+class TNObject(object):
+    ## constructor
+    # \param name name of the object
+    # \param nxtype Nexus type of the object
+    # \param object parent
+    # \brief It sets default values of TNObject
+    def __init__(self, name="root", nxtype=None, parent=None):
+        ## object name
+        self.name = name
+        ## object Nexus type
+        self.nxtype = nxtype
+        ## object parent
+        self.parent = parent
+        ## object children
+        self.children = []
+
+        if hasattr(self.parent,"children"):
+            self.parent.children.append(self)
+
+    ## get child by name or nxtype
+    def child(self, name='', nxtype=''):
+        if name:
+            found = None
+            for ch in self.children:
+                if ch.name == name.strip():
+                    found = ch
+                    break
+            return found   
+        elif nxtype:
+            found = None
+            for ch in self.children:
+                if ch.nxtype == nxtype:
+                    found = ch
+                    break
+            return found    
+        else:
+            if len(self.children)>0:
+                return self.children[0]
+
     
 ## SAX2 parser 
 class FetchNameHandler(sax.ContentHandler):
@@ -38,13 +78,10 @@ class FetchNameHandler(sax.ContentHandler):
     def __init__(self):
         sax.ContentHandler.__init__(self)
 
-        ## map of NXclass : name
-        self.groupTypes = {"":""}
-
-        ## stack with open tag type attributes
-        self.__tstack = []
-        ## stack with open tag name attributes
-        self.__nstack = []
+        ## tree of TNObjects with names and types
+        self.groupTypes = TNObject()
+        ## current object
+        self.__current = self.groupTypes
         ## stack with open tag names
         self.__stack = []
         ## name of attribute tag
@@ -67,8 +104,7 @@ class FetchNameHandler(sax.ContentHandler):
                 ttype = attrs["type"]
             if "name" in attrs.keys():
                 tname = attrs["name"]
-            self.__tstack.append(ttype)
-            self.__nstack.append(tname)
+            self.__current = TNObject(tname.strip(), ttype.strip(), self.__current)
             self.__stack.append(name)
         elif name == "attribute" and self.__stack[-1] == "group":
             self.__content = []
@@ -88,17 +124,15 @@ class FetchNameHandler(sax.ContentHandler):
     # \param name tag name
     def endElement(self, name):
         if name  == "group" :
-            if self.__tstack[-1] and self.__nstack[-1]:
-                self.groupTypes[self.__tstack[-1]] = self.__nstack[-1]
-            elif self.__tstack[-1] and len(self.__tstack[-1]) > 2:
-                self.groupTypes[self.__tstack[-1]] = self.__tstack[-1][2:]
-                
-            else:
-                if Streams.log_error:
-                    print >> Streams.log_error, "FetchNameHandler::endElement() - The group type not defined"
-                raise XMLSyntaxError, "The group type not defined"        
-            self.__tstack.pop()
-            self.__nstack.pop()
+
+            if not self.__current.nxtype or not self.__current.name:
+                if self.__current.nxtype and len(self.__current.nxtype) > 2:
+                    self.__current.name = self.__current.nxtype[2:]
+                else:
+                    if Streams.log_error:
+                        print >> Streams.log_error, "FetchNameHandler::endElement() - The group type not defined"
+                    raise XMLSyntaxError, "The group type not defined"        
+            self.__current = self.__current.parent
             self.__stack.pop()
                 
                 
@@ -107,9 +141,9 @@ class FetchNameHandler(sax.ContentHandler):
                 content = ("".join(self.__content)).strip()        
                 if content:
                     if self.__attrName == "name":
-                        self.__nstack[-1] = content
+                        self.__current.name = content.strip()
                     if self.__attrName == "type":
-                        self.__tstack[-1] = content
+                        self.__current.nxtype = content.strip()
             
             self.__attribute = False
             self.__content = []

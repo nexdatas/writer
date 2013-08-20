@@ -73,6 +73,8 @@ class DataSourceFactory(Element):
         self._last.source.setup(jxml)
         if hasattr(self._last.source,"setJSON") and globalJSON:
             self._last.source.setJSON(globalJSON)
+        if hasattr(self._last.source,"setDataSources"):
+            self._last.source.setDataSources(self.__dsPool)
         if self._last and hasattr(self._last,"tagAttributes"):
             self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
 

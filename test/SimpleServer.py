@@ -302,7 +302,7 @@ class SimpleServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::read_ScalarULong64()"
 		
 		#	Add your own code here
-		attr.set_value(self.attr_ScalarULong64)
+		attr.set_value(long(self.attr_ScalarULong64))
 		# Do not work as well
 
 

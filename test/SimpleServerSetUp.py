@@ -34,16 +34,18 @@ class SimpleServerSetUp(object):
 
     ## constructor
     # \brief defines server parameters
-    def __init__(self):
+    def __init__(self, device = "stestp09/testss/s1r228", instance = "S1"):
         ## information about tango writer
         self.new_device_info_writer = PyTango.DbDevInfo()
         ## information about tango writer class
         self.new_device_info_writer._class = "SimpleServer"
         ## information about tango writer server
-        self.new_device_info_writer.server = "SimpleServer/S1"
+        self.new_device_info_writer.server = "SimpleServer/%s" % instance
         ## information about tango writer name
-        self.new_device_info_writer.name = "stestp09/testss/s1r228"
+        self.new_device_info_writer.name = device
 
+        ## server instance
+        self.instance = instance
         self._psub = None
         ## device proxy
         self.dp = None
@@ -87,7 +89,7 @@ class SimpleServerSetUp(object):
         
         if os.path.isfile("%s/ST" % path):
             self._psub = subprocess.call(
-                "cd %s; ./ST S1 &" % path ,stdout =  None, 
+                "cd %s; ./ST %s &" % (path, self.instance ) ,stdout =  None, 
                 stderr =  None,  shell= True)
         print "waiting for simple server",
         
@@ -114,7 +116,7 @@ class SimpleServerSetUp(object):
         
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE , shell= True).stdout
+            "ps -ef | grep 'SimpleServer.py %s'" % self.instance, stdout=subprocess.PIPE , shell= True).stdout
 
         res = pipe.read().split("\n")
         for r in res:

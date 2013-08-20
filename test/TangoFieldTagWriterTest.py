@@ -290,6 +290,13 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         </field>
 
 
+        <field units="m" type="NX_UINT64" name="ScalarULong64">
+          <strategy mode="STEP"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarULong64"/>
+          </datasource>
+        </field>
 
 
       </group>
@@ -299,13 +306,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 """
 
 
-#        <field units="m" type="NX_UINT64" name="ScalarULong64">
-#          <strategy mode="STEP"/>
-#          <datasource type="TANGO">
-#           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
-#           <record name="ScalarULong64"/>
-#          </datasource>
-#        </field>
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
         decoder = '"decoders":{"MUTF8":"ndts.DecoderPool.UTF8decoder"}'
@@ -323,8 +323,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.ScalarFloat = self._fcounter[i]
             self._simps.dp.ScalarDouble = self._dcounter[i]
             self._simps.dp.ScalarString = self._bools[i]
-            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
-#            self._simps.dp.ScalarULong64 =abs(self._counter[i])
+            self._simps.dp.ScalarULong64 =long(abs(self._counter[i]))
             self.record(tdw,'{}')
 #            self._fcounter[i] = self._simps.dp.ScalarFloat 
 #            self._dcounter[i] = self._simps.dp.ScalarDouble 
@@ -335,7 +334,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
+        det = self._sc.checkFieldTree(f, fname , 16)
         self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
         self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
@@ -343,7 +342,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "ScalarLong", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(det, "ScalarULong","uint64" , "NX_UINT", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarLong64", "int64", "NX_INT64", self._counter)
-#        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error = 1e-6)
         self._sc.checkScalarField(det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error = 1e-14)
         self._sc.checkScalarField(det, "ScalarString", "string", "NX_CHAR", self._bools)
@@ -435,6 +434,15 @@ class TangoFieldTagWriterTest(unittest.TestCase):
           </datasource>
         </field>
 
+
+        <field units="m" type="NX_UINT64" name="ScalarULong64">
+          <strategy mode="STEP"  canfail="true"/>
+          <datasource type="TANGO">
+           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
+           <record name="ScalarULong64"/>
+          </datasource>
+        </field>
+
         <field units="m" type="NX_FLOAT32" name="ScalarFloat">
           <strategy mode="STEP" canfail="true"/>
           <datasource type="TANGO">
@@ -512,13 +520,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 """
 
 
-#        <field units="m" type="NX_UINT64" name="ScalarULong64">
-#          <strategy mode="STEP"/>
-#          <datasource type="TANGO">
-#           <device hostname="localhost" member="attribute" name="stestp09/testss/s1r228" port="10000" />
-#           <record name="ScalarULong64"/>
-#          </datasource>
-#        </field>
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
         decoder = '"decoders":{"MUTF8":"ndts.DecoderPool.UTF8decoder"}'
@@ -540,8 +541,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                 self._simps.dp.ScalarFloat = self._fcounter[i]
                 self._simps.dp.ScalarDouble = self._dcounter[i]
                 self._simps.dp.ScalarString = self._bools[i]
-            ## attributes of DevULong64, DevUChar, DevState type are not supported by PyTango 7.2.3
-            #            self._simps.dp.ScalarULong64 =abs(self._counter[i])
+                self._simps.dp.ScalarULong64 =long(abs(self._counter[i]))
             else:
                 self._simps.tearDown()
                 
@@ -554,7 +554,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
+        det = self._sc.checkFieldTree(f, fname , 16)
         self._sc.checkScalarField(
             det, "ScalarBoolean", "bool", "NX_BOOLEAN", 
             [(Types.Converters.toBool(self._bools[i]) if i%2 else False) for  i in range(steps)],
@@ -583,10 +583,10 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ScalarLong64", "int64", "NX_INT64", 
             [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
-#        self._sc.checkScalarField(
-#            det, "ScalarULong64", "uint64", "NX_UINT", 
-#            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max) for  i in range(steps)],
-#            attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+        self._sc.checkScalarField(
+            det, "ScalarULong64", "uint64", "NX_UINT", 
+            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max) for  i in range(steps)],
+            attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarFloat", "float32", "NX_FLOAT32", 
             [(self._fcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float32')).max) for  i in range(steps)],

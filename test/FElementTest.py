@@ -435,7 +435,7 @@ class FElementTest(unittest.TestCase):
 
         el.source.numpy = True
 
-        mlen = [self.__rnd.randint(1, 1000),self.__rnd.randint(1, 1000) ]
+        mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
         self.assertEqual(el._findShape("2", extraD=False), mlen )
         for i in range(-2, 5):
@@ -449,7 +449,7 @@ class FElementTest(unittest.TestCase):
 
         el.source.numpy = False
 
-        mlen = [self.__rnd.randint(1, 1000),self.__rnd.randint(1, 1000) ]
+        mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
         self.assertEqual(el._findShape("2", extraD=False), mlen )
         for i in range(-2, 5):
@@ -461,6 +461,164 @@ class FElementTest(unittest.TestCase):
         for i in range(3, 5):
             self.assertEqual(el._findShape("2", extraD=True, grows = i), mlen + [0] )
 
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_ext(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [self.__rnd.randint(1, 2),self.__rnd.randint(1, 2) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, extends=True), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True), mlen )
+        self.assertEqual(el._findShape("2", extraD=True, extends=True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), [0] + mlen )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, extends=True), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), mlen + [0] )
+
+        el.source.numpy = False
+
+        mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, extends=True), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True), mlen )
+        self.assertEqual(el._findShape("2", extraD=True, extends=True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), [0] + mlen )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, extends=True), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), mlen + [0] )
+
+
+
+
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_extends(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [self.__rnd.randint(2, 1000),1 ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False), [mlen[0]] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[0]] )
+        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[0]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[0]] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[0], 0] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[0], 0] )
+
+        el.source.numpy = False
+
+        mlen = [self.__rnd.randint(2, 1000),1 ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False), [mlen[0]] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[0]] )
+        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[0]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[0]] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[0], 0] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[0]] + [0] )
+
+
+
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_extends2(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [1,self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False), [mlen[1]] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[1]] )
+        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[1]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[1]])
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[1], 0] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[1]] + [0] )
+
+        el.source.numpy = False
+
+        mlen = [1,self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False), [mlen[1]] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[1]] )
+        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[1]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[1]] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[1], 0] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[1]] + [0] )
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_extends2(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [1,1 ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False), [] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i), [] )
+        self.assertEqual(el._findShape("2", extraD=True), [0]+ [] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [])
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [ 0] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [] + [0] )
+
+        el.source.numpy = False
+
+        mlen = [1,1]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False), [] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i), [] )
+        self.assertEqual(el._findShape("2", extraD=True), [0]+ [] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [ 0] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i), [] + [0] )
 
 
 
@@ -499,6 +657,13 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(el._findShape("2", extraD=True), mlen )
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=True, grows = i), mlen )
+
+
+
+
+
+
+
 
 
 

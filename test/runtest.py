@@ -60,6 +60,8 @@ import FetchNameHandlerTest
 import InnerXMLParserTest
 import AttributeArrayTest
 import FieldArrayTest
+import TNObjectTest
+import TgDeviceTest
 
 try:
     import PyTango
@@ -148,6 +150,8 @@ if PYTANGO_AVAILABLE:
     import XMLFieldTagServerTest
     import TangoFieldTagServerTest
     import TangoSourceTest
+    import TgMemberTest
+    import TgGroupTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
 
@@ -277,6 +281,12 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FieldArrayTest) )
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(TgDeviceTest) )
+
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
@@ -296,6 +306,12 @@ def main():
     if PYTANGO_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TgMemberTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TgGroupTest) )
 
 
         suite.addTests(

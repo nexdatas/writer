@@ -33,6 +33,8 @@ from ndts.H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol,
                         EDimensions, EDim, EStrategy, FElement, EFile, FElement)
 from ndts.DataSourceFactory import DataSourceFactory
 from ndts.Errors import UnsupportedTagError
+from ndts.FetchNameHandler import TNObject
+
 
 from xml import sax
 
@@ -74,7 +76,9 @@ class TElement(FElement):
     ## The last TElement instance
     instance = None
     ## groupTypes
-    groupTypes = {"NXmyentry":"myentry1"}
+    
+    groupTypes = TNObject()
+    ch = TNObject("myentry1","NXmyentry",groupTypes)
     ## strategy 
     strategy = None
     ## trigger 
@@ -85,8 +89,6 @@ class TElement(FElement):
         TElement.instance = self
         ## costructor flag
         self.constructed = True
-        ## fetchName flag
-        self.fetched = False
         ## createLink flag
         self.linked = False
         ## store flag
@@ -109,11 +111,6 @@ class TElement(FElement):
         self.h5Object = Closeable()
         
 
-    ## fetches names   
-    def fetchName(self, groupTypes):
-        self.fetched = True
-        for k in TElement.groupTypes:
-            groupTypes[k] = TElement.groupTypes[k]
 
 
     ## creates links
@@ -409,10 +406,7 @@ class TElementOS(FElement):
     ## creates links
     def createLink(self, groupTypes):
         self.linked = True
-        self.groupTypes = {}
-        for k in groupTypes:
-            self.groupTypes[k] = groupTypes[k]
-
+        self.groupTypes = groupTypes
 
 
 ## test element
@@ -1560,6 +1554,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
+        TElement.groupTypes = TNObject()
+        TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement}
 
 
@@ -1586,14 +1582,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), ins.attrs[a])
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(ins.linked)
         self.assertTrue(ins.stored)
-        self.assertEqual(len(TElement.groupTypes)+1, len(ins.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), ins.groupTypes[a])
-        self.assertEqual("", ins.groupTypes[""])
         
         
 
@@ -1648,12 +1640,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
         self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
         self.assertTrue(ins.linked)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(ins.groupTypes))
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), ins.groupTypes[a])
-        self.assertEqual("", ins.groupTypes[""])
                 
 
         self._nxFile.close()
@@ -1708,7 +1695,6 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
         self.assertEqual(TElementOL.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
         self.assertEqual(len(ins.groupTypes), 0)
                 
 
@@ -1792,7 +1778,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement,"group":TElementOS}
 
         attr1 = {"name":"entry1","type":"NXentry"}
@@ -1830,18 +1817,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
-
 
         self.assertTrue(isinstance(gr, TElementOS))
         self.assertTrue(gr.constructed)
@@ -1850,15 +1830,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -1894,7 +1869,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement,"group":TElementOS}
 
         attr1 = {"name":"entry1","type":"NXentry"}
@@ -1932,14 +1908,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(not fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(groupTypes), len(fl.groupTypes))
-        for a in groupTypes:
-            self.assertEqual(str(groupTypes[a]), fl.groupTypes[a])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -1947,15 +1920,12 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(len(attr1), len(gr.attrs))
         for a in attr1:
             self.assertEqual(str(attr1[a]), gr.attrs[a])
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(not gr.fetched)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(groupTypes), len(gr.groupTypes))
-        for a in groupTypes:
-            self.assertEqual(str(groupTypes[a]), gr.groupTypes[a])
         
         
         el.close()
@@ -1989,6 +1959,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.strategy = 'INIT'
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement}
 
 
@@ -2019,13 +1991,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), ins.attrs[a])
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(ins.linked)
         self.assertTrue(ins.stored)
-        self.assertEqual(len(TElement.groupTypes)+1, len(ins.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), ins.groupTypes[a])
 
         self.assertEqual("", ins.groupTypes[""])
         self.assertTrue(not ins.started)
@@ -2061,6 +2030,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(isinstance(el.stepPool,ThreadPool))
         self.assertTrue(isinstance(el.finalPool,ThreadPool))
         self.assertEqual(el.triggerPools, {})
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         TElement.instance = None
         TElement.strategy = 'STEP'
         el.elementClass = {"field":TElement}
@@ -2093,13 +2064,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), ins.attrs[a])
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(ins.linked)
         self.assertTrue(ins.stored)
-        self.assertEqual(len(TElement.groupTypes)+1, len(ins.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), ins.groupTypes[a])
 
         self.assertEqual("", ins.groupTypes[""])
         self.assertTrue(not ins.started)
@@ -2138,6 +2106,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.trigger = None
         TElement.instance = None
         TElement.strategy = 'FINAL'
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
+
         el.elementClass = {"field":TElement}
 
 
@@ -2168,13 +2139,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), ins.attrs[a])
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(ins.linked)
         self.assertTrue(ins.stored)
-        self.assertEqual(len(TElement.groupTypes)+1, len(ins.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), ins.groupTypes[a])
 
         self.assertEqual("", ins.groupTypes[""])
         self.assertTrue(not ins.started)
@@ -2212,6 +2180,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = 'STEP'
         TElement.trigger = 'mytrigger'
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement}
 
 
@@ -2243,15 +2213,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), ins.attrs[a])
         self.assertEqual(ins.last, self._eFile)
         self.assertEqual(ins.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(ins.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(ins.linked)
         self.assertTrue(ins.stored)
-        self.assertEqual(len(TElement.groupTypes)+1, len(ins.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), ins.groupTypes[a])
 
-        self.assertEqual("", ins.groupTypes[""])
         self.assertTrue(not ins.started)
         el.finalPool.runAndWait()
         self.assertTrue(not ins.started)
@@ -2293,9 +2259,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
-        el.elementClass = {"field":TElement,"group":TElementOS}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         self.assertTrue('definition' in el.transparentTags)
+        el.elementClass = {"field":TElement,"group":TElementOS}
 
         attr1 = {"name":"entry1","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
@@ -2333,17 +2300,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -2353,15 +2314,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -2394,7 +2350,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement,"group":TElementOS}
         self.assertTrue('definition' in el.transparentTags)
 
@@ -2434,17 +2391,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -2454,15 +2405,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -2494,7 +2440,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement,"group":TElementOS}
         self.assertTrue('definition' in el.transparentTags)
 
@@ -2535,17 +2482,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -2555,15 +2496,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -2595,7 +2531,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"field":TElement,"group":TElementOS}
         el.transparentTags = ['mydefinition']
 
@@ -2636,17 +2573,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -2656,15 +2587,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
+ #       self.assertTrue(gr.fetched)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -2821,7 +2748,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"group":TElementOS,"field":TElement}
         el.withXMLinput = {"datasource":InnerTag}
         self.assertTrue('definition' in el.transparentTags)
@@ -2880,18 +2808,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
-
 
         self.assertTrue(isinstance(gr, TElementOS))
         self.assertTrue(gr.constructed)
@@ -2900,15 +2821,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -2951,7 +2867,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"group":TElementOS,"field":TElement}
         el.withXMLinput = {"datasource":InnerTagDSDC}
         self.assertTrue('definition' in el.transparentTags)
@@ -3011,17 +2928,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -3031,15 +2942,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -3086,7 +2992,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"group":TElementOS,"field":TElement}
         el.withXMLinput = {"datasource":InnerTagDSDC}
         self.assertTrue('definition' in el.transparentTags)
@@ -3146,17 +3053,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -3166,15 +3067,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
         
         
         el.close()
@@ -3220,7 +3116,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"group":TElementOS,"field":TElement}
         el.withXMLinput = {"datasource":InnerTagDS}
         self.assertTrue('definition' in el.transparentTags)
@@ -3280,17 +3177,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -3300,16 +3191,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
-        
         
         el.close()
 
@@ -3353,7 +3238,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.instance = None
         TElement.strategy = None
         TElement.trigger = None
-        TElement.groupTypes = {"NXmmyentry":"mmyentry1"}
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
         el.elementClass = {"group":TElementOS,"field":TElement}
         el.withXMLinput = {"datasource":InnerTagDC}
         self.assertTrue('definition' in el.transparentTags)
@@ -3413,17 +3299,11 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr2[a]), fl.attrs[a])
         self.assertEqual(fl.last, gr)
         self.assertEqual(fl.content, [value])
-        self.assertEqual(TElement.groupTypes, {"NXmmyentry":"mmyentry1"})
-        self.assertTrue(fl.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(fl.linked)
         self.assertTrue(fl.stored)
         self.assertTrue(not fl.h5Object.closed)
-        self.assertEqual(len(TElement.groupTypes)+len(TElementOS.groupTypes)+1, len(fl.groupTypes))
-        for a in TElement.groupTypes:
-            self.assertEqual(str(TElement.groupTypes[a]), fl.groupTypes[a])
-        for a in TElementOS.groupTypes:
-            self.assertEqual(str(TElementOS.groupTypes[a]), fl.groupTypes[a])
-        self.assertEqual("", fl.groupTypes[""])
 
 
         self.assertTrue(isinstance(gr, TElementOS))
@@ -3433,16 +3313,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
             self.assertEqual(str(attr1[a]), gr.attrs[a])
         self.assertEqual(gr.last, self._eFile)
         self.assertEqual(gr.content, [])
-        self.assertEqual(TElementOS.groupTypes, {"NXmyentry":"myentry1"})
-        self.assertTrue(gr.fetched)
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
-        self.assertEqual(len(TElementOS.groupTypes)+1, len(gr.groupTypes))
-        for a in TElementOS.groupTypes:
-            print a , TElementOS.groupTypes[a]
-            self.assertEqual(str(TElementOS.groupTypes[a]), gr.groupTypes[a])
-        self.assertEqual("", gr.groupTypes[""])
-        
         
         el.close()
 

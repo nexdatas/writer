@@ -169,6 +169,9 @@ class TangoDataWriter(object):
         self.__eFile = EFile([], None, self.__nxFile)
         if self.addingLogs:    
             self.__logGroup = self.__nxFile.create_group("NexusConfigurationLogs")
+            vfield = self.__logGroup.create_field("python_version", "string")
+            vfield.write(str(sys.version))
+            vfield.close()
 
 
 
@@ -176,7 +179,8 @@ class TangoDataWriter(object):
     # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
     def openEntry(self):
         if self.xmlSettings:
-
+            # flag for INIT mode
+            self.__datasources.counter = -1
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
  
@@ -218,6 +222,11 @@ class TangoDataWriter(object):
     # \brief It runs threads from the STEP pool
     # \param jsonstring local JSON string with data records      
     def record(self, jsonstring=None):
+        # flag for STEP mode
+        if self.__datasources.counter>0:
+            self.__datasources.counter +=1
+        else:
+            self.__datasources.counter = 1
         localJSON = None
         if jsonstring:
             localJSON = json.loads(jsonstring)
@@ -253,6 +262,8 @@ class TangoDataWriter(object):
     # \brief It runs threads from the FINAL pool and
     #  removes the thread pools 
     def closeEntry(self):
+        # flag for FINAL mode
+        self.__datasources.counter = -2
 
         if self.addingLogs and self.__logGroup:    
             self.__logGroup.close()
