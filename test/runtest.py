@@ -149,7 +149,7 @@ if PYTANGO_AVAILABLE:
     import XMLFieldTagServerTest
     import TangoFieldTagServerTest
     import TangoSourceTest
-    import TgMember
+    import TgMemberTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
 
