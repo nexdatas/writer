@@ -406,12 +406,12 @@ class TgDevice(object):
     def setMember(self, member):
         if member.name not in self.members:
             self.members[member.name] = member
-            self.setFlag(member)
+            self.__setFlag(member)
         return self.members[member.name]    
         
     ## sets corresponding flag related to member type
     # \param member given tango device member
-    def setFlag(self, member):
+    def __setFlag(self, member):
         if member.memberType == 'attribute':
             self.attributes.append(member.name.encode())
         elif member.memberType == 'property':
