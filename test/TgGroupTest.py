@@ -825,11 +825,11 @@ class TangoSourceTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                               'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+                               'DevString',[],None,None, arr[k][4] if len(arr[k])>4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                               'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+                               'DevString',[],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
             flip = not flip
 
 
@@ -840,11 +840,11 @@ class TangoSourceTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                               'DevString',[1,0],None,None, arr[k][4] if len(arrb[k])>4 else 0)
+                               'DevString',[],None,None, arr[k][4] if len(arrb[k])>4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                               'DevString',[1,0],None,None, arrb[k][4] if len(arr[k])>4 else 0)
+                               'DevString',[],None,None, arrb[k][4] if len(arr[k])>4 else 0)
             flip = not flip
 
         gr.getData(counter+1)
@@ -854,11 +854,11 @@ class TangoSourceTest(unittest.TestCase):
             if flip:
                 dt = (gr.getDevice(dvn).members[k]).getValue()
                 self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                               'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+                               'DevString',[],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
             else:
                 dt = (gr.getDevice(dvn2).members[k]).getValue()
                 self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                               'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+                               'DevString',[],None,None, arr[k][4] if len(arr[k])>4 else 0)
             flip = not flip
 
 

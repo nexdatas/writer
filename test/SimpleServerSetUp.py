@@ -116,7 +116,7 @@ class SimpleServerSetUp(object):
         
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE , shell= True).stdout
+            "ps -ef | grep 'SimpleServer.py %s'" % self.instance, stdout=subprocess.PIPE , shell= True).stdout
 
         res = pipe.read().split("\n")
         for r in res:

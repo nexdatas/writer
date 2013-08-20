@@ -485,7 +485,18 @@ class TgMember(object):
                                        if self.__da.dim_y else [self.__da.dim_x, 0]),
                           "encoding": self.encoding, "decoders": decoders}
         elif self.memberType == "property":
-            self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1,0]}
+
+            ntp = NTP()
+            rank, shape, pythonDType = ntp.arrayRankRShape(self.__da)
+
+            if rank in NTP.rTf:
+                shape.reverse()
+                if  not shape:
+                    shape = [1,0]
+                    
+                self.__value = {"format":NTP.rTf[rank], "value":self.__da, 
+                                "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
+#            self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1,0]}
         elif self.memberType == "command":
             if self.__cd is None:
                 if Streams.log_error:
@@ -510,7 +521,7 @@ class TgMember(object):
             #                print "getting the property: ", self.name
             plist = proxy.get_property_list('*')
             if self.name.encode() in plist:
-                self.__da = proxy.get_property(self.name.encode())[self.name.encode()][0]
+                self.__da = proxy.get_property(self.name.encode())[self.name.encode()]
         elif self.memberType == "command":
             #                print "calling the command: ", self.name
             clist = [cm.cmd_name for cm in proxy.command_list_query()]
