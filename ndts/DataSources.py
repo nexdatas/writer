@@ -151,6 +151,16 @@ def proxySetup(device):
             return proxy    
 
 
+def isProxyValid(proxy):
+    failed = True
+    try:
+        if dv.proxy:
+            dv.proxy.state()
+            failed = False
+    except:
+        failed = True
+    return not failed    
+
 
 
 ## Tango data source
@@ -249,15 +259,9 @@ class TangoSource(DataSource):
                 print >> Streams.log_error, \
                     "TangoSource::getData() - Support for PyTango datasources not available" 
             raise PackageError, "Support for PyTango datasources not available" 
-        failed = True
-        try:
-            if self.__proxy:
-                self.__proxy.state()
-                failed = False
-        except:
-            failed = True
+
         if self.dv and self.member.memberType and self.member.name:
-            if not self.__proxy or failed:
+            if not self.__proxy or not isProxyValid(self.__proxy):
                 self.__proxy = proxySetup(self.dv)    
                 if not self.__proxy:
                     if Streams.log_error:
@@ -326,6 +330,8 @@ class TgGroup(object):
             self.devices[device] = TgDevice(device)
         return self.devices[device]    
 
+
+
     ## reads data from device proxy
     # \param counter counter of scan steps
     # \param proxy device proxy
@@ -337,19 +343,14 @@ class TgGroup(object):
 
             self.counter = counter
             errors = []
+
+
             for dv in self.devices.values():
                 for mb in dv.members.values():
                     mb.reset()
 
-                failed = True
-                try:
-                    if dv.proxy:
-                        dv.proxy.state()
-                        failed = False
-                except:
-                    failed = True
-                if not dv.proxy or failed:
-                    dv.proxy = proxySetup(dv.name)    
+                if not dv.proxy or not isProxyValid(dv.proxy):
+                    dv.proxy = proxySetup(dv.device)    
                     if not dv.proxy:
                         if Streams.log_error:
                             print >> Streams.log_error,  "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
