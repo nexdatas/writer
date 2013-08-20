@@ -151,6 +151,7 @@ if PYTANGO_AVAILABLE:
     import TangoFieldTagServerTest
     import TangoSourceTest
     import TgMemberTest
+    import TgGroupTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
 
@@ -308,6 +309,9 @@ def main():
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TgMemberTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TgGroupTest) )
 
 
         suite.addTests(
