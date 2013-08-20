@@ -537,6 +537,132 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_scalar_group(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr1 = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True],
+            "ScalarUChar":[ "uint8", "DevUChar", 23],
+            "ScalarShort":[ "int16", "DevShort", -123],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234],
+            "ScalarLong":[ "int64", "DevLong", -124],
+            "ScalarULong":["uint64" , "DevULong", 234],
+            "ScalarLong64":[ "int64", "DevLong64", 234],
+            "ScalarULong64":[ "uint64", "DevULong64", 23L],
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTrue"],
+            }
+
+
+
+        arr1b = {
+            "ScalarBoolean":[ "bool", "DevBoolean", False],
+            "ScalarUChar":[ "uint8", "DevUChar", 13],
+            "ScalarShort":[ "int16", "DevShort", -233],
+            "ScalarUShort":[ "uint16", "DevUShort", 3114],
+            "ScalarLong":[ "int64", "DevLong", -144],
+            "ScalarULong":["uint64" , "DevULong", 134],
+            "ScalarLong64":[ "int64", "DevLong64", 214],
+            "ScalarULong64":[ "uint64", "DevULong64", 14L],
+            "ScalarFloat":[ "float32", "DevFloat", 11.133, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.111173e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTsdf"],
+            }
+
+
+
+        arr2 = {
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+           }
+
+
+        arr3 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded":[ "string", "DevEncoded", 
+                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+           }
+
+        counter =  self.__rnd.randint(-2, 10)
+
+        for k in arr1 :
+            self._simps.dp.write_attribute( k, arr1[k][2])
+        for k in arr1b:
+            self._simps2.dp.write_attribute( k, arr1b[k][2])
+            
+        arr = dict(arr1,**(arr2))
+        arrb = dict(arr1b,**(arr2))
+
+        pl = pool()
+        pl.counter = 1
+        el = {}
+        el2 = {}
+        group = "CORE"
+        group2 = "CORE2"
+        for k in arr:
+            el[k] = TangoSource()
+            el[k].group = group
+            el[k].dv = 'stestp09/testss/s1r228'
+            el[k].member.memberType = 'attribute'
+            el[k].member.name = k
+            self.assertEqual(el[k].setDataSources(pl), None)
+
+        for k in arrb:
+            el2[k] = TangoSource()
+            el2[k].group = group2
+            el2[k].dv = 'stestp09/testss/s2r228'
+            el2[k].member.memberType = 'attribute'
+            el2[k].member.name = k
+            self.assertEqual(el2[k].setDataSources(pl), None)
+        
+
+        dt = el[k].getData()
+        dt = el2[k].getData()
+        for k in arr1b:
+            self._simps.dp.write_attribute( k, arr1b[k][2])
+        for k in arr1:
+            self._simps2.dp.write_attribute( k, arr1[k][2])
+
+        for k in arr:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+
+        for k in arrb:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", arrb[k][2],arrb[k][1],[1,0],None,None, arrb[k][3] if len(arrb[k])>3 else 0)
+
+        pl.counter = 2
+
+        for k in arr:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", arrb[k][2],arrb[k][1],[1,0],None,None, arrb[k][3] if len(arrb[k])>3 else 0)
+
+
+        for k in arrb:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+
+
+        for k in arr3:
+            el = TangoSource()
+            el.dv = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.member.encoding = arr3[k][2][0]
+            dp = DecoderPool()
+            dt = el.setDecoders(dp)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
+
+
+
+
+
 
     ## getData test
     # \brief It tests default settings

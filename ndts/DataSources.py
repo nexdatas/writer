@@ -27,6 +27,7 @@ from Types import NTP
 import Streams
 import threading
 
+
 try:
     import PyTango
     ## global variable if PyTango module installed
@@ -125,30 +126,31 @@ class DataSource(object):
 ## \param device tango device    
 # \returns proxy if proxy is set up    
 def proxySetup(device):    
-        found = False
-        cnt = 0
+    found = False
+    cnt = 0
 
+    try:
+        proxy = PyTango.DeviceProxy(device)
+
+    except:
+        if Streams.log_error:
+            print >> Streams.log_error, "proxySetup() - Cannot connect to %s " % device
+        raise
+
+    while not found and cnt < 1000:
+        if cnt > 1:
+            time.sleep(0.01)
         try:
-            proxy = PyTango.DeviceProxy(device)
-
-        except:
-            if Streams.log_error:
-                print >> Streams.log_error, "proxySetup() - Cannot connect to %s " % device
-            raise
-
-        while not found and cnt < 1000:
-            if cnt > 1:
-                time.sleep(0.01)
-            try:
-                if proxy.state() != PyTango.DevState.RUNNING:
-                    found = True
+            if proxy.state() != PyTango.DevState.RUNNING:
                 found = True
-            except:    
-                time.sleep(0.01)
-                found = False
-            cnt +=1
-        if found:
-            return proxy    
+            found = True
+        except:    
+            time.sleep(0.01)
+            found = False
+        cnt +=1
+    if found:
+        return proxy    
+
 
 ## checks if proxy is valid
 # \param proxy PyTango proxy
@@ -278,7 +280,7 @@ class TangoSource(DataSource):
                     if Streams.log_error:
                         print >> Streams.log_error, \
                             "TangoSource::getData() - DataSource pool not set up" 
-                raise DataSourceSetupError, "DataSource pool not set up" 
+                    raise DataSourceSetupError, "DataSource pool not set up" 
 
                 self.__tngrp.getData(self.__pool.counter)
 
