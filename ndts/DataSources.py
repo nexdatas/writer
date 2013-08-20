@@ -122,7 +122,7 @@ class DataSource(object):
 
 
 ## sets the Tango proxy up
-## device tango device    
+## \param device tango device    
 # \returns proxy if proxy is set up    
 def proxySetup(device):    
         found = False
@@ -150,7 +150,9 @@ def proxySetup(device):
         if found:
             return proxy    
 
-
+## checks if proxy is valid
+# \param proxy PyTango proxy
+# \returns True if proxy is valid else false
 def isProxyValid(proxy):
     failed = True
     try:

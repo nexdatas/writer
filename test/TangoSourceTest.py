@@ -73,6 +73,7 @@ class TangoSourceTest(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName)
 
         self._simps = SimpleServerSetUp.SimpleServerSetUp()
+        self._simps2 = SimpleServerSetUp.SimpleServerSetUp( "stestp09/testss/s2r228", "S2")
 
 
         self._tfname = "doc"
@@ -104,12 +105,14 @@ class TangoSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         self._simps.setUp()
+        self._simps2.setUp()
         ## file handle
         print "SEED =",self.__seed 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
+        self._simps2.tearDown()
         self._simps.tearDown()
 
     ## Exception tester
@@ -429,6 +432,24 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(len(cm), 1)
         gr = cm['bleble']
         self.assertTrue(isinstance(gr,TgGroup))
+## TODO proxy [setup] and ..
+
+        el = TangoSource()
+        el.group = 'bleble2'
+        el.dv = 'stestp09/testss/s2r228'
+        el.memberType = 'attribute'
+        el.member.name = 'ScalarString'
+        self.assertTrue(isinstance(el, object))
+        self.assertTrue('TANGO' in pl.common.keys())
+        self.assertEqual(el.setDataSources(pl), None)
+        self.assertTrue('TANGO' in pl.common.keys())
+        cm = pl.common['TANGO']
+        self.assertEqual(len(cm), 2)
+        self.assertTrue(isinstance(cm['bleble'],TgGroup))
+        self.assertTrue(isinstance(cm['bleble2'],TgGroup))
+
+        gr= cm['bleble2']
+
         self.assertEqual(type(gr.lock),thread.LockType)
         self.assertEqual(gr.counter, 0)
         self.assertEqual(len(gr.devices), 1)
@@ -449,21 +470,6 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(mbs[el.member.name].encoding, el.member.encoding)
         
 
-## TODO proxy [setup] and ..
-
-        el = TangoSource()
-        el.group = 'bleble2'
-        el.dv = 'stestp09/testss/s1r228'
-        el.memberType = 'attribute'
-        el.member.name = 'ScalarString'
-        self.assertTrue(isinstance(el, object))
-        self.assertTrue('TANGO' in pl.common.keys())
-        self.assertEqual(el.setDataSources(pl), None)
-        self.assertTrue('TANGO' in pl.common.keys())
-        cm = pl.common['TANGO']
-        self.assertEqual(len(cm), 2)
-        self.assertTrue(isinstance(cm['bleble'],TgGroup))
-        self.assertTrue(isinstance(cm['bleble2'],TgGroup))
 
 
 
