@@ -375,20 +375,20 @@ class TgGroup(object):
                         mb.setData(res[i])
                 
 
-                    for mb in dv.members.values():
-                        if mb.memberType == "property":
+                for mb in dv.members.values():
+                    if mb.memberType == "property":
                         #                print "getting the property: ", self.name
-                            plist = dv.proxy.get_property_list('*')
-                            if mb.name.encode() in plist:
-                                da = dv.proxy.get_property(mb.name.encode())[mb.name.encode()][0]
-                                mb.setData(da)
-                        elif mb.memberType == "command":
-                    #                print "calling the command: ", self.name
-                            clist = [cm.cmd_name for cm in proxy.command_list_query()]
-                            if mb.name in clist:
-                                cd = dv.proxy.command_query(mb.name.encode())
-                                da = dv.proxy.command_inout(mb.name.encode())
-                                mb.setData(da, cd)
+                        plist = dv.proxy.get_property_list('*')
+                        if mb.name.encode() in plist:
+                            da = dv.proxy.get_property(mb.name.encode())[mb.name.encode()][0]
+                            mb.setData(da)
+                    elif mb.memberType == "command":
+                        #                print "calling the command: ", self.name
+                        clist = [cm.cmd_name for cm in dv.proxy.command_list_query()]
+                        if mb.name in clist:
+                            cd = dv.proxy.command_query(mb.name.encode())
+                            da = dv.proxy.command_inout(mb.name.encode())
+                            mb.setData(da, cd)
     
         finally:
             self.lock.release()
@@ -471,8 +471,8 @@ class TgMember(object):
             return self.__value
         if self.__da is None:
             if Streams.log_error:
-                print >> Streams.log_error, "TgGroup::getValue() - Data for %s not fetched" % self.name
-            raise DataSourceSetupError, ("TgGroup::getValue() -  Data or %s not fetched" % self.name)
+                print >> Streams.log_error, "TgMember::getValue() - Data for %s not fetched" % self.name
+            raise DataSourceSetupError, ("TgMember::getValue() -  Data or %s not fetched" % self.name)
             
         if self.memberType == "attribute":
             self.__value = {"format":str(self.__da.data_format).split('.')[-1], 
@@ -485,8 +485,8 @@ class TgMember(object):
         elif self.memberType == "command":
             if self.__cd is None:
                 if Streams.log_error:
-                    print >> Streams.log_error, "TgGroup::getValue() - Data for %s not fetched" % self.name
-                raise DataSourceSetupError, ("TgGroup::getValue() -  Data or %s not fetched" % self.name)
+                    print >> Streams.log_error, "TgMember::getValue() - Data for %s not fetched" % self.name
+                raise DataSourceSetupError, ("TgMember::getValue() -  Data or %s not fetched" % self.name)
             self.__value = {"format":"SCALAR", "value":self.__da, 
                           "tangoDType":str(self.__cd.out_type).split('.')[-1],  "shape":[1,0], 
                           "encoding":self.encoding, "decoders":decoders}
@@ -513,7 +513,7 @@ class TgMember(object):
             if self.name in clist:
                 self.__cd = proxy.command_query(self.name.encode())
                 self.__da = proxy.command_inout(self.name.encode())
-
+                
 
 ## DataBase data source
 class DBaseSource(DataSource):

@@ -633,7 +633,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_command(self):
+    def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -653,23 +653,98 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+        arrb = {
+            "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "GetShort":["ScalarShort", "int16", "DevShort", -121],
+            "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1223],
+            "GetLong":["ScalarLong", "int64", "DevLong", -344],
+            "GetULong":["ScalarULong","uint64" , "DevULong", 124],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 1345L],
+            "GetFloat":["ScalarFloat", "float32", "DevFloat", 2.123, 1e-5],
+            "GetDouble":["ScalarDouble", "float64", "DevDouble", -1.1233213e+02,1e-14],
+            "GetString":["ScalarString", "string", "DevString", "MyFAADSD"],
+            }
+
+
+        counter =  self.__rnd.randint(-2, 10)
+
+
         for k in arr :
             self._simps.dp.write_attribute(arr[k][0], arr[k][3])
 
+        for k in arrb :
+            self._simps2.dp.write_attribute(arrb[k][0], arrb[k][3])
+
+
+        dvn = 'stestp09/testss/s1r228'
+        dvn2 = 'stestp09/testss/s2r228'
+        gr = TgGroup(-100)
+        dv  = gr.getDevice(dvn)
+        dv2  = gr.getDevice(dvn2)
+
+
+        flip = True
         for k in arr:
-            el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
-            el.member.memberType = 'command'
-            el.member.name = k
-            dt = el.getData()
-            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            mb = TgMember(k, "command")
+            if flip:
+                dv.setMember(mb)
+            else:
+                dv2.setMember(mb)
+            flip = not flip
+
+        gr.getData(counter)
+
+        for k in arr :
+            self._simps.dp.write_attribute(arrb[k][0], arrb[k][3])
+
+        for k in arrb :
+            self._simps2.dp.write_attribute(arr[k][0], arr[k][3])
+
+
+
+        flip = True
+        for k in arr:
+            if flip:
+                dt = (gr.getDevice(dvn).members[k]).getValue()
+                self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            else:
+                dt = (gr.getDevice(dvn2).members[k]).getValue()
+                self.checkData(dt,"SCALAR", arrb[k][3],arrb[k][2],[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+            flip = not flip
+
+
+        gr.getData(counter)
+
+        flip = True
+        for k in arr:
+            if flip:
+                dt = (gr.getDevice(dvn).members[k]).getValue()
+                self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            else:
+                dt = (gr.getDevice(dvn2).members[k]).getValue()
+                self.checkData(dt,"SCALAR", arrb[k][3],arrb[k][2],[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+            flip = not flip
+
+        gr.getData(counter+1)
+
+        flip = True
+        for k in arrb:
+            if flip:
+                dt = (gr.getDevice(dvn).members[k]).getValue()
+                self.checkData(dt,"SCALAR", arrb[k][3],arrb[k][2],[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+            else:
+                dt = (gr.getDevice(dvn2).members[k]).getValue()
+                self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            flip = not flip
 
 
 
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_dev_prop(self):
+    def test_getData_dev_prop(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -690,76 +765,107 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+        arrb = {
+            "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", False],
+#            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 21],
+            "DeviceShort":["ScalarShort", "int16", "DevShort", -113],
+            "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 1232],
+            "DeviceLong":["ScalarLong", "int64", "DevLong", -112],
+            "DeviceULong":["ScalarULong","uint64" , "DevULong", 221],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 414],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 12],
+            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.111],
+            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.111673e+02],
+            "DeviceString":["ScalarString", "string", "DevString", "Mywrew"],
+            }
+
+
+
+
+
+
+        counter =  self.__rnd.randint(-2, 10)
+
+
+        for k in arr :
+            self._simps.dp.write_attribute(arr[k][0], arr[k][3])
+
+        for k in arrb :
+            self._simps2.dp.write_attribute(arrb[k][0], arrb[k][3])
+
+
+        dvn = 'stestp09/testss/s1r228'
+        dvn2 = 'stestp09/testss/s2r228'
+        gr = TgGroup(-100)
+        dv  = gr.getDevice(dvn)
+        dv2  = gr.getDevice(dvn2)
+
+
+        flip = True
         for k in arr:
-            el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
-            el.member.memberType = 'property'
-            el.member.name = k
-            dt = el.getData()
-            self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
-#            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            mb = TgMember(k, "property")
+            if flip:
+                dv.setMember(mb)
+            else:
+                dv2.setMember(mb)
+            flip = not flip
+
+        gr.getData(counter)
+
+        for k in arr :
+            self._simps.dp.write_attribute(arrb[k][0], arrb[k][3])
+
+        for k in arrb :
+            self._simps2.dp.write_attribute(arr[k][0], arr[k][3])
+
+
+
+        flip = True
+        for k in arr:
+            if flip:
+                dt = (gr.getDevice(dvn).members[k]).getValue()
+                self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                               'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            else:
+                dt = (gr.getDevice(dvn2).members[k]).getValue()
+                self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                               'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+            flip = not flip
+
+
+        gr.getData(counter)
+
+        flip = True
+        for k in arr:
+            if flip:
+                dt = (gr.getDevice(dvn).members[k]).getValue()
+                self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                               'DevString',[1,0],None,None, arr[k][4] if len(arrb[k])>4 else 0)
+            else:
+                dt = (gr.getDevice(dvn2).members[k]).getValue()
+                self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                               'DevString',[1,0],None,None, arrb[k][4] if len(arr[k])>4 else 0)
+            flip = not flip
+
+        gr.getData(counter+1)
+
+        flip = True
+        for k in arrb:
+            if flip:
+                dt = (gr.getDevice(dvn).members[k]).getValue()
+                self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                               'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+            else:
+                dt = (gr.getDevice(dvn2).members[k]).getValue()
+                self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
+                               'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            flip = not flip
 
 
 
 
 
 
-    ## isValid test
-    # \brief It tests default settings
-    def ttest_isValid(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-        el = TangoSource()
-        self.assertTrue(isinstance(el, object))
-        self.assertEqual(el.isValid(), True)
-
-
-
-
-
-    ## constructor test
-    # \brief It tests default settings
-    def ttest_setDecoders_default(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-        dname = 'writer'
-        device = 'stestp09/testss/s1r228'
-        ctype = 'command'
-        atype = 'attribute'
-        host = 'haso.desy.de'
-        port = '10000'
-        encoding = 'UTF8'
-
-
-        atts = {"type":"TANGO"}
-        name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
-        gjson = json.loads('{"data":{"myRecord":"1"}}')
-        
-        el = EField(self._fattrs, None )
-        ds = DataSourceFactory(atts, el)
-        self.assertTrue(isinstance(ds, Element))
-        self.assertEqual(ds.tagName, "datasource")
-        self.assertEqual(ds._tagAttrs, atts)
-        self.assertEqual(ds.content, [])
-        self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
-        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
-        self.assertEqual(ds.store(["<datasource type='TANGO'>",
-                                   "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
-                                   "</datasource>"],gjson),None)
-        self.assertEqual(type(ds._last.source),DataSources.TangoSource)
-        self.assertEqual(ds._last.source.member.name,dname)
-        self.assertEqual(ds._last.source.dv,device)
-        self.assertEqual(ds._last.source.member.encoding,encoding)
-        self.assertEqual(ds._last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, dname, atype))
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>") )
 
     
 if __name__ == '__main__':
