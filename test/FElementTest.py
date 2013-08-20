@@ -451,7 +451,6 @@ class FElementTest(unittest.TestCase):
 
         mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        print "DATA",el.source.getData()
         self.assertEqual(el._findShape("2", extraD=False), mlen )
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=False, grows = i), mlen )
@@ -491,7 +490,6 @@ class FElementTest(unittest.TestCase):
 
         mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        print "DATA",el.source.getData()
         self.assertEqual(el._findShape("2", extraD=False, extends=True), mlen )
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True), mlen )
@@ -534,7 +532,6 @@ class FElementTest(unittest.TestCase):
 
         mlen = [self.__rnd.randint(2, 1000),1 ]
         el.source.dims = mlen
-        print "DATA",el.source.getData()
         self.assertEqual(el._findShape("2", extraD=False), [mlen[0]] )
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[0]] )
@@ -576,7 +573,6 @@ class FElementTest(unittest.TestCase):
 
         mlen = [1,self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        print "DATA",el.source.getData()
         self.assertEqual(el._findShape("2", extraD=False), [mlen[1]] )
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[1]] )
@@ -614,7 +610,6 @@ class FElementTest(unittest.TestCase):
 
         mlen = [1,1]
         el.source.dims = mlen
-        print "DATA",el.source.getData()
         self.assertEqual(el._findShape("2", extraD=False), [] )
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=False, grows = i), [] )

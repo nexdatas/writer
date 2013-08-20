@@ -61,6 +61,7 @@ import InnerXMLParserTest
 import AttributeArrayTest
 import FieldArrayTest
 import TNObjectTest
+import TgDeviceTest
 
 try:
     import PyTango
@@ -281,6 +282,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(TgDeviceTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
