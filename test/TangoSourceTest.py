@@ -1178,7 +1178,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_zzzzzzzzzzzgetData_dev_prop_group(self):
+    def test_getData_dev_prop_group(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 

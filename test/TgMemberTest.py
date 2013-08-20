@@ -467,7 +467,7 @@ class TangoSourceTest(unittest.TestCase):
             mb.getData(proxy)
             dt = mb.getValue()
             self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                           'DevString',[],None,None, arr[k][4] if len(arr[k])>4 else 0)
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 #            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
 
@@ -703,15 +703,19 @@ class TangoSourceTest(unittest.TestCase):
             }
 
 
+        prop = self._simps.dp.get_property(arr.keys())
+        for k in prop.keys():
+            prop[k] = [arr[k][3]]
+        self._simps.dp.put_property(prop)
 
 
         for k in arr:
             mb = TgMember(k,"property")
-            da = proxy.get_property(k)[k][0]
+            da = proxy.get_property(k)[k]
             mb.setData(da)
             dt = mb.getValue()
-            self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                           'DevString',[],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            self.checkData(dt,"SCALAR", str(arr[k][3]),
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 #            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
 
