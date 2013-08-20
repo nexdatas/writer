@@ -458,7 +458,11 @@ class TgMember(object):
     def getValue(self, decoders = None):
         if self.__value:
             return self.__value
-        
+        if self.__da is None:
+            if Streams.log_error:
+                print >> Streams.log_error, "TgGroup::getValue() - Data for %s not fetched" % self.name
+            raise DataSourceSetupError, ("TgGroup::getValue() -  Data or %s not fetched" % self.name)
+            
         if self.memberType == "attribute":
             self.__value = {"format":str(self.__da.data_format).split('.')[-1], 
                           "value":self.__da.value, "tangoDType":str(self.__da.type).split('.')[-1], 
@@ -468,6 +472,10 @@ class TgMember(object):
         elif self.memberType == "property":
             self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1,0]}
         elif self.memberType == "command":
+            if self.__cd is None:
+                if Streams.log_error:
+                    print >> Streams.log_error, "TgGroup::getValue() - Data for %s not fetched" % self.name
+                raise DataSourceSetupError, ("TgGroup::getValue() -  Data or %s not fetched" % self.name)
             self.__value = {"format":"SCALAR", "value":self.__da, 
                           "tangoDType":str(self.__cd.out_type).split('.')[-1],  "shape":[1,0], 
                           "encoding":self.encoding, "decoders":decoders}
