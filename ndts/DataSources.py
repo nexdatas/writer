@@ -384,7 +384,7 @@ class TgGroup(object):
                         #                print "getting the property: ", self.name
                         plist = dv.proxy.get_property_list('*')
                         if mb.name.encode() in plist:
-                            da = dv.proxy.get_property(mb.name.encode())[mb.name.encode()][0]
+                            da = dv.proxy.get_property(mb.name.encode())[mb.name.encode()]
                             mb.setData(da)
                     elif mb.memberType == "command":
                         #                print "calling the command: ", self.name
@@ -491,10 +491,13 @@ class TgMember(object):
 
             if rank in NTP.rTf:
                 shape.reverse()
-                if  not shape:
+                if not shape or shape == [1] or shape == [1,0]:
                     shape = [1,0]
-                    
-                self.__value = {"format":NTP.rTf[rank], "value":self.__da, 
+                    rank = 0
+                    value = self.__da[0]
+                else:
+                    value = self.__da
+                self.__value = {"format":NTP.rTf[rank], "value":value, 
                                 "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
 #            self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1,0]}
         elif self.memberType == "command":

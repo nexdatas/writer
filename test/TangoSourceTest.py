@@ -1252,13 +1252,6 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
         
-        from ndts.Types import NTP
-        prop = self._simps.dp.get_property(arr.keys())
-        for k in prop.keys():
-            prop[k] = [arr[k][3]]
-            print k, [arr[k][3]], type(arr[k][3]) , type(prop[k][0])
-            ntp = NTP()
-            print ntp.arrayRankRShape(prop[k])
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -1268,13 +1261,6 @@ class TangoSourceTest(unittest.TestCase):
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
-        from ndts.Types import NTP
-        prop = self._simps.dp.get_property(arr.keys())
-        for k in prop.keys():
-            prop[k] = [arr[k][3]]
-            print k, [arr[k][3]], type(arr[k][3]) , type(prop[k][0])
-            ntp = NTP()
-            print ntp.arrayRankRShape(prop[k])
 
 
         prop = self._simps2.dp.get_property(arr.keys())
@@ -1284,16 +1270,15 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             dt = el[k].getData()
-            print dt
             self.checkData(dt,"SCALAR", str(arr[k][3]),
-                           'DevString', [],None,None, arr[k][4] if len(arr[k])>4 else 0)
+                           'DevString', [1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
 
 
         for k in arrb:
             dt = el2[k].getData()
             self.checkData(dt,"SCALAR", str(arrb[k][3]),
-                           'DevString',[],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+                           'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
 
 
         pl.counter = 2
@@ -1301,14 +1286,14 @@ class TangoSourceTest(unittest.TestCase):
         for k in arrb:
             dt = el[k].getData()
             self.checkData(dt,"SCALAR", str(arrb[k][3]),
-                           'DevString',[],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+                           'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
 
 
 
         for k in arr:
             dt = el2[k].getData()
             self.checkData(dt,"SCALAR", str(arr[k][3]),
-                           'DevString',[],None,None, arr[k][4] if len(arr[k])>4 else 0)
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
 
 
@@ -1346,9 +1331,9 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'property'
             el.member.name = k
             dt = el.getData()
-            self.checkData(dt,"SCALAR", str(self._simps.device_prop[k]),
-                           'DevString',[],None,None, arr[k][4] if len(arr[k])>4 else 0)
-#            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+            dp = PyTango.DeviceProxy(el.dv)  
+            self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
 
 
