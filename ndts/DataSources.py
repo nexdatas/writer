@@ -71,6 +71,10 @@ from DataHolder import DataHolder
 
 from Errors import (PackageError, DataSourceSetupError)
 
+
+
+
+
 ## Data source
 class DataSource(object):
     ## constructor
@@ -114,6 +118,40 @@ class DataSource(object):
         if start == -1 or end < start:
             return ""
         return xml[start + 1:end].replace("&lt;","<").replace("&gt;",">").replace("&amp;","&")
+
+
+
+## sets the Tango proxy up
+## device tango device    
+# \returns proxy if proxy is set up    
+def proxySetup(device):    
+        found = False
+        cnt = 0
+
+        try:
+            proxy = PyTango.DeviceProxy(device)
+
+        except:
+            if Streams.log_error:
+                print >> Streams.log_error, "proxySetup() - Cannot connect to %s " % device
+            raise
+
+        while not found and cnt < 1000:
+            if cnt > 1:
+                time.sleep(0.01)
+            try:
+                if proxy.state() != PyTango.DevState.RUNNING:
+                    found = True
+                found = True
+            except:    
+                time.sleep(0.01)
+                found = False
+            cnt +=1
+        if found:
+            return proxy    
+
+
+
 
 ## Tango data source
 class TangoSource(DataSource):
@@ -185,9 +223,9 @@ class TangoSource(DataSource):
         elif device:
             self.dv = "%s" % (device.encode())
             
-        found = self.__proxySetup(self.dv)    
+        self.__proxy = proxySetup(self.dv)    
 
-        if not found:
+        if not self.__proxy:
             if Streams.log_error:
                 print >> Streams.log_error,  "TangoSource::setup() - Cannot connect to: %s \ndefined by %s" \
                     % (self.dv, xml)
@@ -202,33 +240,6 @@ class TangoSource(DataSource):
     def setDecoders(self, decoders):
         self.__decoders = decoders
 
-    ## sets the Tango proxy up
-    ## device tango device    
-    # \returns if proxy is set up    
-    def __proxySetup(self, device):    
-        found = False
-        cnt = 0
-
-        try:
-            self.__proxy = PyTango.DeviceProxy(self.dv)
-
-        except:
-            if Streams.log_error:
-                print >> Streams.log_error, "TangoSource::__proxySetup() - Cannot connect to %s " % self.dv
-            raise
-
-        while not found and cnt < 1000:
-            if cnt > 1:
-                time.sleep(0.01)
-            try:
-                if self.__proxy.state() != PyTango.DevState.RUNNING:
-                    found = True
-                found = True
-            except:    
-                time.sleep(0.01)
-                found = False
-            cnt +=1
-        return found    
 
     ## data provider
     # \returns dictionary with collected data  
@@ -247,13 +258,13 @@ class TangoSource(DataSource):
             failed = True
         if self.dv and self.member.memberType and self.member.name:
             if not self.__proxy or failed:
-                found = self.__proxySetup(self.dv)    
-                if not found:
+                self.__proxy = proxySetup(self.dv)    
+                if not self.__proxy:
                     if Streams.log_error:
                         print >> Streams.log_error,  "TangoSource::getData() - Setting up lasts to long: %s" % xml
                     raise  DataSourceSetupError, \
                         "Setting up lasts to long: %s" % xml
-
+                
             if self.group is None:
                 self.member.getData(self.__proxy)
             else:
@@ -330,7 +341,6 @@ class TgGroup(object):
                 for mb in dv.members.values():
                     mb.reset()
 
-
                 failed = True
                 try:
                     if dv.proxy:
@@ -339,8 +349,8 @@ class TgGroup(object):
                 except:
                     failed = True
                 if not dv.proxy or failed:
-                    found = self.__proxySetup(dv.name)    
-                    if not found:
+                    dv.proxy = proxySetup(dv.name)    
+                    if not dv.proxy:
                         if Streams.log_error:
                             print >> Streams.log_error,  "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
                         raise DataSourceSetupError, \
