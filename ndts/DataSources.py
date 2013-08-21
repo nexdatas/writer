@@ -158,8 +158,8 @@ def proxySetup(device):
 def isProxyValid(proxy):
     failed = True
     try:
-        if dv.proxy:
-            dv.proxy.state()
+        if proxy:
+            proxy.state()
             failed = False
     except:
         failed = True
