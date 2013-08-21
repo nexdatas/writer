@@ -834,15 +834,21 @@ class PyEvalSource(DataSource):
                         
             else:
                 if Streams.log_error:
-                    print >> Streams.log_error, "PyEvalSource::setup() - PyEval input name %s wrongly defined" % name
+                    print >> Streams.log_error, "PyEvalSource::setup() - PyEval input name wrongly defined"
                 raise  DataSourceSetupError, \
-                    "PyEvalSource::setup() - PyEval input name %s wrongly defined" % name
+                    "PyEvalSource::setup() - PyEval input name wrongly defined"
         res = dom.getElementsByTagName("result")
         if res and len(res)>0:
             self.__name = res[0].getAttribute("name") if res[0].hasAttribute("name") else 'result'
             if len(self.__name) >3 and self.__name[:2] == 'ds.':
                 self.__name = self.__name[3:]
             self.__script = self._getText(res[0]) 
+            
+        if len(self.__script) == 0:
+            if Streams.log_error:
+                print >> Streams.log_error, "PyEvalSource::setup() - PyEval script %s not defined" % self.__name
+            raise  DataSourceSetupError, \
+                "PyEvalSource::setup() - PyEval script %s not defined" % self.__name
             
 
 

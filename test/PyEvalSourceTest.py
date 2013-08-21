@@ -103,63 +103,75 @@ class PyEvalSourceTest(unittest.TestCase):
         
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.__str__(), " PYEVAL %s" % (""))
+
         
-
-    ## __str__ test
-    # \brief It tests default settings
-    def ttest_str_default(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-        name = 'myrecord'
-        ds = PyEvalSource()
-        self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " CLIENT record %s" 
-                         % (None))
-
-        ds = PyEvalSource()
-        ds.name = name                 
-        self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " CLIENT record %s" 
-                         % (name))
-
-        ds = PyEvalSource()
-        ds.name = name                 
-        gjson = '{"data":{"myrecord":"1"}}'
-        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
-        self.assertEqual(ds.__str__(), " CLIENT record %s" 
-                         % (name))
-
-        ds = PyEvalSource()
-        ds.name = name                 
-        ljson = '{"data":{"myrecord2":1}}'
-        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
-        self.assertEqual(ds.__str__(), " CLIENT record %s" 
-                         % (name))
-
 
     ## setup test
     # \brief It tests default settings
-    def ttest_setup_default(self):
+    def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
         dname = 'writer'
+        script = 'ds.result = 0'
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource/>")
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><record/></datasource>")
+        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><result/></datasource>")
 
         ds = PyEvalSource()
-        self.assertEqual(ds.name ,None)
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.setup("<datasource><record name='%s'/></datasource>" % dname),None)
-        self.assertEqual(ds.name ,dname)
+        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><result name ='writer'/></datasource>")
 
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.setup("<datasource><result name='%s'>ds.%s = 0 </result></datasource>" % (dname,dname)),None)
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.setup("<datasource><result>%s</result></datasource>"% script ),None)
+        self.assertEqual(ds.__str__(), " PYEVAL %s" % (script))
+
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.setup, 
+                           "<datasource><datasource/><result>%s</result></datasource>"% script )
+
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.setup, 
+                           "<datasource><datasource type='CLIENT'/><result>%s</result></datasource>"% script )
+
+
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.setup, 
+                           "<datasource><datasource name='INP'/><result>%s</result></datasource>"% script )
+
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.setup(
+                "<datasource><datasource type='CLIENT' name='INP'/><result>%s</result></datasource>"% script ),
+                         None)
+
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.setup("""
+<datasource>
+   <datasource type='CLIENT' name='INP'/>
+   <datasource type='TANGO' name='INP2'/>
+   <result>%s</result>
+</datasource>
+"""         % script ), None)
+        
 
     ## Data check 
     # \brief It check the source Data
@@ -487,6 +499,40 @@ class PyEvalSourceTest(unittest.TestCase):
         el = PyEvalSource()
         self.assertTrue(isinstance(el, object))
         self.assertEqual(el.isValid(), True)
+
+    ## __str__ test
+    # \brief It tests default settings
+    def ttest_str_default(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        name = 'myrecord'
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.__str__(), " CLIENT record %s" 
+                         % (None))
+
+        ds = PyEvalSource()
+        ds.name = name                 
+        self.assertTrue(isinstance(ds, DataSource))
+        self.assertEqual(ds.__str__(), " CLIENT record %s" 
+                         % (name))
+
+        ds = PyEvalSource()
+        ds.name = name                 
+        gjson = '{"data":{"myrecord":"1"}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+        self.assertEqual(ds.__str__(), " CLIENT record %s" 
+                         % (name))
+
+        ds = PyEvalSource()
+        ds.name = name                 
+        ljson = '{"data":{"myrecord2":1}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        self.assertEqual(ds.__str__(), " CLIENT record %s" 
+                         % (name))
+
 
 
 
