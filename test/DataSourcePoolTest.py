@@ -30,6 +30,7 @@ import numpy
 from xml.dom import minidom
 
 import ndts
+import thread
 
 from ndts.DataSourcePool import DataSourcePool
 from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
@@ -178,6 +179,9 @@ class DataSourcePoolTest(unittest.TestCase):
 
 
         el = DataSourcePool()
+        self.assertEqual(el.common,{})
+        self.assertEqual(el.counter,0)
+        self.assertEqual(type(el.lock),thread.LockType)
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))
