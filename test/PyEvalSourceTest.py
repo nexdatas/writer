@@ -201,7 +201,7 @@ class PyEvalSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_default(self):
+    def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
