@@ -873,6 +873,11 @@ class PyEvalSource(DataSource):
     ## provides access to the data    
     # \returns  dictionary with collected data   
     def getData(self):
+        if not self.__name:
+            if Streams.log_error:
+                print >> Streams.log_error, "PyEvalSource::getData() - PyEval datasource not set up"
+            raise  DataSourceSetupError, \
+                 "PyEvalSource::getData() - PyEval datasource not set up"
         class Variables(object): 
             pass
         ds = Variables()

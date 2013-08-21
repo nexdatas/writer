@@ -35,6 +35,7 @@ import time
 
 from ndts.DataSources import DataSource
 from ndts.DataSources import PyEvalSource
+from ndts.DataSourcePool import DataSourcePool
 from ndts.Errors import DataSourceSetupError
 from ndts.Types import Converters
 
@@ -208,34 +209,93 @@ class PyEvalSourceTest(unittest.TestCase):
 
         name = 'myrecord'
         name2 = 'myrecord2'
+        script = 'ds.result = 123.2'
+        script2 = 'ds.result = ds.inp'
+        script3 = 'ds.res = ds.inp + ds.inp2'
+        dp = DataSourcePool()
+
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.getData(), None)
-        ds.name = name     
-        self.assertEqual(ds.getData(), None)
+        self.myAssertRaise(DataSourceSetupError, ds.getData)
+        self.assertEqual(ds.setup(
+                "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>"% script ),
+                         None)
+        dt = ds.getData()
+        self.checkData(dt, "SCALAR", 123.2,"DevDouble",[])        
+
 
         ds = PyEvalSource()
-        ds.name = name 
-        gjson = '{"data":{"myrecord":"1"}}'
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.getData)
+        self.assertEqual(ds.setup(
+                "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>"% script2 ),
+                         None)
+        gjson = '{"data":{"inp":"21"}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)),None)
-        dt = ds.getData()
-        self.checkData(dt, "SCALAR", "1","DevString",[])        
+        self.myAssertRaise(DataSourceSetupError, ds.setDataSources,dp)
+
 
         ds = PyEvalSource()
-        ds.name = name2     
-        gjson = '{"data":{"myrecord":"1"}}'
-        ljson = '{"data":{"myrecord2":12}}'
-        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.getData)
+        self.assertEqual(ds.setup("""
+<datasource>
+  <datasource type='CLIENT' name='inp'>
+    <record name='inp' />
+  </datasource>
+  <result>%s</result>
+</datasource>
+"""% script2 ), None)
+        gjson = '{"data":{"inp":21}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+        self.assertEqual(ds.setDataSources(dp),None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 12,"DevLong64",[])        
+        self.checkData(dt, "SCALAR", 21,"DevLong64",[])        
+
 
         ds = PyEvalSource()
-        ds.name = name2     
-        gjson = '{}'
-        ljson = '{"data":{"myrecord2":12}}'
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.getData)
+        self.assertEqual(ds.setup("""
+<datasource>
+  <datasource type='CLIENT' name='inp'>
+    <record name='rinp' />
+  </datasource>
+  <datasource type='CLIENT' name='inp2'>
+    <record name='rinp2' />
+  </datasource>
+  <result name='res'>%s</result>
+</datasource>
+"""% script3 ), None)
+        gjson = '{"data":{"rinp":21,"rinp2":41}}'
+        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
+        self.assertEqual(ds.setDataSources(dp),None)
+        dt = ds.getData()
+        self.checkData(dt, "SCALAR", 62,"DevLong64",[])        
+
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.getData)
+        self.assertEqual(ds.setup("""
+<datasource>
+  <datasource type='CLIENT' name='inp'>
+    <record name='rinp' />
+  </datasource>
+  <datasource type='CLIENT' name='inp2'>
+    <record name='rinp2' />
+  </datasource>
+  <result name='res'>%s</result>
+</datasource>
+"""% script3 ), None)
+        gjson = '{"data":{"rinp":21.1}}'
+        ljson = '{"data":{"rinp2":41}}'
+        self.assertEqual(ds.setDataSources(dp),None)
         self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 12,"DevLong64",[])        
+        self.checkData(dt, "SCALAR", 62.1,"DevDouble",[])        
+
+
 
 
 
