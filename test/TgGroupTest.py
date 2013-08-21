@@ -65,7 +65,7 @@ class pool(object):
         self.counter = 0
     
 ## test fixture
-class TangoSourceTest(unittest.TestCase):
+class TgGroupTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method

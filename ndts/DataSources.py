@@ -121,49 +121,54 @@ class DataSource(object):
         return xml[start + 1:end].replace("&lt;","<").replace("&gt;",">").replace("&amp;","&")
 
 
+## tools for proxy
+class ProxyTools(object):
 
-## sets the Tango proxy up
-## \param device tango device    
-# \returns proxy if proxy is set up    
-def proxySetup(device):    
-    found = False
-    cnt = 0
 
-    try:
-        proxy = PyTango.DeviceProxy(device)
+    ## sets the Tango proxy up
+    ## \param device tango device    
+    # \returns proxy if proxy is set up    
+    @classmethod
+    def proxySetup(cls, device):    
+        found = False
+        cnt = 0
 
-    except:
-        if Streams.log_error:
-            print >> Streams.log_error, "proxySetup() - Cannot connect to %s " % device
-        raise
-
-    while not found and cnt < 1000:
-        if cnt > 1:
-            time.sleep(0.01)
         try:
-            if proxy.state() != PyTango.DevState.RUNNING:
+            proxy = PyTango.DeviceProxy(device)
+
+        except:
+            if Streams.log_error:
+                print >> Streams.log_error, "ProxyTools.proxySetup() - Cannot connect to %s " % device
+            raise
+
+        while not found and cnt < 1000:
+            if cnt > 1:
+                time.sleep(0.01)
+            try:
+                if proxy.state() != PyTango.DevState.RUNNING:
+                    found = True
                 found = True
-            found = True
-        except:    
-            time.sleep(0.01)
-            found = False
-        cnt +=1
-    if found:
-        return proxy    
+            except:    
+                time.sleep(0.01)
+                found = False
+            cnt +=1
+        if found:
+            return proxy    
 
 
-## checks if proxy is valid
-# \param proxy PyTango proxy
-# \returns True if proxy is valid else false
-def isProxyValid(proxy):
-    failed = True
-    try:
-        if proxy:
-            proxy.state()
-            failed = False
-    except:
+    ## checks if proxy is valid
+    # \param proxy PyTango proxy
+    # \returns True if proxy is valid else false
+    @classmethod
+    def isProxyValid(cls, proxy):
         failed = True
-    return not failed    
+        try:
+            if proxy:
+                proxy.state()
+                failed = False
+        except:
+            failed = True
+        return not failed    
 
 
 
@@ -237,7 +242,7 @@ class TangoSource(DataSource):
         elif device:
             self.dv = "%s" % (device.encode())
             
-        self.__proxy = proxySetup(self.dv)    
+        self.__proxy = ProxyTools.proxySetup(self.dv)    
 
         if not self.__proxy:
             if Streams.log_error:
@@ -265,8 +270,8 @@ class TangoSource(DataSource):
             raise PackageError, "Support for PyTango datasources not available" 
 
         if self.dv and self.member.memberType and self.member.name:
-            if not self.__proxy or not isProxyValid(self.__proxy):
-                self.__proxy = proxySetup(self.dv)    
+            if not self.__proxy or not ProxyTools.isProxyValid(self.__proxy):
+                self.__proxy = ProxyTools.proxySetup(self.dv)    
                 if not self.__proxy:
                     if Streams.log_error:
                         print >> Streams.log_error,  "TangoSource::getData() - Setting up lasts to long: %s" % xml
@@ -353,8 +358,8 @@ class TgGroup(object):
                 for mb in dv.members.values():
                     mb.reset()
 
-                if not dv.proxy or not isProxyValid(dv.proxy):
-                    dv.proxy = proxySetup(dv.device)    
+                if not dv.proxy or not ProxyTools.isProxyValid(dv.proxy):
+                    dv.proxy = ProxyTools.proxySetup(dv.device)    
                     if not dv.proxy:
                         if Streams.log_error:
                             print >> Streams.log_error,  "TgGroup::getData() - Setting up lasts to long: %s" % dv.device
