@@ -933,6 +933,6 @@ class PyEvalSource(DataSource):
                 if Streams.log_error:
                     print >> Streams.log_error, "PyEvalSource::setDataSources - Unknown data source"
                     
-                self.__datasources[name] = DataSources.DataSource()
+                self.__datasources[name] = DataSource()
         
 

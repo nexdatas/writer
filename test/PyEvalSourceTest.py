@@ -32,6 +32,7 @@ import binascii
 import time
 
 
+from ndts import DataSources 
 from ndts.DataSources import DataSource
 from ndts.DataSources import PyEvalSource
 from ndts.DataSourcePool import DataSourcePool
@@ -268,6 +269,29 @@ class PyEvalSourceTest(unittest.TestCase):
         self.assertEqual(ds.setDataSources(dp),None)
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 62,"DevLong64",[])        
+
+        dp = DataSourcePool(json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}'))
+
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.getData)
+        self.assertEqual(ds.setup("""
+<datasource>
+  <datasource type='CL' name='inp'>
+    <record name='rinp' />
+  </datasource>
+  <datasource type='CLIENT' name='inp2'>
+    <record name='rinp2' />
+  </datasource>
+  <result name='res'>%s</result>
+</datasource>
+"""% script3 ), None)
+        gjson = '{"data":{"rinp":21.1}}'
+        ljson = '{"data":{"rinp2":41}}'
+        self.assertEqual(ds.setDataSources(dp),None)
+        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        dt = ds.getData()
+        self.checkData(dt, "SCALAR", 62.1,"DevDouble",[])        
 
 
         ds = PyEvalSource()
