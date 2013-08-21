@@ -45,6 +45,7 @@ import NTPTest
 import ErrorsTest
 import DataSourceTest
 import ClientSourceTest
+import PyEvalSourceTest
 import DBaseSourceTest
 import DataSourcePoolTest
 import DataSourceFactoryTest
@@ -235,6 +236,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(PyEvalSourceTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DBaseSourceTest) )
