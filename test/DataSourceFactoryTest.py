@@ -96,6 +96,32 @@ class DataSourceFactoryTest(unittest.TestCase):
             error = True
         self.assertEqual(error, True)
 
+
+    ## Data check 
+    # \brief It check the source Data
+    # \param data  tested data
+    # \param format data format
+    # \param value data value
+    # \param ttype data Tango type    
+    # \param shape data shape    
+    def checkData(self, data, format, value, ttype, shape):
+        self.assertEqual(data["format"], format)
+        self.assertEqual(data["tangoDType"], ttype)
+        self.assertEqual(data["shape"], shape)
+        if format == 'SCALAR': 
+            self.assertEqual(data["value"], value)
+        elif format == 'SPECTRUM': 
+            self.assertEqual(len(data["value"]), len(value))
+            for i in range(len(value)):
+                self.assertEqual(data["value"][i], value[i])
+        else: 
+            self.assertEqual(len(data["value"]), len(value))
+            for i in range(len(value)):
+                self.assertEqual(len(data["value"][i]), len(value[i]))
+                for j in range(len(value[i])):
+                    self.assertEqual(data["value"][i][j], value[i][j])
+                
+
     ## constructor test
     # \brief It tests default settings
     def test_constructor_default(self):
@@ -255,7 +281,40 @@ class DataSourceFactoryTest(unittest.TestCase):
                          % (name))
         self.assertEqual(len(ds._last.tagAttributes),1)
         self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+        dt = ds._last.source.getData()
+        self.checkData(dt,"SCALAR",'1',"DevString",[])
 
+
+
+        atts = {"type":"PYEVAL"}
+        name = "myRecord"
+        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        gjson = json.loads('{"data":{"myRecord":1123}}')
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.setDataSources(DataSourcePool()),None)
+        self.assertEqual(ds.store(["<datasource type='PYEVAL'>",
+                                   """
+<datasource type="CLIENT" name="myclient">
+  <record name="%s"/>
+</datasource>
+<result> 
+ds.result = ds.myclient + 1
+</result>
+""" %name,
+                                   "</datasource>"],gjson),None)
+        self.assertEqual(type(ds._last.source),DataSources.PyEvalSource)
+        self.assertEqual(ds._last.source.__str__(), " PYEVAL  \nds.result = ds.myclient + 1\n")
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'PYEVAL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
+        dt = ds._last.source.getData()
+        self.checkData(dt,"SCALAR",1124,"DevLong64",[])
         
 
 
