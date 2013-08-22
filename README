@@ -369,6 +369,8 @@ dpx.CloseFile()
 
 
 
-In order to build the XML configurations in the easy way the authors of the server are going to proving for this purpose a specialized GUI tool. The attached to the server XML examples was created by XMLFile class defined in XMLCreator/simpleXML.py. 
+In order to build the XML configurations in the easy way the authors of the server are going 
+to proving for this purpose a specialized GUI tool. The attached to the server XML examples 
+was created by XMLFile class defined in XMLCreator/simpleXML.py. 
 
 
