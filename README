@@ -164,9 +164,9 @@ a <record /> tag. An example of usage:
 
 * <record> *
 
-The record tag defines the fetched data by its name. It has an attrbute
+The *record* tag defines the fetched data by its name. It has an attrbute
 
-    name which for the CLIENT data source type denotes a name of the data in the JSON string, for TANGO data source type a name of the tango class member while for SARDANA a name of the door record. 
+  + *name* which for the CLIENT data source type denotes a name of the data in the JSON string
 
 An example of usage:
 
@@ -201,6 +201,12 @@ It has the following attributes:
 
 If group attribute is defined data of the same group is read simultaneously and 
 only ones during one experimental step.
+
+* <record> *
+
+The *record* tag defines the fetched data by its name. It has an attrbute
+
+  + *name* which for the TANGO data source type a name of the tango class member 
 
 DB datasource
 --------------------
@@ -294,7 +300,7 @@ Client code
 --------------------
 
 In order to use Nexus Data Server one has to write a client code. Some simple client codes 
-are attached to the repository in the XMLCreator directory. In this section we add some 
+are in the  nexdatas repository. In this section we add some 
 comments related to the client code.
 
 # To use the Tango Server we must import the PyTango module and create DeviceProxy for the server.
@@ -322,7 +328,10 @@ dpx.OpenFile()
 xml = open("test.xml", 'r').read()
 dpx.TheXMLSettings = xml
 
-dpx.TheJSONRecord = '{"data": {"parameterA":0.2}, "decoders":{"DESY2D":"desydecoders.desy2Ddec.desy2d"}, "datasources":{"MCLIENT":"sources.DataSources.LocalClientSource"}}'
+dpx.TheJSONRecord = '{"data": {"parameterA":0.2}, 
+                      "decoders":{"DESY2D":"desydecoders.desy2Ddec.desy2d"}, 
+                      "datasources":{"MCLIENT":"sources.DataSources.LocalClientSource"}
+                     }'
 
 dpx.OpenEntry()
 
