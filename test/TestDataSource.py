@@ -46,17 +46,32 @@ class TestDataSource(DataSource):
         self.valid = True
         ## returned Data
         self.value = None
+        ## the current  static JSON object
+        self.globalJSON = None
+        ## the current  dynamic JSON object
+        self.localJSON = None
+        ## xml 
+        self.xml = None
+        ## decoder pool
+        self.decoders = None        
+        ## datasource pool
+        self.datasources = None
+        ## stack
+        self.stack  = []
 
 
     ## sets the parameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-        pass
+        self.stack.append("setup")
+        self.stack.append(xml)
+        self.xml = None
 
 
     ## access to data
     # \brief It is an abstract method providing data   
     def getData(self):
+        self.stack.append("getData")
         if self.valid:
             self.dataTaken = True
             if self.value:
@@ -78,12 +93,40 @@ class TestDataSource(DataSource):
     ## checks if the data is valid
     # \returns if the data is valid
     def isValid(self):
+        self.stack.append("isValid")
         return self.valid
 
 
     ## self-description 
     # \returns self-describing string
     def __str__(self):
+        self.stack.append("__str__")
         return "Test DataSource"
 
 
+
+    ## sets JSON string
+    # \brief It sets the currently used  JSON string
+    # \param globalJSON static JSON string    
+    # \param localJSON dynamic JSON string    
+    def setJSON(self, globalJSON, localJSON=None):
+        self.stack.append("setJSON")
+        self.stack.append(globalJSON)
+        self.stack.append(localJSON)
+        self.globalJSON = globalJSON
+        self.localJSON = localJSON
+
+
+    ## sets the used decoders
+    # \param decoders pool to be set
+    def setDecoders(self, decoders):
+        self.stack.append("setDecoders")
+        self.stack.append(decoders)
+        self.decoders = decoders        
+        
+    ## sets the datasources
+    # \param pool datasource pool
+    def setDataSources(self, pool):
+        self.stack.append("setDataSources")
+        self.stack.append(pool)
+        self.datasources = pool

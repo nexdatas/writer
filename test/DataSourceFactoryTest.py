@@ -29,10 +29,13 @@ import json
 import numpy
 from xml.dom import minidom
 
+import TestDataSource 
+
 
 from ndts.DataSourceFactory import DataSourceFactory
 from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
 from ndts.DataSourcePool import DataSourcePool
+from ndts.DecoderPool import DecoderPool
 from ndts.Element import Element
 from ndts.H5Elements import EField
 from ndts import DataSources
@@ -315,6 +318,69 @@ ds.result = ds.myclient + 1
         self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'PYEVAL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
         dt = ds._last.source.getData()
         self.checkData(dt,"SCALAR",1124,"DevLong64",[])
+        
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_check_flow(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+
+        atts = {"type":"CL"}
+        name = "myRecord"
+        wjson = json.loads('{"datasources":{"CL":"TestDataSource.TestDataSource"}}')
+        gjson = json.loads('{"data":{"myRecord":1123}}')
+        el = EField(self._fattrs, None )
+        ds = DataSourceFactory(atts, el)
+        self.assertTrue(isinstance(ds, Element))
+        self.assertEqual(ds.tagName, "datasource")
+        self.assertEqual(ds._tagAttrs, atts)
+        self.assertEqual(ds.content, [])
+        self.assertEqual(ds.doc, "")
+        self.assertEqual(ds._last, el)
+        dsp = DataSourcePool(wjson)
+        dcp = DecoderPool()
+        self.assertEqual(ds.setDataSources(dsp),None)
+        self.assertEqual(ds.store(["<datasource type='CL'>",
+                                   """
+<datasource type="CLIENT" name="myclient">
+  <record name="%s"/>
+</datasource>
+<result> 
+ds.result = ds.myclient + 1
+</result>
+""" %name,
+                                   "</datasource>"],gjson),None)
+        td = ds._last.source
+        self.assertEqual(len(td.stack), 7)
+        self.assertEqual(td.stack[0], "setup")
+        self.assertEqual(td.stack[1], '<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>')
+        self.assertEqual(td.stack[2], 'setJSON')
+        self.assertEqual(td.stack[3],  {u'data': {u'myRecord': 1123}})
+        self.assertEqual(td.stack[4], None)
+        self.assertEqual(td.stack[5], "setDataSources")
+        self.assertEqual(td.stack[6], dsp)
+
+        
+        ds.setDecoders(dcp)
+        self.assertEqual(len(td.stack), 10)
+        self.assertEqual(td.stack[7], "isValid")
+        self.assertEqual(td.stack[8], "setDecoders")
+        self.assertEqual(td.stack[9], dcp)
+        self.assertEqual(type(ds._last.source),TestDataSource.TestDataSource)
+        self.assertEqual(ds._last.source.__str__(), "Test DataSource")
+        self.assertEqual(len(td.stack), 11)
+        self.assertEqual(td.stack[10], '__str__')
+        self.assertEqual(len(ds._last.tagAttributes),1)
+        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
+        dt = ds._last.source.getData()
+        self.assertEqual(len(td.stack), 12)
+        self.assertEqual(td.stack[11], 'getData')
+        self.checkData(dt,"SCALAR",1,"DevLong",[0,0])
+
         
 
 
