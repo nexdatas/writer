@@ -118,7 +118,7 @@ class DataSource(object):
         end = xml.rfind('<')
         if start == -1 or end < start:
             return ""
-        return xml[start + 1:end].replace("&lt;","<").replace("&gt;",">").replace("&amp;","&")
+        return xml[start + 1:end].replace("&lt;","<").replace("&gt;",">").replace("&quot;","\"").replace("&amp;","&")
 
 
 ## tools for proxy
@@ -912,7 +912,7 @@ class PyEvalSource(DataSource):
     def setDecoders(self, decoders):
         self.__result["decoders"] = decoders        
         for name, source in self.__datasources.items():
-            if hasattr(source, "setDecorders"):
+            if hasattr(source, "setDecoders"):
                 source.setDecoders(decoders)
         
     ## sets the datasources

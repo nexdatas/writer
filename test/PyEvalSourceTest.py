@@ -353,7 +353,7 @@ else:
             }
 
         for a in arr:
-            for a2 in arr:
+            for a2 in arr2:
 
                 ds = PyEvalSource()
                 self.assertTrue(isinstance(ds, DataSource))

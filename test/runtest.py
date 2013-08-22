@@ -154,6 +154,7 @@ if PYTANGO_AVAILABLE:
     import TgMemberTest
     import TgGroupTest
     import ProxyToolsTest
+    import PyEvalTangoSourceTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
 
@@ -336,6 +337,10 @@ def main():
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceTest) )
+
 
 
         if "MYSQL" in DB_AVAILABLE:
