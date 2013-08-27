@@ -305,7 +305,25 @@ class TangoDataServerTest(unittest.TestCase):
                         self.assertEqual(at.value,"NXentry")
                 else:
                     self.assertEqual(ch.name,"NexusConfigurationLogs")
-                    self.assertEqual(ch.nattrs,0)
+                    for c in ch.children:
+                        if c.name == "Nexus__entry__1_XML":
+                            self.assertEqual(
+                                c.read(), 
+                                '<definition> <group type="NXentry" name="entry"/></definition>')
+                            print c.read()
+                        else:
+                            self.assertEqual(c.name,"python_version")
+                            self.assertEqual(c.read(),sys.version)
+                            
+                    self.assertEqual(ch.nattrs,1)
+                    for at in ch.attributes:
+                        self.assertTrue(at.valid)
+                        self.assertTrue(hasattr(at.shape,"__iter__"))
+                        self.assertEqual(len(at.shape),0)
+                        self.assertEqual(at.dtype,"string")
+                    #                    self.assertEqual(at.dtype,"string")
+                        self.assertEqual(at.name,"NX_class")
+                        self.assertEqual(at.value,"NXcollection")                
 
                     
                 
