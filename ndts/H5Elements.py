@@ -218,7 +218,7 @@ class FElementWithAttr(FElement):
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
                     self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
-#                    print "ATTR",key ,self.__h5Instances[key.encode()].dtype, dh.cast(self.__h5Instances[key.encode()].dtype)    
+#                    print "ATTR",key,type(self.__h5Instances[key.encode()]) ,self.__h5Instances[key.encode()].dtype, self.__h5Instances[key.encode()].value, dh.cast(self.__h5Instances[key.encode()].dtype)    
                 else:
                     shape = self.tagAttributes[key][2]
                     self.__h5Instances[key.encode()] = self.h5Object.attr(
@@ -969,6 +969,7 @@ class EAttribute(FElement):
             else:
                 self._last.tagAttributes[self.name] = (tp, val, tuple(shape))
 
+#            print "TAGATTR",self.name, self._last.tagAttributes[self.name ]    
             if self.source:
                 if  self.source.isValid() :
                     return self.strategy, self.trigger

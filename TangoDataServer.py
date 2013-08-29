@@ -342,6 +342,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
 		try:
+			self.get_device_properties(self.get_device_class())
 			self.tdw.numThreads = self.NumberOfThreads
 			self.tdw.openEntry()
 			self.set_state(PyTango.DevState.EXTRACT)
