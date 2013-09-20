@@ -145,8 +145,7 @@ class ProxyTools(object):
             if cnt > 1:
                 time.sleep(0.01)
             try:
-                if proxy.state() != PyTango.DevState.RUNNING:
-                    found = True
+                proxy.ping()
                 found = True
             except:    
                 time.sleep(0.01)
@@ -163,9 +162,8 @@ class ProxyTools(object):
     def isProxyValid(cls, proxy):
         failed = True
         try:
-            if proxy:
-                proxy.state()
-                failed = False
+            proxy.ping()
+            failed = False
         except:
             failed = True
         return not failed    

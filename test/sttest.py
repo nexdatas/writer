@@ -18,7 +18,7 @@ psub = subprocess.Popen("./ST S1 &",stdout =  subprocess.PIPE, stderr =  subproc
 #psub = os.system("./ST S1 &")
 #time.sleep(0.3)
 
-#time.sleep(1)
+#time.sleep(10)
 
 try: 
 #    dp = PyTango.DeviceProxy(new_device_info_writer.name)
@@ -34,7 +34,7 @@ try:
             if dp.state() == PyTango.DevState.ON:
                 found = True
         except Exception,e:    
-            #        print "WHAT:", e
+            print "WHAT:", e
             found = False
             cnt +=1
     print "STATE:",dp.state()

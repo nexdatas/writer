@@ -164,7 +164,11 @@ class TangoDataWriter(object):
         self.__finalPool = None
         self.__triggerPools = {}
         ## file handle
-        self.__nxFile = nx.create_file(self.fileName, overwrite=True)
+        try:
+            self.__nxFile = nx.create_file(self.fileName)
+        except:    
+            self.__nxFile = nx.open_file(self.fileName)
+            
         ## element file objects
         self.__eFile = EFile([], None, self.__nxFile)
         if self.addingLogs:    
