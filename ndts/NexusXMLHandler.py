@@ -154,6 +154,7 @@ class NexusXMLHandler(sax.ContentHandler):
                 self.__inner = True
             elif name in self.elementClass:
                 self.__stack.append(self.elementClass[name](attrs, self.__last()))
+
                 if hasattr(self.__last(), "createLink") and callable(self.__last().createLink):
                     self.__last().createLink(self.__groupTypes)
             elif name not in self.transparentTags:

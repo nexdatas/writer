@@ -813,14 +813,22 @@ class EGroup(FElementWithAttr):
 
         if self._lastObject():
             if ("type" in attrs.keys()) and ("name" in attrs.keys()) :
-                self.h5Object = self._lastObject().create_group(attrs["name"].encode(), attrs["type"].encode())
+                gname = attrs["name"].encode()
             elif "type" in attrs.keys() :
-                self.h5Object = self._lastObject().create_group(attrs["type"][2:].encode(), attrs["type"].encode())
+                gname = attrs["type"][2:].encode()
             else:
                 if Streams.log_error:
                     print >> Streams.log_error,\
                         "EGroup::__init__() - The group type not defined"
                 raise XMLSettingSyntaxError, "The group type not defined"
+            try:
+                self.h5Object = self._lastObject().create_group(gname, attrs["type"].encode())
+            except:
+                if Streams.log_error:
+                    print >> Streams.log_error,\
+                        "EGroup::__init__() - The group '%s' of '%s' type cannot be created" % (gname,attrs["type"].encode())
+                raise XMLSettingSyntaxError, "The group '%s' of '%s' type cannot be created" % (gname,attrs["type"].encode())
+                 
         else:
             if Streams.log_error:
                 print >> Streams.log_error,\
