@@ -92,6 +92,9 @@ class TangoDataWriter(object):
         ## group with Nexus log Info
         self.__logGroup = None
 
+        ## opend flag
+        self.__fileCreated = None
+
         if server:
             if  hasattr(self.__server, "log_fatal"):
                 Streams.log_fatal = server.log_fatal
@@ -164,15 +167,31 @@ class TangoDataWriter(object):
         self.__finalPool = None
         self.__triggerPools = {}
         ## file handle
-        try:
+
+        if os.path.isfile(self.fileName):
+            self.__nxFile = nx.open_file(self.fileName, False)
+            self.__fileCreated = False
+        else:
             self.__nxFile = nx.create_file(self.fileName)
-        except:    
-            self.__nxFile = nx.open_file(self.fileName)
-            
+            self.__fileCreated = True
+        
         ## element file objects
         self.__eFile = EFile([], None, self.__nxFile)
+
+        name = "NexusConfigurationLogs"
         if self.addingLogs:    
-            self.__logGroup = self.__nxFile.create_group("NexusConfigurationLogs","NXcollection")
+            if self.__fileCreated is False:
+                error = True
+                counter = 1
+                while error:
+                    cname = name if counter == 1 else ("%s_%s" % (name, counter))
+                    if not self.__nxFile.exists(cname):
+                        error = False
+                    else:
+                        counter += 1    
+            else:
+                cname = name
+            self.__logGroup = self.__nxFile.create_group(cname,"NXcollection")
             vfield = self.__logGroup.create_field("python_version", "string")
             vfield.write(str(sys.version))
             vfield.close()
