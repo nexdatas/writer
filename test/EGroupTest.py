@@ -138,6 +138,34 @@ class EGroupTest(unittest.TestCase):
         os.remove(self._fname)
 
 
+    ## default constructor test
+    # \brief It tests default settings
+    def test_default_constructor_thesame_name(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+        el = EGroup( self._gattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "group")
+        self.assertEqual(el.content, [])
+
+        self.assertEqual(type(el.h5Object), nx.nxh5.NXGroup)
+        self.assertEqual(el.h5Object.name, self._gattrs["name"])
+        self.assertEqual(el.h5Object.nattrs, 1)
+        self.assertEqual(el.h5Object.attr("NX_class").value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attr("NX_class").dtype, "string")
+        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
+        
+        self.myAssertRaise(XMLSettingSyntaxError, EGroup, self._gattrs, eFile)
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
 
     ## default constructor test
     # \brief It tests default settings

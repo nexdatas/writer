@@ -162,6 +162,7 @@ class ELinkTest(unittest.TestCase):
         atts3 = {"name":"link3","target":"entry3/testField"}
         atts4 = {"name":"link4","target":"/testField"}
         atts5 = {"name":"link5","target":"/testGroup"}
+        atts6 = {"name":"link5","target":"/testField"}
         gT1 = TNObject()
         ch  = TNObject("testGroup","NXentry",gT1)
         gT2 = TNObject()
@@ -173,6 +174,7 @@ class ELinkTest(unittest.TestCase):
         li3 = ELink(atts3, eFile)
         li4 = ELink(atts4, eFile)
         li5 = ELink(atts5, eFile)
+        li6 = ELink(atts6, eFile)
 
         fi2 = EField( self._fattrs, gr)
         fi2.content = ["2 "]
@@ -203,6 +205,8 @@ class ELinkTest(unittest.TestCase):
         li3.createLink(gT2)
         li4.createLink(TNObject())
         li5.createLink(TNObject())
+        self.myAssertRaise(XMLSettingSyntaxError, li5.createLink,TNObject())
+        self.myAssertRaise(XMLSettingSyntaxError, li6.createLink,TNObject())
         self.assertEqual(li0.h5Object, None)
         self.assertEqual(li1.h5Object, None)
         self.assertEqual(li2.h5Object, None)

@@ -403,18 +403,24 @@ class EField(FElementWithAttr):
             deflate = nx.NXDeflateFilter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
-            
-        if shape:
-            if self.__splitArray:
-                f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
-            else:
-                if not chunk:
-                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, filter=deflate)
+       
+        try:    
+            if shape:
+                if self.__splitArray:
+                    f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
                 else:
-                    f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk, filter=deflate)
-        else:
-            f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
-
+                    if not chunk:
+                        f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, filter=deflate)
+                    else:
+                        f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk, filter=deflate)
+            else:
+                f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
+        except:
+             if Streams.log_error:
+                    print >> Streams.log_error,\
+                        "EField::__createObject() - The field '%s' of '%s' type cannot be created" % (nm.encode(), tp.encode())
+             raise XMLSettingSyntaxError, "The fieled '%s' of '%s' type cannot be created" % (nm.encode(),tp.encode())
+                 
         return f
         
 
@@ -924,9 +930,15 @@ class ELink(FElement):
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
         if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            self.h5Object = (self._lastObject()).link(
-                (self.__typesToNames(self._tagAttrs["target"], groupTypes)).encode(),
-                self._tagAttrs["name"].encode())
+            path = (self.__typesToNames(self._tagAttrs["target"], groupTypes)).encode()
+            name = self._tagAttrs["name"].encode()
+            try:
+                self.h5Object = self._lastObject().link(path, name)
+            except:
+                if Streams.log_error:
+                    print >> Streams.log_error,\
+                        "ELink::createLink() - The link '%s' to '%s' type cannot be created" % (name, path)
+                raise XMLSettingSyntaxError, "The link '%s' to '%s' type cannot be created" % (name, path)
         else:
             if Streams.log_error:
                 print >> Streams.log_error,\

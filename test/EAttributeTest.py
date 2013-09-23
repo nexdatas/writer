@@ -228,6 +228,7 @@ class EAttributeTest(unittest.TestCase):
         at.source = ds
         self.assertEqual(at.h5Object, None)
         self.assertEqual(at.store(), (None,None))
+        self.assertEqual(at.store(), (None,None))
         self._nxFile.close()
         os.remove(self._fname) 
 
@@ -249,6 +250,13 @@ class EAttributeTest(unittest.TestCase):
         self.assertEqual(at.h5Object, None)
         self.assertEqual(at.store(), ('INIT',None))
         self.assertEqual(el.tagAttributes["mystring"],('NX_INT',''))
+
+        at2 = EAttribute({"name":"mystring", "type":"NX_CHAR"}, el)
+        at2.source = ds
+        at2.strategy = "INIT"
+        self.assertEqual(at2.h5Object, None)
+        self.assertEqual(at2.store(), ('INIT',None))
+        self.assertEqual(el.tagAttributes["mystring"],('NX_CHAR',''))
         self._nxFile.close()
         os.remove(self._fname) 
 
