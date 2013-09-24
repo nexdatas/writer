@@ -1,7 +1,6 @@
-2013-XX-XX Jan Kotanski <jankotan@gmail.com>
-	* adding possibility of appending a new [NXentry] group to existing file
+2013-09-24 Jan Kotanski <jankotan@gmail.com>
+	* adding possibility of appending a new [NXentry] group to the existing file
 	* fixing NumberOfThreads property update
-	* appending into the file by default
 	* fixing tests for ProxyTools
 	* tagged as 1.2.2
 
