@@ -256,7 +256,7 @@ if __name__ == "__main__":
             parser = sax.make_parser()
             
             ## file  handle
-            nxFile = nx.create_file(self.self.fileName, overwrite=True)
+            nxFile = nx.create_file("test.h5", overwrite=True)
             ## element file objects
             fileElement = EFile([], None, self.nxFile)
             ## a SAX2 handler object
