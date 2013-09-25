@@ -258,7 +258,7 @@ if __name__ == "__main__":
             ## file  handle
             nxFile = nx.create_file("test.h5", overwrite=True)
             ## element file objects
-            fileElement = EFile([], None, self.nxFile)
+            fileElement = EFile([], None, nxFile)
             ## a SAX2 handler object
             handler = NexusXMLHandler(fileElement)
             parser.setContentHandler(handler)
