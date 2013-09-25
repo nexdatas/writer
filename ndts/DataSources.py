@@ -272,9 +272,9 @@ class TangoSource(DataSource):
                 self.__proxy = ProxyTools.proxySetup(self.dv)    
                 if not self.__proxy:
                     if Streams.log_error:
-                        print >> Streams.log_error,  "TangoSource::getData() - Setting up lasts to long: %s" % xml
+                        print >> Streams.log_error,  "TangoSource::getData() - Setting up lasts to long: %s" % self.dv
                     raise  DataSourceSetupError, \
-                        "Setting up lasts to long: %s" % xml
+                        "Setting up lasts to long: %s" % self.dv
                 
             if self.group is None:
                 self.member.getData(self.__proxy)
