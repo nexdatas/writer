@@ -66,7 +66,7 @@ class DataHolder(object):
                     if Streams.log_error:
                         print >> Streams.log_error,  "DataHolder::__setupEncoded() - Unsupported variables format"
                     raise ValueError, "Unsupported variables format"
-                self.format = ["SCALAR","SPECTRUM", "IMAGE", "VERTEX"][rank]
+                self.format = ["SCALAR", "SPECTRUM", "IMAGE", "VERTEX"][rank]
                 
             tp =  decoder.dtype
             if tp in NTP.npTt.keys():

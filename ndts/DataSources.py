@@ -150,7 +150,7 @@ class ProxyTools(object):
             except:    
                 time.sleep(0.01)
                 found = False
-            cnt +=1
+            cnt += 1
         if found:
             return proxy    
 
@@ -236,7 +236,7 @@ class TangoSource(DataSource):
                 "Tango device name not defined: %s" % xml
 
         if hostname and port:
-            self.dv = "%s:%s/%s" % (hostname.encode(), port.encode(),device.encode())
+            self.dv = "%s:%s/%s" % (hostname.encode(), port.encode(), device.encode())
         elif device:
             self.dv = "%s" % (device.encode())
             
@@ -494,22 +494,22 @@ class TgMember(object):
 
             if rank in NTP.rTf:
                 shape.reverse()
-                if not shape or shape == [1] or shape == [1,0]:
-                    shape = [1,0]
+                if not shape or shape == [1] or shape == [1, 0]:
+                    shape = [1, 0]
                     rank = 0
                     value = self.__da[0]
                 else:
                     value = self.__da
                 self.__value = {"format":NTP.rTf[rank], "value":value, 
                                 "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
-#            self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1,0]}
+#            self.__value = {"format":"SCALAR", "value":str(self.__da), "tangoDType":"DevString", "shape":[1, 0]}
         elif self.memberType == "command":
             if self.__cd is None:
                 if Streams.log_error:
                     print >> Streams.log_error, "TgMember::getValue() - Data for %s not fetched" % self.name
                 raise DataSourceSetupError, ("TgMember::getValue() -  Data or %s not fetched" % self.name)
             self.__value = {"format":"SCALAR", "value":self.__da, 
-                          "tangoDType":str(self.__cd.out_type).split('.')[-1],  "shape":[1,0], 
+                          "tangoDType":str(self.__cd.out_type).split('.')[-1],  "shape":[1, 0], 
                           "encoding":self.encoding, "decoders":decoders}
         return self.__value
         
@@ -684,7 +684,7 @@ class DBaseSource(DataSource):
             if not self.format or self.format == 'SCALAR':
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
-                dh = {"format":"SCALAR", "value":data[0], "tangoDType":(NTP.pTt[type(data[0]).__name__]), "shape":[1,0]}
+                dh = {"format":"SCALAR", "value":data[0], "tangoDType":(NTP.pTt[type(data[0]).__name__]), "shape":[1, 0]}
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
@@ -692,7 +692,7 @@ class DBaseSource(DataSource):
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
-                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":(NTP.pTt[type(ldata[0]).__name__]), "shape":[len(ldata),0]}
+                dh = {"format":"SPECTRUM", "value":ldata, "tangoDType":(NTP.pTt[type(ldata[0]).__name__]), "shape":[len(ldata), 0]}
             else:
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
@@ -772,7 +772,7 @@ class ClientSource(DataSource):
         if rank in NTP.rTf:
             shape.reverse()
             if  shape is None:
-                shape = [1,0]
+                shape = [1, 0]
             return {"format":NTP.rTf[rank], "value":rec, 
                     "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
             
@@ -798,14 +798,14 @@ class PyEvalSource(DataSource):
         ## datasources 
         self.__datasources = {}
         ## python script
-        self.__script =""
+        self.__script = ""
         ## data format
-        self.__result ={"format":"SCALAR", 
-                        "value":None, 
-                        "tangoDType":"DevString",  
-                        "shape":[1,0], 
-                        "encoding":None, 
-                        "decoders":None}
+        self.__result = {"format":"SCALAR", 
+                         "value":None, 
+                         "tangoDType":"DevString",  
+                         "shape":[1, 0], 
+                         "encoding":None, 
+                         "decoders":None}
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
@@ -898,7 +898,7 @@ class PyEvalSource(DataSource):
         if rank in NTP.rTf:
             shape.reverse()
             if  shape is None:
-                shape = [1,0]
+                shape = [1, 0]
             return {"format":NTP.rTf[rank], "value":rec, 
                     "tangoDType":NTP.pTt[pythonDType.__name__], "shape":shape}
             

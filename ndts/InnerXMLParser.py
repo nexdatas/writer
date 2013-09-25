@@ -86,7 +86,7 @@ class InnerXMLHandler(sax.ContentHandler):
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        self.__depth +=1 
+        self.__depth += 1 
         self.__contentXML += self.__openTag(name, attrs)
 
     ## adds the tag content 
@@ -98,7 +98,7 @@ class InnerXMLHandler(sax.ContentHandler):
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        self.__depth -=1 
+        self.__depth -= 1 
         if self.__depth == 0:
             self.xml = (self.__preXML, self.__contentXML, self.__postXML)
             self.__xmlReader.setContentHandler(self.__contentHandler)
