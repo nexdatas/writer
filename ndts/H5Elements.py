@@ -19,25 +19,20 @@
 ## \file H5Elements.py
 # NeXus runnable elements
 
-import sys                                                                       
+import sys
 
-import numpy 
+import numpy
 
-from DataHolder import DataHolder
-
-from Element import Element
-
-from FieldArray import FieldArray
-
-from Types import NTP
-
-from Errors import (XMLSettingSyntaxError, DataSourceError )
-
-import Streams
+from .DataHolder import DataHolder
+from .Element import Element
+from .FieldArray import FieldArray
+from .Types import NTP
+from .Errors import (XMLSettingSyntaxError)
+from . import Streams
 
 try:
     import pni.io.nx.h5 as nx
-except:
+except ImportError:
     import pni.nx.h5 as nx
 
 
@@ -81,13 +76,13 @@ class FElement(Element):
             for s in dsShape:
                 if s and extends:
                     shape.append(s)
-                elif not extends and s and s>1:
+                elif not extends and s and s > 1:
                     shape.append(s)
     
             while extends and len(shape) < int(rank):
                 shape.append(1)
             if extraD:
-                shape.insert(exDim-1,0)    
+                shape.insert(exDim-1, 0)    
         return shape       
 
 
@@ -103,27 +98,32 @@ class FElement(Element):
         elif int(rank) == 2:
             lines = value.split("\n")
             image = [ln.split() for ln in lines ]
-            return [len(image),len(image[0])]
+            return [len(image), len(image[0])]
         else:    
             if Streams.log_error:
-                print >> Streams.log_error,\
-                    "FElement::__fetchShape() - Case with not supported rank = %s" % rank
+                print >> Streams.log_error, \
+                    "FElement::__fetchShape() "\
+                    "- Case with not supported rank = %s" \
+                    % rank
 
-            raise XMLSettingSyntaxError, "Case with not supported rank = %s" % rank
+            raise XMLSettingSyntaxError, \
+                "Case with not supported rank = %s" % rank
 
 
     ## creates shape object from rank and lengths variables
     # \param rank rank of the object
-    # \param lengths dictionary with dimensions as a string data , e.g. {"1":"34","2":"40"}
+    # \param lengths dictionary with dimensions as a string data , 
+    #    e.g. {"1":"34","2":"40"}
     # \param extraD if the object grows
     # \param grows growing dimension        
     # \param extends If True extends the shape up to rank value
     # \raise XMLSettingSyntaxError if shape cannot be found      
     # \returns shape of the object
-    def _findShape(self, rank, lengths=None, extraD = False, grows = None, extends = False):
+    def _findShape(self, rank, lengths=None, extraD = False, 
+                   grows = None, extends = False):
         shape = []
         if extraD:
-            if grows and grows >1:
+            if grows and grows > 1:
                 exDim = grows  
             else:
                 exDim = 1
@@ -143,7 +143,7 @@ class FElement(Element):
                     raise XMLSettingSyntaxError, "Too small dimension number"
                         
                 if extraD:
-                    shape.insert(exDim-1,0)    
+                    shape.insert(exDim-1, 0)    
             except:
                 val = ("".join(self.content)).strip().encode()   
                 found = False
@@ -151,11 +151,12 @@ class FElement(Element):
                     data = self.source.getData()
                     if isinstance(data, dict):                        
                         dh = DataHolder(**data)
-                        shape = self.__reshape(dh.shape, rank, extends, extraD, exDim)
+                        shape = self.__reshape(dh.shape, rank, extends, 
+                                               extraD, exDim)
                         if shape is not None:
                             found = True
                 if val and not found:
-                    shape = self.__fetchShape(val,rank)
+                    shape = self.__fetchShape(val, rank)
                     if shape is not None:
                         found = True
                     
@@ -163,7 +164,9 @@ class FElement(Element):
                     nm = "unnamed"
                     if "name" in self._tagAttrs.keys():
                         nm = self._tagAttrs["name"] + " "
-                    raise XMLSettingSyntaxError, "Wrongly defined %sshape: %s"% (nm, str(self.source) if self.source else val) 
+                    raise XMLSettingSyntaxError, \
+                        "Wrongly defined %sshape: %s"% \
+                        (nm, str(self.source) if self.source else val) 
                 
                 
         elif extraD:            
@@ -187,7 +190,8 @@ class FElement(Element):
             dsource = "unknown datasource"
             
             
-        message = ("Data for %s not found. DATASOURCE:%s" % (name, dsource), exceptionMessage )
+        message = ("Data for %s not found. DATASOURCE:%s" \
+                       % (name, dsource), exceptionMessage )
         return message
 
 
@@ -208,42 +212,50 @@ class FElementWithAttr(FElement):
   
 
     ## creates h5 attributes
-    # \brief It creates attributes instances which have been stored in tagAttributes dictionary
+    # \brief It creates attributes instances which have been
+    #   stored in tagAttributes dictionary
     def _createAttributes(self):
         for key in self.tagAttributes.keys():
             if key not in ["name","type"]:
                 if len(self.tagAttributes[key]) < 3:
                     self.__h5Instances[key.encode()] = self.h5Object.attr(
-                        key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode())
+                        key.encode(), 
+                        NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
-                        "SCALAR", self.tagAttributes[key][1].strip().encode(), "DevString", [1,0])
-                    self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
-#                    print "ATTR",key,type(self.__h5Instances[key.encode()]) ,self.__h5Instances[key.encode()].dtype, self.__h5Instances[key.encode()].value, dh.cast(self.__h5Instances[key.encode()].dtype)    
+                        "SCALAR", self.tagAttributes[key][1].strip().encode(), 
+                        "DevString", [1,0])
+                    self.__h5Instances[key.encode()].value = \
+                        dh.cast(self.__h5Instances[key.encode()].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
                     self.__h5Instances[key.encode()] = self.h5Object.attr(
-                        key.encode(), NTP.nTnp[self.tagAttributes[key][0]].encode(), 
+                        key.encode(), 
+                        NTP.nTnp[self.tagAttributes[key][0]].encode(), 
                         shape)
                     val = self.tagAttributes[key][1].strip().encode()
-#                    print "ATTR MD",key, shape ,self.__h5Instances[key.encode()].dtype, True if val else False , val
                     if val:
                         rank = len(shape)
                         if not rank or rank == 0:
-                            dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                            dh = DataHolder("SCALAR", val, "DevString", [1, 0])
                         elif  rank == 1:
                             spec = val.split()
-                            dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                            dh = DataHolder("SPECTRUM", spec, "DevString", 
+                                            [len(spec), 0])
                         elif  rank == 2:
                             lines = val.split("\n")
                             image = [ln.split() for ln in lines ]
-                            dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+                            dh = DataHolder("IMAGE", image, "DevString", 
+                                            [len(image),len(image[0])])
                         else:    
                             if Streams.log_error:
-                                print >> Streams.log_error,\
-                                    "FElement::_createAttributes() - Case with not supported rank = %s", rank
-                            raise XMLSettingSyntaxError, "Case with not supported rank = %s", rank
+                                print >> Streams.log_error, \
+                                    "FElement::_createAttributes() - "\
+                                    "Case with not supported rank = %s", rank
+                            raise XMLSettingSyntaxError, \
+                                "Case with not supported rank = %s", rank
                             
-                        self.__h5Instances[key.encode()].value = dh.cast(self.__h5Instances[key.encode()].dtype)
+                        self.__h5Instances[key.encode()].value = \
+                            dh.cast(self.__h5Instances[key.encode()].dtype)
                     
 
     ## provides attribute h5 object
@@ -273,9 +285,11 @@ class EStrategy(Element):
             if self._last.grows < 1:
                 self._last.grows = 1
         if "canfail" in attrs.keys():
-            self._last.canfail = True if attrs["canfail"].upper() == "TRUE" else False
+            self._last.canfail = True \
+                if attrs["canfail"].upper() == "TRUE" else False
         if "compression" in attrs.keys() and hasattr(self._last,"compression"):
-            self._last.compression = True if attrs["compression"].upper() == "TRUE" else False
+            self._last.compression = True \
+                if attrs["compression"].upper() == "TRUE" else False
             if self._last.compression:
                 if "rate" in attrs.keys() and hasattr(self._last,"rate"):
                     self._last.rate = int(attrs["rate"])
@@ -284,14 +298,16 @@ class EStrategy(Element):
                     if self._last.rate > 9:
                         self._last.rate = 9
                 if "shuffle" in attrs.keys() and hasattr(self._last,"shuffle"):
-                    self._last.shuffle = False if attrs["shuffle"].upper() == "FALSE" else True
+                    self._last.shuffle = False \
+                        if attrs["shuffle"].upper() == "FALSE" else True
                 
             
 
 
     ## stores the tag content
     # \param xml xml setting 
-    def store(self, xml = None):
+    # \param globalJSON global JSON string
+    def store(self, xml = None, globalJSON = None):
         self._last.postrun = ("".join(self.content)).strip()        
 
 
@@ -328,7 +344,8 @@ class EField(FElementWithAttr):
         self.__format = ''
 
     ## checks if it is growing in extra dimension
-    # \brief It checks if it is growing in extra dimension and setup internal variables     
+    # \brief It checks if it is growing in extra dimension 
+    # and setup internal variables     
     def __isgrowing(self):
         self.__extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
@@ -350,7 +367,7 @@ class EField(FElementWithAttr):
             return tp, nm    
         else:
             if Streams.log_error:
-                print >> Streams.log_error,\
+                print >> Streams.log_error, \
                     "FElement::__typeAndName() - Field without a name"
 
             raise XMLSettingSyntaxError, "Field without a name"
@@ -361,9 +378,11 @@ class EField(FElementWithAttr):
     def __getShape(self, tp):
         try:
             if tp.encode() == "string":
-                shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows)
+                shape = self._findShape(self.rank, self.lengths, 
+                                        self.__extraD, self.grows)
             else:
-                shape = self._findShape(self.rank, self.lengths, self.__extraD, self.grows, True)
+                shape = self._findShape(self.rank, self.lengths, 
+                                        self.__extraD, self.grows, True)
 #            print "ifstring", nm, shape, self.grows
             if self.grows > len(shape):
                 self.grows = len(shape)
@@ -375,19 +394,22 @@ class EField(FElementWithAttr):
                     self.grows = 1
                     
             return shape
-        except XMLSettingSyntaxError, ex:
+        except XMLSettingSyntaxError:
             if self.strategy == "POSTRUN": 
                 self.__splitArray = False
                 if self.rank and int(self.rank) >=0:
-                    shape = [0 for d in range(int(self.rank))]
+                    shape = [0]*int(self.rank)
                 else:
                     shape = [0]
                 return shape
             else:
                 if Streams.log_error:
-                    print >> Streams.log_error,\
-                        "FElement::__getShape() - Shape of %s cannot be found  " % self._tagAttrs["name"]
-                raise XMLSettingSyntaxError, "Wrongly defined %sshape: %s"% (self._tagAttrs["name"] + " " , str(self.source)) 
+                    print >> Streams.log_error, \
+                        "FElement::__getShape() - "\
+                        "Shape of %s cannot be found  " % self._tagAttrs["name"]
+                raise XMLSettingSyntaxError, \
+                    "Wrongly defined %sshape: %s"% \
+                    (self._tagAttrs["name"] + " " , str(self.source)) 
             
 
     ## creates H5 object
@@ -407,19 +429,28 @@ class EField(FElementWithAttr):
         try:    
             if shape:
                 if self.__splitArray:
-                    f = FieldArray(self._lastObject(), nm.encode(), tp.encode(), shape)
+                    f = FieldArray(self._lastObject(), nm.encode(), 
+                                   tp.encode(), shape)
                 else:
                     if not chunk:
-                        f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, filter=deflate)
+                        f = self._lastObject().create_field(
+                            nm.encode(), tp.encode(), shape, filter=deflate)
                     else:
-                        f = self._lastObject().create_field(nm.encode(), tp.encode(), shape, chunk, filter=deflate)
+                        f = self._lastObject().create_field(
+                            nm.encode(), tp.encode(), shape, chunk, 
+                            filter=deflate)
             else:
-                f = self._lastObject().create_field(nm.encode(), tp.encode(), filter=deflate)
+                f = self._lastObject().create_field(
+                    nm.encode(), tp.encode(), filter=deflate)
         except:
-             if Streams.log_error:
-                    print >> Streams.log_error,\
-                        "EField::__createObject() - The field '%s' of '%s' type cannot be created" % (nm.encode(), tp.encode())
-             raise XMLSettingSyntaxError, "The fieled '%s' of '%s' type cannot be created" % (nm.encode(),tp.encode())
+            if Streams.log_error:
+                print >> Streams.log_error, \
+                    "EField::__createObject() - "\
+                    "The field '%s' of '%s' type cannot be created" % \
+                    (nm.encode(), tp.encode())
+            raise XMLSettingSyntaxError, \
+                "The fieled '%s' of '%s' type cannot be created" % \
+                (nm.encode(),tp.encode())
                  
         return f
         
@@ -432,29 +463,50 @@ class EField(FElementWithAttr):
                 if key in NTP.aTn.keys():
                     if hasattr(self._tagAttrs[key],"encode"):
                         try:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                self._tagAttrs[key].strip().encode()
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                    self._tagAttrs[key].strip().encode()
                         except:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key].strip().encode())
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                    NTP.convert[
+                                        str(self.h5Object.attr(key.encode()
+                                                               ).dtype)
+                                        ](self._tagAttrs[key].strip().encode())
                     else:
                         try:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = self._tagAttrs[key]
+                            (self.h5Object.attr(
+                                    key.encode(), NTP.nTnp[NTP.aTn[key]
+                                                           ].encode())
+                             ).value = self._tagAttrs[key]
                         except:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](self._tagAttrs[key])
-                            
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())
+                             ).value = \
+                             NTP.convert[str(self.h5Object.attr(
+                                         key.encode()).dtype)
+                                         ](self._tagAttrs[key])
+                             
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
-                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = \
-                        numpy.array(self._tagAttrs[key])
+                    (self.h5Object.attr(
+                            key.encode(), 
+                            NTP.nTnp[NTP.aTnv[key]].encode(),shape)
+                     ).value = \
+                     numpy.array(self._tagAttrs[key])
                 else:
-                    (self.h5Object.attr(key.encode(), "string")).value = self._tagAttrs[key].strip().encode()
+                    (self.h5Object.attr(key.encode(), "string")).value = \
+                        self._tagAttrs[key].strip().encode()
 
         self._createAttributes()        
                 
         if self.strategy == "POSTRUN":
-            self.h5Object.attr("postrun".encode(), "string".encode()).value = self.postrun.encode().strip()
+            self.h5Object.attr("postrun".encode(), 
+                               "string".encode()).value = \
+                self.postrun.encode().strip()
 
 
 
@@ -470,23 +522,28 @@ class EField(FElementWithAttr):
             val = ("".join(self.content)).strip().encode()   
             if val:
                 if not self.rank or int(self.rank) == 0:
-                    dh = DataHolder("SCALAR", val, "DevString", [1,0])
+                    dh = DataHolder("SCALAR", val, "DevString", [1, 0])
                 elif  int(self.rank) == 1:
                     spec = val.split()
-                    dh = DataHolder("SPECTRUM", spec, "DevString", [len(spec),0])
+                    dh = DataHolder("SPECTRUM", spec, 
+                                    "DevString", [len(spec), 0])
                 elif  int(self.rank) == 2:
                     lines = val.split("\n")
                     image = [ln.split() for ln in lines ]
-                    dh = DataHolder("IMAGE", image, "DevString", [len(image),len(image[0])])
+                    dh = DataHolder("IMAGE", image, "DevString", 
+                                    [len(image),len(image[0])])
                 else:    
                     if Streams.log_error:
-                        print >> Streams.log_error,\
-                            "EField::__setStrategy() - Case with not supported rank = %s" % self.rank
+                        print >> Streams.log_error, \
+                            "EField::__setStrategy() - "\
+                            "Case with not supported rank = %s" % self.rank
 
-                    raise XMLSettingSyntaxError, "Case with not supported rank = %s" % self.rank
+                    raise XMLSettingSyntaxError, \
+                        "Case with not supported rank = %s" % self.rank
 
 
-                if self.h5Object.dtype != "string" or not self.rank or int(self.rank) == 0:
+                if self.h5Object.dtype != "string" or not self.rank \
+                        or int(self.rank) == 0:
                     self.h5Object[...] = dh.cast(self.h5Object.dtype)
 #                    self.h5Object.write(dh.cast(self.h5Object.dtype))
                 elif int(self.rank) == 1:
@@ -497,21 +554,27 @@ class EField(FElementWithAttr):
                     sts = dh.cast(self.h5Object.dtype)
                     for i in range(len(sts)):
                         for j in range(len(sts[i])):
-                            self.h5Object[i,j] = sts[i][j] 
+                            self.h5Object[i, j] = sts[i][j] 
 
             elif self.strategy != "POSTRUN":
                 if self.h5Object.dtype != "string": 
                     if Streams.log_error:
-                        print >> Streams.log_error, "EField::__setStrategy() - Warning: Invalid datasource for %s" % nm
-                    raise ValueError,"Warning: Invalid datasource for %s" % nm
+                        print >> Streams.log_error, \
+                            "EField::__setStrategy() - "\
+                            "Warning: Invalid datasource for %s" % nm
+                    raise ValueError, \
+                        "Warning: Invalid datasource for %s" % nm
                 else:
-                    print >> sys.stderr, "EField::__setStrategy() - Warning: Empty value for the field:", nm
+                    print >> sys.stderr, \
+                        "EField::__setStrategy() - "\
+                        "Warning: Empty value for the field:", nm
 
             
     ## stores the tag content
     # \param xml xml setting 
+    # \param globalJSON global JSON string
     # \returns (strategy, trigger)
-    def store(self, xml = None):
+    def store(self, xml = None, globalJSON = None):
         
         # if it is growing in extra dimension
         self.__isgrowing()
@@ -532,7 +595,8 @@ class EField(FElementWithAttr):
     ## writes non-growing data
     # \param dh data holder
     def __writeData(self, dh):
-        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 and self.h5Object.dtype == "string":
+        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 \
+                and self.h5Object.dtype == "string":
             sts = dh.cast(self.h5Object.dtype)
             if len(dh.shape) > 1 and dh.shape[0] == 1:
                 for i in range(len(sts[0])):
@@ -547,7 +611,8 @@ class EField(FElementWithAttr):
             sts = dh.cast(self.h5Object.dtype)
             if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
                 if self.h5Object.dtype == "string":
-                    if hasattr(sts[0], "__iter__")  and type(sts[0]).__name__ != 'str':
+                    if hasattr(sts[0], "__iter__")  and \
+                            type(sts[0]).__name__ != 'str':
                         self.h5Object.write(sts[0][0])
                     else:
                         self.h5Object.write(sts[0])
@@ -556,47 +621,56 @@ class EField(FElementWithAttr):
                         self.h5Object.write(sts)
                     except:    
                         if Streams.log_error:
-                            print >> Streams.log_error,\
-                                "EField::__writedata() - Storing one-dimension single fields not supported by pniio"
-                        raise Exception("Storing one-dimension single fields not supported by pniio")
+                            print >> Streams.log_error, \
+                                "EField::__writedata() - "\
+                                "Storing one-dimension single fields"\
+                                " not supported by pniio"
+                        raise Exception(
+                            "Storing one-dimension single fields"\
+                                " not supported by pniio")
             else:
                 self.h5Object.write(sts)
 
-        elif  len(self.h5Object.shape) == 2 and self.h5Object.dtype == "string":       
+        elif  len(self.h5Object.shape) == 2 \
+                and self.h5Object.dtype == "string":       
             sts = dh.cast(self.h5Object.dtype)
             if str(dh.format).split('.')[-1] == "IMAGE":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
-                        self.h5Object[i,j] = sts[i][j] 
+                        self.h5Object[i, j] = sts[i][j] 
             elif str(dh.format).split('.')[-1] == "SPECTRUM":
                 for i in range(len(sts)):
-                        self.h5Object[i,:] = sts[i]
+                    self.h5Object[i, :] = sts[i]
             else:            
-                self.h5Object[:,:] = sts
-        elif  len(self.h5Object.shape) == 3 and self.h5Object.dtype == "string":       
+                self.h5Object[:, :] = sts
+        elif  len(self.h5Object.shape) == 3 \
+                and self.h5Object.dtype == "string":       
             sts = dh.cast(self.h5Object.dtype)
             if str(dh.format).split('.')[-1] == "VERTEX":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
                         for k in range(len(sts[i][j])):
-                            self.h5Object[i,j,k] = sts[i][j][k] 
+                            self.h5Object[i, j, k] = sts[i][j][k] 
             if str(dh.format).split('.')[-1] == "IMAGE":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
-                        self.h5Object[i,j,:] = sts[i][j] 
+                        self.h5Object[i, j, :] = sts[i][j] 
             elif str(dh.format).split('.')[-1] == "SPECTRUM":
                 for i in range(len(sts)):
-                        self.h5Object[i,:,:] = sts[i]
+                    self.h5Object[i, :, :] = sts[i]
             else:            
-                self.h5Object[:,:,:] = sts
+                self.h5Object[:, :, :] = sts
         else:
             try:
                 self.h5Object.write(dh.cast(self.h5Object.dtype))
             except:    
                 if Streams.log_error:
-                    print >> Streams.log_error,\
-                        "EField::__writedata() - Storing two-dimension single fields not supported by pniio"
-                raise Exception("Storing two-dimension single fields not supported by pniio")
+                    print >> Streams.log_error, \
+                        "EField::__writedata() - "\
+                        "Storing two-dimension single fields "\
+                        "not supported by pniio"
+                raise Exception("Storing two-dimension single fields"\
+                                    " not supported by pniio")
 
 
     ## writes growing scalar data
@@ -608,16 +682,16 @@ class EField(FElementWithAttr):
             self.h5Object[self.h5Object.shape[0]-1] = arr
         elif  len(self.h5Object.shape) == 2:
             if self.grows == 2:
-                self.h5Object[:,self.h5Object.shape[0]-1] = arr
+                self.h5Object[:, self.h5Object.shape[0]-1] = arr
             else:
-                self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                self.h5Object[self.h5Object.shape[0]-1, :] = arr
         elif  len(self.h5Object.shape) == 3:
             if self.grows == 3:
-                self.h5Object[:,:,self.h5Object.shape[0]-1] = arr
+                self.h5Object[:, :, self.h5Object.shape[0]-1] = arr
             if self.grows == 2:
-                self.h5Object[:,self.h5Object.shape[0]-1,:] = arr
+                self.h5Object[:, self.h5Object.shape[0]-1, :] = arr
             else:
-                self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+                self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
 
 
     ## writes growing spectrum data
@@ -629,19 +703,21 @@ class EField(FElementWithAttr):
         if self.grows == 1:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                if len(self.h5Object.shape) == 2 and self.h5Object.shape[1] == 1:
-                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                if len(self.h5Object.shape) == 2 \
+                        and self.h5Object.shape[1] == 1:
+                    self.h5Object[self.h5Object.shape[0]-1, :] = arr
                 if len(self.h5Object.shape) == 2:
-                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                    self.h5Object[self.h5Object.shape[0]-1, :] = arr
                 else:                      
                     self.h5Object[self.h5Object.shape[0]-1] = arr
             else:
                 if len(self.h5Object.shape) == 3:
-                    self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+                    self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
                 elif  len(self.h5Object.shape) == 2:
-                    self.h5Object[self.h5Object.shape[0]-1,:] = arr
+                    self.h5Object[self.h5Object.shape[0]-1, :] = arr
                 else:
-                    if hasattr(arr,"__iter__") and type(arr).__name__!= 'str' and len(arr) == 1:
+                    if hasattr(arr,"__iter__") and type(arr).__name__!= 'str' \
+                            and len(arr) == 1:
                         self.h5Object[self.h5Object.shape[0]-1] = arr[0]
                     else:
                         self.h5Object[self.h5Object.shape[0]-1] = arr
@@ -649,15 +725,15 @@ class EField(FElementWithAttr):
         else:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                self.h5Object[:,self.h5Object.shape[1]-1] = arr
+                self.h5Object[:, self.h5Object.shape[1]-1] = arr
             else:
                 if len(self.h5Object.shape) == 3: 
                     if self.grows == 2:
-                        self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
+                        self.h5Object[:, self.h5Object.shape[1]-1, :] = arr
                     else:
-                        self.h5Object[:,:,self.h5Object.shape[2]-1] = arr
+                        self.h5Object[:, :, self.h5Object.shape[2]-1] = arr
                 else:
-                    self.h5Object[:,self.h5Object.shape[1]-1] = arr
+                    self.h5Object[:, self.h5Object.shape[1]-1] = arr
 
 
     ## writes growing spectrum data
@@ -667,25 +743,26 @@ class EField(FElementWithAttr):
         arr = dh.cast(self.h5Object.dtype)
         if self.grows == 1:
             if len(self.h5Object.shape) == 3:
-                self.h5Object[self.h5Object.shape[0]-1,:,:] = arr
+                self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
             elif len(self.h5Object.shape) == 2:
                 if len(dh.shape) == 1 :
-                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                    self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
                 elif len(dh.shape) > 1  and dh.shape[0] == 1:
-                    self.h5Object[self.h5Object.shape[0]-1,:] = [c[0] for c in arr]
+                    self.h5Object[self.h5Object.shape[0]-1, :] \
+                        = [c[0] for c in arr]
                 elif len(dh.shape) > 1  and dh.shape[1] == 1:
-                    self.h5Object[self.h5Object.shape[0]-1,:] = arr[:,0]
+                    self.h5Object[self.h5Object.shape[0]-1, :] = arr[:, 0]
             elif len(self.h5Object.shape) == 2:
-                self.h5Object[self.h5Object.shape[0]-1,:] = arr[0]
+                self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0]-1] = arr[0][0]
         elif self.grows == 2:
             if len(self.h5Object.shape) == 3:
-                self.h5Object[:,self.h5Object.shape[1]-1,:] = arr
+                self.h5Object[:, self.h5Object.shape[1]-1, :] = arr
             elif len(self.h5Object.shape) == 2:
-                self.h5Object[:,self.h5Object.shape[1]-1] = arr[0]
+                self.h5Object[:, self.h5Object.shape[1]-1] = arr[0]
         else:
-            self.h5Object[:,:,self.h5Object.shape[2]-1] = arr        
+            self.h5Object[:, :, self.h5Object.shape[2]-1] = arr        
 
 
 
@@ -700,14 +777,17 @@ class EField(FElementWithAttr):
             self.__writeImageGrowingData(dh)
         else:
             if Streams.log_error:
-                print >> Streams.log_error,\
-                    "Case with %s format not supported " % str(dh.format).split('.')[-1] 
-            raise XMLSettingSyntaxError, "Case with %s  format not supported " % str(dh.format).split('.')[-1]
+                print >> Streams.log_error, \
+                    "Case with %s format not supported "% \
+                    str(dh.format).split('.')[-1] 
+            raise XMLSettingSyntaxError, \
+                "Case with %s  format not supported " % \
+                str(dh.format).split('.')[-1]
 
     ## grows the h5 field    
     # \brief Ir runs the grow command of h5Object with grows-1 parameter
     def __grow(self):
-        if self.grows and self.grows>0 and hasattr(self.h5Object,"grow"):
+        if self.grows and self.grows > 0 and hasattr(self.h5Object, "grow"):
             self.h5Object.grow(self.grows-1)
                 
 
@@ -735,10 +815,13 @@ class EField(FElementWithAttr):
         except:
             info = sys.exc_info()
             import traceback
-            message = self.setMessage(str(info[1].__str__()) +"\n "+ (" ").join(traceback.format_tb(sys.exc_info()[2]) ))
+            message = self.setMessage(
+                str(info[1].__str__()) +"\n "+ (" ").join(
+                    traceback.format_tb(sys.exc_info()[2]) ))
 #            message = self.setMessage(  sys.exc_info()[1].__str__()  )
             del info
-            print >> sys.stderr, "EField::run() - %s\n %s " % (message[0],message[1])
+            print >> sys.stderr, "EField::run() - %s\n %s " % \
+                (message[0],message[1])
             self.error = message
 
 #            self.error = sys.exc_info()
@@ -746,13 +829,15 @@ class EField(FElementWithAttr):
             if self.error:
                 if self.canfail:
                     if Streams.log_warn:
-                        print >> Streams.log_warn, "EField::run() - %s  " % str(self.error)
+                        print >> Streams.log_warn, \
+                            "EField::run() - %s  " % str(self.error)
                 else:
                     if Streams.log_error:
-                        print >> Streams.log_error, "EField::run() - %s  " % str(self.error)
-                print >> sys.stderr, "EField::run() - ERROR", str(self.error)
+                        print >> Streams.log_error, \
+                            "EField::run() - %s  " % str(self.error)
+                print >> sys.stderr, "EField::run() - ERROR", \
+                    str(self.error)
 
-#            pass
 
     ## fills object with maximum value            
     # \brief It fills object or an extend part of object by default value 
@@ -789,7 +874,7 @@ class EField(FElementWithAttr):
         else:
             arr = value
 
-        dh = DataHolder(format,arr,NTP.npTt[self.h5Object.dtype],shape)    
+        dh = DataHolder(format, arr, NTP.npTt[self.h5Object.dtype], shape)    
         
         
         if not self.__extraD:
@@ -806,7 +891,9 @@ class EField(FElementWithAttr):
         if self.h5Object:
             self.h5Object.attr("nexdatas_canfail","string").value = "FAILED"
             if Streams.log_info:
-                print >> Streams.log_info, "EField::markFailed() - %s marked as failed" % (self.h5Object.name) 
+                print >> Streams.log_info, \
+                    "EField::markFailed() - %s marked as failed" % \
+                    (self.h5Object.name) 
             self.__fillMax()
     
 ## group H5 tag element        
@@ -824,48 +911,76 @@ class EGroup(FElementWithAttr):
                 gname = attrs["type"][2:].encode()
             else:
                 if Streams.log_error:
-                    print >> Streams.log_error,\
+                    print >> Streams.log_error, \
                         "EGroup::__init__() - The group type not defined"
                 raise XMLSettingSyntaxError, "The group type not defined"
             try:
-                self.h5Object = self._lastObject().create_group(gname, attrs["type"].encode())
+                self.h5Object = self._lastObject().create_group(
+                    gname, attrs["type"].encode())
             except:
                 if Streams.log_error:
-                    print >> Streams.log_error,\
-                        "EGroup::__init__() - The group '%s' of '%s' type cannot be created" % (gname,attrs["type"].encode())
-                raise XMLSettingSyntaxError, "The group '%s' of '%s' type cannot be created" % (gname,attrs["type"].encode())
+                    print >> Streams.log_error, \
+                        "EGroup::__init__() - "\
+                        "The group '%s' of '%s' type cannot be created" % \
+                        (gname,attrs["type"].encode())
+                raise XMLSettingSyntaxError, \
+                    "The group '%s' of '%s' type cannot be created" % \
+                    (gname,attrs["type"].encode())
                  
         else:
             if Streams.log_error:
-                print >> Streams.log_error,\
-                    "EGroup::__init__() - File object for the last element does not exist"
-            raise XMLSettingSyntaxError, "File object for the last element does not exist"
+                print >> Streams.log_error, \
+                    "EGroup::__init__() - "\
+                    "File object for the last element does not exist"
+            raise XMLSettingSyntaxError, \
+                "File object for the last element does not exist"
             
         for key in attrs.keys() :
             if key not in ["name","type"]:
                 if key in NTP.aTn.keys():
                     if hasattr(attrs[key],"encode"):
                         try:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key].encode()
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                    attrs[key].encode()
                         except:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](attrs[key].encode())
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                    NTP.convert[
+                                        str(self.h5Object.attr(
+                                                key.encode()
+                                                ).dtype)](attrs[key].encode())
                             
                     else:
                         try:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = attrs[key]
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())
+                             ).value = attrs[key]
                         except:
-                            (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTn[key]].encode())).value = NTP.convert[str(self.h5Object.attr(key.encode()).dtype)](attrs[key])
+                            (self.h5Object.attr(
+                                    key.encode(), 
+                                    NTP.nTnp[NTP.aTn[key]].encode())
+                             ).value \
+                             = NTP.convert[
+                                 str(self.h5Object.attr(key.encode()).dtype)
+                                 ](attrs[key])
                             
                 elif key in NTP.aTnv.keys():
                     
                     shape = (len(attrs[key]),)
-                    (self.h5Object.attr(key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),shape)).value = numpy.array(attrs[key])
+                    (self.h5Object.attr(
+                            key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
+                            shape)).value = numpy.array(attrs[key])
                 else:
-                    (self.h5Object.attr(key.encode(), "string")).value = attrs[key].encode()
+                    (self.h5Object.attr(key.encode(), "string")).value = \
+                        attrs[key].encode()
 
-    ## stores the tag content
-    # \param xml xml setting 
-    def store(self, xml = None):
+    ## stores the tag content 
+    # \param globalJSON global JSON string
+    def store(self, xml = None, globalJSON = None):
         self._createAttributes()
 
 
@@ -898,7 +1013,7 @@ class ELink(FElement):
             if len(gr) > 0: 
                 sgr = gr.split(":")
                 if len(sgr)>1 :
-                    res = "/".join([res,sgr[0]])
+                    res = "/".join([res, sgr[0]])
                     if valid:
                         ch = ch.child(name = sgr[0])
                         if not ch:
@@ -907,20 +1022,22 @@ class ELink(FElement):
                     if valid:
                         c = ch.child(nxtype = sgr[0])
                         if c:
-                            res = "/".join([res,c.name])
+                            res = "/".join([res, c.name])
                             ch = c
                         else:
                             c = ch.child(name = sgr[0])
                             if c:
-                                res = "/".join([res,sgr[0]])
+                                res = "/".join([res, sgr[0]])
                                 ch = c
                             else:
                                 valid = False
                     if not valid:
                         if Streams.log_error:
-                            print >> Streams.log_error,\
-                                "ELink::__typesToNames() - No %s in  groupTypes " %  str(sgr[0])
-                        raise XMLSettingSyntaxError, "No "+ str(sgr[0])+ " in groupTypes " 
+                            print >> Streams.log_error, \
+                                "ELink::__typesToNames() - "\
+                                "No %s in  groupTypes " %  str(sgr[0])
+                        raise XMLSettingSyntaxError, \
+                            "No "+ str(sgr[0])+ " in groupTypes " 
         res = res + "/" + sp[-1]
                 
         return res
@@ -929,19 +1046,25 @@ class ELink(FElement):
     ## creates the link the H5 file
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
-        if ("name" in self._tagAttrs.keys()) and ("target" in self._tagAttrs.keys()):
-            path = (self.__typesToNames(self._tagAttrs["target"], groupTypes)).encode()
+        if ("name" in self._tagAttrs.keys()) and \
+                ("target" in self._tagAttrs.keys()):
+            path = (self.__typesToNames(
+                    self._tagAttrs["target"], groupTypes)).encode()
             name = self._tagAttrs["name"].encode()
             try:
                 self.h5Object = self._lastObject().link(path, name)
             except:
                 if Streams.log_error:
-                    print >> Streams.log_error,\
-                        "ELink::createLink() - The link '%s' to '%s' type cannot be created" % (name, path)
-                raise XMLSettingSyntaxError, "The link '%s' to '%s' type cannot be created" % (name, path)
+                    print >> Streams.log_error, \
+                        "ELink::createLink() - "\
+                        "The link '%s' to '%s' type cannot be created" \
+                        % (name, path)
+                raise XMLSettingSyntaxError, \
+                    "The link '%s' to '%s' type cannot be created" \
+                    % (name, path)
         else:
             if Streams.log_error:
-                print >> Streams.log_error,\
+                print >> Streams.log_error, \
                     "ELink::createLink() - No name or type"
             raise XMLSettingSyntaxError, "No name or type"
           
@@ -969,8 +1092,9 @@ class EAttribute(FElement):
 
     ## stores the tag content
     # \param xml xml setting
+    # \param globalJSON global JSON string
     # \returns (strategy,trigger)
-    def store(self, xml = None):
+    def store(self, xml = None, globalJSON = None):
 
         if "name" in self._tagAttrs.keys(): 
             self.name = self._tagAttrs["name"]
@@ -989,7 +1113,7 @@ class EAttribute(FElement):
             else:
                 self._last.tagAttributes[self.name] = (tp, val, tuple(shape))
 
-#            print "TAGATTR",self.name, self._last.tagAttributes[self.name ]    
+#            print "TAGATTR", self.name, self._last.tagAttributes[self.name ]    
             if self.source:
                 if  self.source.isValid() :
                     return self.strategy, self.trigger
@@ -1018,12 +1142,15 @@ class EAttribute(FElement):
                         print >> sys.stderr , "Group::run() - %s " % message[0]
                         self.error = message
                     else:
-#                        print "ARR",self.name
+#                        print "ARR", self.name
                         arr = dh.cast(self.h5Object.dtype)
 #                        print "ARR2",arr
                         
-                        if self.h5Object.dtype != "string" or len(self.h5Object.shape) == 0:
-                            if self.h5Object.dtype == "string" and len(dh.shape)>0 and dh.shape[0] ==1 and type(arr).__name__ != "str":
+                        if self.h5Object.dtype != "string" \
+                                or len(self.h5Object.shape) == 0:
+                            if self.h5Object.dtype == "string" \
+                                    and len(dh.shape)>0 and dh.shape[0] ==1 \
+                                    and type(arr).__name__ != "str":
                                 self.h5Object.value = arr[0]
                             else:
                                 self.h5Object.value = arr
@@ -1032,25 +1159,31 @@ class EAttribute(FElement):
                             ## pniio does not support this case
 #                                print "ARR", arr
                             self.h5Object.value = arr
-#                                self.h5Object.value = numpy.array(arr,dtype = self.h5Object.dtype)
                             if Streams.log_error:
-                                print >> Streams.log_error,\
-                                    "EAttribute::run() - Storing multi-dimension string attributes not supported by pniio"
-                            raise Exception("Storing multi-dimension string attributes not supported by pniio")
+                                print >> Streams.log_error, \
+                                    "EAttribute::run() - "\
+                                    "Storing multi-dimension string attributes"\
+                                    " not supported by pniio"
+                            raise Exception("Storing multi-dimension string "\
+                                                "attributes not supported "\
+                                                "by pniio")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
             print >> sys.stderr , "Group::run() - %s " % message[0]
             self.error = message
-                                #            self.error = sys.exc_info()
+        #            self.error = sys.exc_info()
         finally:
             if self.error:
                 if self.canfail:
                     if Streams.log_warn:
-                        print >> Streams.log_warn, "Group::run() - %s  " % str(self.error)
+                        print >> Streams.log_warn, \
+                            "Group::run() - %s  " % str(self.error)
                 else:
                     if Streams.log_error:
-                        print >> Streams.log_error, "Group::run() - %s  " % str(self.error)
-                print >> sys.stderr, "Group::run() - ERROR", str(self.error)
+                        print >> Streams.log_error, \
+                        "Group::run() - %s  " % str(self.error)
+                print >> sys.stderr, "Group::run() - ERROR", \
+                    str(self.error)
 
 
     ## fills object with maximum value            
@@ -1093,8 +1226,12 @@ class EAttribute(FElement):
         if field:
             field.attr("nexdatas_canfail","string").value = "FAILED"
             if Streams.log_info:
-                print >> Streams.log_info, "EAttribute::markFailed() - %s of %s marked as failed" % (self.h5Object.name, field.name)
-                print >> Streams.log_info, "EAttribute::markFailed() - marked as failed  "
+                print >> Streams.log_info, \
+                    "EAttribute::markFailed() - "\
+                    "%s of %s marked as failed" % \
+                    (self.h5Object.name, field.name)
+                print >> Streams.log_info, \
+                    "EAttribute::markFailed() - marked as failed  "
             self.__fillMax()    
 
 ## file H5 element        
@@ -1119,7 +1256,7 @@ class EDoc(Element):
     ## stores the tag content
     # \param xml xml setting
     # \param globalJSON global JSON string
-    def store(self, xml, globalJSON = None):
+    def store(self, xml = None, globalJSON = None):
         if self._beforeLast():
             self._beforeLast().doc +=  "".join(xml[1])            
 
@@ -1136,7 +1273,8 @@ class ESymbol(Element):
 
     ## stores the tag content
     # \param xml xml setting
-    def store(self, xml = None):
+    # \param globalJSON global JSON string
+    def store(self, xml = None, globalJSON = None):
         if "name" in self._tagAttrs.keys():
             self.symbols[self._tagAttrs["name"]] = self._last.doc
 

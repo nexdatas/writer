@@ -52,7 +52,7 @@ class UTF8decoder(object):
     ## provides the data shape
     # \returns the data shape if data was loaded
     def shape(self):
-        return [1,0]
+        return [1, 0]
         
 
 
@@ -102,7 +102,7 @@ class UINT32decoder(object):
     # \returns the data shape if data was loaded
     def shape(self):
         if self.__data:
-            return [len(self.__data[1])/4,0]
+            return [len(self.__data[1])/4, 0]
         
 
 
@@ -115,8 +115,8 @@ class UINT32decoder(object):
             raise ValueError, "Wrong encoded UINT32 data length"
         if not self.__value:
             self.__value = numpy.array(
-                struct.unpack('I'*(len(self.__data[1])/4), self.__data[1]), dtype=self.dtype
-                ).reshape(len(self.__data[1])/4)
+                struct.unpack('I'*(len(self.__data[1])/4), self.__data[1]), 
+                dtype=self.dtype).reshape(len(self.__data[1])/4)
         return self.__value
 
 
@@ -180,7 +180,7 @@ class VDEOdecoder(object):
     # \returns the data shape if data was loaded
     def shape(self):
         if self.__header:
-            return [self.__header['width'],self.__header['height']]
+            return [self.__header['width'], self.__header['height']]
         
 
 
@@ -191,11 +191,12 @@ class VDEOdecoder(object):
             return
         if not self.__value:
             image = self.__data[1][struct.calcsize(self.__headerFormat):]
-            format = self.__formatID[self.__header['imageMode']]
-            fSize = struct.calcsize(format)
+            dformat = self.__formatID[self.__header['imageMode']]
+            fSize = struct.calcsize(dformat)
             self.__value = numpy.array(
-                struct.unpack(format*(len(image)/fSize), image), dtype=self.dtype
-                ).reshape(self.__header['width'],self.__header['height'])
+                struct.unpack(dformat*(len(image)/fSize), image), 
+                dtype=self.dtype).reshape(self.__header['width'],
+                                          self.__header['height'])
         return self.__value
 
 
@@ -222,10 +223,12 @@ class DecoderPool(object):
     ## loads user decoders
     # \param configJSON string with decoders    
     def __appendUserDecoders(self, configJSON):
-        if configJSON and 'decoders' in configJSON.keys() and  hasattr(configJSON['decoders'],'keys'):
+        if configJSON and 'decoders' in configJSON.keys() \
+                and  hasattr(configJSON['decoders'],'keys'):
             for dk in configJSON['decoders'].keys():
                 pkl = configJSON['decoders'][dk].split(".")
-                dec =  __import__(".".join(pkl[:-1]), globals(), locals(), pkl[-1])  
+                dec =  __import__(".".join(pkl[:-1]), globals(), 
+                                  locals(), pkl[-1])  
                 self.append(getattr(dec, pkl[-1]), dk)
             
 
@@ -261,8 +264,10 @@ class DecoderPool(object):
         self.__pool[name] = instance
 
         if not hasattr(instance,"load") or not hasattr(instance,"name") \
-                or not hasattr(instance,"shape") or not hasattr(instance,"decode") \
-                or not hasattr(instance,"dtype") or not hasattr(instance,"format"):
+                or not hasattr(instance,"shape") \
+                or not hasattr(instance,"decode") \
+                or not hasattr(instance,"dtype") \
+                or not hasattr(instance,"format"):
             self.pop(name)
             return 
         return name

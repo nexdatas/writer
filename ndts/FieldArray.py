@@ -21,10 +21,10 @@
 
 import numpy
 
-import Streams
+from . import Streams
 
-from Types import NTP
-from Errors import CorruptedFieldArrayError
+from .Types import NTP
+from .Errors import CorruptedFieldArrayError
 
 
 ## Array of the attributes
@@ -93,26 +93,33 @@ class FieldArray(object):
 
 
         if self.__fdim < 1:
-            self.__fList.append(parent.create_field(name.encode(), dtype.encode(), self.shape))
+            self.__fList.append(
+                parent.create_field(name.encode(), 
+                                    dtype.encode(), self.shape))
 
         elif self.__fdim == 1:
             if self.shape[1] == 1:
-                self.__fList.append(parent.create_field(name.encode(),
-                                                      dtype.encode(), [self.shape[0]]))
+                self.__fList.append(
+                    parent.create_field(name.encode(),
+                                        dtype.encode(), [self.shape[0]]))
             else:
                 for i in range(self.shape[1]):
-                    self.__fList.append(parent.create_field(name.encode()+"_"+str(i),
-                                                          dtype.encode(), [self.shape[0]]))
+                    self.__fList.append(
+                        parent.create_field(name.encode()+"_"+str(i),
+                                            dtype.encode(), [self.shape[0]]))
         elif self.__fdim == 2:
             if self.shape[1] == 1 and self.shape[2] == 1 :
-                self.__fList.append(parent.create_field(name.encode(),
-                                                      dtype.encode(), [self.shape[0]]))
+                self.__fList.append(
+                    parent.create_field(name.encode(),
+                                        dtype.encode(), [self.shape[0]]))
             
             else:
                 for i in range(self.shape[1]):
                     for j in range(self.shape[2]):
-                        self.__fList.append(parent.create_field(name.encode()+"_"+str(i)+"_"+str(j),
-                                                              dtype.encode(), [self.shape[0]]))
+                        self.__fList.append(
+                            parent.create_field(
+                                name.encode()+"_"+str(i)+"_"+str(j),
+                                dtype.encode(), [self.shape[0]]))
         
         
     
@@ -136,7 +143,7 @@ class FieldArray(object):
             mkey = [key]
 
         while mkey < len(self.shape):
-            mkey.append(slice(0,self.shape[len(mkey)], 1))
+            mkey.append(slice(0, self.shape[len(mkey)], 1))
             
         kr = None
         ir = None
@@ -144,13 +151,16 @@ class FieldArray(object):
             
         if len(self.shape) >0 :
             kr = (range(self.shape[0])[mkey[0]])
-            if isinstance(kr, int):  kr = [kr]
+            if isinstance(kr, int):  
+                kr = [kr]
         if len(self.shape) >1 :
             ir = (range(self.shape[1])[mkey[1]])
-            if isinstance(ir, int):  ir = [ir]
+            if isinstance(ir, int):  
+                ir = [ir]
         if len(self.shape) >2 :
             jr = (range(self.shape[2])[mkey[2]])
-            if isinstance(jr, int):  jr = [jr]
+            if isinstance(jr, int):  
+                jr = [jr]
         
         return kr, ir, jr
             
@@ -164,12 +174,15 @@ class FieldArray(object):
             
 
         if self.__fdim == 0:
-            return numpy.array([self.__fList[0].__getitem__(k) for k in kr])
+            return numpy.array(
+                [self.__fList[0].__getitem__(k) for k in kr])
         elif self.__fdim == 1: 
-            return numpy.array([[self.__fList[i].__getitem__(k) for i  in ir] for k in kr])
+            return numpy.array(
+                [[self.__fList[i].__getitem__(k) for i  in ir] for k in kr])
         elif self.__fdim == 2:
-            return numpy.array([[[self.__fList[i*self.shape[2]+j].__getitem__(k)  
-                                  for j  in jr] for i  in ir] for k in kr])
+            return numpy.array(
+                [[[self.__fList[i*self.shape[2]+j].__getitem__(k)  
+                   for j  in jr] for i  in ir] for k in kr])
         else: 
             return None
            
@@ -181,9 +194,11 @@ class FieldArray(object):
         
         if not self.__fList:
             if Streams.log_error:
-                print >> Streams.log_error, "FieldArray::__setitem__() - Field list without elements"
+                print >> Streams.log_error, \
+                    "FieldArray::__setitem__() - Field list without elements"
 
-            raise CorruptedFieldArrayError, "Field list without elements"
+            raise CorruptedFieldArrayError, \
+                "Field list without elements"
 
         kr, ir, jr = self.__fetchRanges(key)
 
@@ -213,37 +228,55 @@ class FieldArray(object):
                 for k in range(len(value)):
                     for i in range(len(value[0])):
                         for j in range(len(value[0][0])):
-                            self.__fList[ir[i]*self.shape[2]+jr[j]].__setitem__(kr[k], value[k][i][j])
+                            self.__fList[
+                                ir[i]*self.shape[2]+jr[j]
+                                ].__setitem__(kr[k], value[k][i][j])
 
             elif rank == 2:
                 if len(kr) == 1:
-                        for i in range(len(value)):
-                            for j in range(len(value[0])):
-                                if hasattr(value[i][j],"encode"):
-                                    self.__fList[ir[i]*self.shape[2]+jr[j]][kr[0]] = value[i][j].encode()
-                                else:
-                                    self.__fList[ir[i]*self.shape[2]+jr[j]][kr[0]] = value[i][j]
+                    for i in range(len(value)):
+                        for j in range(len(value[0])):
+                            if hasattr(value[i][j],"encode"):
+                                self.__fList[
+                                    ir[i]*self.shape[2]+jr[j]
+                                    ][kr[0]] = value[i][j].encode()
+                            else:
+                                self.__fList[
+                                    ir[i]*self.shape[2]+jr[j]
+                                    ][kr[0]] = value[i][j]
                 elif len(ir) == 1 :        
                     for k in range(len(value)):
                         for j in range(len(value[0])):
-                            self.__fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[k], value[k][j])
+                            self.__fList[
+                                ir[0]*self.shape[2]+jr[j]
+                                ].__setitem__(kr[k], value[k][j])
                 elif len(jr) == 1 :        
                     for k in range(len(value)):
                         for i in range(len(value[0])):
-                            self.__fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[k], value[k][i])
+                            self.__fList[
+                                ir[i]*self.shape[2]+jr[0]
+                                ].__setitem__(kr[k], value[k][i])
 
             elif rank == 1:            
                 if len(kr) == 1 and len(ir) == 1:
-                        for j in range(len(value)):
-                            self.__fList[ir[0]*self.shape[2]+jr[j]].__setitem__(kr[0], value[j])
+                    for j in range(len(value)):
+                        self.__fList[
+                            ir[0]*self.shape[2]+jr[j]
+                            ].__setitem__(kr[0], value[j])
                 if len(kr) == 1 and len(jr) == 1:
-                        for i in range(len(value)):
-                            self.__fList[ir[i]*self.shape[2]+jr[0]].__setitem__(kr[0], value[i])
+                    for i in range(len(value)):
+                        self.__fList[
+                            ir[i]*self.shape[2]+jr[0]
+                            ].__setitem__(kr[0], value[i])
                 if len(ir) == 1 and len(jr) == 1:
                     for k in range(len(value)):
-                        self.__fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[k], value[k])
+                        self.__fList[
+                            ir[0]*self.shape[2]+jr[0]
+                            ].__setitem__(kr[k], value[k])
             elif rank == 0:
-                    self.__fList[ir[0]*self.shape[2]+jr[0]].__setitem__(kr[0], value)
+                self.__fList[
+                    ir[0]*self.shape[2]+jr[0]
+                    ].__setitem__(kr[0], value)
 
                     
 
@@ -281,8 +314,10 @@ class FieldArray(object):
     def grow(self, dim=0, ln=1):
         if dim:
             if Streams.log_error:
-                print >> Streams.log_error, "FieldArray::grow() - dim >0  not supported"
-            raise ValueError, "dim >0  not supported by FieldArray.grow "
+                print >> Streams.log_error, \
+                    "FieldArray::grow() - dim >0  not supported"
+            raise ValueError, \
+                "dim >0  not supported by FieldArray.grow "
         for f in self.__fList:
             f.grow(dim, ln)
         shape = list(self.shape)    

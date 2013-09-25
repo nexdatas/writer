@@ -19,13 +19,12 @@
 ## \file ThreadPool.py
 # Thread Pool class
 
-#from threading import *                                                                      
-from ElementThread import ElementThread
 import Queue
-import Streams
 import sys
 
-from Errors import ThreadError
+from . import Streams
+from .ElementThread import ElementThread
+from .Errors import ThreadError
 
 ## Pool with threads
 class ThreadPool(object):
@@ -33,7 +32,7 @@ class ThreadPool(object):
     # \brief It cleans the member variables
     def __init__(self, numThreads=None):
         ## maximal number of threads
-        self.numThreads  = numThreads if numThreads >=1 else -1
+        self.numThreads  = numThreads if numThreads >= 1 else -1
         ## queue of the appended elements
         self.__elementQueue = Queue.Queue()
         ## list of the appended elements
@@ -80,7 +79,7 @@ class ThreadPool(object):
     def join(self, timeout=None):
         for th in self.__threadList:
             if th.isAlive():
-                th.join()
+                th.join(timeout)
 
                 
     ## runner with waiting
@@ -98,14 +97,16 @@ class ThreadPool(object):
                 if hasattr(el,"canfail") and el.canfail:
                     print >> sys.stderr, el.error
                     if Streams.log_warn:
-                        print >> Streams.log_warn,  "ThreadPool::checkErrors() - %s" %   str(el.error)
+                        print >> Streams.log_warn, \
+                            "ThreadPool::checkErrors() - %s" %   str(el.error)
                     if hasattr(el,"markFailed"):
                         el.markFailed()
                             
                 else:
                     errors.append(el.error)
                     if Streams.log_error:
-                        print >> Streams.log_error,  "ThreadPool::checkErrors() - %s" % str(el.error)
+                        print >> Streams.log_error, \
+                            "ThreadPool::checkErrors() - %s" % str(el.error)
         if errors:
             raise ThreadError("Problems in storing data: %s" %  str(errors)  )
 

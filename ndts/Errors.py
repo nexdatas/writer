@@ -21,32 +21,38 @@
 
 
 ## exception for problems in thread
-class ThreadError(Exception): pass
+class ThreadError(Exception): 
+    pass
 
 
 ## exception for corrupted FieldArray
-class CorruptedFieldArrayError(Exception): pass
+class CorruptedFieldArrayError(Exception): 
+    pass
 
 
 ## exception for syntax in XML settings
-class XMLSettingSyntaxError(Exception): pass
+class XMLSettingSyntaxError(Exception): 
+    pass
 
 ## exception for fetching data from data source
-class DataSourceError(Exception): pass
+class DataSourceError(Exception): 
+    pass
 
 
 ## exception for fetching data from data source
-class PackageError(Exception): pass
+class PackageError(Exception): 
+    pass
 
 ## exception for setting data source
-class DataSourceSetupError(Exception): pass
+class DataSourceSetupError(Exception): 
+    pass
 
 
 ## exception for syntax in XML settings
-class XMLSyntaxError(Exception): pass
+class XMLSyntaxError(Exception): 
+    pass
 
 ## unsupported tag exception
-class UnsupportedTagError(Exception): pass
+class UnsupportedTagError(Exception): 
+    pass
 
-## exception for problems in thread
-class ThreadError(Exception): pass

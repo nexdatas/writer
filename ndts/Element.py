@@ -21,7 +21,7 @@
                                                                       
 
 import sys
-import Streams
+from . import Streams
 
 ## Tag element stored on our stack 
 class Element(object):
@@ -49,9 +49,12 @@ class Element(object):
         if hasattr(self._last, "h5Object"):
             return self._last.h5Object
         else:
-            print >> sys.stderr, "Element::_lastObject() -  H5 Object not found :", self.tagName
+            print >> sys.stderr, \
+                "Element::_lastObject() -  H5 Object not found :", self.tagName
             if Streams.log_warn:
-                print >> Streams.log_warn, "Element::_lastObject() - H5 Object not found :", self.tagName
+                print >> Streams.log_warn, \
+                    "Element::_lastObject() - H5 Object not found :", \
+                    self.tagName
                 
 
     ## before last stack element
@@ -66,5 +69,6 @@ class Element(object):
     ## stores the tag
     # \brief abstract method to store the tag element    
     # \param xml tuple of xml code    
-    def store(self, xml = None):
+    # \param globalJSON global JSON string
+    def store(self, xml = None, globalJSON = None):
         pass
