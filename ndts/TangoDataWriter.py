@@ -20,6 +20,7 @@
 # NeXuS H5 Data Writer
 #
 
+""" Tango Data Writer implementation """
 
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler

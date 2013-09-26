@@ -19,6 +19,8 @@
 ## \file DataHolder.py
 # holder for data
 
+""" definition of a data holder with casting methods """
+
 import numpy
                          
 from .Types import NTP

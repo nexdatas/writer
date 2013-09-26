@@ -19,6 +19,8 @@
 ## \file ThreadPool.py
 # Thread Pool class
 
+""" Provides a pool with element threads """
+
 import Queue
 import sys
 

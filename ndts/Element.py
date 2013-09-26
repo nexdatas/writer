@@ -18,6 +18,8 @@
 ## \package ndts nexdatas
 ## \file Element.py
 # Element
+
+""" Provides the base class Element for xml tags """
                                                                       
 
 import sys

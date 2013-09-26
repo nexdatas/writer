@@ -19,6 +19,8 @@
 ## \file DecoderPool.py
 # decoder classes
 
+""" Provides a pool  with data decoders """
+
 import struct
 import numpy
 

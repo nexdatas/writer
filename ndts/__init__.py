@@ -19,5 +19,7 @@
 ## \file __init__.py
 # package constructor
 
+""" Tango Data Writer """
+
 ## package version
 __version__ = "1.3.0"

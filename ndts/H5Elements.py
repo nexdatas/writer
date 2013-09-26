@@ -19,6 +19,8 @@
 ## \file H5Elements.py
 # NeXus runnable elements
 
+""" Definitions of tag evaluation classes """
+
 import sys
 
 import numpy

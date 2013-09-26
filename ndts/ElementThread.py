@@ -19,6 +19,8 @@
 ## \file ElementThread.py
 # ElementThread
 
+""" Implementation of element thread of tag evaluation """
+
 from threading import Thread
 import Queue
 

@@ -19,6 +19,8 @@
 ## \file FieldArray.py
 # FieldArray
 
+""" splits string arrays to one dimensional ones """
+
 import numpy
 
 from . import Streams

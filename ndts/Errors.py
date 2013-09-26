@@ -20,6 +20,8 @@
 # Error classes
 
 
+""" Tango Data Writer errors """
+
 ## exception for problems in thread
 class ThreadError(Exception): 
     pass

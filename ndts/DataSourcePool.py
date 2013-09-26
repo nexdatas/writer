@@ -19,6 +19,8 @@
 ## \file DataSourcePool.py
 # datasource classes
 
+""" pool with datasource evaluation classes """
+
 import threading
 
 from . import DataSources
