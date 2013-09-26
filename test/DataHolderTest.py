@@ -51,7 +51,7 @@ class DataHolderTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-        self.__data = {"format":"SCALAR", 
+        self.__data = {"rank":"SCALAR", 
                        "value":"123", "tangoDType":"DevShort", 
                        "shape":[1,0],
                        "encoding": None, "decoders": None}
@@ -124,7 +124,7 @@ class DataHolderTest(unittest.TestCase):
 
         el = DataHolder(**self.__data) 
         self.assertTrue(isinstance(el, object))
-        self.assertEqual(el.format, self.__data["format"])
+        self.assertEqual(el.format, self.__data["rank"])
         self.assertEqual(el.value, self.__data["value"])
         self.assertEqual(el.tangoDType, self.__data["tangoDType"])
         self.assertEqual(el.shape, self.__data["shape"])
@@ -160,7 +160,7 @@ class DataHolderTest(unittest.TestCase):
 
         for a in arr:
 
-            data = {"format":"SCALAR", 
+            data = {"rank":"SCALAR", 
                     "value":arr[a][2], 
                     "tangoDType":arr[a][1], 
                     "shape":[1,0],
@@ -169,7 +169,7 @@ class DataHolderTest(unittest.TestCase):
             el = DataHolder(**data)
  
             self.assertTrue(isinstance(el, object))
-            self.assertEqual(el.format, data["format"])
+            self.assertEqual(el.format, data["rank"])
             self.assertEqual(el.value, data["value"])
             self.assertEqual(el.tangoDType, data["tangoDType"])
             self.assertEqual(el.shape, data["shape"])
@@ -217,7 +217,7 @@ class DataHolderTest(unittest.TestCase):
 
         for a in arr:
 
-            data = {"format":"SPECTRUM", 
+            data = {"rank":"SPECTRUM", 
                     "value":arr[a][2], 
                     "tangoDType":arr[a][1], 
                     "shape":arr[a][3],
@@ -226,7 +226,7 @@ class DataHolderTest(unittest.TestCase):
             el = DataHolder(**data)
  
             self.assertTrue(isinstance(el, object))
-            self.assertEqual(el.format, data["format"])
+            self.assertEqual(el.format, data["rank"])
             self.assertEqual(el.tangoDType, data["tangoDType"])
             self.assertEqual(el.shape, data["shape"])
             self.assertEqual(el.encoding, data["encoding"])
@@ -283,7 +283,7 @@ class DataHolderTest(unittest.TestCase):
 
         for a in arr:
 
-            data = {"format":"IMAGE", 
+            data = {"rank":"IMAGE", 
                     "value":arr[a][2], 
                     "tangoDType":arr[a][1], 
                     "shape":arr[k][3],
@@ -292,7 +292,7 @@ class DataHolderTest(unittest.TestCase):
             el = DataHolder(**data)
  
             self.assertTrue(isinstance(el, object))
-            self.assertEqual(el.format, data["format"])
+            self.assertEqual(el.format, data["rank"])
             self.assertEqual(el.tangoDType, data["tangoDType"])
             self.assertEqual(el.shape, data["shape"])
             self.assertEqual(el.encoding, data["encoding"])
@@ -329,7 +329,7 @@ class DataHolderTest(unittest.TestCase):
 
         for a in arr:
             
-            data = {"format":"SCALAR", 
+            data = {"rank":"SCALAR", 
                     "value":arr[a][2], 
                     "tangoDType":arr[a][1], 
                     "shape":[1,0], 
@@ -385,7 +385,7 @@ class DataHolderTest(unittest.TestCase):
 
         for a in arr:
             
-            data = {"format":"SCALAR", 
+            data = {"rank":"SCALAR", 
                     "value":arr[a][2], 
                     "tangoDType":arr[a][1], 
                     "shape":[1,0], 
@@ -465,7 +465,7 @@ class DataHolderTest(unittest.TestCase):
         for k in arrs:
             arr = arrs[k]
             for a in arr:
-                data = {"format":"SCALAR", 
+                data = {"rank":"SCALAR", 
                         "value":arr[a][2], 
                         "tangoDType":arr[a][1], 
                         "shape":[1,0],
@@ -474,7 +474,7 @@ class DataHolderTest(unittest.TestCase):
                 el = DataHolder(**data)
 
                 self.assertTrue(isinstance(el, object))
-                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.format, data["rank"])
                 self.assertEqual(el.value, data["value"])
                 self.assertEqual(el.tangoDType, data["tangoDType"])
                 self.assertEqual(el.shape, data["shape"])
@@ -560,7 +560,7 @@ class DataHolderTest(unittest.TestCase):
         for k in arrs:
             arr = arrs[k]
             for a in arr:
-                data = {"format":"SCALAR", 
+                data = {"rank":"SCALAR", 
                         "value":arr[a][2], 
                         "tangoDType":arr[a][1], 
                         "shape":[1,0],
@@ -569,7 +569,7 @@ class DataHolderTest(unittest.TestCase):
                 el = DataHolder(**data)
 
                 self.assertTrue(isinstance(el, object))
-                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.format, data["rank"])
                 self.assertEqual(el.value, data["value"])
                 self.assertEqual(el.tangoDType, data["tangoDType"])
                 self.assertEqual(el.shape, data["shape"])
@@ -662,7 +662,7 @@ class DataHolderTest(unittest.TestCase):
         for k in arrs:
             arr = arrs[k]
             for a in arr:
-                data = {"format":"SPECTRUM", 
+                data = {"rank":"SPECTRUM", 
                         "value":arr[a][2], 
                         "tangoDType":arr[a][1], 
                         "shape":arr[a][3],
@@ -671,7 +671,7 @@ class DataHolderTest(unittest.TestCase):
                 el = DataHolder(**data)
 
                 self.assertTrue(isinstance(el, object))
-                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.format, data["rank"])
                 self.assertEqual(el.value, data["value"])
                 self.assertEqual(el.tangoDType, data["tangoDType"])
                 self.assertEqual(el.shape, data["shape"])
@@ -779,7 +779,7 @@ class DataHolderTest(unittest.TestCase):
         for k in arrs:
             arr = arrs[k]
             for a in arr:
-                data = {"format":"IMAGE", 
+                data = {"rank":"IMAGE", 
                         "value":arr[a][2], 
                         "tangoDType":arr[a][1], 
                         "shape":arr[a][3],
@@ -788,7 +788,7 @@ class DataHolderTest(unittest.TestCase):
                 el = DataHolder(**data)
 
                 self.assertTrue(isinstance(el, object))
-                self.assertEqual(el.format, data["format"])
+                self.assertEqual(el.format, data["rank"])
                 self.assertEqual(el.value, data["value"])
                 self.assertEqual(el.tangoDType, data["tangoDType"])
                 self.assertEqual(el.shape, data["shape"])

@@ -18,16 +18,13 @@
 ## \package ndts nexdatas
 # \file FetchNameHandler.py
 # An example of SAX Nexus parser
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
+
 from xml import sax
 
 import sys, os
-import Streams
+from . import Streams
 
-from Errors import  XMLSyntaxError
+from .Errors import  XMLSyntaxError
 
 ## Type Name object
 class TNObject(object):
@@ -104,7 +101,8 @@ class FetchNameHandler(sax.ContentHandler):
                 ttype = attrs["type"]
             if "name" in attrs.keys():
                 tname = attrs["name"]
-            self.__current = TNObject(tname.strip(), ttype.strip(), self.__current)
+            self.__current = TNObject(tname.strip(), ttype.strip(), 
+                                      self.__current)
             self.__stack.append(name)
         elif name == "attribute" and self.__stack[-1] == "group":
             self.__content = []
@@ -130,7 +128,9 @@ class FetchNameHandler(sax.ContentHandler):
                     self.__current.name = self.__current.nxtype[2:]
                 else:
                     if Streams.log_error:
-                        print >> Streams.log_error, "FetchNameHandler::endElement() - The group type not defined"
+                        print >> Streams.log_error, \
+                            "FetchNameHandler::endElement() - "\
+                            "The group type not defined"
                     raise XMLSyntaxError, "The group type not defined"        
             self.__current = self.__current.parent
             self.__stack.pop()

@@ -257,6 +257,12 @@ class DecoderPool(object):
     
     ## adds additional decoder
     # \param name name of the adding decoder
+    def pop(self, name):
+        self.__pool.pop(name, None)
+
+
+    ## adds additional decoder
+    # \param name name of the adding decoder
     # \param decoder instance of the adding decoder
     # \returns name of decoder
     def append(self, decoder, name):
@@ -273,9 +279,5 @@ class DecoderPool(object):
         return name
 
 
-    ## adds additional decoder
-    # \param name name of the adding decoder
-    def pop(self, name):
-        self.__pool.pop(name, None)
 
         

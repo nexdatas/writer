@@ -21,10 +21,9 @@
 
 import sys 
 
-import DataSources
-from DataSourcePool import DataSourcePool
-from Element import Element
-import Streams
+from . import Streams
+from . import DataSources
+from .Element import Element
 
 
 ## Data source creator
@@ -45,30 +44,34 @@ class DataSourceFactory(Element):
         
 
     ## creates data source   
-    # \param name name of the tag
     # \param attrs dictionary with the tag attributes
-    def __createDSource(self, name, attrs):
+    def __createDSource(self, attrs):
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
                 self._last.source = self.__dsPool.get(attrs["type"])()
             else:
-                print >> sys.stderr, "DataSourceFactory::__createDSource - Unknown data source"
+                print >> sys.stderr, \
+                    "DataSourceFactory::__createDSource - Unknown data source"
                 if Streams.log_error:
-                    print >> Streams.log_error, "DataSourceFactory::__createDSource - Unknown data source"
+                    print >> Streams.log_error, \
+                        "DataSourceFactory::__createDSource - "\
+                        "Unknown data source"
                     
                 self._last.source = DataSources.DataSource()
         else:
-            print >> sys.stderr, "DataSourceFactory::__createDSource - Typeless data source"
+            print >> sys.stderr, \
+                "DataSourceFactory::__createDSource - Typeless data source"
             if Streams.log_error:
-                print >> Streams.log_error, "DataSourceFactory::__createDSource - Typeless data source"
+                print >> Streams.log_error, \
+                    "DataSourceFactory::__createDSource - Typeless data source"
             self._last.source = DataSources.DataSource()
 
 
     ##  sets the datasource form xml string
     # \param xml input parameter   
     # \param globalJSON global JSON string
-    def store(self, xml, globalJSON = None):
-        self.__createDSource(self.tagName, self._tagAttrs)
+    def store(self, xml = None, globalJSON = None):
+        self.__createDSource(self._tagAttrs)
         jxml = "".join(xml)
         self._last.source.setup(jxml)
         if hasattr(self._last.source,"setJSON") and globalJSON:

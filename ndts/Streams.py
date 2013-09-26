@@ -19,13 +19,13 @@
 ## \file Streams.py
 
 ## Tango fatal log
-log_fatal = None                                                                      
+log_fatal = None  
 ## Tango error log
-log_error = None                                                                      
+log_error = None 
 ## Tango warn log
-log_warn = None                                                                      
+log_warn = None 
 ## Tango info log
-log_info = None                                                                      
+log_info = None 
 ## Tango debug log
-log_debug = None                                                                      
+log_debug = None 
 

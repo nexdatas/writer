@@ -30,10 +30,7 @@ from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
-try:
-    import pni.io.nx.h5 as nx
-except ImportError:
-    import pni.nx.h5 as nx
+import pni.io.nx.h5 as nx
 
 
 ## NeXuS runnable tag element
@@ -863,18 +860,18 @@ class EField(FElementWithAttr):
             nptype = "str"
 
             
-        format = 'SCALAR'
+        dformat = 'SCALAR'
         if shape and  len(shape) > 0  and shape[0] >= 1:
             arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
             if len(shape) == 1:
-                format = 'SPECTRUM'
+                dformat = 'SPECTRUM'
             else:
-                format = 'IMAGE'
+                dformat = 'IMAGE'
         else:
             arr = value
 
-        dh = DataHolder(format, arr, NTP.npTt[self.h5Object.dtype], shape)    
+        dh = DataHolder(dformat, arr, NTP.npTt[self.h5Object.dtype], shape)    
         
         
         if not self.__extraD:
@@ -1003,7 +1000,8 @@ class ELink(FElement):
     # \param text original directory     
     # \param groupTypes tree of TNObject with name:nxtype 
     # \returns directory defined by group names    
-    def __typesToNames(self, text, groupTypes):
+    @classmethod    
+    def __typesToNames(cls, text, groupTypes):
         sp = text.split("/")
         res = ""
         ch = groupTypes

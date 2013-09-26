@@ -18,25 +18,27 @@
 ## \package ndts nexdatas
 ## \file DataHolder.py
 # holder for data
-                         
-from Types import NTP
 
 import numpy
-import Streams
+                         
+from .Types import NTP
+from . import Streams
+
 ## Holder for passing data 
 class DataHolder(object):
 
     ## constructor
-    # \param format format of the data, i.e. SCALAR, SPECTRUM, IMAGE
+    # \param rank format of the data, i.e. SCALAR, SPECTRUM, IMAGE
     # \param value value of the data. It may be also 1D and 2D array
     # \param tangoDType type of the data
     # \param shape shape of the data
     # \param encoding encoding type of Tango DevEncoded varibles
     # \param decoders poll with decoding classes
-    def __init__(self, format, value, tangoDType, shape, encoding = None, decoders = None):
+    def __init__(self, rank, value, tangoDType, shape, 
+                 encoding = None, decoders = None):
 
         ## data format
-        self.format = format
+        self.format = rank
         ## data value
         self.value = value
         ## data type
@@ -64,9 +66,12 @@ class DataHolder(object):
                 rank = NTP().arrayRank(self.value)
                 if rank > 2 :
                     if Streams.log_error:
-                        print >> Streams.log_error,  "DataHolder::__setupEncoded() - Unsupported variables format"
+                        print >> Streams.log_error,  \
+                            "DataHolder::__setupEncoded() - "\
+                            "Unsupported variables format"
                     raise ValueError, "Unsupported variables format"
-                self.format = ["SCALAR", "SPECTRUM", "IMAGE", "VERTEX"][rank]
+                self.format = ["SCALAR", "SPECTRUM", 
+                               "IMAGE", "VERTEX"][rank]
                 
             tp =  decoder.dtype
             if tp in NTP.npTt.keys():
@@ -75,21 +80,28 @@ class DataHolder(object):
                 
         if self.value is None:        
             if Streams.log_error:
-                print >> Streams.log_error,  "DataHolder::__setupEncoded() - Encoding of DevEncoded variables not defined"
-            raise ValueError, "Encoding of DevEncoded variables not defined"
+                print >> Streams.log_error,  \
+                    "DataHolder::__setupEncoded() - "\
+                    "Encoding of DevEncoded variables not defined"
+            raise ValueError, \
+                "Encoding of DevEncoded variables not defined"
 
         if self.shape is None:
             if Streams.log_error:
-                print >> Streams.log_error,  "DataHolder::__setupEncoded() - Encoding or Shape not defined"
+                print >> Streams.log_error, \
+                    "DataHolder::__setupEncoded() - "\
+                    "Encoding or Shape not defined"
             raise ValueError, "Encoding or Shape not defined"
 
 
     ## casts the data into given type
     # \param tp given type of data
-    # \returns numpy array of defined type or list for strings or value for SCALAR
+    # \returns numpy array of defined type or list 
+    #          for strings or value for SCALAR
     def cast(self, tp):
         if str(self.format).split('.')[-1] == "SCALAR":
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType):
+            if tp in NTP.npTt.keys() \
+                    and NTP.npTt[tp] == str(self.tangoDType):
                 return self.value
             else:
                 if self.value == "" and tp != 'string':
@@ -99,13 +111,16 @@ class DataHolder(object):
             
         else:
 
-            if tp in NTP.npTt.keys() and NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
-                    return numpy.array(self.value, dtype=tp)
+            if tp in NTP.npTt.keys() and \
+                    NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
+                return numpy.array(self.value, dtype=tp)
             else:    
                 if tp == "string":
                     return NTP().createArray(self.value, NTP.convert[tp])
                 else:
-                    return numpy.array(NTP().createArray(self.value, NTP.convert[tp]), dtype=tp)
+                    return numpy.array(
+                        NTP().createArray(self.value, NTP.convert[tp]), 
+                        dtype=tp)
 
         
 

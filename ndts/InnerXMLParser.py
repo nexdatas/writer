@@ -18,16 +18,11 @@
 ## \package ndts nexdatas
 # \file InnerXMLParser.py
 # An example of SAX Nexus parser
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
+
 from xml import sax
 
 import sys, os
 
-from Errors import  XMLSyntaxError
-    
 ## SAX2 parser 
 class InnerXMLHandler(sax.ContentHandler):
 
@@ -53,15 +48,18 @@ class InnerXMLHandler(sax.ContentHandler):
     ## replaces characters not allowed in xml string
     # \param string text
     # \returns converted text with special characters 
-    def __replace(self, string):
-        return string.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+    @classmethod    
+    def __replace(cls, string):
+        return string.replace("&","&amp;").\
+            replace("<","&lt;").replace(">","&gt;")
 
 
     ## replaces characters not allowed in  xml attribute values
     # \param string text
     # \returns converted text with special characters 
     def __replaceAttr(self, string):
-        return self.__replace(string).replace("\"","&quot;").replace("'","&apos;")
+        return self.__replace(string).replace("\"","&quot;").\
+            replace("'","&apos;")
 
 
     ## creates opening tag
@@ -111,7 +109,7 @@ class InnerXMLHandler(sax.ContentHandler):
 if __name__ == "__main__":
 
     if  len(sys.argv) <2:
-        print "usage: FetchNameHadler.py  <XMLinput>"
+        print "usage: InnerXMLParser.py  <XMLinput>"
         
     else:
         ## input XML file

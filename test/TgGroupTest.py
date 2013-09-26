@@ -193,7 +193,7 @@ class TgGroupTest(unittest.TestCase):
     # \param decoders data decoders
     # \param error data error
     def checkData(self, data, format, value, ttype, shape, encoding = None, decoders = None, error = 0):
-        self.assertEqual(data["format"], format)
+        self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
         if encoding is not None:

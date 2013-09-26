@@ -19,11 +19,9 @@
 ## \file DataSourcePool.py
 # datasource classes
 
-import struct
-import numpy
 import threading
 
-import DataSources
+from . import DataSources
 
 
 ## DataSource pool
@@ -34,8 +32,10 @@ class DataSourcePool(object):
     # \brief It creates know datasources    
     # \param configJSON string with datasources    
     def __init__(self, configJSON = None):
-        self.__pool = {"DB":DataSources.DBaseSource, "TANGO":DataSources.TangoSource,
-                      "CLIENT":DataSources.ClientSource, "PYEVAL":DataSources.PyEvalSource}
+        self.__pool = {"DB":DataSources.DBaseSource, 
+                       "TANGO":DataSources.TangoSource,
+                       "CLIENT":DataSources.ClientSource, 
+                       "PYEVAL":DataSources.PyEvalSource}
         self.__appendUserDataSources(configJSON)
         ## global variables for specific datasources
         self.common = {}
@@ -47,10 +47,12 @@ class DataSourcePool(object):
     ## loads user datasources
     # \param configJSON string with datasources    
     def __appendUserDataSources(self, configJSON):
-        if configJSON and 'datasources' in configJSON.keys() and  hasattr(configJSON['datasources'],'keys'):
+        if configJSON and 'datasources' in configJSON.keys() \
+                and  hasattr(configJSON['datasources'],'keys'):
             for dk in configJSON['datasources'].keys():
                 pkl = configJSON['datasources'][dk].split(".")
-                dec =  __import__(".".join(pkl[:-1]), globals(), locals(), pkl[-1])  
+                dec =  __import__(".".join(pkl[:-1]), 
+                                  globals(), locals(), pkl[-1])  
                 self.append(getattr(dec, pkl[-1]), dk)
             
 
@@ -59,15 +61,23 @@ class DataSourcePool(object):
     # \param datasource the given datasource
     # \returns True if it the datasource is registered        
     def hasDataSource(self, datasource):
-        return True if datasource in self.__pool.keys() else False
+        return True if datasource in self.__pool.keys() \
+            else False
 
 
     ## checks it the datasource is registered        
     # \param datasource the given datasource name
-    # \returns datasource type if it the datasource is registered        
+    # \returns datasource type if it the datasource 
+    #          is registered        
     def get(self, datasource):
         if datasource in self.__pool.keys():
             return self.__pool[datasource]
+
+
+    ## adds additional datasource
+    # \param name name of the adding datasource
+    def pop(self, name):
+        self.__pool.pop(name, None)
 
     
     ## adds additional datasource
@@ -76,16 +86,12 @@ class DataSourcePool(object):
     # \returns name of datasource
     def append(self, datasource, name):
         self.__pool[name] = datasource
-        if not hasattr(datasource,"setup") or not hasattr(datasource,"getData") \
+        if not hasattr(datasource,"setup") \
+                or not hasattr(datasource,"getData") \
                 or not hasattr(datasource,"isValid"):
             self.pop(name)
             return 
         return name
 
-
-    ## adds additional datasource
-    # \param name name of the adding datasource
-    def pop(self, name):
-        self.__pool.pop(name, None)
 
         

@@ -113,7 +113,7 @@ class PGSQLSourceTest(unittest.TestCase):
     # \param ttype data Tango type    
     # \param shape data shape    
     def checkData(self, data, format, value, ttype, shape):
-        self.assertEqual(data["format"], format)
+        self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
         if format == 'SCALAR': 

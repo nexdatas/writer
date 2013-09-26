@@ -21,13 +21,11 @@
 #
 
 
-from NexusXMLHandler import NexusXMLHandler
-from FetchNameHandler import FetchNameHandler
-import Streams
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
+from .NexusXMLHandler import NexusXMLHandler
+from .FetchNameHandler import FetchNameHandler
+from . import Streams
+
+import pni.io.nx.h5 as nx
 
 from xml import sax
 
@@ -40,9 +38,9 @@ import json
 import sys, os
 import gc
 
-from H5Elements import EFile
-from DecoderPool import DecoderPool
-from DataSourcePool import DataSourcePool
+from .H5Elements import EFile
+from .DecoderPool import DecoderPool
+from .DataSourcePool import DataSourcePool
 
 ## NeXuS data writer
 class TangoDataWriter(object):
@@ -134,11 +132,11 @@ class TangoDataWriter(object):
         return self.__xmlSettings
 
     ## set method for xmlSettings attribute
-    # \param xml xml settings
-    def __setXML(self, xml):
+    # \param xmlset xml settings
+    def __setXML(self, xmlset):
         self.__fetcher = FetchNameHandler()
-        sax.parseString(xml, self.__fetcher)
-        self.__xmlSettings = xml
+        sax.parseString(xmlset, self.__fetcher)
+        self.__xmlSettings = xmlset
 
     ## del method for xmlSettings attribute
     def __delXML(self):
@@ -184,22 +182,26 @@ class TangoDataWriter(object):
                 error = True
                 counter = 1
                 while error:
-                    cname = name if counter == 1 else ("%s_%s" % (name, counter))
+                    cname = name if counter == 1 else \
+                        ("%s_%s" % (name, counter))
                     if not self.__nxFile.exists(cname):
                         error = False
                     else:
                         counter += 1    
             else:
                 cname = name
-            self.__logGroup = self.__nxFile.create_group(cname,"NXcollection")
-            vfield = self.__logGroup.create_field("python_version", "string")
+            self.__logGroup = self.__nxFile.create_group(
+                cname,"NXcollection")
+            vfield = self.__logGroup.create_field(
+                "python_version", "string")
             vfield.write(str(sys.version))
             vfield.close()
 
 
 
     ##  opens the data entry corresponding to a new XML settings
-    # \brief It parse the XML settings, creates thread pools and runs the INIT pool.
+    # \brief It parse the XML settings, creates thread pools 
+    # and runs the INIT pool.
     def openEntry(self):
         if self.xmlSettings:
             # flag for INIT mode
@@ -207,8 +209,10 @@ class TangoDataWriter(object):
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
  
-            handler = NexusXMLHandler(self.__eFile, self.__datasources, self.__decoders, 
-                                      self.__fetcher.groupTypes, parser, json.loads(self.thejson))
+            handler = NexusXMLHandler(
+                self.__eFile, self.__datasources, 
+                self.__decoders, self.__fetcher.groupTypes, 
+                parser, json.loads(self.thejson))
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
 
@@ -235,7 +239,9 @@ class TangoDataWriter(object):
 
             if self.addingLogs:    
                 self.__entryCounter += 1
-                lfield = self.__logGroup.create_field("Nexus__entry__%s_XML" % str(self.__entryCounter),"string")
+                lfield = self.__logGroup.create_field(
+                    "Nexus__entry__%s_XML" % str(self.__entryCounter),
+                    "string")
                 lfield.write(self.xmlSettings)
                 lfield.close()
             if self.__nxFile and hasattr(self.__nxFile, "flush"):
@@ -246,8 +252,8 @@ class TangoDataWriter(object):
     # \param jsonstring local JSON string with data records      
     def record(self, jsonstring=None):
         # flag for STEP mode
-        if self.__datasources.counter>0:
-            self.__datasources.counter +=1
+        if self.__datasources.counter > 0:
+            self.__datasources.counter += 1
         else:
             self.__datasources.counter = 1
         localJSON = None
@@ -256,7 +262,8 @@ class TangoDataWriter(object):
             
         if self.__stepPool:
             if Streams.log_info:
-                print >> Streams.log_info , "TangoDataWriter::record() - Default trigger"
+                print >> Streams.log_info , \
+                    "TangoDataWriter::record() - Default trigger"
             print "TangoDataWriter::record() - Default trigger"
             self.__stepPool.setJSON(json.loads(self.thejson), localJSON)
             self.__stepPool.runAndWait()
@@ -270,9 +277,11 @@ class TangoDataWriter(object):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
                     if Streams.log_info:
-                        print >> Streams.log_info , "TangoDataWriter:record() - Trigger: %s" % pool 
+                        print >> Streams.log_info , \
+                            "TangoDataWriter:record() - Trigger: %s" % pool 
                     print "TangoDataWriter:record() - Trigger: %s" % pool 
-                    self.__triggerPools[pool].setJSON(json.loads(self.thejson), localJSON)
+                    self.__triggerPools[pool].setJSON(
+                        json.loads(self.thejson), localJSON)
                     self.__triggerPools[pool].runAndWait()
                     self.__triggerPools[pool].checkErrors()
 
@@ -373,7 +382,8 @@ if __name__ == "__main__":
 #    xmlf = "../XMLExamples/test.xml"
     xmlf = "../XMLExamples/MNI.xml"
 
-    print "usage: TangoDataWriter.py  <XMLfile1>  <XMLfile2>  ...  <XMLfileN>  <H5file>"
+    print "usage: TangoDataWriter.py  <XMLfile1>  "\
+        "<XMLfile2>  ...  <XMLfileN>  <H5file>"
 
     ## No arguments
     argc = len(sys.argv)
@@ -397,17 +407,20 @@ if __name__ == "__main__":
             tdw.openEntry()
             
             print "recording the H5 file"
-            tdw.record('{"data": {"emittance_x": 0.8} ,  "triggers":["trigger1", "trigger2"] }')
+            tdw.record('{"data": {"emittance_x": 0.8} ,'\
+                           '  "triggers":["trigger1", "trigger2"] }')
             
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record('{"data": {"emittance_x": 1.2}  ,  "triggers":["trigger2"] }')
+            tdw.record('{"data": {"emittance_x": 1.2}  ,'\
+                           '  "triggers":["trigger2"] }')
 
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record('{"data": {"emittance_x": 1.1}  ,  "triggers":["trigger1"] }')
+            tdw.record('{"data": {"emittance_x": 1.1}  , '\
+                           ' "triggers":["trigger1"] }')
 
 
             print "sleeping for 1s"

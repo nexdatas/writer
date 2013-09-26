@@ -104,7 +104,7 @@ class DataSourceDecodersTest(unittest.TestCase):
     ## Data check 
     # \brief It check the source Data
     # \param data  tested data
-    # \param format data format
+    # \param dformat data format
     # \param value data value
     # \param ttype data Tango type    
     # \param shape data shape    
@@ -113,20 +113,20 @@ class DataSourceDecodersTest(unittest.TestCase):
     # \param encoding data encoding    
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, format, value, ttype, shape, encoding = None, decoders = None, error = 0):
-        self.assertEqual(data["format"], format)
+    def checkData(self, data, dformat, value, ttype, shape, encoding = None, decoders = None, error = 0):
+        self.assertEqual(data["rank"], dformat)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
         if encoding is not None:
             self.assertEqual(data["encoding"], encoding)
         if decoders is not None:
             self.assertEqual(data["decoders"], decoders)
-        if format == 'SCALAR': 
+        if dformat == 'SCALAR': 
                 if error:
                     self.assertTrue(abs(data["value"]- value)<= error)
                 else:
                     self.assertEqual(data["value"], value)
-        elif format == 'SPECTRUM': 
+        elif dformat == 'SPECTRUM': 
             self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
                 if error:
