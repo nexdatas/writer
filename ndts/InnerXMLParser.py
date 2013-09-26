@@ -88,9 +88,9 @@ class InnerXMLHandler(sax.ContentHandler):
         self.__contentXML += self.__openTag(name, attrs)
 
     ## adds the tag content 
-    # \param ch partial content of the tag    
-    def characters(self, ch):
-        self.__contentXML += self.__replace(ch)
+    # \param content partial content of the tag    
+    def characters(self, content):
+        self.__contentXML += self.__replace(content)
 
 
     ## parses an closing tag

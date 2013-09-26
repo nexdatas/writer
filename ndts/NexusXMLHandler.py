@@ -126,14 +126,14 @@ class NexusXMLHandler(sax.ContentHandler):
 
 
     ## adds the tag content 
-    # \param ch partial content of the tag    
-    def characters(self, ch):
+    # \param content partial content of the tag    
+    def characters(self, content):
         if self.__inner == True:
 #            print "XML:\n", self.__innerHandler.xml
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag:
-            self.__last().content.append(ch)
+            self.__last().content.append(content)
 
 
     ##  parses the opening tag

@@ -310,8 +310,8 @@ class FieldArray(object):
     ## growing method
     # \brief It enlage the field
     # \param dim growing dimension
-    # \param ln a number of grow units    
-    def grow(self, dim=0, ln=1):
+    # \param ext a number of grow units    
+    def grow(self, dim=0, ext=1):
         if dim:
             if Streams.log_error:
                 print >> Streams.log_error, \
@@ -319,12 +319,12 @@ class FieldArray(object):
             raise ValueError, \
                 "dim >0  not supported by FieldArray.grow "
         for f in self.__fList:
-            f.grow(dim, ln)
+            f.grow(dim, ext)
         shape = list(self.shape)    
         if shape:
-            shape[dim] = shape[dim] + ln
+            shape[dim] = shape[dim] + ext
         else:
-            shape = [1+ln]
+            shape = [1 + ext]
         self.shape = tuple(shape)
 
     ## closing method

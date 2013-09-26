@@ -111,10 +111,10 @@ class FetchNameHandler(sax.ContentHandler):
                 self.__attrName = attrs["name"]
 
     ## adds the tag content 
-    # \param ch partial content of the tag    
-    def characters(self, ch):
+    # \param content partial content of the tag    
+    def characters(self, content):
         if self.__attribute and self.__stack[-1] == "group":
-            self.__content.append(ch)
+            self.__content.append(content)
 
 
 

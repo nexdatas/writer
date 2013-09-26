@@ -95,32 +95,33 @@ class DataHolder(object):
 
 
     ## casts the data into given type
-    # \param tp given type of data
+    # \param dtype given type of data
     # \returns numpy array of defined type or list 
     #          for strings or value for SCALAR
-    def cast(self, tp):
+    def cast(self, dtype):
         if str(self.format).split('.')[-1] == "SCALAR":
-            if tp in NTP.npTt.keys() \
-                    and NTP.npTt[tp] == str(self.tangoDType):
+            if dtype in NTP.npTt.keys() \
+                    and NTP.npTt[dtype] == str(self.tangoDType):
                 return self.value
             else:
-                if self.value == "" and tp != 'string':
-                    return NTP.convert[tp](0)
+                if self.value == "" and dtype != 'string':
+                    return NTP.convert[dtype](0)
                 else:
-                    return NTP.convert[tp](self.value)
+                    return NTP.convert[dtype](self.value)
             
         else:
 
-            if tp in NTP.npTt.keys() and \
-                    NTP.npTt[tp] == str(self.tangoDType) and tp != "string":
-                return numpy.array(self.value, dtype=tp)
+            if dtype in NTP.npTt.keys() \
+                    and NTP.npTt[dtype] == str(self.tangoDType) \
+                    and dtype != "string":
+                return numpy.array(self.value, dtype=dtype)
             else:    
-                if tp == "string":
-                    return NTP().createArray(self.value, NTP.convert[tp])
+                if dtype == "string":
+                    return NTP().createArray(self.value, NTP.convert[dtype])
                 else:
                     return numpy.array(
-                        NTP().createArray(self.value, NTP.convert[tp]), 
-                        dtype=tp)
+                        NTP().createArray(self.value, NTP.convert[dtype]), 
+                        dtype=dtype)
 
         
 

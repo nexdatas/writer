@@ -187,7 +187,7 @@ class TangoSource(DataSource):
         ## datasource tango group
         self.group = None
         ## full device name
-        self.dv = None
+        self.device = None
 
         ## global tango group for TANGO datasources
         self.__tngrp = None
@@ -205,7 +205,7 @@ class TangoSource(DataSource):
     # \returns self-describing string
     def __str__(self):
         return " TANGO Device %s : %s (%s)" % (
-            self.dv, self.member.name, self.member.memberType )
+            self.device, self.member.name, self.member.memberType )
 
 
     ## sets the parrameters up from xml
@@ -254,21 +254,21 @@ class TangoSource(DataSource):
                 "Tango device name not defined: %s" % xml
 
         if hostname and port:
-            self.dv = "%s:%s/%s" % (hostname.encode(), 
+            self.device = "%s:%s/%s" % (hostname.encode(), 
                                     port.encode(), device.encode())
         elif device:
-            self.dv = "%s" % (device.encode())
+            self.device = "%s" % (device.encode())
             
-        self.__proxy = ProxyTools.proxySetup(self.dv)    
+        self.__proxy = ProxyTools.proxySetup(self.device)    
 
         if not self.__proxy:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "TangoSource::setup() - "\
                     "Cannot connect to: %s \ndefined by %s" \
-                    % (self.dv, xml)
+                    % (self.device, xml)
             raise  DataSourceSetupError, \
-                "Cannot connect to: %s \ndefined by %s" % (self.dv, xml)
+                "Cannot connect to: %s \ndefined by %s" % (self.device, xml)
 
 
 
@@ -290,16 +290,16 @@ class TangoSource(DataSource):
             raise PackageError, \
                 "Support for PyTango datasources not available" 
 
-        if self.dv and self.member.memberType and self.member.name:
+        if self.device and self.member.memberType and self.member.name:
             if not self.__proxy or not ProxyTools.isProxyValid(self.__proxy):
-                self.__proxy = ProxyTools.proxySetup(self.dv)    
+                self.__proxy = ProxyTools.proxySetup(self.device)    
                 if not self.__proxy:
                     if Streams.log_error:
                         print >> Streams.log_error,  \
                             "TangoSource::getData() - "\
-                            "Setting up lasts to long: %s" % self.dv
+                            "Setting up lasts to long: %s" % self.device
                     raise  DataSourceSetupError, \
-                        "Setting up lasts to long: %s" % self.dv
+                        "Setting up lasts to long: %s" % self.device
                 
             if self.group is None:
                 self.member.getData(self.__proxy)
@@ -337,7 +337,7 @@ class TangoSource(DataSource):
                 self.__tngrp = self.__pool.common['TANGO'][self.group]
 
                 self.__tngrp.lock.acquire()
-                tdv = self.__tngrp.getDevice(self.dv)
+                tdv = self.__tngrp.getDevice(self.device)
                 tdv.proxy = self.__proxy
                 self.member = tdv.setMember(self.member)
         finally:
@@ -498,11 +498,11 @@ class TgMember(object):
         self.__cd = None 
         
     ## sets tango data    
-    # \param da output tango data
+    # \param data output tango data
     # \param input command data
-    def setData(self, da, cd=None):
-        self.__da = da
-        self.__cd = cd
+    def setData(self, data, cmd=None):
+        self.__da = data
+        self.__cd = cmd
     
 
     ## provides value of tango member    

@@ -370,11 +370,11 @@ class EField(FElementWithAttr):
             raise XMLSettingSyntaxError, "Field without a name"
 
     ## provides shape
-    # \param tp object type    
+    # \param dtypy object type    
     # \returns object shape    
-    def __getShape(self, tp):
+    def __getShape(self, dtype):
         try:
-            if tp.encode() == "string":
+            if dtype.encode() == "string":
                 shape = self._findShape(self.rank, self.lengths, 
                                         self.__extraD, self.grows)
             else:
@@ -384,7 +384,7 @@ class EField(FElementWithAttr):
             if self.grows > len(shape):
                 self.grows = len(shape)
 
-            if len(shape) > 1 and tp.encode() == "string":
+            if len(shape) > 1 and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 if self.__extraD:
@@ -410,11 +410,11 @@ class EField(FElementWithAttr):
             
 
     ## creates H5 object
-    # \param tp object type    
-    # \param nm object name
+    # \param dtype object type    
+    # \param name object name
     # \param shape object shape    
     # \returns H5 object
-    def __createObject(self, tp, nm, shape):
+    def __createObject(self, dtype, name, shape):
         chunk = [s if s > 0 else 1 for s in shape]  
         deflate = None
         # create Filter
@@ -426,28 +426,28 @@ class EField(FElementWithAttr):
         try:    
             if shape:
                 if self.__splitArray:
-                    f = FieldArray(self._lastObject(), nm.encode(), 
-                                   tp.encode(), shape)
+                    f = FieldArray(self._lastObject(), name.encode(), 
+                                   dtype.encode(), shape)
                 else:
                     if not chunk:
                         f = self._lastObject().create_field(
-                            nm.encode(), tp.encode(), shape, filter=deflate)
+                            name.encode(), dtype.encode(), shape, filter=deflate)
                     else:
                         f = self._lastObject().create_field(
-                            nm.encode(), tp.encode(), shape, chunk, 
+                            name.encode(), dtype.encode(), shape, chunk, 
                             filter=deflate)
             else:
                 f = self._lastObject().create_field(
-                    nm.encode(), tp.encode(), filter=deflate)
+                    name.encode(), dtype.encode(), filter=deflate)
         except:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "EField::__createObject() - "\
                     "The field '%s' of '%s' type cannot be created" % \
-                    (nm.encode(), tp.encode())
+                    (name.encode(), dtype.encode())
             raise XMLSettingSyntaxError, \
                 "The fieled '%s' of '%s' type cannot be created" % \
-                (nm.encode(),tp.encode())
+                (name.encode(),dtype.encode())
                  
         return f
         
@@ -509,9 +509,9 @@ class EField(FElementWithAttr):
 
 
     ## provides strategy or fill the value in
-    # \param nm object name
+    # \param name object name
     # \returns strategy or strategy,trigger it trigger defined 
-    def __setStrategy(self, nm):
+    def __setStrategy(self, name):
         if self.source:
             if  self.source.isValid() :
                 return self.strategy, self.trigger
@@ -558,13 +558,13 @@ class EField(FElementWithAttr):
                     if Streams.log_error:
                         print >> Streams.log_error, \
                             "EField::__setStrategy() - "\
-                            "Warning: Invalid datasource for %s" % nm
+                            "Warning: Invalid datasource for %s" % name
                     raise ValueError, \
-                        "Warning: Invalid datasource for %s" % nm
+                        "Warning: Invalid datasource for %s" % name
                 else:
                     print >> sys.stderr, \
                         "EField::__setStrategy() - "\
-                        "Warning: Empty value for the field:", nm
+                        "Warning: Empty value for the field:", name
 
             
     ## stores the tag content
@@ -590,22 +590,22 @@ class EField(FElementWithAttr):
 
 
     ## writes non-growing data
-    # \param dh data holder
-    def __writeData(self, dh):
+    # \param holder data holder
+    def __writeData(self, holder):
         if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 \
                 and self.h5Object.dtype == "string":
-            sts = dh.cast(self.h5Object.dtype)
-            if len(dh.shape) > 1 and dh.shape[0] == 1:
+            sts = holder.cast(self.h5Object.dtype)
+            if len(holder.shape) > 1 and holder.shape[0] == 1:
                 for i in range(len(sts[0])):
                     self.h5Object[i] = sts[0][i] 
-            elif len(dh.shape) > 1 and dh.shape[1] == 1:
+            elif len(holder.shape) > 1 and holder.shape[1] == 1:
                 for i in range(len(sts)):
                     self.h5Object[i] = sts[i][0] 
             else:
                 for i in range(len(sts)):
                     self.h5Object[i] = sts[i] 
         elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
-            sts = dh.cast(self.h5Object.dtype)
+            sts = holder.cast(self.h5Object.dtype)
             if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
                 if self.h5Object.dtype == "string":
                     if hasattr(sts[0], "__iter__")  and \
@@ -630,36 +630,36 @@ class EField(FElementWithAttr):
 
         elif  len(self.h5Object.shape) == 2 \
                 and self.h5Object.dtype == "string":       
-            sts = dh.cast(self.h5Object.dtype)
-            if str(dh.format).split('.')[-1] == "IMAGE":
+            sts = holder.cast(self.h5Object.dtype)
+            if str(holder.format).split('.')[-1] == "IMAGE":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
                         self.h5Object[i, j] = sts[i][j] 
-            elif str(dh.format).split('.')[-1] == "SPECTRUM":
+            elif str(holder.format).split('.')[-1] == "SPECTRUM":
                 for i in range(len(sts)):
                     self.h5Object[i, :] = sts[i]
             else:            
                 self.h5Object[:, :] = sts
         elif  len(self.h5Object.shape) == 3 \
                 and self.h5Object.dtype == "string":       
-            sts = dh.cast(self.h5Object.dtype)
-            if str(dh.format).split('.')[-1] == "VERTEX":
+            sts = holder.cast(self.h5Object.dtype)
+            if str(holder.format).split('.')[-1] == "VERTEX":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
                         for k in range(len(sts[i][j])):
                             self.h5Object[i, j, k] = sts[i][j][k] 
-            if str(dh.format).split('.')[-1] == "IMAGE":
+            if str(holder.format).split('.')[-1] == "IMAGE":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
                         self.h5Object[i, j, :] = sts[i][j] 
-            elif str(dh.format).split('.')[-1] == "SPECTRUM":
+            elif str(holder.format).split('.')[-1] == "SPECTRUM":
                 for i in range(len(sts)):
                     self.h5Object[i, :, :] = sts[i]
             else:            
                 self.h5Object[:, :, :] = sts
         else:
             try:
-                self.h5Object.write(dh.cast(self.h5Object.dtype))
+                self.h5Object.write(holder.cast(self.h5Object.dtype))
             except:    
                 if Streams.log_error:
                     print >> Streams.log_error, \
@@ -671,10 +671,10 @@ class EField(FElementWithAttr):
 
 
     ## writes growing scalar data
-    # \param dh data holder
-    def __writeScalarGrowingData(self, dh):
+    # \param holder data holder
+    def __writeScalarGrowingData(self, holder):
             
-        arr = dh.cast(self.h5Object.dtype)
+        arr = holder.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
             self.h5Object[self.h5Object.shape[0]-1] = arr
         elif  len(self.h5Object.shape) == 2:
@@ -692,11 +692,11 @@ class EField(FElementWithAttr):
 
 
     ## writes growing spectrum data
-    # \param dh data holder
-    def __writeSpectrumGrowingData(self, dh):
+    # \param holder data holder
+    def __writeSpectrumGrowingData(self, holder):
 
         # way around for a bug in pniio
-        arr = dh.cast(self.h5Object.dtype)
+        arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
@@ -734,20 +734,20 @@ class EField(FElementWithAttr):
 
 
     ## writes growing spectrum data
-    # \param dh data holder
-    def __writeImageGrowingData(self, dh):
+    # \param holder data holder
+    def __writeImageGrowingData(self, holder):
 
-        arr = dh.cast(self.h5Object.dtype)
+        arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
             if len(self.h5Object.shape) == 3:
                 self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
             elif len(self.h5Object.shape) == 2:
-                if len(dh.shape) == 1 :
+                if len(holder.shape) == 1 :
                     self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
-                elif len(dh.shape) > 1  and dh.shape[0] == 1:
+                elif len(holder.shape) > 1  and holder.shape[0] == 1:
                     self.h5Object[self.h5Object.shape[0]-1, :] \
                         = [c[0] for c in arr]
-                elif len(dh.shape) > 1  and dh.shape[1] == 1:
+                elif len(holder.shape) > 1  and holder.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0]-1, :] = arr[:, 0]
             elif len(self.h5Object.shape) == 2:
                 self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
@@ -764,22 +764,22 @@ class EField(FElementWithAttr):
 
 
     ## writes growing data
-    # \param dh data holder
-    def __writeGrowingData(self, dh):
-        if str(dh.format).split('.')[-1] == "SCALAR":
-            self.__writeScalarGrowingData(dh)
-        elif str(dh.format).split('.')[-1] == "SPECTRUM":
-            self.__writeSpectrumGrowingData(dh)
-        elif str(dh.format).split('.')[-1] == "IMAGE":
-            self.__writeImageGrowingData(dh)
+    # \param holder data holder
+    def __writeGrowingData(self, holder):
+        if str(holder.format).split('.')[-1] == "SCALAR":
+            self.__writeScalarGrowingData(holder)
+        elif str(holder.format).split('.')[-1] == "SPECTRUM":
+            self.__writeSpectrumGrowingData(holder)
+        elif str(holder.format).split('.')[-1] == "IMAGE":
+            self.__writeImageGrowingData(holder)
         else:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "Case with %s format not supported "% \
-                    str(dh.format).split('.')[-1] 
+                    str(holder.format).split('.')[-1] 
             raise XMLSettingSyntaxError, \
                 "Case with %s  format not supported " % \
-                str(dh.format).split('.')[-1]
+                str(holder.format).split('.')[-1]
 
     ## grows the h5 field    
     # \brief Ir runs the grow command of h5Object with grows-1 parameter

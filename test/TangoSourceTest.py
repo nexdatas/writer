@@ -141,7 +141,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.member.name, None)
         self.assertEqual(ds.member.memberType, 'attribute')
         self.assertEqual(ds.member.encoding, None)
-        self.assertEqual(ds.dv, None)
+        self.assertEqual(ds.device, None)
         self.assertEqual(ds.group, None)
 
 
@@ -159,22 +159,22 @@ class TangoSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (None, None, "attribute"))
 
-        ds.dv = device
+        ds.device = device
         ds.member.name = None
         ds.memberType = None
         self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (device, None, "attribute"))
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = dname
         ds.memberType = None
         self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (None, dname, "attribute"))
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.memberType = mtype
         self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (None, None, mtype))
 
-        ds.dv = device
+        ds.device = device
         ds.member.name = dname
         ds.memberType = mtype
         self.assertEqual(ds.__str__(), " TANGO Device %s : %s (%s)" % (device, dname, mtype))
@@ -245,90 +245,90 @@ class TangoSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource/>")
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup,
                            "<datasource> <device name='%s'/> </datasource>" % device)
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup,
                            "<datasource> <record name='%s'/> </datasource>" % dname)
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup, "<datasource> <record/>  <device/> </datasource>")
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s'/> </datasource>" % (dname,device))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, device)
-        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.device, device)
+        self.assertEqual(ds.device, device)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, None)
         self.assertEqual(ds.group, None)
 
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" % 
                  (dname,device,ctype))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.device, device)
         self.assertEqual(ds.member.memberType, ctype)
         self.assertEqual(ds.member.encoding, None)
         self.assertEqual(ds.group, None)
 
 
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" % 
                  (dname,device,'strange'))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.device, device)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.group, None)
 
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s'/> </datasource>" % 
                  (dname,device,host))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.device, device)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.group, None)
 
 
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         
         ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s'/> </datasource>" % 
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, "%s:%s/%s" %(host, port, device))
+        self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, None)
         self.assertEqual(ds.group, None)
 
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
@@ -336,20 +336,20 @@ class TangoSourceTest(unittest.TestCase):
         ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s'/> </datasource>" % 
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.device, device)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, encoding)
         self.assertEqual(ds.group, None)
 
 
-        ds.dv = None
+        ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
         ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group= '%s'/> </datasource>" % 
                  (dname,device,encoding, group))
         self.assertEqual(ds.member.name, dname)
-        self.assertEqual(ds.dv, device)
+        self.assertEqual(ds.device, device)
         self.assertEqual(ds.group, group)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, encoding)
@@ -374,7 +374,7 @@ class TangoSourceTest(unittest.TestCase):
 
 
         el = TangoSource()
-        el.dv = 'stestp09/testss/s1r228'
+        el.device = 'stestp09/testss/s1r228'
         el.memberType = 'attribute'
         el.member.name = 'ScalarString'
         self.assertTrue(isinstance(el, object))
@@ -383,7 +383,7 @@ class TangoSourceTest(unittest.TestCase):
 
         el = TangoSource()
         el.group = 'bleble'
-        el.dv = 'stestp09/testss/s1r228'
+        el.device = 'stestp09/testss/s1r228'
         el.memberType = 'attribute'
         el.member.name = 'ScalarString'
         self.assertTrue(isinstance(el, object))
@@ -421,7 +421,7 @@ class TangoSourceTest(unittest.TestCase):
 
         el = TangoSource()
         el.group = 'bleble'
-        el.dv = 'stestp09/testss/s1r228'
+        el.device = 'stestp09/testss/s1r228'
         el.memberType = 'attribute'
         el.member.name = 'ScalarString'
         self.assertTrue(isinstance(el, object))
@@ -436,7 +436,7 @@ class TangoSourceTest(unittest.TestCase):
 
         el = TangoSource()
         el.group = 'bleble2'
-        el.dv = 'stestp09/testss/s2r228'
+        el.device = 'stestp09/testss/s2r228'
         el.memberType = 'attribute'
         el.member.name = 'ScalarString'
         self.assertTrue(isinstance(el, object))
@@ -453,10 +453,10 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(type(gr.lock),thread.LockType)
         self.assertEqual(gr.counter, 0)
         self.assertEqual(len(gr.devices), 1)
-        dv = gr.devices[el.dv]
+        dv = gr.devices[el.device]
         self.assertTrue(isinstance(dv,TgDevice))
-        self.assertEqual(dv.device, el.dv)
-        self.assertEqual(dv.device, el.dv)
+        self.assertEqual(dv.device, el.device)
+        self.assertEqual(dv.device, el.device)
         self.assertEqual(dv.proxy, None)
         self.assertEqual(dv.attributes, [el.member.name])
         self.assertEqual(dv.commands, [])
@@ -516,7 +516,7 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'attribute'
             el.member.name = k
             dt = el.getData()
@@ -524,7 +524,7 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr3:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'attribute'
             el.member.name = k
             el.member.encoding = arr3[k][2][0]
@@ -605,7 +605,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             el[k] = TangoSource()
             el[k].group = group
-            el[k].dv = 'stestp09/testss/s1r228'
+            el[k].device = 'stestp09/testss/s1r228'
             el[k].member.memberType = 'attribute'
             el[k].member.name = k
             self.assertEqual(el[k].setDataSources(pl), None)
@@ -613,7 +613,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arrb:
             el2[k] = TangoSource()
             el2[k].group = group2
-            el2[k].dv = 'stestp09/testss/s2r228'
+            el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
@@ -650,7 +650,7 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr3:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'attribute'
             el.member.name = k
             el.member.encoding = arr3[k][2][0]
@@ -702,7 +702,7 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'attribute'
             el.member.name = k
             dt = el.getData()
@@ -790,7 +790,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             el[k] = TangoSource()
             el[k].group = group
-            el[k].dv = 'stestp09/testss/s1r228'
+            el[k].device = 'stestp09/testss/s1r228'
             el[k].member.memberType = 'attribute'
             el[k].member.name = k
             self.assertEqual(el[k].setDataSources(pl), None)
@@ -798,7 +798,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arrb:
             el2[k] = TangoSource()
             el2[k].group = group2
-            el2[k].dv = 'stestp09/testss/s2r228'
+            el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
@@ -881,7 +881,7 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'attribute'
             el.member.name = k
             dt = el.getData()
@@ -976,7 +976,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             el[k] = TangoSource()
             el[k].group = group
-            el[k].dv = 'stestp09/testss/s1r228'
+            el[k].device = 'stestp09/testss/s1r228'
             el[k].member.memberType = 'attribute'
             el[k].member.name = k
             self.assertEqual(el[k].setDataSources(pl), None)
@@ -984,7 +984,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arrb:
             el2[k] = TangoSource()
             el2[k].group = group2
-            el2[k].dv = 'stestp09/testss/s2r228'
+            el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
@@ -1053,7 +1053,7 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'command'
             el.member.name = k
             dt = el.getData()
@@ -1120,7 +1120,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             el[k] = TangoSource()
             el[k].group = group
-            el[k].dv = 'stestp09/testss/s1r228'
+            el[k].device = 'stestp09/testss/s1r228'
             el[k].member.memberType = 'command'
             el[k].member.name = k
             self.assertEqual(el[k].setDataSources(pl), None)
@@ -1128,7 +1128,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arrb:
             el2[k] = TangoSource()
             el2[k].group = group2
-            el2[k].dv = 'stestp09/testss/s2r228'
+            el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'command'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
@@ -1239,7 +1239,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arr:
             el[k] = TangoSource()
             el[k].group = group
-            el[k].dv = 'stestp09/testss/s1r228'
+            el[k].device = 'stestp09/testss/s1r228'
             el[k].member.memberType = 'property'
             el[k].member.name = k
             self.assertEqual(el[k].setDataSources(pl), None)
@@ -1247,7 +1247,7 @@ class TangoSourceTest(unittest.TestCase):
         for k in arrb:
             el2[k] = TangoSource()
             el2[k].group = group2
-            el2[k].dv = 'stestp09/testss/s2r228'
+            el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'property'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
@@ -1327,11 +1327,11 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             el = TangoSource()
-            el.dv = 'stestp09/testss/s1r228'
+            el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'property'
             el.member.name = k
             dt = el.getData()
-            dp = PyTango.DeviceProxy(el.dv)  
+            dp = PyTango.DeviceProxy(el.device)  
             self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
                            'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 
@@ -1390,7 +1390,7 @@ class TangoSourceTest(unittest.TestCase):
                                    "</datasource>"],gjson),None)
         self.assertEqual(type(ds._last.source),DataSources.TangoSource)
         self.assertEqual(ds._last.source.member.name,dname)
-        self.assertEqual(ds._last.source.dv,device)
+        self.assertEqual(ds._last.source.device,device)
         self.assertEqual(ds._last.source.member.encoding,encoding)
         self.assertEqual(ds._last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, dname, atype))
         self.assertEqual(len(ds._last.tagAttributes),1)
