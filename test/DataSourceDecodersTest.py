@@ -178,22 +178,22 @@ class DataSourceDecodersTest(unittest.TestCase):
             self.assertEqual(ds._tagAttrs, atts)
             self.assertEqual(ds.content, [])
             self.assertEqual(ds.doc, "")
-            self.assertEqual(ds._last, el)
+            self.assertEqual(ds.last, el)
             self.assertEqual(ds.setDataSources(DataSourcePool()),None)
             self.assertEqual(ds.store(["<datasource type='TANGO'>",
                                        "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
                             k,device, arr3[k][2][0]),
                                        "</datasource>"],gjson),None)
-            self.assertEqual(type(ds._last.source),DataSources.TangoSource)
-            self.assertEqual(ds._last.source.member.name,k)
-            self.assertEqual(ds._last.source.device,device)
-            self.assertEqual(ds._last.source.member.encoding, arr3[k][2][0])
-            self.assertEqual(ds._last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, k, atype))
-            self.assertEqual(len(ds._last.tagAttributes),1)
-            self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='%s'/> <device name='stestp09/testss/s1r228' encoding='%s'/></datasource>" % (k, arr3[k][2][0])) )
+            self.assertEqual(type(ds.last.source),DataSources.TangoSource)
+            self.assertEqual(ds.last.source.member.name,k)
+            self.assertEqual(ds.last.source.device,device)
+            self.assertEqual(ds.last.source.member.encoding, arr3[k][2][0])
+            self.assertEqual(ds.last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, k, atype))
+            self.assertEqual(len(ds.last.tagAttributes),1)
+            self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='%s'/> <device name='stestp09/testss/s1r228' encoding='%s'/></datasource>" % (k, arr3[k][2][0])) )
             dp = DecoderPool()
             self.assertEqual(ds.setDecoders(dp),None)
-            dt = ds._last.source.getData()
+            dt = ds.last.source.getData()
             self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
 
 
@@ -231,22 +231,22 @@ class DataSourceDecodersTest(unittest.TestCase):
             self.assertEqual(ds._tagAttrs, atts)
             self.assertEqual(ds.content, [])
             self.assertEqual(ds.doc, "")
-            self.assertEqual(ds._last, el)
+            self.assertEqual(ds.last, el)
             self.assertEqual(ds.setDataSources(DataSourcePool()),None)
             self.assertEqual(ds.store(["<datasource type='TANGO'>",
                                        "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
                             k,device, arr3[k][2][0]),
                                        "</datasource>"],gjson),None)
-            self.assertEqual(type(ds._last.source),DataSources.TangoSource)
-            self.assertEqual(ds._last.source.member.name,k)
-            self.assertEqual(ds._last.source.device,device)
-            self.assertEqual(ds._last.source.member.encoding, arr3[k][2][0])
-            self.assertEqual(ds._last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, k, atype))
-            self.assertEqual(len(ds._last.tagAttributes),1)
-            self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='%s'/> <device name='stestp09/testss/s1r228' encoding='%s'/></datasource>" % (k, arr3[k][2][0])) )
+            self.assertEqual(type(ds.last.source),DataSources.TangoSource)
+            self.assertEqual(ds.last.source.member.name,k)
+            self.assertEqual(ds.last.source.device,device)
+            self.assertEqual(ds.last.source.member.encoding, arr3[k][2][0])
+            self.assertEqual(ds.last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, k, atype))
+            self.assertEqual(len(ds.last.tagAttributes),1)
+            self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='%s'/> <device name='stestp09/testss/s1r228' encoding='%s'/></datasource>" % (k, arr3[k][2][0])) )
             dp = DecoderPool()
             self.assertEqual(ds.setDecoders(None),None)
-            dt = ds._last.source.getData()
+            dt = ds.last.source.getData()
             self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],None)
 
 

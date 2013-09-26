@@ -106,7 +106,7 @@ class EDimensionsTest(unittest.TestCase):
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
-        self.assertEqual(el._last, None)
+        self.assertEqual(el.last, None)
 
 
 
@@ -122,12 +122,12 @@ class EDimensionsTest(unittest.TestCase):
         self.assertEqual(el2._tagAttrs, self._fattrs2)
         self.assertEqual(el2.doc, "")
         self.assertEqual(el2.store(""), None)
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2.store("<tag/>"), None)
 
 
 
-    ## _last method test
+    ## last method test
     # \brief It tests executing _lastObject method
     def test_last(self):
         print "Run: %s.test_last() " % self.__class__.__name__
@@ -155,14 +155,14 @@ class EDimensionsTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs3)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "2")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
         
         nxFile.close()
         os.remove(fname)
 
 
-    ## _last method test
+    ## last method test
     # \brief It tests executing _lastObject method
     def test_last_norank(self):
         fun = sys._getframe().f_code.co_name
@@ -191,8 +191,8 @@ class EDimensionsTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs2)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "0")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "0")
         
         nxFile.close()
         os.remove(fname)
@@ -215,7 +215,7 @@ class EDimensionsTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         self.assertEqual(el.doc, "")
@@ -236,12 +236,12 @@ class EDimensionsTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         self.assertEqual(el3.store([None,"<tag/>",None]), None)
         self.assertEqual(el.doc, "")
-        el3._last.doc = "SYM"
+        el3.last.doc = "SYM"
         self.assertEqual(el3.store(None), None)
         el2.doc = "SYM2"
         self.assertEqual(el3.store(None), None)

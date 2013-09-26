@@ -40,14 +40,14 @@ class Element(object):
         ## doc string
         self.doc = ""
         ## the previous element
-        self._last = last
+        self.last = last
 
 
     ## last H5 file object
     # \returns H5 file object of the previous element    
     def _lastObject(self):
-        if hasattr(self._last, "h5Object"):
-            return self._last.h5Object
+        if hasattr(self.last, "h5Object"):
+            return self.last.h5Object
         else:
             print >> sys.stderr, \
                 "Element::_lastObject() -  H5 Object not found :", self.tagName
@@ -60,8 +60,8 @@ class Element(object):
     ## before last stack element
     # \returns  before last element placed on the stack
     def _beforeLast(self):
-        if self._last:
-            return self._last._last
+        if self.last:
+            return self.last.last
         else:
             return None
 

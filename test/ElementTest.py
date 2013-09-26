@@ -80,7 +80,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
-        self.assertEqual(el._last, None)
+        self.assertEqual(el.last, None)
 
 
     ## store method test
@@ -95,12 +95,12 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2._tagAttrs, self._fattrs)
         self.assertEqual(el2.doc, "")
         self.assertEqual(el2.store(), None)
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2.store("<tag/>"), None)
         
 
 
-    ## _lastObject method test
+    ## lastObject method test
     # \brief It tests executing _lastObject method
     def test_lastObject(self):
         fun = sys._getframe().f_code.co_name
@@ -153,7 +153,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         

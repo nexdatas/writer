@@ -138,7 +138,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, self._fattrs)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, None)
+        self.assertEqual(ds.last, None)
 
         el = Element(self._tfname, self._fattrs )
         ds = DataSourceFactory(self._fattrs, el)
@@ -147,7 +147,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, self._fattrs)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
 
 
 
@@ -166,10 +166,10 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, self._fattrs)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.store(["<datasource>","","</datasource>"]), None)
-        self.assertEqual(type(ds._last.source),DataSources.DataSource)
-        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+        self.assertEqual(type(ds.last.source),DataSources.DataSource)
+        self.assertTrue(not hasattr(ds.last,"tagAttributes"))
 
         atts = {"type":"TANGO"}
         el = Element(self._tfname, self._fattrs )
@@ -179,10 +179,10 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.store(["<datasource>","","</datasource>"]), None)
-        self.assertEqual(type(ds._last.source),DataSources.DataSource)
-        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+        self.assertEqual(type(ds.last.source),DataSources.DataSource)
+        self.assertTrue(not hasattr(ds.last,"tagAttributes"))
 
 
         atts = {"type":"CLIENT"}
@@ -193,10 +193,10 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.myAssertRaise(DataSourceSetupError,ds.store,["<datasource>","","</datasource>"])
-        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+        self.assertTrue(not hasattr(ds.last,"tagAttributes"))
 
 
         atts = {"type":"CLIENT"}
@@ -207,10 +207,10 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.myAssertRaise(DataSourceSetupError,ds.store,["<datasource type='CLIENT'>","<record/>","</datasource>"])
-        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+        self.assertTrue(not hasattr(ds.last,"tagAttributes"))
 
 
         atts = {"type":"CLIENT"}
@@ -222,17 +222,17 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.assertEqual(ds.store(["<datasource type='CLIENT'>",
                                    '<record name="%s"/>' %name,
                                    "</datasource>"]),None)
-        self.assertEqual(type(ds._last.source),DataSources.ClientSource)
-        self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.__str__(), " CLIENT record %s" 
+        self.assertEqual(type(ds.last.source),DataSources.ClientSource)
+        self.assertEqual(ds.last.source.name,name)
+        self.assertEqual(ds.last.source.name,name)
+        self.assertEqual(ds.last.source.__str__(), " CLIENT record %s" 
                          % (name))
-        self.assertTrue(not hasattr(ds._last,"tagAttributes"))
+        self.assertTrue(not hasattr(ds.last,"tagAttributes"))
 
 
 
@@ -245,18 +245,18 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.assertEqual(ds.store(["<datasource type='CLIENT'>",
                                    '<record name="%s"/>' %name,
                                    "</datasource>"]),None)
-        self.assertEqual(type(ds._last.source),DataSources.ClientSource)
-        self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.__str__(), " CLIENT record %s" 
+        self.assertEqual(type(ds.last.source),DataSources.ClientSource)
+        self.assertEqual(ds.last.source.name,name)
+        self.assertEqual(ds.last.source.name,name)
+        self.assertEqual(ds.last.source.__str__(), " CLIENT record %s" 
                          % (name)) 
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+        self.assertEqual(len(ds.last.tagAttributes),1)
+        self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
 
 
 
@@ -272,19 +272,19 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.assertEqual(ds.store(["<datasource type='CLIENT'>",
                                    '<record name="%s"/>' %name,
                                    "</datasource>"],gjson),None)
-        self.assertEqual(type(ds._last.source),DataSources.ClientSource)
-        self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.name,name)
-        self.assertEqual(ds._last.source.__str__(), " CLIENT record %s" 
+        self.assertEqual(type(ds.last.source),DataSources.ClientSource)
+        self.assertEqual(ds.last.source.name,name)
+        self.assertEqual(ds.last.source.name,name)
+        self.assertEqual(ds.last.source.__str__(), " CLIENT record %s" 
                          % (name))
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
-        dt = ds._last.source.getData()
+        self.assertEqual(len(ds.last.tagAttributes),1)
+        self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR', '<datasource type=\'CLIENT\'><record name="myRecord"/></datasource>'))
+        dt = ds.last.source.getData()
         self.checkData(dt,"SCALAR",'1',"DevString",[])
 
 
@@ -300,7 +300,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.assertEqual(ds.store(["<datasource type='PYEVAL'>",
                                    """
@@ -312,11 +312,11 @@ ds.result = ds.myclient + 1
 </result>
 """ %name,
                                    "</datasource>"],gjson),None)
-        self.assertEqual(type(ds._last.source),DataSources.PyEvalSource)
-        self.assertEqual(ds._last.source.__str__(), " PYEVAL  \nds.result = ds.myclient + 1\n")
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'PYEVAL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
-        dt = ds._last.source.getData()
+        self.assertEqual(type(ds.last.source),DataSources.PyEvalSource)
+        self.assertEqual(ds.last.source.__str__(), " PYEVAL  \nds.result = ds.myclient + 1\n")
+        self.assertEqual(len(ds.last.tagAttributes),1)
+        self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'PYEVAL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
+        dt = ds.last.source.getData()
         self.checkData(dt,"SCALAR",1124,"DevLong64",[])
         
 
@@ -340,7 +340,7 @@ ds.result = ds.myclient + 1
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         dsp = DataSourcePool(wjson)
         dcp = DecoderPool()
         self.assertEqual(ds.setDataSources(dsp),None)
@@ -354,7 +354,7 @@ ds.result = ds.myclient + 1
 </result>
 """ %name,
                                    "</datasource>"],gjson),None)
-        td = ds._last.source
+        td = ds.last.source
         self.assertEqual(len(td.stack), 7)
         self.assertEqual(td.stack[0], "setup")
         self.assertEqual(td.stack[1], '<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>')
@@ -370,13 +370,13 @@ ds.result = ds.myclient + 1
         self.assertEqual(td.stack[7], "isValid")
         self.assertEqual(td.stack[8], "setDecoders")
         self.assertEqual(td.stack[9], dcp)
-        self.assertEqual(type(ds._last.source),TestDataSource.TestDataSource)
-        self.assertEqual(ds._last.source.__str__(), "Test DataSource")
+        self.assertEqual(type(ds.last.source),TestDataSource.TestDataSource)
+        self.assertEqual(ds.last.source.__str__(), "Test DataSource")
         self.assertEqual(len(td.stack), 11)
         self.assertEqual(td.stack[10], '__str__')
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
-        dt = ds._last.source.getData()
+        self.assertEqual(len(ds.last.tagAttributes),1)
+        self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))
+        dt = ds.last.source.getData()
         self.assertEqual(len(td.stack), 12)
         self.assertEqual(td.stack[11], 'getData')
         self.checkData(dt,"SCALAR",1,"DevLong",[0,0])

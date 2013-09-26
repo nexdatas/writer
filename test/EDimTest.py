@@ -112,7 +112,7 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
-        self.assertEqual(el._last, None)
+        self.assertEqual(el.last, None)
 
 
 
@@ -128,12 +128,12 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(el2._tagAttrs, self._fattrs2)
         self.assertEqual(el2.doc, "")
         self.assertEqual(el2.store(""), None)
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2.store("<tag/>"), None)
 
 
 
-    ## _last method test
+    ## last method test
     # \brief It tests executing _lastObject method
     def test_last(self):
         fun = sys._getframe().f_code.co_name
@@ -162,14 +162,14 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs3)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "2")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
         
         nxFile.close()
         os.remove(fname)
 
 
-    ## _last method test
+    ## last method test
     # \brief It tests executing _lastObject method
     def test_last_index(self):
         fun = sys._getframe().f_code.co_name
@@ -199,8 +199,8 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs2)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "1")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "1")
         self.assertEqual(el3._beforeLast().lengths,{'1':'14'})
         self.assertEqual(fi.lengths,{'1':'14'})
         self.assertEqual(fi.rank,"1")
@@ -211,7 +211,7 @@ class EDimTest(unittest.TestCase):
 
 
 
-    ## _last method test
+    ## last method test
     # \brief It tests executing _lastObject method
     def test_last_index2(self):
         fun = sys._getframe().f_code.co_name
@@ -242,8 +242,8 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs2)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "2")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
         self.assertEqual(el3._beforeLast().lengths,{'1':'14', '2':'22'})
         self.assertEqual(fi.lengths,{'1':'14', '2':'22'})
         self.assertEqual(fi.rank,"2")
@@ -254,7 +254,7 @@ class EDimTest(unittest.TestCase):
 
 
 
-    ## _last method test
+    ## last method test
     # \brief It tests executing _lastObject method
     def test_last_noindex(self):
         fun = sys._getframe().f_code.co_name
@@ -284,8 +284,8 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs2)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "2")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
         self.assertEqual(el3._beforeLast().lengths,{})
         self.assertEqual(fi.lengths,{})
         self.assertEqual(fi.rank,"2")
@@ -326,8 +326,8 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(fi._tagAttrs, self._fattrs2)
         self.assertEqual(fi.doc, "")
         self.assertEqual(fi._lastObject(), None)
-        self.assertEqual(type(el2._last), EField)
-        self.assertEqual(el2._last.rank, "1")
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "1")
         self.assertEqual(el3._beforeLast().lengths,{})
         self.assertEqual(fi.lengths,{})
         self.assertEqual(fi.rank,"1")

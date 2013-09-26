@@ -105,7 +105,7 @@ class EFileTest(unittest.TestCase):
         self.assertEqual(el.source, None)
         self.assertEqual(el.error, None)
         self.assertEqual(el.h5Object, None)
-        self.assertEqual(el._last, None)
+        self.assertEqual(el.last, None)
 
 
     ## default constructor test
@@ -145,7 +145,7 @@ class EFileTest(unittest.TestCase):
         self.assertEqual(el.tagName, 'file')
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
-        self.assertEqual(el._last, None)
+        self.assertEqual(el.last, None)
         self.assertEqual(el.source, None)
         self.assertEqual(el.error, None)
         for k in self._fattrs:

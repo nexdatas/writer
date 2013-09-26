@@ -271,31 +271,31 @@ class EStrategy(Element):
         Element.__init__(self, "strategy", attrs, last)
 
         if "mode" in attrs.keys():
-            self._last.strategy = attrs["mode"]
+            self.last.strategy = attrs["mode"]
         if "trigger" in attrs.keys():
-            self._last.trigger = attrs["trigger"]
+            self.last.trigger = attrs["trigger"]
             if Streams.log_info:
                 print >> Streams.log_info, "TRIGGER" , attrs["trigger"]
             print "TRIGGER" , attrs["trigger"]
-        if "grows" in attrs.keys() and hasattr(self._last,"grows"):
-            self._last.grows = int(attrs["grows"])
-            if self._last.grows < 1:
-                self._last.grows = 1
+        if "grows" in attrs.keys() and hasattr(self.last,"grows"):
+            self.last.grows = int(attrs["grows"])
+            if self.last.grows < 1:
+                self.last.grows = 1
         if "canfail" in attrs.keys():
-            self._last.canfail = True \
+            self.last.canfail = True \
                 if attrs["canfail"].upper() == "TRUE" else False
-        if "compression" in attrs.keys() and hasattr(self._last,"compression"):
-            self._last.compression = True \
+        if "compression" in attrs.keys() and hasattr(self.last,"compression"):
+            self.last.compression = True \
                 if attrs["compression"].upper() == "TRUE" else False
-            if self._last.compression:
-                if "rate" in attrs.keys() and hasattr(self._last,"rate"):
-                    self._last.rate = int(attrs["rate"])
-                    if self._last.rate < 0:
-                        self._last.rate = 0
-                    if self._last.rate > 9:
-                        self._last.rate = 9
-                if "shuffle" in attrs.keys() and hasattr(self._last,"shuffle"):
-                    self._last.shuffle = False \
+            if self.last.compression:
+                if "rate" in attrs.keys() and hasattr(self.last,"rate"):
+                    self.last.rate = int(attrs["rate"])
+                    if self.last.rate < 0:
+                        self.last.rate = 0
+                    if self.last.rate > 9:
+                        self.last.rate = 9
+                if "shuffle" in attrs.keys() and hasattr(self.last,"shuffle"):
+                    self.last.shuffle = False \
                         if attrs["shuffle"].upper() == "FALSE" else True
                 
             
@@ -305,7 +305,7 @@ class EStrategy(Element):
     # \param xml xml setting 
     # \param globalJSON global JSON string
     def store(self, xml = None, globalJSON = None):
-        self._last.postrun = ("".join(self.content)).strip()        
+        self.last.postrun = ("".join(self.content)).strip()        
 
 
 ## field H5 tag element
@@ -431,14 +431,15 @@ class EField(FElementWithAttr):
                 else:
                     if not chunk:
                         f = self._lastObject().create_field(
-                            name.encode(), dtype.encode(), shape, filter=deflate)
+                            name.encode(), dtype.encode(), shape, [],
+                            deflate)
                     else:
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), shape, chunk, 
-                            filter=deflate)
+                            deflate)
             else:
                 f = self._lastObject().create_field(
-                    name.encode(), dtype.encode(), filter=deflate)
+                    name.encode(), dtype.encode(), [], [], deflate)
         except:
             if Streams.log_error:
                 print >> Streams.log_error, \
@@ -1104,14 +1105,15 @@ class EAttribute(FElement):
             if tp == "NX_CHAR":    
                 shape = self._findShape(self.rank, self.lengths)
             else:
-                shape = self._findShape(self.rank, self.lengths, extends= True)
+                shape = self._findShape(self.rank, self.lengths, 
+                                        extends= True)
             val = ("".join(self.content)).strip().encode()   
             if not shape:
-                self._last.tagAttributes[self.name] = (tp, val)
+                self.last.tagAttributes[self.name] = (tp, val)
             else:
-                self._last.tagAttributes[self.name] = (tp, val, tuple(shape))
+                self.last.tagAttributes[self.name] = (tp, val, tuple(shape))
 
-#            print "TAGATTR", self.name, self._last.tagAttributes[self.name ]    
+#            print "TAGATTR", self.name, self.last.tagAttributes[self.name ]    
             if self.source:
                 if  self.source.isValid() :
                     return self.strategy, self.trigger
@@ -1123,7 +1125,7 @@ class EAttribute(FElement):
         try:
             if self.name:
                 if not self.h5Object:
-                    self.h5Object = self._last.h5Attribute(self.name)
+                    self.h5Object = self.last.h5Attribute(self.name)
                 if self.source:
                     dt = self.source.getData()
                     dh = None
@@ -1188,7 +1190,7 @@ class EAttribute(FElement):
     # \brief It fills object or an extend part of object by default value 
     def __fillMax(self):
         if self.name and not self.h5Object:
-            self.h5Object = self._last.h5Attribute(self.name)
+            self.h5Object = self.last.h5Attribute(self.name)
         shape = list(self.h5Object.shape)
         
         nptype = self.h5Object.dtype
@@ -1274,7 +1276,7 @@ class ESymbol(Element):
     # \param globalJSON global JSON string
     def store(self, xml = None, globalJSON = None):
         if "name" in self._tagAttrs.keys():
-            self.symbols[self._tagAttrs["name"]] = self._last.doc
+            self.symbols[self._tagAttrs["name"]] = self.last.doc
 
 
  
@@ -1286,7 +1288,7 @@ class EDimensions(Element):
     def __init__(self, attrs, last):
         Element.__init__(self, "dimensions", attrs, last)
         if "rank" in attrs.keys():
-            self._last.rank = attrs["rank"]
+            self.last.rank = attrs["rank"]
 
 
 ## dim tag element        

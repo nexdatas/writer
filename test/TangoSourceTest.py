@@ -1383,18 +1383,18 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds._tagAttrs, atts)
         self.assertEqual(ds.content, [])
         self.assertEqual(ds.doc, "")
-        self.assertEqual(ds._last, el)
+        self.assertEqual(ds.last, el)
         self.assertEqual(ds.setDataSources(DataSourcePool()),None)
         self.assertEqual(ds.store(["<datasource type='TANGO'>",
                                    "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
                                    "</datasource>"],gjson),None)
-        self.assertEqual(type(ds._last.source),DataSources.TangoSource)
-        self.assertEqual(ds._last.source.member.name,dname)
-        self.assertEqual(ds._last.source.device,device)
-        self.assertEqual(ds._last.source.member.encoding,encoding)
-        self.assertEqual(ds._last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, dname, atype))
-        self.assertEqual(len(ds._last.tagAttributes),1)
-        self.assertEqual(ds._last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>") )
+        self.assertEqual(type(ds.last.source),DataSources.TangoSource)
+        self.assertEqual(ds.last.source.member.name,dname)
+        self.assertEqual(ds.last.source.device,device)
+        self.assertEqual(ds.last.source.member.encoding,encoding)
+        self.assertEqual(ds.last.source.__str__() , " TANGO Device %s : %s (%s)" % (device, dname, atype))
+        self.assertEqual(len(ds.last.tagAttributes),1)
+        self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>") )
 
     
 if __name__ == '__main__':

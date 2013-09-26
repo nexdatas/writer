@@ -105,7 +105,7 @@ class ESymbolTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
         self.assertEqual(el.symbols, {})
-        self.assertEqual(el._last, None)
+        self.assertEqual(el.last, None)
 
 
 
@@ -121,7 +121,7 @@ class ESymbolTest(unittest.TestCase):
         self.assertEqual(el2._tagAttrs, self._fattrs2)
         self.assertEqual(el2.doc, "")
         self.assertEqual(el2.store(""), None)
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2.symbols, {})
         self.assertEqual(el2.store("<tag/>"), None)
         self.assertEqual(el2.symbols, {})
@@ -182,7 +182,7 @@ class ESymbolTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         self.assertEqual(el.doc, "")
@@ -204,13 +204,13 @@ class ESymbolTest(unittest.TestCase):
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el2._last, el)
+        self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         self.assertEqual(el3.store([None,"<tag/>",None]), None)
         self.assertEqual(el.doc, "")
         self.assertEqual(el3.symbols, {"test":''})
-        el3._last.doc = "SYM"
+        el3.last.doc = "SYM"
         self.assertEqual(el3.store(None), None)
         self.assertEqual(el3.symbols, {"test":'SYM'})
         el2.doc = "SYM2"

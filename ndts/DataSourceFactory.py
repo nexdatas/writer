@@ -48,7 +48,7 @@ class DataSourceFactory(Element):
     def __createDSource(self, attrs):
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
-                self._last.source = self.__dsPool.get(attrs["type"])()
+                self.last.source = self.__dsPool.get(attrs["type"])()
             else:
                 print >> sys.stderr, \
                     "DataSourceFactory::__createDSource - Unknown data source"
@@ -57,14 +57,14 @@ class DataSourceFactory(Element):
                         "DataSourceFactory::__createDSource - "\
                         "Unknown data source"
                     
-                self._last.source = DataSources.DataSource()
+                self.last.source = DataSources.DataSource()
         else:
             print >> sys.stderr, \
                 "DataSourceFactory::__createDSource - Typeless data source"
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "DataSourceFactory::__createDSource - Typeless data source"
-            self._last.source = DataSources.DataSource()
+            self.last.source = DataSources.DataSource()
 
 
     ##  sets the datasource form xml string
@@ -73,21 +73,21 @@ class DataSourceFactory(Element):
     def store(self, xml = None, globalJSON = None):
         self.__createDSource(self._tagAttrs)
         jxml = "".join(xml)
-        self._last.source.setup(jxml)
-        if hasattr(self._last.source,"setJSON") and globalJSON:
-            self._last.source.setJSON(globalJSON)
-        if hasattr(self._last.source,"setDataSources"):
-            self._last.source.setDataSources(self.__dsPool)
-        if self._last and hasattr(self._last,"tagAttributes"):
-            self._last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
+        self.last.source.setup(jxml)
+        if hasattr(self.last.source,"setJSON") and globalJSON:
+            self.last.source.setJSON(globalJSON)
+        if hasattr(self.last.source,"setDataSources"):
+            self.last.source.setDataSources(self.__dsPool)
+        if self.last and hasattr(self.last,"tagAttributes"):
+            self.last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
 
 
     ## sets the used decoders
     # \param decoders pool to be set
     def setDecoders(self, decoders):
-        if self._last and self._last.source and self._last.source.isValid() \
-                and hasattr(self._last.source,"setDecoders"):
-            self._last.source.setDecoders(decoders)
+        if self.last and self.last.source and self.last.source.isValid() \
+                and hasattr(self.last.source,"setDecoders"):
+            self.last.source.setDecoders(decoders)
             
 
 
