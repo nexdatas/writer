@@ -19,6 +19,8 @@
 # \file FetchNameHandler.py
 # An example of SAX Nexus parser
 
+""" SAX parser for fetching name attributes of tags """
+
 from xml import sax
 
 import sys, os

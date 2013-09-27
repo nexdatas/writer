@@ -19,6 +19,8 @@
 ## \file DataSources.py
 # data-source types
 
+""" Definitions of various datasources """
+
 import time
 import sys
 import threading

@@ -18,6 +18,8 @@
 ## \package ndts nexdatas
 ## \file Streams.py
 
+""" labels to Tango Streams """
+
 ## Tango fatal log
 log_fatal = None  
 ## Tango error log

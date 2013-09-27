@@ -69,7 +69,8 @@ class FElement(Element):
     # \param exDim grows growing dimension + 1        
     # \param extraD if the object grows
     # \returns shape of the  h5 field
-    def __reshape(self, dsShape, rank, extends, extraD, exDim):        
+    @classmethod
+    def __reshape(cls, dsShape, rank, extends, extraD, exDim):        
         shape = []
         if dsShape:    
             for s in dsShape:
@@ -88,7 +89,8 @@ class FElement(Element):
     ## fetches shape from value and rank
     # \param rank rank of the object
     # \param value of the object
-    def __fetchShape(self, value, rank):
+    @classmethod
+    def __fetchShape(cls, value, rank):
         if not rank or int(rank) == 0:
             return [1]
         elif  int(rank) == 1:

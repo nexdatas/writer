@@ -19,6 +19,8 @@
 # \file InnerXMLParser.py
 # An example of SAX Nexus parser
 
+""" SAX parser for taking XML string inside specified tag """
+
 from xml import sax
 
 import sys, os
@@ -27,7 +29,7 @@ import sys, os
 class InnerXMLHandler(sax.ContentHandler):
 
     ## constructor
-    # \brief It constructs parser handler for fetching group names
+    # \brief It constructs parser handler for taking xml od datasources
     def __init__(self, xmlReader, contentHandler, name, attrs):
         sax.ContentHandler.__init__(self)
         ## xml string

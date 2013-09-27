@@ -18,6 +18,9 @@
 ## \package ndts nexdatas
 # \file NexusXMLHandler.py
 # An example of SAX Nexus parser
+
+""" SAX parser for interpreting content of  XML configuration string """
+
 import pni.io.nx.h5 as nx
 from xml import sax
 

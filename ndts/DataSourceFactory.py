@@ -19,6 +19,8 @@
 ## \file DataSourceFactory.py
 # data-source types
 
+""" factory with datasources """
+
 import sys 
 
 from . import Streams
