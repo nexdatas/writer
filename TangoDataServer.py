@@ -63,7 +63,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def __init__(self,cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
 		TangoDataServer.init_device(self)
-
+		
 #------------------------------------------------------------------
 #	Device destructor
 #------------------------------------------------------------------
@@ -443,6 +443,7 @@ class TangoDataServerClass(PyTango.DeviceClass):
 			{
 				'label':"XML Configuration",
 				'description':"An XML string with Nexus configuration.",
+				'Display level' : PyTango.DispLevel.EXPERT ,
 			} ],
 		'TheJSONRecord':
 			[[PyTango.DevString,
