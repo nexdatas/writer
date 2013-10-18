@@ -470,8 +470,8 @@ class TangoDataServerClass(PyTango.DeviceClass):
 			PyTango.SCALAR,
 			PyTango.READ_WRITE],
 			{
-				'label':"H5 output file",
-				'description':"A name of H5 output file",
+				'label':"Output file with its path",
+				'description':"A name of H5 output file with its full path",
 			} ],
 		}
 
