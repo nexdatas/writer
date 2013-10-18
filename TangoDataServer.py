@@ -63,7 +63,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def __init__(self,cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
 		TangoDataServer.init_device(self)
-		
+
 #------------------------------------------------------------------
 #	Device destructor
 #------------------------------------------------------------------
@@ -118,7 +118,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def read_attr_hardware(self, data):
 		print "In ", self.get_name(), "::read_attr_hardware()"
-
 
 #==================================================================
 #
@@ -212,15 +211,27 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def write_FileName(self, attr):
 		print "In ", self.get_name(), "::write_FileName()"
-		self.tdw.fileName = attr.get_write_value()
+		if self.is_FileName_write_allowed():
+			self.tdw.fileName = attr.get_write_value()
 
-		print "Attribute value = ", self.tdw.fileName
-
+			print "Attribute value = ", self.tdw.fileName
+		else:
+			print >> self.log_warn , "To change the file name please close the file"
+			raise Exception, "To change the file name please close the file"
 		#	Add your own code here
 
 
 #---- FileName attribute State Machine -----------------
 	def is_FileName_allowed(self, req_type):
+		if self.get_state() in [PyTango.DevState.OFF]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#---- FileName attribute Write State Machine -----------------
+	def is_FileName_write_allowed(self):
 		if self.get_state() in [PyTango.DevState.OFF,
 		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.OPEN,
@@ -443,7 +454,7 @@ class TangoDataServerClass(PyTango.DeviceClass):
 			{
 				'label':"XML Configuration",
 				'description':"An XML string with Nexus configuration.",
-				'Display level' : PyTango.DispLevel.EXPERT ,
+				'Display level':PyTango.DispLevel.EXPERT,
 			} ],
 		'TheJSONRecord':
 			[[PyTango.DevString,
@@ -452,6 +463,7 @@ class TangoDataServerClass(PyTango.DeviceClass):
 			{
 				'label':"JSON string with client data",
 				'description':"A JSON string with global client data.",
+				'Display level':PyTango.DispLevel.EXPERT,
 			} ],
 		'FileName':
 			[[PyTango.DevString,
