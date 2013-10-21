@@ -2706,6 +2706,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0][i], 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                print i
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
