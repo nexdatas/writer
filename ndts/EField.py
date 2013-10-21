@@ -406,10 +406,7 @@ class EField(FElementWithAttr):
             
         arr = holder.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
-            print "arr", arr, type(arr)
-            print "h5", self.h5Object[self.h5Object.shape[0]-1], self.h5Object.shape, self.h5Object.shape[0]-1
             self.h5Object[self.h5Object.shape[0]-1] = arr
-            print "h52", self.h5Object[self.h5Object.shape[0]-1], self.h5Object.shape, self.h5Object.shape[0]-1
         elif  len(self.h5Object.shape) == 2:
             if self.grows == 2:
                 self.h5Object[:, self.h5Object.shape[0]-1] = arr
