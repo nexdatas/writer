@@ -49,7 +49,7 @@ from ndts.EGroup import EGroup
 from ndts.Types import NTP, Converters
 from ndts.DataSources import DataSource
 
-from ndts.H5Elements import XMLSettingSyntaxError
+from ndts.Errors import XMLSettingSyntaxError
 
 from Checkers import Checker 
 
@@ -2706,7 +2706,6 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0][i], 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
-                print i
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:

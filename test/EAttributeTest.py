@@ -42,7 +42,7 @@ from ndts.EGroup import EGroup
 from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters
-from ndts.H5Elements import XMLSettingSyntaxError
+from ndts.Errors import XMLSettingSyntaxError
 
 from TestDataSource import TestDataSource 
 

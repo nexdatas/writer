@@ -40,7 +40,7 @@ from ndts.FElement import FElement
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 from ndts.DataSources import DataSource
-from ndts.H5Elements import XMLSettingSyntaxError
+from ndts.Errors import XMLSettingSyntaxError
 from ndts.Types import NTP
 
 from TestDataSource import TestDataSource 
