@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
@@ -21,19 +22,9 @@
 
 """ Definitions of tag evaluation classes """
 
-import sys
-
-import numpy
-
-from .DataHolder import DataHolder
 from .Element import Element
 from .FElement import FElement
-from .FieldArray import FieldArray
-from .Types import NTP
-from .Errors import (XMLSettingSyntaxError)
-from . import Streams
 
-import pni.io.nx.h5 as nx
 
 
 ## file H5 element        

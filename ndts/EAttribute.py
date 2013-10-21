@@ -26,14 +26,8 @@ import sys
 import numpy
 
 from .DataHolder import DataHolder
-from .Element import Element
 from .FElement import FElement
-from .FieldArray import FieldArray
-from .Types import NTP
-from .Errors import (XMLSettingSyntaxError)
 from . import Streams
-
-import pni.io.nx.h5 as nx
 
 
 

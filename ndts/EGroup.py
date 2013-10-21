@@ -21,18 +21,12 @@
 
 """ Definitions of group tag evaluation classes """
 
-import sys
-
 import numpy
 
-from .DataHolder import DataHolder
-from .Element import Element
 from .FElement import FElementWithAttr
 from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
-
-import pni.io.nx.h5 as nx
 
 
 
