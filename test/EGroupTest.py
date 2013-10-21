@@ -36,9 +36,9 @@ except:
 
 
 
-from ndts.H5Elements import FElementWithAttr
-from ndts.H5Elements import FElement
-from ndts.H5Elements import EGroup
+from ndts.FElement import FElementWithAttr
+from ndts.FElement import FElement
+from ndts.EGroup import EGroup
 from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters

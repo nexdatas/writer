@@ -35,10 +35,10 @@ except:
     import pni.nx.h5 as nx
 
 
-from ndts.H5Elements import FElement
-from ndts.H5Elements import ELink
-from ndts.H5Elements import EField
-from ndts.H5Elements import EGroup
+from ndts.FElement import FElement
+from ndts.ELink import ELink
+from ndts.EField import EField
+from ndts.EGroup import EGroup
 from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters

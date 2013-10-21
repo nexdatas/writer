@@ -36,8 +36,8 @@ except:
     import pni.nx.h5 as nx
 
 
-from ndts.H5Elements import FElementWithAttr
-from ndts.H5Elements import FElement
+from ndts.FElement import FElementWithAttr
+from ndts.FElement import FElement
 from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters

@@ -29,9 +29,14 @@ import sys, os
 from . import Streams
 
 from .Element import Element
-from .H5Elements import (
-    EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
-    EDimensions, EDim, EStrategy, FElement, EFile)
+from .FElement import FElement
+from .EGroup import EGroup
+from .EField import EField
+from .EAttribute import EAttribute
+from .EStrategy import EStrategy
+from .ELink import ELink
+from .H5Elements import ( 
+    EDoc, ESymbol, EDimensions, EDim, EFile)
 from .DataSourceFactory import DataSourceFactory
 from .ThreadPool import ThreadPool
 from .InnerXMLParser import InnerXMLHandler

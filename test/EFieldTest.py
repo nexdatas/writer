@@ -40,12 +40,12 @@ except:
 
 from TestDataSource import TestDataSource 
 
-from ndts.H5Elements import FElementWithAttr
-from ndts.H5Elements import FElement
-from ndts.H5Elements import EField
+from ndts.FElement import FElementWithAttr
+from ndts.FElement import FElement
+from ndts.EField import EField
 from ndts.Element import Element
 from ndts.H5Elements import EFile
-from ndts.H5Elements import EGroup
+from ndts.EGroup import EGroup
 from ndts.Types import NTP, Converters
 from ndts.DataSources import DataSource
 
@@ -2709,7 +2709,10 @@ class EFieldTest(unittest.TestCase):
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
+                    print k
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow > 0 else 0), None)
+                    if k == 'float32':
+                        el[k].h5Object[0] = 3.4
                     self.assertEqual(el[k].markFailed(), None)
 
             self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 

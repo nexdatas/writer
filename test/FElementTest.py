@@ -36,7 +36,7 @@ except:
     import pni.nx.h5 as nx
 
 from ndts.Element import Element
-from ndts.H5Elements import FElement
+from ndts.FElement import FElement
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 from ndts.DataSources import DataSource

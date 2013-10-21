@@ -36,9 +36,9 @@ except:
 
 
 
-from ndts.H5Elements import EStrategy
-from ndts.H5Elements import FElement
-from ndts.H5Elements import EField
+from ndts.EStrategy import EStrategy
+from ndts.FElement import FElement
+from ndts.EField import EField
 from ndts.Element import Element
 from ndts.H5Elements import EFile
 from ndts.Types import NTP, Converters
