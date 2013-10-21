@@ -246,7 +246,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 """
 
         uc = self._counter[0]
-        datasources = ', "datasources":{"MCLIENT":"ndts.DataSources.ClientSource"}'
+        datasources = ', "datasources":{"MCLIENT":"ndts.ClientSource.ClientSource"}'
         tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_64":' + str(uc) + ' }' 
                               + str(datasources)
                               + ' }')
