@@ -2712,7 +2712,7 @@ class EFieldTest(unittest.TestCase):
                     print k
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow > 0 else 0), None)
                     if k == 'float32':
-                        el[k].h5Object[0] = 3.4
+                        print k,  el[k].h5Object.shape
                     self.assertEqual(el[k].markFailed(), None)
 
             self._sc.checkScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
