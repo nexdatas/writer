@@ -146,8 +146,7 @@ class NTP(object):
     def arrayRankShape(self, array):        
         rank, shape, pythonDType = self.arrayRankRShape(array)
 
-        if rank in self.rTf:
-            shape.reverse()
+        shape.reverse()
         return (rank, shape, pythonDType)            
 
 
