@@ -37,7 +37,7 @@ from ndts.DataSources import DataSource
 from ndts.DataSourcePool import DataSourcePool
 from ndts.DecoderPool import DecoderPool
 from ndts.Element import Element
-from ndts.H5Elements import EField
+from ndts.EField import EField
 from ndts import DataSources
 from ndts import ClientSource
 from ndts import PyEvalSource

@@ -36,7 +36,7 @@ from ndts import TangoSource
 from ndts import ClientSource
 from ndts.DataSourcePool import DataSourcePool
 from ndts.Element import Element
-from ndts.H5Elements import EField
+from ndts.EField import EField
 from ndts import DataSources
 from ndts.Errors import DataSourceSetupError
 

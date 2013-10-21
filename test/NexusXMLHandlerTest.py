@@ -29,8 +29,14 @@ import json
 from ndts.H5Elements import EFile
 from ndts.ThreadPool import ThreadPool
 from ndts.Element import Element
-from ndts.H5Elements import (EGroup, EField, EAttribute, ELink, EDoc, ESymbol, 
-                        EDimensions, EDim, EStrategy, FElement, EFile, FElement)
+from ndts.EGroup import EGroup
+from ndts.EField import EField
+from ndts.EAttribute import EAttribute
+from ndts.ELink import ELink
+from ndts.EStrategy import EStrategy
+from ndts.FElement import FElement
+from ndts.H5Elements import (
+    EDoc, ESymbol, EDimensions, EDim, EFile)
 from ndts.DataSourceFactory import DataSourceFactory
 from ndts.Errors import UnsupportedTagError
 from ndts.FetchNameHandler import TNObject
