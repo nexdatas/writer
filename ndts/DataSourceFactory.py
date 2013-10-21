@@ -25,7 +25,6 @@ import sys
 
 from . import Streams
 from . import DataSources
-from . import DataSources
 from .Element import Element
 
 
