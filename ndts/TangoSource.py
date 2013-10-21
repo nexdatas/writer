@@ -26,10 +26,9 @@ import sys
 import threading
 from xml.dom import minidom
 
-from .Types import NTP
 from . import Streams
+from .Types import NTP
 
-from .DataHolder import DataHolder
 from .DataSources import DataSource
 from .Errors import (PackageError, DataSourceSetupError)
 
@@ -455,10 +454,9 @@ class TgMember(object):
         elif self.memberType == "property":
 
             ntp = NTP()
-            rank, shape, pythonDType = ntp.arrayRankRShape(self.__da)
+            rank, shape, pythonDType = ntp.arrayRankShape(self.__da)
 
             if rank in NTP.rTf:
-                shape.reverse()
                 if not shape or shape == [1] or shape == [1, 0]:
                     shape = [1, 0]
                     rank = 0

@@ -21,9 +21,7 @@
 
 """ Definitions of PYEVAL datasource """
 
-import time
 import sys
-import threading
 from xml.dom import minidom
 
 from .Types import NTP
@@ -31,7 +29,7 @@ from . import Streams
 
 from .DataHolder import DataHolder
 from .DataSources import DataSource
-from .Errors import (PackageError, DataSourceSetupError)
+from .Errors import DataSourceSetupError
 
             
 
@@ -163,12 +161,12 @@ class PyEvalSource(DataSource):
         exec(self.__script.strip(), {}, {"ds":ds})
         rec = getattr(ds, self.__name)
         ntp = NTP()
-        rank, shape, pythonDType = ntp.arrayRankRShape(rec)
 
+        rank, shape, pythonDType = ntp.arrayRankShape(rec)
         if rank in NTP.rTf:
-            shape.reverse()
             if  shape is None:
                 shape = [1, 0]
+
             return {"rank":NTP.rTf[rank], "value":rec, 
                     "tangoDType":NTP.pTt[pythonDType.__name__], 
                     "shape":shape}

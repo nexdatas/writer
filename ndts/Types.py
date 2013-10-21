@@ -139,6 +139,18 @@ class NTP(object):
         return (rank, shape, pythonDType)            
 
 
+    ## array rank, shape and type
+    # \brief It calculates the rank, shape and type of 
+    #        the first element of the list array
+    # \param array given array
+    def arrayRankShape(self, array):        
+        rank, shape, pythonDType = self.arrayRankRShape(array)
+
+        if rank in self.rTf:
+            shape.reverse()
+        return (rank, shape, pythonDType)            
+
+
     ## creates python array from the given array with applied 
     #  the given function to it elements
     # \param value given array

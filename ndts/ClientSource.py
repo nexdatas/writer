@@ -21,17 +21,13 @@
 
 """ Definitions of CLIENT datasource """
 
-import time
-import sys
-import threading
 from xml.dom import minidom
 
 from .Types import NTP
 from . import Streams
 
-from .DataHolder import DataHolder
 from .DataSources import DataSource
-from .Errors import (PackageError, DataSourceSetupError)
+from .Errors import DataSourceSetupError
 
 
 ## Client data source
@@ -102,10 +98,9 @@ class ClientSource(DataSource):
         else:
             return    
         ntp = NTP()
-        rank, shape, pythonDType = ntp.arrayRankRShape(rec)
+        rank, shape, pythonDType = ntp.arrayRankShape(rec)
 
         if rank in NTP.rTf:
-            shape.reverse()
             if  shape is None:
                 shape = [1, 0]
             return { "rank":NTP.rTf[rank], 

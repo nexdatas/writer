@@ -23,7 +23,6 @@
 
 import threading
 
-from . import DataSources
 from . import TangoSource
 from . import DBaseSource
 from . import ClientSource

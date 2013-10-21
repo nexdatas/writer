@@ -21,15 +21,12 @@
 
 """ Definitions of DB datasource """
 
-import time
 import sys
-import threading
 from xml.dom import minidom
 
 from .Types import NTP
 from . import Streams
 
-from .DataHolder import DataHolder
 from .DataSources import DataSource
 from .Errors import (PackageError, DataSourceSetupError)
 
