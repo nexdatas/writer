@@ -30,8 +30,8 @@ from xml.dom import minidom
 
 
 from ndts.DataSources import DataSource
-from ndts.DataSources import PYTANGO_AVAILABLE as PYTANGO
-from ndts.DataSources import DB_AVAILABLE as DB
+from ndts.TangoSource import PYTANGO_AVAILABLE as PYTANGO
+from ndts.DBaseSource import DB_AVAILABLE as DB
 
 
 

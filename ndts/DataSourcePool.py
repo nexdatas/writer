@@ -24,6 +24,10 @@
 import threading
 
 from . import DataSources
+from . import TangoSource
+from . import DBaseSource
+from . import ClientSource
+from . import PyEvalSource
 
 
 ## DataSource pool
@@ -34,10 +38,10 @@ class DataSourcePool(object):
     # \brief It creates know datasources    
     # \param configJSON string with datasources    
     def __init__(self, configJSON = None):
-        self.__pool = {"DB":DataSources.DBaseSource, 
-                       "TANGO":DataSources.TangoSource,
-                       "CLIENT":DataSources.ClientSource, 
-                       "PYEVAL":DataSources.PyEvalSource}
+        self.__pool = {"DB":DBaseSource.DBaseSource, 
+                       "TANGO":TangoSource.TangoSource,
+                       "CLIENT":ClientSource.ClientSource, 
+                       "PYEVAL":PyEvalSource.PyEvalSource}
         self.__appendUserDataSources(configJSON)
         ## global variables for specific datasources
         self.common = {}

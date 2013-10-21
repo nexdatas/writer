@@ -34,7 +34,7 @@ import time
 
 from ndts import DataSources 
 from ndts.DataSources import DataSource
-from ndts.DataSources import PyEvalSource
+from ndts.PyEvalSource import PyEvalSource
 from ndts.DataSourcePool import DataSourcePool
 from ndts.Errors import DataSourceSetupError
 from ndts.Types import Converters, NTP
@@ -270,7 +270,7 @@ class PyEvalSourceTest(unittest.TestCase):
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 62,"DevLong64",[])        
 
-        dp = DataSourcePool(json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}'))
+        dp = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))

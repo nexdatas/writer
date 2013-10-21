@@ -36,11 +36,11 @@ import json
 import SimpleServerSetUp
 
 
-from ndts.DataSources import DataSource
-from ndts.DataSources import TangoSource
-from ndts.DataSources import TgMember
-from ndts.DataSources import TgGroup
-from ndts.DataSources import TgDevice
+from ndts.TangoSource import DataSource
+from ndts.TangoSource import TangoSource
+from ndts.TangoSource import TgMember
+from ndts.TangoSource import TgGroup
+from ndts.TangoSource import TgDevice
 from ndts.DecoderPool import DecoderPool
 from ndts.Element import Element
 from ndts.H5Elements import EField
@@ -1373,7 +1373,7 @@ class TangoSourceTest(unittest.TestCase):
 
         atts = {"type":"TANGO"}
         name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        wjson = json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
         
         el = EField(self._fattrs, None )
@@ -1388,7 +1388,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ds.store(["<datasource type='TANGO'>",
                                    "<record name='%s'/> <device name='%s' encoding='%s'/>" % (dname,device,encoding),
                                    "</datasource>"],gjson),None)
-        self.assertEqual(type(ds.last.source),DataSources.TangoSource)
+        self.assertEqual(type(ds.last.source),TangoSource)
         self.assertEqual(ds.last.source.member.name,dname)
         self.assertEqual(ds.last.source.device,device)
         self.assertEqual(ds.last.source.member.encoding,encoding)

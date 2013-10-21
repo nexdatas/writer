@@ -31,7 +31,9 @@ from xml.dom import minidom
 
 
 from ndts.DataSourceFactory import DataSourceFactory
-from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
+from ndts.DataSources import DataSource
+from ndts import TangoSource
+from ndts import ClientSource
 from ndts.DataSourcePool import DataSourcePool
 from ndts.Element import Element
 from ndts.H5Elements import EField
@@ -159,7 +161,7 @@ class DataSourceDecodersTest(unittest.TestCase):
 
         atts = {"type":"TANGO"}
         name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        wjson = json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
 
@@ -184,7 +186,7 @@ class DataSourceDecodersTest(unittest.TestCase):
                                        "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
                             k,device, arr3[k][2][0]),
                                        "</datasource>"],gjson),None)
-            self.assertEqual(type(ds.last.source),DataSources.TangoSource)
+            self.assertEqual(type(ds.last.source),TangoSource.TangoSource)
             self.assertEqual(ds.last.source.member.name,k)
             self.assertEqual(ds.last.source.device,device)
             self.assertEqual(ds.last.source.member.encoding, arr3[k][2][0])
@@ -212,7 +214,7 @@ class DataSourceDecodersTest(unittest.TestCase):
 
         atts = {"type":"TANGO"}
         name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        wjson = json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
 
@@ -237,7 +239,7 @@ class DataSourceDecodersTest(unittest.TestCase):
                                        "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
                             k,device, arr3[k][2][0]),
                                        "</datasource>"],gjson),None)
-            self.assertEqual(type(ds.last.source),DataSources.TangoSource)
+            self.assertEqual(type(ds.last.source),TangoSource.TangoSource)
             self.assertEqual(ds.last.source.member.name,k)
             self.assertEqual(ds.last.source.device,device)
             self.assertEqual(ds.last.source.member.encoding, arr3[k][2][0])

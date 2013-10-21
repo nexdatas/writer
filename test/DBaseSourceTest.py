@@ -33,7 +33,7 @@ import time
 
 
 from ndts.DataSources import DataSource
-from ndts.DataSources import DBaseSource
+from ndts.DBaseSource import DBaseSource
 from ndts.Errors import DataSourceSetupError
 from ndts.Types import Converters
 

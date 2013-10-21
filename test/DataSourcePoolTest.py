@@ -33,7 +33,10 @@ import ndts
 import thread
 
 from ndts.DataSourcePool import DataSourcePool
-from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
+from ndts.DataSources import DataSource
+from ndts.TangoSource import TangoSource
+from ndts.DBaseSource import DBaseSource
+from ndts.ClientSource import ClientSource
 
 
 ## if 64-bit machione
@@ -166,7 +169,7 @@ class DataSourcePoolTest(unittest.TestCase):
         self.myAssertRaise(ImportError,DataSourcePool,jsn)
 
 
-        el = DataSourcePool(json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}'))
+        el = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
 
 
 
@@ -188,7 +191,7 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertTrue(not el.hasDataSource("DBB"))
         self.assertTrue(not el.hasDataSource("CL"))
 
-        el = DataSourcePool(json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}'))
+        el = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))
@@ -214,7 +217,7 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertEqual(el.get("CL"),None)
         
 
-        el = DataSourcePool(json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}'))
+        el = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()
@@ -236,7 +239,7 @@ class DataSourcePoolTest(unittest.TestCase):
 
 
         el = DataSourcePool()
-        el.append(ndts.DataSources.ClientSource,"CL")
+        el.append(ndts.ClientSource.ClientSource,"CL")
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()

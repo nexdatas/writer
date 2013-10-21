@@ -36,7 +36,7 @@ import json
 import SimpleServerSetUp
 
 
-from ndts.DataSources import ProxyTools
+from ndts.TangoSource import ProxyTools
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

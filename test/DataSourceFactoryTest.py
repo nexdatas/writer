@@ -33,12 +33,14 @@ import TestDataSource
 
 
 from ndts.DataSourceFactory import DataSourceFactory
-from ndts.DataSources import TangoSource,ClientSource,DBaseSource,DataSource
+from ndts.DataSources import DataSource
 from ndts.DataSourcePool import DataSourcePool
 from ndts.DecoderPool import DecoderPool
 from ndts.Element import Element
 from ndts.H5Elements import EField
 from ndts import DataSources
+from ndts import ClientSource
+from ndts import PyEvalSource
 from ndts.Errors import DataSourceSetupError
 
 from ndts.DecoderPool import DecoderPool
@@ -227,7 +229,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds.store(["<datasource type='CLIENT'>",
                                    '<record name="%s"/>' %name,
                                    "</datasource>"]),None)
-        self.assertEqual(type(ds.last.source),DataSources.ClientSource)
+        self.assertEqual(type(ds.last.source),ClientSource.ClientSource)
         self.assertEqual(ds.last.source.name,name)
         self.assertEqual(ds.last.source.name,name)
         self.assertEqual(ds.last.source.__str__(), " CLIENT record %s" 
@@ -250,7 +252,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds.store(["<datasource type='CLIENT'>",
                                    '<record name="%s"/>' %name,
                                    "</datasource>"]),None)
-        self.assertEqual(type(ds.last.source),DataSources.ClientSource)
+        self.assertEqual(type(ds.last.source),ClientSource.ClientSource)
         self.assertEqual(ds.last.source.name,name)
         self.assertEqual(ds.last.source.name,name)
         self.assertEqual(ds.last.source.__str__(), " CLIENT record %s" 
@@ -277,7 +279,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         self.assertEqual(ds.store(["<datasource type='CLIENT'>",
                                    '<record name="%s"/>' %name,
                                    "</datasource>"],gjson),None)
-        self.assertEqual(type(ds.last.source),DataSources.ClientSource)
+        self.assertEqual(type(ds.last.source),ClientSource.ClientSource)
         self.assertEqual(ds.last.source.name,name)
         self.assertEqual(ds.last.source.name,name)
         self.assertEqual(ds.last.source.__str__(), " CLIENT record %s" 
@@ -291,7 +293,7 @@ class DataSourceFactoryTest(unittest.TestCase):
 
         atts = {"type":"PYEVAL"}
         name = "myRecord"
-        wjson = json.loads('{"datasources":{"CL":"DataSources.ClientSource"}}')
+        wjson = json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":1123}}')
         el = EField(self._fattrs, None )
         ds = DataSourceFactory(atts, el)
@@ -312,7 +314,7 @@ ds.result = ds.myclient + 1
 </result>
 """ %name,
                                    "</datasource>"],gjson),None)
-        self.assertEqual(type(ds.last.source),DataSources.PyEvalSource)
+        self.assertEqual(type(ds.last.source),PyEvalSource.PyEvalSource)
         self.assertEqual(ds.last.source.__str__(), " PYEVAL  \nds.result = ds.myclient + 1\n")
         self.assertEqual(len(ds.last.tagAttributes),1)
         self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR','<datasource type=\'PYEVAL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result> \nds.result = ds.myclient + 1\n</result>\n</datasource>' ))

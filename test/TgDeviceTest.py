@@ -37,10 +37,10 @@ import SimpleServerSetUp
 
 
 from ndts.DataSources import DataSource
-from ndts.DataSources import TangoSource
-from ndts.DataSources import TgMember
-from ndts.DataSources import TgGroup
-from ndts.DataSources import TgDevice
+from ndts.TangoSource import TangoSource
+from ndts.TangoSource import TgMember
+from ndts.TangoSource import TgGroup
+from ndts.TangoSource import TgDevice
 from ndts.DecoderPool import DecoderPool
 from ndts.Element import Element
 from ndts.H5Elements import EField
