@@ -586,7 +586,8 @@ class EField(FElementWithAttr):
                 value = numpy.iinfo(getattr(numpy, nptype)).max
             except:
                 try:
-                    value = numpy.finfo(getattr(numpy, nptype)).max
+                    value = numpy.asscalar(
+                        numpy.finfo(getattr(numpy, nptype)).max)
                 except:    
                     value = 0
         else:
@@ -595,7 +596,6 @@ class EField(FElementWithAttr):
             
         dformat = 'SCALAR'
         if shape and  len(shape) > 0  and shape[0] >= 1:
-            print "SP", shape
             arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
             if len(shape) == 1:
@@ -603,7 +603,6 @@ class EField(FElementWithAttr):
             else:
                 dformat = 'IMAGE'
         else:
-            print "VL", value, type(value)
             arr = value
 
         dh = DataHolder(dformat, arr, NTP.npTt[self.h5Object.dtype], shape)    

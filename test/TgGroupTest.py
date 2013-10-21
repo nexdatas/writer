@@ -43,7 +43,7 @@ from ndts.TangoSource import TgGroup
 from ndts.TangoSource import TgDevice
 from ndts.DecoderPool import DecoderPool
 from ndts.Element import Element
-from ndts.H5Elements import EField
+from ndts.EField import EField
 from ndts.DataSourceFactory import DataSourceFactory
 from ndts.Errors import DataSourceSetupError
 from ndts.DataSourcePool import DataSourcePool

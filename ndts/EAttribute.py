@@ -168,7 +168,8 @@ class EAttribute(FElement):
                 value = numpy.iinfo(getattr(numpy, nptype)).max
             except:
                 try:
-                    value = numpy.finfo(getattr(numpy, nptype)).max
+                    value = numpy.asscalar(
+                        numpy.finfo(getattr(numpy, nptype)).max)
                 except:    
                     value = 0
         else:
