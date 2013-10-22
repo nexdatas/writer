@@ -56,11 +56,15 @@ class EGroup(FElementWithAttr):
                 if Streams.log_error:
                     print >> Streams.log_error, \
                         "EGroup::__init__() - "\
-                        "The group '%s' of '%s' type cannot be created" % \
+                        "The group '%s' of '%s' type cannot be created. \n"\
+                        "Please remove the old file, change the file name "\
+                        "or change the group name."% \
                         (gname,attrs["type"].encode())
                 raise XMLSettingSyntaxError, \
-                    "The group '%s' of '%s' type cannot be created" % \
-                    (gname,attrs["type"].encode())
+                        "The group '%s' of '%s' type cannot be created. \n"\
+                        "Please remove the old file, change the file name "\
+                        "or change the group name."% \
+                        (gname,attrs["type"].encode())
                  
         else:
             if Streams.log_error:
