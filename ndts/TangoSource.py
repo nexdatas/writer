@@ -441,7 +441,7 @@ class TgMember(object):
                     "Data for %s not fetched" % self.name
             raise DataSourceSetupError, (
                 "TgMember::getValue() -  "\
-                    "Data or %s not fetched" % self.name)
+                    "Data of %s not fetched" % self.name)
             
         if self.memberType == "attribute":
             self.__value = {"rank":str(self.__da.data_format).split('.')[-1], 
