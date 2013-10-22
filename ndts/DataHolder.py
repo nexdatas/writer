@@ -116,7 +116,11 @@ class DataHolder(object):
             if dtype in NTP.npTt.keys() \
                     and NTP.npTt[dtype] == str(self.tangoDType) \
                     and dtype != "string":
-                return numpy.array(self.value, dtype=dtype)
+                if type(self.value).__name__ == 'ndarray' and \
+                        self.value.dtype.name == dtype:
+                    return self.value
+                else:
+                    return numpy.array(self.value, dtype=dtype)
             else:    
                 if dtype == "string":
                     return NTP().createArray(self.value, NTP.convert[dtype])
