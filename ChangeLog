@@ -1,4 +1,4 @@
-2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+2013-10-23 Jan Kotanski <jankotan@gmail.com>
 	* change format to rank in JSON data
 	* spitting DataSources and H5Elements
 	* making TheXMLSettings  and The JSONString in expert view level
