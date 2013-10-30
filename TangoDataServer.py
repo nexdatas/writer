@@ -49,7 +49,7 @@ from ndts.TangoDataWriter import TangoDataWriter as TDW
 #   DevState.OFF :      NeXuS Data Writer is switch off
 #   DevState.EXTRACT :  H5 file is open
 #   DevState.OPEN :     XML configuration is initialzed
-#   DevState.RUNNING :  NeXus Data Server is writting
+#   DevState.RUNNING :  NeXus Data Server is writing
 #==================================================================
 
 
