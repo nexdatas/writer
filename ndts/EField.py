@@ -120,21 +120,12 @@ class EField(FElementWithAttr):
                     
             return shape
         except XMLSettingSyntaxError:
-            if self.strategy == "POSTRUN": 
-                self.__splitArray = False
-                if self.rank and int(self.rank) >=0:
-                    shape = [0]*int(self.rank)
-                else:
-                    shape = [0]
-                return shape
+            self.__splitArray = False
+            if self.rank and int(self.rank) >=0:
+                shape = [0]*int(self.rank)
             else:
-                if Streams.log_error:
-                    print >> Streams.log_error, \
-                        "FElement::__getShape() - "\
-                        "Shape of %s cannot be found  " % self._tagAttrs["name"]
-                raise XMLSettingSyntaxError, \
-                    "Wrongly defined %sshape: %s"% \
-                    (self._tagAttrs["name"] + " " , str(self.source)) 
+                shape = [0]
+            return shape
             
 
     ## creates H5 object
@@ -515,6 +506,17 @@ class EField(FElementWithAttr):
     def __grow(self):
         if self.grows and self.grows > 0 and hasattr(self.h5Object, "grow"):
             self.h5Object.grow(self.grows-1)
+            
+    
+    ## reshapes h5 object        
+    # \param shape required shape        
+    def __reshape(self, shape):
+        h5shape = self.h5Object.shape
+        ln = len(shape)
+        if ln > 0 and len(h5shape) == ln: 
+            for i in range(ln):
+                if shape[i] - h5shape[i] > 0: 
+                    self.h5Object.grow(i, shape[i] - h5shape[i])
                 
 
     ## runner  
@@ -535,6 +537,8 @@ class EField(FElementWithAttr):
                     self.error = message
                 else:
                     if not self.__extraD:
+                        if not isinstance(self.h5Object, FieldArray):
+                            self.__reshape(dh.shape)
                         self.__writeData(dh)
                     else:
                         self.__writeGrowingData(dh)
