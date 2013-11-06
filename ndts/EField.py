@@ -335,6 +335,7 @@ class EField(FElementWithAttr):
                         self.h5Object.write(sts[0])
                 else:
                     try:
+                        print "H5", self.h5Object.shape,self.h5Object.dtype,sts
                         self.h5Object.write(sts)
                     except:    
                         if Streams.log_error:
@@ -513,10 +514,11 @@ class EField(FElementWithAttr):
     def __reshape(self, shape):
         h5shape = self.h5Object.shape
         ln = len(shape)
-        if ln > 0 and len(h5shape) == ln: 
-            for i in range(ln):
-                if shape[i] - h5shape[i] > 0: 
-                    self.h5Object.grow(i, shape[i] - h5shape[i])
+        if ln > 0 and len(h5shape) < ln: 
+            for i in range(len(h5shape)):
+                if not self.__extraD or self.grows - 1 != i:
+                    if shape[i] - h5shape[i] > 0: 
+                        self.h5Object.grow(i, shape[i] - h5shape[i])
                 
 
     ## runner  
@@ -536,9 +538,9 @@ class EField(FElementWithAttr):
                     message = self.setMessage("PNI Object not created")
                     self.error = message
                 else:
+                    if not isinstance(self.h5Object, FieldArray):
+                        self.__reshape(dh.shape)
                     if not self.__extraD:
-                        if not isinstance(self.h5Object, FieldArray):
-                            self.__reshape(dh.shape)
                         self.__writeData(dh)
                     else:
                         self.__writeGrowingData(dh)

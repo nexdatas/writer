@@ -3366,6 +3366,132 @@ class EFieldTest(unittest.TestCase):
 
     ## run method tests
     # \brief It tests default settings
+    def test_run_noX_1d_reshape(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+
+
+        attrs = {
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", "int64", (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", "uint64", (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        eFile = EFile( {}, None, self._nxFile)
+        el = {} 
+        quin = 0
+        quot = 0
+
+        for k in attrs: 
+            quot = (quot + 1) %4
+            grow = quot-1  if quot else  None
+            quin = (quin+1) % 5 
+
+
+            if attrs[k][2] == "string":
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(self.__rnd.randint(2, 10)) ] 
+            elif attrs[k][2] != "bool":
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(self.__rnd.randint(2, 10))] 
+            else:    
+                mlen = [1]
+                if k == 'bool':
+                    attrs[k][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(self.__rnd.randint(2, 10))]
+                else:
+                    attrs[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  
+                                      for c in range(self.__rnd.randint(2, 10)) ]
+                    
+            attrs[k][3] =  (len(attrs[k][0]),)
+
+
+
+            stt = [None,'INIT','FINAL','POSTRUN'][quot]
+            if attrs[k][1]:
+                el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+            else:    
+                el[k] = EField( {"name":k, "units":"m"}, eFile)
+                
+
+
+            el[k].strategy = stt
+            ds = TestDataSource()
+            el[k].source = ds
+            el[k].rank = "1"
+            el[k].grows = grow
+
+            self.assertTrue(isinstance(el[k], Element))
+            self.assertTrue(isinstance(el[k], FElement))
+            self.assertTrue(isinstance(el[k], FElementWithAttr))
+            self.assertEqual(el[k].tagName, "field")
+            self.assertEqual(el[k].rank, "1")
+            self.assertEqual(el[k].lengths, {})
+            self.assertEqual(el[k].strategy, stt)
+            self.assertEqual(el[k].trigger, None)
+            self.assertEqual(el[k].grows, grow)
+            self.assertEqual(el[k].compression, False)
+            self.assertEqual(el[k].rate, 5)
+            self.assertEqual(el[k].shuffle, True)
+
+            el[k].store()
+            self.assertEqual(el[k].error, None)
+            ds.value = {"rank":NTP.rTf[1], 
+                        "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]), 
+                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "shape":[attrs[k][3][0],0]}
+            print "DATA:", ds.getData()
+#            self.assertEqual(el[k].store(), None)
+            self.assertEqual(el[k].run(), None)
+#            self.myAssertRaise(ValueError, el[k].store)
+
+            self.assertEqual(el[k].error, None)
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][4] if len(attrs[k])> 4 else 0,
+                                                attrs = {"type":attrs[k][1],"units":"m"})
+            else:
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                          attrs[k][1], attrs[k][0], 
+                                          attrs[k][4] if len(attrs[k])> 4 else 0, 
+                                          attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                          )
+            
+            
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+
+
+
+
+
+
+    ## run method tests
+    # \brief It tests default settings
     def test_run_noX_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -3615,6 +3741,11 @@ class EFieldTest(unittest.TestCase):
 
 
 
+
+
+
+
+
     ## run method tests
     # \brief It tests default settings
     def test_run_X_1d_markFailed(self):
@@ -3736,7 +3867,7 @@ class EFieldTest(unittest.TestCase):
     def test_run_noX_2d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname = '%s/%s.h5' % (os.getcwd(), fun )  
 
 
         attrs = {
