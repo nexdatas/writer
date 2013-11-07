@@ -3458,7 +3458,6 @@ class EFieldTest(unittest.TestCase):
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]), 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
-            print "DATA:", ds.getData()
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
