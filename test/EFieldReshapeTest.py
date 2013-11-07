@@ -2149,12 +2149,12 @@ class EFieldReshapeTest(unittest.TestCase):
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleSpectrumField(self._nxFile, k, 
                                                       attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],attrs[k][0][0] ,0 ,
+                                                      attrs[k][1],[attrs[k][0][0][0]] ,0 ,
                                                       attrs = {"type":attrs[k][1],"units":"m"})
                 else:
                     self._sc.checkSingleSpectrumField(self._nxFile, k, 
                                                       attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],attrs[k][0][0] ,0 ,
+                                                      attrs[k][1],[attrs[k][0][0][0]] ,0 ,
                                                       attrs = {"type":attrs[k][1],"units":"m","postrun":None})
                     
             elif stt != 'POSTRUN':
