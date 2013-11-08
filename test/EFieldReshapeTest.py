@@ -2677,9 +2677,9 @@ class EFieldReshapeTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-#            "string":["","NX_CHAR", "string" , (1,)],
-#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["","ISO8601", "string", (1,)],
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
