@@ -1,3 +1,7 @@
+2013-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding asynchronous versions of OpenEntry, Record, CloseEntry
+	* tagged as 1.4.0
+
 2013-11-08 Jan Kotanski <jankotan@gmail.com>
 	* adding reshaping fields
 	* tagged as 1.3.1
