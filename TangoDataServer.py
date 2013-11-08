@@ -119,6 +119,18 @@ class TangoDataServer(PyTango.Device_4Impl):
 	def read_attr_hardware(self, data):
 		print "In ", self.get_name(), "::read_attr_hardware()"
 
+
+#---- FileName attribute Write State Machine -----------------
+	def is_FileName_write_allowed(self):
+		if self.get_state() in [PyTango.DevState.OFF,
+		                        PyTango.DevState.EXTRACT,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
 #==================================================================
 #
 #	TangoDataServer read/write attribute methods
@@ -230,55 +242,12 @@ class TangoDataServer(PyTango.Device_4Impl):
 		return True
 
 
-#---- FileName attribute Write State Machine -----------------
-	def is_FileName_write_allowed(self):
-		if self.get_state() in [PyTango.DevState.OFF,
-		                        PyTango.DevState.EXTRACT,
-		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.RUNNING]:
-			#	End of Generated Code
-			#	Re-Start of Generated Code
-			return False
-		return True
-
-
 
 #==================================================================
 #
 #	TangoDataServer command methods
 #
 #==================================================================
-
-#------------------------------------------------------------------
-#	Record command:
-#
-#	Description: Record setting for one step
-#                
-#	argin:  DevString	JSON string with data
-#------------------------------------------------------------------
-	def Record(self, argin):
-		print "In ", self.get_name(), "::Record()"
-		#	Add your own code here
-		self.set_state(PyTango.DevState.RUNNING)
-		print "In ", self.get_name(), "::Record()"
-		#	Add your own code here
-		try:
-			self.tdw.record(argin)
-		finally:
-			self.set_state(PyTango.DevState.EXTRACT)
-
-
-#---- Record command State Machine -----------------
-	def is_Record_allowed(self):
-		if self.get_state() in [PyTango.DevState.ON,
-		                        PyTango.DevState.OFF,
-		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.RUNNING]:
-			#	End of Generated Code
-			#	Re-Start of Generated Code
-			return False
-		return True
-
 
 #------------------------------------------------------------------
 #	OpenFile command:
@@ -303,38 +272,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 		if self.get_state() in [PyTango.DevState.OFF,
 		                        PyTango.DevState.EXTRACT,
 		                        PyTango.DevState.OPEN,
-		                        PyTango.DevState.RUNNING]:
-			#	End of Generated Code
-			#	Re-Start of Generated Code
-			return False
-		return True
-
-
-#------------------------------------------------------------------
-#	CloseFile command:
-#
-#	Description: Close the H5 file
-#                
-#------------------------------------------------------------------
-	def CloseFile(self):
-		print "In ", self.get_name(), "::CloseFile()"
-		#	Add your own code here
-		if self.get_state() in [PyTango.DevState.EXTRACT,
-		                        PyTango.DevState.RUNNING]:
-			self.CloseEntry()
-		self.set_state(PyTango.DevState.RUNNING)
-		try:
-			self.tdw.closeNXFile()
-			self.set_state(PyTango.DevState.ON)
- 		finally:
-			if self.get_state() == PyTango.DevState.RUNNING:
-				self.set_state(PyTango.DevState.OPEN)
-
-
-#---- CloseFile command State Machine -----------------
-	def is_CloseFile_allowed(self):
-		if self.get_state() in [PyTango.DevState.ON,
-		                        PyTango.DevState.OFF,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -375,6 +312,37 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
+#	Record command:
+#
+#	Description: Record setting for one step
+#                
+#	argin:  DevString	JSON string with data
+#------------------------------------------------------------------
+	def Record(self, argin):
+		print "In ", self.get_name(), "::Record()"
+		#	Add your own code here
+		self.set_state(PyTango.DevState.RUNNING)
+		print "In ", self.get_name(), "::Record()"
+		#	Add your own code here
+		try:
+			self.tdw.record(argin)
+		finally:
+			self.set_state(PyTango.DevState.EXTRACT)
+
+
+#---- Record command State Machine -----------------
+	def is_Record_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
 #	CloseEntry command:
 #
 #	Description: Closing the entry
@@ -397,6 +365,108 @@ class TangoDataServer(PyTango.Device_4Impl):
 		if self.get_state() in [PyTango.DevState.ON,
 		                        PyTango.DevState.OFF,
 		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
+#	OpenEntryAsynch command:
+#
+#	Description: Creating the new entry in asynchronous mode
+#                
+#------------------------------------------------------------------
+	def OpenEntryAsynch(self):
+		print "In ", self.get_name(), "::OpenEntryAsynch()"
+		#	Add your own code here
+
+
+#---- OpenEntryAsynch command State Machine -----------------
+	def is_OpenEntryAsynch_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.EXTRACT,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
+#	RecordAsynch command:
+#
+#	Description: Record setting for one step in asynchronous mode
+#                
+#	argin:  DevString	JSON string with data
+#------------------------------------------------------------------
+	def RecordAsynch(self, argin):
+		print "In ", self.get_name(), "::RecordAsynch()"
+		#	Add your own code here
+
+
+#---- RecordAsynch command State Machine -----------------
+	def is_RecordAsynch_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
+#	CloseEntryAsynch command:
+#
+#	Description: Closing the entry is asynchronous mode
+#                
+#------------------------------------------------------------------
+	def CloseEntryAsynch(self):
+		print "In ", self.get_name(), "::CloseEntryAsynch()"
+		#	Add your own code here
+
+
+#---- CloseEntryAsynch command State Machine -----------------
+	def is_CloseEntryAsynch_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
+		                        PyTango.DevState.OPEN,
+		                        PyTango.DevState.RUNNING]:
+			#	End of Generated Code
+			#	Re-Start of Generated Code
+			return False
+		return True
+
+
+#------------------------------------------------------------------
+#	CloseFile command:
+#
+#	Description: Close the H5 file
+#                
+#------------------------------------------------------------------
+	def CloseFile(self):
+		print "In ", self.get_name(), "::CloseFile()"
+		#	Add your own code here
+		if self.get_state() in [PyTango.DevState.EXTRACT,
+		                        PyTango.DevState.RUNNING]:
+			self.CloseEntry()
+		self.set_state(PyTango.DevState.RUNNING)
+		try:
+			self.tdw.closeNXFile()
+			self.set_state(PyTango.DevState.ON)
+ 		finally:
+			if self.get_state() == PyTango.DevState.RUNNING:
+				self.set_state(PyTango.DevState.OPEN)
+
+
+#---- CloseFile command State Machine -----------------
+	def is_CloseFile_allowed(self):
+		if self.get_state() in [PyTango.DevState.ON,
+		                        PyTango.DevState.OFF,
 		                        PyTango.DevState.RUNNING]:
 			#	End of Generated Code
 			#	Re-Start of Generated Code
@@ -427,19 +497,28 @@ class TangoDataServerClass(PyTango.DeviceClass):
 
 	#	Command definitions
 	cmd_list = {
-		'Record':
-			[[PyTango.DevString, "JSON string with data"],
-			[PyTango.DevVoid, ""]],
 		'OpenFile':
-			[[PyTango.DevVoid, ""],
-			[PyTango.DevVoid, ""]],
-		'CloseFile':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevVoid, ""]],
 		'OpenEntry':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevVoid, ""]],
+		'Record':
+			[[PyTango.DevString, "JSON string with data"],
+			[PyTango.DevVoid, ""]],
 		'CloseEntry':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevVoid, ""]],
+		'OpenEntryAsynch':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevVoid, ""]],
+		'RecordAsynch':
+			[[PyTango.DevString, "JSON string with data"],
+			[PyTango.DevVoid, ""]],
+		'CloseEntryAsynch':
+			[[PyTango.DevVoid, ""],
+			[PyTango.DevVoid, ""]],
+		'CloseFile':
 			[[PyTango.DevVoid, ""],
 			[PyTango.DevVoid, ""]],
 		}
