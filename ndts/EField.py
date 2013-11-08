@@ -513,15 +513,12 @@ class EField(FElementWithAttr):
     def __reshape(self, shape):
         h5shape = self.h5Object.shape
         ln = len(shape)
-        if ln > 0 and len(h5shape) <= ln: 
-            print "RE"
+        if ln > 0 and len(h5shape) > 0: 
             j=0
             for i in range(len(h5shape)):
-#                print "II",i,not self.__extraD, self.grows - 1 != i, shape[i] - h5shape[i], i==0 ,self.grows 
                 if not self.__extraD or self.grows - 1 != i and \
                         not (i==0 and self.grows ==0) :
                     if shape[j] - h5shape[i] > 0: 
-                        print "gr", shape[j] - h5shape[i]
                         self.h5Object.grow(i, shape[j] - h5shape[i])
                     j += 1        
 
@@ -543,20 +540,14 @@ class EField(FElementWithAttr):
                     self.error = message
                 else:
                     if not self.__extraD:
-                        print "OSHAPE", self.h5Object.shape, dh.shape
                         if not isinstance(self.h5Object, FieldArray):
-                            print "ORESHAPE"
                             self.__reshape(dh.shape)
-                            print "ORESHAPED", self.h5Object.shape, dh.shape
                         self.__writeData(dh)
                     else:
-                        print "SHAPE", self.h5Object.shape, dh.shape
                         if not isinstance(self.h5Object, FieldArray) and \
                                 len(self.h5Object.shape) >= self.grows and \
                                 self.h5Object.shape[self.grows-1] == 1:
-                            print "RESHAPE"
                             self.__reshape(dh.shape)
-                            print "RESHAPED", self.h5Object.shape, dh.shape
                         self.__writeGrowingData(dh)
         except:
             info = sys.exc_info()
@@ -589,13 +580,11 @@ class EField(FElementWithAttr):
     # \brief It fills object or an extend part of object by default value 
     def __fillMax(self):
         shape = list(self.h5Object.shape)
-        print "FSHAPE", self.h5Object.shape
         nptype = self.h5Object.dtype
         value = ''
 
         if self.grows:
             shape.pop(self.grows-1)
-        print "FSHAPE2", shape
             
         if nptype == "bool":
             value = False

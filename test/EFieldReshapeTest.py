@@ -2304,9 +2304,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-            "string":["Mystring","NX_CHAR", "string" , (1,)],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+#            "string":["Mystring","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -2427,9 +2427,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-            "string":["Mystring","NX_CHAR", "string" , (1,),""],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
+#            "string":["Mystring","NX_CHAR", "string" , (1,),""],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
             "int":[-123,"NX_INT", "int64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
             "int8":[12,"NX_INT8", "int8", (1,),numpy.iinfo(getattr(numpy, 'int8')).max],
             "int16":[-123,"NX_INT16", "int16", (1,),numpy.iinfo(getattr(numpy, 'int16')).max],
@@ -2463,7 +2463,7 @@ class EFieldReshapeTest(unittest.TestCase):
                 grow = 0 
 
             mlen = self.__rnd.randint(2, 10)
-            attrs[k][0] =  [[[ (attrs[k][0] if r%2 else attrs[k][4])  for c in range(mlen)  ] ] for r in range(steps)  ]
+            attrs[k][0] =  [[[ (attrs[k][4])  for c in range(mlen)  ] ] for r in range(steps)  ]
             attrs[k][3] =  (1,len(attrs[k][0][0][0]))
 
 
@@ -2509,12 +2509,13 @@ class EFieldReshapeTest(unittest.TestCase):
                             "shape":[1,attrs[k][3][1]]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
+                    self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
 
-            self.assertEqual(el[k].error, None)
+            self.assertTrue(el[k].error is not None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
                 self._sc.checkStringSpectrumField(self._nxFile, k, 
@@ -2523,7 +2524,7 @@ class EFieldReshapeTest(unittest.TestCase):
                                             attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][1], [[[r[0][0]]] for r in  attrs[k][0]],
                                                 attrs[k][5] if len(attrs[k])> 5 else 0, grow,
                                                 attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
@@ -2676,9 +2677,9 @@ class EFieldReshapeTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-            "string":["","NX_CHAR", "string" , (1,)],
-            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-            "iso8601":["","ISO8601", "string", (1,)],
+#            "string":["","NX_CHAR", "string" , (1,)],
+#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
@@ -2793,9 +2794,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-            "string":["Mystring","NX_CHAR", "string" , (1,)],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+#            "string":["Mystring","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -2873,18 +2874,12 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
-            ds.value = {"rank":NTP.rTf[2], 
-                        "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
-                        "shape":[attrs[k][3][0],1]}
-            
-#            self.assertEqual(el[k].store(), None)
 
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0][i]]), 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
-                            "shape":[1,attrs[k][3][1]]}
+                            "shape":[attrs[k][3][0],1]}
                 self.assertEqual(el[k].run(), None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
@@ -2916,9 +2911,9 @@ class EFieldReshapeTest(unittest.TestCase):
         self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
 
         attrs = {
-            "string":["Mystring","NX_CHAR", "string" , (1,),""],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
+#            "string":["Mystring","NX_CHAR", "string" , (1,),""],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
             "int":[-123,"NX_INT", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             "int8":[12,"NX_INT8", "int8", (1,), numpy.iinfo(getattr(numpy, 'int8')).max],
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
@@ -2952,7 +2947,7 @@ class EFieldReshapeTest(unittest.TestCase):
                 grow = 0
 
             mlen = self.__rnd.randint(2, 10)
-            attrs[k][0] =  [[[ attrs[k][0] if r%2 else attrs[k][4]]  for c in range(mlen)   ] for r in range(steps)  ]
+            attrs[k][0] =  [[[ attrs[k][4]]  for c in range(mlen)   ] for r in range(steps)  ]
             attrs[k][3] =  (len(attrs[k][0][0]),1)
 
 
@@ -2998,21 +2993,22 @@ class EFieldReshapeTest(unittest.TestCase):
                             "shape":[1,attrs[k][3][1]]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
+                    self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
-            self.assertEqual(el[k].error, None)
+            self.assertTrue(el[k].error is not None)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
 
                 self._sc.checkStringSpectrumField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
-                                            attrs[k][1], [[ row[0]  for row in img]for img in attrs[k][0]] ,
+                                            attrs[k][1], [[ row[0]  for row in attrs[k][0][0]]] ,
                                             attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                                attrs[k][1], attrs[k][0],
+                                                attrs[k][1], [ [[row[0][0]]]  for row in attrs[k][0] ],
                                                 attrs[k][5] if len(attrs[k])> 5 else 0,grow,
                                                 attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
@@ -3284,9 +3280,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-            "string":["Mystring","NX_CHAR", "string" , (1,)],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+#            "string":["Mystring","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -3365,17 +3361,12 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             el[k].store()
-            ds.value = {"rank":NTP.rTf[2], 
-                        "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in row] for row in attrs[k][0][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
-                        "shape":[attrs[k][3][0],attrs[k][3][1]]}
-            
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(c) for c in row ] for row  in attrs[k][0][i]]), 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
-                            "shape":[1,attrs[k][3][1]]}
+                            "shape":[attrs[k][3][0],attrs[k][3][1]]}
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
@@ -3404,9 +3395,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-            "string":["Mystring","NX_CHAR", "string" , (1,),""],
-            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
-            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
+#            "string":["Mystring","NX_CHAR", "string" , (1,),""],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,),"" ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,),""],
             "int":[-123,"NX_INT", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             "int8":[12,"NX_INT8", "int8", (1,), numpy.iinfo(getattr(numpy, 'int8')).max],
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
@@ -3440,7 +3431,7 @@ class EFieldReshapeTest(unittest.TestCase):
                 grow = 0
             
             mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10)]
-            attrs[k][0] =  [[[( attrs[k][0] if r%2 else attrs[k][4])  for c in range(mlen[0])  ] for c2 in range(mlen[1])  ] for r in range(steps)  ]
+            attrs[k][0] =  [[[(attrs[k][4])  for c in range(mlen[0])  ] for c2 in range(mlen[1])  ] for r in range(steps)  ]
             attrs[k][3] =  (len(attrs[k][0][0]),len(attrs[k][0][0][0]))
 
 
@@ -3486,22 +3477,28 @@ class EFieldReshapeTest(unittest.TestCase):
                             "shape":[1,attrs[k][3][1]]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
+                    self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
+                if i:
+                    self.assertTrue(el[k].error is not None)
+                else:
+                    self.assertTrue(not el[k].error)
                     
 
-            self.assertEqual(el[k].error, None)
             if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0] ,
-                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k, 
+                    attrs[k][2] if attrs[k][2] else 'string', 
+                    attrs[k][1], attrs[k][0] ,
+                    attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][5] if len(attrs[k])> 5 else 0,grow,
-                                                attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+                self._sc.checkImageField(
+                    self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                    attrs[k][1], [[[a[0][0]]] for a in  attrs[k][0]],
+                    attrs[k][5] if len(attrs[k])> 5 else 0,grow,
+                    attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
         self._nxFile.close()
         os.remove(self._fname)

@@ -32,6 +32,7 @@ import FElementTest
 import FElementWithAttrTest
 import EStrategyTest
 import EFieldTest
+import EFieldReshapeTest
 import EGroupTest
 import ELinkTest
 import EAttributeTest
@@ -186,6 +187,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EFieldTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EFieldReshapeTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EGroupTest) )
