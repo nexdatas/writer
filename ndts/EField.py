@@ -510,11 +510,11 @@ class EField(FElementWithAttr):
     
     ## reshapes h5 object        
     # \param shape required shape        
-    def __reshape(self, shape):
+    def __growshape(self, shape):
         h5shape = self.h5Object.shape
         ln = len(shape)
         if ln > 0 and len(h5shape) > 0: 
-            j=0
+            j = 0
             for i in range(len(h5shape)):
                 if not self.__extraD or self.grows - 1 != i and \
                         not (i==0 and self.grows ==0) :
@@ -541,13 +541,13 @@ class EField(FElementWithAttr):
                 else:
                     if not self.__extraD:
                         if not isinstance(self.h5Object, FieldArray):
-                            self.__reshape(dh.shape)
+                            self.__growshape(dh.shape)
                         self.__writeData(dh)
                     else:
                         if not isinstance(self.h5Object, FieldArray) and \
                                 len(self.h5Object.shape) >= self.grows and \
                                 self.h5Object.shape[self.grows-1] == 1:
-                            self.__reshape(dh.shape)
+                            self.__growshape(dh.shape)
                         self.__writeGrowingData(dh)
         except:
             info = sys.exc_info()
