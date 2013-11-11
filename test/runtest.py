@@ -151,6 +151,9 @@ if PYTANGO_AVAILABLE:
     import ClientFieldTagServerTest
     import XMLFieldTagServerTest
     import TangoFieldTagServerTest
+    import ClientFieldTagAsynchTest
+    import XMLFieldTagAsynchTest
+    import TangoFieldTagAsynchTest
     import TangoSourceTest
     import TgMemberTest
     import TgGroupTest
@@ -158,6 +161,7 @@ if PYTANGO_AVAILABLE:
     import PyEvalTangoSourceTest
     if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagServerTest
+        import DBFieldTagAsynchTest
 
 #import TestServerSetUp
 
@@ -337,10 +341,19 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerTest) )
 
         suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchTest) )
+
+        suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
+
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceTest) )
@@ -350,6 +363,8 @@ def main():
         if "MYSQL" in DB_AVAILABLE:
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest) )
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchTest) )
 
 
     
