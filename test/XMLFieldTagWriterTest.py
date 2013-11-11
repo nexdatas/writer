@@ -99,8 +99,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_xmlScalar(self):
-        print "Run: %s.test_xmlScalar() " % self.__class__.__name__
-        fname= '%s/xmlscalar.h5' % os.getcwd()   
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -217,8 +218,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_xmlAttrScalar(self):
-        print "Run: %s.test_xmlAttrScalar() " % self.__class__.__name__
-        fname= '%s/xmlattrscalar.h5' % os.getcwd()   
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -284,8 +286,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_xmlSpectrum(self):
-        print "Run: %s.test_xmlSpectrum() " % self.__class__.__name__
-        fname= '%s/xmlspectrum.h5' % os.getcwd()   
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -508,8 +511,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_xmlAttrSpectrum(self):
-        print "Run: %s.test_xmlAttrSpectrum() " % self.__class__.__name__
-        fname= '%s/xmlattrspectrum.h5' % os.getcwd()   
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -603,8 +607,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_xmlImage(self):
-        print "Run: %s.test_xmlImage() " % self.__class__.__name__
-        fname= '%s/xmlimage.h5' % os.getcwd()   
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -859,8 +864,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_xmlAttrImage(self):
-        print "Run: %s.test_xmlAttrImage() " % self.__class__.__name__
-        fname= '%s/xmlattrimage.h5' % os.getcwd()   
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s.h5' % (os.getcwd(), fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
