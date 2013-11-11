@@ -377,9 +377,13 @@ dpx.CloseEntry()
 dpx.CloseFile()
 
 
+Additionally, one can use asynchronous versions of OpenEntry, Record, CloseEntry, i.e. 
+OpenEntryAsynch, RecordAsynch, CloseEntryAsynch. In this case data is stored 
+in a background thread and during this writing Tango Data Server has a state RUNNING.
 
-In order to build the XML configurations in the easy way the authors of the server are going 
-to proving for this purpose a specialized GUI tool. The attached to the server XML examples 
+In order to build the XML configurations in the easy way the authors of the server provide
+or this purpose a specialized GUI tool, Component Designer. 
+The attached to the server XML examples 
 was created by XMLFile class defined in XMLCreator/simpleXML.py. 
 
 
