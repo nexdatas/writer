@@ -123,7 +123,7 @@ class TangoDataServerTest(unittest.TestCase):
         print "Run: TangoDataServerTest.test_openFile()"
         try:
             fname= '%s/test.h5' % os.getcwd()   
-            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            dp = PyTango.DeviceProxy(self._sv.device)
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
@@ -199,7 +199,7 @@ class TangoDataServerTest(unittest.TestCase):
 
         try:
             fname= '%s/test.h5' % os.getcwd()   
-            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            dp = PyTango.DeviceProxy(self._sv.device)
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
@@ -251,7 +251,7 @@ class TangoDataServerTest(unittest.TestCase):
         fname= '%s/test2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
-            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            dp = PyTango.DeviceProxy(self._sv.device)
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
@@ -348,7 +348,7 @@ class TangoDataServerTest(unittest.TestCase):
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
         try:
-            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            dp = PyTango.DeviceProxy(self._sv.device)
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
@@ -430,7 +430,7 @@ class TangoDataServerTest(unittest.TestCase):
         fname= '%s/scantest2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
-            dp = PyTango.DeviceProxy("testp09/testtdw/testr228")
+            dp = PyTango.DeviceProxy(self._sv.device)
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)

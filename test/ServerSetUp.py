@@ -36,6 +36,7 @@ class ServerSetUp(object):
     def __init__(self, device = "testp09/testtdw/testr228", instance = "TDWTEST"):
         ## information about tango writer
         self.instance = instance
+        self.device = device
         self.new_device_info_writer = PyTango.DbDevInfo()
         self.new_device_info_writer._class = "TangoDataServer"
         self.new_device_info_writer.server = "TangoDataServer/%s" % self.instance
