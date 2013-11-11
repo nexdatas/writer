@@ -88,6 +88,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         if json:
             tdw.TheJSONRecord = json
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
         self.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
@@ -102,6 +103,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
 
         if json:
             tdw.TheJSONRecord = json
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
         self.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
@@ -114,8 +116,10 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
 
     ## performs one record step
     def record(self, tdw, string):
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
         self.wait(tdw)
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
 if __name__ == '__main__':
     unittest.main()

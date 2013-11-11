@@ -67,6 +67,7 @@ class ClientFieldTagAsynchTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     def wait(self, proxy):
         while proxy.State() == PyTango.DevState.RUNNING:
             time.sleep(0.001)
+            
 
     ## opens writer
     # \param fname file name     
@@ -85,6 +86,7 @@ class ClientFieldTagAsynchTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         if json:
             tdw.TheJSONRecord = json
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
         self.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
@@ -99,6 +101,7 @@ class ClientFieldTagAsynchTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
 
         if json:
             tdw.TheJSONRecord = json
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
         self.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
@@ -111,8 +114,10 @@ class ClientFieldTagAsynchTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
 
     ## performs one record step
     def record(self, tdw, string):
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
         self.wait(tdw)
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
 if __name__ == '__main__':
     unittest.main()
