@@ -36,13 +36,17 @@ import ClientFieldTagWriterTest
 
 ## test fixture
 class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
+    ## server counter
+    serverCounter = 0
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         ClientFieldTagWriterTest.ClientFieldTagWriterTest.__init__(self, methodName)
 
-        self._sv = ServerSetUp.ServerSetUp()
+        ClientFieldTagServerTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % ClientFieldTagServerTest.serverCounter
+        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
 #        self._counter =  [1, 2]
 #        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]

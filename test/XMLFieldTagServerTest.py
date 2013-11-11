@@ -30,13 +30,17 @@ import XMLFieldTagWriterTest
 
 ## test fixture
 class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
+    ## server counter
+    serverCounter = 0
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         XMLFieldTagWriterTest.XMLFieldTagWriterTest.__init__(self, methodName)
 
-        self._sv = ServerSetUp.ServerSetUp()
+        XMLFieldTagServerTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % XMLFieldTagServerTest.serverCounter
+        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
 #        self._counter =  [1, 2]
 #        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]

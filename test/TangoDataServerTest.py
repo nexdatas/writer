@@ -44,13 +44,17 @@ import ServerSetUp
 
 ## test fixture
 class TangoDataServerTest(unittest.TestCase):
+    ## server counter
+    serverCounter = 0
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-        self._sv = ServerSetUp.ServerSetUp()
+        TangoDataServerTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % TangoDataServerTest.serverCounter
+        self._sv = ServerSetUp.AsynchSetUp("testp09/testtdw/"+ sins, sins)
 
         self._scanXml = """
 <definition>

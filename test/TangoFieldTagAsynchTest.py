@@ -38,6 +38,8 @@ import TangoFieldTagWriterTest
 
 ## test fixture
 class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
+    ## server counter
+    serverCounter = 0
 
     ## constructor
     # \param methodName name of the test method
@@ -46,7 +48,9 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         unittest.TestCase.__init__(self, methodName)
 
 
-        self._sv = ServerSetUp.ServerSetUp()
+        TangoFieldTagAsynchTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % TangoFieldTagAsynchTest.serverCounter
+        self._sv = ServerSetUp.AsynchSetUp("testp09/testtdw/"+ sins, sins)
 
 
     ## test starter
