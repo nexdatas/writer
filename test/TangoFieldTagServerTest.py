@@ -49,7 +49,7 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
 
         TangoFieldTagServerTest.serverCounter += 1
         sins = self.__class__.__name__+"%s" % TangoFieldTagServerTest.serverCounter
-        self._sv = ServerSetUp.AsynchSetUp("testp09/testtdw/"+ sins, sins)
+        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
 
     ## test starter
