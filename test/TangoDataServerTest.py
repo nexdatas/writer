@@ -54,7 +54,7 @@ class TangoDataServerTest(unittest.TestCase):
 
         TangoDataServerTest.serverCounter += 1
         sins = self.__class__.__name__+"%s" % TangoDataServerTest.serverCounter
-        self._sv = ServerSetUp.AsynchSetUp("testp09/testtdw/"+ sins, sins)
+        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
         self._scanXml = """
 <definition>
