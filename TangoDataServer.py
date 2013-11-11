@@ -102,8 +102,14 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 	def __init__(self,cl, name):
 		PyTango.Device_4Impl.__init__(self,cl,name)
+		## openentry thread
+		self.othread = None
+		## record thread
+		self.rthread = None
+		## closentry thread
+		self.cthread = None
 		TangoDataServer.init_device(self)
-
+		
 #------------------------------------------------------------------
 #	Device destructor
 #------------------------------------------------------------------
@@ -424,8 +430,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 		self.set_state(PyTango.DevState.RUNNING)
 		self.get_device_properties(self.get_device_class())
 		self.tdw.numThreads = self.NumberOfThreads
-		thread = OpenEntryThread(self)
-		thread.start()
+		self.othread = OpenEntryThread(self)
+		self.othread.start()
 
 #---- OpenEntryAsynch command State Machine -----------------
 	def is_OpenEntryAsynch_allowed(self):
@@ -450,8 +456,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::RecordAsynch()"
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
-		thread = RecordThread(self, argin)
-		thread.start()
+		self.rthread = RecordThread(self, argin)
+		self.rthread.start()
 
 #---- RecordAsynch command State Machine -----------------
 	def is_RecordAsynch_allowed(self):
@@ -475,8 +481,8 @@ class TangoDataServer(PyTango.Device_4Impl):
 		print "In ", self.get_name(), "::CloseEntryAsynch()"
 		#	Add your own code here
 		self.set_state(PyTango.DevState.RUNNING)
-		thread = CloseEntryThread(self)
-		thread.start()
+		self.cthread = CloseEntryThread(self)
+		self.cthread.start()
 
 
 #---- CloseEntryAsynch command State Machine -----------------
