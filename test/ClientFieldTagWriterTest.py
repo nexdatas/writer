@@ -59,7 +59,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             import time
             ## random seed
             self.seed  = long(time.time() * 256) # use fractional seconds
-         
+#        self.seed = 53867028435352363366241944565880343254
         self.__rnd = random.Random(self.seed)
 
         self._counter =  [1,-2,6,-8,9,-11]

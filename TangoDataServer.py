@@ -62,10 +62,10 @@ class OpenEntryThread(Thread):
 			self.server.tdw.openEntry()
 			self.server.set_state(PyTango.DevState.EXTRACT)
 		except Exception, e:
-		   print "OP STATE",self.server.get_state()
-		   print e 
-		   print >> self.server.log_error, e
-		   raise
+			print "OP STATE",self.server.get_state()
+			print e 
+			print >> self.server.log_error, e
+			raise
  		finally:
 			if self.server.get_state() == PyTango.DevState.RUNNING:
 				self.server.set_state(PyTango.DevState.OPEN)
@@ -81,10 +81,10 @@ class CloseEntryThread(Thread):
 			self.server.tdw.closeEntry()
 			self.server.set_state(PyTango.DevState.OPEN)
 		except Exception, e:
-		   print "CL STATE",self.server.get_state()
-		   print e 
-		   print >> self.server.log_error, e
-		   raise
+			print "CL STATE",self.server.get_state()
+			print e 
+			print >> self.server.log_error, e
+			raise
  		finally:
 			if self.server.get_state() == PyTango.DevState.RUNNING:
 				self.server.set_state(PyTango.DevState.EXTRACT)
@@ -100,10 +100,10 @@ class RecordThread(Thread):
 		try:
 			self.server.tdw.record(self.argin)
 		except Exception, e:
-		   print "RC STATE",self.server.get_state()
-		   print e 
-		   print >> self.server.log_error, e
-		   raise
+			print "RC STATE",self.server.get_state()
+			print e 
+			print >> self.server.log_error, e
+			raise
 		finally:
 			self.server.set_state(PyTango.DevState.EXTRACT)
 		

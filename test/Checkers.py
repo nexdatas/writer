@@ -51,7 +51,7 @@ class Checker(object):
         except NotImplementedError:
             import time
             self.seed  = long(time.time() * 256) # use fractional seconds
-         
+#        self.seed = 113927724434234094860192629108901591122
         self.__rnd = random.Random(self.seed)
 
 
