@@ -53,68 +53,44 @@ from ndts.TangoDataWriter import TangoDataWriter as TDW
 #   DevState.RUNNING :  NeXus Data Server is writing
 #==================================================================
 
-class OpenEntryThread(Thread):
-    def __init__(self, server):
+## thread with server command
+class CommandThread(Thread):
+    ## constructor
+    # \param sever tango server
+    # \param command tango command to run
+    # \param finalState final state
+    # \param errorState state set on error
+    # \param args list of command arguments
+    def __init__(self, server, command, finalState, errorState, args = None):
         Thread.__init__(self)
+        ## tango server
         self.server = server
+        ## command
+        self.command = getattr(server.tdw, command)
+        ## final state
+        self.fstate = finalState
+        ## error state
+        self.estate = errorState
+        ## command arguments
+        self.args = args if isinstance(args, list) else []
+
+
+    ## runs the given command on the server and changes the state on exit
     def run(self):
         try:
-            self.server.tdw.openEntry()
+            self.command(*self.args)
             with self.server.lock:
-                self.server.set_state(PyTango.DevState.EXTRACT)
-        except Exception, e:
-            with self.server.lock:
-                print "OP STATE",self.server.get_state()
-            print e 
-            print >> self.server.log_error, e
+                self.server.set_state(self.fstate)
+        except:
+            print sys.exc_info()[0]
+            print >> self.server.log_error, sys.exc_info()[0]
             raise
         finally:
             with self.server.lock:
                 if self.server.get_state() == PyTango.DevState.RUNNING:
-                    self.server.set_state(PyTango.DevState.OPEN)
+                    self.server.set_state(self.estate)
 
 
-class CloseEntryThread(Thread):
-    def __init__(self, server):
-        Thread.__init__(self)
-        self.server = server
-
-    def run(self):
-        try:
-            self.server.tdw.closeEntry()
-            with self.server.lock:
-                self.server.set_state(PyTango.DevState.OPEN)
-        except Exception, e:
-            with self.server.lock:
-                print "CL STATE",self.server.get_state()
-            print e 
-            print >> self.server.log_error, e
-            raise
-        finally:
-            with self.server.lock:
-                if self.server.get_state() == PyTango.DevState.RUNNING:
-                    self.server.set_state(PyTango.DevState.EXTRACT)
-
-
-class RecordThread(Thread):
-    def __init__(self, server, argin):
-        Thread.__init__(self)
-        self.server = server
-        self.argin = argin
-
-    def run(self):
-        try:
-            self.server.tdw.record(self.argin)
-        except Exception, e:
-            with self.server.lock:
-                print "RC STATE",self.server.get_state()
-            print e 
-            print >> self.server.log_error, e
-            raise
-        finally:
-            with self.server.lock:
-                self.server.set_state(PyTango.DevState.EXTRACT)
-            
 
 class TangoDataServer(PyTango.Device_4Impl):
 
@@ -456,7 +432,9 @@ class TangoDataServer(PyTango.Device_4Impl):
             self.set_state(PyTango.DevState.RUNNING)
         self.get_device_properties(self.get_device_class())
         self.tdw.numThreads = self.NumberOfThreads
-        self.othread = OpenEntryThread(self)
+        self.othread = CommandThread(
+            self, "openEntry", PyTango.DevState.EXTRACT, 
+            PyTango.DevState.OPEN)
         self.othread.start()
 
 #---- OpenEntryAsynch command State Machine -----------------
@@ -482,7 +460,10 @@ class TangoDataServer(PyTango.Device_4Impl):
         #    Add your own code here
         with self.lock:
             self.set_state(PyTango.DevState.RUNNING)
-        self.rthread = RecordThread(self, argin)
+
+        self.rthread = CommandThread(
+            self, "record", PyTango.DevState.EXTRACT, 
+            PyTango.DevState.EXTRACT, [argin])
         self.rthread.start()
 
 #---- RecordAsynch command State Machine -----------------
@@ -508,7 +489,9 @@ class TangoDataServer(PyTango.Device_4Impl):
         #    Add your own code here
         with self.lock:    
             self.set_state(PyTango.DevState.RUNNING)
-        self.cthread = CloseEntryThread(self)
+        self.cthread = CommandThread(
+            self, "closeEntry", PyTango.DevState.OPEN, 
+            PyTango.DevState.EXTRACT)
         self.cthread.start()
 
 
