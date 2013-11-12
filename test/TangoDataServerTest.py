@@ -125,7 +125,7 @@ class TangoDataServerTest(unittest.TestCase):
         try:
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy(self._sv.device)
-            ProxyHelper.wait(dp)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
@@ -202,7 +202,7 @@ class TangoDataServerTest(unittest.TestCase):
         try:
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy(self._sv.device)
-            ProxyHelper.wait(dp)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
@@ -255,7 +255,7 @@ class TangoDataServerTest(unittest.TestCase):
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
-            ProxyHelper.wait(dp)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
@@ -353,7 +353,7 @@ class TangoDataServerTest(unittest.TestCase):
         xml = """<definition/>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
-            ProxyHelper.wait(dp)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
@@ -436,7 +436,7 @@ class TangoDataServerTest(unittest.TestCase):
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
-            ProxyHelper.wait(dp)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)

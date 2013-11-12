@@ -1333,7 +1333,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k
             dt = el.getData()
             dp = PyTango.DeviceProxy(el.device)  
-            ProxyHelper.wait(dp)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
             self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
                            'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 

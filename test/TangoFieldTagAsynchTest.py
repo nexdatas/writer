@@ -77,7 +77,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
-        ProxyHelper.wait(tdw)
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         
@@ -91,7 +91,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
             tdw.TheJSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
-        ProxyHelper.wait(tdw)
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
@@ -106,7 +106,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
             tdw.TheJSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
-        ProxyHelper.wait(tdw)
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
         tdw.CloseFile()
@@ -119,7 +119,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     def record(self, tdw, string):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
-        ProxyHelper.wait(tdw)
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
 if __name__ == '__main__':

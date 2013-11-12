@@ -216,7 +216,7 @@ class TgMemberTest(unittest.TestCase):
         group = 'common_motors'
 
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         mb = TgMember(dname)
         mb.getData(proxy)
@@ -253,7 +253,7 @@ class TgMemberTest(unittest.TestCase):
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr1 = {
             "ScalarBoolean":[ "bool", "DevBoolean", True],
             "ScalarUChar":[ "uint8", "DevUChar", 23],
@@ -327,7 +327,7 @@ class TgMemberTest(unittest.TestCase):
             }
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
 
 
@@ -365,7 +365,7 @@ class TgMemberTest(unittest.TestCase):
         
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr = {
             "ImageBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -414,7 +414,7 @@ class TgMemberTest(unittest.TestCase):
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr = {
             "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
 #            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
@@ -448,7 +448,7 @@ class TgMemberTest(unittest.TestCase):
     def test_getData_dev_prop(self):
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -495,7 +495,7 @@ class TgMemberTest(unittest.TestCase):
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr1 = {
             "ScalarBoolean":[ "bool", "DevBoolean", True],
             "ScalarUChar":[ "uint8", "DevUChar", 23],
@@ -571,7 +571,7 @@ class TgMemberTest(unittest.TestCase):
             }
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
 
 
@@ -610,7 +610,7 @@ class TgMemberTest(unittest.TestCase):
         
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr = {
             "ImageBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -660,7 +660,7 @@ class TgMemberTest(unittest.TestCase):
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr = {
             "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
 #            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
@@ -696,7 +696,7 @@ class TgMemberTest(unittest.TestCase):
     def test_setData_dev_prop(self):
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
-        ProxyHelper.wait(proxy)
+        self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)

@@ -843,7 +843,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        ProxyHelper.wait(dp)
+        self.assertTrue(ProxyHelper.wait(dp, 10000))
 
         steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
         for i in range(steps):
@@ -1180,7 +1180,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        ProxyHelper.wait(dp)
+        self.assertTrue(ProxyHelper.wait(dp, 10000))
 
         steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
         for i in range(steps):
@@ -1433,7 +1433,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        ProxyHelper.wait(dp)
+        self.assertTrue(ProxyHelper.wait(dp, 10000))
 
         steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
         for i in range(steps):
@@ -1683,7 +1683,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        ProxyHelper.wait(dp)
+        self.assertTrue(ProxyHelper.wait(dp, 10000))
 
         steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
         for i in range(steps):
