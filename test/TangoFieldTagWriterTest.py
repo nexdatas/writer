@@ -28,7 +28,9 @@ import numpy
 import struct
 import binascii
 import time
+import PyTango
 
+from ProxyHelper import ProxyHelper
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -126,21 +128,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def tearDown(self):
         self._simps.tearDown()
 
-    ## waiting for running server
-    # \proxy server proxy    
-    def wait(self, proxy, counts=-1, sec = 0.001):
-        found = False
-        cnt = 0
-        while not found and cnt != counts:
-            try:
-                if proxy.State() != PyTango.DevState.RUNNING:
-                    found = True
-            except:    
-                found = False
-            if cnt:    
-                time.sleep(sec)
-            cnt +=1
-        return found    
 
 
 
@@ -856,7 +843,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        self.wait(dp)
+        ProxyHelper.wait(dp)
 
         steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
         for i in range(steps):
@@ -1193,7 +1180,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        self.wait(dp)
+        ProxyHelper.wait(dp)
 
         steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
         for i in range(steps):
@@ -1446,7 +1433,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        self.wait(dp)
+        ProxyHelper.wait(dp)
 
         steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
         for i in range(steps):
@@ -1696,7 +1683,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
-        self.wait(dp)
+        ProxyHelper.wait(dp)
 
         steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
         for i in range(steps):

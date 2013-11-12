@@ -35,6 +35,7 @@ from  xml.sax import SAXParseException
 from Checkers import Checker
 import ServerSetUp
 import TangoFieldTagWriterTest
+from ProxyHelper import ProxyHelper
 
 ## test fixture
 class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
@@ -76,7 +77,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         
@@ -90,7 +91,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
             tdw.TheJSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
@@ -105,7 +106,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
             tdw.TheJSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
         tdw.CloseFile()
@@ -118,7 +119,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     def record(self, tdw, string):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
 if __name__ == '__main__':

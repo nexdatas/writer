@@ -27,6 +27,7 @@ import time
 
 import ServerSetUp
 import DBFieldTagWriterTest
+from ProxyHelper import ProxyHelper
 
 ## test fixture
 class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
@@ -62,6 +63,7 @@ class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
         DBFieldTagWriterTest.DBFieldTagWriterTest.tearDown(self)
         self._sv.tearDown()
 
+            
         
     ## opens writer
     # \param fname file name     
@@ -70,7 +72,7 @@ class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         
@@ -84,7 +86,7 @@ class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
             tdw.TheJSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
@@ -99,7 +101,7 @@ class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
             tdw.TheJSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
         tdw.CloseFile()
@@ -112,7 +114,7 @@ class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     def record(self, tdw, string):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
 

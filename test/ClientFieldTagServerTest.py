@@ -30,9 +30,11 @@ import PyTango
 from  xml.sax import SAXParseException
 
 from Checkers import Checker
+from ProxyHelper import ProxyHelper
 
 import ServerSetUp
 import ClientFieldTagWriterTest
+from ProxyHelper import ProxyHelper
 
 ## test fixture
 class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
@@ -64,6 +66,8 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     # \brief Common tear down oif Tango Server
     def tearDown(self): 
         self._sv.tearDown()
+
+
         
     ## opens writer
     # \param fname file name     
@@ -72,7 +76,7 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         

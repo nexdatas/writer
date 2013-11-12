@@ -34,6 +34,7 @@ import json
 
 
 import SimpleServerSetUp
+from ProxyHelper import ProxyHelper
 
 
 from ndts.TangoSource import DataSource
@@ -114,24 +115,6 @@ class TangoSourceTest(unittest.TestCase):
     def tearDown(self):
         self._simps2.tearDown()
         self._simps.tearDown()
-
-    ## waiting for running server
-    # \proxy server proxy    
-    def wait(self, proxy, counts=-1, sec = 0.001):
-        found = False
-        cnt = 0
-        while not found and cnt != counts:
-            try:
-                if proxy.State() != PyTango.DevState.RUNNING:
-                    found = True
-            except:    
-                found = False
-            if cnt:    
-                time.sleep(sec)
-            cnt +=1
-        return found    
-
-
 
     ## Exception tester
     # \param exception expected exception
@@ -1350,7 +1333,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k
             dt = el.getData()
             dp = PyTango.DeviceProxy(el.device)  
-            self.wait(dp)
+            ProxyHelper.wait(dp)
             self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
                            'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
 

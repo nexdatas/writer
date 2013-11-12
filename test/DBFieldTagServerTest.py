@@ -26,6 +26,7 @@ import PyTango
 
 import ServerSetUp
 import DBFieldTagWriterTest
+from ProxyHelper import ProxyHelper
 
 ## test fixture
 class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
@@ -60,7 +61,8 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     def tearDown(self): 
         DBFieldTagWriterTest.DBFieldTagWriterTest.tearDown(self)
         self._sv.tearDown()
-        
+ 
+       
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
@@ -68,7 +70,7 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
-        self.wait(tdw)
+        ProxyHelper.wait(tdw)
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         

@@ -104,22 +104,6 @@ class DBFieldTagWriterTest(unittest.TestCase):
         print "tearing down ..."
         self._mydb.close()
 
-    ## waiting for running server
-    # \proxy server proxy    
-    def wait(self, proxy, counts=-1, sec = 0.001):
-        found = False
-        cnt = 0
-        while not found and cnt != counts:
-            try:
-                if proxy.State() != PyTango.DevState.RUNNING:
-                    found = True
-            except:    
-                found = False
-            if cnt:    
-                time.sleep(sec)
-            cnt +=1
-        return found    
-
 
     ## Exception tester
     # \param exception expected exception

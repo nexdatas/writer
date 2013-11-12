@@ -68,22 +68,6 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         print "tearing down ..."
 
 
-    ## waiting for running server
-    # \proxy server proxy    
-    def wait(self, proxy, counts=-1, sec = 0.001):
-        found = False
-        cnt = 0
-        while not found and cnt != counts:
-            try:
-                if proxy.State() != PyTango.DevState.RUNNING:
-                    found = True
-            except:    
-                found = False
-            if cnt:    
-                time.sleep(sec)
-            cnt +=1
-        return found    
-
 
     ## opens writer
     # \param fname file name     
