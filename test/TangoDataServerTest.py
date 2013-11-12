@@ -116,6 +116,23 @@ class TangoDataServerTest(unittest.TestCase):
         self._sv.tearDown()
 
         
+    ## waiting for running server
+    # \proxy server proxy    
+    def wait(self, proxy, counts=-1, sec = 0.001):
+        found = False
+        cnt = 0
+        while not found and cnt != counts:
+            try:
+                if proxy.State() != PyTango.DevState.RUNNING:
+                    found = True
+            except:    
+                found = False
+            if cnt:    
+                time.sleep(sec)
+            cnt +=1
+        return found    
+
+
 
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
@@ -124,6 +141,7 @@ class TangoDataServerTest(unittest.TestCase):
         try:
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy(self._sv.device)
+            self.wait(dp)
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
@@ -200,6 +218,7 @@ class TangoDataServerTest(unittest.TestCase):
         try:
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy(self._sv.device)
+            self.wait(dp)
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
             dp.FileName = fname
@@ -252,6 +271,7 @@ class TangoDataServerTest(unittest.TestCase):
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
+            self.wait(dp)
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
@@ -349,6 +369,7 @@ class TangoDataServerTest(unittest.TestCase):
         xml = """<definition/>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
+            self.wait(dp)
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
@@ -431,6 +452,7 @@ class TangoDataServerTest(unittest.TestCase):
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
+            self.wait(dp)
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)

@@ -59,13 +59,10 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
         self._sv.tearDown()
 
 
-    ## waiting for running server
-    # \proxy server proxy    
-    def wait(self, proxy):
-        while proxy.State() == PyTango.DevState.RUNNING:
-            time.sleep(0.001)
 
+            
         
+
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
@@ -73,6 +70,8 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # \returns Tango Data Writer proxy instance
     def openWriter(self, fname, xml, json = None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
+        self.wait(tdw)    
+
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         

@@ -107,6 +107,7 @@ class TangoDataWriterTest(unittest.TestCase):
         print "tearing down ..."
 
 
+
     ## Exception tester
     # \param exception expected exception
     # \param method called method      
