@@ -106,7 +106,7 @@ class EDimTest(unittest.TestCase):
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         el = EDim({}, None)
         self.assertTrue(isinstance(el, Element))
         self.assertEqual(el.tagName, self._tfname)

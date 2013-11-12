@@ -95,7 +95,7 @@ class EFileTest(unittest.TestCase):
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         el = EFile( {}, None, None)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -113,7 +113,7 @@ class EFileTest(unittest.TestCase):
     def test_constructor_nx(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         el = EFile( {}, None, self._nxFile)
         self.assertTrue(isinstance(el, Element))
@@ -137,7 +137,7 @@ class EFileTest(unittest.TestCase):
     def test_constructor_attrs(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         el = EFile(self._fattrs, None, self._nxFile)
         self.assertTrue(isinstance(el, Element))

@@ -115,7 +115,7 @@ class ELinkTest(unittest.TestCase):
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile( {}, None, self._nxFile)
         li = ELink({}, eFile)
@@ -144,7 +144,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)

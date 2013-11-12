@@ -138,7 +138,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_0d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["My string","NX_CHAR", "string"],
@@ -236,7 +236,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["","NX_CHAR", "string"],
@@ -332,7 +332,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_0d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["My string","NX_CHAR", "string"],
@@ -437,7 +437,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["My string","NX_CHAR", "string",""],
@@ -540,7 +540,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_1d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
 
         attrs = {
@@ -667,7 +667,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
 
         attrs = {
@@ -790,7 +790,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_1d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -930,7 +930,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,),""],
@@ -1053,7 +1053,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1180,7 +1180,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1302,7 +1302,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1432,7 +1432,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1551,7 +1551,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1685,7 +1685,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1812,7 +1812,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -1938,7 +1938,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2054,7 +2054,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_double(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2187,7 +2187,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2300,7 +2300,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_double(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2423,7 +2423,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2540,7 +2540,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2674,7 +2674,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["","NX_CHAR", "string" , (1,)],
@@ -2790,7 +2790,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -2908,7 +2908,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
 #            "string":["Mystring","NX_CHAR", "string" , (1,),""],
@@ -3023,7 +3023,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -3154,7 +3154,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_noX_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
             "string":["","NX_CHAR", "string" , (1,)],
@@ -3276,7 +3276,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {
@@ -3391,7 +3391,7 @@ class EFieldReshapeTest(unittest.TestCase):
     def test_run_X_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
         attrs = {

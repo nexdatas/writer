@@ -73,7 +73,7 @@ class AttributeArrayTest(unittest.TestCase):
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
         parent = []
@@ -110,7 +110,7 @@ class AttributeArrayTest(unittest.TestCase):
     def test_0d_data(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 

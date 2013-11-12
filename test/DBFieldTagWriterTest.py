@@ -169,7 +169,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbScalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -451,7 +451,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -741,7 +741,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbSpectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1018,7 +1018,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1407,7 +1407,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbImage(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1793,7 +1793,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbImage_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">

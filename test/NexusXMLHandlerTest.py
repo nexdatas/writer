@@ -530,7 +530,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -561,7 +561,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -608,7 +608,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_group(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -666,7 +666,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_group(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -731,7 +731,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_group_group(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -814,7 +814,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -881,7 +881,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -932,7 +932,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_field_empty(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -982,7 +982,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_field_empty(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1039,7 +1039,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_field_value_error(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1070,7 +1070,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_field_value_error(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1107,7 +1107,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1177,7 +1177,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_group_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1259,7 +1259,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_group_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1334,7 +1334,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1398,7 +1398,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_XML_field_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1479,7 +1479,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_field_attribute(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1546,7 +1546,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1605,7 +1605,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TEOS_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1660,7 +1660,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TEOL_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1713,7 +1713,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TEOF_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1770,7 +1770,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_group_field(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1859,7 +1859,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_group_field_groupTypes(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -1950,7 +1950,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_field_INIT(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2025,7 +2025,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_field_STEP(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2097,7 +2097,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_field_FINAL(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2172,7 +2172,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_TE_field_STEP_trigger(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2251,7 +2251,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_transparent(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2342,7 +2342,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_transparent_2(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2432,7 +2432,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_transparent_3(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2523,7 +2523,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_transparent_4(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2616,7 +2616,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_unsupported(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2672,7 +2672,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_unsupported_false(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2731,7 +2731,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_inner(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2849,7 +2849,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_inner_DSDC (self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -2972,7 +2972,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_inner_DSDC_2 (self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -3096,7 +3096,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_inner_DS(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
@@ -3218,7 +3218,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     def test_group_field_inner_DC(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s.h5' % (os.getcwd(), fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects

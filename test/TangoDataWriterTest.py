@@ -340,9 +340,9 @@ class TangoDataWriterTest(unittest.TestCase):
              
 
         if dirExists:
-            fname = '%s/%s/%s.h5' % (os.getcwd(), directory, fun )  
+            fname = '%s/%s/%s%s.h5' % (os.getcwd(), directory, self.__class__.__name__, fun )  
         else:
-            fname = '%s/%s.h5' % (os.getcwd(), fun )  
+            fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
             
         try:
             tdw = TangoDataWriter()

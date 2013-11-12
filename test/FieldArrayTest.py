@@ -121,7 +121,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
         name = "myfield"
@@ -162,7 +162,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_0d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -238,7 +238,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_1d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -343,7 +343,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -437,7 +437,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_2d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -539,7 +539,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_2d_double(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -640,7 +640,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -736,7 +736,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_2d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -840,7 +840,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_read_write_3d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -949,7 +949,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1046,7 +1046,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_1d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1151,7 +1151,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_2d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1262,7 +1262,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_2d_first(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1371,7 +1371,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_2d_second(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1480,7 +1480,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_2d_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1579,7 +1579,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1701,7 +1701,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_double_first(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1825,7 +1825,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_double_second(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -1944,7 +1944,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_double_third(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2062,7 +2062,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_single_first(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2175,7 +2175,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_single_second(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2295,7 +2295,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_single_third(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2410,7 +2410,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_get_set_3d_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2518,7 +2518,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_attr_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2618,7 +2618,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_grow(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2700,7 +2700,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_grow_dim0(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2784,7 +2784,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_grow_val1(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
@@ -2867,7 +2867,7 @@ class FieldArrayTest(unittest.TestCase):
     def test_grow_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s.h5' % (os.getcwd(), fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True)
 
