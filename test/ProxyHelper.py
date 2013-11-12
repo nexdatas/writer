@@ -22,16 +22,16 @@
 
 import os
 import PyTango
-
+import time
 
 ## test fixture
 class ProxyHelper(object):
-    @staticmethod
     ## waiting for running server
     # \proxy server proxy    
     # \proxy counts number of counts
     # \proxy sec time interval between two counts
-    def wait(self, proxy, counts = -1, sec = 0.01):
+    @classmethod
+    def wait(cls, proxy, counts=-1, sec=0.01):
         found = False
         cnt = 0
         while not found and cnt != counts:
