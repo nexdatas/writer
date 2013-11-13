@@ -51,6 +51,7 @@ from ndts.TangoDataWriter import TangoDataWriter as TDW
 #   DevState.EXTRACT :  H5 file is open
 #   DevState.OPEN :     XML configuration is initialzed
 #   DevState.RUNNING :  NeXus Data Server is writing
+#   DevState.FAULT :    Error state
 #==================================================================
 
 ## thread with server command
@@ -286,6 +287,16 @@ class TangoDataServer(PyTango.Device_4Impl):
                 return False
         return True
 
+#------------------------------------------------------------------
+#    Read Errors attribute
+#------------------------------------------------------------------
+    def read_Errors(self, attr):
+        print "In ", self.get_name(), "::read_Errors()"
+        
+        #    Add your own code here
+        
+        attr_Errors_read = ["Hello Tango world"]
+        attr.set_value(attr_Errors_read, 1)
 
 
 #==================================================================
@@ -623,6 +634,14 @@ class TangoDataServerClass(PyTango.DeviceClass):
             {
                 'label':"Output file with its path",
                 'description':"A name of H5 output file with its full path",
+            } ],
+        'Errors':
+            [[PyTango.DevString,
+            PyTango.SPECTRUM,
+            PyTango.READ, 1000],
+            {
+                'label':"list of errors",
+                'description':"list of errors",
             } ],
         }
 
