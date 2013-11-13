@@ -1,3 +1,7 @@
+2013-11-13 Jan Kotanski <jankotan@gmail.com>
+	* adding Errors attribute and a FAULT server state
+	* tagged as 1.4.1
+
 2013-11-12 Jan Kotanski <jankotan@gmail.com>
 	* adding asynchronous versions of OpenEntry, Record, CloseEntry
 	* tagged as 1.4.0
