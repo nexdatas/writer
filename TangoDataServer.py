@@ -34,6 +34,7 @@
 import PyTango
 import sys
 from threading import Thread, Lock
+from datetime import datetime 
 
 import ndts
 from ndts.TangoDataWriter import TangoDataWriter as TDW
@@ -83,13 +84,11 @@ class CommandThread(Thread):
             with self.server.lock:
                 self.server.set_state(self.fstate)
         except:
-            print sys.exc_info()[0]
-            print >> self.server.log_error, sys.exc_info()[0]
-            raise
-        finally:
             with self.server.lock:
-                if self.server.get_state() == PyTango.DevState.RUNNING:
-                    self.server.set_state(self.estate)
+                self.server.set_state(self.estate)
+                self.server.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise
 
 
 
@@ -112,7 +111,10 @@ class TangoDataServer(PyTango.Device_4Impl):
         self.rthread = None
         ## closentry thread
         self.cthread = None
+        ## Tango Data Writer
         self.tdw = TDW(self)
+        ## list with errors
+        self.errors = []
         TangoDataServer.init_device(self)
         
 #------------------------------------------------------------------
@@ -139,6 +141,7 @@ class TangoDataServer(PyTango.Device_4Impl):
         try:
             with self.lock:
                 self.set_state(PyTango.DevState.RUNNING)
+                self.errors = []
             if hasattr(self,'tdw') and self.tdw:
                 if hasattr(self.tdw,'closeNXFile'):
                     self.tdw.closeNXFile()
@@ -147,10 +150,12 @@ class TangoDataServer(PyTango.Device_4Impl):
             self.tdw = TDW(self)
             with self.lock:
                 self.set_state(PyTango.DevState.ON)
-        finally:
+        except:    
             with self.lock:
-                if self.get_state() == PyTango.DevState.RUNNING:
-                    self.set_state(PyTango.DevState.OFF)
+                self.set_state(PyTango.DevState.FAULT)
+                self.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise    
             
         self.get_device_properties(self.get_device_class())
 
@@ -174,9 +179,9 @@ class TangoDataServer(PyTango.Device_4Impl):
     def is_FileName_write_allowed(self):
         with self.lock:
             if self.get_state() in [PyTango.DevState.OFF,
-                        PyTango.DevState.EXTRACT,
-                        PyTango.DevState.OPEN,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.EXTRACT,
+                                    PyTango.DevState.OPEN,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -217,8 +222,8 @@ class TangoDataServer(PyTango.Device_4Impl):
     def is_TheXMLSettings_allowed(self, req_type):
         with self.lock:
             if self.get_state() in [PyTango.DevState.OFF,
-                        PyTango.DevState.EXTRACT,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.EXTRACT,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -249,7 +254,7 @@ class TangoDataServer(PyTango.Device_4Impl):
     def is_TheJSONRecord_allowed(self, req_type):
         with self.lock:
             if self.get_state() in [PyTango.DevState.OFF,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -295,8 +300,8 @@ class TangoDataServer(PyTango.Device_4Impl):
         
         #    Add your own code here
         
-        attr_Errors_read = ["Hello Tango world"]
-        attr.set_value(attr_Errors_read, 1)
+        attr.set_value(self.errors)
+        print self.errors
 
 
 #==================================================================
@@ -316,23 +321,26 @@ class TangoDataServer(PyTango.Device_4Impl):
         #    Add your own code here
         with self.lock:
             self.set_state(PyTango.DevState.RUNNING)
+            self.errors = []
         try:
             self.tdw.openNXFile()
             with self.lock:
                 self.set_state(PyTango.DevState.OPEN)
-        finally:
+        except:    
             with self.lock:
-                if self.get_state() == PyTango.DevState.RUNNING:
-                    self.set_state(PyTango.DevState.ON)
+                self.set_state(PyTango.DevState.FAULT)
+                self.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise    
 
 
 #---- OpenFile command State Machine -----------------
     def is_OpenFile_allowed(self):
         with self.lock:
             if self.get_state() in [PyTango.DevState.OFF,
-                        PyTango.DevState.EXTRACT,
-                        PyTango.DevState.OPEN,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.EXTRACT,
+                                    PyTango.DevState.OPEN,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -354,19 +362,22 @@ class TangoDataServer(PyTango.Device_4Impl):
             self.tdw.openEntry()
             with self.lock:
                 self.set_state(PyTango.DevState.EXTRACT)
-        finally:
+        except:    
             with self.lock:
-                if self.get_state() == PyTango.DevState.RUNNING:
-                    self.set_state(PyTango.DevState.OPEN)
+                self.set_state(PyTango.DevState.FAULT)
+                self.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise    
 
 
 #---- OpenEntry command State Machine -----------------
     def is_OpenEntry_allowed(self):
         with self.lock:
             if self.get_state() in [PyTango.DevState.ON,
-                        PyTango.DevState.OFF,
-                        PyTango.DevState.EXTRACT,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.OFF,
+                                    PyTango.DevState.EXTRACT,
+                                    PyTango.DevState.FAULT,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -387,18 +398,24 @@ class TangoDataServer(PyTango.Device_4Impl):
         #    Add your own code here
         try:
             self.tdw.record(argin)
-        finally:
             with self.lock:
                 self.set_state(PyTango.DevState.EXTRACT)
+        except:    
+            with self.lock:
+                self.set_state(PyTango.DevState.FAULT)
+                self.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise    
 
 
 #---- Record command State Machine -----------------
     def is_Record_allowed(self):
         with self.lock:
             if self.get_state() in [PyTango.DevState.ON,
-                        PyTango.DevState.OFF,
-                        PyTango.DevState.OPEN,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.OFF,
+                                    PyTango.DevState.OPEN,
+                                    PyTango.DevState.FAULT,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -413,24 +430,29 @@ class TangoDataServer(PyTango.Device_4Impl):
         print "In ", self.get_name(), "::CloseEntry()"
         #    Add your own code here
         with self.lock:
+            state = self.get_state() 
+            if state != PyTango.DevState.FAULT:
+                state = PyTango.DevState.OPEN
             self.set_state(PyTango.DevState.RUNNING)
         try:
             self.tdw.closeEntry()
             with self.lock:
-                self.set_state(PyTango.DevState.OPEN)
-        finally:
+                self.set_state(state)
+        except:    
             with self.lock:
-                if self.get_state() == PyTango.DevState.RUNNING:
-                    self.set_state(PyTango.DevState.EXTRACT)
+                self.set_state(PyTango.DevState.FAULT)
+                self.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise    
 
 
 #---- CloseEntry command State Machine -----------------
     def is_CloseEntry_allowed(self):
         with self.lock:
             if self.get_state() in [PyTango.DevState.ON,
-                        PyTango.DevState.OFF,
-                        PyTango.DevState.OPEN,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.OFF,
+                                    PyTango.DevState.OPEN,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -450,16 +472,17 @@ class TangoDataServer(PyTango.Device_4Impl):
         self.tdw.numThreads = self.NumberOfThreads
         self.othread = CommandThread(
             self, "openEntry", PyTango.DevState.EXTRACT, 
-            PyTango.DevState.OPEN)
+            PyTango.DevState.FAULT)
         self.othread.start()
 
 #---- OpenEntryAsynch command State Machine -----------------
     def is_OpenEntryAsynch_allowed(self):
         with self.lock:
             if self.get_state() in [PyTango.DevState.ON,
-                        PyTango.DevState.OFF,
-                        PyTango.DevState.EXTRACT,
-                        PyTango.DevState.RUNNING]:
+                                    PyTango.DevState.OFF,
+                                    PyTango.DevState.FAULT,
+                                    PyTango.DevState.EXTRACT,
+                                    PyTango.DevState.RUNNING]:
                 return False
         return True
 
@@ -479,7 +502,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 
         self.rthread = CommandThread(
             self, "record", PyTango.DevState.EXTRACT, 
-            PyTango.DevState.EXTRACT, [argin])
+            PyTango.DevState.FAULT, [argin])
         self.rthread.start()
 
 #---- RecordAsynch command State Machine -----------------
@@ -487,6 +510,7 @@ class TangoDataServer(PyTango.Device_4Impl):
         with self.lock:
             if self.get_state() in [PyTango.DevState.ON,
                                     PyTango.DevState.OFF,
+                                    PyTango.DevState.FAULT,
                                     PyTango.DevState.OPEN,
                                     PyTango.DevState.RUNNING]:
                 return False
@@ -502,11 +526,14 @@ class TangoDataServer(PyTango.Device_4Impl):
     def CloseEntryAsynch(self):
         print "In ", self.get_name(), "::CloseEntryAsynch()"
         #    Add your own code here
-        with self.lock:    
+        with self.lock:
+            state = self.get_state() 
+            if state != PyTango.DevState.FAULT:
+                state = PyTango.DevState.OPEN
             self.set_state(PyTango.DevState.RUNNING)
         self.cthread = CommandThread(
-            self, "closeEntry", PyTango.DevState.OPEN, 
-            PyTango.DevState.EXTRACT)
+            self, "closeEntry", state, 
+            PyTango.DevState.FAULT)
         self.cthread.start()
 
 
@@ -531,18 +558,23 @@ class TangoDataServer(PyTango.Device_4Impl):
         print "In ", self.get_name(), "::CloseFile()"
         #    Add your own code here
         with self.lock:
-            if self.get_state() in [PyTango.DevState.EXTRACT,
-                        PyTango.DevState.RUNNING]:
+            state = self.get_state() 
+            if state in [PyTango.DevState.EXTRACT,
+                         PyTango.DevState.RUNNING]:
                 self.CloseEntry()
+            if state != PyTango.DevState.FAULT:
+                state = PyTango.DevState.ON
             self.set_state(PyTango.DevState.RUNNING)
         try:
             self.tdw.closeNXFile()
             with self.lock:
-                self.set_state(PyTango.DevState.ON)
-        finally:
+                self.set_state(state)
+        except:    
             with self.lock:
-                if self.get_state() == PyTango.DevState.RUNNING:
-                    self.set_state(PyTango.DevState.OPEN)
+                self.set_state(PyTango.DevState.FAULT)
+                self.errors.append(
+                    str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise    
 
 
 #---- CloseFile command State Machine -----------------
