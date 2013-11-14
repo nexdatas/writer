@@ -1,3 +1,7 @@
+2013-11-XX Jan Kotanski <jankotan@gmail.com>
+	* fixes interference of TANGO groups and fetching TANGO memeber shapes
+	* tagged as 1.4.2
+
 2013-11-13 Jan Kotanski <jankotan@gmail.com>
 	* adding Errors attribute and a FAULT server state
 	* tagged as 1.4.1

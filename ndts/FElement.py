@@ -142,15 +142,7 @@ class FElement(Element):
             except:
                 val = ("".join(self.content)).strip().encode()   
                 found = False
-                if self.source and self.source.isValid():
-                    data = self.source.getData()
-                    if isinstance(data, dict):                        
-                        dh = DataHolder(**data)
-                        shape = self.__reshape(dh.shape, rank, extends, 
-                                               extraD, exDim)
-                        if shape is not None:
-                            found = True
-                if val and not found:
+                if val:
                     shape = self.__fetchShape(val, rank)
                     if shape is not None:
                         found = True
