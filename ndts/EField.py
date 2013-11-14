@@ -160,14 +160,18 @@ class EField(FElementWithAttr):
                 f = self._lastObject().create_field(
                     name.encode(), dtype.encode(), [], [], deflate)
         except:
+            info = sys.exc_info()
+            import traceback
+            message = str(info[1].__str__()) +"\n "+ (" ").join(
+                    traceback.format_tb(sys.exc_info()[2]) )
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "EField::__createObject() - "\
-                    "The field '%s' of '%s' type cannot be created" % \
-                    (name.encode(), dtype.encode())
+                    "The field '%s' of '%s' type cannot be created: %s" % \
+                    (name.encode(), dtype.encode(), message)
             raise XMLSettingSyntaxError, \
-                "The fieled '%s' of '%s' type cannot be created" % \
-                (name.encode(),dtype.encode())
+                "The field '%s' of '%s' type cannot be created: %s" % \
+                (name.encode(),dtype.encode(), message)
                  
         return f
         
