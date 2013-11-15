@@ -150,33 +150,38 @@ class FElement(Element):
                 val = ("".join(self.content)).strip().encode()   
                 found = False
                 
-## ----
-                if self.source and self.source.isValid():
-                    data = self.source.getData()
-                    if isinstance(data, dict):                        
-                        dh = DataHolder(**data)
-                        shape = self._reshape(dh.shape, rank, extends, 
-                                               extraD, exDim)
-                        if shape is not None:
-                            found = True
-                if val and not found:
+#                if self.source and self.source.isValid():
+#                    data = self.source.getData()
+#                    if isinstance(data, dict):                        
+#                        dh = DataHolder(**data)
+#                        shape = self._reshape(dh.shape, rank, extends, 
+#                                               extraD, exDim)
+#                        if shape is not None:
+#                            found = True
+
+#                shape = self._reshape([], rank, extends, 
+#                                      extraD, exDim)
+#                if shape is not None:
+#                    found = True
+#                print "shape",shape,rank,extraD, exDim
 #                if val:
+                if val and not found:
                     shape = self.__fetchShape(val, rank)
                     if shape is not None:
                         found = True
-                   
+                  
                 if not found:
                     nm = "unnamed"
                     if "name" in self._tagAttrs.keys():
                         nm = self._tagAttrs["name"] + " "
                     raise XMLSettingSyntaxError, \
-                        "Wrongly defined %sshape: %s"% \
+                        "Wrongly defined %s shape: %s"% \
                         (nm, str(self.source) if self.source else val) 
-                
                 
         elif extraD:            
             shape = [0]
 
+        print "found",  shape
         return shape
 
 

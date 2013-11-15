@@ -111,20 +111,22 @@ class EField(FElementWithAttr):
 #            print "ifstring", nm, shape, self.grows
             if self.grows > len(shape):
                 self.grows = len(shape)
-
+            print "GSHAPE1",shape,self.rank
             if len(shape) > 1 and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 if self.__extraD:
                     self.grows = 1
                     
+            print "GSHAPE2a",shape     
             return shape
         except XMLSettingSyntaxError:
             self.__splitArray = False
             if self.rank and int(self.rank) >=0:
-                shape = [0]*int(self.rank)
+                shape = [0]*(int(self.rank)+int(self.__extraD))
             else:
                 shape = [0]
+            print "GSHAPE2b",shape     
             return shape
             
 
@@ -302,6 +304,7 @@ class EField(FElementWithAttr):
         # type and name
         tp, nm = self.__typeAndName()
         # shape
+        print "NAME", nm, tp
         shape = self.__getShape(tp)
         # create h5 object
         self.h5Object = self.__createObject(tp, nm, shape)
@@ -533,7 +536,6 @@ class EField(FElementWithAttr):
     def run(self):
         try:
             if self.source:
-                self.__grow()
                 dt = self.source.getData()
                 dh = None
                 if dt and isinstance(dt, dict):
@@ -543,6 +545,8 @@ class EField(FElementWithAttr):
                                            self.__extraD, exDim)
 #                    if shape is not None:
 #                        found = True
+                    print "SHAPE", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
+                self.__grow()
                     
                 if not dh:
                     message = self.setMessage("Data without value")

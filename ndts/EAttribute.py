@@ -90,22 +90,17 @@ class EAttribute(FElement):
                 if self.source:
                     dt = self.source.getData()
                     dh = None
-#                    print "dt", dt, self.h5Object.shape
                     if dt:
                         dh = DataHolder(**dt)
-#                        print "VAL", dh.value, type(dh.value)
                     if not dh:
                         message = self.setMessage("Data without value")
-                    #                    message = self.setMessage()
                         self.error = message
                     elif not hasattr(self.h5Object,'shape'):
                         message = self.setMessage("PNI Object not created")
                         print >> sys.stderr , "Group::run() - %s " % message[0]
                         self.error = message
                     else:
-#                        print "ARR", self.name
                         arr = dh.cast(self.h5Object.dtype)
-#                        print "ARR2",arr
                         
                         if self.h5Object.dtype != "string" \
                                 or len(self.h5Object.shape) == 0:
