@@ -527,15 +527,6 @@ class EField(FElementWithAttr):
                     j += 1        
 
                     
-    def __getExtra(self):
-        if self.__extraD:
-            if self.grows and self.grows > 1:
-                exDim = self.grows  
-            else:
-                exDim = 1
-        else:
-            exDim = 0
-        return exDim
                     
     ## runner  
     # \brief During its thread run it fetches the data from the source  
@@ -547,7 +538,7 @@ class EField(FElementWithAttr):
                 dh = None
                 if dt and isinstance(dt, dict):
                     dh = DataHolder(**dt)
-                    exDim = self.__getExtra()
+                    exDim = self._getExtra(self.grows, self.__extraD)
                     shape = self._reshape(dh.shape, self.rank, True, 
                                            self.__extraD, exDim)
 #                    if shape is not None:

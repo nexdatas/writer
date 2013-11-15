@@ -104,6 +104,20 @@ class FElement(Element):
             raise XMLSettingSyntaxError, \
                 "Case with not supported rank = %s" % rank
 
+    # provides growing dimension 
+    # \param grows growing dimension    
+    # \param extraD if the object grows
+    # \returns growing dimension
+    @classmethod    
+    def _getExtra(cls, grows, extraD = False):    
+        if extraD:
+            if grows and grows > 1:
+                exDim = grows  
+            else:
+                exDim = 1
+        else:
+            exDim = 0
+        return exDim    
 
     ## creates shape object from rank and lengths variables
     # \param rank rank of the object
@@ -117,14 +131,7 @@ class FElement(Element):
     def _findShape(self, rank, lengths=None, extraD = False, 
                    grows = None, extends = False):
         shape = []
-        if extraD:
-            if grows and grows > 1:
-                exDim = grows  
-            else:
-                exDim = 1
-        else:
-            exDim = 0
-                    
+        exDim = self._getExtra(grows, extraD)
         if  int(rank) > 0:
             try:
                 for i in range(int(rank)):
