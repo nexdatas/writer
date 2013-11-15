@@ -233,7 +233,7 @@ class TangoSource(DataSource):
                             "DataSource pool not set up" 
                     raise DataSourceSetupError, "DataSource pool not set up" 
 
-                self.__tngrp.getData(self.__pool.counter, self.member)
+                self.__tngrp.getData(self.__pool.counter, self.__proxy, self.member)
 
             if hasattr(self.__tngrp, "lock"):
                 self.__tngrp.lock.acquire()
@@ -313,25 +313,36 @@ class TgGroup(object):
             mb.setData(res[i])
 
 
-    ## fetches property data for given member
-    # \param device given device 
+
+    ## fetches attribute data for given proxy
+    # \param proxy given proxy 
     # \param member given member
-    def __fetchProperty(self, device, member):
-        plist = device.proxy.get_property_list('*')
+    def __fetchAttribute(self, proxy, member):
+        alist = proxy.get_attribute_list()
+        if member.name  in alist:
+            da = proxy.read_attribute(member.name.encode())
+            member.setData(da)
+
+
+    ## fetches property data for given member
+    # \param proxy given proxy 
+    # \param member given member
+    def __fetchProperty(self, proxy, member):
+        plist = proxy.get_property_list('*')
         if member.name.encode() in plist:
-            da = device.proxy.get_property(
+            da = proxy.get_property(
                 member.name.encode())[member.name.encode()]
             member.setData(da)
 
     ## fetches command data for given member
-    # \param device given device 
+    # \param proxy given proxy 
     # \param member given member
-    def __fetchCommand(self, device, member):
+    def __fetchCommand(self, proxy, member):
         clist = [cm.cmd_name \
-                     for cm in device.proxy.command_list_query()]
+                     for cm in proxy.command_list_query()]
         if member.name in clist:
-            cd = device.proxy.command_query(member.name.encode())
-            da = device.proxy.command_inout(member.name.encode())
+            cd = proxy.command_query(member.name.encode())
+            da = proxy.command_inout(member.name.encode())
             member.setData(da, cd)
 
 
@@ -339,16 +350,20 @@ class TgGroup(object):
     # \param counter counter of scan steps
     # \param proxy device proxy
     # \param member required member 
-    def getData(self, counter, member = None):
+    def getData(self, counter, proxy = None, member = None):
 
         with self.lock:    
             if counter == self.counter:
-                if member and member.isDataSet():
-                    return
-            else:
-                pass
+                if proxy and member and not member.isDataSet():
+                    if member.memberType == "attribute":
+                        self.__fetchAttribute(proxy, member)
+                    elif member.memberType == "command":
+                        self.__fetchCommand(proxy, member)
+                    elif member.memberType == "property":
+                        self.__fetchProperty(proxy, member)
+                return
+                
             self.counter = counter
-            errors = []
 
             for dv in self.devices.values():
                 for mb in dv.members.values():
@@ -370,9 +385,9 @@ class TgGroup(object):
 
                 for mb in dv.members.values():
                     if mb.memberType == "property":
-                        self.__fetchProperty(dv, mb)
+                        self.__fetchProperty(dv.proxy, mb)
                     elif mb.memberType == "command":
-                        self.__fetchCommand(dv, mb)
+                        self.__fetchCommand(dv.proxy, mb)
     
 
 ## tango device
