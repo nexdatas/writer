@@ -340,12 +340,13 @@ class TgGroup(object):
     # \param proxy device proxy
     # \param member required member 
     def getData(self, counter, member = None):
-        if counter == self.counter:
-            if member.isDataSet():
-                return
-        try:
-            self.lock.acquire()
 
+        with self.lock:    
+            if counter == self.counter:
+                if member and member.isDataSet():
+                    return
+            else:
+                pass
             self.counter = counter
             errors = []
 
@@ -373,8 +374,6 @@ class TgGroup(object):
                     elif mb.memberType == "command":
                         self.__fetchCommand(dv, mb)
     
-        finally:
-            self.lock.release()
 
 ## tango device
 class TgDevice(object):
