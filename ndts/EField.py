@@ -550,8 +550,8 @@ class EField(FElementWithAttr):
                     exDim = self.__getExtra()
                     shape = self._reshape(dh.shape, self.rank, True, 
                                            self.__extraD, exDim)
-                    if shape is not None:
-                        found = True
+#                    if shape is not None:
+#                        found = True
                     
                 if not dh:
                     message = self.setMessage("Data without value")

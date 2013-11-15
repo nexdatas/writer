@@ -233,7 +233,8 @@ class TangoSource(DataSource):
                             "DataSource pool not set up" 
                     raise DataSourceSetupError, "DataSource pool not set up" 
 
-                self.__tngrp.getData(self.__pool.counter, self.__proxy, self.member)
+                self.__tngrp.getData(
+                    self.__pool.counter, self.__proxy, self.member)
 
             if hasattr(self.__tngrp, "lock"):
                 self.__tngrp.lock.acquire()
@@ -288,7 +289,8 @@ class TgGroup(object):
 
     ## fetches attribute data for given device
     # \param device given device 
-    def __fetchAttributes(self, device):
+    @classmethod
+    def __fetchAttributes(cls, device):
         attr = device.attributes
         alist = device.proxy.get_attribute_list()
                 
@@ -317,7 +319,8 @@ class TgGroup(object):
     ## fetches attribute data for given proxy
     # \param proxy given proxy 
     # \param member given member
-    def __fetchAttribute(self, proxy, member):
+    @classmethod        
+    def __fetchAttribute(cls, proxy, member):
         alist = proxy.get_attribute_list()
         if member.name  in alist:
             da = proxy.read_attribute(member.name.encode())
@@ -327,7 +330,8 @@ class TgGroup(object):
     ## fetches property data for given member
     # \param proxy given proxy 
     # \param member given member
-    def __fetchProperty(self, proxy, member):
+    @classmethod        
+    def __fetchProperty(cls, proxy, member):
         plist = proxy.get_property_list('*')
         if member.name.encode() in plist:
             da = proxy.get_property(
@@ -337,7 +341,8 @@ class TgGroup(object):
     ## fetches command data for given member
     # \param proxy given proxy 
     # \param member given member
-    def __fetchCommand(self, proxy, member):
+    @classmethod        
+    def __fetchCommand(cls, proxy, member):
         clist = [cm.cmd_name \
                      for cm in proxy.command_list_query()]
         if member.name in clist:
@@ -465,7 +470,7 @@ class TgMember(object):
     def isDataSet(self):
         status = True if self.__da else False
         if self.memberType == 'command':
-           status = status and (True if self.__cd else False)
+            status = status and (True if self.__cd else False)
         return status    
 
     ## provides value of tango member    
