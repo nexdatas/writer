@@ -526,6 +526,17 @@ class EField(FElementWithAttr):
                         self.h5Object.grow(i, shape[j] - h5shape[i])
                     j += 1        
 
+                    
+    def __getExtra(self):
+        if self.__extraD:
+            if self.grows and self.grows > 1:
+                exDim = self.grows  
+            else:
+                exDim = 1
+        else:
+            exDim = 0
+        return exDim
+                    
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
@@ -534,8 +545,14 @@ class EField(FElementWithAttr):
                 self.__grow()
                 dt = self.source.getData()
                 dh = None
-                if dt:
+                if dt and isinstance(dt, dict):
                     dh = DataHolder(**dt)
+                    exDim = self.__getExtra()
+                    shape = self._reshape(dh.shape, self.rank, True, 
+                                           self.__extraD, exDim)
+                    if shape is not None:
+                        found = True
+                    
                 if not dh:
                     message = self.setMessage("Data without value")
                     self.error = message

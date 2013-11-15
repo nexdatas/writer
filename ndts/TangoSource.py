@@ -233,7 +233,7 @@ class TangoSource(DataSource):
                             "DataSource pool not set up" 
                     raise DataSourceSetupError, "DataSource pool not set up" 
 
-                self.__tngrp.getData(self.__pool.counter)
+                self.__tngrp.getData(self.__pool.counter, self.member)
 
             if hasattr(self.__tngrp, "lock"):
                 self.__tngrp.lock.acquire()
@@ -290,7 +290,8 @@ class TgGroup(object):
     ## reads data from device proxy
     # \param counter counter of scan steps
     # \param proxy device proxy
-    def getData(self, counter):
+    # \param member required member 
+    def getData(self, counter, member = None):
         if counter == self.counter:
             return
         try:

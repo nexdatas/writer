@@ -64,7 +64,7 @@ class FElement(Element):
     # \param extraD if the object grows
     # \returns shape of the  h5 field
     @classmethod
-    def __reshape(cls, dsShape, rank, extends, extraD, exDim):        
+    def _reshape(cls, dsShape, rank, extends, extraD, exDim):        
         shape = []
         if dsShape:    
             for s in dsShape:
@@ -142,11 +142,22 @@ class FElement(Element):
             except:
                 val = ("".join(self.content)).strip().encode()   
                 found = False
-                if val:
+                
+## ----
+                if self.source and self.source.isValid():
+                    data = self.source.getData()
+                    if isinstance(data, dict):                        
+                        dh = DataHolder(**data)
+                        shape = self._reshape(dh.shape, rank, extends, 
+                                               extraD, exDim)
+                        if shape is not None:
+                            found = True
+                if val and not found:
+#                if val:
                     shape = self.__fetchShape(val, rank)
                     if shape is not None:
                         found = True
-                    
+                   
                 if not found:
                     nm = "unnamed"
                     if "name" in self._tagAttrs.keys():
