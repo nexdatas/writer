@@ -286,6 +286,54 @@ class TgGroup(object):
         return self.devices[device]    
 
 
+    ## fetches attribute data for given device
+    # \param device given device 
+    def __fetchAttributes(self, device):
+        attr = device.attributes
+        alist = device.proxy.get_attribute_list()
+                
+        errors = []
+        for a in attr:
+            if a.encode() not in alist:
+                errors.append((a, device.device))
+        if errors:                
+            if Streams.log_error:
+                print >> Streams.log_error, \
+                    "TgGroup::getData() - "\
+                    "attribute not in tango "\
+                    "device attributes:%s" % errors
+            raise DataSourceSetupError, (
+                "TgGroup::getData() - "\
+                    "attribute not in tango "\
+                    "device attributes:%s" % errors )
+
+        res = device.proxy.read_attributes(attr)
+        for i in range(len(attr)):
+            mb = device.members[attr[i]]
+            mb.setData(res[i])
+
+
+    ## fetches property data for given member
+    # \param device given device 
+    # \param member given member
+    def __fetchProperty(self, device, member):
+        plist = device.proxy.get_property_list('*')
+        if member.name.encode() in plist:
+            da = device.proxy.get_property(
+                member.name.encode())[member.name.encode()]
+            member.setData(da)
+
+    ## fetches command data for given member
+    # \param device given device 
+    # \param member given member
+    def __fetchCommand(self, device, member):
+        clist = [cm.cmd_name \
+                     for cm in device.proxy.command_list_query()]
+        if member.name in clist:
+            cd = device.proxy.command_query(member.name.encode())
+            da = device.proxy.command_inout(member.name.encode())
+            member.setData(da, cd)
+
 
     ## reads data from device proxy
     # \param counter counter of scan steps
@@ -299,7 +347,6 @@ class TgGroup(object):
 
             self.counter = counter
             errors = []
-
 
             for dv in self.devices.values():
                 for mb in dv.members.values():
@@ -317,43 +364,13 @@ class TgGroup(object):
                             "Setting up lasts to long: %s" % dv.device
 
                 if dv.attributes:
-                    attr = dv.attributes
-                    alist = dv.proxy.get_attribute_list()
-                
-                    for a in attr:
-                        if a.encode() not in alist:
-                            errors.append((a, dv.device))
-                    if errors:                
-                        if Streams.log_error:
-                            print >> Streams.log_error, \
-                                "TgGroup::getData() - "\
-                                "attribute not in tango "\
-                                "device attributes:%s" % errors
-                        raise DataSourceSetupError, (
-                            "TgGroup::getData() - "\
-                                "attribute not in tango "\
-                                "device attributes:%s" % errors )
-
-                    res = dv.proxy.read_attributes(attr)
-                    for i in range(len(attr)):
-                        mb = dv.members[attr[i]]
-                        mb.setData(res[i])
-                
+                    self.__fetchAttributes(dv)
 
                 for mb in dv.members.values():
                     if mb.memberType == "property":
-                        plist = dv.proxy.get_property_list('*')
-                        if mb.name.encode() in plist:
-                            da = dv.proxy.get_property(
-                                mb.name.encode())[mb.name.encode()]
-                            mb.setData(da)
+                        self.__fetchProperty(dv, mb)
                     elif mb.memberType == "command":
-                        clist = [cm.cmd_name \
-                                     for cm in dv.proxy.command_list_query()]
-                        if mb.name in clist:
-                            cd = dv.proxy.command_query(mb.name.encode())
-                            da = dv.proxy.command_inout(mb.name.encode())
-                            mb.setData(da, cd)
+                        self.__fetchCommand(dv, mb)
     
         finally:
             self.lock.release()
