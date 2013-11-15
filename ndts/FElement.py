@@ -66,17 +66,21 @@ class FElement(Element):
     @classmethod
     def _reshape(cls, dsShape, rank, extends, extraD, exDim):        
         shape = []
+        print "RESHAPE", dsShape, shape
         if dsShape:    
             for s in dsShape:
                 if s and extends:
                     shape.append(s)
-                elif not extends and s and s > 1:
+                    print "EX", s, shape
+                elif not extends and s  and s > 0:
                     shape.append(s)
+                    print "NEX", s, shape
     
             while extends and len(shape) < int(rank):
-                shape.append(1)
+                shape.append(0)
             if extraD:
                 shape.insert(exDim-1, 0)    
+        print "END", shape
         return shape       
 
 

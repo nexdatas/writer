@@ -457,6 +457,7 @@ class EField(FElementWithAttr):
                     else:
                         self.h5Object[:, :, self.h5Object.shape[2]-1] = arr
                 else:
+                    print "arr", arr, self.h5Object.shape, self.h5Object.shape[1]-1, self.h5Object.dtype
                     self.h5Object[:, self.h5Object.shape[1]-1] = arr
 
 
@@ -558,12 +559,14 @@ class EField(FElementWithAttr):
                     if not self.__extraD:
                         if not isinstance(self.h5Object, FieldArray):
                             self.__growshape(dh.shape)
+                            print "SHAPEne", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
                         self.__writeData(dh)
                     else:
                         if not isinstance(self.h5Object, FieldArray) and \
                                 len(self.h5Object.shape) >= self.grows and \
                                 self.h5Object.shape[self.grows-1] == 1:
                             self.__growshape(dh.shape)
+                            print "SHAPEex", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
                         self.__writeGrowingData(dh)
         except:
             info = sys.exc_info()
