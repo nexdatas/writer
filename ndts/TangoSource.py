@@ -341,7 +341,8 @@ class TgGroup(object):
     # \param member required member 
     def getData(self, counter, member = None):
         if counter == self.counter:
-            return
+            if member.isDataSet():
+                return
         try:
             self.lock.acquire()
 
@@ -443,7 +444,15 @@ class TgMember(object):
     def setData(self, data, cmd=None):
         self.__da = data
         self.__cd = cmd
-    
+
+
+    # checks if data is set   
+    # \returns True if data is set    
+    def isDataSet(self):
+        status = True if self.__da else False
+        if self.memberType == 'command':
+           status = status and (True if self.__cd else False)
+        return status    
 
     ## provides value of tango member    
     # \returns dictionary with {"rank":, "value":, "tangoDType":,  
