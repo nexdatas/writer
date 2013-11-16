@@ -148,6 +148,7 @@ class EField(FElementWithAttr):
         # create Filter
         print "create1"
         if self.compression:
+            print "comp", self.rate, self.shuffle
             deflate = nx.NXDeflateFilter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
