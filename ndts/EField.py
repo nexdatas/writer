@@ -121,11 +121,18 @@ class EField(FElementWithAttr):
             print "GSHAPE2a",shape     
             return shape
         except XMLSettingSyntaxError:
-            self.__splitArray = False
-            if self.rank and int(self.rank) >=0:
-                shape = [0]*(int(self.rank)+int(self.__extraD))
+            if int(self.rank) > 1 and dtype.encode() == "string":
+                self.__splitArray = True
+                shape = self._findShape(self.rank, self.lengths, self.__extraD, 
+                                        checkData=True)
+                if self.__extraD:
+                    self.grows = 1
             else:
-                shape = [0]
+                self.__splitArray = False
+                if self.rank and int(self.rank) >=0:
+                    shape = [0]*(int(self.rank)+int(self.__extraD))
+                else:
+                    shape = [0]
             print "GSHAPE2b",shape     
             return shape
             
@@ -139,17 +146,22 @@ class EField(FElementWithAttr):
         chunk = [s if s > 0 else 1 for s in shape]  
         deflate = None
         # create Filter
+        print "create1"
         if self.compression:
             deflate = nx.NXDeflateFilter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
        
+        print "create2"
         try:    
             if shape:
+                print "create2a"
                 if self.__splitArray:
+                    print "create3a"
                     f = FieldArray(self._lastObject(), name.encode(), 
                                    dtype.encode(), shape)
                 else:
+                    print "create3b"
                     if not chunk:
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), shape, [],
@@ -159,8 +171,10 @@ class EField(FElementWithAttr):
                             name.encode(), dtype.encode(), shape, chunk, 
                             deflate)
             else:
+                print "create2b", name.encode(), dtype.encode(), [], [], deflate
                 f = self._lastObject().create_field(
                     name.encode(), dtype.encode(), [], [], deflate)
+                print "create2c"
         except:
             info = sys.exc_info()
             import traceback
@@ -307,7 +321,9 @@ class EField(FElementWithAttr):
         print "NAME", nm, tp
         shape = self.__getShape(tp)
         # create h5 object
+        print "store1"
         self.h5Object = self.__createObject(tp, nm, shape)
+        print "store2"
         # create attributes
         self.__setAttributes()
 

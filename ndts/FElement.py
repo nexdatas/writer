@@ -133,7 +133,7 @@ class FElement(Element):
     # \raise XMLSettingSyntaxError if shape cannot be found      
     # \returns shape of the object
     def _findShape(self, rank, lengths=None, extraD = False, 
-                   grows = None, extends = False):
+                   grows = None, extends = False, checkData=False):
         shape = []
         exDim = self._getExtra(grows, extraD)
         if  int(rank) > 0:
@@ -153,20 +153,19 @@ class FElement(Element):
             except:
                 val = ("".join(self.content)).strip().encode()   
                 found = False
-                
-#                if self.source and self.source.isValid():
-#                    data = self.source.getData()
-#                    if isinstance(data, dict):                        
-#                        dh = DataHolder(**data)
-#                        shape = self._reshape(dh.shape, rank, extends, 
-#                                               extraD, exDim)
-#                        if shape is not None:
-#                            found = True
-
-#                shape = self._reshape([], rank, extends, 
-#                                      extraD, exDim)
-#                if shape is not None:
-#                    found = True
+###                
+                if checkData and self.source and self.source.isValid():
+                    data = self.source.getData()
+                    if isinstance(data, dict):                        
+                        dh = DataHolder(**data)
+                        shape = self._reshape(dh.shape, rank, extends, 
+                                               extraD, exDim)
+                        if shape is not None:
+                            found = True
+                shape = self._reshape([], rank, extends, 
+                                      extraD, exDim)
+                if shape is not None:
+                    found = True
 #                print "shape",shape,rank,extraD, exDim
 #                if val:
                 if val and not found:
