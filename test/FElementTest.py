@@ -471,29 +471,233 @@ class FElementTest(unittest.TestCase):
 
         mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), mlen )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), mlen )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ mlen )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + mlen )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[0], 0, mlen[1]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), mlen + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
         el.source.numpy = False
 
         mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), mlen )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), mlen )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ mlen )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + mlen )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[0], 0, mlen[1]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), mlen + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_checkData(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData = True), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData = True), mlen )
+        self.assertEqual(el._findShape("2", extraD=True, checkData = True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData = True), [0] + mlen )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData = True), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData = True), mlen + [0] )
+
+        el.source.numpy = False
+
+        mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData = True), mlen)
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData = True), mlen )
+        self.assertEqual(el._findShape("2", extraD=True, checkData = True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData = True), [0] + mlen )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData = True), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData = True), mlen + [0] )
+
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_ext_checkData(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [self.__rnd.randint(1, 2),self.__rnd.randint(1, 2) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, extends=True, checkData=True), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True, checkData=True), mlen )
+        self.assertEqual(el._findShape("2", extraD=True, extends=True, checkData=True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True, checkData=True), [0] + mlen )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, extends=True, checkData=True), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True, checkData=True), mlen + [0] )
+
+        el.source.numpy = False
+
+        mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, extends=True, checkData=True), mlen )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True, checkData=True), mlen )
+        self.assertEqual(el._findShape("2", extraD=True, extends=True, checkData=True), [0]+ mlen )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True, checkData=True), [0] + mlen )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, extends=True, checkData=True), [mlen[0], 0, mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True, checkData=True), mlen + [0] )
+
+
+
+
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_extends_checkData(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [self.__rnd.randint(2, 1000),1 ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData=True), [mlen[0],1] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData=True), [mlen[0],1] )
+        self.assertEqual(el._findShape("2", extraD=True, checkData=True), [0]+ [mlen[0]] + [1] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [0] + [mlen[0]] + [1] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData=True), [mlen[0], 0,1 ] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [mlen[0], 1,0] )
+
+        el.source.numpy = False
+
+        mlen = [self.__rnd.randint(2, 1000),1 ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData=True), [mlen[0],1] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData=True), [mlen[0],1] )
+        self.assertEqual(el._findShape("2", extraD=True, checkData=True), [0]+ [mlen[0]] + [1] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [0] + [mlen[0]] + [1] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData=True), [mlen[0], 0 ,1] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [mlen[0]] + [1,0] )
+
+
+
+
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_extends2_checkData(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [1,self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData=True), [1, mlen[1]] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData=True), [1, mlen[1]] )
+        self.assertEqual(el._findShape("2", extraD=True, checkData=True), [0,1]+ [mlen[1]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [0,1] + [mlen[1]])
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData=True), [1,0,mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [1]+ [mlen[1]] + [0] )
+
+        el.source.numpy = False
+
+        mlen = [1,self.__rnd.randint(2, 1000) ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData=True), [1, mlen[1]] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData=True), [1,mlen[1]] )
+        self.assertEqual(el._findShape("2", extraD=True, checkData=True), [0,1]+ [mlen[1]] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [0,1] + [mlen[1]] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData=True), [1,0,mlen[1]] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [1]+ [mlen[1]] + [0] )
+
+    ## run _findShape test
+    # \brief It tests _findShape method
+    def test_findShape_ds_2d_extends3_checkData(self):
+        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        ds = TestDataSource()
+        el = FElement(self._tfname, self._fattrs, None)
+        el.source = ds
+        
+
+        el.source.numpy = True
+
+        mlen = [1,1 ]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData=True), [1, 1] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData=True), [1,1] )
+        self.assertEqual(el._findShape("2", extraD=True, checkData=True), [0]+ [1,1] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [0] + [1,1])
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData=True), [1, 0,1] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [1,1] + [0] )
+
+        el.source.numpy = False
+
+        mlen = [1,1]
+        el.source.dims = mlen
+        self.assertEqual(el._findShape("2", extraD=False, checkData=True), [1,1] )
+        for i in range(-2, 5):
+            self.assertEqual(el._findShape("2", extraD=False, grows = i, checkData=True), [1,1] )
+        self.assertEqual(el._findShape("2", extraD=True, checkData=True), [0]+ [1,1] )
+        for i in range(-2, 2):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [0] + [1,1] )
+        self.assertEqual(el._findShape("2", extraD=True, grows = 2, checkData=True), [1, 0, 1] )
+        for i in range(3, 5):
+            self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [1,1] + [0] )
+
+
+
+
+
+
+
 
 
 
@@ -510,29 +714,29 @@ class FElementTest(unittest.TestCase):
 
         mlen = [self.__rnd.randint(1, 2),self.__rnd.randint(1, 2) ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False, extends=True), mlen )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, extends=True)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True), mlen )
-        self.assertEqual(el._findShape("2", extraD=True, extends=True), [0]+ mlen )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i, extends=True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, extends=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), [0] + mlen )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2, extends=True), [mlen[0], 0, mlen[1]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i, extends=True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2, extends=True)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), mlen + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i, extends=True)
 
         el.source.numpy = False
 
         mlen = [self.__rnd.randint(2, 1000),self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False, extends=True), mlen )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, extends=True)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i, extends=True), mlen )
-        self.assertEqual(el._findShape("2", extraD=True, extends=True), [0]+ mlen )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i, extends=True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, extends=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), [0] + mlen )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2, extends=True), [mlen[0], 0, mlen[1]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i, extends=True)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2, extends=True)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i, extends=True), mlen + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i, extends=True)
 
 
 
@@ -552,29 +756,29 @@ class FElementTest(unittest.TestCase):
 
         mlen = [self.__rnd.randint(2, 1000),1 ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), [mlen[0]] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[0]] )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[0]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[0]] )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[0], 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[0], 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
         el.source.numpy = False
 
         mlen = [self.__rnd.randint(2, 1000),1 ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), [mlen[0]] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[0]] )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[0]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[0]] )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[0], 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[0]] + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
 
 
@@ -593,33 +797,33 @@ class FElementTest(unittest.TestCase):
 
         mlen = [1,self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), [mlen[1]] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[1]] )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[1]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[1]])
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[1], 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[1]] + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
         el.source.numpy = False
 
         mlen = [1,self.__rnd.randint(2, 1000) ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), [mlen[1]] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), [mlen[1]] )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ [mlen[1]] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [mlen[1]] )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [mlen[1], 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [mlen[1]] + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
     ## run _findShape test
     # \brief It tests _findShape method
-    def test_findShape_ds_2d_extends2(self):
+    def test_findShape_ds_2d_extends3(self):
         print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
@@ -630,29 +834,29 @@ class FElementTest(unittest.TestCase):
 
         mlen = [1,1 ]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), [] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), [] )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ [] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [])
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [ 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [] + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
         el.source.numpy = False
 
         mlen = [1,1]
         el.source.dims = mlen
-        self.assertEqual(el._findShape("2", extraD=False), [] )
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False)
         for i in range(-2, 5):
-            self.assertEqual(el._findShape("2", extraD=False, grows = i), [] )
-        self.assertEqual(el._findShape("2", extraD=True), [0]+ [] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=False, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True)
         for i in range(-2, 2):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [0] + [] )
-        self.assertEqual(el._findShape("2", extraD=True, grows = 2), [ 0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
+        self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = 2)
         for i in range(3, 5):
-            self.assertEqual(el._findShape("2", extraD=True, grows = i), [] + [0] )
+            self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i)
 
 
 
