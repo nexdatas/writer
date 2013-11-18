@@ -119,9 +119,16 @@ class EField(FElementWithAttr):
                     self.grows = 1
                     
             print "GSHAPE2a",shape     
+            if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
+                "SHAPEArr"
+                self.__splitArray = True
+                shape = self._findShape(self.rank, self.lengths, self.__extraD, 
+                                        checkData=True)
+                if self.__extraD:
+                    self.grows = 1
             return shape
         except XMLSettingSyntaxError:
-            if int(self.rank) > 1 and dtype.encode() == "string":
+            if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, 
                                         checkData=True)
@@ -173,8 +180,12 @@ class EField(FElementWithAttr):
                             deflate)
             else:
                 print "create2b", name.encode(), dtype.encode(), [], [], deflate
-                f = self._lastObject().create_field(
-                    name.encode(), dtype.encode(), [], [], deflate)
+                if deflate:
+                    f = self._lastObject().create_field(
+                        name.encode(), dtype.encode(), [0], [1], deflate)
+                else:    
+                    f = self._lastObject().create_field(
+                        name.encode(), dtype.encode(), [], [], None)
                 print "create2c"
         except:
             info = sys.exc_info()
@@ -474,7 +485,7 @@ class EField(FElementWithAttr):
                     else:
                         self.h5Object[:, :, self.h5Object.shape[2]-1] = arr
                 else:
-                    print "arr", arr, self.h5Object.shape, self.h5Object.shape[1]-1, self.h5Object.dtype
+                    print "arr", arr, self.h5Object.shape, self.h5Object.dtype
                     self.h5Object[:, self.h5Object.shape[1]-1] = arr
 
 
@@ -526,10 +537,17 @@ class EField(FElementWithAttr):
                 "Case with %s  format not supported " % \
                 str(holder.format).split('.')[-1]
 
+
     ## grows the h5 field    
     # \brief Ir runs the grow command of h5Object with grows-1 parameter
     def __grow(self):
         if self.grows and self.grows > 0 and hasattr(self.h5Object, "grow"):
+            shape = self.h5Object.shape
+            if self.grows > len(shape):
+                self.grows = len(shape)
+            if not self.grows and self.__extraD:
+                self.grows = 1
+
             self.h5Object.grow(self.grows-1)
             
     
@@ -538,13 +556,17 @@ class EField(FElementWithAttr):
     def __growshape(self, shape):
         h5shape = self.h5Object.shape
         ln = len(shape)
+        print "gS", shape, h5shape, self.grows, self.__extraD
         if ln > 0 and len(h5shape) > 0: 
             j = 0
             for i in range(len(h5shape)):
-                if not self.__extraD or self.grows - 1 != i and \
-                        not (i==0 and self.grows ==0) :
+                if not self.__extraD or (self.grows - 1 != i and \
+                        not (i==0 and self.grows ==0)) :
                     if shape[j] - h5shape[i] > 0: 
                         self.h5Object.grow(i, shape[j] - h5shape[i])
+                    elif not h5shape[i]:
+                        self.h5Object.grow(i, 1)
+                        
                     j += 1        
 
                     
@@ -552,6 +574,7 @@ class EField(FElementWithAttr):
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
+        self.__grew = False
         try:
             if self.source:
                 dt = self.source.getData()
@@ -565,6 +588,7 @@ class EField(FElementWithAttr):
 #                        found = True
                     print "SHAPE", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
                 self.__grow()
+                self.__grew = True
                     
                 if not dh:
                     message = self.setMessage("Data without value")
@@ -577,11 +601,13 @@ class EField(FElementWithAttr):
                         if not isinstance(self.h5Object, FieldArray):
                             self.__growshape(dh.shape)
                             print "SHAPEne", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
+                            print "dh", dh.value
                         self.__writeData(dh)
                     else:
                         if not isinstance(self.h5Object, FieldArray) and \
                                 len(self.h5Object.shape) >= self.grows and \
                                 self.h5Object.shape[self.grows-1] == 1:
+                            print "DHS", dh.shape
                             self.__growshape(dh.shape)
                             print "SHAPEex", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
                         self.__writeGrowingData(dh)
@@ -612,6 +638,7 @@ class EField(FElementWithAttr):
                     str(self.error)
 
 
+
     ## fills object with maximum value            
     # \brief It fills object or an extend part of object by default value 
     def __fillMax(self):
@@ -619,8 +646,19 @@ class EField(FElementWithAttr):
         nptype = self.h5Object.dtype
         value = ''
 
+
+        print "GROW", self.grows, shape
+        if self.grows > len(shape):
+            self.grows = len(shape)
+        if not self.grows and self.__extraD:
+            self.grows = 1
         if self.grows:
             shape.pop(self.grows-1)
+
+        print "FMSHAPE" ,shape
+        shape = [s if s > 0 else 1 for s in shape]        
+        print "FMSHAPE2" ,shape
+        self.__growshape(shape)
             
         if nptype == "bool":
             value = False
@@ -648,12 +686,15 @@ class EField(FElementWithAttr):
         else:
             arr = value
 
+        print "ARR", arr    
         dh = DataHolder(dformat, arr, NTP.npTt[self.h5Object.dtype], shape)    
         
-        
+
         if not self.__extraD:
             self.__writeData(dh)
         else:
+            if not self.__grew:
+                self.__grow( )
             self.__writeGrowingData(dh)
 
             
@@ -669,4 +710,3 @@ class EField(FElementWithAttr):
                     "EField::markFailed() - %s marked as failed" % \
                     (self.h5Object.name) 
             self.__fillMax()
-    

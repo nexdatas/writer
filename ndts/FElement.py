@@ -162,11 +162,17 @@ class FElement(Element):
                                                extraD, exDim)
                         if shape is not None:
                             found = True
-                shape = self._reshape([], rank, extends, 
-                                      extraD, exDim)
-                if shape is not None:
-                    found = True
-#                print "shape",shape,rank,extraD, exDim
+
+
+
+#                if not found:            
+#                    shape = self._reshape([], rank, extends, 
+#                                          extraD, exDim)
+#                    if shape is not None:
+#                        found = True
+
+#               print "shape",shape,rank,extraD, exDim
+#
 #                if val:
                 if val and not found:
                     shape = self.__fetchShape(val, rank)

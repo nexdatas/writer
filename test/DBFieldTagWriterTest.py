@@ -338,7 +338,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
         <field name="final_pid2_scalar_string" type="NX_CHAR" units="m" >
-          <dimensions rank="2"/>
+          <dimensions rank="1"/>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
@@ -904,7 +904,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field name="final_pid_spectrum_string" type="NX_CHAR" units="" >
-          <dimensions rank="2" />
+          <dimensions rank="1" />
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>

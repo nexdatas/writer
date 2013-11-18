@@ -165,7 +165,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def test_tangoScalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/tangoscalar.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -377,7 +377,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def test_tangoScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/tangoscalar.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -652,7 +652,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def test_tangoSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/tangospectrum.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -846,8 +846,9 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
         steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
+        self._simps.tearDown()
         for i in range(steps):
-            if i%2 :
+            if not i%2 :
                 self._simps.setUp()
 
                 self._simps.dp.SpectrumBoolean = self._logical[i]
@@ -868,7 +869,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
             self.record(tdw,'{}')
 
-#        self._simps.tearDown()
+        self._simps.tearDown()
         self.closeWriter(tdw)
         self._simps.setUp()
         
@@ -879,23 +880,23 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname , 18)
         self._sc.checkSpectrumField(
             det, "SpectrumBoolean", "bool", "NX_BOOLEAN", 
-            [(self._logical[i] if i%2 else [False]*len(self._logical[i])) for  i in range(steps)],
+            [(self._logical[i] if not i%2 else [False]*len(self._logical[i])) for  i in range(steps)],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkSpectrumField(
             det, "SpectrumUChar", "uint8", "NX_UINT8", 
-            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumShort", "int16", "NX_INT16", 
-            [(self._mca1[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._mca1[i])) 
+            [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._mca1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
             grows=3)
         self._sc.checkSpectrumField(
             det, "SpectrumUShort", "uint16", "NX_UINT16", 
-            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
             grows=2)
@@ -903,12 +904,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumLong", "int32", "NX_INT32", 
-            [(self._mca1[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca1[i])) 
+            [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSpectrumField(
             det, "SpectrumULong", "uint32", "NX_UINT32", 
-            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
             grows=1)
@@ -917,13 +918,13 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumLong64", "int64", "NX_INT64", 
-            [(self._mca1[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[i])) 
+            [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumULong64", "uint64", "NX_UINT64", 
-            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
             grows=2)
@@ -932,14 +933,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumFloat", "float32", "NX_FLOAT32", 
-            [(self._fmca1[i] if i%2 else  [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[i])) 
+            [(self._fmca1[i] if not i%2 else  [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows=0, error = 1e-6)
 
         self._sc.checkSpectrumField(
             det, "SpectrumDouble", "float64", "NX_FLOAT64", 
-            [(self._fmca1[i] if i%2 else  [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[i])) 
+            [(self._fmca1[i] if not i%2 else  [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows=1, error = 1e-14)
@@ -949,7 +950,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkStringSpectrumField(
             det, "SpectrumString", "string", "NX_CHAR", 
-            [(self._dates[i] if i%2 else  ['']*len(self._dates[i])) 
+            [(self._dates[i] if not i%2 else  ['']*len(self._dates[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
@@ -957,13 +958,13 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded", "int32", "NX_INT32", 
-            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32", 
-            [(self._mca2[i] if i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
@@ -974,7 +975,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleSpectrumField(
             det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", 
-            [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]),
+            [numpy.finfo(getattr(numpy, 'float32')).max],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             error =1.0e-06)
             
@@ -995,7 +996,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def test_tangoSpectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/tangospectrum.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1252,7 +1253,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def test_tangoImage(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/tangoimage.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1499,7 +1500,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     def test_tangoImage_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/tangoimage.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1686,10 +1687,10 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
         steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
+        self._simps.tearDown()
         for i in range(steps):
-            if i%2 :
+            if not i%2 :
                 self._simps.setUp()
-
                 self._simps.dp.ImageBoolean = self._logical2[i]
                 self._simps.dp.ImageUChar = self._pco1[i]
                 self._simps.dp.ImageShort = self._pco1[i]
@@ -1702,11 +1703,11 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                 self._simps.dp.ImageDouble = self._fpco1[i]
                 self._simps.dp.ImageString = self._dates2[i]
             else:
-                self._simps.tearDown()
+                 self._simps.tearDown()
 
             self.record(tdw,'{}')
 
-#        self._simps.tearDown()
+        self._simps.tearDown()
         self.closeWriter(tdw)
         self._simps.setUp()
         
@@ -1717,13 +1718,13 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname , 22)
         self._sc.checkImageField(
             det, "ImageBoolean", "bool", "NX_BOOLEAN", 
-            [(self._logical2[i] if i%2 else [[False]*len(self._logical2[i][0])]*len(self._logical2[i])) for  i in range(steps)],
+            [(self._logical2[i] if not i%2 else [[False]*len(self._logical2[i][0])]*len(self._logical2[i])) for  i in range(steps)],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
 
         self._sc.checkImageField(
             det, "ImageUChar", "uint8", "NX_UINT8", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1731,14 +1732,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "ImageShort", "int16", "NX_INT16", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows = 3 )
         self._sc.checkImageField(
             det, "ImageUShort", "uint16", "NX_UINT16", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1747,14 +1748,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "ImageLong", "int32", "NX_INT32", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows = 2 )
         self._sc.checkImageField(
             det, "ImageULong", "uint32", "NX_UINT32", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1763,14 +1764,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "ImageLong64", "int64", "NX_INT64", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows = 1 )
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1779,14 +1780,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "ImageFloat", "float32", "NX_FLOAT32", 
-            [(self._fpco1[i] if i%2 else 
+            [(self._fpco1[i] if not i%2 else 
               [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows = 3, error = 1.0e-6 )
         self._sc.checkImageField(
             det, "ImageDouble", "float64", "NX_FLOAT64", 
-            [(self._fpco1[i] if i%2 else 
+            [(self._fpco1[i] if not i%2 else 
               [[numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1796,7 +1797,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkStringImageField(
             det, "ImageString", "string", "NX_CHAR", 
-            [(self._dates2[i] if i%2 else 
+            [(self._dates2[i] if not i%2 else 
               [['']*len(self._dates2[i][0])]*len(self._dates2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
@@ -1804,7 +1805,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "ImageEncoded", "uint8", "NX_UINT8", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1813,7 +1814,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", 
-            [(self._pco1[i] if i%2 else 
+            [(self._pco1[i] if not i%2 else 
               [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
@@ -1825,7 +1826,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32", 
-             [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[0][0])]*len(self._fpco1[0]) ,
+             [[numpy.finfo(getattr(numpy, 'float32')).max]] ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
 
