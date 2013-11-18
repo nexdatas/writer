@@ -140,7 +140,7 @@ class FElement(Element):
             try:
                 for i in range(int(rank)):
                     si = str(i+1)
-                    if si in lengths.keys() and lengths[si] is not None:
+                    if lengths and si in lengths.keys() and lengths[si] is not None:
                         if int(lengths[si]) > 0:
                             shape.append(int(lengths[si]))
                     else:
@@ -151,6 +151,8 @@ class FElement(Element):
                 if extraD:
                     shape.insert(exDim-1, 0)    
             except:
+#                import sys
+#                print sys.exc_info()
                 val = ("".join(self.content)).strip().encode()   
                 found = False
 ###                
@@ -163,17 +165,6 @@ class FElement(Element):
                         if shape is not None:
                             found = True
 
-
-
-#                if not found:            
-#                    shape = self._reshape([], rank, extends, 
-#                                          extraD, exDim)
-#                    if shape is not None:
-#                        found = True
-
-#               print "shape",shape,rank,extraD, exDim
-#
-#                if val:
                 if val and not found:
                     shape = self.__fetchShape(val, rank)
                     if shape is not None:
