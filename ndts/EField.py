@@ -65,6 +65,8 @@ class EField(FElementWithAttr):
         self.rate = 5
         ## compression shuffle
         self.shuffle = True
+        ## grew flag
+        self.__grew = True
         ## data format
         self.__format = ''
 
