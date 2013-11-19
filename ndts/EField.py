@@ -178,7 +178,6 @@ class EField(FElementWithAttr):
                 else:    
                     f = self._lastObject().create_field(
                         name.encode(), dtype.encode(), [], [], None)
-                print "create2c"
         except:
             info = sys.exc_info()
             import traceback
