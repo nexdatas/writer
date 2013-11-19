@@ -200,7 +200,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
-            <query format="SPECTRUM">
+            <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
           </datasource>

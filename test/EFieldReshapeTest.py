@@ -888,6 +888,7 @@ class EFieldReshapeTest(unittest.TestCase):
                                          else [Converters.toBool(attrs[k][0][i][0]) ]), 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
+                print "ki",k,i,  attrs[k][0][0],grow
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
@@ -1895,7 +1896,8 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].compression, False)
             self.assertEqual(el[k].rate, 5)
             self.assertEqual(el[k].shuffle, True)
-
+            
+            
             el[k].store()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" \
@@ -1904,11 +1906,12 @@ class EFieldReshapeTest(unittest.TestCase):
                         "shape":[1,1]}
 
             for i in range(steps):
+                print "KI", k,i, attrs[k][0]
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(attrs[k][0][i][0][0])]]), 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
-                            "shape":[attrs[k][3][0],0]}
+                            "shape":[1,1]}
                 self.assertEqual(el[k].run(), None)
 
             
@@ -2020,7 +2023,7 @@ class EFieldReshapeTest(unittest.TestCase):
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(attrs[k][0][i][0][0])]]), 
                             "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
-                            "shape":[attrs[k][3][0],0]}
+                            "shape":[1,1]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:

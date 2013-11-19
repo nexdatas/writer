@@ -103,6 +103,7 @@ class EField(FElementWithAttr):
     # \param dtypy object type    
     # \returns object shape    
     def __getShape(self, dtype):
+        print "GET"
         try:
             if dtype.encode() == "string":
                 shape = self._findShape(self.rank, self.lengths, 
@@ -119,7 +120,7 @@ class EField(FElementWithAttr):
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 if self.__extraD:
                     self.grows = 1
-                    
+                  
             print "GSHAPE2a",shape     
             if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
                 "SHAPEArr"
@@ -130,10 +131,12 @@ class EField(FElementWithAttr):
                     self.grows = 1
             return shape
         except XMLSettingSyntaxError:
+            print "EXEP1"
             if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
+                print "EXEP2"
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, 
-                                        checkData=True)
+                                        extends=True, checkData=True)
                 if self.__extraD:
                     self.grows = 1
             else:
@@ -167,7 +170,7 @@ class EField(FElementWithAttr):
             if shape:
                 print "create2a"
                 if self.__splitArray:
-                    print "create3a"
+                    print "create3a", shape, self.rank
                     f = FieldArray(self._lastObject(), name.encode(), 
                                    dtype.encode(), shape)
                 else:
@@ -472,8 +475,6 @@ class EField(FElementWithAttr):
                 else:
                     if hasattr(arr,"__iter__") and type(arr).__name__!= 'str' \
                             and len(arr) == 1:
-                        self.h5Object[self.h5Object.shape[0]-1] = arr[0]
-                    else:
                         self.h5Object[self.h5Object.shape[0]-1] = arr
 
         else:
@@ -582,8 +583,10 @@ class EField(FElementWithAttr):
                 dt = self.source.getData()
                 dh = None
                 if dt and isinstance(dt, dict):
+                    print "DT", dt
                     dh = DataHolder(**dt)
                     exDim = self._getExtra(self.grows, self.__extraD)
+                    print "dh", dh.shape, dh.value
                     shape = self._reshape(dh.shape, self.rank, True, 
                                            self.__extraD, exDim)
 #                    if shape is not None:
