@@ -119,6 +119,8 @@ class FElement(Element):
             exDim = 0
         return exDim    
 
+
+
     ## creates shape object from rank and lengths variables
     # \param rank rank of the object
     # \param lengths dictionary with dimensions as a string data , 
@@ -136,7 +138,8 @@ class FElement(Element):
             try:
                 for i in range(int(rank)):
                     si = str(i+1)
-                    if lengths and si in lengths.keys() and lengths[si] is not None:
+                    if lengths and si in lengths.keys() \
+                            and lengths[si] is not None:
                         if int(lengths[si]) > 0:
                             shape.append(int(lengths[si]))
                     else:
@@ -212,7 +215,34 @@ class FElementWithAttr(FElement):
         ## dictionary with attribures from sepatare attribute tags
         self.tagAttributes = {}
         self.__h5Instances = {}
-  
+
+
+    ## creates DataHolder with given rank and value   
+    # \param rank data rank    
+    # \param val data value
+    # \returns data holder    
+    @classmethod    
+    def _setValue(cls, rank, val):
+        dh = None
+        if not rank or rank == 0:
+            dh = DataHolder("SCALAR", val, "DevString", [1, 0])
+        elif  rank == 1:
+            spec = val.split()
+            dh = DataHolder("SPECTRUM", spec, "DevString", 
+                            [len(spec), 0])
+        elif  rank == 2:
+            lines = val.split("\n")
+            image = [ln.split() for ln in lines ]
+            dh = DataHolder("IMAGE", image, "DevString", 
+                            [len(image),len(image[0])])
+        else:    
+            if Streams.log_error:
+                print >> Streams.log_error, \
+                    "FElement::_createAttributes() - "\
+                    "Case with not supported rank = %s", rank
+            raise XMLSettingSyntaxError, \
+                "Case with not supported rank = %s", rank
+        return dh
 
     ## creates h5 attributes
     # \brief It creates attributes instances which have been
@@ -238,25 +268,7 @@ class FElementWithAttr(FElement):
                     val = self.tagAttributes[key][1].strip().encode()
                     if val:
                         rank = len(shape)
-                        if not rank or rank == 0:
-                            dh = DataHolder("SCALAR", val, "DevString", [1, 0])
-                        elif  rank == 1:
-                            spec = val.split()
-                            dh = DataHolder("SPECTRUM", spec, "DevString", 
-                                            [len(spec), 0])
-                        elif  rank == 2:
-                            lines = val.split("\n")
-                            image = [ln.split() for ln in lines ]
-                            dh = DataHolder("IMAGE", image, "DevString", 
-                                            [len(image),len(image[0])])
-                        else:    
-                            if Streams.log_error:
-                                print >> Streams.log_error, \
-                                    "FElement::_createAttributes() - "\
-                                    "Case with not supported rank = %s", rank
-                            raise XMLSettingSyntaxError, \
-                                "Case with not supported rank = %s", rank
-                            
+                        dh = self._setValue(rank, val)
                         self.__h5Instances[key.encode()].value = \
                             dh.cast(self.__h5Instances[key.encode()].dtype)
                     

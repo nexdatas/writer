@@ -118,7 +118,8 @@ class EField(FElementWithAttr):
                 if self.__extraD:
                     self.grows = 1
                   
-            if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
+            if int(self.rank)+int(self.__extraD) > 1 \
+                    and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, 
                                         checkData=True)
@@ -126,7 +127,8 @@ class EField(FElementWithAttr):
                     self.grows = 1
             return shape
         except XMLSettingSyntaxError:
-            if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
+            if int(self.rank)+int(self.__extraD) > 1 \
+                    and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, 
                                         checkData=True)
@@ -260,26 +262,7 @@ class EField(FElementWithAttr):
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:
-                if not self.rank or int(self.rank) == 0:
-                    dh = DataHolder("SCALAR", val, "DevString", [1, 0])
-                elif  int(self.rank) == 1:
-                    spec = val.split()
-                    dh = DataHolder("SPECTRUM", spec, 
-                                    "DevString", [len(spec), 0])
-                elif  int(self.rank) == 2:
-                    lines = val.split("\n")
-                    image = [ln.split() for ln in lines ]
-                    dh = DataHolder("IMAGE", image, "DevString", 
-                                    [len(image),len(image[0])])
-                else:    
-                    if Streams.log_error:
-                        print >> Streams.log_error, \
-                            "EField::__setStrategy() - "\
-                            "Case with not supported rank = %s" % self.rank
-
-                    raise XMLSettingSyntaxError, \
-                        "Case with not supported rank = %s" % self.rank
-
+                dh = self._setValue(int(self.rank),val)
 
                 if self.h5Object.dtype != "string" or not self.rank \
                         or int(self.rank) == 0:
@@ -564,11 +547,6 @@ class EField(FElementWithAttr):
                 dh = None
                 if dt and isinstance(dt, dict):
                     dh = DataHolder(**dt)
-                    exDim = self._getExtra(self.grows, self.__extraD)
-                    shape = self._reshape(dh.shape, self.rank, True, 
-                                           self.__extraD, exDim)
-#                    if shape is not None:
-#                        found = True
                 self.__grow()
                 self.__grew = True
                     
