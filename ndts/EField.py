@@ -262,7 +262,7 @@ class EField(FElementWithAttr):
         else:
             val = ("".join(self.content)).strip().encode()   
             if val:
-                dh = self._setValue(int(self.rank),val)
+                dh = self._setValue(int(self.rank), val)
 
                 if self.h5Object.dtype != "string" or not self.rank \
                         or int(self.rank) == 0:
