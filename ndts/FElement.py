@@ -66,21 +66,17 @@ class FElement(Element):
     @classmethod
     def _reshape(cls, dsShape, rank, extends, extraD, exDim):        
         shape = []
-        print "RESHAPE", dsShape, shape,extends, rank
         if dsShape:    
             for s in dsShape:
                 if s and extends:
                     shape.append(s)
-                    print "EX", s, shape
                 elif not extends and s  and s > 0:
                     shape.append(s)
-                    print "NEX", s, shape
     
             while extends and len(shape) < int(rank):
                 shape.append(0)
             if extraD:
                 shape.insert(exDim-1, 0)    
-        print "END", shape
         return shape       
 
 
@@ -134,7 +130,6 @@ class FElement(Element):
     # \returns shape of the object
     def _findShape(self, rank, lengths=None, extraD = False, 
                    grows = None, extends = False, checkData=False):
-        print "rank", rank, checkData
         shape = []
         exDim = self._getExtra(grows, extraD)
         if  int(rank) > 0:
@@ -152,17 +147,13 @@ class FElement(Element):
                 if extraD:
                     shape.insert(exDim-1, 0)    
             except:
-#                import sys
-#                print sys.exc_info()
                 val = ("".join(self.content)).strip().encode()   
                 found = False
 ###                
                 if checkData and self.source and self.source.isValid():
-                    print "CHECKING"
                     data = self.source.getData()
                     if isinstance(data, dict):                        
                         dh = DataHolder(**data)
-                        print "Dat", data
                         shape = self._reshape(dh.shape, rank, extends, 
                                                extraD, exDim)
                         if shape is not None:
@@ -184,7 +175,6 @@ class FElement(Element):
         elif extraD:            
             shape = [0]
 
-        print "found",  shape
         return shape
 
 

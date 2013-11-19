@@ -103,7 +103,6 @@ class EField(FElementWithAttr):
     # \param dtypy object type    
     # \returns object shape    
     def __getShape(self, dtype):
-        print "GET"
         try:
             if dtype.encode() == "string":
                 shape = self._findShape(self.rank, self.lengths, 
@@ -111,19 +110,15 @@ class EField(FElementWithAttr):
             else:
                 shape = self._findShape(self.rank, self.lengths, 
                                         self.__extraD, self.grows, True)
-#            print "ifstring", nm, shape, self.grows
             if self.grows > len(shape):
                 self.grows = len(shape)
-            print "GSHAPE1",shape,self.rank
             if len(shape) > 1 and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD)
                 if self.__extraD:
                     self.grows = 1
                   
-            print "GSHAPE2a",shape     
             if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
-                "SHAPEArr"
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, 
                                         checkData=True)
@@ -131,12 +126,10 @@ class EField(FElementWithAttr):
                     self.grows = 1
             return shape
         except XMLSettingSyntaxError:
-            print "EXEP1"
             if int(self.rank)+int(self.__extraD) > 1 and dtype.encode() == "string":
-                print "EXEP2"
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD, 
-                                        extends=True, checkData=True)
+                                        checkData=True)
                 if self.__extraD:
                     self.grows = 1
             else:
@@ -145,7 +138,6 @@ class EField(FElementWithAttr):
                     shape = [0]*(int(self.rank)+int(self.__extraD))
                 else:
                     shape = [0]
-            print "GSHAPE2b",shape     
             return shape
             
 
@@ -158,23 +150,17 @@ class EField(FElementWithAttr):
         chunk = [s if s > 0 else 1 for s in shape]  
         deflate = None
         # create Filter
-        print "create1"
         if self.compression:
-            print "comp", self.rate, self.shuffle
             deflate = nx.NXDeflateFilter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
        
-        print "create2"
         try:    
             if shape:
-                print "create2a"
                 if self.__splitArray:
-                    print "create3a", shape, self.rank
                     f = FieldArray(self._lastObject(), name.encode(), 
                                    dtype.encode(), shape)
                 else:
-                    print "create3b"
                     if not chunk:
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), shape, [],
@@ -184,7 +170,6 @@ class EField(FElementWithAttr):
                             name.encode(), dtype.encode(), shape, chunk, 
                             deflate)
             else:
-                print "create2b", name.encode(), dtype.encode(), [], [], deflate
                 if deflate:
                     f = self._lastObject().create_field(
                         name.encode(), dtype.encode(), [0], [1], deflate)
@@ -335,12 +320,9 @@ class EField(FElementWithAttr):
         # type and name
         tp, nm = self.__typeAndName()
         # shape
-        print "NAME", nm, tp
         shape = self.__getShape(tp)
         # create h5 object
-        print "store1"
         self.h5Object = self.__createObject(tp, nm, shape)
-        print "store2"
         # create attributes
         self.__setAttributes()
 
@@ -488,7 +470,6 @@ class EField(FElementWithAttr):
                     else:
                         self.h5Object[:, :, self.h5Object.shape[2]-1] = arr
                 else:
-                    print "arr", arr, self.h5Object.shape, self.h5Object.dtype
                     self.h5Object[:, self.h5Object.shape[1]-1] = arr
 
 
@@ -559,7 +540,6 @@ class EField(FElementWithAttr):
     def __growshape(self, shape):
         h5shape = self.h5Object.shape
         ln = len(shape)
-        print "gS", shape, h5shape, self.grows, self.__extraD
         if ln > 0 and len(h5shape) > 0: 
             j = 0
             for i in range(len(h5shape)):
@@ -583,15 +563,12 @@ class EField(FElementWithAttr):
                 dt = self.source.getData()
                 dh = None
                 if dt and isinstance(dt, dict):
-                    print "DT", dt
                     dh = DataHolder(**dt)
                     exDim = self._getExtra(self.grows, self.__extraD)
-                    print "dh", dh.shape, dh.value
                     shape = self._reshape(dh.shape, self.rank, True, 
                                            self.__extraD, exDim)
 #                    if shape is not None:
 #                        found = True
-                    print "SHAPE", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
                 self.__grow()
                 self.__grew = True
                     
@@ -605,16 +582,12 @@ class EField(FElementWithAttr):
                     if not self.__extraD:
                         if not isinstance(self.h5Object, FieldArray):
                             self.__growshape(dh.shape)
-                            print "SHAPEne", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
-                            print "dh", dh.value
                         self.__writeData(dh)
                     else:
                         if not isinstance(self.h5Object, FieldArray) and \
                                 len(self.h5Object.shape) >= self.grows and \
                                 self.h5Object.shape[self.grows-1] == 1:
-                            print "DHS", dh.shape
                             self.__growshape(dh.shape)
-                            print "SHAPEex", self.h5Object.name, dh.shape, shape, self.h5Object.shape    
                         self.__writeGrowingData(dh)
         except:
             info = sys.exc_info()
@@ -652,7 +625,6 @@ class EField(FElementWithAttr):
         value = ''
 
 
-        print "GROW", self.grows, shape
         if self.grows > len(shape):
             self.grows = len(shape)
         if not self.grows and self.__extraD:
@@ -660,9 +632,7 @@ class EField(FElementWithAttr):
         if self.grows:
             shape.pop(self.grows-1)
 
-        print "FMSHAPE" ,shape
         shape = [s if s > 0 else 1 for s in shape]        
-        print "FMSHAPE2" ,shape
         self.__growshape(shape)
             
         if nptype == "bool":
@@ -691,9 +661,7 @@ class EField(FElementWithAttr):
         else:
             arr = value
 
-        print "ARR", arr    
         dh = DataHolder(dformat, arr, NTP.npTt[self.h5Object.dtype], shape)    
-        
 
         if not self.__extraD:
             self.__writeData(dh)
@@ -701,7 +669,7 @@ class EField(FElementWithAttr):
             if not self.__grew:
                 self.__grow( )
             self.__writeGrowingData(dh)
-
+            
             
 
 

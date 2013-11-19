@@ -208,8 +208,11 @@ class FieldArray(object):
         rank = ntp.arrayRank(value)            
 
         if self.__fdim < 1 :
-            for k in range(len(value)):
-                self.__fList[0].__setitem__(kr[k], value[k])
+            if type(value).__name__ == 'str':
+                self.__fList[0].__setitem__(kr[0], value)
+            else:
+                for k in range(len(value)):
+                    self.__fList[0].__setitem__(kr[k], value[k])
         elif self.__fdim == 1:
             if rank == 2:
                 for i in range(len(value[0])):
