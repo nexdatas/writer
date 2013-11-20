@@ -975,7 +975,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleSpectrumField(
             det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", 
-            [numpy.finfo(getattr(numpy, 'float32')).max],
+            [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]),
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             error =1.0e-06)
             
@@ -1826,7 +1826,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32", 
-             [[numpy.finfo(getattr(numpy, 'float32')).max]] ,
+            [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[0][0])]*len(self._fpco1[0]),
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
 
