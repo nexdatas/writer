@@ -105,11 +105,13 @@ class EField(FElementWithAttr):
     def __getShape(self, dtype):
         try:
             if dtype.encode() == "string":
-                shape = self._findShape(self.rank, self.lengths, 
-                                        self.__extraD, self.grows, checkData=True)
+                shape = self._findShape(
+                    self.rank, self.lengths, 
+                    self.__extraD, self.grows, checkData=True)
             else:
-                shape = self._findShape(self.rank, self.lengths, 
-                                        self.__extraD, self.grows, True, checkData=True)
+                shape = self._findShape(
+                    self.rank, self.lengths, 
+                    self.__extraD, self.grows, True, checkData=True)
             if self.grows > len(shape):
                 self.grows = len(shape)
             if len(shape) > 1 and dtype.encode() == "string":
