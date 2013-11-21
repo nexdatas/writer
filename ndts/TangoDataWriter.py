@@ -28,6 +28,8 @@ from . import Streams
 
 import pni.io.nx.h5 as nx
 
+#import  cProfile, pstats, io
+
 from xml import sax
 
 try:
@@ -203,7 +205,9 @@ class TangoDataWriter(object):
     ##  opens the data entry corresponding to a new XML settings
     # \brief It parse the XML settings, creates thread pools 
     # and runs the INIT pool.
-    def openEntry(self):
+    def openEntry(self): 
+#        self.pr = cProfile.Profile()
+
         if self.xmlSettings:
             # flag for INIT mode
             self.__datasources.counter = -1
@@ -296,6 +300,8 @@ class TangoDataWriter(object):
     #  removes the thread pools 
     def closeEntry(self):
         # flag for FINAL mode
+#        self.pr.enable()
+
         self.__datasources.counter = -2
 
         if self.addingLogs and self.__logGroup:    
@@ -333,6 +339,16 @@ class TangoDataWriter(object):
             self.__nxFile.flush()
 
         gc.collect()
+#        self.pr.disable()
+#        s = io.open("/tmp/nexuslog.log",mode='wb')
+#        ps = pstats.Stats(self.pr, stream=s)
+#        ps.print_stats()
+
+#        from EField import pr
+#        s = io.open("/tmp/writescalarnexuslog.log",mode='wb')
+#        ps = pstats.Stats(pr, stream=s)
+#        ps.print_stats()
+
 
 
     ## the H5 file closing
@@ -362,10 +378,56 @@ class TangoDataWriter(object):
             
         self.__nxFile = None
         self.__eFile = None
+
+#        self.fileName = None
+        self.__server = None
+        self.__xmlSettings = None
+#        self.__json = None
+#        self.numThreads = None
+#        self.__initPool = None
+#        self.__stepPool = None
+#        self.__finalPool = None
+#        self.__triggerPools = None
+#        self.__nxFile = None
+#        self.__eFile = None
+#        self.__decoders = None
+#        self.__datasources = None
+#        self.__fetcher = None
+#        self.addingLogs = None
+#        self.__entryCounter = None
+#        self.__logGroup = None
+#        self.__fileCreated = None
+    
+
         gc.collect()
 
         
-
+    def __del__(self):
+        self.fileName = None
+        self.__server = None
+        self.__xmlSettings = None
+        self.__json = None
+        self.numThreads = None
+        self.__initPool = None
+        self.__stepPool = None
+        self.__finalPool = None
+        self.__triggerPools = None
+        self.__nxFile = None
+        self.__eFile = None
+        self.__decoders = None
+        self.__datasources = None
+        self.__fetcher = None
+        self.addingLogs = None
+        self.__entryCounter = None
+        self.__logGroup = None
+        self.__fileCreated = None
+    
+        Streams.log_fatal = None
+        Streams.log_error = None
+        Streams.log_warn = None
+        Streams.log_info = None
+        Streams.log_debug = None
+                
 
 
 if __name__ == "__main__":

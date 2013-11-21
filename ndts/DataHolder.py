@@ -112,19 +112,25 @@ class DataHolder(object):
                     return NTP.convert[dtype](self.value)
             
         else:
-
+            print "CHECK",dtype, NTP.npTt[dtype], str(self.tangoDType) 
             if dtype in NTP.npTt.keys() \
                     and NTP.npTt[dtype] == str(self.tangoDType) \
                     and dtype != "string":
+                print "DTYPE OK",dtype, type(self.value).__name__
                 if type(self.value).__name__ == 'ndarray' and \
                         self.value.dtype.name == dtype:
+                    print "copy label"
                     return self.value
                 else:
+                    print "create array"
                     return numpy.array(self.value, dtype=dtype)
             else:    
+                print "DTYPE TO BE CHANGE",type(self.value).__name__
                 if dtype == "string":
+                    print "cast string"
                     return NTP().createArray(self.value, NTP.convert[dtype])
                 else:
+                    print "cast no string"
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]), 
                         dtype=dtype)

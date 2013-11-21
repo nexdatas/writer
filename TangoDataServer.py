@@ -104,12 +104,6 @@ class TangoDataServer(PyTango.Device_4Impl):
         ## thread lock
         if not hasattr(self, "lock"):
             self.lock = Lock()
-        ## openentry thread
-        self.othread = None
-        ## record thread
-        self.rthread = None
-        ## closentry thread
-        self.cthread = None
         ## Tango Data Writer
         self.tdw = TDW(self)
         ## list with errors
@@ -128,6 +122,9 @@ class TangoDataServer(PyTango.Device_4Impl):
             self.tdw = None
         with self.lock:
             self.set_state(PyTango.DevState.OFF)
+        import gc
+        gc.collect()
+#        print "DELETE", gc.get_objects()
 
 
 #------------------------------------------------------------------
@@ -157,6 +154,9 @@ class TangoDataServer(PyTango.Device_4Impl):
             raise    
             
         self.get_device_properties(self.get_device_class())
+        import gc
+        gc.collect()
+#        print "INIT", gc.get_objects()
 
 #------------------------------------------------------------------
 #    Always excuted hook method
@@ -465,9 +465,9 @@ class TangoDataServer(PyTango.Device_4Impl):
             self.set_state(PyTango.DevState.RUNNING)
         self.get_device_properties(self.get_device_class())
         self.tdw.numThreads = self.NumberOfThreads
-        self.othread = CommandThread(
+        othread = CommandThread(
             self, "openEntry", PyTango.DevState.EXTRACT)
-        self.othread.start()
+        othread.start()
 
 #---- OpenEntryAsynch command State Machine -----------------
     def is_OpenEntryAsynch_allowed(self):
@@ -494,9 +494,9 @@ class TangoDataServer(PyTango.Device_4Impl):
         with self.lock:
             self.set_state(PyTango.DevState.RUNNING)
 
-        self.rthread = CommandThread(
+        rthread = CommandThread(
             self, "record", PyTango.DevState.EXTRACT, [argin])
-        self.rthread.start()
+        rthread.start()
 
 #---- RecordAsynch command State Machine -----------------
     def is_RecordAsynch_allowed(self):
@@ -524,9 +524,9 @@ class TangoDataServer(PyTango.Device_4Impl):
             if state != PyTango.DevState.FAULT:
                 state = PyTango.DevState.OPEN
             self.set_state(PyTango.DevState.RUNNING)
-        self.cthread = CommandThread(
+        cthread = CommandThread(
             self, "closeEntry", state)
-        self.cthread.start()
+        cthread.start()
 
 
 #---- CloseEntryAsynch command State Machine -----------------
@@ -567,7 +567,12 @@ class TangoDataServer(PyTango.Device_4Impl):
                 self.errors.append(
                     str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
             raise    
-
+        del self.tdw
+        self.tdw = None
+        import gc
+        gc.collect()
+        print "ALIVE", gc.get_referrers(self)
+        print "END"
 
 #---- CloseFile command State Machine -----------------
     def is_CloseFile_allowed(self):

@@ -21,6 +21,11 @@
 
 """ Definitions of field tag evaluation classes """
 
+#import cProfile, pstats, io
+
+#pr = cProfile.Profile()
+#logs = io.open("/tmp/writerunnexuslog.log",mode='ab')
+
 import sys
 
 import numpy
@@ -539,6 +544,7 @@ class EField(FElementWithAttr):
     ## runner  
     # \brief During its thread run it fetches the data from the source  
     def run(self):
+#        pr.enable()
         self.__grew = False
         try:
             if self.source:
@@ -591,6 +597,7 @@ class EField(FElementWithAttr):
                             "EField::run() - %s  " % str(self.error)
                 print >> sys.stderr, "EField::run() - ERROR", \
                     str(self.error)
+#            pr.disable()
 
 
 
