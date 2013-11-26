@@ -67,7 +67,6 @@ class PyEvalSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-#        print "CL XML" , xml
         dom = minidom.parseString(xml)
         mds = dom.getElementsByTagName("datasource")
         inputs = []
@@ -197,10 +196,11 @@ class PyEvalSource(DataSource):
                     self.__datasources[name].setDataSources(pool)
 
             else:
-                print >> sys.stderr, \
-                    "PyEvalSource::setDataSources - Unknown data source"
                 if Streams.log_error:
                     print >> Streams.log_error, \
+                        "PyEvalSource::setDataSources - Unknown data source"
+                else:    
+                    print >> sys.stderr, \
                         "PyEvalSource::setDataSources - Unknown data source"
                     
                 self.__datasources[name] = DataSource()

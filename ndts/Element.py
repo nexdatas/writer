@@ -51,13 +51,15 @@ class Element(object):
         if hasattr(self.last, "h5Object"):
             return self.last.h5Object
         else:
-            print >> sys.stderr, \
-                "Element::_lastObject() -  H5 Object not found :", self.tagName
             if Streams.log_warn:
                 print >> Streams.log_warn, \
                     "Element::_lastObject() - H5 Object not found :", \
                     self.tagName
-                
+            else:
+                print >> sys.stderr, \
+                    "Element::_lastObject() -  H5 Object not found :", \
+                    self.tagName
+
 
     ## before last stack element
     # \returns  before last element placed on the stack

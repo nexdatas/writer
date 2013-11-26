@@ -288,9 +288,14 @@ class EField(FElementWithAttr):
                     raise ValueError, \
                         "Warning: Invalid datasource for %s" % name
                 else:
-                    print >> sys.stderr, \
-                        "EField::__setStrategy() - "\
-                        "Warning: Empty value for the field:", name
+                    if Streams.log_error:
+                        print >> Streams.log_error, \
+                            "EField::__setStrategy() - "\
+                            "Warning: Empty value for the field:", name
+                    else:
+                        print >> sys.stderr, \
+                            "EField::__setStrategy() - "\
+                            "Warning: Empty value for the field:", name
 
             
     ## stores the tag content
@@ -576,8 +581,6 @@ class EField(FElementWithAttr):
                     traceback.format_tb(sys.exc_info()[2]) ))
 #            message = self.setMessage(  sys.exc_info()[1].__str__()  )
             del info
-            print >> sys.stderr, "EField::run() - %s\n %s " % \
-                (message[0],message[1])
             self.error = message
 
 #            self.error = sys.exc_info()
@@ -587,12 +590,17 @@ class EField(FElementWithAttr):
                     if Streams.log_warn:
                         print >> Streams.log_warn, \
                             "EField::run() - %s  " % str(self.error)
+                    else:
+                        print >> sys.stderr, "EField::run() - %s\n %s " % \
+                            (self.error[0], self.error[1])
+
                 else:
                     if Streams.log_error:
                         print >> Streams.log_error, \
                             "EField::run() - %s  " % str(self.error)
-                print >> sys.stderr, "EField::run() - ERROR", \
-                    str(self.error)
+                    else:
+                        print >> sys.stderr, "EField::run() - ERROR", \
+                            str(self.error)
 
 
 

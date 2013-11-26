@@ -74,7 +74,6 @@ class EAttribute(FElement):
             else:
                 self.last.tagAttributes[self.name] = (tp, val, tuple(shape))
 
-#            print "TAGATTR", self.name, self.last.tagAttributes[self.name ]    
             if self.source:
                 if  self.source.isValid() :
                     return self.strategy, self.trigger
@@ -113,7 +112,6 @@ class EAttribute(FElement):
         
                         else:
                             ## pniio does not support this case
-#                                print "ARR", arr
                             self.h5Object.value = arr
                             if Streams.log_error:
                                 print >> Streams.log_error, \

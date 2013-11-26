@@ -111,13 +111,11 @@ class DBaseSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-#        print "DB XML" , xml
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query)> 0:
             self.format = query[0].getAttribute("format") \
                 if query[0].hasAttribute("format") else None
-#            print "format:", self.format
             self.query = self._getText(query[0])
             
         if not self.format or not self.query:
