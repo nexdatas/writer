@@ -47,13 +47,11 @@ class ClientSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-#        print "CL XML" , xml
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec)> 0:
             self.name = rec[0].getAttribute("name") \
                 if rec[0].hasAttribute("name") else None
-#            print "NAME:", self.name
         if not self.name:
             if Streams.log_error:
                 print >> Streams.log_error, \

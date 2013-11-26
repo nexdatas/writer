@@ -38,25 +38,28 @@ try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
-    print >> sys.stdout, "MYSQL not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "MYSQL not available: %s" % e
+    else:    
+        print >> sys.stdout, "MYSQL not available: %s" % e
     
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
 except ImportError, e:
-    print >> sys.stdout, "PGSQL not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info,  "PGSQL not available: %s" % e
+    else:    
+        print >> sys.stdout, "PGSQL not available: %s" % e
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
 except ImportError, e:
-    print >> sys.stdout, "ORACLE not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "ORACLE not available: %s" % e
+    else:    
+        print >> sys.stdout, "ORACLE not available: %s" % e
         
 
 
@@ -111,13 +114,11 @@ class DBaseSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-#        print "DB XML" , xml
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query)> 0:
             self.format = query[0].getAttribute("format") \
                 if query[0].hasAttribute("format") else None
-#            print "format:", self.format
             self.query = self._getText(query[0])
             
         if not self.format or not self.query:
