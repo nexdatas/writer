@@ -1,3 +1,7 @@
+2013-11-26 Jan Kotanski <jankotan@gmail.com>
+	* adding dev_state implementation
+	* tagged as 1.4.3
+
 2013-11-19 Jan Kotanski <jankotan@gmail.com>
 	* fixes interference of TANGO groups and reshaping TANGO memeber
 	* tagged as 1.4.2
