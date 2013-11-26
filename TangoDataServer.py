@@ -31,12 +31,63 @@
 #
 """ Nexus Data Writer - Tango Server """
 
+
 import PyTango
 import sys
 from threading import Thread, Lock
 from datetime import datetime 
 
 from ndts.TangoDataWriter import TangoDataWriter as TDW
+
+
+
+#==================================================================
+#   CommandThread Class Description:
+#
+#         thread with server command
+#
+#==================================================================
+class CommandThread(Thread):
+
+#------------------------------------------------------------------
+#    constructor
+#
+#    argin:  server      Device_4Impl    Tango server implementation 
+#    argin:  command     __callable__    Thread command
+#    argin:  finalState  DevState        Final State Code
+#    argin:  args        list            List of command arguments
+#
+#------------------------------------------------------------------
+    def __init__(self, server, command, finalState, args = None):
+        Thread.__init__(self)
+        ## tango server
+        self.server = server
+        ## command
+        self.command = getattr(server.tdw, command)
+        ## final state
+        self.fstate = finalState
+        ## error state
+        self.estate = PyTango.DevState.FAULT
+        ## command arguments
+        self.args = args if isinstance(args, list) else []
+
+
+#------------------------------------------------------------------
+#    runs the given command on the server and changes the state on exit
+#------------------------------------------------------------------
+    def run(self):
+        try:
+            self.command(*self.args)
+            with self.server.lock:
+                self.server.state_flag = self.fstate
+        except:
+            with self.server.lock:
+                self.server.state_flag = self.estate
+            self.server.errors.append(
+                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            raise
+
+
 
 #==================================================================
 #   TangoDataServer Class Description:
@@ -53,47 +104,8 @@ from ndts.TangoDataWriter import TangoDataWriter as TDW
 #   DevState.RUNNING :  NeXus Data Server is writing
 #   DevState.FAULT :    Error state
 #==================================================================
-
-## thread with server command
-class CommandThread(Thread):
-    ## constructor
-    # \param sever tango server
-    # \param command tango command to run
-    # \param finalState final state
-    # \param errorState state set on error
-    # \param args list of command arguments
-    def __init__(self, server, command, finalState, args = None):
-        Thread.__init__(self)
-        ## tango server
-        self.server = server
-        ## command
-        self.command = getattr(server.tdw, command)
-        ## final state
-        self.fstate = finalState
-        ## error state
-        self.estate = PyTango.DevState.FAULT
-        ## command arguments
-        self.args = args if isinstance(args, list) else []
-
-
-    ## runs the given command on the server and changes the state on exit
-    def run(self):
-        try:
-            self.command(*self.args)
-            with self.server.lock:
-                self.server.state_flag = self.fstate
-        except:
-            with self.server.lock:
-                self.server.state_flag = self.estate
-            self.server.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise
-
-
-
 class TangoDataServer(PyTango.Device_4Impl):
 
-#--------- Add you global variables here --------------------------
 
 
 #------------------------------------------------------------------
@@ -156,15 +168,25 @@ class TangoDataServer(PyTango.Device_4Impl):
         self.get_device_properties(self.get_device_class())
 
 
+#------------------------------------------------------------------
+#    set_state method
+#
+#    argin:  DevState    State Code
+#------------------------------------------------------------------
     def set_state(self, state):
-        print "In ", self.get_name(), "::set_state()"
+#        print "In ", self.get_name(), "::set_state()"
         with self.lock:
             self.state_flag = state
             PyTango.Device_4Impl.set_state(self, state)
 
 
+#------------------------------------------------------------------
+#    get_state method
+#
+#    argout: DevState    State Code
+#------------------------------------------------------------------
     def get_state(self):
-        print "In ", self.get_name(), "::get_state()"
+#        print "In ", self.get_name(), "::get_state()"
         with self.lock:
             PyTango.Device_4Impl.set_state(self, self.state_flag)
             PyTango.Device_4Impl.get_state(self)
@@ -199,9 +221,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def read_TheXMLSettings(self, attr):
         print "In ", self.get_name(), "::read_TheXMLSettings()"
-        
-        #    Add your own code here
-         
         attr.set_value(self.tdw.xmlSettings)
 
 
@@ -229,8 +248,6 @@ class TangoDataServer(PyTango.Device_4Impl):
     def read_TheJSONRecord(self, attr):
         print "In ", self.get_name(), "::read_TheJSONRecord()"
         
-        #    Add your own code here
-        
         attr.set_value(self.tdw.thejson)
 
 
@@ -241,8 +258,6 @@ class TangoDataServer(PyTango.Device_4Impl):
         print "In ", self.get_name(), "::write_TheJSONRecord()"
         self.tdw.thejson = attr.get_write_value()
         print "Attribute value = ", self.tdw.thejson
-
-        #    Add your own code here
 
 
 #---- TheJSONRecord attribute State Machine -----------------
@@ -258,8 +273,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def read_FileName(self, attr):
         print "In ", self.get_name(), "::read_FileName()"
-        
-        #    Add your own code here
         
         attr.set_value(self.tdw.fileName)
 
@@ -278,7 +291,6 @@ class TangoDataServer(PyTango.Device_4Impl):
                 "To change the file name please close the file."
             raise Exception, \
                 "To change the file name please close the file." 
-        #    Add your own code here
 
 
 #---- FileName attribute Write State Machine -----------------
@@ -301,8 +313,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def read_Errors(self, attr):
         print "In ", self.get_name(), "::read_Errors()"
-        
-        #    Add your own code here
         
         attr.set_value(self.errors)
         print self.errors
@@ -329,6 +339,24 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
+#    Status command:
+#
+#    Description: This command gets the device status 
+#        (stored in its <i>device_status</i> data member) 
+#        and returns it to the caller.
+#                
+#    argout: ConstDevString    Status description
+#------------------------------------------------------------------
+    def dev_status(self):
+        print "In ", self.get_name(), "::dev_status()"
+        self.set_state()
+        self.the_status = self.get_status()
+        
+        self.set_status(self.the_status)
+        return self.the_status
+
+
+#------------------------------------------------------------------
 #    OpenFile command:
 #
 #    Description: Open the H5 file
@@ -336,7 +364,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def OpenFile(self):
         print "In ", self.get_name(), "::OpenFile()"
-        #    Add your own code here
+
         self.set_state(PyTango.DevState.RUNNING)
         self.errors = []
         try:
@@ -367,7 +395,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def OpenEntry(self):
         print "In ", self.get_name(), "::OpenEntry()"
-        #    Add your own code here
+
         self.set_state(PyTango.DevState.RUNNING)
         try:
             self.get_device_properties(self.get_device_class())
@@ -401,10 +429,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def Record(self, argin):
         print "In ", self.get_name(), "::Record()"
-        #    Add your own code here
         self.set_state(PyTango.DevState.RUNNING)
-        print "In ", self.get_name(), "::Record()"
-        #    Add your own code here
         try:
             self.tdw.record(argin)
             self.set_state(PyTango.DevState.EXTRACT)
@@ -434,7 +459,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def CloseEntry(self):
         print "In ", self.get_name(), "::CloseEntry()"
-        #    Add your own code here
         state = self.get_state() 
         if state != PyTango.DevState.FAULT:
             state = PyTango.DevState.OPEN
@@ -467,7 +491,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def OpenEntryAsynch(self):
         print "In ", self.get_name(), "::OpenEntryAsynch()"
-        #    Add your own code here
         self.set_state(PyTango.DevState.RUNNING)
         self.get_device_properties(self.get_device_class())
         self.tdw.numThreads = self.NumberOfThreads
@@ -495,7 +518,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def RecordAsynch(self, argin):
         print "In ", self.get_name(), "::RecordAsynch()"
-        #    Add your own code here
         self.set_state(PyTango.DevState.RUNNING)
         self.rthread = CommandThread(
             self, "record", PyTango.DevState.EXTRACT, [argin])
@@ -520,7 +542,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def CloseEntryAsynch(self):
         print "In ", self.get_name(), "::CloseEntryAsynch()"
-        #    Add your own code here
         state = self.get_state() 
         if state != PyTango.DevState.FAULT:
             state = PyTango.DevState.OPEN
@@ -548,7 +569,6 @@ class TangoDataServer(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def CloseFile(self):
         print "In ", self.get_name(), "::CloseFile()"
-        #    Add your own code here
         state = self.get_state() 
         if state in [PyTango.DevState.EXTRACT,
                      PyTango.DevState.RUNNING]:
