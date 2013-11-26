@@ -96,11 +96,7 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object,'shape'):
                         message = self.setMessage("PNI Object not created")
-                        if Streams.log_error:
-                            print >> Streams.log_error, \
-                                "EAttribute::run() - %s " % message[0]
-                        else:    
-                            print >> sys.stderr , "EAttribute::run() - %s " % message[0]
+                        print >> sys.stderr , "Group::run() - %s " % message[0]
                         self.error = message
                     else:
                         arr = dh.cast(self.h5Object.dtype)
@@ -127,7 +123,7 @@ class EAttribute(FElement):
                                                 "by pniio")
         except:
             message = self.setMessage( sys.exc_info()[1].__str__()  )
-            print >> sys.stderr , "EAttribute::run() - %s " % message[0]
+            print >> sys.stderr , "Group::run() - %s " % message[0]
             self.error = message
         #            self.error = sys.exc_info()
         finally:
@@ -136,16 +132,12 @@ class EAttribute(FElement):
                     if Streams.log_warn:
                         print >> Streams.log_warn, \
                             "Group::run() - %s  " % str(self.error)
-                    else:
-                        print >> sys.stderr, "Group::run() - ERROR", \
-                            str(self.error)
                 else:
                     if Streams.log_error:
                         print >> Streams.log_error, \
-                        "Attribute::run() - %s  " % str(self.error)
-                    else:
-                        print >> sys.stderr, "Group::run() - ERROR", \
-                            str(self.error)
+                        "Group::run() - %s  " % str(self.error)
+                print >> sys.stderr, "Group::run() - ERROR", \
+                    str(self.error)
 
 
     ## fills object with maximum value            
@@ -192,16 +184,9 @@ class EAttribute(FElement):
                 print >> Streams.log_info, \
                     "EAttribute::markFailed() - "\
                     "%s of %s marked as failed" % \
-                    (self.h5Object.name \
-                         if hasattr(self.h5Object, "name") else "", 
-                     field.name if hasattr(field, "name") else "")
-            else:    
-                print >> sys.stderr, \
-                    "EAttribute::markFailed() - "\
-                    "%s of %s marked as failed" % \
-                    (self.h5Object.name \
-                         if hasattr(self.h5Object, "name") else "", 
-                     field.name if hasattr(field, "name") else "")
+                    (self.h5Object.name, field.name)
+                print >> Streams.log_info, \
+                    "EAttribute::markFailed() - marked as failed  "
             self.__fillMax()    
 
 

@@ -38,28 +38,25 @@ try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
 except ImportError, e:
+    print >> sys.stdout, "MYSQL not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "MYSQL not available: %s" % e
-    else:    
-        print >> sys.stdout, "MYSQL not available: %s" % e
     
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
 except ImportError, e:
+    print >> sys.stdout, "PGSQL not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info,  "PGSQL not available: %s" % e
-    else:    
-        print >> sys.stdout, "PGSQL not available: %s" % e
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
 except ImportError, e:
+    print >> sys.stdout, "ORACLE not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "ORACLE not available: %s" % e
-    else:    
-        print >> sys.stdout, "ORACLE not available: %s" % e
         
 
 

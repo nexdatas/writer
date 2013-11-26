@@ -52,21 +52,19 @@ class DataSourceFactory(Element):
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
                 self.last.source = self.__dsPool.get(attrs["type"])()
             else:
+                print >> sys.stderr, \
+                    "DataSourceFactory::__createDSource - Unknown data source"
                 if Streams.log_error:
                     print >> Streams.log_error, \
                         "DataSourceFactory::__createDSource - "\
                         "Unknown data source"
-                else:    
-                    print >> sys.stderr, \
-                        "DataSourceFactory::__createDSource - Unknown data source"
                     
                 self.last.source = DataSources.DataSource()
         else:
+            print >> sys.stderr, \
+                "DataSourceFactory::__createDSource - Typeless data source"
             if Streams.log_error:
                 print >> Streams.log_error, \
-                    "DataSourceFactory::__createDSource - Typeless data source"
-            else:    
-                print >> sys.stderr, \
                     "DataSourceFactory::__createDSource - Typeless data source"
             self.last.source = DataSources.DataSource()
 
