@@ -39,9 +39,10 @@ try:
     PYTANGO_AVAILABLE = True
 except ImportError, e:
     PYTANGO_AVAILABLE = False
-    print >> sys.stdout, "PYTANGO not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "PYTANGO not available: %s" % e
+    else:
+        print >> sys.stdout, "PYTANGO not available: %s" % e
 
 
 
@@ -133,7 +134,6 @@ class TangoSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-#        print "TG XML" , xml 
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         name = None
@@ -534,18 +534,15 @@ class TgMember(object):
         self.reset()
         
         if self.memberType == "attribute":
-            #            print "getting the attribute: ", self.name
             alist = proxy.get_attribute_list()
             if self.name.encode() in alist:
                 self.__da = proxy.read_attribute( self.name.encode())
         elif self.memberType == "property":
-            #                print "getting the property: ", self.name
             plist = proxy.get_property_list('*')
             if self.name.encode() in plist:
                 self.__da = proxy.get_property(
                     self.name.encode())[self.name.encode()]
         elif self.memberType == "command":
-            #                print "calling the command: ", self.name
             clist = [cm.cmd_name for cm in proxy.command_list_query()]
             if self.name in clist:
                 self.__cd = proxy.command_query(self.name.encode())

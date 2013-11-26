@@ -137,7 +137,6 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param content partial content of the tag    
     def characters(self, content):
         if self.__inner == True:
-#            print "XML:\n", self.__innerHandler.xml
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag:
@@ -149,7 +148,6 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
         if self.__inner == True:
-#            print "XML:\n", self.__innerHandler.xml
             if hasattr(self.__innerHandler, "xml"):
                 self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
@@ -176,12 +174,15 @@ class NexusXMLHandler(sax.ContentHandler):
                             "Unsupported tag: %s, %s " % ( name, attrs.keys())
                     raise UnsupportedTagError, "Unsupported tag: %s, %s " \
                         % ( name, attrs.keys())
-                print >> sys.stderr, "NexusXMLHandler::startElement() - "\
-                    "Unsupported tag: ", name, attrs.keys()
                 if Streams.log_warn:
                     print >> Streams.log_warn,  \
                         "NexusXMLHandler::startElement() - "\
                         "Unsupported tag: %s, %s " % ( name, attrs.keys())
+                else:
+                    print >> sys.stderr, \
+                        "NexusXMLHandler::startElement() - "\
+                        "Unsupported tag: %s, %s " % ( name, attrs.keys())
+
                 self.__unsupportedTag = name
                 
 
@@ -189,13 +190,11 @@ class NexusXMLHandler(sax.ContentHandler):
     # \param name tag name
     def endElement(self, name):
         if self.__inner == True:
-#            print "XML:\n", self.__innerHandler.xml
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag and self.__parser \
                 and name in self.withXMLinput:
             pass
-#           print "XML", self.__innerHandler.xml
         elif not self.__unsupportedTag and name in self.elementClass:
             if hasattr(self.__last(), "store") \
                     and callable(self.__last().store):

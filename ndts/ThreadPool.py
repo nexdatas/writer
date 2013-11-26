@@ -97,9 +97,11 @@ class ThreadPool(object):
         for el in self.__elementList:
             if el.error:
                 if hasattr(el,"canfail") and el.canfail:
-                    print >> sys.stderr, el.error
                     if Streams.log_warn:
                         print >> Streams.log_warn, \
+                            "ThreadPool::checkErrors() - %s" %   str(el.error)
+                    else:
+                        print >> sys.stderr, \
                             "ThreadPool::checkErrors() - %s" %   str(el.error)
                     if hasattr(el,"markFailed"):
                         el.markFailed()

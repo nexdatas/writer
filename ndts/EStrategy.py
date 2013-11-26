@@ -21,6 +21,8 @@
 
 """ Definitions of strategy evaluation classes """
 
+import sys
+
 from .Element import Element
 from . import Streams
 
@@ -39,7 +41,8 @@ class EStrategy(Element):
             self.last.trigger = attrs["trigger"]
             if Streams.log_info:
                 print >> Streams.log_info, "TRIGGER" , attrs["trigger"]
-            print "TRIGGER" , attrs["trigger"]
+            else:
+                print >> sys.stdout,  "TRIGGER" , attrs["trigger"]
         if "grows" in attrs.keys() and hasattr(self.last,"grows"):
             self.last.grows = int(attrs["grows"])
             if self.last.grows < 1:
