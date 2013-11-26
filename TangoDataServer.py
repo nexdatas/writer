@@ -306,6 +306,21 @@ class TangoDataServer(PyTango.Device_4Impl):
 #==================================================================
 
 #------------------------------------------------------------------
+#    State command:
+#
+#    Description: This command gets the device state (stored in its <i>device_state</i> data member) and returns it to the caller.
+#                
+#    argout: DevState    State Code
+#------------------------------------------------------------------
+    def dev_state(self):
+        print "In ", self.get_name(), "::dev_state()"
+        with self.lock:
+            argout = self.get_state()
+            self.set_state(argout)
+        return argout
+
+
+#------------------------------------------------------------------
 #    OpenFile command:
 #
 #    Description: Open the H5 file
