@@ -238,7 +238,7 @@ class TangoDataServer(PyTango.Device_4Impl):
         if self.get_state() in [PyTango.DevState.OFF,
                                 PyTango.DevState.EXTRACT,
                                 PyTango.DevState.RUNNING]:
-                return False
+            return False
         return True
 
 
@@ -350,10 +350,10 @@ class TangoDataServer(PyTango.Device_4Impl):
     def dev_status(self):
         print "In ", self.get_name(), "::dev_status()"
         self.set_state()
-        self.the_status = self.get_status()
+        the_status = self.get_status()
         
-        self.set_status(self.the_status)
-        return self.the_status
+        self.set_status(the_status)
+        return the_status
 
 
 #------------------------------------------------------------------
@@ -447,7 +447,7 @@ class TangoDataServer(PyTango.Device_4Impl):
                                 PyTango.DevState.OPEN,
                                 PyTango.DevState.FAULT,
                                 PyTango.DevState.RUNNING]:
-                return False
+            return False
         return True
 
 
@@ -479,7 +479,7 @@ class TangoDataServer(PyTango.Device_4Impl):
                                 PyTango.DevState.OFF,
                                 PyTango.DevState.OPEN,
                                 PyTango.DevState.RUNNING]:
-                return False
+            return False
         return True
 
 
@@ -530,7 +530,7 @@ class TangoDataServer(PyTango.Device_4Impl):
                                 PyTango.DevState.FAULT,
                                 PyTango.DevState.OPEN,
                                 PyTango.DevState.RUNNING]:
-                return False
+            return False
         return True
 
 
@@ -557,7 +557,7 @@ class TangoDataServer(PyTango.Device_4Impl):
                                 PyTango.DevState.OFF,
                                 PyTango.DevState.OPEN,
                                 PyTango.DevState.RUNNING]:
-                return False
+            return False
         return True
 
 
@@ -593,7 +593,7 @@ class TangoDataServer(PyTango.Device_4Impl):
                                 PyTango.DevState.RUNNING]:
             #    End of Generated Code
             #    Re-Start of Generated Code
-                return False
+            return False
         return True
 
 
