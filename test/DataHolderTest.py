@@ -30,9 +30,9 @@ import binascii
 import time
 
 
-from ndts.DataHolder import DataHolder
-from ndts.Types import NTP
-from ndts.DecoderPool import DecoderPool
+from nxswriter.DataHolder import DataHolder
+from nxswriter.Types import NTP
+from nxswriter.DecoderPool import DecoderPool
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

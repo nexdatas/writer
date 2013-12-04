@@ -35,14 +35,14 @@ except:
     import pni.nx.h5 as nx
 
 
-from ndts.FElement import FElement
-from ndts.EAttribute import EAttribute
-from ndts.EField import EField
-from ndts.EGroup import EGroup
-from ndts.Element import Element
-from ndts.H5Elements import EFile
-from ndts.Types import NTP, Converters
-from ndts.Errors import XMLSettingSyntaxError
+from nxswriter.FElement import FElement
+from nxswriter.EAttribute import EAttribute
+from nxswriter.EField import EField
+from nxswriter.EGroup import EGroup
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.Types import NTP, Converters
+from nxswriter.Errors import XMLSettingSyntaxError
 
 from TestDataSource import TestDataSource 
 

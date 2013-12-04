@@ -16,14 +16,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \file setup.py
-# ndts installer 
+# nxswriter installer 
 import os,sys
 from distutils.core import setup
 from distutils.command.install import install
 
 ## package name
-NDTS = "ndts"
-## ndts imported package
+NDTS = "nxswriter"
+## nxswriter imported package
 INDTS = __import__(NDTS)
 
 
@@ -54,11 +54,11 @@ SETUPDATA=dict(
     license = "GNU GENERAL PUBLIC LICENSE v3",
     keywords = "writer Tango server nexus data",
     url = "http://code.google.com/p/nexdatas/",
-    packages=['ndts'],
+    packages=['nxswriter'],
     requires=required,
     scripts = ['TangoDataServer.py', 'TangoDataServer'],
 #    scripts = ['TangoDataServer.py'],
-#    package_data={'ndts': ['TDS']},
+#    package_data={'nxswriter': ['TDS']},
     long_description= read('README')
 )
 

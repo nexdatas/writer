@@ -26,9 +26,9 @@ import subprocess
 import random
 import struct
 
-from ndts.H5Elements import EFile
-from ndts.ThreadPool import ThreadPool
-from ndts.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.ThreadPool import ThreadPool
+from nxswriter.Element import Element
 
 try:
     import pni.io.nx.h5 as nx

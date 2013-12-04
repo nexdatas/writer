@@ -32,10 +32,10 @@ import binascii
 import time
 
 
-from ndts.DataSources import DataSource
-from ndts.DBaseSource import DBaseSource
-from ndts.Errors import DataSourceSetupError
-from ndts.Types import Converters
+from nxswriter.DataSources import DataSource
+from nxswriter.DBaseSource import DBaseSource
+from nxswriter.Errors import DataSourceSetupError
+from nxswriter.Types import Converters
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

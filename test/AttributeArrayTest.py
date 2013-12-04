@@ -26,7 +26,7 @@ import subprocess
 import random
 import struct
 
-from ndts.FieldArray import AttributeArray
+from nxswriter.FieldArray import AttributeArray
 
 try:
     import pni.io.nx.h5 as nx

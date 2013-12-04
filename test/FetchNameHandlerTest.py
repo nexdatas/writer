@@ -32,9 +32,9 @@ import json
 
 from xml import sax
 
-from ndts.FetchNameHandler import FetchNameHandler
-from ndts.Errors import XMLSyntaxError
-from ndts.FetchNameHandler import TNObject
+from nxswriter.FetchNameHandler import FetchNameHandler
+from nxswriter.Errors import XMLSyntaxError
+from nxswriter.FetchNameHandler import TNObject
 
 
 

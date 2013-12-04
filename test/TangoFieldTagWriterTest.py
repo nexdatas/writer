@@ -44,8 +44,8 @@ except:
 from  xml.sax import SAXParseException
 
 
-from ndts import TangoDataWriter, Types
-from ndts.TangoDataWriter  import TangoDataWriter 
+from nxswriter import TangoDataWriter, Types
+from nxswriter.TangoDataWriter  import TangoDataWriter 
 from Checkers import Checker
 
 import SimpleServerSetUp
@@ -313,7 +313,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
-        decoder = '"decoders":{"MUTF8":"ndts.DecoderPool.UTF8decoder"}'
+        decoder = '"decoders":{"MUTF8":"nxswriter.DecoderPool.UTF8decoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         steps = min(len(self._counter), len(self._fcounter), len(self._bools))
@@ -527,7 +527,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
-        decoder = '"decoders":{"MUTF8":"ndts.DecoderPool.UTF8decoder"}'
+        decoder = '"decoders":{"MUTF8":"nxswriter.DecoderPool.UTF8decoder"}'
 
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
@@ -838,7 +838,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumDouble = self._fmca1[0]
         self._simps.dp.SpectrumString = self._dates[0]
 
-        decoder = '"decoders":{"MUINT32":"ndts.DecoderPool.UINT32decoder"}'
+        decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         import PyTango
@@ -1176,7 +1176,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.SpectrumDouble = self._fmca1[0]
         self._simps.dp.SpectrumString = self._dates[0]
 
-        decoder = '"decoders":{"MUINT32":"ndts.DecoderPool.UINT32decoder"}'
+        decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         import PyTango
@@ -1429,7 +1429,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 #        print self._fmca1[0]
 
-        decoder = '"decoders":{"MLIMA":"ndts.DecoderPool.VDEOdecoder"}'
+        decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         import PyTango
@@ -1679,7 +1679,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 #        print self._fmca1[0]
 
-        decoder = '"decoders":{"MLIMA":"ndts.DecoderPool.VDEOdecoder"}'
+        decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
         import PyTango

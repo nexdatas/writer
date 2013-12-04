@@ -26,7 +26,7 @@ import subprocess
 import random
 import struct
 
-from ndts.DecoderPool import UTF8decoder
+from nxswriter.DecoderPool import UTF8decoder
 
 
 

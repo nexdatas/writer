@@ -32,8 +32,8 @@ import json
 
 from xml import sax
 
-from ndts.InnerXMLParser import InnerXMLHandler
-from ndts.Errors import XMLSyntaxError
+from nxswriter.InnerXMLParser import InnerXMLHandler
+from nxswriter.Errors import XMLSyntaxError
 
 
 try:

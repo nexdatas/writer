@@ -33,10 +33,10 @@ except:
     import pni.nx.h5 as nx
 
 
-from ndts.H5Elements import FElement
-from ndts.Element import Element
-from ndts.H5Elements import EFile
-from ndts.H5Elements import EDoc
+from nxswriter.H5Elements import FElement
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.H5Elements import EDoc
 
 
 ## if 64-bit machione

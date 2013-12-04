@@ -36,11 +36,11 @@ except:
     import pni.nx.h5 as nx
 
 
-from ndts.FElement import FElementWithAttr
-from ndts.FElement import FElement
-from ndts.Element import Element
-from ndts.H5Elements import EFile
-from ndts.Types import NTP, Converters
+from nxswriter.FElement import FElementWithAttr
+from nxswriter.FElement import FElement
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.Types import NTP, Converters
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

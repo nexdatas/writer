@@ -36,13 +36,13 @@ except:
 
 
 
-from ndts.FElement import FElementWithAttr
-from ndts.FElement import FElement
-from ndts.EGroup import EGroup
-from ndts.Element import Element
-from ndts.H5Elements import EFile
-from ndts.Types import NTP, Converters
-from ndts.Errors import XMLSettingSyntaxError
+from nxswriter.FElement import FElementWithAttr
+from nxswriter.FElement import FElement
+from nxswriter.EGroup import EGroup
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.Types import NTP, Converters
+from nxswriter.Errors import XMLSettingSyntaxError
 
 from Checkers import Checker 
 

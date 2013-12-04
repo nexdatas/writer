@@ -31,7 +31,7 @@ except:
     from pni.nx.h5 import open_file
 
 
-from ndts import Types
+from nxswriter import Types
 
 from math import exp
 

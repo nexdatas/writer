@@ -21,8 +21,8 @@
 #
 import numpy
 
-from ndts.Types import NTP
-from ndts.DataSources import DataSource
+from nxswriter.Types import NTP
+from nxswriter.DataSources import DataSource
 
 
 

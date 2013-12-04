@@ -29,7 +29,7 @@ import binascii
 import time
 import numpy
 
-from ndts.FieldArray import FieldArray
+from nxswriter.FieldArray import FieldArray
 from Checkers import Checker
 
 ## True if pniio installed

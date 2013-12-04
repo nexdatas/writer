@@ -30,8 +30,8 @@ except:
 
 from  xml.sax import SAXParseException
 
-from ndts import TangoDataWriter 
-from ndts.TangoDataWriter  import TangoDataWriter 
+from nxswriter import TangoDataWriter 
+from nxswriter.TangoDataWriter  import TangoDataWriter 
 import struct
 
     

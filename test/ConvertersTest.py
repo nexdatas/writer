@@ -29,7 +29,7 @@ import numpy
 
 
 
-from ndts.Types import Converters
+from nxswriter.Types import Converters
 
 
 ## if 64-bit machione

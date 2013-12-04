@@ -37,18 +37,18 @@ import SimpleServerSetUp
 from ProxyHelper import ProxyHelper
 
 
-from ndts.TangoSource import DataSource
-from ndts.TangoSource import TangoSource
-from ndts.TangoSource import TgMember
-from ndts.TangoSource import TgGroup
-from ndts.TangoSource import TgDevice
-from ndts.DecoderPool import DecoderPool
-from ndts.Element import Element
-from ndts.EField import EField
-from ndts.DataSourceFactory import DataSourceFactory
-from ndts.Errors import DataSourceSetupError
-from ndts.DataSourcePool import DataSourcePool
-from ndts import DataSources
+from nxswriter.TangoSource import DataSource
+from nxswriter.TangoSource import TangoSource
+from nxswriter.TangoSource import TgMember
+from nxswriter.TangoSource import TgGroup
+from nxswriter.TangoSource import TgDevice
+from nxswriter.DecoderPool import DecoderPool
+from nxswriter.Element import Element
+from nxswriter.EField import EField
+from nxswriter.DataSourceFactory import DataSourceFactory
+from nxswriter.Errors import DataSourceSetupError
+from nxswriter.DataSourcePool import DataSourcePool
+from nxswriter import DataSources
 
 import threading
 import thread

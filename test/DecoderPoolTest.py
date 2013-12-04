@@ -29,9 +29,9 @@ import json
 import numpy
 from xml.dom import minidom
 
-import ndts
+import nxswriter
 
-from ndts.DecoderPool import DecoderPool, UTF8decoder, UINT32decoder, VDEOdecoder
+from nxswriter.DecoderPool import DecoderPool, UTF8decoder, UINT32decoder, VDEOdecoder
 
 
 ## if 64-bit machione
@@ -254,7 +254,7 @@ class DecoderPoolTest(unittest.TestCase):
 
 
         el = DecoderPool()
-        el.append(ndts.DecoderPool.UTF8decoder,"UTF")
+        el.append(nxswriter.DecoderPool.UTF8decoder,"UTF")
         ds = el.get("UTF8")
         self.assertTrue(isinstance(ds, UTF8decoder))
         ds = el.get("UINT32")

@@ -29,7 +29,7 @@ import numpy
 import binascii
 import time
 
-from ndts.DecoderPool import UINT32decoder
+from nxswriter.DecoderPool import UINT32decoder
 
 
 

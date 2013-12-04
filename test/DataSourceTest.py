@@ -29,9 +29,9 @@ import numpy
 from xml.dom import minidom
 
 
-from ndts.DataSources import DataSource
-from ndts.TangoSource import PYTANGO_AVAILABLE as PYTANGO
-from ndts.DBaseSource import DB_AVAILABLE as DB
+from nxswriter.DataSources import DataSource
+from nxswriter.TangoSource import PYTANGO_AVAILABLE as PYTANGO
+from nxswriter.DBaseSource import DB_AVAILABLE as DB
 
 
 

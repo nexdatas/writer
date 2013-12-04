@@ -15,19 +15,11 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package ndts nexdatas
-## \file Streams.py
+## \package nxswriter nexdatas
+## \file __init__.py
+# package constructor
 
-""" labels to Tango Streams """
+""" Tango Data Writer """
 
-## Tango fatal log
-log_fatal = None  
-## Tango error log
-log_error = None 
-## Tango warn log
-log_warn = None 
-## Tango info log
-log_info = None 
-## Tango debug log
-log_debug = None 
-
+## package version
+__version__ = "1.4.4"

@@ -30,11 +30,11 @@ import numpy
 
 
 
-from ndts.Types import NTP
-from ndts.Types import Converters
+from nxswriter.Types import NTP
+from nxswriter.Types import Converters
 
 ##
-from ndts.DataHolder import DataHolder
+from nxswriter.DataHolder import DataHolder
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

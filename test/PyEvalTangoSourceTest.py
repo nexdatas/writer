@@ -34,13 +34,13 @@ import time
 import SimpleServerSetUp
 import PyTango
 
-from ndts import DataSources 
-from ndts.DecoderPool import DecoderPool
-from ndts.DataSources import DataSource
-from ndts.PyEvalSource import PyEvalSource
-from ndts.DataSourcePool import DataSourcePool
-from ndts.Errors import DataSourceSetupError
-from ndts.Types import Converters, NTP
+from nxswriter import DataSources 
+from nxswriter.DecoderPool import DecoderPool
+from nxswriter.DataSources import DataSource
+from nxswriter.PyEvalSource import PyEvalSource
+from nxswriter.DataSourcePool import DataSourcePool
+from nxswriter.Errors import DataSourceSetupError
+from nxswriter.Types import Converters, NTP
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

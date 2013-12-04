@@ -36,12 +36,12 @@ except:
 
 
 
-from ndts.EStrategy import EStrategy
-from ndts.FElement import FElement
-from ndts.EField import EField
-from ndts.Element import Element
-from ndts.H5Elements import EFile
-from ndts.Types import NTP, Converters
+from nxswriter.EStrategy import EStrategy
+from nxswriter.FElement import FElement
+from nxswriter.EField import EField
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.Types import NTP, Converters
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

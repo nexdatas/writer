@@ -30,7 +30,7 @@ import time
 import Queue
 from threading import Thread
 
-from ndts.ElementThread import ElementThread
+from nxswriter.ElementThread import ElementThread
 
 
 

@@ -29,7 +29,7 @@ import numpy
 import binascii
 import time
 
-from ndts.DecoderPool import VDEOdecoder
+from nxswriter.DecoderPool import VDEOdecoder
 
 
 

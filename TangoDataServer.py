@@ -37,7 +37,7 @@ import sys
 from threading import Thread, Lock
 from datetime import datetime 
 
-from ndts.TangoDataWriter import TangoDataWriter as TDW
+from nxswriter.TangoDataWriter import TangoDataWriter as TDW
 
 
 

@@ -42,9 +42,9 @@ except:
 
 from  xml.sax import SAXParseException
 
-from ndts import TangoDataWriter, Types
-from ndts.TangoDataWriter  import TangoDataWriter 
-from ndts.Errors  import ThreadError
+from nxswriter import TangoDataWriter, Types
+from nxswriter.TangoDataWriter  import TangoDataWriter 
+from nxswriter.Errors  import ThreadError
 from Checkers import Checker
 
 import MySQLdb

@@ -32,18 +32,18 @@ from xml.dom import minidom
 import TestDataSource 
 
 
-from ndts.DataSourceFactory import DataSourceFactory
-from ndts.DataSources import DataSource
-from ndts.DataSourcePool import DataSourcePool
-from ndts.DecoderPool import DecoderPool
-from ndts.Element import Element
-from ndts.EField import EField
-from ndts import DataSources
-from ndts import ClientSource
-from ndts import PyEvalSource
-from ndts.Errors import DataSourceSetupError
+from nxswriter.DataSourceFactory import DataSourceFactory
+from nxswriter.DataSources import DataSource
+from nxswriter.DataSourcePool import DataSourcePool
+from nxswriter.DecoderPool import DecoderPool
+from nxswriter.Element import Element
+from nxswriter.EField import EField
+from nxswriter import DataSources
+from nxswriter import ClientSource
+from nxswriter import PyEvalSource
+from nxswriter.Errors import DataSourceSetupError
 
-from ndts.DecoderPool import DecoderPool
+from nxswriter.DecoderPool import DecoderPool
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

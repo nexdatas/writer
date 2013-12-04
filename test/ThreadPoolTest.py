@@ -30,8 +30,8 @@ import time
 import Queue
 import json
 
-from ndts.ThreadPool import ThreadPool
-from ndts.Errors import ThreadError
+from nxswriter.ThreadPool import ThreadPool
+from nxswriter.Errors import ThreadError
 
 
 

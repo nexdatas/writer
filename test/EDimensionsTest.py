@@ -34,11 +34,11 @@ except:
     import pni.nx.h5 as nx
 
 
-from ndts.FElement import FElement
-from ndts.EField import EField
-from ndts.Element import Element
-from ndts.H5Elements import EFile
-from ndts.H5Elements import EDimensions
+from nxswriter.FElement import FElement
+from nxswriter.EField import EField
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.H5Elements import EDimensions
 
 
 ## if 64-bit machione

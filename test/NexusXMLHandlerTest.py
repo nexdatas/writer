@@ -26,20 +26,20 @@ import subprocess
 import random
 import struct
 import json
-from ndts.H5Elements import EFile
-from ndts.ThreadPool import ThreadPool
-from ndts.Element import Element
-from ndts.EGroup import EGroup
-from ndts.EField import EField
-from ndts.EAttribute import EAttribute
-from ndts.ELink import ELink
-from ndts.EStrategy import EStrategy
-from ndts.FElement import FElement
-from ndts.H5Elements import (
+from nxswriter.H5Elements import EFile
+from nxswriter.ThreadPool import ThreadPool
+from nxswriter.Element import Element
+from nxswriter.EGroup import EGroup
+from nxswriter.EField import EField
+from nxswriter.EAttribute import EAttribute
+from nxswriter.ELink import ELink
+from nxswriter.EStrategy import EStrategy
+from nxswriter.FElement import FElement
+from nxswriter.H5Elements import (
     EDoc, ESymbol, EDimensions, EDim, EFile)
-from ndts.DataSourceFactory import DataSourceFactory
-from ndts.Errors import UnsupportedTagError
-from ndts.FetchNameHandler import TNObject
+from nxswriter.DataSourceFactory import DataSourceFactory
+from nxswriter.Errors import UnsupportedTagError
+from nxswriter.FetchNameHandler import TNObject
 
 
 from xml import sax
@@ -64,7 +64,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 from  xml.sax import SAXParseException
 
 
-from ndts.NexusXMLHandler import NexusXMLHandler
+from nxswriter.NexusXMLHandler import NexusXMLHandler
 
 class Closeable(object):
     ## consturctor

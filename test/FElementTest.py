@@ -35,13 +35,13 @@ try:
 except:
     import pni.nx.h5 as nx
 
-from ndts.Element import Element
-from ndts.FElement import FElement
-from ndts.H5Elements import EFile
-from ndts.ThreadPool import ThreadPool
-from ndts.DataSources import DataSource
-from ndts.Errors import XMLSettingSyntaxError
-from ndts.Types import NTP
+from nxswriter.Element import Element
+from nxswriter.FElement import FElement
+from nxswriter.H5Elements import EFile
+from nxswriter.ThreadPool import ThreadPool
+from nxswriter.DataSources import DataSource
+from nxswriter.Errors import XMLSettingSyntaxError
+from nxswriter.Types import NTP
 
 from TestDataSource import TestDataSource 
 

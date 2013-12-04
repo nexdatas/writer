@@ -15,46 +15,19 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package ndts nexdatas
-## \file Errors.py
-# Error classes
+## \package nxswriter nexdatas
+## \file Streams.py
 
+""" labels to Tango Streams """
 
-""" Tango Data Writer errors """
-
-## exception for problems in thread
-class ThreadError(Exception): 
-    pass
-
-
-## exception for corrupted FieldArray
-class CorruptedFieldArrayError(Exception): 
-    pass
-
-
-## exception for syntax in XML settings
-class XMLSettingSyntaxError(Exception): 
-    pass
-
-## exception for fetching data from data source
-class DataSourceError(Exception): 
-    pass
-
-
-## exception for fetching data from data source
-class PackageError(Exception): 
-    pass
-
-## exception for setting data source
-class DataSourceSetupError(Exception): 
-    pass
-
-
-## exception for syntax in XML settings
-class XMLSyntaxError(Exception): 
-    pass
-
-## unsupported tag exception
-class UnsupportedTagError(Exception): 
-    pass
+## Tango fatal log
+log_fatal = None  
+## Tango error log
+log_error = None 
+## Tango warn log
+log_warn = None 
+## Tango info log
+log_info = None 
+## Tango debug log
+log_debug = None 
 

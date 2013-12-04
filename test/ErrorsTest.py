@@ -29,7 +29,7 @@ import numpy
 
 
 
-from ndts.Errors import (CorruptedFieldArrayError,XMLSettingSyntaxError,
+from nxswriter.Errors import (CorruptedFieldArrayError,XMLSettingSyntaxError,
                          DataSourceError,PackageError,DataSourceSetupError,
                          XMLSyntaxError,UnsupportedTagError,ThreadError)
                          

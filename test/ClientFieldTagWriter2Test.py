@@ -40,8 +40,8 @@ except:
 from  xml.sax import SAXParseException
 
 
-from ndts import TangoDataWriter, Types
-from ndts.TangoDataWriter  import TangoDataWriter 
+from nxswriter import TangoDataWriter, Types
+from nxswriter.TangoDataWriter  import TangoDataWriter 
 from Checkers import Checker
 
 ## test fixture
@@ -250,7 +250,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 """
 
         uc = self._counter[0]
-        datasources = ', "datasources":{"MCLIENT":"ndts.ClientSource.ClientSource"}'
+        datasources = ', "datasources":{"MCLIENT":"nxswriter.ClientSource.ClientSource"}'
         tdw = self.openWriter(fname, xml, json = '{"data": { "cnt_64":' + str(uc) + ' }' 
                               + str(datasources)
                               + ' }')

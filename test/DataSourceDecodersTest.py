@@ -30,19 +30,19 @@ import numpy
 from xml.dom import minidom
 
 
-from ndts.DataSourceFactory import DataSourceFactory
-from ndts.DataSources import DataSource
-from ndts import TangoSource
-from ndts import ClientSource
-from ndts.DataSourcePool import DataSourcePool
-from ndts.Element import Element
-from ndts.EField import EField
-from ndts import DataSources
-from ndts.Errors import DataSourceSetupError
+from nxswriter.DataSourceFactory import DataSourceFactory
+from nxswriter.DataSources import DataSource
+from nxswriter import TangoSource
+from nxswriter import ClientSource
+from nxswriter.DataSourcePool import DataSourcePool
+from nxswriter.Element import Element
+from nxswriter.EField import EField
+from nxswriter import DataSources
+from nxswriter.Errors import DataSourceSetupError
 
 import SimpleServerSetUp
 
-from ndts.DecoderPool import DecoderPool
+from nxswriter.DecoderPool import DecoderPool
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

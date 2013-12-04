@@ -27,7 +27,7 @@ import random
 import struct
 import binascii
 
-from ndts.FetchNameHandler import TNObject
+from nxswriter.FetchNameHandler import TNObject
 
 try:
     import pni.io.nx.h5 as nx

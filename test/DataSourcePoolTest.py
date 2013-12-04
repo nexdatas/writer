@@ -29,14 +29,14 @@ import json
 import numpy
 from xml.dom import minidom
 
-import ndts
+import nxswriter
 import thread
 
-from ndts.DataSourcePool import DataSourcePool
-from ndts.DataSources import DataSource
-from ndts.TangoSource import TangoSource
-from ndts.DBaseSource import DBaseSource
-from ndts.ClientSource import ClientSource
+from nxswriter.DataSourcePool import DataSourcePool
+from nxswriter.DataSources import DataSource
+from nxswriter.TangoSource import TangoSource
+from nxswriter.DBaseSource import DBaseSource
+from nxswriter.ClientSource import ClientSource
 
 
 ## if 64-bit machione
@@ -239,7 +239,7 @@ class DataSourcePoolTest(unittest.TestCase):
 
 
         el = DataSourcePool()
-        el.append(ndts.ClientSource.ClientSource,"CL")
+        el.append(nxswriter.ClientSource.ClientSource,"CL")
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()
