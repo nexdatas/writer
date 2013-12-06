@@ -60,7 +60,8 @@ class AttributeArray(object):
             a.value = value
 
     ## attribute value       
-    value = property(__getvalue, __setvalue)            
+    value = property(__getvalue, __setvalue, 
+                     doc = 'attribute value')            
 
     
         
