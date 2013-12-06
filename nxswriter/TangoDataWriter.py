@@ -123,7 +123,8 @@ class TangoDataWriter(object):
         del self.__json 
 
     ## the json data string
-    thejson = property(__getJSON, __setJSON, __delJSON)
+    thejson = property(__getJSON, __setJSON, __delJSON, 
+                       doc = 'the json data string')
 
 
 
@@ -144,7 +145,8 @@ class TangoDataWriter(object):
         del self.__xmlSettings 
 
     ## the xmlSettings
-    xmlSettings = property(__getXML, __setXML, __delXML)
+    xmlSettings = property(__getXML, __setXML, __delXML,
+                           doc = 'the xml settings')
 
 
     ## the H5 file handle 
