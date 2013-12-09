@@ -38,8 +38,8 @@ class ServerSetUp(object):
         self.instance = instance
         self.device = device
         self.new_device_info_writer = PyTango.DbDevInfo()
-        self.new_device_info_writer._class = "TangoDataServer"
-        self.new_device_info_writer.server = "TangoDataServer/%s" % self.instance
+        self.new_device_info_writer._class = "NXSDataWriter"
+        self.new_device_info_writer.server = "NXSDataWriter/%s" % self.instance
         self.new_device_info_writer.name = device
 
         self._psub = None
@@ -54,13 +54,13 @@ class ServerSetUp(object):
         db.add_device(self.new_device_info_writer)
         db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
         
-        if os.path.isfile("../TangoDataServer"):
+        if os.path.isfile("../NXSDataWriter"):
             self._psub = subprocess.call(
-                "cd ..; ./TangoDataServer %s &" % self.instance, stdout =  None, 
+                "cd ..; ./NXSDataWriter %s &" % self.instance, stdout =  None, 
                 stderr =  None,  shell= True)
         else:
             self._psub = subprocess.call(
-                "TangoDataServer %s &" % self.instance,stdout =  None, 
+                "NXSDataWriter %s &" % self.instance,stdout =  None, 
                 stderr = None , shell= True)
         print "waiting for server",
         
@@ -87,7 +87,7 @@ class ServerSetUp(object):
         
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'TangoDataServer.py %s'" % self.instance, stdout=subprocess.PIPE , shell= True).stdout
+            "ps -ef | grep 'NXSDataWriter.py %s'" % self.instance, stdout=subprocess.PIPE , shell= True).stdout
 
         res = pipe.read().split("\n")
         for r in res:

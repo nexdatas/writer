@@ -41,10 +41,6 @@ required = [
     'numpy (>=1.5.0)',
     'PyTango (>=7.2.2)',
     'pninx (>=4.0.2)'
-#    'libpninx (>=0.1.2)'
-#   'pninx-python (>=0.1.2)'
-#   'libpninx-python (>=0.1.2)'
-#   'libpninx-python (>=0.1.2)'
     ]
 
 ## metadata for distutils
@@ -60,21 +56,9 @@ SETUPDATA = dict(
     url = "http://code.google.com/p/nexdatas/",
     packages=['nxswriter'],
     requires=required,
-    scripts = ['TangoDataServer.py', 'TangoDataServer'],
-#    scripts = ['TangoDataServer.py'],
-#    package_data={'nxswriter': ['TDS']},
+    scripts = ['NXSDataWriter.py', 'NXSDataWriter'],
     long_description= read('README')
 )
-
-## metadata for setuptools
-#SETUPTOOLSDATA= dict(
-#    include_package_data = True,
-#    install_requires = [
-#        'numpy>=1.5.0',
-#        'PyTango>=7.2.2',
-#        'libpninx-python>=0.1.2'
-#        ],
-#)
 
 
         

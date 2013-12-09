@@ -1,4 +1,5 @@
-2013-12-06 Jan Kotanski <jankotan@gmail.com>
+2013-12-09 Jan Kotanski <jankotan@gmail.com>
+	* changing TangoDataServer into NXSDataWriter
 	* changing ndts into nxswriter
 	* tagged as 1.5.0
 

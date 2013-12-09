@@ -2,13 +2,13 @@
 #    "$Header:  $";
 #=============================================================================
 #
-# file :        TangoDataServer.py
+# file :        NXSDataWriter.py
 #
-# description : Python source for the TangoDataServer and its commands. 
+# description : Python source for the NXSDataWriter and its commands. 
 #                The class is derived from Device. It represents the
 #                CORBA servant object which will be accessed from the
 #                network. All commands which can be executed on the
-#                TangoDataServer are implemented in this file.
+#                NXSDataWriter are implemented in this file.
 #
 # project :     TANGO Device Server
 #
@@ -90,7 +90,7 @@ class CommandThread(Thread):
 
 
 #==================================================================
-#   TangoDataServer Class Description:
+#   NXSDataWriter Class Description:
 #
 #         Tango Server to store data in H5 files
 #
@@ -104,7 +104,7 @@ class CommandThread(Thread):
 #   DevState.RUNNING :  NeXus Data Server is writing
 #   DevState.FAULT :    Error state
 #==================================================================
-class TangoDataServer(PyTango.Device_4Impl):
+class NXSDataWriter(PyTango.Device_4Impl):
 
 
 
@@ -128,7 +128,7 @@ class TangoDataServer(PyTango.Device_4Impl):
         self.tdw = TDW(self)
         ## list with errors
         self.errors = []
-        TangoDataServer.init_device(self)
+        NXSDataWriter.init_device(self)
         
 #------------------------------------------------------------------
 #    Device destructor
@@ -205,7 +205,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 #==================================================================
 #
-#    TangoDataServer read/write attribute methods
+#    NXSDataWriter read/write attribute methods
 #
 #==================================================================
 #------------------------------------------------------------------
@@ -320,7 +320,7 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 #==================================================================
 #
-#    TangoDataServer command methods
+#    NXSDataWriter command methods
 #
 #==================================================================
 
@@ -599,10 +599,10 @@ class TangoDataServer(PyTango.Device_4Impl):
 
 #==================================================================
 #
-#    TangoDataServerClass class definition
+#    NXSDataWriterClass class definition
 #
 #==================================================================
-class TangoDataServerClass(PyTango.DeviceClass):
+class NXSDataWriterClass(PyTango.DeviceClass):
 
     #    Class Properties
     class_property_list = {
@@ -687,22 +687,22 @@ class TangoDataServerClass(PyTango.DeviceClass):
 
 
 #------------------------------------------------------------------
-#    TangoDataServerClass Constructor
+#    NXSDataWriterClass Constructor
 #------------------------------------------------------------------
     def __init__(self, name):
         PyTango.DeviceClass.__init__(self, name)
         self.set_type(name)
-        print "In TangoDataServerClass  constructor"
+        print "In NXSDataWriterClass  constructor"
 
 #==================================================================
 #
-#    TangoDataServer class main method
+#    NXSDataWriter class main method
 #
 #==================================================================
 if __name__ == '__main__':
     try:
         py = PyTango.Util(sys.argv)
-        py.add_TgClass(TangoDataServerClass, TangoDataServer, 'TangoDataServer')
+        py.add_TgClass(NXSDataWriterClass, NXSDataWriter, 'NXSDataWriter')
 
         U = PyTango.Util.instance()
         U.server_init()

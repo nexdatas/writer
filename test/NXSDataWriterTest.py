@@ -16,8 +16,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file TangoDataServerTest.py
-# unittests for TangoDataServer
+## \file NXSDataWriterTest.py
+# unittests for NXSDataWriter
 #
 import unittest
 import os
@@ -44,7 +44,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 import ServerSetUp
 
 ## test fixture
-class TangoDataServerTest(unittest.TestCase):
+class NXSDataWriterTest(unittest.TestCase):
     ## server counter
     serverCounter = 0
 
@@ -53,8 +53,8 @@ class TangoDataServerTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-        TangoDataServerTest.serverCounter += 1
-        sins = self.__class__.__name__+"%s" % TangoDataServerTest.serverCounter
+        NXSDataWriterTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % NXSDataWriterTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
         self._scanXml = """
@@ -121,7 +121,7 @@ class TangoDataServerTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):     
-        print "Run: TangoDataServerTest.test_openFile()"
+        print "Run: NXSDataWriterTest.test_openFile()"
         try:
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy(self._sv.device)
@@ -250,7 +250,7 @@ class TangoDataServerTest(unittest.TestCase):
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
-        print "Run: TangoDataServerTest.test_openEntry() "
+        print "Run: NXSDataWriterTest.test_openEntry() "
         fname= '%s/test2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
@@ -347,7 +347,7 @@ class TangoDataServerTest(unittest.TestCase):
     ## openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: TangoDataServerTest.test_openEntryWithSAXParseException() "
+        print "Run: NXSDataWriterTest.test_openEntryWithSAXParseException() "
         fname= '%s/test2.h5' % os.getcwd()   
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -431,7 +431,7 @@ class TangoDataServerTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
-        print "Run: TangoDataServerTest.test_scanRecord() "
+        print "Run: NXSDataWriterTest.test_scanRecord() "
         fname= '%s/scantest2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:

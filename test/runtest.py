@@ -147,7 +147,7 @@ if "ORACLE" in DB_AVAILABLE:
 
 if PYTANGO_AVAILABLE:
     import TangoFieldTagWriterTest
-    import TangoDataServerTest
+    import NXSDataWriterTest
     import ClientFieldTagServerTest
     import XMLFieldTagServerTest
     import TangoFieldTagServerTest
@@ -332,7 +332,7 @@ def main():
 
 
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(TangoDataServerTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest) )
