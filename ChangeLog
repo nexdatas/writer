@@ -1,4 +1,4 @@
-2013-12-09 Jan Kotanski <jankotan@gmail.com>
+2013-12-10 Jan Kotanski <jankotan@gmail.com>
 	* changing TangoDataWriter.thejson into  TangoDataWriter.jsonRecord
 	* changing TheXMLSettings into XMLSettings
 	* changing TheJSONRecord into JSONRecord
