@@ -217,24 +217,24 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
-#    Read TheXMLSettings attribute
+#    Read XMLSettings attribute
 #------------------------------------------------------------------
-    def read_TheXMLSettings(self, attr):
-        print "In ", self.get_name(), "::read_TheXMLSettings()"
+    def read_XMLSettings(self, attr):
+        print "In ", self.get_name(), "::read_XMLSettings()"
         attr.set_value(self.tdw.xmlSettings)
 
 
 #------------------------------------------------------------------
-#    Write TheXMLSettings attribute
+#    Write XMLSettings attribute
 #------------------------------------------------------------------
-    def write_TheXMLSettings(self, attr):
-        print "In ", self.get_name(), "::write_TheXMLSettings()"
+    def write_XMLSettings(self, attr):
+        print "In ", self.get_name(), "::write_XMLSettings()"
         self.tdw.xmlSettings = attr.get_write_value()
         print "Attribute value = ", self.tdw.xmlSettings
 
 
-#---- TheXMLSettings attribute State Machine -----------------
-    def is_TheXMLSettings_allowed(self, _):
+#---- XMLSettings attribute State Machine -----------------
+    def is_XMLSettings_allowed(self, _):
         if self.get_state() in [PyTango.DevState.OFF,
                                 PyTango.DevState.EXTRACT,
                                 PyTango.DevState.RUNNING]:
@@ -243,25 +243,25 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
 
 #------------------------------------------------------------------
-#    Read TheJSONRecord attribute
+#    Read JSONRecord attribute
 #------------------------------------------------------------------
-    def read_TheJSONRecord(self, attr):
-        print "In ", self.get_name(), "::read_TheJSONRecord()"
+    def read_JSONRecord(self, attr):
+        print "In ", self.get_name(), "::read_JSONRecord()"
         
-        attr.set_value(self.tdw.thejson)
+        attr.set_value(self.tdw.jsonRecord)
 
 
 #------------------------------------------------------------------
-#    Write TheJSONRecord attribute
+#    Write JSONRecord attribute
 #------------------------------------------------------------------
-    def write_TheJSONRecord(self, attr):
-        print "In ", self.get_name(), "::write_TheJSONRecord()"
-        self.tdw.thejson = attr.get_write_value()
-        print "Attribute value = ", self.tdw.thejson
+    def write_JSONRecord(self, attr):
+        print "In ", self.get_name(), "::write_JSONRecord()"
+        self.tdw.jsonRecord = attr.get_write_value()
+        print "Attribute value = ", self.tdw.jsonRecord
 
 
-#---- TheJSONRecord attribute State Machine -----------------
-    def is_TheJSONRecord_allowed(self, _):
+#---- JSONRecord attribute State Machine -----------------
+    def is_JSONRecord_allowed(self, _):
         if self.get_state() in [PyTango.DevState.OFF,
                                 PyTango.DevState.RUNNING]:
             return False
@@ -649,7 +649,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
 
     #    Attribute definitions
     attr_list = {
-        'TheXMLSettings':
+        'XMLSettings':
             [[PyTango.DevString,
             PyTango.SCALAR,
             PyTango.READ_WRITE],
@@ -658,7 +658,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
                 'description':"An XML string with Nexus configuration.",
                 'Display level':PyTango.DispLevel.EXPERT,
             } ],
-        'TheJSONRecord':
+        'JSONRecord':
             [[PyTango.DevString,
             PyTango.SCALAR,
             PyTango.READ_WRITE],

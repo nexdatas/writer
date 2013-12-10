@@ -131,8 +131,8 @@ class NXSDataWriterTest(unittest.TestCase):
             dp.FileName = fname
             dp.OpenFile()
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
-            self.assertEqual(dp.TheXMLSettings,"")
-            self.assertEqual(dp.TheJSONRecord, "{}")
+            self.assertEqual(dp.XMLSettings,"")
+            self.assertEqual(dp.JSONRecord, "{}")
             dp.CloseFile()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
 
@@ -208,8 +208,8 @@ class NXSDataWriterTest(unittest.TestCase):
             dp.FileName = fname
             dp.OpenFile()
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
-            self.assertEqual(dp.TheXMLSettings,"")
-            self.assertEqual(dp.TheJSONRecord, "{}")
+            self.assertEqual(dp.XMLSettings,"")
+            self.assertEqual(dp.JSONRecord, "{}")
             dp.CloseFile()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
 
@@ -264,7 +264,7 @@ class NXSDataWriterTest(unittest.TestCase):
 
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
-            dp.TheXMLSettings = xml
+            dp.XMLSettings = xml
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
@@ -363,7 +363,7 @@ class NXSDataWriterTest(unittest.TestCase):
 
             try:
                 error = None
-                dp.TheXMLSettings = wrongXml
+                dp.XMLSettings = wrongXml
             except PyTango.DevFailed,e:
                 error = True
             except Exception, e: 
@@ -380,7 +380,7 @@ class NXSDataWriterTest(unittest.TestCase):
 
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
-            dp.TheXMLSettings = xml
+            dp.XMLSettings = xml
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
@@ -445,7 +445,7 @@ class NXSDataWriterTest(unittest.TestCase):
 
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
-            dp.TheXMLSettings = self._scanXml
+            dp.XMLSettings = self._scanXml
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 

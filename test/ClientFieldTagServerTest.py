@@ -84,10 +84,10 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
         
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
-        tdw.TheXMLSettings = xml
+        tdw.XMLSettings = xml
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         if json:
-            tdw.TheJSONRecord = json
+            tdw.JSONRecord = json
         tdw.OpenEntry()
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
@@ -100,7 +100,7 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
-            tdw.TheJSONRecord = json
+            tdw.JSONRecord = json
         tdw.CloseEntry()
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         

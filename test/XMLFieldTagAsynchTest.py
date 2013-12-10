@@ -79,10 +79,10 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
         
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
-        tdw.TheXMLSettings = xml
+        tdw.XMLSettings = xml
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         if json:
-            tdw.TheJSONRecord = json
+            tdw.JSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
@@ -97,7 +97,7 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
-            tdw.TheJSONRecord = json
+            tdw.JSONRecord = json
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))

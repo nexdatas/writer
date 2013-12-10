@@ -106,30 +106,30 @@ class TangoDataWriter(object):
             if  hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
     
-    ## get method for thejson attribute
-    # \returns value of thejson            
+    ## get method for jsonRecord attribute
+    # \returns value of jsonRecord            
     def __getJSON(self):
         return self.__json
 
-    ## set method for thejson attribute
-    # \param jsonstring value of thejson            
+    ## set method for jsonRecord attribute
+    # \param jsonstring value of jsonRecord            
     def __setJSON(self, jsonstring):
         self.__decoders = DecoderPool(json.loads(jsonstring))            
         self.__datasources = DataSourcePool(json.loads(jsonstring))            
         self.__json = jsonstring
 
-    ## del method for thejson attribute
+    ## del method for jsonRecord attribute
     def __delJSON(self):
         del self.__json 
 
     ## the json data string
-    thejson = property(__getJSON, __setJSON, __delJSON, 
+    jsonRecord = property(__getJSON, __setJSON, __delJSON, 
                        doc = 'the json data string')
 
 
 
     ## get method for xmlSettings attribute
-    # \returns value of thejson            
+    # \returns value of jsonRecord            
     def __getXML(self):
         return self.__xmlSettings
 
@@ -215,7 +215,7 @@ class TangoDataWriter(object):
             handler = NexusXMLHandler(
                 self.__eFile, self.__datasources, 
                 self.__decoders, self.__fetcher.groupTypes, 
-                parser, json.loads(self.thejson))
+                parser, json.loads(self.jsonRecord))
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
 
@@ -236,7 +236,7 @@ class TangoDataWriter(object):
             for pool in self.__triggerPools.keys():
                 self.__triggerPools[pool].numThreads = self.numThreads
 
-            self.__initPool.setJSON(json.loads(self.thejson))
+            self.__initPool.setJSON(json.loads(self.jsonRecord))
             self.__initPool.runAndWait()
             self.__initPool.checkErrors()
 
@@ -270,7 +270,7 @@ class TangoDataWriter(object):
             else:
                 print >> sys.stdout, \
                     "TangoDataWriter::record() - Default trigger"
-            self.__stepPool.setJSON(json.loads(self.thejson), localJSON)
+            self.__stepPool.setJSON(json.loads(self.jsonRecord), localJSON)
             self.__stepPool.runAndWait()
             self.__stepPool.checkErrors()
        
@@ -288,7 +288,7 @@ class TangoDataWriter(object):
                         print >> sys.stdout, \
                             "TangoDataWriter:record() - Trigger: %s" % pool 
                     self.__triggerPools[pool].setJSON(
-                        json.loads(self.thejson), localJSON)
+                        json.loads(self.jsonRecord), localJSON)
                     self.__triggerPools[pool].runAndWait()
                     self.__triggerPools[pool].checkErrors()
 
@@ -309,7 +309,7 @@ class TangoDataWriter(object):
             self.__logGroup = None
 
         if self.__finalPool:
-            self.__finalPool.setJSON(json.loads(self.thejson))
+            self.__finalPool.setJSON(json.loads(self.jsonRecord))
             self.__finalPool.runAndWait()
             self.__finalPool.checkErrors()
 
