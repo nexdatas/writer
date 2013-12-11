@@ -349,11 +349,12 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def dev_status(self):
         print "In ", self.get_name(), "::dev_status()"
-        self.set_state()
-        the_status = self.get_status()
+        state = self.state_flag
+        self.set_state(state)
+        self.the_status = self.get_status()
         
-        self.set_status(the_status)
-        return the_status
+        self.set_status(self.the_status)
+        return self.the_status
 
 
 #------------------------------------------------------------------
