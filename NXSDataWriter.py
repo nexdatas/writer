@@ -128,7 +128,17 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.tdw = TDW(self)
         ## list with errors
         self.errors = []
+        ## status messages
+        self.__status = {
+            PyTango.DevState.OFF:"Not initialized",
+            PyTango.DevState.ON:"Ready",
+            PyTango.DevState.OPEN:"File open",
+            PyTango.DevState.EXTRACT:"Entry open",
+            PyTango.DevState.RUNNING:"Writing ...",
+            PyTango.DevState.FAULT:"Error",
+            }
         NXSDataWriter.init_device(self)
+        
         
 #------------------------------------------------------------------
 #    Device destructor
@@ -174,10 +184,10 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #    argin:  DevState    State Code
 #------------------------------------------------------------------
     def set_state(self, state):
-#        print "In ", self.get_name(), "::set_state()"
         with self.lock:
-            self.state_flag = state
-            PyTango.Device_4Impl.set_state(self, state)
+            if state is not None:
+                self.state_flag = state
+            PyTango.Device_4Impl.set_state(self, self.state_flag)
 
 
 #------------------------------------------------------------------
@@ -186,7 +196,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #    argout: DevState    State Code
 #------------------------------------------------------------------
     def get_state(self):
-#        print "In ", self.get_name(), "::get_state()"
         with self.lock:
             PyTango.Device_4Impl.set_state(self, self.state_flag)
             PyTango.Device_4Impl.get_state(self)
@@ -349,12 +358,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def dev_status(self):
         print "In ", self.get_name(), "::dev_status()"
-        state = self.state_flag
-        self.set_state(state)
-        self.the_status = self.get_status()
-        
-        self.set_status(self.the_status)
-        return self.the_status
+        self.set_state(None)
+        with self.lock:
+            state = self.state_flag
+        self.set_status(self.__status[state])
+        return self.__status[state]
 
 
 #------------------------------------------------------------------

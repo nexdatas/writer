@@ -1,3 +1,7 @@
+2013-12-XX Jan Kotanski <jankotan@gmail.com>
+	* fixies for status method
+	* tagged as 1.5.1
+
 2013-12-10 Jan Kotanski <jankotan@gmail.com>
 	* changing TangoDataWriter.thejson into  TangoDataWriter.jsonRecord
 	* changing TheXMLSettings into XMLSettings
