@@ -57,6 +57,15 @@ class NXSDataWriterTest(unittest.TestCase):
         sins = self.__class__.__name__+"%s" % NXSDataWriterTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
+        self.__status = {
+            PyTango.DevState.OFF:"Not Initialized",
+            PyTango.DevState.ON:"Ready",
+            PyTango.DevState.OPEN:"File Open",
+            PyTango.DevState.EXTRACT:"Entry Open",
+            PyTango.DevState.RUNNING:"Writing ...",
+            PyTango.DevState.FAULT:"Error",
+            }
+
         self._scanXml = """
 <definition>
   <group type="NXentry" name="entry1">
@@ -128,13 +137,16 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             dp.FileName = fname
             dp.OpenFile()
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             self.assertEqual(dp.XMLSettings,"")
             self.assertEqual(dp.JSONRecord, "{}")
             dp.CloseFile()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
             # check the created file
@@ -205,13 +217,16 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             dp.FileName = fname
             dp.OpenFile()
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             self.assertEqual(dp.XMLSettings,"")
             self.assertEqual(dp.JSONRecord, "{}")
             dp.CloseFile()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
             # check the created file
@@ -259,23 +274,29 @@ class NXSDataWriterTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.OpenFile()
 
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.XMLSettings = xml
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
             dp.OpenEntry()
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
 
             dp.CloseEntry()
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 
             dp.CloseFile()
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             self.assertEqual(dp.state(),PyTango.DevState.ON)
 
 
@@ -357,6 +378,7 @@ class NXSDataWriterTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.OpenFile()
 
@@ -373,26 +395,32 @@ class NXSDataWriterTest(unittest.TestCase):
                 
 
 
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
 #            dp.CloseFile()
 #            dp.OpenFile()
 
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.XMLSettings = xml
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
             dp.OpenEntry()
             self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.CloseEntry()
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
             dp.CloseFile()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
 
@@ -440,31 +468,38 @@ class NXSDataWriterTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.OpenFile()
 
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.XMLSettings = self._scanXml
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.OpenEntry()
             self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
             dp.Record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
                            + str(self._mca1)+ '  } }')
             self.assertEqual(dp.state(),PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
             dp.Record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
                            + str(self._mca2)+ '  } }')
 
 
             dp.CloseEntry()
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
             dp.CloseFile()
             self.assertEqual(dp.state(),PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
 
 
 

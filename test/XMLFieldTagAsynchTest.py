@@ -47,6 +47,14 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
 #        self._counter =  [1, 2]
 #        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
+        self.__status = {
+            PyTango.DevState.OFF:"Not Initialized",
+            PyTango.DevState.ON:"Ready",
+            PyTango.DevState.OPEN:"File Open",
+            PyTango.DevState.EXTRACT:"Entry Open",
+            PyTango.DevState.RUNNING:"Writing ...",
+            PyTango.DevState.FAULT:"Error",
+            }
 
 
     ## test starter
@@ -74,18 +82,23 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
 
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         
         tdw.OpenFile()
         
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         
         tdw.XMLSettings = xml
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         if json:
             tdw.JSONRecord = json
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         tdw.OpenEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
@@ -98,22 +111,27 @@ class XMLFieldTagAsynchTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
 
         if json:
             tdw.JSONRecord = json
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.CloseEntryAsynch()
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         
         tdw.CloseFile()
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
                 
 
 
 
     ## performs one record step
     def record(self, tdw, string):
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         tdw.RecordAsynch(string)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
 if __name__ == '__main__':

@@ -45,6 +45,14 @@ class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
 
 #        self._counter =  [1, 2]
 #        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
+        self.__status = {
+            PyTango.DevState.OFF:"Not Initialized",
+            PyTango.DevState.ON:"Ready",
+            PyTango.DevState.OPEN:"File Open",
+            PyTango.DevState.EXTRACT:"Entry Open",
+            PyTango.DevState.RUNNING:"Writing ...",
+            PyTango.DevState.FAULT:"Error",
+            }
 
 
 
@@ -70,17 +78,21 @@ class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
 
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         
         tdw.OpenFile()
         
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         
         tdw.XMLSettings = xml
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         if json:
             tdw.JSONRecord = json
         tdw.OpenEntry()
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         return tdw
 
 
@@ -89,14 +101,17 @@ class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         if json:
             tdw.JSONRecord = json
         tdw.CloseEntry()
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
         
         tdw.CloseFile()
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
                 
 
 
