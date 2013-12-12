@@ -130,10 +130,10 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.errors = []
         ## status messages
         self.__status = {
-            PyTango.DevState.OFF:"Not initialized",
+            PyTango.DevState.OFF:"Not Initialized",
             PyTango.DevState.ON:"Ready",
-            PyTango.DevState.OPEN:"File open",
-            PyTango.DevState.EXTRACT:"Entry open",
+            PyTango.DevState.OPEN:"File Open",
+            PyTango.DevState.EXTRACT:"Entry Open",
             PyTango.DevState.RUNNING:"Writing ...",
             PyTango.DevState.FAULT:"Error",
             }
