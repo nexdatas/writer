@@ -1,3 +1,7 @@
+2014-01-03 Jan Kotanski <jankotan@gmail.com>
+	* moves NXSDataServer into nxswriter module
+	* tagged as 1.5.2
+
 2013-12-12 Jan Kotanski <jankotan@gmail.com>
 	* fixies for status method
 	* tagged as 1.5.1
