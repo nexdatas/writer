@@ -712,7 +712,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
 if __name__ == '__main__':
     try:
         py = PyTango.Util(sys.argv)
-        py.add_TgClass(NXSDataWriterClass, NXSDataWriter, 'NXSDataWriter')
+        py.add_class(NXSDataWriterClass, NXSDataWriter, 'NXSDataWriter')
 
         U = PyTango.Util.instance()
         U.server_init()
