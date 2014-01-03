@@ -23,3 +23,22 @@
 
 ## package version
 __version__ = "1.5.2"
+
+import sys
+
+def run(argv):
+    import PyTango
+    from NXSDataWriter import NXSDataWriter as NXSWriter
+    from NXSDataWriter import NXSDataWriterClass as NXSWriterClass
+    try:
+        py = PyTango.Util(argv)
+        py.add_class(NXSWriterClass, NXSWriter, 'NXSDataWriter')
+
+        U = PyTango.Util.instance()
+        U.server_init()
+        U.server_run()
+
+    except PyTango.DevFailed, e:
+        print '-------> Received a DevFailed exception:', e
+    except Exception, e:
+        print '-------> An unforeseen exception occured....', e
