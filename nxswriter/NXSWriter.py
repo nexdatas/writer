@@ -695,7 +695,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
 
 
 #------------------------------------------------------------------
-#    NXSDataWriterClass Constructor
+##    NXSDataWriterClass Constructor
 #
 #------------------------------------------------------------------
     def __init__(self, name):
