@@ -22,14 +22,16 @@
 """ Tango Data Writer """
 
 ## package version
-__version__ = "1.5.2"
+__version__ = "1.5.3"
 
 import sys
 
+## runs the TANGO server
+# \param argv command-line arguments
 def run(argv):
     import PyTango
-    from NXSDataWriter import NXSDataWriter as NXSWriter
-    from NXSDataWriter import NXSDataWriterClass as NXSWriterClass
+    from .NXSWriter import NXSDataWriter as NXSWriter
+    from .NXSWriter import NXSDataWriterClass as NXSWriterClass
     try:
         py = PyTango.Util(argv)
         py.add_class(NXSWriterClass, NXSWriter, 'NXSDataWriter')

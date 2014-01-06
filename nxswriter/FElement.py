@@ -152,7 +152,6 @@ class FElement(Element):
             except:
                 val = ("".join(self.content)).strip().encode()   
                 found = False
-###                
                 if checkData and self.source and self.source.isValid():
                     data = self.source.getData()
                     if isinstance(data, dict):                        

@@ -85,6 +85,7 @@ class EAttribute(FElement):
         try:
             if self.name:
                 if not self.h5Object:
+                    ## stored H5 file object (defined in base class)
                     self.h5Object = self.last.h5Attribute(self.name)
                 if self.source:
                     dt = self.source.getData()

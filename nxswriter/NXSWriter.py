@@ -42,7 +42,7 @@ from TangoDataWriter import TangoDataWriter as TDW
 
 
 #==================================================================
-#   CommandThread Class Description:
+##   CommandThread Class Description:
 #
 #         thread with server command
 #
@@ -90,7 +90,7 @@ class CommandThread(Thread):
 
 
 #==================================================================
-#   NXSDataWriter Class Description:
+##   NXSDataWriter Class Description:
 #
 #         Tango Server to store data in H5 files
 #
@@ -607,18 +607,17 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
 
 #==================================================================
-#
-#    NXSDataWriterClass class definition
+##    NXSDataWriterClass class definition
 #
 #==================================================================
 class NXSDataWriterClass(PyTango.DeviceClass):
 
-    #    Class Properties
+    ##    Class Properties
     class_property_list = {
         }
 
 
-    #    Device Properties
+    ##    Device Properties
     device_property_list = {
         'NumberOfThreads':
             [PyTango.DevLong,
@@ -627,7 +626,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         }
 
 
-    #    Command definitions
+    ##    Command definitions
     cmd_list = {
         'OpenFile':
             [[PyTango.DevVoid, ""],
@@ -656,7 +655,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         }
 
 
-    #    Attribute definitions
+    ##    Attribute definitions
     attr_list = {
         'XMLSettings':
             [[PyTango.DevString,
@@ -697,6 +696,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
 
 #------------------------------------------------------------------
 #    NXSDataWriterClass Constructor
+#
 #------------------------------------------------------------------
     def __init__(self, name):
         PyTango.DeviceClass.__init__(self, name)

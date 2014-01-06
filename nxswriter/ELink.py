@@ -38,6 +38,7 @@ class ELink(FElement):
     # \param last the last element from the stack
     def __init__(self, attrs, last):
         FElement.__init__(self, "link", attrs, last)
+        ## stored H5 file object (defined in base class)
         self.h5Object = None
 
     ## converts types to Names using groupTypes dictionary

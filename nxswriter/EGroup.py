@@ -50,6 +50,7 @@ class EGroup(FElementWithAttr):
                         "EGroup::__init__() - The group type not defined"
                 raise XMLSettingSyntaxError, "The group type not defined"
             try:
+                ## stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())
             except:
@@ -118,6 +119,7 @@ class EGroup(FElementWithAttr):
                         attrs[key].encode()
 
     ## stores the tag content 
+    # \param xml xml setting 
     # \param globalJSON global JSON string
     def store(self, xml = None, globalJSON = None):
         self._createAttributes()

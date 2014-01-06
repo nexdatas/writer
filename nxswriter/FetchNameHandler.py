@@ -33,7 +33,7 @@ class TNObject(object):
     ## constructor
     # \param name name of the object
     # \param nxtype Nexus type of the object
-    # \param object parent
+    # \param parent object parent
     # \brief It sets default values of TNObject
     def __init__(self, name="root", nxtype=None, parent=None):
         ## object name

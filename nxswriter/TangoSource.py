@@ -52,6 +52,7 @@ class ProxyTools(object):
 
 
     ## sets the Tango proxy up
+    ## \param cls ProxyTools class
     ## \param device tango device    
     # \returns proxy if proxy is set up    
     @classmethod
@@ -84,6 +85,7 @@ class ProxyTools(object):
 
 
     ## checks if proxy is valid
+    ## \param cls ProxyTools class
     # \param proxy PyTango proxy
     # \returns True if proxy is valid else false
     @classmethod
@@ -274,8 +276,11 @@ class TgGroup(object):
     ## default constructor
     # \param counter of steps
     def __init__(self, counter = 0):
+        ## threading lock
         self.lock = threading.Lock()
+        ## counter of steps
         self.counter = counter
+        ## TANGO devices
         self.devices = {}
 
     ## provides tango device
@@ -399,6 +404,7 @@ class TgGroup(object):
 class TgDevice(object):
     ## default constructor
     # \param device tango device name
+    # \param proxy device proxy
     def __init__(self, device, proxy = None):
         ## tango device name
         self.device = device
@@ -410,6 +416,7 @@ class TgDevice(object):
         self.properties = []
         ## device command names
         self.commands = []
+        ## device proxy
         self.proxy = proxy 
 
 
@@ -459,13 +466,13 @@ class TgMember(object):
         
     ## sets tango data    
     # \param data output tango data
-    # \param input command data
+    # \param cmd input command data
     def setData(self, data, cmd=None):
         self.__da = data
         self.__cd = cmd
 
 
-    # checks if data is set   
+    ## checks if data is set   
     # \returns True if data is set    
     def isDataSet(self):
         status = True if self.__da else False

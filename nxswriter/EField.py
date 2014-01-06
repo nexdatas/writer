@@ -310,7 +310,7 @@ class EField(FElementWithAttr):
         tp, nm = self.__typeAndName()
         # shape
         shape = self.__getShape(tp)
-        # create h5 object
+        ## stored H5 file object (defined in base class)
         self.h5Object = self.__createObject(tp, nm, shape)
         # create attributes
         self.__setAttributes()
@@ -581,6 +581,8 @@ class EField(FElementWithAttr):
                     traceback.format_tb(sys.exc_info()[2]) ))
 #            message = self.setMessage(  sys.exc_info()[1].__str__()  )
             del info
+            ##  notification of error in the run method 
+            #   (defined in base class)
             self.error = message
 
 #            self.error = sys.exc_info()
