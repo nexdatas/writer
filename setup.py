@@ -45,7 +45,7 @@ required = [
 
 ## metadata for distutils
 SETUPDATA = dict(
-    name = "python-nxswriter",
+    name = "nexdatas",
     version = INDTS.__version__,
     author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
     author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
