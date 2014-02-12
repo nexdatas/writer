@@ -32,7 +32,8 @@ from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
-import pni.io.nx.h5 as nx
+#import pni.io.nx.h5 as nx
+import h5py
 
 
 
@@ -154,10 +155,10 @@ class EField(FElementWithAttr):
         chunk = [s if s > 0 else 1 for s in shape]  
         deflate = None
         # create Filter
-        if self.compression:
-            deflate = nx.NXDeflateFilter()
-            deflate.rate = self.rate
-            deflate.shuffle = self.shuffle
+#        if self.compression:
+#            deflate = nx.NXDeflateFilter()
+#            deflate.rate = self.rate
+#            deflate.shuffle = self.shuffle
        
         try:    
             if shape:

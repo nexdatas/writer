@@ -21,7 +21,8 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
-import pni.io.nx.h5 as nx
+#import pni.io.nx.h5 as nx
+import h5py
 from xml import sax
 
 import sys, os
@@ -276,7 +277,8 @@ if __name__ == "__main__":
             mparser = sax.make_parser()
             
             ## file  handle
-            nxFile = nx.create_file(fo, overwrite=True)
+            nxFile = h5py.File(fo, 'w')
+#            nxFile = nx.create_file(fo, overwrite=True)
             ## element file objects
             mfileElement = EFile([], None, nxFile)
             ## a SAX2 handler object

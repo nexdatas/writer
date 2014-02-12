@@ -26,7 +26,8 @@ from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
 
-import pni.io.nx.h5 as nx
+#import pni.io.nx.h5 as nx
+import h5py 
 
 from xml import sax
 
@@ -170,10 +171,12 @@ class TangoDataWriter(object):
         ## file handle
 
         if os.path.isfile(self.fileName):
-            self.__nxFile = nx.open_file(self.fileName, False)
+#            self.__nxFile = nx.open_file(self.fileName, False)
+            self.__nxFile = h5py.File(self.fileName, 'r+')
             self.__fileCreated = False
         else:
-            self.__nxFile = nx.create_file(self.fileName)
+#            self.__nxFile = nx.create_file(self.fileName)
+            self.__nxFile = h5py.File(self.fileName, 'w')
             self.__fileCreated = True
         
         ## element file objects
