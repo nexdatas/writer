@@ -443,10 +443,15 @@ class EField(FElementWithAttr):
                     self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
                 elif  len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0]-1, :] = arr
-                else:
-                    if hasattr(arr,"__iter__") and type(arr).__name__!= 'str' \
+                elif hasattr(arr,"__iter__") and type(arr).__name__!= 'str' \
                             and len(arr) == 1:
                         self.h5Object[self.h5Object.shape[0]-1] = arr
+                else:
+                    if Streams.log_error:
+                        print >> Streams.log_error, \
+                            "Rank mismatch"
+                    raise XMLSettingSyntaxError, \
+                        "Rank mismatch"
 
         else:
             if isinstance(arr, numpy.ndarray) \
@@ -482,11 +487,24 @@ class EField(FElementWithAttr):
                 self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0]-1] = arr[0][0]
+            else:
+                if Streams.log_error:
+                    print >> Streams.log_error, \
+                        "Rank mismatch"
+                raise XMLSettingSyntaxError, \
+                    "Rank mismatch"
+                
         elif self.grows == 2:
             if len(self.h5Object.shape) == 3:
                 self.h5Object[:, self.h5Object.shape[1]-1, :] = arr
             elif len(self.h5Object.shape) == 2:
                 self.h5Object[:, self.h5Object.shape[1]-1] = arr[0]
+            else:
+                if Streams.log_error:
+                    print >> Streams.log_error, \
+                        "Rank mismatch"
+                raise XMLSettingSyntaxError, \
+                    "Rank mismatch"
         else:
             self.h5Object[:, :, self.h5Object.shape[2]-1] = arr        
 
@@ -559,7 +577,7 @@ class EField(FElementWithAttr):
                 if not dh:
                     message = self.setMessage("Data without value")
                     self.error = message
-                elif not hasattr(self.h5Object,'shape'):
+                elif not hasattr(self.h5Object, 'shape'):
                     message = self.setMessage("PNI Object not created")
                     self.error = message
                 else:

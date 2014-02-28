@@ -160,7 +160,6 @@ class PyEvalSource(DataSource):
         exec(self.__script.strip(), {}, {"ds":ds})
         rec = getattr(ds, self.__name)
         ntp = NTP()
-
         rank, shape, pythonDType = ntp.arrayRankShape(rec)
         if rank in NTP.rTf:
             if  shape is None:
