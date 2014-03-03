@@ -1526,7 +1526,10 @@ class EFieldReshapeTest(unittest.TestCase):
                 if i and attrs[k][2] != "string":
                     self.assertEqual(not el[k].error, False)
                 else:
-                    self.assertEqual(el[k].error, None)
+                    if i!=0:
+                        self.assertEqual(not el[k].error, False)
+                    else:
+                        self.assertEqual(el[k].error, None)
     
 
                     
