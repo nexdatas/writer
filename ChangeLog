@@ -1,3 +1,7 @@
+2014-03-03 Jan Kotanski <jankotan@gmail.com>
+	* adding exception on rank missmatch
+	* tagged as 1.5.4
+
 2014-01-16 Jan Kotanski <jankotan@gmail.com>
 	* comming back to 'nexdatas' package name
 	* tagged as 1.5.3
