@@ -80,14 +80,23 @@ class CommandThread(Thread):
             self.command(*self.args)
             with self.server.lock:
                 self.server.state_flag = self.fstate
-        except:
-            with self.server.lock:
-                self.server.state_flag = self.estate
-            self.server.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
             raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
 
-
+    def __failed(self):
+        with self.server.lock:
+            self.server.state_flag = self.estate
+        self.server.errors.append(
+            str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+        
 
 #==================================================================
 ##   NXSDataWriter Class Description:
@@ -169,11 +178,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 self.tdw = None
             self.tdw = TDW(self)
             self.set_state(PyTango.DevState.ON)
-        except:    
-            self.set_state(PyTango.DevState.FAULT)
-            self.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise    
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
+            raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
             
         self.get_device_properties(self.get_device_class())
 
@@ -209,9 +223,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
         print "In ", self.get_name(), "::always_excuted_hook()"
 
 
-
-
-
 #==================================================================
 #
 #    NXSDataWriter read/write attribute methods
@@ -223,7 +234,13 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def read_attr_hardware(self, _):
         print "In ", self.get_name(), "::read_attr_hardware()"
 
-
+#------------------------------------------------------------------
+#    on error
+#------------------------------------------------------------------
+    def __failed(self):
+        self.set_state(PyTango.DevState.FAULT)
+        self.errors.append(
+            str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
 
 #------------------------------------------------------------------
 #    Read XMLSettings attribute
@@ -379,11 +396,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.openNXFile()
             self.set_state(PyTango.DevState.OPEN)
-        except:    
-            self.set_state(PyTango.DevState.FAULT)
-            self.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise    
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
+            raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
 
 
 #---- OpenFile command State Machine -----------------
@@ -411,11 +433,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.tdw.numThreads = self.NumberOfThreads
             self.tdw.openEntry()
             self.set_state(PyTango.DevState.EXTRACT)
-        except:    
-            self.set_state(PyTango.DevState.FAULT)
-            self.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise    
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
+            raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
 
 
 #---- OpenEntry command State Machine -----------------
@@ -442,11 +469,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.record(argin)
             self.set_state(PyTango.DevState.EXTRACT)
-        except:    
-            self.set_state(PyTango.DevState.FAULT)
-            self.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise    
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
+            raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
 
 
 #---- Record command State Machine -----------------
@@ -475,11 +507,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.closeEntry()
             self.set_state(state)
-        except:    
-            self.set_state(PyTango.DevState.FAULT)
-            self.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise    
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
+            raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
 
 
 #---- CloseEntry command State Machine -----------------
@@ -588,11 +625,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.closeNXFile()
             self.set_state(state)
-        except:    
-            self.set_state(PyTango.DevState.FAULT)
-            self.errors.append(
-                str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-            raise    
+        except (PyTango.DevFailed, BaseException) as e:
+            self.__failed()
+            raise
+        except:
+            self.__failed()
+            PyTango.Except.throw_exception(
+                str(sys.exc_info()[0]),
+                str(sys.exc_info()[1]),
+                str(sys.exc_info()[2])
+                )
 
 
 #---- CloseFile command State Machine -----------------
