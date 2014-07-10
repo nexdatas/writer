@@ -1,7 +1,7 @@
-2014-XX-XX Jan Kotanski <jankotan@gmail.com>
+2014-07-10 Jan Kotanski <jankotan@gmail.com>
 	* adding reraising Tango exceptions
 	* tagged as 1.5.5
-	
+
 2014-03-03 Jan Kotanski <jankotan@gmail.com>
 	* adding exception on rank missmatch
 	* tagged as 1.5.4
