@@ -194,7 +194,7 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numThreads,nth)
+        self.assertEqual(el.numberOfThreads,nth)
 
 
     ## constructor test
@@ -205,7 +205,7 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numThreads,nth)
+        self.assertEqual(el.numberOfThreads,nth)
 
         jlist = [Job() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
@@ -249,7 +249,7 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numThreads,nth)
+        self.assertEqual(el.numberOfThreads,nth)
 
         jlist = [EJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
@@ -288,7 +288,7 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numThreads,nth)
+        self.assertEqual(el.numberOfThreads,nth)
 
         jlist = [EJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
@@ -335,7 +335,7 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numThreads,nth)
+        self.assertEqual(el.numberOfThreads,nth)
 
         jlist = [SOJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
@@ -385,7 +385,7 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numThreads,nth)
+        self.assertEqual(el.numberOfThreads,nth)
 
         jlist = [SOJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:

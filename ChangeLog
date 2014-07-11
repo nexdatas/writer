@@ -1,4 +1,14 @@
 2014-07-10 Jan Kotanski <jankotan@gmail.com>
+	* making python API more similar to Tango one:
+	* 	getNXFile -> getFile
+	* 	openNXFile -> openFile
+	* 	closeNXFile -> closeFile
+        * 	jsonRecord -> jsonrecord 
+        * 	xmlSettings -> xmlsettings
+        * 	numThreads -> numberOfThreads
+	* tagged as 1.6.0
+
+2014-07-10 Jan Kotanski <jankotan@gmail.com>
 	* adding reraising Tango exceptions
 	* tagged as 1.5.5
 

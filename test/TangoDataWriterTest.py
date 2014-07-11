@@ -132,25 +132,25 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw = TangoDataWriter()
             tdw.fileName = fname
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             
-            tdw.openNXFile()
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
+            tdw.openFile()
+            self.assertTrue(tdw.getFile() is not None)
+            self.assertTrue(tdw.getFile().valid)
+            self.assertFalse(tdw.getFile().readonly)
             
-            tdw.closeNXFile()
+            tdw.closeFile()
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
-            self.assertTrue(tdw.getNXFile() is None)
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(tdw.getFile() is None)
             
 
             # check the created file
@@ -193,31 +193,31 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw = TangoDataWriter()
             tdw.fileName = fname
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             
-            tdw.openNXFile()
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
+            tdw.openFile()
+            self.assertTrue(tdw.getFile() is not None)
+            self.assertTrue(tdw.getFile().valid)
+            self.assertFalse(tdw.getFile().readonly)
             try:
                 error = False
-                tdw.jsonRecord =  "}"
+                tdw.jsonrecord =  "}"
             except ValueError, e:
                 error = True
             self.assertEqual(error, True)
 
-            tdw.closeNXFile()
+            tdw.closeFile()
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
-            self.assertTrue(tdw.getNXFile() is None)
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(tdw.getFile() is None)
             
 
             # check the created file
@@ -261,31 +261,31 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw = TangoDataWriter()
             tdw.fileName = fname
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             
-            tdw.openNXFile()
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
+            tdw.openFile()
+            self.assertTrue(tdw.getFile() is not None)
+            self.assertTrue(tdw.getFile().valid)
+            self.assertFalse(tdw.getFile().readonly)
             try:
                 error = False
-                tdw.jsonRecord =  1223
+                tdw.jsonrecord =  1223
             except TypeError, e:
                 error = True
             self.assertEqual(error, True)
 
-            tdw.closeNXFile()
+            tdw.closeFile()
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
-            self.assertTrue(tdw.getNXFile() is None)
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(tdw.getFile() is None)
             
 
             # check the created file
@@ -348,25 +348,25 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw = TangoDataWriter()
             tdw.fileName = fname
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             
-            tdw.openNXFile()
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
+            tdw.openFile()
+            self.assertTrue(tdw.getFile() is not None)
+            self.assertTrue(tdw.getFile().valid)
+            self.assertFalse(tdw.getFile().readonly)
             
-            tdw.closeNXFile()
+            tdw.closeFile()
             self.assertEqual(tdw.fileName, fname)
-            self.assertEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.getNXFile() is None)
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
-            self.assertTrue(tdw.getNXFile() is None)
+            self.assertEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.getFile() is None)
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(tdw.getFile() is None)
             
 
             # check the created file
@@ -408,23 +408,23 @@ class TangoDataWriterTest(unittest.TestCase):
         try:
             tdw = TangoDataWriter()
             tdw.fileName = fname
-            tdw.openNXFile()
+            tdw.openFile()
 
-            tdw.xmlSettings = xml
+            tdw.xmlsettings = xml
             tdw.openEntry()
 
             tdw.closeEntry()
 
-            self.assertTrue(tdw.getNXFile() is not None)
-            self.assertTrue(tdw.getNXFile().valid)
-            self.assertFalse(tdw.getNXFile().readonly)
+            self.assertTrue(tdw.getFile() is not None)
+            self.assertTrue(tdw.getFile().valid)
+            self.assertFalse(tdw.getFile().readonly)
             self.assertEqual(tdw.fileName, fname)
-            self.assertNotEqual(tdw.xmlSettings, "")
-            self.assertEqual(tdw.jsonRecord, "{}")
-            self.assertTrue(tdw.numThreads > 0)
-            self.assertTrue(isinstance(tdw.numThreads,(int, long)))
+            self.assertNotEqual(tdw.xmlsettings, "")
+            self.assertEqual(tdw.jsonrecord, "{}")
+            self.assertTrue(tdw.numberOfThreads > 0)
+            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
 
-            tdw.closeNXFile()
+            tdw.closeFile()
            
              # check the created file
             
@@ -500,11 +500,11 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw = TangoDataWriter()
             tdw.fileName = fname
 
-            tdw.openNXFile()
+            tdw.openFile()
 
             try:
                 error = None
-                tdw.xmlSettings = wrongXml
+                tdw.xmlsettings = wrongXml
             except SAXParseException,e:
                 error = True
             except Exception, e:
@@ -515,7 +515,7 @@ class TangoDataWriterTest(unittest.TestCase):
 
 
             try:
-                tdw.xmlSettings = xml
+                tdw.xmlsettings = xml
                 error = None
                 tdw.openEntry()
             except SAXParseException,e:
@@ -526,7 +526,7 @@ class TangoDataWriterTest(unittest.TestCase):
                                 
             tdw.closeEntry()
 
-            tdw.closeNXFile()
+            tdw.closeFile()
             
 
             # check the created file
@@ -569,9 +569,9 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw = TangoDataWriter()
             tdw.fileName = fname
             
-            tdw.openNXFile()
+            tdw.openFile()
 
-            tdw.xmlSettings = self._scanXml
+            tdw.xmlsettings = self._scanXml
             tdw.openEntry()
 
 
@@ -584,7 +584,7 @@ class TangoDataWriterTest(unittest.TestCase):
 
             tdw.closeEntry()
 
-            tdw.closeNXFile()
+            tdw.closeFile()
            
 
 

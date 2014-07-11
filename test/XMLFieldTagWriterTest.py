@@ -77,10 +77,10 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter()
         tdw.fileName = fname
-        tdw.openNXFile()
-        tdw.xmlSettings = xml
+        tdw.openFile()
+        tdw.xmlsettings = xml
         if json:
-            tdw.jsonRecord = json
+            tdw.jsonrecord = json
         tdw.openEntry()
         return tdw
 
@@ -89,9 +89,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         if json:
-            tdw.jsonRecord = json
+            tdw.jsonrecord = json
         tdw.closeEntry()
-        tdw.closeNXFile()
+        tdw.closeFile()
 
     ## performs one record step
     def record(self, tdw, string):

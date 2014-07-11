@@ -155,8 +155,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def delete_device(self):
         print "[Device delete_device method] for device", self.get_name()
         if hasattr(self,'tdw') and  self.tdw :
-            if hasattr(self.tdw,'closeNXFile'):
-                self.tdw.closeNXFile()
+            if hasattr(self.tdw,'closeFile'):
+                self.tdw.closeFile()
             del self.tdw
             self.tdw = None
         self.set_state(PyTango.DevState.OFF)
@@ -172,8 +172,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.set_state(PyTango.DevState.RUNNING)
             self.errors = []
             if hasattr(self,'tdw') and self.tdw:
-                if hasattr(self.tdw,'closeNXFile'):
-                    self.tdw.closeNXFile()
+                if hasattr(self.tdw,'closeFile'):
+                    self.tdw.closeFile()
                 del self.tdw
                 self.tdw = None
             self.tdw = TDW(self)
@@ -247,7 +247,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def read_XMLSettings(self, attr):
         print "In ", self.get_name(), "::read_XMLSettings()"
-        attr.set_value(self.tdw.xmlSettings)
+        attr.set_value(self.tdw.xmlsettings)
 
 
 #------------------------------------------------------------------
@@ -255,8 +255,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def write_XMLSettings(self, attr):
         print "In ", self.get_name(), "::write_XMLSettings()"
-        self.tdw.xmlSettings = attr.get_write_value()
-        print "Attribute value = ", self.tdw.xmlSettings
+        self.tdw.xmlsettings = attr.get_write_value()
+        print "Attribute value = ", self.tdw.xmlsettings
 
 
 #---- XMLSettings attribute State Machine -----------------
@@ -274,7 +274,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def read_JSONRecord(self, attr):
         print "In ", self.get_name(), "::read_JSONRecord()"
         
-        attr.set_value(self.tdw.jsonRecord)
+        attr.set_value(self.tdw.jsonrecord)
 
 
 #------------------------------------------------------------------
@@ -282,8 +282,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def write_JSONRecord(self, attr):
         print "In ", self.get_name(), "::write_JSONRecord()"
-        self.tdw.jsonRecord = attr.get_write_value()
-        print "Attribute value = ", self.tdw.jsonRecord
+        self.tdw.jsonrecord = attr.get_write_value()
+        print "Attribute value = ", self.tdw.jsonrecord
 
 
 #---- JSONRecord attribute State Machine -----------------
@@ -394,7 +394,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.set_state(PyTango.DevState.RUNNING)
         self.errors = []
         try:
-            self.tdw.openNXFile()
+            self.tdw.openFile()
             self.set_state(PyTango.DevState.OPEN)
         except (PyTango.DevFailed, BaseException) as e:
             self.__failed()
@@ -430,7 +430,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.set_state(PyTango.DevState.RUNNING)
         try:
             self.get_device_properties(self.get_device_class())
-            self.tdw.numThreads = self.NumberOfThreads
+            self.tdw.numberOfThreads = self.NumberOfThreads
             self.tdw.openEntry()
             self.set_state(PyTango.DevState.EXTRACT)
         except (PyTango.DevFailed, BaseException) as e:
@@ -539,7 +539,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         print "In ", self.get_name(), "::OpenEntryAsynch()"
         self.set_state(PyTango.DevState.RUNNING)
         self.get_device_properties(self.get_device_class())
-        self.tdw.numThreads = self.NumberOfThreads
+        self.tdw.numberOfThreads = self.NumberOfThreads
         self.othread = CommandThread(
             self, "openEntry", PyTango.DevState.EXTRACT)
         self.othread.start()
@@ -623,7 +623,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             state = PyTango.DevState.ON
         self.set_state(PyTango.DevState.RUNNING)
         try:
-            self.tdw.closeNXFile()
+            self.tdw.closeFile()
             self.set_state(state)
         except (PyTango.DevFailed, BaseException) as e:
             self.__failed()

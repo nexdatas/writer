@@ -32,9 +32,9 @@ from .Errors import ThreadError
 class ThreadPool(object):
     ## constructor
     # \brief It cleans the member variables
-    def __init__(self, numThreads=None):
+    def __init__(self, numberOfThreads=None):
         ## maximal number of threads
-        self.numThreads  = numThreads if numThreads >= 1 else -1
+        self.numberOfThreads  = numberOfThreads if numberOfThreads >= 1 else -1
         ## queue of the appended elements
         self.__elementQueue = Queue.Queue()
         ## list of the appended elements
@@ -67,10 +67,10 @@ class ThreadPool(object):
         for eth in self.__elementList:
             self.__elementQueue.put(eth)
 
-        if self.numThreads < 1:
-            self.numThreads = len(self.__elementList)
+        if self.numberOfThreads < 1:
+            self.numberOfThreads = len(self.__elementList)
 
-        for  i in range(min(self.numThreads, len(self.__elementList))):
+        for  i in range(min(self.numberOfThreads, len(self.__elementList))):
             th = ElementThread(i, self.__elementQueue)
             self.__threadList.append(th)
             th.start()
