@@ -359,7 +359,7 @@ class EField(FElementWithAttr):
             else:
                 self.h5Object.write(sts)
 
-        elif  len(self.h5Object.shape) == 2 \
+        elif len(self.h5Object.shape) == 2 \
                 and self.h5Object.dtype == "string":       
             sts = holder.cast(self.h5Object.dtype)
             if str(holder.format).split('.')[-1] == "IMAGE":
@@ -368,9 +368,9 @@ class EField(FElementWithAttr):
                         self.h5Object[i, j] = sts[i][j] 
             elif str(holder.format).split('.')[-1] == "SPECTRUM":
                 for i in range(len(sts)):
-                    self.h5Object[i, :] = sts[i]
+                    self.h5Object[i, 0] = sts[i]
             else:            
-                self.h5Object[:, :] = sts
+                self.h5Object[0, 0] = sts
         elif  len(self.h5Object.shape) == 3 \
                 and self.h5Object.dtype == "string":       
             sts = holder.cast(self.h5Object.dtype)
@@ -382,10 +382,10 @@ class EField(FElementWithAttr):
             if str(holder.format).split('.')[-1] == "IMAGE":
                 for i in range(len(sts)):
                     for j in range(len(sts[i])):
-                        self.h5Object[i, j, :] = sts[i][j] 
+                        self.h5Object[i, j, 0] = sts[i][j] 
             elif str(holder.format).split('.')[-1] == "SPECTRUM":
                 for i in range(len(sts)):
-                    self.h5Object[i, :, :] = sts[i]
+                    self.h5Object[i, 0, 0] = sts[i]
             else:            
                 self.h5Object[:, :, :] = sts
         else:
@@ -410,16 +410,16 @@ class EField(FElementWithAttr):
             self.h5Object[self.h5Object.shape[0]-1] = arr
         elif  len(self.h5Object.shape) == 2:
             if self.grows == 2:
-                self.h5Object[:, self.h5Object.shape[0]-1] = arr
+                self.h5Object[0, self.h5Object.shape[0]-1] = arr
             else:
-                self.h5Object[self.h5Object.shape[0]-1, :] = arr
+                self.h5Object[self.h5Object.shape[0]-1, 0] = arr
         elif  len(self.h5Object.shape) == 3:
             if self.grows == 3:
-                self.h5Object[:, :, self.h5Object.shape[0]-1] = arr
+                self.h5Object[0, 0, self.h5Object.shape[0]-1] = arr
             if self.grows == 2:
-                self.h5Object[:, self.h5Object.shape[0]-1, :] = arr
+                self.h5Object[0, self.h5Object.shape[0]-1, 0] = arr
             else:
-                self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
+                self.h5Object[self.h5Object.shape[0]-1, 0, 0] = arr
 
 
     ## writes growing spectrum data
@@ -433,9 +433,9 @@ class EField(FElementWithAttr):
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
                 if len(self.h5Object.shape) == 2 \
                         and self.h5Object.shape[1] == 1:
-                    self.h5Object[self.h5Object.shape[0]-1, :] = arr
+                    self.h5Object[self.h5Object.shape[0]-1, 0:len(arr)] = arr
                 if len(self.h5Object.shape) == 2:
-                    self.h5Object[self.h5Object.shape[0]-1, :] = arr
+                    self.h5Object[self.h5Object.shape[0]-1, 0:len(arr)] = arr
                 else:                      
                     self.h5Object[self.h5Object.shape[0]-1] = arr
             else:
@@ -456,7 +456,7 @@ class EField(FElementWithAttr):
         else:
             if isinstance(arr, numpy.ndarray) \
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
-                self.h5Object[:, self.h5Object.shape[1]-1] = arr
+                self.h5Object[0:len(arr), self.h5Object.shape[1]-1] = arr
             else:
                 if len(self.h5Object.shape) == 3: 
                     if self.grows == 2:
@@ -464,7 +464,7 @@ class EField(FElementWithAttr):
                     else:
                         self.h5Object[:, :, self.h5Object.shape[2]-1] = arr
                 else:
-                    self.h5Object[:, self.h5Object.shape[1]-1] = arr
+                    self.h5Object[0:len(arr), self.h5Object.shape[1]-1] = arr
 
 
     ## writes growing spectrum data
@@ -497,9 +497,11 @@ class EField(FElementWithAttr):
                 
         elif self.grows == 2:
             if len(self.h5Object.shape) == 3:
-                self.h5Object[:, self.h5Object.shape[1]-1, :] = arr
+                self.h5Object[0:len(arr), self.h5Object.shape[1]-1, 
+                              0:len(arr[0])] = arr
             elif len(self.h5Object.shape) == 2:
-                self.h5Object[:, self.h5Object.shape[1]-1] = arr[0]
+                self.h5Object[0:len(arr[0]), 
+                              self.h5Object.shape[1]-1] = arr[0]
             else:
                 if Streams.log_error:
                     print >> Streams.log_error, \
@@ -507,7 +509,8 @@ class EField(FElementWithAttr):
                 raise XMLSettingSyntaxError, \
                     "Rank mismatch"
         else:
-            self.h5Object[:, :, self.h5Object.shape[2]-1] = arr        
+            self.h5Object[0:len(arr), 0:len(arr[0]), 
+                          self.h5Object.shape[2]-1] = arr        
 
 
 
