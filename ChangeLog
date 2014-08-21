@@ -1,3 +1,7 @@
+2014-08-21 Jan Kotanski <jankotan@gmail.com>
+	* enables saving images and spectra in larger fields with larger dims
+	* tagged as 1.6.1
+
 2014-07-11 Jan Kotanski <jankotan@gmail.com>
 	* making python API more similar to Tango one:
 	* 	getNXFile -> getFile

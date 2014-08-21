@@ -442,7 +442,7 @@ class EField(FElementWithAttr):
                 if len(self.h5Object.shape) == 3:
                     self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
                 elif  len(self.h5Object.shape) == 2:
-                    self.h5Object[self.h5Object.shape[0]-1, :] = arr
+                    self.h5Object[self.h5Object.shape[0]-1, 0:len(arr)] = arr
                 elif hasattr(arr,"__iter__") and type(arr).__name__!= 'str' \
                             and len(arr) == 1:
                         self.h5Object[self.h5Object.shape[0]-1] = arr
@@ -474,7 +474,8 @@ class EField(FElementWithAttr):
         arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
             if len(self.h5Object.shape) == 3:
-                self.h5Object[self.h5Object.shape[0]-1, :, :] = arr
+                self.h5Object[self.h5Object.shape[0]-1, 
+                              0:len(arr), 0:len(arr[0])] = arr
             elif len(self.h5Object.shape) == 2:
                 if len(holder.shape) == 1 :
                     self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
