@@ -152,6 +152,7 @@ class EField(FElementWithAttr):
     # \returns H5 object
     def __createObject(self, dtype, name, shape):
         chunk = [s if s > 0 else 1 for s in shape]  
+        minshape = [1 if s > 0 else 0 for s in shape]  
         deflate = None
         # create Filter
         if self.compression:
@@ -171,8 +172,12 @@ class EField(FElementWithAttr):
                             deflate)
                     else:
                         f = self._lastObject().create_field(
-                            name.encode(), dtype.encode(), shape, chunk, 
+                            name.encode(), dtype.encode(), minshape, chunk, 
                             deflate)
+#                    else:
+#                        f = self._lastObject().create_field(
+#                            name.encode(), dtype.encode(), shape, chunk, 
+#                            deflate)
             else:
                 if deflate:
                     f = self._lastObject().create_field(
@@ -264,7 +269,7 @@ class EField(FElementWithAttr):
             val = ("".join(self.content)).strip().encode()   
             if val:
                 dh = self._setValue(int(self.rank), val)
-
+                self.__growshape(dh.shape)
                 if self.h5Object.dtype != "string" or not self.rank \
                         or int(self.rank) == 0:
                     self.h5Object[...] = dh.cast(self.h5Object.dtype)
@@ -592,7 +597,8 @@ class EField(FElementWithAttr):
                     else:
                         if not isinstance(self.h5Object, FieldArray) and \
                                 len(self.h5Object.shape) >= self.grows and \
-                                self.h5Object.shape[self.grows-1] == 1:
+                                (self.h5Object.shape[self.grows-1] == 1 \
+                                     or self.canfail):
                             self.__growshape(dh.shape)
                         self.__writeGrowingData(dh)
         except:

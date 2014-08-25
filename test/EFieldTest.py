@@ -1112,11 +1112,11 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             if attrs[k][2] and attrs[k][2] != 'string':
                 if el[k].grows == 3:
-                    self.assertEqual(h5.shape,(attrs[k][3][0],attrs[k][3][1],0))
+                    self.assertEqual(h5.shape,(1,1,0))
                 elif el[k].grows == 2:
-                    self.assertEqual(h5.shape,(attrs[k][3][0],0,attrs[k][3][1]))
+                    self.assertEqual(h5.shape,(1,0,1))
                 else:
-                    self.assertEqual(h5.shape,(0,attrs[k][3][0],attrs[k][3][1]))
+                    self.assertEqual(h5.shape,(0,1,1))
                 self.assertEqual(h5.size,0)
                 self.assertEqual(h5.nattrs, 2)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
@@ -1222,13 +1222,14 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            self.assertEqual(h5.shape,(attrs[k][3][0],attrs[k][3][1]))
             if attrs[k][2] and attrs[k][2] != 'string':
-                self.assertEqual(h5.size,attrs[k][3][0]*attrs[k][3][1])
+                self.assertEqual(h5.shape,(1,1))
+                self.assertEqual(h5.size, 1)
                 self.assertEqual(h5.nattrs, 2)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
-
+            else:
+                self.assertEqual(h5.shape,(attrs[k][3][0],attrs[k][3][1]))
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -1331,14 +1332,16 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            self.assertEqual(h5.shape,(attrs[k][3][0],attrs[k][3][1]))
             if attrs[k][2] and attrs[k][2] != 'string':
-                self.assertEqual(h5.size,attrs[k][3][0]*attrs[k][3][1])
+                self.assertEqual(h5.shape,(1, 1))
+                self.assertEqual(h5.size, 1)
                 self.assertEqual(h5.nattrs, 3)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
                 self._sc.checkScalarAttribute(h5, "postrun", "string", k)
-
+            else:
+                self.assertEqual(h5.shape,(attrs[k][3][0],attrs[k][3][1]))
+    
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -5568,7 +5571,7 @@ class EFieldTest(unittest.TestCase):
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                attrs[k][1],  attrs[k][0],
+                                                attrs[k][1], attrs[k][0],
                                                 attrs[k][4] if len(attrs[k])> 4 else 0,
                                                 attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             else:
