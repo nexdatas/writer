@@ -171,7 +171,7 @@ class EField(FElementWithAttr):
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), shape, [],
                             deflate)
-                   elif self.canfail:    
+                    elif self.canfail:    
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), shape, chunk, 
                             deflate)
