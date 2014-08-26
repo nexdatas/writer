@@ -1,5 +1,9 @@
+2014-08-26 Jan Kotanski <jankotan@gmail.com>
+	* adding auto growing of fields
+	* tagged as 1.6.2
+
 2014-08-21 Jan Kotanski <jankotan@gmail.com>
-	* enables saving images and spectra in larger fields with larger dims
+	* enables saving images and spectra in fields with larger dims
 	* tagged as 1.6.1
 
 2014-07-11 Jan Kotanski <jankotan@gmail.com>
