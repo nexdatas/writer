@@ -953,11 +953,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleSpectrumField(
             det, "final_mca_uint32_canfail", "uint32", "NX_UINT32",             
-            [numpy.iinfo(getattr(numpy, 'uint32')).max]*256 , 
+            [numpy.iinfo(getattr(numpy, 'uint32')).max], 
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleSpectrumField(
             det, "init_mca_int64_canfail", "int64", "NX_INT64",
-            [numpy.iinfo(getattr(numpy, 'int64')).max]*256 , 
+            [numpy.iinfo(getattr(numpy, 'int64')).max], 
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
         
@@ -1143,11 +1143,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleSpectrumField(
             det, "init_mca_float32_canfail", "float32", "NX_FLOAT32",
-            [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]), 
+            [numpy.finfo(getattr(numpy, 'float32')).max], 
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleSpectrumField(
             det, "final_mca_float64_canfail", "float64", "NX_FLOAT64",
-            [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[0]), 
+            [numpy.finfo(getattr(numpy, 'float64')).max], 
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
         self._sc.checkSpectrumField(
@@ -1393,11 +1393,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleStringSpectrumField(
             det, "init_string_time_canfail", 
-            "string", "NX_CHAR", ['']*len(dates[0]),
+            "string", "NX_CHAR", [''],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleSpectrumField(
             det, "final_flags_canfail", "bool", 
-            "NX_BOOLEAN", [False]*len(logical[0]),
+            "NX_BOOLEAN", [False],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
         self._sc.checkSingleStringSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
@@ -1840,12 +1840,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 #        self._sc.checkSingleImageField(det, "init_pco_int64_canfail", "int64", "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
             det, "init_pco_int64_canfail",  "int64", "NX_INT64", 
-            [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco] for rpco in self._pco1[0]],
+            [[numpy.iinfo(getattr(numpy, 'int64')).max]],
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         
         self._sc.checkSingleImageField(
             det, "final_pco_uint_canfail",  "uint64", "NX_UINT", 
-            [[numpy.iinfo(getattr(numpy, 'uint64')).max for el in rpco] for rpco in self._pco1[0]],
+            [[numpy.iinfo(getattr(numpy, 'uint64')).max]],
             attrs = {"type":"NX_UINT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         
         self._sc.checkImageField(
@@ -2053,12 +2053,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleImageField(
             det, "init_pco_float32_canfail", "float32", "NX_FLOAT32", 
-            [[numpy.finfo(getattr(numpy, 'float32')).max for el in rpco] for rpco in self._fpco1[0]],
+            [[numpy.finfo(getattr(numpy, 'float32')).max ]],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-6)
         self._sc.checkSingleImageField(
             det, "final_pco_float64_canfail", "float64", "NX_FLOAT64", 
-            [[numpy.finfo(getattr(numpy, 'float64')).max for el in rpco] for rpco in self._fpco1[0]],
+            [[numpy.finfo(getattr(numpy, 'float64')).max ]],
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-14)
 
@@ -2349,7 +2349,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleImageField(
             det, "init_flags_canfail", "bool", "NX_BOOLEAN", 
-            [[False for el in rpco] for rpco in logical[0]],
+            [[False]],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
         self._sc.checkImageField(

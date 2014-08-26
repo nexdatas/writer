@@ -155,6 +155,7 @@ class EField(FElementWithAttr):
         minshape = [1 if s > 0 else 0 for s in shape]  
         deflate = None
         # create Filter
+                    
         if self.compression:
             deflate = nx.NXDeflateFilter()
             deflate.rate = self.rate
@@ -170,14 +171,14 @@ class EField(FElementWithAttr):
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), shape, [],
                             deflate)
+                   elif self.canfail:    
+                        f = self._lastObject().create_field(
+                            name.encode(), dtype.encode(), shape, chunk, 
+                            deflate)
                     else:
                         f = self._lastObject().create_field(
                             name.encode(), dtype.encode(), minshape, chunk, 
                             deflate)
-#                    else:
-#                        f = self._lastObject().create_field(
-#                            name.encode(), dtype.encode(), shape, chunk, 
-#                            deflate)
             else:
                 if deflate:
                     f = self._lastObject().create_field(
@@ -582,7 +583,6 @@ class EField(FElementWithAttr):
                     dh = DataHolder(**dt)
                 self.__grow()
                 self.__grew = True
-                    
                 if not dh:
                     message = self.setMessage("Data without value")
                     self.error = message
