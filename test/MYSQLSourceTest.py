@@ -71,6 +71,7 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
         self._mydb = None
+        self._largs = None
 
 
 
@@ -81,12 +82,26 @@ class MYSQLSourceTest(unittest.TestCase):
         ## file handle
         print "\nsetting up..."       
         ## connection arguments to MYSQL DB
-        args = {}
-        args["db"] = 'tango'
-        args["host"] = 'localhost'
-        args["read_default_file"] = '/etc/my.cnf'
-        self._mydb = MySQLdb.connect(**args)
+        try:
+            args = {}
+            args["db"] = 'tango'
+            args["host"] = 'localhost'
+            args["read_default_file"] = '/etc/my.cnf'
+            self._mydb = MySQLdb.connect(**args)
+        except:
+            from os.path import expanduser
+            home = expanduser("~")
+            args2 = {'host': u'localhost', 'db': u'tango', 
+                     'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
+            self._mydb = MySQLdb.connect(**args2)
+            self._largs = args2
+            print "ARGS:", args2
         print "SEED =", self.__seed 
+
+    def setsource(self, sr):
+        if self._largs:
+            if 'read_default_file' in self._largs.keys():
+                sr.mycnf =  self._largs['read_default_file']
 
     ## test closer
     # \brief Common tear down
@@ -154,24 +169,29 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
         ds = DBaseSource()
+        self.setsource(ds)
         self.myAssertRaise(PackageError, ds.getData)
 
         ds = DBaseSource()
+        self.setsource(ds)
         ds.dbtype = "UNKNOWNDB"
         self.myAssertRaise(PackageError, ds.getData)
 
         ds = DBaseSource()
+        self.setsource(ds)
         ds.dbtype = self.__dbtype
         self.myAssertRaise(TypeError, ds.getData)
 
 
         ds = DBaseSource()
+        self.setsource(ds)
         ds.dbtype = self.__dbtype
         ds.query = query
         self.myAssertRaise(MySQLdb.OperationalError, ds.getData)
 
 
         ds = DBaseSource()
+        self.setsource(ds)
         ds.dbtype = self.__dbtype
         ds.query = query2
         ds.format = format
@@ -208,6 +228,7 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
             ds = DBaseSource()
+            self.setsource(ds)
             ds.query = arr[a][0]
             ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
@@ -247,6 +268,7 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
             ds = DBaseSource()
+            self.setsource(ds)
             ds.query = arr[a][0]
             ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
@@ -286,6 +308,7 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
             ds = DBaseSource()
+            self.setsource(ds)
             ds.query = arr[a][0]
             ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
@@ -323,6 +346,7 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
             ds = DBaseSource()
+            self.setsource(ds)
             ds.query = arr[a][0]
             ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
@@ -365,6 +389,7 @@ class MYSQLSourceTest(unittest.TestCase):
 
 
             ds = DBaseSource()
+            self.setsource(ds)
             ds.query = arr[a][0]
             ds.dbtype = self.__dbtype
             ds.format = arr[a][1]
