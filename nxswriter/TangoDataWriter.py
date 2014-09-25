@@ -36,19 +36,22 @@ except ImportError:
     from StringIO import StringIO
 
 import json
-import sys, os
+import sys
+import os
 import gc
 
 from .H5Elements import EFile
 from .DecoderPool import DecoderPool
 from .DataSourcePool import DataSourcePool
 
+
 ## NeXuS data writer
 class TangoDataWriter(object):
+
     ## constructor
     # \brief It initialize the data writer for the H5 output file
     # \param server Tango server
-    def __init__(self, server = None):
+    def __init__(self, server=None):
         ## output file name
         self.fileName = ""
         ## Tango server
@@ -83,7 +86,6 @@ class TangoDataWriter(object):
         ## group name parser
         self.__fetcher = None
 
-
         ## adding logs
         self.addingLogs = True
         ## counter for open entries
@@ -95,41 +97,39 @@ class TangoDataWriter(object):
         self.__fileCreated = None
 
         if server:
-            if  hasattr(self.__server, "log_fatal"):
+            if hasattr(self.__server, "log_fatal"):
                 Streams.log_fatal = server.log_fatal
-            if  hasattr(self.__server, "log_error"):
+            if hasattr(self.__server, "log_error"):
                 Streams.log_error = server.log_error
-            if  hasattr(self.__server, "log_warn"):
+            if hasattr(self.__server, "log_warn"):
                 Streams.log_warn = server.log_warn
-            if  hasattr(self.__server, "log_info"):
+            if hasattr(self.__server, "log_info"):
                 Streams.log_info = server.log_info
-            if  hasattr(self.__server, "log_debug"):
+            if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
-    
+
     ## get method for jsonrecord attribute
-    # \returns value of jsonrecord            
+    # \returns value of jsonrecord
     def __getJSON(self):
         return self.__json
 
     ## set method for jsonrecord attribute
-    # \param jsonstring value of jsonrecord            
+    # \param jsonstring value of jsonrecord
     def __setJSON(self, jsonstring):
-        self.__decoders = DecoderPool(json.loads(jsonstring))            
-        self.__datasources = DataSourcePool(json.loads(jsonstring))            
+        self.__decoders = DecoderPool(json.loads(jsonstring))
+        self.__datasources = DataSourcePool(json.loads(jsonstring))
         self.__json = jsonstring
 
     ## del method for jsonrecord attribute
     def __delJSON(self):
-        del self.__json 
+        del self.__json
 
     ## the json data string
-    jsonrecord = property(__getJSON, __setJSON, __delJSON, 
-                       doc = 'the json data string')
-
-
+    jsonrecord = property(__getJSON, __setJSON, __delJSON,
+                       doc='the json data string')
 
     ## get method for xmlsettings attribute
-    # \returns value of jsonrecord            
+    # \returns value of jsonrecord
     def __getXML(self):
         return self.__xmlsettings
 
@@ -142,25 +142,22 @@ class TangoDataWriter(object):
 
     ## del method for xmlsettings attribute
     def __delXML(self):
-        del self.__xmlsettings 
+        del self.__xmlsettings
 
     ## the xmlsettings
     xmlsettings = property(__getXML, __setXML, __delXML,
-                           doc = 'the xml settings')
+                           doc='the xml settings')
 
-
-    ## the H5 file handle 
-    # \returns the H5 file handle 
+    ## the H5 file handle
+    # \returns the H5 file handle
     def getFile(self):
-        return self.__nxFile            
-
-       
+        return self.__nxFile
 
     ## the H5 file opening
-    # \brief It opens the H5 file       
+    # \brief It opens the H5 file
     def openFile(self):
         ## file handle
-        self.closeFile() 
+        self.closeFile()
         self.__nxFile = None
         self.__eFile = None
         self.__initPool = None
@@ -175,12 +172,12 @@ class TangoDataWriter(object):
         else:
             self.__nxFile = nx.create_file(self.fileName)
             self.__fileCreated = True
-        
+
         ## element file objects
         self.__eFile = EFile([], None, self.__nxFile)
 
         name = "NexusConfigurationLogs"
-        if self.addingLogs:    
+        if self.addingLogs:
             if self.__fileCreated is False:
                 error = True
                 counter = 1
@@ -190,20 +187,18 @@ class TangoDataWriter(object):
                     if not self.__nxFile.exists(cname):
                         error = False
                     else:
-                        counter += 1    
+                        counter += 1
             else:
                 cname = name
             self.__logGroup = self.__nxFile.create_group(
-                cname,"NXcollection")
+                cname, "NXcollection")
             vfield = self.__logGroup.create_field(
                 "python_version", "string")
             vfield.write(str(sys.version))
             vfield.close()
 
-
-
     ##  opens the data entry corresponding to a new XML settings
-    # \brief It parse the XML settings, creates thread pools 
+    # \brief It parse the XML settings, creates thread pools
     # and runs the INIT pool.
     def openEntry(self):
         if self.xmlsettings:
@@ -211,10 +206,10 @@ class TangoDataWriter(object):
             self.__datasources.counter = -1
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
- 
+
             handler = NexusXMLHandler(
-                self.__eFile, self.__datasources, 
-                self.__decoders, self.__fetcher.groupTypes, 
+                self.__eFile, self.__datasources,
+                self.__decoders, self.__fetcher.groupTypes,
                 parser, json.loads(self.jsonrecord))
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
@@ -223,24 +218,24 @@ class TangoDataWriter(object):
             inpsrc.setByteStream(StringIO(self.xmlsettings))
             parser.parse(inpsrc)
 
-            
             self.__initPool = handler.initPool
             self.__stepPool = handler.stepPool
             self.__finalPool = handler.finalPool
             self.__triggerPools = handler.triggerPools
-            
+
             self.__initPool.numberOfThreads = self.numberOfThreads
             self.__stepPool.numberOfThreads = self.numberOfThreads
             self.__finalPool.numberOfThreads = self.numberOfThreads
 
             for pool in self.__triggerPools.keys():
-                self.__triggerPools[pool].numberOfThreads = self.numberOfThreads
+                self.__triggerPools[pool].numberOfThreads = \
+                    self.numberOfThreads
 
             self.__initPool.setJSON(json.loads(self.jsonrecord))
             self.__initPool.runAndWait()
             self.__initPool.checkErrors()
 
-            if self.addingLogs:    
+            if self.addingLogs:
                 self.__entryCounter += 1
                 lfield = self.__logGroup.create_field(
                     "Nexus__entry__%s_XML" % str(self.__entryCounter),
@@ -250,9 +245,9 @@ class TangoDataWriter(object):
             if self.__nxFile and hasattr(self.__nxFile, "flush"):
                 self.__nxFile.flush()
 
-    ## close the data writer        
+    ## close the data writer
     # \brief It runs threads from the STEP pool
-    # \param jsonstring local JSON string with data records      
+    # \param jsonstring local JSON string with data records
     def record(self, jsonstring=None):
         # flag for STEP mode
         if self.__datasources.counter > 0:
@@ -262,10 +257,10 @@ class TangoDataWriter(object):
         localJSON = None
         if jsonstring:
             localJSON = json.loads(jsonstring)
-            
+
         if self.__stepPool:
             if Streams.log_info:
-                print >> Streams.log_info , \
+                print >> Streams.log_info, \
                     "TangoDataWriter::record() - Default trigger"
             else:
                 print >> sys.stdout, \
@@ -273,8 +268,8 @@ class TangoDataWriter(object):
             self.__stepPool.setJSON(json.loads(self.jsonrecord), localJSON)
             self.__stepPool.runAndWait()
             self.__stepPool.checkErrors()
-       
-        triggers = None    
+
+        triggers = None
         if localJSON and 'triggers' in localJSON.keys():
             triggers = localJSON['triggers']
 
@@ -282,11 +277,11 @@ class TangoDataWriter(object):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
                     if Streams.log_info:
-                        print >> Streams.log_info , \
-                            "TangoDataWriter:record() - Trigger: %s" % pool 
+                        print >> Streams.log_info, \
+                            "TangoDataWriter:record() - Trigger: %s" % pool
                     else:
                         print >> sys.stdout, \
-                            "TangoDataWriter:record() - Trigger: %s" % pool 
+                            "TangoDataWriter:record() - Trigger: %s" % pool
                     self.__triggerPools[pool].setJSON(
                         json.loads(self.jsonrecord), localJSON)
                     self.__triggerPools[pool].runAndWait()
@@ -294,17 +289,15 @@ class TangoDataWriter(object):
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
-#        gc.collect()
 
-
-    ## closes the data entry        
+    ## closes the data entry
     # \brief It runs threads from the FINAL pool and
-    #  removes the thread pools 
+    #  removes the thread pools
     def closeEntry(self):
         # flag for FINAL mode
         self.__datasources.counter = -2
 
-        if self.addingLogs and self.__logGroup:    
+        if self.addingLogs and self.__logGroup:
             self.__logGroup.close()
             self.__logGroup = None
 
@@ -313,26 +306,24 @@ class TangoDataWriter(object):
             self.__finalPool.runAndWait()
             self.__finalPool.checkErrors()
 
-
         if self.__initPool:
             self.__initPool.close()
         self.__initPool = None
-            
 
         if self.__stepPool:
             self.__stepPool.close()
         self.__stepPool = None
-                
-        if self.__finalPool: 
+
+        if self.__finalPool:
             self.__finalPool.close()
         self.__finalPool = None
 
-        if self.__triggerPools: 
-            for pool in self.__triggerPools.keys(): 
+        if self.__triggerPools:
+            for pool in self.__triggerPools.keys():
                 self.__triggerPools[pool].close()
             self.__triggerPools = {}
 
-        if self.addingLogs and self.__logGroup:    
+        if self.addingLogs and self.__logGroup:
             self.__logGroup.close()
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
@@ -340,38 +331,33 @@ class TangoDataWriter(object):
 
         gc.collect()
 
-
     ## the H5 file closing
-    # \brief It closes the H5 file       
+    # \brief It closes the H5 file
     def closeFile(self):
 
         if self.__initPool:
             self.__initPool.close()
-            self.__initPool = None         
-   
+            self.__initPool = None
+
         if self.__stepPool:
             self.__stepPool.close()
-            self.__stepPool = None         
-                
-        if self.__finalPool: 
+            self.__stepPool = None
+
+        if self.__finalPool:
             self.__finalPool.close()
-            self.__finalPool = None         
+            self.__finalPool = None
 
-
-        if self.__triggerPools: 
-            for pool in self.__triggerPools.keys(): 
+        if self.__triggerPools:
+            for pool in self.__triggerPools.keys():
                 self.__triggerPools[pool].close()
             self.__triggerPools = {}
 
-        if self.__nxFile:    
+        if self.__nxFile:
             self.__nxFile.close()
-            
+
         self.__nxFile = None
         self.__eFile = None
         gc.collect()
-
-        
-
 
 
 if __name__ == "__main__":
@@ -395,40 +381,37 @@ if __name__ == "__main__":
     ## No arguments
     argc = len(sys.argv)
     if argc > 2:
-        tdw.fileName = sys.argv[argc-1]
+        tdw.fileName = sys.argv[argc - 1]
 
     if argc > 1:
         print "opening the H5 file"
         tdw.openFile()
 
-
-
-        for i in range(1, argc-1):
+        for i in range(1, argc - 1):
             xmlf = sys.argv[i]
-        
-            ## xml string    
+
+            ## xml string
             xml = open(xmlf, 'r').read()
             tdw.xmlsettings = xml
 
             print "opening the data entry "
             tdw.openEntry()
-            
+
             print "recording the H5 file"
-            tdw.record('{"data": {"emittance_x": 0.8} ,'\
-                           '  "triggers":["trigger1", "trigger2"] }')
-            
-            print "sleeping for 1s"
-            time.sleep(1)
-            print "recording the H5 file"
-            tdw.record('{"data": {"emittance_x": 1.2}  ,'\
-                           '  "triggers":["trigger2"] }')
+            tdw.record('{"data": {"emittance_x": 0.8} , '
+                       ' "triggers":["trigger1", "trigger2"] }')
 
             print "sleeping for 1s"
             time.sleep(1)
             print "recording the H5 file"
-            tdw.record('{"data": {"emittance_x": 1.1}  , '\
-                           ' "triggers":["trigger1"] }')
+            tdw.record('{"data": {"emittance_x": 1.2}, '
+                       ' "triggers":["trigger2"] }')
 
+            print "sleeping for 1s"
+            time.sleep(1)
+            print "recording the H5 file"
+            tdw.record('{"data": {"emittance_x": 1.1}  , '
+                       ' "triggers":["trigger1"] }')
 
             print "sleeping for 1s"
             time.sleep(1)
@@ -438,9 +421,5 @@ if __name__ == "__main__":
             print "closing the data entry "
             tdw.closeEntry()
 
-
         print "closing the H5 file"
         tdw.closeFile()
-            
-                
-    

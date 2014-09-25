@@ -26,13 +26,8 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
 
-
-        
-        
-
-
-## link H5 tag element        
-class ELink(FElement):        
+## link H5 tag element
+class ELink(FElement):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -42,33 +37,33 @@ class ELink(FElement):
         self.h5Object = None
 
     ## converts types to Names using groupTypes dictionary
-    # \param text original directory     
-    # \param groupTypes tree of TNObject with name:nxtype 
-    # \returns directory defined by group names    
-    @classmethod    
+    # \param text original directory
+    # \param groupTypes tree of TNObject with name:nxtype
+    # \returns directory defined by group names
+    @classmethod
     def __typesToNames(cls, text, groupTypes):
         sp = text.split("/")
         res = ""
         ch = groupTypes
-        valid = True if ch.name  == "root" else False
+        valid = True if ch.name == "root" else False
 
         for gr in sp[:-1]:
-            if len(gr) > 0: 
+            if len(gr) > 0:
                 sgr = gr.split(":")
-                if len(sgr)>1 :
+                if len(sgr) > 1:
                     res = "/".join([res, sgr[0]])
                     if valid:
-                        ch = ch.child(name = sgr[0])
+                        ch = ch.child(name=sgr[0])
                         if not ch:
                             valid = False
                 else:
                     if valid:
-                        c = ch.child(nxtype = sgr[0])
+                        c = ch.child(nxtype=sgr[0])
                         if c:
                             res = "/".join([res, c.name])
                             ch = c
                         else:
-                            c = ch.child(name = sgr[0])
+                            c = ch.child(name=sgr[0])
                             if c:
                                 res = "/".join([res, sgr[0]])
                                 ch = c
@@ -78,14 +73,13 @@ class ELink(FElement):
                         if Streams.log_error:
                             print >> Streams.log_error, \
                                 "ELink::__typesToNames() - "\
-                                "No %s in  groupTypes " %  str(sgr[0])
-                        raise XMLSettingSyntaxError, \
-                            "No "+ str(sgr[0])+ " in groupTypes " 
+                                "No %s in  groupTypes " % str(sgr[0])
+                        raise XMLSettingSyntaxError(
+                            "No " + str(sgr[0]) + " in groupTypes ")
         res = res + "/" + sp[-1]
-                
+
         return res
 
-        
     ## creates the link the H5 file
     # \param groupTypes dictionary with type:name group pairs
     def createLink(self, groupTypes):
@@ -102,12 +96,11 @@ class ELink(FElement):
                         "ELink::createLink() - "\
                         "The link '%s' to '%s' type cannot be created" \
                         % (name, path)
-                raise XMLSettingSyntaxError, \
-                    "The link '%s' to '%s' type cannot be created" \
-                    % (name, path)
+                raise XMLSettingSyntaxError(
+                    "The link '%s' to '%s' type cannot be created"
+                    % (name, path))
         else:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "ELink::createLink() - No name or type"
-            raise XMLSettingSyntaxError, "No name or type"
-          
+            raise XMLSettingSyntaxError("No name or type")

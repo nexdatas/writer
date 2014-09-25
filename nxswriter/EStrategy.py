@@ -27,8 +27,8 @@ from .Element import Element
 from . import Streams
 
 
-## query tag element        
-class EStrategy(Element):        
+## query tag element
+class EStrategy(Element):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -40,35 +40,32 @@ class EStrategy(Element):
         if "trigger" in attrs.keys():
             self.last.trigger = attrs["trigger"]
             if Streams.log_info:
-                print >> Streams.log_info, "TRIGGER" , attrs["trigger"]
+                print >> Streams.log_info, "TRIGGER", attrs["trigger"]
             else:
-                print >> sys.stdout,  "TRIGGER" , attrs["trigger"]
-        if "grows" in attrs.keys() and hasattr(self.last,"grows"):
+                print >> sys.stdout, "TRIGGER", attrs["trigger"]
+        if "grows" in attrs.keys() and hasattr(self.last, "grows"):
             self.last.grows = int(attrs["grows"])
             if self.last.grows < 1:
                 self.last.grows = 1
         if "canfail" in attrs.keys():
             self.last.canfail = True \
                 if attrs["canfail"].upper() == "TRUE" else False
-        if "compression" in attrs.keys() and hasattr(self.last,"compression"):
+        if "compression" in attrs.keys() and hasattr(self.last, "compression"):
             self.last.compression = True \
                 if attrs["compression"].upper() == "TRUE" else False
             if self.last.compression:
-                if "rate" in attrs.keys() and hasattr(self.last,"rate"):
+                if "rate" in attrs.keys() and hasattr(self.last, "rate"):
                     self.last.rate = int(attrs["rate"])
                     if self.last.rate < 0:
                         self.last.rate = 0
                     if self.last.rate > 9:
                         self.last.rate = 9
-                if "shuffle" in attrs.keys() and hasattr(self.last,"shuffle"):
+                if "shuffle" in attrs.keys() and hasattr(self.last, "shuffle"):
                     self.last.shuffle = False \
                         if attrs["shuffle"].upper() == "FALSE" else True
-                
-            
-
 
     ## stores the tag content
-    # \param xml xml setting 
+    # \param xml xml setting
     # \param globalJSON global JSON string
-    def store(self, xml = None, globalJSON = None):
-        self.last.postrun = ("".join(self.content)).strip()   
+    def store(self, xml=None, globalJSON=None):
+        self.last.postrun = ("".join(self.content)).strip()

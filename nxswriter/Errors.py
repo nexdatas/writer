@@ -22,39 +22,42 @@
 
 """ Tango Data Writer errors """
 
+
 ## exception for problems in thread
-class ThreadError(Exception): 
+class ThreadError(Exception):
     pass
 
 
 ## exception for corrupted FieldArray
-class CorruptedFieldArrayError(Exception): 
+class CorruptedFieldArrayError(Exception):
     pass
 
 
 ## exception for syntax in XML settings
-class XMLSettingSyntaxError(Exception): 
-    pass
-
-## exception for fetching data from data source
-class DataSourceError(Exception): 
+class XMLSettingSyntaxError(Exception):
     pass
 
 
 ## exception for fetching data from data source
-class PackageError(Exception): 
+class DataSourceError(Exception):
     pass
+
+
+## exception for fetching data from data source
+class PackageError(Exception):
+    pass
+
 
 ## exception for setting data source
-class DataSourceSetupError(Exception): 
+class DataSourceSetupError(Exception):
     pass
 
 
 ## exception for syntax in XML settings
-class XMLSyntaxError(Exception): 
+class XMLSyntaxError(Exception):
     pass
+
 
 ## unsupported tag exception
-class UnsupportedTagError(Exception): 
+class UnsupportedTagError(Exception):
     pass
-

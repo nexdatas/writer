@@ -31,10 +31,9 @@ from .DataHolder import DataHolder
 from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
-            
 
 ## class with variables
-class variables(object):    
+class variables(object):
     pass
 
 
@@ -52,17 +51,17 @@ class PyEvalSource(DataSource):
         self.__localJSON = None
         ## datasources xml
         self.__sources = {}
-        ## datasources 
+        ## datasources
         self.__datasources = {}
         ## python script
         self.__script = ""
         ## data format
-        self.__result = {"rank":"SCALAR", 
-                         "value":None, 
-                         "tangoDType":"DevString",  
-                         "shape":[1, 0], 
-                         "encoding":None, 
-                         "decoders":None}
+        self.__result = {"rank": "SCALAR",
+                         "value": None,
+                         "tangoDType": "DevString",
+                         "shape": [1, 0],
+                         "encoding": None,
+                         "decoders": None}
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
@@ -70,14 +69,14 @@ class PyEvalSource(DataSource):
         dom = minidom.parseString(xml)
         mds = dom.getElementsByTagName("datasource")
         inputs = []
-        if mds and len(mds)>0:
+        if mds and len(mds) > 0:
             inputs = mds[0].getElementsByTagName("datasource")
         for inp in inputs:
             if inp.hasAttribute("name") and inp.hasAttribute("type"):
                 name = inp.getAttribute("name").strip()
                 dstype = inp.getAttribute("type").strip()
-                if len(name)>0:
-                    if len(name)>3 and name[:2] == 'ds.':
+                if len(name) > 0:
+                    if len(name) > 3 and name[:2] == 'ds.':
                         name = name[3:]
                     self.__sources[name] = (dstype, inp.toxml())
                 else:
@@ -85,123 +84,117 @@ class PyEvalSource(DataSource):
                         print >> Streams.log_error, \
                             "PyEvalSource::setup() - "\
                             "PyEval input %s not defined" % name
-                    raise  DataSourceSetupError, \
-                        "PyEvalSource::setup() - "\
-                        "PyEval input %s not defined" % name
-                        
+                    raise DataSourceSetupError(
+                        "PyEvalSource::setup() - "
+                        "PyEval input %s not defined" % name)
+
             else:
                 if Streams.log_error:
                     print >> Streams.log_error, \
                         "PyEvalSource::setup() - "\
                         "PyEval input name wrongly defined"
-                raise  DataSourceSetupError, \
-                    "PyEvalSource::setup() - PyEval input name wrongly defined"
+                raise DataSourceSetupError(
+                    "PyEvalSource::setup() - "
+                    "PyEval input name wrongly defined")
         res = dom.getElementsByTagName("result")
-        if res and len(res)>0:
+        if res and len(res) > 0:
             self.__name = res[0].getAttribute("name") \
                 if res[0].hasAttribute("name") else 'result'
-            if len(self.__name) >3 and self.__name[:2] == 'ds.':
+            if len(self.__name) > 3 and self.__name[:2] == 'ds.':
                 self.__name = self.__name[3:]
-            self.__script = self._getText(res[0]) 
-            
+            self.__script = self._getText(res[0])
+
         if len(self.__script) == 0:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "PyEvalSource::setup() - "\
                     "PyEval script %s not defined" % self.__name
-            raise  DataSourceSetupError, \
-                "PyEvalSource::setup() - "\
-                "PyEval script %s not defined" % self.__name
-            
+            raise DataSourceSetupError(
+                "PyEvalSource::setup() - "
+                "PyEval script %s not defined" % self.__name)
 
-
-    ## self-description 
+    ## self-description
     # \returns self-describing string
     def __str__(self):
         return " PYEVAL %s" % (self.__script)
 
-
     ## sets JSON string
     # \brief It sets the currently used  JSON string
-    # \param globalJSON static JSON string    
-    # \param localJSON dynamic JSON string    
+    # \param globalJSON static JSON string
+    # \param localJSON dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
         for source in self.__datasources.values():
             if hasattr(source, "setJSON"):
-                source.setJSON(self.__globalJSON, 
+                source.setJSON(self.__globalJSON,
                                self.__localJSON)
-            
 
-    ## provides access to the data    
-    # \returns  dictionary with collected data   
+    ## provides access to the data
+    # \returns  dictionary with collected data
     def getData(self):
         if not self.__name:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "PyEvalSource::getData() - PyEval datasource not set up"
-            raise  DataSourceSetupError, \
-                 "PyEvalSource::getData() - PyEval datasource not set up"
-        class Variables(object): 
+            raise DataSourceSetupError(
+                "PyEvalSource::getData() - PyEval datasource not set up")
+
+        class Variables(object):
             pass
         ds = Variables()
         for name, source in self.__datasources.items():
-            dt = source.getData()   
+            dt = source.getData()
             value = None
             if dt:
                 dh = DataHolder(**dt)
-                if dh and hasattr(dh,"value"):
+                if dh and hasattr(dh, "value"):
                     value = dh.value
             setattr(ds, name, value)
 
         setattr(ds, self.__name, None)
 
-        exec(self.__script.strip(), {}, {"ds":ds})
+        exec(self.__script.strip(), {}, {"ds": ds})
         rec = getattr(ds, self.__name)
         ntp = NTP()
         rank, shape, pythonDType = ntp.arrayRankShape(rec)
         if rank in NTP.rTf:
-            if  shape is None:
+            if shape is None:
                 shape = [1, 0]
 
-            return {"rank":NTP.rTf[rank], "value":rec, 
-                    "tangoDType":NTP.pTt[pythonDType.__name__], 
-                    "shape":shape}
-            
-    
-
+            return {"rank": NTP.rTf[rank],
+                    "value": rec,
+                    "tangoDType": NTP.pTt[pythonDType.__name__],
+                    "shape": shape}
 
     ## sets the used decoders
     # \param decoders pool to be set
     def setDecoders(self, decoders):
-        self.__result["decoders"] = decoders        
+        self.__result["decoders"] = decoders
         for source in self.__datasources.values():
             if hasattr(source, "setDecoders"):
                 source.setDecoders(decoders)
-        
+
     ## sets the datasources
     # \param pool datasource pool
     def setDataSources(self, pool):
-        
+
         for name, inp in self.__sources.items():
             if pool and pool.hasDataSource(inp[0]):
                 self.__datasources[name] = pool.get(inp[0])()
                 self.__datasources[name].setup(inp[1])
-                if hasattr(self.__datasources[name],"setJSON") \
+                if hasattr(self.__datasources[name], "setJSON") \
                         and self.__globalJSON:
                     self.__datasources[name].setJSON(self.__globalJSON)
-                if hasattr(self.__datasources[name],"setDataSources"):
+                if hasattr(self.__datasources[name], "setDataSources"):
                     self.__datasources[name].setDataSources(pool)
 
             else:
                 if Streams.log_error:
                     print >> Streams.log_error, \
                         "PyEvalSource::setDataSources - Unknown data source"
-                else:    
+                else:
                     print >> sys.stderr, \
                         "PyEvalSource::setDataSources - Unknown data source"
-                    
-                self.__datasources[name] = DataSource()
-        
 
+                self.__datasources[name] = DataSource()

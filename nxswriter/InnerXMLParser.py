@@ -23,9 +23,11 @@
 
 from xml import sax
 
-import sys, os
+import sys
+import os
 
-## SAX2 parser 
+
+## SAX2 parser
 class InnerXMLHandler(sax.ContentHandler):
 
     ## constructor
@@ -37,43 +39,41 @@ class InnerXMLHandler(sax.ContentHandler):
         ## external contentHandler
         self.__contentHandler = contentHandler
         ## external xmlreader
-        self.__xmlReader = xmlReader 
+        self.__xmlReader = xmlReader
         ## tag depth
         self.__depth = 1
         ## first tag
-        self.__preXML = self.__openTag(name, attrs, eol = False) 
+        self.__preXML = self.__openTag(name, attrs, eol=False)
         ## last tag
-        self.__postXML = "</%s>"% name
+        self.__postXML = "</%s>" % name
         ## tag content
         self.__contentXML = ""
 
     ## replaces characters not allowed in xml string
     # \param string text
-    # \returns converted text with special characters 
-    @classmethod    
+    # \returns converted text with special characters
+    @classmethod
     def __replace(cls, string):
-        return string.replace("&","&amp;").\
-            replace("<","&lt;").replace(">","&gt;")
-
+        return string.replace("&", "&amp;").\
+            replace("<", "&lt;").replace(">", "&gt;")
 
     ## replaces characters not allowed in  xml attribute values
     # \param string text
-    # \returns converted text with special characters 
+    # \returns converted text with special characters
     def __replaceAttr(self, string):
-        return self.__replace(string).replace("\"","&quot;").\
-            replace("'","&apos;")
-
+        return self.__replace(string).replace("\"", "&quot;").\
+            replace("'", "&apos;")
 
     ## creates opening tag
     # \param name tag name
-    # \param attrs tag attributes    
-    def __openTag(self, name, attrs, eol = False):
+    # \param attrs tag attributes
+    def __openTag(self, name, attrs, eol=False):
         xml = ""
         if eol:
-            xml += "\n<%s"% name
+            xml += "\n<%s" % name
         else:
-            xml += "<%s"% name
-            
+            xml += "<%s" % name
+
         for k in attrs.keys():
             xml += " %s=\"%s\"" % (k, self.__replaceAttr(attrs[k]))
         if eol:
@@ -86,33 +86,30 @@ class InnerXMLHandler(sax.ContentHandler):
     # \param name tag name
     # \param attrs attribute dictionary
     def startElement(self, name, attrs):
-        self.__depth += 1 
+        self.__depth += 1
         self.__contentXML += self.__openTag(name, attrs)
 
-    ## adds the tag content 
-    # \param content partial content of the tag    
+    ## adds the tag content
+    # \param content partial content of the tag
     def characters(self, content):
         self.__contentXML += self.__replace(content)
-
 
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        self.__depth -= 1 
+        self.__depth -= 1
         if self.__depth == 0:
             self.xml = (self.__preXML, self.__contentXML, self.__postXML)
             self.__xmlReader.setContentHandler(self.__contentHandler)
-        else:   
-            self.__contentXML += "</%s>" % name 
-
-
+        else:
+            self.__contentXML += "</%s>" % name
 
 
 if __name__ == "__main__":
 
-    if  len(sys.argv) <2:
+    if len(sys.argv) < 2:
         print "usage: InnerXMLParser.py  <XMLinput>"
-        
+
     else:
         ## input XML file
         fi = sys.argv[1]
@@ -120,11 +117,10 @@ if __name__ == "__main__":
 
             ## a parser object
             parser = sax.make_parser()
-            
+
             ## a SAX2 handler object
             handler = InnerXMLHandler()
             parser.setContentHandler(handler)
 
             parser.parse(open(fi))
             print "GT:", handler.xml
-    

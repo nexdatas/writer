@@ -23,10 +23,12 @@
 
 from xml import sax
 
-import sys, os
+import sys
+import os
 from . import Streams
 
-from .Errors import  XMLSyntaxError
+from .Errors import XMLSyntaxError
+
 
 ## Type Name object
 class TNObject(object):
@@ -45,7 +47,7 @@ class TNObject(object):
         ## object children
         self.children = []
 
-        if hasattr(self.parent,"children"):
+        if hasattr(self.parent, "children"):
             self.parent.children.append(self)
 
     ## get child by name or nxtype
@@ -56,20 +58,20 @@ class TNObject(object):
                 if ch.name == name.strip():
                     found = ch
                     break
-            return found   
+            return found
         elif nxtype:
             found = None
             for ch in self.children:
                 if ch.nxtype == nxtype:
                     found = ch
                     break
-            return found    
+            return found
         else:
-            if len(self.children)>0:
+            if len(self.children) > 0:
                 return self.children[0]
 
-    
-## SAX2 parser 
+
+## SAX2 parser
 class FetchNameHandler(sax.ContentHandler):
 
     ## constructor
@@ -84,10 +86,10 @@ class FetchNameHandler(sax.ContentHandler):
         ## stack with open tag names
         self.__stack = []
         ## name of attribute tag
-        self.__attrName = "" 
+        self.__attrName = ""
         ## content of attribute tag
         self.__content = []
-        
+
         self.__attribute = False
 
     ##  parses the opening tag
@@ -96,14 +98,13 @@ class FetchNameHandler(sax.ContentHandler):
     def startElement(self, name, attrs):
         ttype = ""
         tname = ""
-        
-        
-        if name  == "group":
+
+        if name == "group":
             if "type" in attrs.keys():
                 ttype = attrs["type"]
             if "name" in attrs.keys():
                 tname = attrs["name"]
-            self.__current = TNObject(tname.strip(), ttype.strip(), 
+            self.__current = TNObject(tname.strip(), ttype.strip(),
                                       self.__current)
             self.__stack.append(name)
         elif name == "attribute" and self.__stack[-1] == "group":
@@ -112,18 +113,16 @@ class FetchNameHandler(sax.ContentHandler):
             if "name" in attrs.keys() and attrs["name"] in ["name", "type"]:
                 self.__attrName = attrs["name"]
 
-    ## adds the tag content 
-    # \param content partial content of the tag    
+    ## adds the tag content
+    # \param content partial content of the tag
     def characters(self, content):
         if self.__attribute and self.__stack[-1] == "group":
             self.__content.append(content)
 
-
-
     ## parses an closing tag
     # \param name tag name
     def endElement(self, name):
-        if name  == "group" :
+        if name == "group":
 
             if not self.__current.nxtype or not self.__current.name:
                 if self.__current.nxtype and len(self.__current.nxtype) > 2:
@@ -133,34 +132,29 @@ class FetchNameHandler(sax.ContentHandler):
                         print >> Streams.log_error, \
                             "FetchNameHandler::endElement() - "\
                             "The group type not defined"
-                    raise XMLSyntaxError, "The group type not defined"        
+                    raise XMLSyntaxError("The group type not defined")
             self.__current = self.__current.parent
             self.__stack.pop()
-                
-                
-        if name == "attribute"  and self.__stack[-1] == "group":
-            if self.__attrName :
-                content = ("".join(self.__content)).strip()        
+
+        if name == "attribute" and self.__stack[-1] == "group":
+            if self.__attrName:
+                content = ("".join(self.__content)).strip()
                 if content:
                     if self.__attrName == "name":
                         self.__current.name = content.strip()
                     if self.__attrName == "type":
                         self.__current.nxtype = content.strip()
-            
+
             self.__attribute = False
             self.__content = []
             self.__attrName = None
-            
-            
-
-
 
 
 if __name__ == "__main__":
 
-    if  len(sys.argv) <2:
+    if len(sys.argv) < 2:
         print "usage: FetchNameHadler.py  <XMLinput>"
-        
+
     else:
         ## input XML file
         fi = sys.argv[1]
@@ -168,11 +162,10 @@ if __name__ == "__main__":
 
             ## a parser object
             parser = sax.make_parser()
-            
+
             ## a SAX2 handler object
             handler = FetchNameHandler()
             parser.setContentHandler(handler)
 
             parser.parse(open(fi))
             print "GT:", handler.groupTypes
-    

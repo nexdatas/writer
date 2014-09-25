@@ -20,12 +20,13 @@
 # Element
 
 """ Provides the base class Element for xml tags """
-                                                                      
+
 
 import sys
 from . import Streams
 
-## Tag element stored on our stack 
+
+## Tag element stored on our stack
 class Element(object):
 
     ## constructor
@@ -44,9 +45,8 @@ class Element(object):
         ## the previous element
         self.last = last
 
-
     ## last H5 file object
-    # \returns H5 file object of the previous element    
+    # \returns H5 file object of the previous element
     def _lastObject(self):
         if hasattr(self.last, "h5Object"):
             return self.last.h5Object
@@ -60,7 +60,6 @@ class Element(object):
                     "Element::_lastObject() -  H5 Object not found :", \
                     self.tagName
 
-
     ## before last stack element
     # \returns  before last element placed on the stack
     def _beforeLast(self):
@@ -69,10 +68,9 @@ class Element(object):
         else:
             return None
 
-        
     ## stores the tag
-    # \brief abstract method to store the tag element    
-    # \param xml tuple of xml code    
+    # \brief abstract method to store the tag element
+    # \param xml tuple of xml code
     # \param globalJSON global JSON string
-    def store(self, xml = None, globalJSON = None):
+    def store(self, xml=None, globalJSON=None):
         pass

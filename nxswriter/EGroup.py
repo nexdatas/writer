@@ -29,10 +29,8 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
 
-
-    
-## group H5 tag element        
-class EGroup(FElementWithAttr):        
+## group H5 tag element
+class EGroup(FElementWithAttr):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -40,15 +38,15 @@ class EGroup(FElementWithAttr):
         FElementWithAttr.__init__(self, "group", attrs, last)
 
         if self._lastObject():
-            if ("type" in attrs.keys()) and ("name" in attrs.keys()) :
+            if ("type" in attrs.keys()) and ("name" in attrs.keys()):
                 gname = attrs["name"].encode()
-            elif "type" in attrs.keys() :
+            elif "type" in attrs.keys():
                 gname = attrs["type"][2:].encode()
             else:
                 if Streams.log_error:
                     print >> Streams.log_error, \
                         "EGroup::__init__() - The group type not defined"
-                raise XMLSettingSyntaxError, "The group type not defined"
+                raise XMLSettingSyntaxError("The group type not defined")
             try:
                 ## stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
@@ -59,57 +57,57 @@ class EGroup(FElementWithAttr):
                         "EGroup::__init__() - "\
                         "The group '%s' of '%s' type cannot be created. \n"\
                         "Please remove the old file, change the file name "\
-                        "or change the group name."% \
-                        (gname,attrs["type"].encode())
-                raise XMLSettingSyntaxError, \
-                        "The group '%s' of '%s' type cannot be created. \n"\
-                        "Please remove the old file, change the file name "\
-                        "or change the group name."% \
-                        (gname,attrs["type"].encode())
-                 
+                        "or change the group name." % \
+                        (gname, attrs["type"].encode())
+                raise XMLSettingSyntaxError(
+                        "The group '%s' of '%s' type cannot be created. \n"
+                        "Please remove the old file, change the file name "
+                        "or change the group name." %
+                        (gname, attrs["type"].encode()))
+
         else:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "EGroup::__init__() - "\
                     "File object for the last element does not exist"
-            raise XMLSettingSyntaxError, \
-                "File object for the last element does not exist"
-            
-        for key in attrs.keys() :
-            if key not in ["name","type"]:
+            raise XMLSettingSyntaxError(
+                "File object for the last element does not exist")
+
+        for key in attrs.keys():
+            if key not in ["name", "type"]:
                 if key in NTP.aTn.keys():
-                    if hasattr(attrs[key],"encode"):
+                    if hasattr(attrs[key], "encode"):
                         try:
                             (self.h5Object.attr(
-                                    key.encode(), 
+                                    key.encode(),
                                     NTP.nTnp[NTP.aTn[key]].encode())).value = \
                                     attrs[key].encode()
                         except:
                             (self.h5Object.attr(
-                                    key.encode(), 
+                                    key.encode(),
                                     NTP.nTnp[NTP.aTn[key]].encode())).value = \
                                     NTP.convert[
                                         str(self.h5Object.attr(
                                                 key.encode()
                                                 ).dtype)](attrs[key].encode())
-                            
+
                     else:
                         try:
                             (self.h5Object.attr(
-                                    key.encode(), 
+                                    key.encode(),
                                     NTP.nTnp[NTP.aTn[key]].encode())
                              ).value = attrs[key]
                         except:
                             (self.h5Object.attr(
-                                    key.encode(), 
+                                    key.encode(),
                                     NTP.nTnp[NTP.aTn[key]].encode())
                              ).value \
                              = NTP.convert[
                                  str(self.h5Object.attr(key.encode()).dtype)
                                  ](attrs[key])
-                            
+
                 elif key in NTP.aTnv.keys():
-                    
+
                     shape = (len(attrs[key]),)
                     (self.h5Object.attr(
                             key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
@@ -118,9 +116,8 @@ class EGroup(FElementWithAttr):
                     (self.h5Object.attr(key.encode(), "string")).value = \
                         attrs[key].encode()
 
-    ## stores the tag content 
-    # \param xml xml setting 
+    ## stores the tag content
+    # \param xml xml setting
     # \param globalJSON global JSON string
-    def store(self, xml = None, globalJSON = None):
+    def store(self, xml=None, globalJSON=None):
         self._createAttributes()
-

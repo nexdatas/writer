@@ -4,7 +4,7 @@
 #
 # file :        NXSDataWriter.py
 #
-# description : Python source for the NXSDataWriter and its commands. 
+# description : Python source for the NXSDataWriter and its commands.
 #                The class is derived from Device. It represents the
 #                CORBA servant object which will be accessed from the
 #                network. All commands which can be executed on the
@@ -35,10 +35,9 @@
 import PyTango
 import sys
 from threading import Thread, Lock
-from datetime import datetime 
+from datetime import datetime
 
 from TangoDataWriter import TangoDataWriter as TDW
-
 
 
 #==================================================================
@@ -52,13 +51,13 @@ class CommandThread(Thread):
 #------------------------------------------------------------------
 #    constructor
 #
-#    argin:  server      Device_4Impl    Tango server implementation 
+#    argin:  server      Device_4Impl    Tango server implementation
 #    argin:  command     __callable__    Thread command
 #    argin:  finalState  DevState        Final State Code
 #    argin:  args        list            List of command arguments
 #
 #------------------------------------------------------------------
-    def __init__(self, server, command, finalState, args = None):
+    def __init__(self, server, command, finalState, args=None):
         Thread.__init__(self)
         ## tango server
         self.server = server
@@ -70,7 +69,6 @@ class CommandThread(Thread):
         self.estate = PyTango.DevState.FAULT
         ## command arguments
         self.args = args if isinstance(args, list) else []
-
 
 #------------------------------------------------------------------
 #    runs the given command on the server and changes the state on exit
@@ -95,8 +93,8 @@ class CommandThread(Thread):
         with self.server.lock:
             self.server.state_flag = self.estate
         self.server.errors.append(
-            str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
-        
+            str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
+
 
 #==================================================================
 ##   NXSDataWriter Class Description:
@@ -114,8 +112,6 @@ class CommandThread(Thread):
 #   DevState.FAULT :    Error state
 #==================================================================
 class NXSDataWriter(PyTango.Device_4Impl):
-
-
 
 #------------------------------------------------------------------
 #    Device constructor
@@ -139,23 +135,22 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.errors = []
         ## status messages
         self.__status = {
-            PyTango.DevState.OFF:"Not Initialized",
-            PyTango.DevState.ON:"Ready",
-            PyTango.DevState.OPEN:"File Open",
-            PyTango.DevState.EXTRACT:"Entry Open",
-            PyTango.DevState.RUNNING:"Writing ...",
-            PyTango.DevState.FAULT:"Error",
+            PyTango.DevState.OFF: "Not Initialized",
+            PyTango.DevState.ON: "Ready",
+            PyTango.DevState.OPEN: "File Open",
+            PyTango.DevState.EXTRACT: "Entry Open",
+            PyTango.DevState.RUNNING: "Writing ...",
+            PyTango.DevState.FAULT: "Error",
             }
         NXSDataWriter.init_device(self)
-        
-        
+
 #------------------------------------------------------------------
 #    Device destructor
 #------------------------------------------------------------------
     def delete_device(self):
         print "[Device delete_device method] for device", self.get_name()
-        if hasattr(self,'tdw') and  self.tdw :
-            if hasattr(self.tdw,'closeFile'):
+        if hasattr(self, 'tdw') and self.tdw:
+            if hasattr(self.tdw, 'closeFile'):
                 self.tdw.closeFile()
             del self.tdw
             self.tdw = None
@@ -171,8 +166,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.set_state(PyTango.DevState.RUNNING)
             self.errors = []
-            if hasattr(self,'tdw') and self.tdw:
-                if hasattr(self.tdw,'closeFile'):
+            if hasattr(self, 'tdw') and self.tdw:
+                if hasattr(self.tdw, 'closeFile'):
                     self.tdw.closeFile()
                 del self.tdw
                 self.tdw = None
@@ -188,9 +183,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
                 )
-            
-        self.get_device_properties(self.get_device_class())
 
+        self.get_device_properties(self.get_device_class())
 
 #------------------------------------------------------------------
 #    set_state method
@@ -203,7 +197,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 self.state_flag = state
             PyTango.Device_4Impl.set_state(self, self.state_flag)
 
-
 #------------------------------------------------------------------
 #    get_state method
 #
@@ -214,14 +207,12 @@ class NXSDataWriter(PyTango.Device_4Impl):
             PyTango.Device_4Impl.set_state(self, self.state_flag)
             PyTango.Device_4Impl.get_state(self)
             return self.state_flag
-            
 
 #------------------------------------------------------------------
 #    Always excuted hook method
 #------------------------------------------------------------------
     def always_executed_hook(self):
         print "In ", self.get_name(), "::always_excuted_hook()"
-
 
 #==================================================================
 #
@@ -240,7 +231,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def __failed(self):
         self.set_state(PyTango.DevState.FAULT)
         self.errors.append(
-            str(datetime.now()) + ":\n"+ str(sys.exc_info()[1]))
+            str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
 
 #------------------------------------------------------------------
 #    Read XMLSettings attribute
@@ -248,7 +239,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def read_XMLSettings(self, attr):
         print "In ", self.get_name(), "::read_XMLSettings()"
         attr.set_value(self.tdw.xmlsettings)
-
 
 #------------------------------------------------------------------
 #    Write XMLSettings attribute
@@ -258,7 +248,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.tdw.xmlsettings = attr.get_write_value()
         print "Attribute value = ", self.tdw.xmlsettings
 
-
 #---- XMLSettings attribute State Machine -----------------
     def is_XMLSettings_allowed(self, _):
         if self.get_state() in [PyTango.DevState.OFF,
@@ -267,15 +256,13 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    Read JSONRecord attribute
 #------------------------------------------------------------------
     def read_JSONRecord(self, attr):
         print "In ", self.get_name(), "::read_JSONRecord()"
-        
-        attr.set_value(self.tdw.jsonrecord)
 
+        attr.set_value(self.tdw.jsonrecord)
 
 #------------------------------------------------------------------
 #    Write JSONRecord attribute
@@ -285,7 +272,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.tdw.jsonrecord = attr.get_write_value()
         print "Attribute value = ", self.tdw.jsonrecord
 
-
 #---- JSONRecord attribute State Machine -----------------
     def is_JSONRecord_allowed(self, _):
         if self.get_state() in [PyTango.DevState.OFF,
@@ -293,15 +279,13 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    Read FileName attribute
 #------------------------------------------------------------------
     def read_FileName(self, attr):
         print "In ", self.get_name(), "::read_FileName()"
-        
-        attr.set_value(self.tdw.fileName)
 
+        attr.set_value(self.tdw.fileName)
 
 #------------------------------------------------------------------
 #    Write FileName attribute
@@ -313,18 +297,17 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
             print "Attribute value = ", self.tdw.fileName
         else:
-            print >> self.log_warn , \
+            print >> self.log_warn, \
                 "To change the file name please close the file."
-            raise Exception, \
-                "To change the file name please close the file." 
-
+            raise Exception(
+                "To change the file name please close the file.")
 
 #---- FileName attribute Write State Machine -----------------
     def is_FileName_write_allowed(self):
         if self.get_state() in [PyTango.DevState.OFF,
-                                PyTango.DevState.EXTRACT,
-                                PyTango.DevState.OPEN,
-                                PyTango.DevState.RUNNING]:
+                                 PyTango.DevState.EXTRACT,
+                                 PyTango.DevState.OPEN,
+                                 PyTango.DevState.RUNNING]:
             return False
         return True
 
@@ -339,10 +322,9 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
     def read_Errors(self, attr):
         print "In ", self.get_name(), "::read_Errors()"
-        
+
         attr.set_value(self.errors)
         print self.errors
-
 
 #==================================================================
 #
@@ -353,24 +335,23 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #------------------------------------------------------------------
 #    State command:
 #
-#    Description: This command gets the device state 
-#        (stored in its <i>device_state</i> data member) 
+#    Description: This command gets the device state
+#        (stored in its <i>device_state</i> data member)
 #        and returns it to the caller.
-#                
+#
 #    argout: DevState    State Code
 #------------------------------------------------------------------
     def dev_state(self):
         print "In ", self.get_name(), "::dev_state()"
         return self.get_state()
 
-
 #------------------------------------------------------------------
 #    Status command:
 #
-#    Description: This command gets the device status 
-#        (stored in its <i>device_status</i> data member) 
+#    Description: This command gets the device status
+#        (stored in its <i>device_status</i> data member)
 #        and returns it to the caller.
-#                
+#
 #    argout: ConstDevString    Status description
 #------------------------------------------------------------------
     def dev_status(self):
@@ -381,12 +362,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.set_status(self.__status[state])
         return self.__status[state]
 
-
 #------------------------------------------------------------------
 #    OpenFile command:
 #
 #    Description: Open the H5 file
-#                
+#
 #------------------------------------------------------------------
     def OpenFile(self):
         print "In ", self.get_name(), "::OpenFile()"
@@ -407,7 +387,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[2])
                 )
 
-
 #---- OpenFile command State Machine -----------------
     def is_OpenFile_allowed(self):
         if self.get_state() in [PyTango.DevState.OFF,
@@ -417,12 +396,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    OpenEntry command:
 #
 #    Description: Creating the new entry
-#                
+#
 #------------------------------------------------------------------
     def OpenEntry(self):
         print "In ", self.get_name(), "::OpenEntry()"
@@ -444,7 +422,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[2])
                 )
 
-
 #---- OpenEntry command State Machine -----------------
     def is_OpenEntry_allowed(self):
         if self.get_state() in [PyTango.DevState.ON,
@@ -455,12 +432,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    Record command:
 #
 #    Description: Record setting for one step
-#                
+#
 #    argin:  DevString    JSON string with data
 #------------------------------------------------------------------
     def Record(self, argin):
@@ -480,7 +456,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[2])
                 )
 
-
 #---- Record command State Machine -----------------
     def is_Record_allowed(self):
         if self.get_state() in [PyTango.DevState.ON,
@@ -491,16 +466,15 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    CloseEntry command:
 #
 #    Description: Closing the entry
-#                
+#
 #------------------------------------------------------------------
     def CloseEntry(self):
         print "In ", self.get_name(), "::CloseEntry()"
-        state = self.get_state() 
+        state = self.get_state()
         if state != PyTango.DevState.FAULT:
             state = PyTango.DevState.OPEN
         self.set_state(PyTango.DevState.RUNNING)
@@ -518,7 +492,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[2])
                 )
 
-
 #---- CloseEntry command State Machine -----------------
     def is_CloseEntry_allowed(self):
         if self.get_state() in [PyTango.DevState.ON,
@@ -528,12 +501,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    OpenEntryAsynch command:
 #
 #    Description: Creating the new entry in asynchronous mode
-#                
+#
 #------------------------------------------------------------------
     def OpenEntryAsynch(self):
         print "In ", self.get_name(), "::OpenEntryAsynch()"
@@ -554,12 +526,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    RecordAsynch command:
 #
 #    Description: Record setting for one step in asynchronous mode
-#                
+#
 #    argin:  DevString    JSON string with data
 #------------------------------------------------------------------
     def RecordAsynch(self, argin):
@@ -579,23 +550,21 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    CloseEntryAsynch command:
 #
 #    Description: Closing the entry is asynchronous mode
-#                
+#
 #------------------------------------------------------------------
     def CloseEntryAsynch(self):
         print "In ", self.get_name(), "::CloseEntryAsynch()"
-        state = self.get_state() 
+        state = self.get_state()
         if state != PyTango.DevState.FAULT:
             state = PyTango.DevState.OPEN
         self.set_state(PyTango.DevState.RUNNING)
         self.cthread = CommandThread(
             self, "closeEntry", state)
         self.cthread.start()
-
 
 #---- CloseEntryAsynch command State Machine -----------------
     def is_CloseEntryAsynch_allowed(self):
@@ -606,16 +575,15 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
-
 #------------------------------------------------------------------
 #    CloseFile command:
 #
 #    Description: Close the H5 file
-#                
+#
 #------------------------------------------------------------------
     def CloseFile(self):
         print "In ", self.get_name(), "::CloseFile()"
-        state = self.get_state() 
+        state = self.get_state()
         if state in [PyTango.DevState.EXTRACT,
                      PyTango.DevState.RUNNING]:
             self.CloseEntry()
@@ -635,7 +603,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
                 )
-
 
 #---- CloseFile command State Machine -----------------
     def is_CloseFile_allowed(self):
@@ -658,15 +625,13 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     class_property_list = {
         }
 
-
     ##    Device Properties
     device_property_list = {
         'NumberOfThreads':
             [PyTango.DevLong,
-            "maximal number of threads",
-            [ 100 ] ],
+             "maximal number of threads",
+             [100]],
         }
-
 
     ##    Command definitions
     cmd_list = {
@@ -696,7 +661,6 @@ class NXSDataWriterClass(PyTango.DeviceClass):
             [PyTango.DevVoid, ""]],
         }
 
-
     ##    Attribute definitions
     attr_list = {
         'XMLSettings':
@@ -707,7 +671,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
                 'label':"XML Configuration",
                 'description':"An XML string with Nexus configuration.",
                 'Display level':PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'JSONRecord':
             [[PyTango.DevString,
             PyTango.SCALAR,
@@ -716,7 +680,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
                 'label':"JSON string with client data",
                 'description':"A JSON string with global client data.",
                 'Display level':PyTango.DispLevel.EXPERT,
-            } ],
+            }],
         'FileName':
             [[PyTango.DevString,
             PyTango.SCALAR,
@@ -724,7 +688,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
             {
                 'label':"Output file with its path",
                 'description':"A name of H5 output file with its full path",
-            } ],
+            }],
         'Errors':
             [[PyTango.DevString,
             PyTango.SPECTRUM,
@@ -732,9 +696,8 @@ class NXSDataWriterClass(PyTango.DeviceClass):
             {
                 'label':"list of errors",
                 'description':"list of errors",
-            } ],
+            }],
         }
-
 
 #------------------------------------------------------------------
 ##    NXSDataWriterClass Constructor
@@ -751,4 +714,4 @@ class NXSDataWriterClass(PyTango.DeviceClass):
 #
 #==================================================================
 if __name__ == '__main__':
-    pass    
+    pass
