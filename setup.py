@@ -34,10 +34,11 @@ INDTS = __import__(NDTS)
 
 ## reading a file
 def read(fname):
+    """ reading a file"""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 ## required files
-required = [
+REQUIRED = [
     'numpy (>=1.5.0)',
     'PyTango (>=7.2.2)',
     'pninx (>=4.0.2)'
@@ -55,7 +56,7 @@ SETUPDATA = dict(
     keywords="writer Tango server nexus data",
     url="http://code.google.com/p/nexdatas/",
     packages=['nxswriter'],
-    requires=required,
+    requires=REQUIRED,
     scripts=['NXSDataWriter.py', 'NXSDataWriter'],
     long_description=read('README')
 )
@@ -63,6 +64,7 @@ SETUPDATA = dict(
 
 ## the main function
 def main():
+    """ the main function """
     setup(**SETUPDATA)
 
 
