@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \file setup.py
-# nxswriter installer 
+# nxswriter installer
 
 """ setup.py for Nexus Data Writer """
 
@@ -45,29 +45,26 @@ required = [
 
 ## metadata for distutils
 SETUPDATA = dict(
-    name = "nexdatas",
-    version = INDTS.__version__,
-    author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
-        + "halil.pasic@gmail.com",
-    description = ("Nexus Data writer implemented as a Tango Server"),
-    license = "GNU GENERAL PUBLIC LICENSE v3",
-    keywords = "writer Tango server nexus data",
-    url = "http://code.google.com/p/nexdatas/",
+    name="nexdatas",
+    version=INDTS.__version__,
+    author="Jan Kotanski, Eugen Wintersberger , Halil Pasic",
+    author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, " 
+    + "halil.pasic@gmail.com",
+    description=("Nexus Data writer implemented as a Tango Server"),
+    license="GNU GENERAL PUBLIC LICENSE v3",
+    keywords="writer Tango server nexus data",
+    url="http://code.google.com/p/nexdatas/",
     packages=['nxswriter'],
     requires=required,
-    scripts = ['NXSDataWriter.py', 'NXSDataWriter'],
-    long_description= read('README')
+    scripts=['NXSDataWriter.py', 'NXSDataWriter'],
+    long_description=read('README')
 )
 
-
-        
 
 ## the main function
 def main():
     setup(**SETUPDATA)
-        
+
 
 if __name__ == '__main__':
     main()
-
