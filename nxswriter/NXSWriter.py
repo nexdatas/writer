@@ -37,7 +37,7 @@ import sys
 from threading import Thread, Lock
 from datetime import datetime
 
-from TangoDataWriter import TangoDataWriter as TDW
+from .TangoDataWriter import TangoDataWriter as TDW
 
 
 #==================================================================
@@ -78,7 +78,7 @@ class CommandThread(Thread):
             self.command(*self.args)
             with self.server.lock:
                 self.server.state_flag = self.fstate
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
@@ -173,7 +173,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 self.tdw = None
             self.tdw = TDW(self)
             self.set_state(PyTango.DevState.ON)
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
@@ -376,7 +376,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.openFile()
             self.set_state(PyTango.DevState.OPEN)
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
@@ -411,7 +411,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.tdw.numberOfThreads = self.NumberOfThreads
             self.tdw.openEntry()
             self.set_state(PyTango.DevState.EXTRACT)
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
@@ -445,7 +445,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.record(argin)
             self.set_state(PyTango.DevState.EXTRACT)
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
@@ -481,7 +481,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.closeEntry()
             self.set_state(state)
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
@@ -593,7 +593,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.tdw.closeFile()
             self.set_state(state)
-        except (PyTango.DevFailed, BaseException) as e:
+        except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
         except:
