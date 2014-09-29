@@ -22,8 +22,6 @@
 """ Definitions of various datasources """
 
 
-
-
 ## Data source
 class DataSource(object):
     ## constructor
@@ -31,44 +29,36 @@ class DataSource(object):
     def __init__(self):
         pass
 
-
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
         pass
 
-
     ## access to data
-    # \brief It is an abstract method providing data   
+    # \brief It is an abstract method providing data
     def getData(self):
         pass
-
 
     ## checks if the data is valid
     # \returns if the data is valid
     def isValid(self):
         return True
 
-
-
-    ## self-description 
+    ## self-description
     # \returns self-describing string
     def __str__(self):
         return "unknown DataSource"
-
 
     ## provides xml content of the node
     # \param node DOM node
     # \returns xml content string
     @classmethod
     def _getText(cls, node):
-        xml = node.toxml() 
+        xml = node.toxml()
         start = xml.find('>')
         end = xml.rfind('<')
         if start == -1 or end < start:
             return ""
-        return xml[start + 1:end].replace("&lt;","<").\
-            replace("&gt;",">").replace("&quot;","\"").\
-            replace("&amp;","&")
-
-
+        return xml[start + 1:end].replace("&lt;", "<").\
+            replace("&gt;", ">").replace("&quot;", "\"").\
+            replace("&amp;", "&")

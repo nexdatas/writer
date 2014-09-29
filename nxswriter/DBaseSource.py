@@ -41,7 +41,7 @@ except ImportError, e:
     print >> sys.stdout, "MYSQL not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "MYSQL not available: %s" % e
-    
+
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
@@ -57,14 +57,7 @@ except ImportError, e:
     print >> sys.stdout, "ORACLE not available: %s" % e
     if Streams.log_info:
         print >> Streams.log_info, "ORACLE not available: %s" % e
-        
 
-
-
-
-
-
-                
 
 ## DataBase data source
 class DBaseSource(DataSource):
@@ -95,39 +88,37 @@ class DBaseSource(DataSource):
         ## record format, i.e. SCALAR, SPECTRUM, IMAGE
         self.format = None
 
+        ## map
+        self.__dbConnect = {"MYSQL": self.__connectMYSQL,
+                            "PGSQL": self.__connectPGSQL,
+                            "ORACLE": self.__connectORACLE}
 
-        
-        ## map 
-        self.__dbConnect = {"MYSQL":self.__connectMYSQL, 
-                          "PGSQL":self.__connectPGSQL,
-                          "ORACLE":self.__connectORACLE}
-
-    ## self-description 
+    ## self-description
     # \returns self-describing string
     def __str__(self):
         return " %s DB %s with %s " % (
-            self.dbtype, self.dbname if self.dbname else "" , self.query )
+            self.dbtype, self.dbname if self.dbname else "", self.query)
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
-        if query and len(query)> 0:
+        if query and len(query) > 0:
             self.format = query[0].getAttribute("format") \
                 if query[0].hasAttribute("format") else None
             self.query = self._getText(query[0])
-            
+
         if not self.format or not self.query:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "DBaseSource::setup() - "\
                     "Database query or its format not defined: %s" % xml
-            raise  DataSourceSetupError, \
-                "Database query or its format not defined: %s" % xml
+            raise DataSourceSetupError(
+                "Database query or its format not defined: %s" % xml)
 
         db = dom.getElementsByTagName("database")
-        if db and len(db)> 0:
+        if db and len(db) > 0:
             self.dbname = db[0].getAttribute("dbname") \
                 if db[0].hasAttribute("dbname") else None
             self.dbtype = db[0].getAttribute("dbtype") \
@@ -147,12 +138,8 @@ class DBaseSource(DataSource):
             self.port = db[0].getAttribute("port") \
                 if db[0].hasAttribute("port") else None
             self.dsn = self._getText(db[0])
-            
 
-
-
-
-    ## connects to MYSQL database    
+    ## connects to MYSQL database
     # \returns open database object
     def __connectMYSQL(self):
         args = {}
@@ -170,7 +157,7 @@ class DBaseSource(DataSource):
             args["port"] = int(self.port)
         return MySQLdb.connect(**args)
 
-    ## connects to PGSQL database    
+    ## connects to PGSQL database
     # \returns open database object
     def __connectPGSQL(self):
         args = {}
@@ -185,10 +172,10 @@ class DBaseSource(DataSource):
             args["host"] = self.hostname.encode()
         if self.port:
             args["port"] = int(self.port)
-            
+
         return psycopg2.connect(**args)
 
-    ## connects to ORACLE database    
+    ## connects to ORACLE database
     # \returns open database object
     def __connectORACLE(self):
         args = {}
@@ -200,11 +187,11 @@ class DBaseSource(DataSource):
             args["dsn"] = self.dsn.encode()
         if self.mode:
             args["mode"] = self.mode.encode()
-            
+
         return cx_Oracle.connect(**args)
 
-    ## provides access to the data    
-    # \returns  dictionary with collected data   
+    ## provides access to the data
+    # \returns  dictionary with collected data
     def getData(self):
 
         db = None
@@ -217,9 +204,8 @@ class DBaseSource(DataSource):
                 print >> Streams.log_error, \
                     "DBaseSource::getData() - "\
                     "Support for %s database not available" % self.dbtype
-            raise PackageError, \
-                "Support for %s database not available" % self.dbtype
-
+            raise PackageError(
+                "Support for %s database not available" % self.dbtype)
 
         if db:
             cursor = db.cursor()
@@ -227,9 +213,10 @@ class DBaseSource(DataSource):
             if not self.format or self.format == 'SCALAR':
 #                data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
-                dh = {"rank":"SCALAR", "value":data[0], 
-                      "tangoDType":(NTP.pTt[type(data[0]).__name__]), 
-                      "shape":[1, 0]}
+                dh = {"rank": "SCALAR",
+                      "value": data[0],
+                      "tangoDType": (NTP.pTt[type(data[0]).__name__]),
+                      "shape": [1, 0]}
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
@@ -237,18 +224,18 @@ class DBaseSource(DataSource):
                     ldata = list(el[0] for el in data)
                 else:
                     ldata = list(el for el in data[0])
-                dh = {"rank":"SPECTRUM", "value":ldata, 
-                      "tangoDType":(NTP.pTt[type(ldata[0]).__name__]), 
-                      "shape":[len(ldata), 0]}
+                dh = {"rank": "SPECTRUM",
+                      "value": ldata,
+                      "tangoDType": (NTP.pTt[type(ldata[0]).__name__]),
+                      "shape": [len(ldata), 0]}
             else:
                 data = cursor.fetchall()
 #                data = copy.deepcopy(cursor.fetchall())
                 ldata = list(list(el) for el in data)
-                dh = {"rank":"IMAGE", "value":ldata, 
-                      "tangoDType":NTP.pTt[type(ldata[0][0]).__name__], 
-                      "shape":[len(ldata), len(ldata[0])]}
+                dh = {"rank": "IMAGE",
+                      "value": ldata,
+                      "tangoDType": NTP.pTt[type(ldata[0][0]).__name__],
+                      "shape": [len(ldata), len(ldata[0])]}
             cursor.close()
             db.close()
         return dh
-
-

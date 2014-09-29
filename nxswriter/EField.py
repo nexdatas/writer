@@ -35,7 +35,6 @@ from . import Streams
 import pni.io.nx.h5 as nx
 
 
-
 ## field H5 tag element
 class EField(FElementWithAttr):
     ## constructor
@@ -97,7 +96,7 @@ class EField(FElementWithAttr):
                 print >> Streams.log_error, \
                     "FElement::__typeAndName() - Field without a name"
 
-            raise XMLSettingSyntaxError, "Field without a name"
+            raise XMLSettingSyntaxError("Field without a name")
 
     ## provides shape
     # \param dtypy object type
@@ -120,7 +119,7 @@ class EField(FElementWithAttr):
                 if self.__extraD:
                     self.grows = 1
 
-            if int(self.rank)+int(self.__extraD) > 1 \
+            if int(self.rank) + int(self.__extraD) > 1 \
                     and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD,
@@ -129,7 +128,7 @@ class EField(FElementWithAttr):
                     self.grows = 1
             return shape
         except XMLSettingSyntaxError:
-            if int(self.rank)+int(self.__extraD) > 1 \
+            if int(self.rank) + int(self.__extraD) > 1 \
                     and dtype.encode() == "string":
                 self.__splitArray = True
                 shape = self._findShape(self.rank, self.lengths, self.__extraD,
@@ -138,12 +137,11 @@ class EField(FElementWithAttr):
                     self.grows = 1
             else:
                 self.__splitArray = False
-                if self.rank and int(self.rank) >=0:
-                    shape = [0]*(int(self.rank)+int(self.__extraD))
+                if self.rank and int(self.rank) >= 0:
+                    shape = [0] * (int(self.rank) + int(self.__extraD))
                 else:
                     shape = [0]
             return shape
-
 
     ## creates H5 object
     # \param dtype object type
@@ -189,19 +187,18 @@ class EField(FElementWithAttr):
         except:
             info = sys.exc_info()
             import traceback
-            message = str(info[1].__str__()) +"\n "+ (" ").join(
-                    traceback.format_tb(sys.exc_info()[2]) )
+            message = str(info[1].__str__()) + "\n " + (" ").join(
+                traceback.format_tb(sys.exc_info()[2]))
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "EField::__createObject() - "\
                     "The field '%s' of '%s' type cannot be created: %s" % \
                     (name.encode(), dtype.encode(), message)
-            raise XMLSettingSyntaxError, \
-                "The field '%s' of '%s' type cannot be created: %s" % \
-                (name.encode(),dtype.encode(), message)
+            raise XMLSettingSyntaxError(
+                "The field '%s' of '%s' type cannot be created: %s" %
+                    (name.encode(), dtype.encode(), message))
 
         return f
-
 
     ## creates attributes
     # \brief It creates attributes in h5Object
@@ -209,7 +206,7 @@ class EField(FElementWithAttr):
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
                 if key in NTP.aTn.keys():
-                    if hasattr(self._tagAttrs[key],"encode"):
+                    if hasattr(self._tagAttrs[key], "encode"):
                         try:
                             (self.h5Object.attr(
                                     key.encode(),
@@ -242,7 +239,8 @@ class EField(FElementWithAttr):
                     shape = (len(self._tagAttrs[key]),)
                     (self.h5Object.attr(
                             key.encode(),
-                            NTP.nTnp[NTP.aTnv[key]].encode(),shape)
+                            NTP.nTnp[NTP.aTnv[key]].encode(),
+                            shape)
                      ).value = \
                      numpy.array(self._tagAttrs[key])
                 else:
@@ -256,15 +254,12 @@ class EField(FElementWithAttr):
                                "string".encode()).value = \
                 self.postrun.encode().strip()
 
-
-
-
     ## provides strategy or fill the value in
     # \param name object name
     # \returns strategy or strategy,trigger it trigger defined
     def __setStrategy(self, name):
         if self.source:
-            if  self.source.isValid() :
+            if self.source.isValid():
                 return self.strategy, self.trigger
         else:
             val = ("".join(self.content)).strip().encode()
@@ -291,8 +286,8 @@ class EField(FElementWithAttr):
                         print >> Streams.log_error, \
                             "EField::__setStrategy() - "\
                             "Warning: Invalid datasource for %s" % name
-                    raise ValueError, \
-                        "Warning: Invalid datasource for %s" % name
+                    raise ValueError(
+                        "Warning: Invalid datasource for %s" % name)
                 else:
                     if Streams.log_error:
                         print >> Streams.log_error, \
@@ -303,12 +298,11 @@ class EField(FElementWithAttr):
                             "EField::__setStrategy() - "\
                             "Warning: Empty value for the field:", name
 
-
     ## stores the tag content
     # \param xml xml setting
     # \param globalJSON global JSON string
     # \returns (strategy, trigger)
-    def store(self, xml = None, globalJSON = None):
+    def store(self, xml=None, globalJSON=None):
 
         # if it is growing in extra dimension
         self.__isgrowing()
@@ -324,12 +318,10 @@ class EField(FElementWithAttr):
         # return strategy or fill the value in
         return self.__setStrategy(nm)
 
-
-
     ## writes non-growing data
     # \param holder data holder
     def __writeData(self, holder):
-        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] >1 \
+        if len(self.h5Object.shape) == 1 and self.h5Object.shape[0] > 1 \
                 and self.h5Object.dtype == "string":
             sts = holder.cast(self.h5Object.dtype)
             if len(holder.shape) > 1 and holder.shape[0] == 1:
@@ -341,11 +333,11 @@ class EField(FElementWithAttr):
             else:
                 for i in range(len(sts)):
                     self.h5Object[i] = sts[i]
-        elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1 :
+        elif len(self.h5Object.shape) == 1 and self.h5Object.shape[0] == 1:
             sts = holder.cast(self.h5Object.dtype)
-            if hasattr(sts, "__iter__")  and type(sts).__name__ != 'str':
+            if hasattr(sts, "__iter__") and type(sts).__name__ != 'str':
                 if self.h5Object.dtype == "string":
-                    if hasattr(sts[0], "__iter__")  and \
+                    if hasattr(sts[0], "__iter__") and \
                             type(sts[0]).__name__ != 'str':
                         self.h5Object.write(sts[0][0])
                     else:
@@ -360,8 +352,8 @@ class EField(FElementWithAttr):
                                 "Storing one-dimension single fields"\
                                 " not supported by pniio"
                         raise Exception(
-                            "Storing one-dimension single fields"\
-                                " not supported by pniio")
+                            "Storing one-dimension single fields"
+                            " not supported by pniio")
             else:
                 self.h5Object.write(sts)
 
@@ -377,7 +369,7 @@ class EField(FElementWithAttr):
                     self.h5Object[i, 0] = sts[i]
             else:
                 self.h5Object[0, 0] = sts
-        elif  len(self.h5Object.shape) == 3 \
+        elif len(self.h5Object.shape) == 3 \
                 and self.h5Object.dtype == "string":
             sts = holder.cast(self.h5Object.dtype)
             if str(holder.format).split('.')[-1] == "VERTEX":
@@ -403,9 +395,8 @@ class EField(FElementWithAttr):
                         "EField::__writedata() - "\
                         "Storing two-dimension single fields "\
                         "not supported by pniio"
-                raise Exception("Storing two-dimension single fields"\
-                                    " not supported by pniio")
-
+                raise Exception("Storing two-dimension single fields"
+                                " not supported by pniio")
 
     ## writes growing scalar data
     # \param holder data holder
@@ -413,20 +404,19 @@ class EField(FElementWithAttr):
 
         arr = holder.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
-            self.h5Object[self.h5Object.shape[0]-1] = arr
-        elif  len(self.h5Object.shape) == 2:
+            self.h5Object[self.h5Object.shape[0] - 1] = arr
+        elif len(self.h5Object.shape) == 2:
             if self.grows == 2:
-                self.h5Object[0, self.h5Object.shape[0]-1] = arr
+                self.h5Object[0, self.h5Object.shape[0] - 1] = arr
             else:
-                self.h5Object[self.h5Object.shape[0]-1, 0] = arr
-        elif  len(self.h5Object.shape) == 3:
+                self.h5Object[self.h5Object.shape[0] - 1, 0] = arr
+        elif len(self.h5Object.shape) == 3:
             if self.grows == 3:
-                self.h5Object[0, 0, self.h5Object.shape[0]-1] = arr
+                self.h5Object[0, 0, self.h5Object.shape[0] - 1] = arr
             if self.grows == 2:
-                self.h5Object[0, self.h5Object.shape[0]-1, 0] = arr
+                self.h5Object[0, self.h5Object.shape[0] - 1, 0] = arr
             else:
-                self.h5Object[self.h5Object.shape[0]-1, 0, 0] = arr
-
+                self.h5Object[self.h5Object.shape[0] - 1, 0, 0] = arr
 
     ## writes growing spectrum data
     # \param holder data holder
@@ -439,17 +429,17 @@ class EField(FElementWithAttr):
                     and len(arr.shape) == 1 and arr.shape[0] == 1:
                 if len(self.h5Object.shape) == 2 \
                         and self.h5Object.shape[1] == 1:
-                    self.h5Object[self.h5Object.shape[0]-1, 0:len(arr)] = arr
+                    self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
                 if len(self.h5Object.shape) == 2:
-                    self.h5Object[self.h5Object.shape[0]-1, 0:len(arr)] = arr
+                    self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
                 else:
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
             else:
                 if len(self.h5Object.shape) == 3:
                     self.h5Object[self.h5Object.shape[0] - 1, :, :] = arr
-                elif  len(self.h5Object.shape) == 2:
+                elif len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
-                elif hasattr(arr,"__iter__") and type(arr).__name__ != 'str' \
+                elif hasattr(arr, "__iter__") and type(arr).__name__ != 'str' \
                             and len(arr) == 1:
                         self.h5Object[self.h5Object.shape[0] - 1] = arr
                 else:
@@ -478,13 +468,13 @@ class EField(FElementWithAttr):
         arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
             if len(self.h5Object.shape) == 3:
-                self.h5Object[self.h5Object.shape[0]-1,
+                self.h5Object[self.h5Object.shape[0] - 1,
                               0:len(arr), 0:len(arr[0])] = arr
             elif len(self.h5Object.shape) == 2:
                 if len(holder.shape) == 1:
-                    self.h5Object[self.h5Object.shape[0]-1, :] = arr[0]
+                    self.h5Object[self.h5Object.shape[0] - 1, :] = arr[0]
                 elif len(holder.shape) > 1 and holder.shape[0] == 1:
-                    self.h5Object[self.h5Object.shape[0]-1, :] \
+                    self.h5Object[self.h5Object.shape[0] - 1, :] \
                         = [c[0] for c in arr]
                 elif len(holder.shape) > 1 and holder.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0] - 1, :] = arr[:, 0]
