@@ -1,4 +1,5 @@
-2014-XX-XX Jan Kotanski <jankotan@gmail.com>
+2014-10-13 Jan Kotanski <jankotan@gmail.com>
+	* making work around for astor strangeness of add_class args
 	* cleaning the code
 	* tagged as 1.6.3
 

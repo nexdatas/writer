@@ -35,7 +35,7 @@ def run(argv):
     from .NXSWriter import NXSDataWriterClass as NXSWriterClass
     try:
         py = PyTango.Util(argv)
-        py.add_class(NXSWriterClass, NXSWriter, 'NXSDataWriter')
+        py.add_class(NXSWriterClass, NXSWriter)
 
         U = PyTango.Util.instance()
         U.server_init()
