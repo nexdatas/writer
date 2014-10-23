@@ -24,6 +24,7 @@
 
 from .Element import Element
 from .FElement import FElement
+from .DataHolder import DataHolder
 
 
 ## file H5 element
@@ -90,3 +91,22 @@ class EDim(Element):
         Element.__init__(self, "dim", attrs, last)
         if ("index" in attrs.keys()) and ("value" in attrs.keys()):
             self._beforeLast().lengths[attrs["index"]] = attrs["value"]
+        ## index attribute    
+        self.__index = None
+        ## datasource
+        self.source = None
+        self.content = []
+        if attrs["index"]:
+            self.__index = attrs["index"]
+
+    ## stores the tag content
+    # \param xml xml setting
+    # \param globalJSON global JSON string
+    def store(self, xml=None, globalJSON=None):
+        if self.__index is not None and self.source:
+            dt = self.source.getData()
+            if dt and isinstance(dt, dict):
+                dh = DataHolder(**dt)
+                if dh:
+                    self._beforeLast().lengths[self.__index] = str(
+                        dh.cast("string"))
