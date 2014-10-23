@@ -96,7 +96,7 @@ class EDim(Element):
         ## datasource
         self.source = None
         self.content = []
-        if "index" in attrs.keys() and attrs["index"]:
+        if "index" in attrs.keys():
             self.__index = attrs["index"]
 
     ## stores the tag content
