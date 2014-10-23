@@ -80,7 +80,7 @@ class TangoDataWriter(object):
         ## pool with decoders
         self.__decoders = DecoderPool()
 
-        ## pool with decoders
+        ## pool with datasources
         self.__datasources = DataSourcePool()
 
         ## group name parser
@@ -116,8 +116,8 @@ class TangoDataWriter(object):
     ## set method for jsonrecord attribute
     # \param jsonstring value of jsonrecord
     def __setJSON(self, jsonstring):
-        self.__decoders = DecoderPool(json.loads(jsonstring))
-        self.__datasources = DataSourcePool(json.loads(jsonstring))
+        self.__decoders.appendUserDecoders(json.loads(jsonstring))
+        self.__datasources.appendUserDataSources(json.loads(jsonstring))
         self.__json = jsonstring
 
     ## del method for jsonrecord attribute

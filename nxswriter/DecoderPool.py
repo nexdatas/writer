@@ -203,11 +203,11 @@ class DecoderPool(object):
         self.__pool = {}
 
         self.__createDecoders()
-        self.__appendUserDecoders(configJSON)
+        self.appendUserDecoders(configJSON)
 
     ## loads user decoders
     # \param configJSON string with decoders
-    def __appendUserDecoders(self, configJSON):
+    def appendUserDecoders(self, configJSON):
         if configJSON and 'decoders' in configJSON.keys() \
                 and hasattr(configJSON['decoders'], 'keys'):
             for dk in configJSON['decoders'].keys():

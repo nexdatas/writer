@@ -40,7 +40,7 @@ class DataSourcePool(object):
                        "TANGO": TangoSource.TangoSource,
                        "CLIENT": ClientSource.ClientSource,
                        "PYEVAL": PyEvalSource.PyEvalSource}
-        self.__appendUserDataSources(configJSON)
+        self.appendUserDataSources(configJSON)
         ## global variables for specific datasources
         self.common = {}
         ## step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2;
@@ -50,7 +50,7 @@ class DataSourcePool(object):
 
     ## loads user datasources
     # \param configJSON string with datasources
-    def __appendUserDataSources(self, configJSON):
+    def appendUserDataSources(self, configJSON):
         if configJSON and 'datasources' in configJSON.keys() \
                 and hasattr(configJSON['datasources'], 'keys'):
             for dk in configJSON['datasources'].keys():
