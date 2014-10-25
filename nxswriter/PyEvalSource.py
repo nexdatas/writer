@@ -22,6 +22,8 @@
 """ Definitions of PYEVAL datasource """
 
 import sys
+import threading
+import copy
 from xml.dom import minidom
 
 from .Types import NTP
@@ -32,10 +34,8 @@ from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
 
-## class with variables
-class variables(object):
+class Variables(object):
     pass
-
 
 ## Python Eval data source
 class PyEvalSource(DataSource):
@@ -49,12 +49,20 @@ class PyEvalSource(DataSource):
         self.__globalJSON = None
         ## the current  dynamic JSON object
         self.__localJSON = None
+        ## datasource pool
+        self.__pool = None
         ## datasources xml
         self.__sources = {}
         ## datasources
         self.__datasources = {}
         ## python script
         self.__script = ""
+        ## common block
+        self.__commonblock = False
+        ## lock for common block
+        self.__lock = None
+        ## common block variables
+        self.__common = None
         ## data format
         self.__result = {"rank": "SCALAR",
                          "value": None,
@@ -112,6 +120,11 @@ class PyEvalSource(DataSource):
             raise DataSourceSetupError(
                 "PyEvalSource::setup() - "
                 "PyEval script %s not defined" % self.__name)
+        
+        if "commonblock" in self.__script:
+            self.__commonblock = True 
+        else:    
+            self.__commonblock = False
 
     ## self-description
     # \returns self-describing string
@@ -140,8 +153,6 @@ class PyEvalSource(DataSource):
             raise DataSourceSetupError(
                 "PyEvalSource::getData() - PyEval datasource not set up")
 
-        class Variables(object):
-            pass
         ds = Variables()
         for name, source in self.__datasources.items():
             dt = source.getData()
@@ -154,8 +165,15 @@ class PyEvalSource(DataSource):
 
         setattr(ds, self.__name, None)
 
-        exec(self.__script.strip(), {}, {"ds": ds})
-        rec = getattr(ds, self.__name)
+        if not self.__commonblock:
+            exec(self.__script.strip(), {}, {"ds": ds})
+            rec = getattr(ds, self.__name)
+        else:
+            rec = None
+            with self.__lock:
+                exec(self.__script.strip(), {}, {
+                        "ds": ds, "commonblock": self.__common})
+                rec = copy.deepcopy(getattr(ds, self.__name))
         ntp = NTP()
         rank, shape, pythonDType = ntp.arrayRankShape(rec)
         if rank in NTP.rTf:
@@ -178,6 +196,33 @@ class PyEvalSource(DataSource):
     ## sets the datasources
     # \param pool datasource pool
     def setDataSources(self, pool):
+        self.__pool = pool
+        pool.lock.acquire()
+        try:
+            if 'PYEVAL' not in self.__pool.common.keys():
+                self.__pool.common['PYEVAL'] = {}
+                if "lock" not in self.__pool.common['PYEVAL'].keys():
+                    self.__pool.common['PYEVAL']["lock"] = threading.Lock()
+                if "lock" not in self.__pool.common['PYEVAL'].keys():
+                    self.__lock = threading.Lock()
+                    self.__pool.common['PYEVAL']["lock"] = self.lock
+                if "common" not in self.__pool.common['PYEVAL'].keys():
+                    self.common = Variables()
+                    self.__pool.common['PYEVAL']["common"] = self.__common
+                    
+#            if self.group:
+#                if self.group not in self.__pool.common['TANGO'].keys():
+#                    self.__pool.common['TANGO'][self.group] = TgGroup()
+#                self.__tngrp = self.__pool.common['TANGO'][self.group]
+#
+#                self.__tngrp.lock.acquire()
+#                tdv = self.__tngrp.getDevice(self.device)
+#                tdv.proxy = self.__proxy
+#                self.member = tdv.setMember(self.member)
+        finally:
+#            if self.group:
+#                self.__tngrp.lock.release()
+            pool.lock.release()
 
         for name, inp in self.__sources.items():
             if pool and pool.hasDataSource(inp[0]):
