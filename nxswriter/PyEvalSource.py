@@ -37,6 +37,7 @@ from .Errors import DataSourceSetupError
 class Variables(object):
     pass
 
+
 ## Python Eval data source
 class PyEvalSource(DataSource):
     ## constructor
@@ -120,10 +121,10 @@ class PyEvalSource(DataSource):
             raise DataSourceSetupError(
                 "PyEvalSource::setup() - "
                 "PyEval script %s not defined" % self.__name)
-        
+
         if "commonblock" in self.__script:
-            self.__commonblock = True 
-        else:    
+            self.__commonblock = True
+        else:
             self.__commonblock = False
 
     ## self-description
@@ -207,7 +208,7 @@ class PyEvalSource(DataSource):
             if "common" not in self.__pool.common['PYEVAL'].keys():
                 self.__pool.common['PYEVAL']["common"] = {}
             self.__common = self.__pool.common['PYEVAL']["common"]
-                    
+
         finally:
             pool.lock.release()
 

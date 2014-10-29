@@ -91,7 +91,7 @@ class EDim(Element):
         Element.__init__(self, "dim", attrs, last)
         if ("index" in attrs.keys()) and ("value" in attrs.keys()):
             self._beforeLast().lengths[attrs["index"]] = attrs["value"]
-        ## index attribute    
+        ## index attribute
         self.__index = None
         ## datasource
         self.source = None
