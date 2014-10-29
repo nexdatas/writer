@@ -1,4 +1,5 @@
 2014-XX-XX Jan Kotanski <jankotan@gmail.com>
+	* adding common block to PyEval
 	* adding datasources into attributes
 	* tagged as 1.7.0
 

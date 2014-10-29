@@ -201,27 +201,14 @@ class PyEvalSource(DataSource):
         try:
             if 'PYEVAL' not in self.__pool.common.keys():
                 self.__pool.common['PYEVAL'] = {}
-                if "lock" not in self.__pool.common['PYEVAL'].keys():
-                    self.__pool.common['PYEVAL']["lock"] = threading.Lock()
-                if "lock" not in self.__pool.common['PYEVAL'].keys():
-                    self.__lock = threading.Lock()
-                    self.__pool.common['PYEVAL']["lock"] = self.lock
-                if "common" not in self.__pool.common['PYEVAL'].keys():
-                    self.common = Variables()
-                    self.__pool.common['PYEVAL']["common"] = self.__common
+            if "lock" not in self.__pool.common['PYEVAL'].keys():
+                self.__pool.common['PYEVAL']["lock"] = threading.Lock()
+            self.__lock = self.__pool.common['PYEVAL']["lock"]
+            if "common" not in self.__pool.common['PYEVAL'].keys():
+                self.__pool.common['PYEVAL']["common"] = {}
+            self.__common = self.__pool.common['PYEVAL']["common"]
                     
-#            if self.group:
-#                if self.group not in self.__pool.common['TANGO'].keys():
-#                    self.__pool.common['TANGO'][self.group] = TgGroup()
-#                self.__tngrp = self.__pool.common['TANGO'][self.group]
-#
-#                self.__tngrp.lock.acquire()
-#                tdv = self.__tngrp.getDevice(self.device)
-#                tdv.proxy = self.__proxy
-#                self.member = tdv.setMember(self.member)
         finally:
-#            if self.group:
-#                self.__tngrp.lock.release()
             pool.lock.release()
 
         for name, inp in self.__sources.items():
