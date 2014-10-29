@@ -831,8 +831,9 @@ except:
             ds.res = str(unicode(ds.inp))+ ds.inp2
         except:
             ds.res = ds.inp2
-
+commonblock["myres"] = ds.res
 """
+        script2 = 'ds.res2 = commonblock["myres"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
@@ -916,6 +917,21 @@ except:
 
 
 
+
+                ds2 = PyEvalSource()
+                self.assertTrue(isinstance(ds2, DataSource))
+                self.myAssertRaise(DataSourceSetupError, ds2.getData)
+                self.assertEqual(ds2.setup("""
+<datasource>
+  <result name='res2'>%s</result>
+</datasource>
+"""% (script2) ), None)
+                self.assertEqual(ds2.setDataSources(dsp),None)
+                dt = ds2.getData()
+                self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3], error = error)
+
+
+
             for a2 in arr3:
                 ds = PyEvalSource()
                 self.assertTrue(isinstance(ds, DataSource))
@@ -957,6 +973,25 @@ except:
                         except:
                             vv = v2
 
+                if  type(vv).__name__ == 'ndarray':
+                    if type(vv[0]).__name__ in NTP.convert.keys():
+                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(NTP.convert[type(vv[0]).__name__]()).__name__], [len(vv)])
+                    else:    
+                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
+                else:    
+                    self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
+ 
+
+                ds2 = PyEvalSource()
+                self.assertTrue(isinstance(ds2, DataSource))
+                self.myAssertRaise(DataSourceSetupError, ds2.getData)
+                self.assertEqual(ds2.setup("""
+<datasource>
+  <result name='res2'>%s</result>
+</datasource>
+"""% (script2) ), None)
+                self.assertEqual(ds2.setDataSources(dsp),None)
+                dt = ds2.getData()
                 if  type(vv).__name__ == 'ndarray':
                     if type(vv[0]).__name__ in NTP.convert.keys():
                         self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(NTP.convert[type(vv[0]).__name__]()).__name__], [len(vv)])
