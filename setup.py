@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \file setup.py
-# nxswriter installer 
+# nxswriter installer
 
 """ setup.py for Nexus Data Writer """
 
@@ -34,10 +34,11 @@ INDTS = __import__(NDTS)
 
 ## reading a file
 def read(fname):
+    """ reading a file"""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 ## required files
-required = [
+REQUIRED = [
     'numpy (>=1.5.0)',
     'PyTango (>=7.2.2)',
     'pninx (>=4.0.2)'
@@ -45,29 +46,27 @@ required = [
 
 ## metadata for distutils
 SETUPDATA = dict(
-    name = "nexdatas",
-    version = INDTS.__version__,
-    author = "Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    author_email = "jankotan@gmail.com, eugen.wintersberger@gmail.com, " \
-        + "halil.pasic@gmail.com",
-    description = ("Nexus Data writer implemented as a Tango Server"),
-    license = "GNU GENERAL PUBLIC LICENSE v3",
-    keywords = "writer Tango server nexus data",
-    url = "http://code.google.com/p/nexdatas/",
+    name="nexdatas",
+    version=INDTS.__version__,
+    author="Jan Kotanski, Eugen Wintersberger , Halil Pasic",
+    author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, " 
+    + "halil.pasic@gmail.com",
+    description=("Nexus Data writer implemented as a Tango Server"),
+    license="GNU GENERAL PUBLIC LICENSE v3",
+    keywords="writer Tango server nexus data",
+    url="http://code.google.com/p/nexdatas/",
     packages=['nxswriter'],
-    requires=required,
-    scripts = ['NXSDataWriter.py', 'NXSDataWriter'],
-    long_description= read('README')
+    requires=REQUIRED,
+    scripts=['NXSDataWriter.py', 'NXSDataWriter'],
+    long_description=read('README')
 )
 
 
-        
-
 ## the main function
 def main():
+    """ the main function """
     setup(**SETUPDATA)
-        
+
 
 if __name__ == '__main__':
     main()
-

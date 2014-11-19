@@ -28,13 +28,14 @@ from . import Streams
 from .ElementThread import ElementThread
 from .Errors import ThreadError
 
+
 ## Pool with threads
 class ThreadPool(object):
     ## constructor
     # \brief It cleans the member variables
-    def __init__(self, numThreads=None):
+    def __init__(self, numberOfThreads=None):
         ## maximal number of threads
-        self.numThreads  = numThreads if numThreads >= 1 else -1
+        self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
         ## queue of the appended elements
         self.__elementQueue = Queue.Queue()
         ## list of the appended elements
@@ -50,31 +51,29 @@ class ThreadPool(object):
     ## sets the JSON string to threads
     # \param globalJSON the static JSON string
     # \param localJSON the dynamic JSON string
-    # \returns self object    
+    # \returns self object
     def setJSON(self, globalJSON, localJSON=None):
-        for el in self.__elementList :
+        for el in self.__elementList:
             if hasattr(el.source, "setJSON") and callable(el.source.setJSON):
                 el.source.setJSON(globalJSON, localJSON)
         return self
-
 
     ## runner
     # \brief It runs the threads from the pool
     def run(self):
         self.__threadList = []
         self.__elementQueue = Queue.Queue()
-        
+
         for eth in self.__elementList:
             self.__elementQueue.put(eth)
 
-        if self.numThreads < 1:
-            self.numThreads = len(self.__elementList)
+        if self.numberOfThreads < 1:
+            self.numberOfThreads = len(self.__elementList)
 
-        for  i in range(min(self.numThreads, len(self.__elementList))):
+        for i in range(min(self.numberOfThreads, len(self.__elementList))):
             th = ElementThread(i, self.__elementQueue)
             self.__threadList.append(th)
             th.start()
-
 
     ## waits for all thread from the pool
     # \param timeout the maximal waiting time
@@ -83,42 +82,39 @@ class ThreadPool(object):
             if th.isAlive():
                 th.join(timeout)
 
-                
     ## runner with waiting
-    # \brief It runs and waits the threads from the pool 
+    # \brief It runs and waits the threads from the pool
     def runAndWait(self):
         self.run()
         self.join()
-
 
     ## checks errors from threads
     def checkErrors(self):
         errors = []
         for el in self.__elementList:
             if el.error:
-                if hasattr(el,"canfail") and el.canfail:
+                if hasattr(el, "canfail") and el.canfail:
                     if Streams.log_warn:
                         print >> Streams.log_warn, \
-                            "ThreadPool::checkErrors() - %s" %   str(el.error)
+                            "ThreadPool::checkErrors() - %s" % str(el.error)
                     else:
                         print >> sys.stderr, \
-                            "ThreadPool::checkErrors() - %s" %   str(el.error)
-                    if hasattr(el,"markFailed"):
+                            "ThreadPool::checkErrors() - %s" % str(el.error)
+                    if hasattr(el, "markFailed"):
                         el.markFailed()
-                            
                 else:
                     errors.append(el.error)
                     if Streams.log_error:
                         print >> Streams.log_error, \
                             "ThreadPool::checkErrors() - %s" % str(el.error)
         if errors:
-            raise ThreadError("Problems in storing data: %s" %  str(errors)  )
+            raise ThreadError("Problems in storing data: %s" % str(errors))
 
     ## closer
     # \brief It close the threads from the pool
     def close(self):
         for el in self.__elementList:
-            if hasattr(el.h5Object,"close"):
+            if hasattr(el.h5Object, "close"):
                 el.h5Object.close()
         self.__threadList = []
         self.__elementList = []

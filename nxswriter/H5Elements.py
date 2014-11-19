@@ -24,11 +24,11 @@
 
 from .Element import Element
 from .FElement import FElement
+from .DataHolder import DataHolder
 
 
-
-## file H5 element        
-class EFile(FElement):        
+## file H5 element
+class EFile(FElement):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -37,9 +37,8 @@ class EFile(FElement):
         FElement.__init__(self, "file", attrs, last, h5fileObject)
 
 
-
-## doc tag element        
-class EDoc(Element):        
+## doc tag element
+class EDoc(Element):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -49,13 +48,13 @@ class EDoc(Element):
     ## stores the tag content
     # \param xml xml setting
     # \param globalJSON global JSON string
-    def store(self, xml = None, globalJSON = None):
+    def store(self, xml=None, globalJSON=None):
         if self._beforeLast():
-            self._beforeLast().doc +=  "".join(xml[1])            
+            self._beforeLast().doc += "".join(xml[1])
 
 
-## symbol tag element        
-class ESymbol(Element):        
+## symbol tag element
+class ESymbol(Element):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -67,14 +66,13 @@ class ESymbol(Element):
     ## stores the tag content
     # \param xml xml setting2
     # \param globalJSON global JSON string
-    def store(self, xml = None, globalJSON = None):
+    def store(self, xml=None, globalJSON=None):
         if "name" in self._tagAttrs.keys():
             self.symbols[self._tagAttrs["name"]] = self.last.doc
 
 
- 
-## dimensions tag element        
-class EDimensions(Element):        
+## dimensions tag element
+class EDimensions(Element):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -84,14 +82,31 @@ class EDimensions(Element):
             self.last.rank = attrs["rank"]
 
 
-## dim tag element        
-class EDim(Element):        
+## dim tag element
+class EDim(Element):
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
     def __init__(self, attrs, last):
         Element.__init__(self, "dim", attrs, last)
-        if ("index"  in attrs.keys()) and  ("value"  in attrs.keys()) :
+        if ("index" in attrs.keys()) and ("value" in attrs.keys()):
             self._beforeLast().lengths[attrs["index"]] = attrs["value"]
+        ## index attribute
+        self.__index = None
+        ## datasource
+        self.source = None
+        self.content = []
+        if "index" in attrs.keys():
+            self.__index = attrs["index"]
 
-
+    ## stores the tag content
+    # \param xml xml setting
+    # \param globalJSON global JSON string
+    def store(self, xml=None, globalJSON=None):
+        if self.__index is not None and self.source:
+            dt = self.source.getData()
+            if dt and isinstance(dt, dict):
+                dh = DataHolder(**dt)
+                if dh:
+                    self._beforeLast().lengths[self.__index] = str(
+                        dh.cast("string"))

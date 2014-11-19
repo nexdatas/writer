@@ -25,6 +25,7 @@ import sys
 import subprocess
 import random
 import struct
+import binascii
 import numpy
 
 
@@ -40,6 +41,8 @@ from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import EDim
 from nxswriter.H5Elements import EDimensions
+
+from TestDataSource import TestDataSource 
 
 
 ## if 64-bit machione
@@ -66,9 +69,17 @@ class EDimTest(unittest.TestCase):
         self._attrs2 = {"index":"2","value":"22" }
         self._attrs3 = {"value":"2" }
         self._attrs4 = {"index":"2"}
+        self._attrs5 = {"index":"1"}
         self._gname = "testDoc"
         self._gtype = "NXentry"
 
+        try:
+            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+        except NotImplementedError:
+            import time
+            self.__seed  = long(time.time() * 256) # use fractional seconds
+         
+        self.__rnd = random.Random(self.__seed)
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
@@ -82,6 +93,7 @@ class EDimTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        print "SEED =", self.__seed 
 
     ## test closer
     # \brief Common tear down
@@ -334,6 +346,255 @@ class EDimTest(unittest.TestCase):
         
         nxFile.close()
         os.remove(fname)
+
+
+
+
+    ## last method test
+    # \brief It tests executing _lastObject method
+    def test_store_last_index(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs2,  el )
+        el2 = EDimensions(self._fattrs4,  fi )
+        el3 = EDim(self._attrs5,  el2 )
+        ds = TestDataSource()
+        ds.value0d = self.__rnd.randint(1, 10)
+        el3.source = ds
+        el3.store()
+        print el3._beforeLast().lengths
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs2)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "1")
+        self.assertEqual(el3._beforeLast().lengths,{'1':'%s' % ds.value0d} )
+        self.assertEqual(fi.lengths,{'1':'%s' % ds.value0d})
+        self.assertEqual(fi.rank,"1")
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+
+
+    ## last method test
+    # \brief It tests executing _lastObject method
+    def test_store_last_index2(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs2,  el )
+        el2 = EDimensions(self._fattrs3,  fi )
+        el3 = EDim(self._attrs5,  el2 )
+        ds = TestDataSource()
+        ds.value0d = self.__rnd.randint(1, 10)
+        el3.source = ds
+        el4 = EDim(self._attrs4,  el2 )
+        ds2 = TestDataSource()
+        ds2.value0d = self.__rnd.randint(1, 10)
+        el4.source = ds2
+        el3.store()
+        el4.store()
+
+
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs2)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
+        self.assertEqual(el3._beforeLast().lengths,
+                         {'1':'%s' % ds.value0d, '2':'%s' % ds2.value0d})
+        self.assertEqual(fi.lengths,
+        {'1':'%s' % ds.value0d, '2':'%s' % ds2.value0d})
+        self.assertEqual(fi.rank,"2")
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+    ## last method test
+    # \brief It tests executing _lastObject method
+    def test_store_last_index2_mixed(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs2,  el )
+        el2 = EDimensions(self._fattrs3,  fi )
+        el3 = EDim(self._attrs5,  el2 )
+        ds = TestDataSource()
+        ds.value0d = self.__rnd.randint(1, 10)
+        el3.source = ds
+        el4 = EDim(self._attrs2,  el2 )
+        el3.store()
+
+
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs2)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
+        self.assertEqual(el3._beforeLast().lengths,
+                         {'1':'%s' % ds.value0d, '2':'22'})
+        self.assertEqual(fi.lengths,
+        {'1':'%s' % ds.value0d, '2':'22'})
+        self.assertEqual(fi.rank,"2")
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+
+
+    ## last method test
+    # \brief It tests executing _lastObject method
+    def test_store_last_noindex(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs2,  el )
+        el2 = EDimensions(self._fattrs3,  fi )
+        el3 = EDim({},  el2 )
+
+        ds = TestDataSource()
+        ds.value0d = self.__rnd.randint(1, 10)
+        el3.source = ds
+        el3.store()
+
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs2)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
+        self.assertEqual(el3._beforeLast().lengths,{})
+        self.assertEqual(fi.lengths,{})
+        self.assertEqual(fi.rank,"2")
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+
+
+    ## _last method test
+    # \brief It tests executing _lastObject method
+    def test_store_last_novalue(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = nx.create_file(fname, overwrite=True)
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs2,  el )
+        el2 = EDimensions(self._fattrs4,  fi )
+        el3 = EDim(self._attrs5,  el2 )
+        ds = TestDataSource()
+        ds.value0d = ""
+        el3.source = ds
+        el3.store()
+
+
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs2)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "1")
+        self.assertEqual(el3._beforeLast().lengths,{'1':''})
+        self.assertEqual(fi.lengths,{'1':''})
+        self.assertEqual(fi.rank,"1")
+        
+        nxFile.close()
+        os.remove(fname)
+
+
 
 if __name__ == '__main__':
     unittest.main()

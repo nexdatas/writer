@@ -58,8 +58,9 @@ class TestDataSource(DataSource):
         self.datasources = None
         ## stack
         self.stack  = []
-
-
+        ## value 0D
+        self.value0d = 1
+        
     ## sets the parameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
@@ -77,7 +78,7 @@ class TestDataSource(DataSource):
             if self.value:
                 return self.value
             elif len(self.dims) == 0:
-                return {"rank":NTP.rTf[0], "value":1, 
+                return {"rank":NTP.rTf[0], "value":self.value0d, 
                         "tangoDType":"DevLong", "shape":[0,0]}
             elif numpy:
                 return {"rank":NTP.rTf[len(self.dims)], "value":numpy.ones(self.dims), 

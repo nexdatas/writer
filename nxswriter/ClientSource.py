@@ -42,14 +42,13 @@ class ClientSource(DataSource):
         self.__globalJSON = None
         ## the current  dynamic JSON object
         self.__localJSON = None
-        
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
-        if rec and len(rec)> 0:
+        if rec and len(rec) > 0:
             self.name = rec[0].getAttribute("name") \
                 if rec[0].hasAttribute("name") else None
         if not self.name:
@@ -57,35 +56,31 @@ class ClientSource(DataSource):
                 print >> Streams.log_error, \
                     "ClientSource::setup() - "\
                     "Client record name not defined: %s" % xml
-            raise  DataSourceSetupError, \
-                "Client record name not defined: %s" % xml
-            
+            raise DataSourceSetupError(
+                "Client record name not defined: %s" % xml)
 
-
-    ## self-description 
+    ## self-description
     # \returns self-describing string
     def __str__(self):
         return " CLIENT record %s" % (self.name)
 
-
     ## sets JSON string
     # \brief It sets the currently used  JSON string
-    # \param globalJSON static JSON string    
-    # \param localJSON dynamic JSON string    
+    # \param globalJSON static JSON string
+    # \param localJSON dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
-            
 
-    ## provides access to the data    
-    # \returns  dictionary with collected data   
+    ## provides access to the data
+    # \returns  dictionary with collected data
     def getData(self):
-        if  self.__globalJSON and 'data' not in self.__globalJSON.keys() :
+        if self.__globalJSON and 'data' not in self.__globalJSON.keys():
             self.__globalJSON = None
 
-        if self.__localJSON and 'data' not in self.__localJSON.keys() :
+        if self.__localJSON and 'data' not in self.__localJSON.keys():
             self.__localJSON = None
-            
+
         rec = None
         if self.__localJSON and 'data' in self.__localJSON \
                 and self.name in self.__localJSON['data']:
@@ -94,16 +89,14 @@ class ClientSource(DataSource):
                 and self.name in self.__globalJSON['data']:
             rec = self.__globalJSON['data'][str(self.name)]
         else:
-            return    
+            return
         ntp = NTP()
         rank, shape, pythonDType = ntp.arrayRankShape(rec)
 
         if rank in NTP.rTf:
-            if  shape is None:
+            if shape is None:
                 shape = [1, 0]
-            return { "rank":NTP.rTf[rank], 
-                     "value":rec, 
-                     "tangoDType":NTP.pTt[pythonDType.__name__], 
-                     "shape":shape}
-            
-
+            return {"rank": NTP.rTf[rank],
+                    "value": rec,
+                    "tangoDType": NTP.pTt[pythonDType.__name__],
+                    "shape": shape}

@@ -84,19 +84,39 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
+        self._largs = None
+
         
 
     ## test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."
-        args = {}
-        args["db"] = 'tango'
-        args["host"] = 'localhost'
-        args["read_default_file"] = '/etc/my.cnf'
-        self._mydb = MySQLdb.connect(**args)
+        try:
+            args = {}
+            args["db"] = 'tango'
+            args["host"] = 'localhost'
+            args["read_default_file"] = '/etc/my.cnf'
+            self._mydb = MySQLdb.connect(**args)
+        except:
+            from os.path import expanduser
+            home = expanduser("~")
+            args2 = {'host': u'localhost', 'db': u'tango', 
+                     'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
+            self._mydb = MySQLdb.connect(**args2)
+            self._largs = args2
+            print "ARGS:", args2
+
         print "SEED =", self.seed 
         print "CHECKER SEED =", self._sc.seed 
+
+    def setmycnf(self, xml):
+        if not self._largs or 'read_default_file' not in self._largs.keys():
+            return str(xml.replace("$mycnf", ""))
+        else:
+            return str(xml.replace("$mycnf", 'mycnf="%s"' % self._largs['read_default_file']))
+            
+            
 
     ## test closer
     # \brief Common tear down
@@ -126,12 +146,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter()
         tdw.fileName = fname
-        tdw.numThreads = 1
+        tdw.numberOfThreads = 1
 
-        tdw.openNXFile()
-        tdw.xmlSettings = xml
+        tdw.openFile()
+        tdw.xmlsettings = xml
         if json:
-            tdw.jsonRecord = json
+            tdw.jsonrecord = json
         tdw.openEntry()
         return tdw
 
@@ -140,9 +160,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json = None):
         if json:
-            tdw.jsonRecord = json
+            tdw.jsonrecord = json
         tdw.closeEntry()
-        tdw.closeNXFile()
+        tdw.closeFile()
 
     ## performs one record step
     def record(self, tdw, string):
@@ -165,7 +185,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -177,7 +197,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -188,7 +208,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         <field  units="m" name="pid_scalar3_string" type="NX_CHAR">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -199,7 +219,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="0" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -209,7 +229,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         <field  units="m" name="pid_scalar_uint" type="NX_UINT">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -222,7 +242,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <dimensions rank="0" />
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -233,7 +253,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         <field  units="m" name="pid_scalar_float64" type="NX_FLOAT64">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -245,7 +265,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="0" /> 
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -260,7 +280,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -271,7 +291,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -282,7 +302,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         <field  units="m" name="init_pid_scalar_int32" type="NX_INT32">
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -293,7 +313,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         <field  units="m" name="init_pid_scalar_string" type="NX_CHAR">
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -304,7 +324,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         <field  units="m" name="final_pid_scalar_float32" type="NX_FLOAT32">
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -316,7 +336,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="0" />
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -330,7 +350,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -341,7 +361,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1"/>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -355,7 +375,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="0"/>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -371,6 +391,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
         
+        xml = self.setmycnf(xml)
+
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
         scalar = str(cursor.fetchone()[0])
@@ -739,7 +761,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -754,7 +776,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="2"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -769,7 +791,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" comporession="true" rate="4" shuffle="true"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -781,7 +803,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -798,7 +820,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -812,7 +834,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -824,7 +846,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT name FROM device limit 6
             </query>
@@ -839,7 +861,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -853,7 +875,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -868,7 +890,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -880,7 +902,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -895,7 +917,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -907,7 +929,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -924,6 +946,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        xml = self.setmycnf(xml)
         
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
@@ -1250,16 +1273,16 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[numpy.iinfo(getattr(numpy, 'int64')).max] ]*3 ,
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
-                                    [[numpy.finfo(getattr(numpy, 'float64')).max] ]*3 ,
+                                    [[numpy.finfo(getattr(numpy, 'float64')).max]]*3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
                                        [['']*len(name)]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
-                                          [numpy.iinfo(getattr(numpy, 'int32')).max]*len(spectrum)  ,
+                                          [numpy.iinfo(getattr(numpy, 'int32')).max]*len(spectrum),
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
-                                          [numpy.finfo(getattr(numpy, 'float64')).max]*len(spectrum)  ,
+                                          [numpy.finfo(getattr(numpy, 'float64')).max]*len(spectrum),
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
        
 
@@ -1311,7 +1334,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="1"/>
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -1325,7 +1348,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -1339,6 +1362,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        xml = self.setmycnf(xml)
         
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
@@ -1404,7 +1428,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT name, pid FROM device limit 6
             </query>
@@ -1418,7 +1442,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT name FROM device limit 6
             </query>
@@ -1434,7 +1458,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1451,7 +1475,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1463,7 +1487,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2"/>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1475,7 +1499,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2"/>
           <strategy mode="INIT"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1491,7 +1515,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1505,7 +1529,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="2" compression="true"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1520,7 +1544,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="3"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1534,7 +1558,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"  />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1548,7 +1572,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" compression="true" grows="3" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1559,7 +1583,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1571,7 +1595,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP" compression="true" rate="2" shuffle="false" grows="2" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1582,7 +1606,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="INIT" compression="true" grows="3" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1594,7 +1618,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="INIT" compression="true" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1606,7 +1630,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP" grows="2"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1622,7 +1646,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL" compression="true" rate="2" shuffle="false" grows="2" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1638,7 +1662,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1655,7 +1679,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
           </dimensions>
           <strategy mode="INIT"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1670,6 +1694,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+
+        xml = self.setmycnf(xml)
+
 
         cursor = self._mydb.cursor()
         cursor.execute("SELECT name, pid FROM device limit 6")
@@ -2132,10 +2159,10 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                        [[['' for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
-                                       [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub] for sub in pid]]*3 ,
+                                 [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32", 
-                                       [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for sub in pid]]*3, grows=2 ,
+                                 [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for sub in pid]]*3, grows=2 ,
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT", 
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,

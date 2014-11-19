@@ -402,9 +402,6 @@ class SimpleServer(PyTango.Device_4Impl):
 
 		#	Add your own code here
 
-		# writing encoded attributes not supported for PyTango 7.2.3
-#		self.attr_Scalar = []
-		attr.get_write_value(self.attr_ScalarEncoded)
 		self.attr_ScalarEncoded = attr.get_write_value()
 		print "Attribute value = ", self.attr_ScalarEncoded
 

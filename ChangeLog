@@ -1,3 +1,35 @@
+2014-10-29 Jan Kotanski <jankotan@gmail.com>
+	* adding common block to PyEval
+	* adding datasources into attributes
+	* tagged as 1.7.0
+
+2014-10-13 Jan Kotanski <jankotan@gmail.com>
+	* making work around for astor strangeness of add_class args
+	* cleaning the code
+	* tagged as 1.6.3
+
+2014-08-26 Jan Kotanski <jankotan@gmail.com>
+	* adding auto growing of fields
+	* tagged as 1.6.2
+
+2014-08-21 Jan Kotanski <jankotan@gmail.com>
+	* enables saving images and spectra in fields with larger dims
+	* tagged as 1.6.1
+
+2014-07-11 Jan Kotanski <jankotan@gmail.com>
+	* making python API more similar to Tango one:
+	* 	getNXFile -> getFile
+	* 	openNXFile -> openFile
+	* 	closeNXFile -> closeFile
+        * 	jsonRecord -> jsonrecord 
+        * 	xmlSettings -> xmlsettings
+        * 	numThreads -> numberOfThreads
+	* tagged as 1.6.0
+
+2014-07-10 Jan Kotanski <jankotan@gmail.com>
+	* adding reraising Tango exceptions
+	* tagged as 1.5.5
+
 2014-03-03 Jan Kotanski <jankotan@gmail.com>
 	* adding exception on rank missmatch
 	* tagged as 1.5.4

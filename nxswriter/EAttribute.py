@@ -30,9 +30,9 @@ from .FElement import FElement
 from . import Streams
 
 
+## attribute tag element
+class EAttribute(FElement):
 
-## attribute tag element        
-class EAttribute(FElement):        
     ## constructor
     # \param attrs dictionary of the tag attributes
     # \param last the last element from the stack
@@ -49,38 +49,36 @@ class EAttribute(FElement):
         ## trigger for asynchronous writting
         self.trigger = None
 
-
     ## stores the tag content
     # \param xml xml setting
     # \param globalJSON global JSON string
     # \returns (strategy,trigger)
-    def store(self, xml = None, globalJSON = None):
+    def store(self, xml=None, globalJSON=None):
 
-        if "name" in self._tagAttrs.keys(): 
+        if "name" in self._tagAttrs.keys():
             self.name = self._tagAttrs["name"]
-            if "type" in self._tagAttrs.keys() :
+            if "type" in self._tagAttrs.keys():
                 tp = self._tagAttrs["type"]
-            else:        
+            else:
                 tp = "NX_CHAR"
-                
-            if tp == "NX_CHAR":    
+
+            if tp == "NX_CHAR":
                 shape = self._findShape(self.rank, self.lengths)
             else:
-                shape = self._findShape(self.rank, self.lengths, 
-                                        extends= True, checkData = True)
-            val = ("".join(self.content)).strip().encode()   
+                shape = self._findShape(self.rank, self.lengths,
+                                        extends=True, checkData=True)
+            val = ("".join(self.content)).strip().encode()
             if not shape:
                 self.last.tagAttributes[self.name] = (tp, val)
             else:
                 self.last.tagAttributes[self.name] = (tp, val, tuple(shape))
 
             if self.source:
-                if  self.source.isValid() :
+                if self.source.isValid():
                     return self.strategy, self.trigger
 
-
-    ## runner  
-    # \brief During its thread run it fetches the data from the source  
+    ## runner
+    # \brief During its thread run it fetches the data from the source
     def run(self):
         try:
             if self.name:
@@ -95,36 +93,38 @@ class EAttribute(FElement):
                     if not dh:
                         message = self.setMessage("Data without value")
                         self.error = message
-                    elif not hasattr(self.h5Object,'shape'):
+                    elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        print >> sys.stderr , "Group::run() - %s " % message[0]
+                        print >> sys.stderr, "Group::run() - %s " % message[0]
                         self.error = message
                     else:
                         arr = dh.cast(self.h5Object.dtype)
-                        
+
                         if self.h5Object.dtype != "string" \
                                 or len(self.h5Object.shape) == 0:
                             if self.h5Object.dtype == "string" \
-                                    and len(dh.shape)>0 and dh.shape[0] ==1 \
+                                    and len(dh.shape) > 0 \
+                                    and dh.shape[0] == 1 \
                                     and type(arr).__name__ != "str":
                                 self.h5Object.value = arr[0]
                             else:
                                 self.h5Object.value = arr
-        
+
                         else:
                             ## pniio does not support this case
                             self.h5Object.value = arr
                             if Streams.log_error:
                                 print >> Streams.log_error, \
                                     "EAttribute::run() - "\
-                                    "Storing multi-dimension string attributes"\
+                                    "Storing multi-dimension "\
+                                    "string attributes"\
                                     " not supported by pniio"
-                            raise Exception("Storing multi-dimension string "\
-                                                "attributes not supported "\
-                                                "by pniio")
+                            raise Exception("Storing multi-dimension string "
+                                            "attributes not supported "
+                                            "by pniio")
         except:
-            message = self.setMessage( sys.exc_info()[1].__str__()  )
-            print >> sys.stderr , "Group::run() - %s " % message[0]
+            message = self.setMessage(sys.exc_info()[1].__str__())
+            print >> sys.stderr, "Group::run() - %s " % message[0]
             self.error = message
         #            self.error = sys.exc_info()
         finally:
@@ -140,14 +140,13 @@ class EAttribute(FElement):
                 print >> sys.stderr, "Group::run() - ERROR", \
                     str(self.error)
 
-
-    ## fills object with maximum value            
-    # \brief It fills object or an extend part of object by default value 
+    ## fills object with maximum value
+    # \brief It fills object or an extend part of object by default value
     def __fillMax(self):
         if self.name and not self.h5Object:
             self.h5Object = self.last.h5Attribute(self.name)
         shape = list(self.h5Object.shape)
-        
+
         nptype = self.h5Object.dtype
         value = ''
 
@@ -158,29 +157,25 @@ class EAttribute(FElement):
                 try:
                     value = numpy.asscalar(
                         numpy.finfo(getattr(numpy, nptype)).max)
-                except:    
+                except:
                     value = 0
         else:
             nptype = "str"
 
-        if shape and  len(shape) > 0:
+        if shape and len(shape) > 0:
             arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
         else:
             arr = value
 
-
         self.h5Object.value = arr
-        
-            
-            
 
     ## marks the field as failed
-    # \brief It marks the field as failed            
-    def markFailed(self):          
+    # \brief It marks the field as failed
+    def markFailed(self):
         field = self._lastObject()
         if field:
-            field.attr("nexdatas_canfail","string").value = "FAILED"
+            field.attr("nexdatas_canfail", "string").value = "FAILED"
             if Streams.log_info:
                 print >> Streams.log_info, \
                     "EAttribute::markFailed() - "\
@@ -188,6 +183,4 @@ class EAttribute(FElement):
                     (self.h5Object.name, field.name)
                 print >> Streams.log_info, \
                     "EAttribute::markFailed() - marked as failed  "
-            self.__fillMax()    
-
-
+            self.__fillMax()

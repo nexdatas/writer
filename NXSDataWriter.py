@@ -25,4 +25,3 @@ import sys
 import nxswriter
 
 nxswriter.run(sys.argv)
-

@@ -28,11 +28,10 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
 
-
 ## NeXuS runnable tag element
-# tag element corresponding to one of H5 objects 
+# tag element corresponding to one of H5 objects
 class FElement(Element):
-    
+
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
@@ -40,45 +39,43 @@ class FElement(Element):
     # \param h5object H5 file object
     def __init__(self, name, attrs, last, h5object=None):
         Element.__init__(self, name, attrs, last)
-        ## stored H5 file object 
+        ## stored H5 file object
         self.h5Object = h5object
-        ## data source    
+        ## data source
         self.source = None
         ## notification of error in the run method
         self.error = None
         ##  flag for devices for which is allowed to failed
         self.canfail = False
 
-    ## runner  
-    # \brief During its thread run it fetches the data from the source  
+    ## runner
+    # \brief During its thread run it fetches the data from the source
     def run(self):
         if self.source:
             self.source.getData()
-            
 
     ## recalculates shape
     # \param dsShape origin shape of the object
     # \param rank rank of the object
     # \param extends If True extends the shape up to rank value
-    # \param exDim grows growing dimension + 1        
+    # \param exDim grows growing dimension + 1
     # \param extraD if the object grows
     # \returns shape of the  h5 field
     @classmethod
-    def _reshape(cls, dsShape, rank, extends, extraD, exDim):        
+    def _reshape(cls, dsShape, rank, extends, extraD, exDim):
         shape = []
-        if dsShape:    
+        if dsShape:
             for s in dsShape:
                 if s and extends:
                     shape.append(s)
-                elif not extends and s  and s > 0:
+                elif not extends and s and s > 0:
                     shape.append(s)
-    
+
             while extends and len(shape) < int(rank):
                 shape.append(0)
             if extraD:
-                shape.insert(exDim-1, 0)    
-        return shape       
-
+                shape.insert(exDim - 1, 0)
+        return shape
 
     ## fetches shape from value and rank
     # \param rank rank of the object
@@ -87,76 +84,74 @@ class FElement(Element):
     def __fetchShape(cls, value, rank):
         if not rank or int(rank) == 0:
             return [1]
-        elif  int(rank) == 1:
+        elif int(rank) == 1:
             spec = value.split()
             return [len(spec)]
         elif int(rank) == 2:
             lines = value.split("\n")
-            image = [ln.split() for ln in lines ]
+            image = [ln.split() for ln in lines]
             return [len(image), len(image[0])]
-        else:    
+        else:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "FElement::__fetchShape() "\
                     "- Case with not supported rank = %s" \
                     % rank
 
-            raise XMLSettingSyntaxError, \
-                "Case with not supported rank = %s" % rank
+            raise XMLSettingSyntaxError(
+                "Case with not supported rank = %s" % rank)
 
-    # provides growing dimension 
-    # \param grows growing dimension    
+    # provides growing dimension
+    # \param grows growing dimension
     # \param extraD if the object grows
     # \returns growing dimension
-    @classmethod    
-    def _getExtra(cls, grows, extraD = False):    
+    @classmethod
+    def _getExtra(cls, grows, extraD=False):
         if extraD:
             if grows and grows > 1:
-                exDim = grows  
+                exDim = grows
             else:
                 exDim = 1
         else:
             exDim = 0
-        return exDim    
-
-
+        return exDim
 
     ## creates shape object from rank and lengths variables
     # \param rank rank of the object
-    # \param lengths dictionary with dimensions as a string data , 
+    # \param lengths dictionary with dimensions as a string data ,
     #    e.g. {"1":"34","2":"40"}
     # \param extraD if the object grows
-    # \param grows growing dimension        
+    # \param grows growing dimension
     # \param extends If True extends the shape up to rank value
-    # \raise XMLSettingSyntaxError if shape cannot be found      
+    # \raise XMLSettingSyntaxError if shape cannot be found
     # \returns shape of the object
-    def _findShape(self, rank, lengths=None, extraD = False, 
-                   grows = None, extends = False, checkData=False):
+    def _findShape(self, rank, lengths=None, extraD=False,
+                   grows=None, extends=False, checkData=False):
         shape = []
         exDim = self._getExtra(grows, extraD)
-        if  int(rank) > 0:
+        if int(rank) > 0:
             try:
                 for i in range(int(rank)):
-                    si = str(i+1)
+                    si = str(i + 1)
                     if lengths and si in lengths.keys() \
                             and lengths[si] is not None:
                         if int(lengths[si]) > 0:
                             shape.append(int(lengths[si]))
                     else:
-                        raise XMLSettingSyntaxError, "Dimensions not defined"
+                        raise XMLSettingSyntaxError("Dimensions not defined")
                 if len(shape) < int(rank):
-                    raise XMLSettingSyntaxError, "Too small dimension number"
-                        
+                    raise XMLSettingSyntaxError("Too small dimension number")
+
                 if extraD:
-                    shape.insert(exDim-1, 0)    
+                    shape.insert(exDim - 1, 0)
             except:
-                val = ("".join(self.content)).strip().encode()   
+                val = ("".join(self.content)).strip().encode()
                 found = False
                 if checkData and self.source and self.source.isValid():
                     data = self.source.getData()
-                    if isinstance(data, dict):                        
+                    if isinstance(data, dict):
                         dh = DataHolder(**data)
-                        shape = self._reshape(dh.shape, rank, extends, 
+                        shape = self._reshape(dh.shape, rank, extends,
                                                extraD, exDim)
                         if shape is not None:
                             found = True
@@ -165,20 +160,19 @@ class FElement(Element):
                     shape = self.__fetchShape(val, rank)
                     if shape is not None:
                         found = True
-                  
+
                 if not found:
                     nm = "unnamed"
                     if "name" in self._tagAttrs.keys():
                         nm = self._tagAttrs["name"] + " "
-                    raise XMLSettingSyntaxError, \
-                        "Wrongly defined %s shape: %s"% \
-                        (nm, str(self.source) if self.source else val) 
-                
-        elif extraD:            
+                    raise XMLSettingSyntaxError(
+                        "Wrongly defined %s shape: %s" %
+                        (nm, str(self.source) if self.source else val))
+
+        elif extraD:
             shape = [0]
 
         return shape
-
 
     ## creates the error message
     # \param exceptionMessage additional message of exception
@@ -187,23 +181,22 @@ class FElement(Element):
             name = self.h5Object.path
         elif hasattr(self.h5Object, "name"):
             name = self.h5Object.name
-        else:    
+        else:
             name = "unnamed object"
         if self.source:
             dsource = str(self.source)
         else:
             dsource = "unknown datasource"
-            
-            
-        message = ("Data for %s not found. DATASOURCE:%s" \
-                       % (name, dsource), exceptionMessage )
+
+        message = ("Data for %s not found. DATASOURCE:%s"
+                   % (name, dsource), exceptionMessage)
         return message
 
 
 ## NeXuS runnable tag element with attributes
 # tag element corresponding to one of H5 objects with attributes
 class FElementWithAttr(FElement):
-    
+
     ## constructor
     # \param name tag name
     # \param attrs dictionary of the tag attributes
@@ -215,32 +208,31 @@ class FElementWithAttr(FElement):
         self.tagAttributes = {}
         self.__h5Instances = {}
 
-
-    ## creates DataHolder with given rank and value   
-    # \param rank data rank    
+    ## creates DataHolder with given rank and value
+    # \param rank data rank
     # \param val data value
-    # \returns data holder    
-    @classmethod    
+    # \returns data holder
+    @classmethod
     def _setValue(cls, rank, val):
         dh = None
         if not rank or rank == 0:
             dh = DataHolder("SCALAR", val, "DevString", [1, 0])
-        elif  rank == 1:
+        elif rank == 1:
             spec = val.split()
-            dh = DataHolder("SPECTRUM", spec, "DevString", 
+            dh = DataHolder("SPECTRUM", spec, "DevString",
                             [len(spec), 0])
-        elif  rank == 2:
+        elif rank == 2:
             lines = val.split("\n")
-            image = [ln.split() for ln in lines ]
-            dh = DataHolder("IMAGE", image, "DevString", 
-                            [len(image),len(image[0])])
-        else:    
+            image = [ln.split() for ln in lines]
+            dh = DataHolder("IMAGE", image, "DevString",
+                            [len(image), len(image[0])])
+        else:
             if Streams.log_error:
                 print >> Streams.log_error, \
                     "FElement::_createAttributes() - "\
                     "Case with not supported rank = %s", rank
-            raise XMLSettingSyntaxError, \
-                "Case with not supported rank = %s", rank
+            raise XMLSettingSyntaxError(
+                "Case with not supported rank = %s", rank)
         return dh
 
     ## creates h5 attributes
@@ -248,21 +240,21 @@ class FElementWithAttr(FElement):
     #   stored in tagAttributes dictionary
     def _createAttributes(self):
         for key in self.tagAttributes.keys():
-            if key not in ["name","type"]:
+            if key not in ["name", "type"]:
                 if len(self.tagAttributes[key]) < 3:
                     self.__h5Instances[key.encode()] = self.h5Object.attr(
-                        key.encode(), 
+                        key.encode(),
                         NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
-                        "SCALAR", self.tagAttributes[key][1].strip().encode(), 
-                        "DevString", [1,0])
+                        "SCALAR", self.tagAttributes[key][1].strip().encode(),
+                        "DevString", [1, 0])
                     self.__h5Instances[key.encode()].value = \
                         dh.cast(self.__h5Instances[key.encode()].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
                     self.__h5Instances[key.encode()] = self.h5Object.attr(
-                        key.encode(), 
-                        NTP.nTnp[self.tagAttributes[key][0]].encode(), 
+                        key.encode(),
+                        NTP.nTnp[self.tagAttributes[key][0]].encode(),
                         shape)
                     val = self.tagAttributes[key][1].strip().encode()
                     if val:
@@ -270,11 +262,9 @@ class FElementWithAttr(FElement):
                         dh = self._setValue(rank, val)
                         self.__h5Instances[key.encode()].value = \
                             dh.cast(self.__h5Instances[key.encode()].dtype)
-                    
 
     ## provides attribute h5 object
     # \param name attribute name
-    # \returns instance of the attribute object if created            
+    # \returns instance of the attribute object if created
     def h5Attribute(self, name):
         return self.__h5Instances.get(name)
-

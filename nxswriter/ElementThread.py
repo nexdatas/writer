@@ -41,7 +41,7 @@ class ElementThread(Thread):
     ## runner
     # \brief It runs the defined thread
     def run(self):
-        full = True    
+        full = True
         while full:
             try:
                 elem = self.__queue.get(block=False)
@@ -50,7 +50,4 @@ class ElementThread(Thread):
                     elem.run()
 
             except Queue.Empty:
-                full = False    
-                
-
-
+                full = False

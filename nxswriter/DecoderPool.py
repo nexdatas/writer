@@ -24,6 +24,7 @@
 import struct
 import numpy
 
+
 ## UTF8 decoder
 class UTF8decoder(object):
 
@@ -36,15 +37,14 @@ class UTF8decoder(object):
         self.format = None
         ## data type
         self.dtype = None
-        
+
         ## image data
         self.__value = None
         ## header and image data
         self.__data = None
 
-
     ## loads encoded data
-    # \param data encoded data    
+    # \param data encoded data
     def load(self, data):
         self.__data = data
         self.format = data[0]
@@ -55,18 +55,15 @@ class UTF8decoder(object):
     # \returns the data shape if data was loaded
     def shape(self):
         return [1, 0]
-        
-
 
     ## provides the decoded data
     # \returns the decoded data if data was loaded
-    def decode(self):        
+    def decode(self):
         if not self.__data:
             return
         if not self.__value:
             self.__value = self.__data[1]
         return self.__value
-
 
 
 ## INT decoder
@@ -81,20 +78,19 @@ class UINT32decoder(object):
         self.format = None
         ## data type
         self.dtype = None
-        
+
         ## image data
         self.__value = None
         ## header and image data
         self.__data = None
 
-
     ## loads encoded data
-    # \param data encoded data    
+    # \param data encoded data
     def load(self, data):
-        if not hasattr(data,"__iter__"):
-            raise ValueError, "Wrong Data Format"
+        if not hasattr(data, "__iter__"):
+            raise ValueError("Wrong Data Format")
         if len(data[1]) % 4:
-            raise ValueError, "Wrong encoded UINT32 data length"
+            raise ValueError("Wrong encoded UINT32 data length")
         self.__data = data
         self.format = data[0]
         self.__value = None
@@ -104,24 +100,20 @@ class UINT32decoder(object):
     # \returns the data shape if data was loaded
     def shape(self):
         if self.__data:
-            return [len(self.__data[1])/4, 0]
-        
-
+            return [len(self.__data[1]) / 4, 0]
 
     ## provides the decoded data
     # \returns the decoded data if data was loaded
-    def decode(self):        
+    def decode(self):
         if not self.__data:
             return
         if len(self.__data[1]) % 4:
-            raise ValueError, "Wrong encoded UINT32 data length"
+            raise ValueError("Wrong encoded UINT32 data length")
         if not self.__value:
             self.__value = numpy.array(
-                struct.unpack('I'*(len(self.__data[1])/4), self.__data[1]), 
-                dtype=self.dtype).reshape(len(self.__data[1])/4)
+                struct.unpack('I' * (len(self.__data[1]) / 4), self.__data[1]),
+                dtype=self.dtype).reshape(len(self.__data[1]) / 4)
         return self.__value
-
-
 
 
 ## VIDEO IMAGE LIMA decoder
@@ -136,7 +128,7 @@ class VDEOdecoder(object):
         self.format = None
         ## data type
         self.dtype = None
-        
+
         ## image data
         self.__value = None
         ## header and image data
@@ -146,22 +138,19 @@ class VDEOdecoder(object):
         ## header data
         self.__header = {}
         ## format modes
-        self.__formatID = {0:'B', 1:'H', 2:'I', 3:'Q'}
+        self.__formatID = {0: 'B', 1: 'H', 2: 'I', 3: 'Q'}
         ## dtype modes
-        self.__dtypeID = {0:'uint8', 1:'uint16', 2:'uint32', 3:'uint64'}
-
+        self.__dtypeID = {0: 'uint8', 1: 'uint16', 2: 'uint32', 3: 'uint64'}
 
     ## loads encoded data
-    # \param data encoded data    
+    # \param data encoded data
     def load(self, data):
         self.__data = data
         self.format = data[0]
-        self._loadHeader(data[1][:struct.calcsize(self.__headerFormat)])        
+        self._loadHeader(data[1][:struct.calcsize(self.__headerFormat)])
         self.__value = None
-        
 
-
-    ## loads the image header    
+    ## loads the image header
     # \param headerData buffer with header data
     def _loadHeader(self, headerData):
         hdr = struct.unpack(self.__headerFormat, headerData)
@@ -175,7 +164,7 @@ class VDEOdecoder(object):
         self.__header['endianness'] = hdr[6]
         self.__header['headerSize'] = hdr[7]
         self.__header['padding'] = hdr[7:]
-        
+
         self.dtype = self.__dtypeID[self.__header['imageMode']]
 
     ## provides the data shape
@@ -183,12 +172,10 @@ class VDEOdecoder(object):
     def shape(self):
         if self.__header:
             return [self.__header['width'], self.__header['height']]
-        
-
 
     ## provides the decoded data
     # \returns the decoded data if data was loaded
-    def decode(self):        
+    def decode(self):
         if not self.__header or not self.__data:
             return
         if not self.__value:
@@ -196,90 +183,76 @@ class VDEOdecoder(object):
             dformat = self.__formatID[self.__header['imageMode']]
             fSize = struct.calcsize(dformat)
             self.__value = numpy.array(
-                struct.unpack(dformat*(len(image)/fSize), image), 
+                struct.unpack(dformat * (len(image) / fSize), image),
                 dtype=self.dtype).reshape(self.__header['width'],
                                           self.__header['height'])
         return self.__value
 
 
-
-
 ## Decoder pool
-class DecoderPool(object):        
-
+class DecoderPool(object):
 
     ## constructor
-    # \brief It creates know decoders    
-    # \param configJSON string with decoders    
-    def __init__(self, configJSON = None):
-        self.__knowDecoders = { 
-            "LIMA_VIDEO_IMAGE":VDEOdecoder, 
-            "UTF8":UTF8decoder , 
-            "UINT32":UINT32decoder } 
+    # \brief It creates know decoders
+    # \param configJSON string with decoders
+    def __init__(self, configJSON=None):
+        self.__knowDecoders = {
+            "LIMA_VIDEO_IMAGE": VDEOdecoder,
+            "UTF8": UTF8decoder,
+            "UINT32": UINT32decoder}
         self.__pool = {}
 
         self.__createDecoders()
-        self.__appendUserDecoders(configJSON)
-
+        self.appendUserDecoders(configJSON)
 
     ## loads user decoders
-    # \param configJSON string with decoders    
-    def __appendUserDecoders(self, configJSON):
+    # \param configJSON string with decoders
+    def appendUserDecoders(self, configJSON):
         if configJSON and 'decoders' in configJSON.keys() \
-                and  hasattr(configJSON['decoders'],'keys'):
+                and hasattr(configJSON['decoders'], 'keys'):
             for dk in configJSON['decoders'].keys():
                 pkl = configJSON['decoders'][dk].split(".")
-                dec =  __import__(".".join(pkl[:-1]), globals(), 
-                                  locals(), pkl[-1])  
+                dec = __import__(".".join(pkl[:-1]), globals(),
+                                  locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
-            
 
     ## creates know decoders
-    # \brief It calls constructor of know decoders    
+    # \brief It calls constructor of know decoders
     def __createDecoders(self):
         for dk in self.__knowDecoders.keys():
             self.__pool[dk] = self.__knowDecoders[dk]()
 
-
-            
-    ## checks it the decoder is registered        
+    ## checks it the decoder is registered
     # \param decoder the given decoder
-    # \returns True if it the decoder is registered        
+    # \returns True if it the decoder is registered
     def hasDecoder(self, decoder):
         return True if decoder in self.__pool.keys() else False
 
-
-    ## checks it the decoder is registered        
+    ## checks it the decoder is registered
     # \param decoder the given decoder
-    # \returns True if it the decoder is registered        
+    # \returns True if it the decoder is registered
     def get(self, decoder):
         if decoder in self.__pool.keys():
             return self.__pool[decoder]
 
-    
     ## adds additional decoder
     # \param name name of the adding decoder
     def pop(self, name):
         self.__pool.pop(name, None)
-
 
     ## adds additional decoder
     # \param name name of the adding decoder
     # \param decoder instance of the adding decoder
     # \returns name of decoder
     def append(self, decoder, name):
-        instance = decoder()  
+        instance = decoder()
         self.__pool[name] = instance
 
-        if not hasattr(instance,"load") or not hasattr(instance,"name") \
-                or not hasattr(instance,"shape") \
-                or not hasattr(instance,"decode") \
-                or not hasattr(instance,"dtype") \
-                or not hasattr(instance,"format"):
+        if not hasattr(instance, "load") or not hasattr(instance, "name") \
+                or not hasattr(instance, "shape") \
+                or not hasattr(instance, "decode") \
+                or not hasattr(instance, "dtype") \
+                or not hasattr(instance, "format"):
             self.pop(name)
-            return 
+            return
         return name
-
-
-
-        
