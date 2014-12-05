@@ -1,3 +1,11 @@
+2014-12-05 Jan Kotanski <jankotan@gmail.com>
+	* changing error message for link problems
+	* tagged as 1.7.2
+
+2014-12-02 Jan Kotanski <jankotan@gmail.com>
+	* enabling use of Tango attrs with different character sizes
+	* tagged as 1.7.1
+
 2014-10-29 Jan Kotanski <jankotan@gmail.com>
 	* adding common block to PyEval
 	* adding datasources into attributes

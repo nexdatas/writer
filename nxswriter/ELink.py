@@ -73,9 +73,11 @@ class ELink(FElement):
                         if Streams.log_error:
                             print >> Streams.log_error, \
                                 "ELink::__typesToNames() - "\
-                                "No %s in  groupTypes " % str(sgr[0])
+                                "Link creation problem: %s cannot be found" \
+                                % str(res + "/" + sgr[0])
                         raise XMLSettingSyntaxError(
-                            "No " + str(sgr[0]) + " in groupTypes ")
+                            "Link creation problem: %s cannot be found"
+                            % str(res + "/" + sgr[0]))
         res = res + "/" + sp[-1]
 
         return res

@@ -284,10 +284,11 @@ class TgGroup(object):
     def __fetchAttributes(cls, device):
         attr = device.attributes
         alist = device.proxy.get_attribute_list()
+        alist = [a.lower() for a in alist]
 
         errors = []
         for a in attr:
-            if a.encode() not in alist:
+            if a.encode().lower() not in alist:
                 errors.append((a, device.device))
         if errors:
             if Streams.log_error:
@@ -311,7 +312,8 @@ class TgGroup(object):
     @classmethod
     def __fetchAttribute(cls, proxy, member):
         alist = proxy.get_attribute_list()
-        if member.name in alist:
+        alist = [a.lower() for a in alist]
+        if member.name.lower() in alist:
             da = proxy.read_attribute(member.name.encode())
             member.setData(da)
 
@@ -321,7 +323,8 @@ class TgGroup(object):
     @classmethod
     def __fetchProperty(cls, proxy, member):
         plist = proxy.get_property_list('*')
-        if member.name.encode() in plist:
+        plist = [a.lower() for a in plist]
+        if member.name.encode().lower() in plist:
             da = proxy.get_property(
                 member.name.encode())[member.name.encode()]
             member.setData(da)
@@ -333,7 +336,8 @@ class TgGroup(object):
     def __fetchCommand(cls, proxy, member):
         clist = [cm.cmd_name
                  for cm in proxy.command_list_query()]
-        if member.name in clist:
+        clist = [a.lower() for a in clist]
+        if member.name.encode().lower() in clist:
             cd = proxy.command_query(member.name.encode())
             da = proxy.command_inout(member.name.encode())
             member.setData(da, cd)
@@ -524,15 +528,18 @@ class TgMember(object):
         self.reset()
         if self.memberType == "attribute":
             alist = proxy.get_attribute_list()
-            if self.name.encode() in alist:
+            alist = [a.lower() for a in alist]
+            if self.name.encode().lower() in alist:
                 self.__da = proxy.read_attribute(self.name.encode())
         elif self.memberType == "property":
             plist = proxy.get_property_list('*')
-            if self.name.encode() in plist:
+            plist = [a.lower() for a in plist]
+            if self.name.encode().lower() in plist:
                 self.__da = proxy.get_property(
                     self.name.encode())[self.name.encode()]
         elif self.memberType == "command":
             clist = [cm.cmd_name for cm in proxy.command_list_query()]
-            if self.name in clist:
+            clist = [a.lower() for a in clist]
+            if self.name.encode().lower() in clist:
                 self.__cd = proxy.command_query(self.name.encode())
                 self.__da = proxy.command_inout(self.name.encode())

@@ -538,6 +538,68 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_scalar_tl(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr1 = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True],
+            "ScalarUChar":[ "uint8", "DevUChar", 23],
+            "ScalarShort":[ "int16", "DevShort", -123],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234],
+            "ScalarLong":[ "int64", "DevLong", -124],
+            "ScalarULong":["uint64" , "DevULong", 234],
+            "ScalarLong64":[ "int64", "DevLong64", 234],
+            "ScalarULong64":[ "uint64", "DevULong64", 23L],
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTrue"],
+            }
+
+
+
+        arr2 = {
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+           }
+
+
+        arr3 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded":[ "string", "DevEncoded", 
+                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+           }
+
+        for k in arr1 :
+            self._simps.dp.write_attribute( k, arr1[k][2])
+            
+        arr = dict(arr1,**(arr2))
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k.lower()
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+        for k in arr3:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k.lower()
+            el.member.encoding = arr3[k][2][0]
+            dp = DecoderPool()
+            dt = el.setDecoders(dp)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
+
+
+
+
+
     ## getData test
     # \brief It tests default settings
     def test_getData_scalar_group(self):
@@ -617,6 +679,134 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
+            self.assertEqual(el2[k].setDataSources(pl), None)
+        
+
+        dt = el[k].getData()
+        dt = el2[k].getData()
+        for k in arr1b:
+            self._simps.dp.write_attribute( k, arr1b[k][2])
+        for k in arr1:
+            self._simps2.dp.write_attribute( k, arr1[k][2])
+
+        for k in arr:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+
+        for k in arrb:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", arrb[k][2],arrb[k][1],[1,0],None,None, arrb[k][3] if len(arrb[k])>3 else 0)
+
+        pl.counter = 2
+
+        for k in arr:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", arrb[k][2],arrb[k][1],[1,0],None,None, arrb[k][3] if len(arrb[k])>3 else 0)
+
+
+        for k in arrb:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, arr[k][3] if len(arr[k])>3 else 0)
+
+
+
+        for k in arr3:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.member.encoding = arr3[k][2][0]
+            dp = DecoderPool()
+            dt = el.setDecoders(dp)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
+
+
+
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_scalar_group_tl(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr1 = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True],
+            "ScalarUChar":[ "uint8", "DevUChar", 23],
+            "ScalarShort":[ "int16", "DevShort", -123],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234],
+            "ScalarLong":[ "int64", "DevLong", -124],
+            "ScalarULong":["uint64" , "DevULong", 234],
+            "ScalarLong64":[ "int64", "DevLong64", 234],
+            "ScalarULong64":[ "uint64", "DevULong64", 23L],
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTrue"],
+            }
+
+
+
+        arr1b = {
+            "ScalarBoolean":[ "bool", "DevBoolean", False],
+            "ScalarUChar":[ "uint8", "DevUChar", 13],
+            "ScalarShort":[ "int16", "DevShort", -233],
+            "ScalarUShort":[ "uint16", "DevUShort", 3114],
+            "ScalarLong":[ "int64", "DevLong", -144],
+            "ScalarULong":["uint64" , "DevULong", 134],
+            "ScalarLong64":[ "int64", "DevLong64", 214],
+            "ScalarULong64":[ "uint64", "DevULong64", 14L],
+            "ScalarFloat":[ "float32", "DevFloat", 11.133, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.111173e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTsdf"],
+            }
+
+
+
+        arr2 = {
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+           }
+
+
+        arr3 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded":[ "string", "DevEncoded", 
+                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+           }
+
+        counter =  self.__rnd.randint(-2, 10)
+
+        for k in arr1 :
+            self._simps.dp.write_attribute( k, arr1[k][2])
+        for k in arr1b:
+            self._simps2.dp.write_attribute( k, arr1b[k][2])
+            
+        arr = dict(arr1,**(arr2))
+        arrb = dict(arr1b,**(arr2))
+
+        pl = pool()
+        pl.counter = 1
+        el = {}
+        el2 = {}
+        group = "CORE"
+        group2 = "CORE2"
+        for k in arr:
+            el[k] = TangoSource()
+            el[k].group = group
+            el[k].device = 'stestp09/testss/s1r228'
+            el[k].member.memberType = 'attribute'
+            el[k].member.name = k.lower()
+            self.assertEqual(el[k].setDataSources(pl), None)
+
+        for k in arrb:
+            el2[k] = TangoSource()
+            el2[k].group = group2
+            el2[k].device = 'stestp09/testss/s2r228'
+            el2[k].member.memberType = 'attribute'
+            el2[k].member.name = k.lower()
             self.assertEqual(el2[k].setDataSources(pl), None)
         
 
@@ -1457,6 +1647,43 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_command_lt(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "GetShort":["ScalarShort", "int16", "DevShort", -123],
+            "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
+            "GetLong":["ScalarLong", "int64", "DevLong", -124],
+            "GetULong":["ScalarULong","uint64" , "DevULong", 234],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
+            "GetDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02,1e-14],
+            "GetString":["ScalarString", "string", "DevString", "MyTrue"],
+            }
+
+
+
+        for k in arr :
+            self._simps.dp.write_attribute(arr[k][0], arr[k][3])
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'command'
+            el.member.name = k.lower()
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+
+
 
 
     ## getData test
@@ -1525,6 +1752,119 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].device = 'stestp09/testss/s2r228'
             el2[k].member.memberType = 'command'
             el2[k].member.name = k
+            self.assertEqual(el2[k].setDataSources(pl), None)
+        
+
+        dt = el[k].getData()
+        dt = el2[k].getData()
+
+
+        for k in arr :
+            self._simps.dp.write_attribute(arrb[k][0], arrb[k][3])
+
+        for k in arrb:
+            self._simps2.dp.write_attribute(arr[k][0], arr[k][3])
+
+
+        for k in arr:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],
+                           None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+        for k in arrb:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", arrb[k][3],arrb[k][2],[1,0],
+                           None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+
+        pl.counter = 2
+
+        for k in arrb:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", arrb[k][3],arrb[k][2],[1,0],
+                           None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+
+
+        for k in arr:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],
+                           None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+
+
+
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_command_group_lt(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "GetShort":["ScalarShort", "int16", "DevShort", -123],
+            "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
+            "GetLong":["ScalarLong", "int64", "DevLong", -124],
+            "GetULong":["ScalarULong","uint64" , "DevULong", 234],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
+            "GetDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02,1e-14],
+            "GetString":["ScalarString", "string", "DevString", "MyTrue"],
+            }
+
+
+
+        arrb = {
+            "GetBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 3],
+            "GetShort":["ScalarShort", "int16", "DevShort", -113],
+            "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1114],
+            "GetLong":["ScalarLong", "int64", "DevLong", -121],
+            "GetULong":["ScalarULong","uint64" , "DevULong", 211],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 211],
+            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 13L],
+            "GetFloat":["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
+            "GetDouble":["ScalarDouble", "float64", "DevDouble", -1.116673e+02,1e-14],
+            "GetString":["ScalarString", "string", "DevString", "MyT11e"],
+            }
+
+
+
+        for k in arr :
+            self._simps.dp.write_attribute(arr[k][0], arr[k][3])
+
+        for k in arrb:
+            self._simps2.dp.write_attribute(arrb[k][0], arrb[k][3])
+
+
+
+        pl = pool()
+        pl.counter = 1
+        el = {}
+        el2 = {}
+        group = "CORE"
+        group2 = "CORE2"
+        for k in arr:
+            el[k] = TangoSource()
+            el[k].group = group
+            el[k].device = 'stestp09/testss/s1r228'
+            el[k].member.memberType = 'command'
+            el[k].member.name = k.lower()
+            self.assertEqual(el[k].setDataSources(pl), None)
+
+        for k in arrb:
+            el2[k] = TangoSource()
+            el2[k].group = group2
+            el2[k].device = 'stestp09/testss/s2r228'
+            el2[k].member.memberType = 'command'
+            el2[k].member.name = k.lower()
             self.assertEqual(el2[k].setDataSources(pl), None)
         
 
@@ -1805,6 +2145,127 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_dev_prop_group_lt(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "DeviceShort":["ScalarShort", "int16", "DevShort", -113],
+            "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 1134],
+            "DeviceLong":["ScalarLong", "int64", "DevLong", -111],
+            "DeviceULong":["ScalarULong","uint64" , "DevULong", 1134],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+#            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-07],
+#            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.456673e+02, 1e-14],
+            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234],
+            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.45e+02],
+            "DeviceString":["ScalarString", "string", "DevString", "MyTrue"],
+            }
+
+
+
+        arrb = {
+            "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", False],
+#            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 11],
+            "DeviceShort":["ScalarShort", "int16", "DevShort", -11],
+            "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 114],
+            "DeviceLong":["ScalarLong", "int64", "DevLong", -121],
+            "DeviceULong":["ScalarULong","uint64" , "DevULong", 214],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 214],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 21],
+#            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134, 1e-07],
+#            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.416673e+02, 1e-14],
+            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 11.134],
+            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -1.41e+02],
+            "DeviceString":["ScalarString", "string", "DevString", "M11rue"],
+            }
+
+        prop = self._simps.dp.get_property(arr.keys())
+        for k in prop.keys():
+            prop[k] = [arr[k][3]]
+        self._simps.dp.put_property(prop)
+
+
+        prop = self._simps2.dp.get_property(arrb.keys())
+        for k in prop.keys():
+            prop[k] = [arrb[k][3]]
+        self._simps2.dp.put_property(prop)
+
+
+
+
+        pl = pool()
+        pl.counter = 1
+        el = {}
+        el2 = {}
+        group = "CORE"
+        group2 = "CORE2"
+        for k in arr:
+            el[k] = TangoSource()
+            el[k].group = group
+            el[k].device = 'stestp09/testss/s1r228'
+            el[k].member.memberType = 'property'
+            el[k].member.name = k.lower()
+            self.assertEqual(el[k].setDataSources(pl), None)
+
+        for k in arrb:
+            el2[k] = TangoSource()
+            el2[k].group = group2
+            el2[k].device = 'stestp09/testss/s2r228'
+            el2[k].member.memberType = 'property'
+            el2[k].member.name = k.lower()
+            self.assertEqual(el2[k].setDataSources(pl), None)
+        
+
+        dt = el[k].getData()
+        dt = el2[k].getData()
+
+        prop = self._simps.dp.get_property(arrb.keys())
+        for k in prop.keys():
+            prop[k] = [arrb[k][3]]
+        self._simps.dp.put_property(prop)
+
+
+
+        prop = self._simps2.dp.get_property(arr.keys())
+        for k in prop.keys():
+            prop[k] = [arr[k][3]]
+        self._simps2.dp.put_property(prop)
+
+        for k in arr:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", str(arr[k][3]),
+                           'DevString', [1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+        for k in arrb:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", str(arrb[k][3]),
+                           'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+
+
+        pl.counter = 2
+
+        for k in arrb:
+            dt = el[k].getData()
+            self.checkData(dt,"SCALAR", str(arrb[k][3]),
+                           'DevString',[1,0],None,None, arrb[k][4] if len(arrb[k])>4 else 0)
+
+
+
+        for k in arr:
+            dt = el2[k].getData()
+            self.checkData(dt,"SCALAR", str(arr[k][3]),
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
 
     ## getData test
     # \brief It tests default settings
@@ -1962,6 +2423,45 @@ class TangoSourceTest(unittest.TestCase):
             el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'property'
             el.member.name = k
+            dt = el.getData()
+            dp = PyTango.DeviceProxy(el.device)  
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
+            self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
+                           'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
+
+
+
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_dev_prop_lt(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr = {
+            "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
+#            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            "DeviceShort":["ScalarShort", "int16", "DevShort", -123],
+            "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
+            "DeviceLong":["ScalarLong", "int64", "DevLong", -124],
+            "DeviceULong":["ScalarULong","uint64" , "DevULong", 234],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
+            "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234],
+            "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            "DeviceString":["ScalarString", "string", "DevString", "MyTrue"],
+            }
+
+
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'property'
+            el.member.name = k.lower()
             dt = el.getData()
             dp = PyTango.DeviceProxy(el.device)  
             self.assertTrue(ProxyHelper.wait(dp, 10000))

@@ -51,6 +51,9 @@ class TNObject(object):
             self.parent.children.append(self)
 
     ## get child by name or nxtype
+    # \param name group name
+    # \param nxtype nexus group type
+    # \returns child instance
     def child(self, name='', nxtype=''):
         if name:
             found = None
