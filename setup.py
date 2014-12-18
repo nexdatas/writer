@@ -57,7 +57,7 @@ SETUPDATA = dict(
     url="http://code.google.com/p/nexdatas/",
     packages=['nxswriter'],
     requires=REQUIRED,
-    scripts=['NXSDataWriter.py', 'NXSDataWriter'],
+    scripts=['NXSDataWriter'],
     long_description=read('README')
 )
 

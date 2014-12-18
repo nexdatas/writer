@@ -1,3 +1,7 @@
+2014-12-18 Jan Kotanski <jankotan@gmail.com>
+	* removing shell start-up file
+	* tagged as 1.7.3
+
 2014-12-05 Jan Kotanski <jankotan@gmail.com>
 	* changing error message for link problems
 	* tagged as 1.7.2
