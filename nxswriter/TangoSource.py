@@ -159,6 +159,7 @@ class TangoSource(DataSource):
                 "Tango record name not defined: %s" % xml)
         dv = dom.getElementsByTagName("device")
         device = None
+        client = False
         if dv and len(dv) > 0:
             device = dv[0].getAttribute("name") \
                 if dv[0].hasAttribute("name") else None
@@ -166,17 +167,19 @@ class TangoSource(DataSource):
                 if dv[0].hasAttribute("hostname") else None
             port = dv[0].getAttribute("port") \
                 if dv[0].hasAttribute("port") else None
-            self.group = dv[0].getAttribute("group") \
+            group = dv[0].getAttribute("group") \
                 if dv[0].hasAttribute("group") else None
             encoding = dv[0].getAttribute("encoding") \
                 if dv[0].hasAttribute("encoding") else None
             memberType = dv[0].getAttribute("member") \
                 if dv[0].hasAttribute("member") else None
-            client = dv[0].getAttribute("client") \
-                if dv[0].hasAttribute("client") else None
             if not memberType or memberType not in [
                 "attribute", "command", "property"]:
                 memberType = "attribute"
+            if group != '__CLIENT__':
+                self.group = group
+            else:
+                client = True
             self.member = TgMember(name, memberType, encoding)
         if not device:
             if Streams.log_error:

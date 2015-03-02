@@ -390,25 +390,25 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.memberType = None
         ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <device name='%s' client='true'/> </datasource>" % device)
+                           "<datasource> <device name='%s' group='__CLIENT__'/> </datasource>" % device)
 
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
         self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource> <record name='%s' client='true'/> </datasource>" % dname)
+                           "<datasource> <record name='%s' group='__CLIENT__'/> </datasource>" % dname)
 
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        self.myAssertRaise(DataSourceSetupError, ds.setup, "<datasource> <record/>  <device client='true'/> </datasource>")
+        self.myAssertRaise(DataSourceSetupError, ds.setup, "<datasource> <record/>  <device group='__CLIENT__'/> </datasource>")
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' client='true'/> </datasource>" % (dname,device))
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' group='__CLIENT__'/> </datasource>" % (dname,device))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.client, None)
@@ -421,7 +421,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' client='true'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" % 
                  (dname,device,ctype))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -435,7 +435,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' client='true'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" % 
                  (dname,device,'strange'))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -448,7 +448,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' client='true'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' group='__CLIENT__'/> </datasource>" % 
                  (dname,device,host))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -461,7 +461,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' client='true'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" % 
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
@@ -475,7 +475,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' client='true'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" % 
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
@@ -490,7 +490,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.memberType = None
         ds.member.encoding = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' client='true'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" % 
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -504,12 +504,12 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group= '%s' client='true'/> </datasource>" % 
-                 (dname,device,encoding, group))
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" % 
+                 (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
         self.assertEqual(ds.client, "%s:%s/%s/%s" %(host, port, device, dname.lower()))
-        self.assertEqual(ds.group, group)
+        self.assertEqual(ds.group, None)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, encoding)
 
