@@ -23,9 +23,7 @@
 
 from xml.dom import minidom
 
-from .Types import NTP
 from . import Streams
-
 from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
@@ -75,28 +73,5 @@ class ClientSource(DataSource):
     ## provides access to the data
     # \returns  dictionary with collected data
     def getData(self):
-        if self.__globalJSON and 'data' not in self.__globalJSON.keys():
-            self.__globalJSON = None
-
-        if self.__localJSON and 'data' not in self.__localJSON.keys():
-            self.__localJSON = None
-
-        rec = None
-        if self.__localJSON and 'data' in self.__localJSON \
-                and self.name in self.__localJSON['data']:
-            rec = self.__localJSON['data'][str(self.name)]
-        elif self.__globalJSON and 'data' in self.__globalJSON \
-                and self.name in self.__globalJSON['data']:
-            rec = self.__globalJSON['data'][str(self.name)]
-        else:
-            return
-        ntp = NTP()
-        rank, shape, pythonDType = ntp.arrayRankShape(rec)
-
-        if rank in NTP.rTf:
-            if shape is None:
-                shape = [1, 0]
-            return {"rank": NTP.rTf[rank],
-                    "value": rec,
-                    "tangoDType": NTP.pTt[pythonDType.__name__],
-                    "shape": shape}
+        return self._getJSONData(
+            self.name, self.__globalJSON, self.__localJSON)

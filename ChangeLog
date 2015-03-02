@@ -1,3 +1,7 @@
+2015-03-02 Jan Kotanski <jankotan@gmail.com>
+	* adding client attribute to tango datasources
+	* tagged as 1.8.0
+
 2014-12-18 Jan Kotanski <jankotan@gmail.com>
 	* removing shell start-up file
 	* tagged as 1.7.3

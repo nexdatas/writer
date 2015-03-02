@@ -116,14 +116,29 @@ class TangoSource(DataSource):
         ## device proxy
         self.__proxy = None
 
+        ## the current  static JSON object
+        self.__globalJSON = None
+        ## the current  dynamic JSON object
+        self.__localJSON = None
+
         ## decoder pool
         self.__decoders = None
+
+        self.client = None
 
     ## self-description
     # \returns self-describing string
     def __str__(self):
         return " TANGO Device %s : %s (%s)" % (
             self.device, self.member.name, self.member.memberType)
+
+    ## sets JSON string
+    # \brief It sets the currently used  JSON string
+    # \param globalJSON static JSON string
+    # \param localJSON dynamic JSON string
+    def setJSON(self, globalJSON, localJSON=None):
+        self.__globalJSON = globalJSON
+        self.__localJSON = localJSON
 
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
@@ -157,6 +172,8 @@ class TangoSource(DataSource):
                 if dv[0].hasAttribute("encoding") else None
             memberType = dv[0].getAttribute("member") \
                 if dv[0].hasAttribute("member") else None
+            client = dv[0].getAttribute("client") \
+                if dv[0].hasAttribute("client") else None
             if not memberType or memberType not in [
                 "attribute", "command", "property"]:
                 memberType = "attribute"
@@ -169,7 +186,7 @@ class TangoSource(DataSource):
             raise DataSourceSetupError(
                 "Tango device name not defined: %s" % xml)
 
-        if hostname and port:
+        if hostname and port and device:
             self.device = "%s:%s/%s" % (hostname.encode(),
                                     port.encode(), device.encode())
         elif device:
@@ -185,6 +202,16 @@ class TangoSource(DataSource):
                     % (self.device, xml)
             raise DataSourceSetupError(
                 "Cannot connect to: %s \ndefined by %s" % (self.device, xml))
+        elif hostname and port and device and client:
+            try:
+                host = self.__proxy.get_db_host().split(".")[0]
+            except:
+                print str(e)
+                host = hostname.encode().split(".")[0]
+            self.client = "%s:%s/%s/%s" % (
+                host, port.encode(),
+                device.encode(), name.lower()
+                )
 
     ## sets the used decoders
     # \param decoders pool to be set
@@ -194,6 +221,12 @@ class TangoSource(DataSource):
     ## data provider
     # \returns dictionary with collected data
     def getData(self):
+        if self.client:
+            res = self._getJSONData(
+                self.client,
+                self.__globalJSON, self.__localJSON)
+            if res:
+                return res
         if not PYTANGO_AVAILABLE:
             if Streams.log_error:
                 print >> Streams.log_error, \

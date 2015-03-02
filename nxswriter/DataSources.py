@@ -21,6 +21,8 @@
 
 """ Definitions of various datasources """
 
+from .Types import NTP
+
 
 ## Data source
 class DataSource(object):
@@ -62,3 +64,33 @@ class DataSource(object):
         return xml[start + 1:end].replace("&lt;", "<").\
             replace("&gt;", ">").replace("&quot;", "\"").\
             replace("&amp;", "&")
+
+    ## provides access to the data
+    # \returns  dictionary with collected data
+    @classmethod
+    def _getJSONData(cls, name, globalJSON, localJSON):
+        if globalJSON and 'data' not in globalJSON.keys():
+            globalJSON = None
+
+        if localJSON and 'data' not in localJSON.keys():
+            localJSON = None
+
+        rec = None
+        if localJSON and 'data' in localJSON \
+                and name in localJSON['data']:
+            rec = localJSON['data'][str(name)]
+        elif globalJSON and 'data' in globalJSON \
+                and name in globalJSON['data']:
+            rec = globalJSON['data'][str(name)]
+        else:
+            return
+        ntp = NTP()
+        rank, shape, pythonDType = ntp.arrayRankShape(rec)
+
+        if rank in NTP.rTf:
+            if shape is None:
+                shape = [1, 0]
+            return {"rank": NTP.rTf[rank],
+                    "value": rec,
+                    "tangoDType": NTP.pTt[pythonDType.__name__],
+                    "shape": shape}
