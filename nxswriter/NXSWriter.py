@@ -371,6 +371,9 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def OpenFile(self):
         print "In ", self.get_name(), "::OpenFile()"
 
+        state = self.get_state()
+        if state in [PyTango.DevState.OPEN]:
+            self.CloseFile()
         self.set_state(PyTango.DevState.RUNNING)
         self.errors = []
         try:
@@ -391,7 +394,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def is_OpenFile_allowed(self):
         if self.get_state() in [PyTango.DevState.OFF,
                                 PyTango.DevState.EXTRACT,
-                                PyTango.DevState.OPEN,
                                 PyTango.DevState.RUNNING]:
             return False
         return True
@@ -584,8 +586,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def CloseFile(self):
         print "In ", self.get_name(), "::CloseFile()"
         state = self.get_state()
-        if state in [PyTango.DevState.EXTRACT,
-                     PyTango.DevState.RUNNING]:
+        if state in [PyTango.DevState.EXTRACT]:
             self.CloseEntry()
         if state != PyTango.DevState.FAULT:
             state = PyTango.DevState.ON
