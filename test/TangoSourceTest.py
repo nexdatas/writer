@@ -853,6 +853,142 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_client_scalar_tango(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr1 = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True, "DevBoolean", False],
+            "ScalarUChar":[ "uint8", "DevUChar", 23, "DevLong64", 443],
+            "ScalarShort":[ "int16", "DevShort", -123, "DevLong64", 234],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234, "DevLong64", 23],
+            "ScalarLong":[ "int64", "DevLong", -124, "DevLong64", -23],
+            "ScalarULong":["uint64" , "DevULong", 234, "DevLong64", 23],
+            "ScalarLong64":[ "int64", "DevLong64", 234, "DevLong64",  -13],
+            "ScalarULong64":[ "uint64", "DevULong64", 23L, "DevLong64", 223L],
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,  "DevDouble", +2.456673e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
+            }
+
+
+
+        arr2 = {
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON, "DevState", PyTango._PyTango.DevState.ON],
+           }
+
+
+        arr3 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded":[ "string", "DevEncoded", 
+                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+           }
+
+        for k in arr1 :
+            self._simps.dp.write_attribute( k, arr1[k][2])
+            
+        arr = dict(arr1,**(arr2))
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, 
+                           arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                gjson = '{"data":{"tango://%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                gjson = '{"data":{"tango://%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                gjson = '{"data":{"tango://%s":%s}}' % (el.client, arr[k][4])
+            self.assertEqual(el.setJSON(json.loads(gjson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                ljson = '{"data":{"tango://%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                ljson = '{"data":{"tango://%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                ljson = '{"data":{"tango://%s":%s}}' % (el.client, arr[k][4])
+            gjson = '{}'
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                ljson = '{"data":{"tango://%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                ljson = '{"data":{"tango://%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                ljson = '{"data":{"tango://%s":%s}}' % (el.client, arr[k][4])
+            gjson = '{}'
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                gjson = '{"data":{"tango://%s":"%s"}}' % (el.client, arr[k][2])
+                ljson = '{"data":{"tango://%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                gjson = '{"data":{"tango://%s":%s}}' % (el.client, str(arr[k][2]).lower())
+                ljson = '{"data":{"tango://%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                gjson = '{"data":{"tango://%s":%s}}' % (el.client, arr[k][2])
+                ljson = '{"data":{"tango://%s":%s}}' % (el.client, arr[k][4])
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+
+        for k in arr3:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            el.member.encoding = arr3[k][2][0]
+            dp = DecoderPool()
+            dt = el.setDecoders(dp)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
+
+
+
 
 
 
