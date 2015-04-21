@@ -101,7 +101,6 @@ class TangoSource(DataSource):
     # \brief It cleans all member variables
     def __init__(self):
         DataSource.__init__(self)
-
         ## Tango device member
         self.member = TgMember(None)
         ## datasource tango group
@@ -225,9 +224,18 @@ class TangoSource(DataSource):
     # \returns dictionary with collected data
     def getData(self):
         if self.client:
-            res = self._getJSONData(
-                self.client,
-                self.__globalJSON, self.__localJSON)
+            res = None
+            try:
+                res = self._getJSONData(
+                    "tango://%s" % self.client,
+                    self.__globalJSON, self.__localJSON)
+            except:
+                try:
+                    res = self._getJSONData(
+                        self.client,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
             if res:
                 return res
         if not PYTANGO_AVAILABLE:
