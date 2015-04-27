@@ -440,8 +440,8 @@ class EField(FElementWithAttr):
                 elif len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
                 elif hasattr(arr, "__iter__") and type(arr).__name__ != 'str' \
-                            and len(arr) == 1:
-                        self.h5Object[self.h5Object.shape[0] - 1] = arr
+                        and len(arr) == 1:
+                    self.h5Object[self.h5Object.shape[0] - 1] = arr
                 else:
                     if Streams.log_error:
                         print >> Streams.log_error, \

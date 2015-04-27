@@ -1,3 +1,19 @@
+2015-04-21 Jan Kotanski <jankotan@gmail.com>
+	* adding support for tango:// prefix in __CLIENT__ TANGO datasources
+	* tagged as 1.8.2
+
+2015-04-07 Jan Kotanski <jankotan@gmail.com>
+	* adding closeFile to openFile if OPEN
+	* tagged as 1.8.1
+
+2015-03-05 Jan Kotanski <jankotan@gmail.com>
+	* adding __CLIENT__ group for  TANGO datasources
+	* tagged as 1.8.0
+
+2014-12-18 Jan Kotanski <jankotan@gmail.com>
+	* removing shell start-up file
+	* tagged as 1.7.3
+
 2014-12-05 Jan Kotanski <jankotan@gmail.com>
 	* changing error message for link problems
 	* tagged as 1.7.2

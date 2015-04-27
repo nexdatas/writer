@@ -54,10 +54,10 @@ SETUPDATA = dict(
     description=("Nexus Data writer implemented as a Tango Server"),
     license="GNU GENERAL PUBLIC LICENSE v3",
     keywords="writer Tango server nexus data",
-    url="http://code.google.com/p/nexdatas/",
+    url="https://github.com/jkotan/nexdatas/",
     packages=['nxswriter'],
     requires=REQUIRED,
-    scripts=['NXSDataWriter.py', 'NXSDataWriter'],
+    scripts=['NXSDataWriter'],
     long_description=read('README')
 )
 
