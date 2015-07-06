@@ -34,6 +34,7 @@ from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
 
+## Variables for PyEval datasource
 class Variables(object):
     pass
 

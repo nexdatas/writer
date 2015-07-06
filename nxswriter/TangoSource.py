@@ -122,7 +122,7 @@ class TangoSource(DataSource):
 
         ## decoder pool
         self.__decoders = None
-
+        ## client datasource for mixed CLIENT/TANGO mode
         self.client = None
 
     ## self-description

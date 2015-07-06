@@ -95,6 +95,7 @@ class EDim(Element):
         self.__index = None
         ## datasource
         self.source = None
+        ## tag content
         self.content = []
         if "index" in attrs.keys():
             self.__index = attrs["index"]
