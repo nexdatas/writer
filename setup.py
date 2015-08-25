@@ -22,7 +22,7 @@
 
 
 import os
-from distutils.core import setup
+from distutils.core import setup, Command
 
 ## package name
 NDTS = "nxswriter"
@@ -37,6 +37,25 @@ def read(fname):
     """ reading a file"""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
+## test command class
+class TestCommand(Command):
+
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys
+        import subprocess
+        errno = subprocess.call([sys.executable, 'test/runtest.py'])
+        raise SystemExit(errno)
+
+
 ## required files
 REQUIRED = [
     'numpy (>=1.5.0)',
@@ -49,7 +68,7 @@ SETUPDATA = dict(
     name="nexdatas",
     version=INDTS.__version__,
     author="Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, " 
+    author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, "
     + "halil.pasic@gmail.com",
     description=("Nexus Data writer implemented as a Tango Server"),
     license="GNU GENERAL PUBLIC LICENSE v3",
@@ -58,6 +77,7 @@ SETUPDATA = dict(
     packages=['nxswriter'],
     requires=REQUIRED,
     scripts=['NXSDataWriter'],
+    cmdclass={'test': TestCommand},
     long_description=read('README')
 )
 
