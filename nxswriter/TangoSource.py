@@ -231,7 +231,7 @@ class TangoSource(DataSource):
                     self.__globalJSON, self.__localJSON)
             except:
                 res = None
-            if not res:    
+            if not res:
                 try:
                     res = self._getJSONData(
                         self.client,
