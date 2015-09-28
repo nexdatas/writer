@@ -126,7 +126,7 @@ class TangoDataWriter(object):
 
     ## the json data string
     jsonrecord = property(__getJSON, __setJSON, __delJSON,
-                       doc='the json data string')
+                          doc='the json data string')
 
     ## get method for xmlsettings attribute
     # \returns value of jsonrecord

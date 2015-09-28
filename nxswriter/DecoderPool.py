@@ -213,7 +213,7 @@ class DecoderPool(object):
             for dk in configJSON['decoders'].keys():
                 pkl = configJSON['decoders'][dk].split(".")
                 dec = __import__(".".join(pkl[:-1]), globals(),
-                                  locals(), pkl[-1])
+                                 locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
 
     ## creates know decoders

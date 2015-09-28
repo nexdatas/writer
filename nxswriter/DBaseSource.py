@@ -48,7 +48,7 @@ try:
 except ImportError, e:
     print >> sys.stdout, "PGSQL not available: %s" % e
     if Streams.log_info:
-        print >> Streams.log_info,  "PGSQL not available: %s" % e
+        print >> Streams.log_info, "PGSQL not available: %s" % e
 
 try:
     import cx_Oracle
@@ -211,7 +211,7 @@ class DBaseSource(DataSource):
             cursor = db.cursor()
             cursor.execute(self.query)
             if not self.format or self.format == 'SCALAR':
-#                data = copy.deepcopy(cursor.fetchone())
+                #  data = copy.deepcopy(cursor.fetchone())
                 data = cursor.fetchone()
                 dh = {"rank": "SCALAR",
                       "value": data[0],
@@ -219,7 +219,7 @@ class DBaseSource(DataSource):
                       "shape": [1, 0]}
             elif self.format == 'SPECTRUM':
                 data = cursor.fetchall()
-#                data = copy.deepcopy(cursor.fetchall())
+                # data = copy.deepcopy(cursor.fetchall())
                 if len(data[0]) == 1:
                     ldata = list(el[0] for el in data)
                 else:
@@ -230,7 +230,7 @@ class DBaseSource(DataSource):
                       "shape": [len(ldata), 0]}
             else:
                 data = cursor.fetchall()
-#                data = copy.deepcopy(cursor.fetchall())
+                # data = copy.deepcopy(cursor.fetchall())
                 ldata = list(list(el) for el in data)
                 dh = {"rank": "IMAGE",
                       "value": ldata,

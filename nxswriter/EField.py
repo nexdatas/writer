@@ -196,7 +196,7 @@ class EField(FElementWithAttr):
                     (name.encode(), dtype.encode(), message)
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
-                    (name.encode(), dtype.encode(), message))
+                (name.encode(), dtype.encode(), message))
 
         return f
 
@@ -209,40 +209,42 @@ class EField(FElementWithAttr):
                     if hasattr(self._tagAttrs[key], "encode"):
                         try:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                    self._tagAttrs[key].strip().encode()
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                self._tagAttrs[key].strip().encode()
                         except:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                    NTP.convert[
-                                        str(self.h5Object.attr(key.encode()
-                                                               ).dtype)
-                                        ](self._tagAttrs[key].strip().encode())
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.convert[
+                                    str(self.h5Object.attr(
+                                        key.encode()
+                                    ).dtype)
+                            ](self._tagAttrs[key].strip().encode())
                     else:
                         try:
                             (self.h5Object.attr(
-                                    key.encode(), NTP.nTnp[NTP.aTn[key]
-                                                           ].encode())
+                                key.encode(), NTP.nTnp[
+                                    NTP.aTn[key]
+                                ].encode())
                              ).value = self._tagAttrs[key]
                         except:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())
                              ).value = \
-                             NTP.convert[str(self.h5Object.attr(
-                                         key.encode()).dtype)
-                                         ](self._tagAttrs[key])
+                                NTP.convert[str(self.h5Object.attr(
+                                    key.encode()).dtype)
+                            ](self._tagAttrs[key])
 
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
                     (self.h5Object.attr(
-                            key.encode(),
-                            NTP.nTnp[NTP.aTnv[key]].encode(),
-                            shape)
+                        key.encode(),
+                        NTP.nTnp[NTP.aTnv[key]].encode(),
+                        shape)
                      ).value = \
-                     numpy.array(self._tagAttrs[key])
+                        numpy.array(self._tagAttrs[key])
                 else:
                     (self.h5Object.attr(key.encode(), "string")).value = \
                         self._tagAttrs[key].strip().encode()
@@ -546,7 +548,7 @@ class EField(FElementWithAttr):
             for i in range(len(h5shape)):
                 if not self.__extraD or (
                     self.grows - 1 != i and
-                    not (i == 0 and self.grows == 0)):
+                        not (i == 0 and self.grows == 0)):
                     if shape[j] - h5shape[i] > 0:
                         self.h5Object.grow(i, shape[j] - h5shape[i])
                     elif not h5shape[i]:

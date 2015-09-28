@@ -81,11 +81,11 @@ class NTP(object):
     ## map of tag attribute types
     aTn = {"signal": "NX_INT", "axis": "NX_INT", "primary": "NX_INT32",
            "offset": "NX_INT", "stride": "NX_INT", "file_time": "NX_DATE_TIME",
-          "file_update_time": "NX_DATE_TIME", "restricts": "NX_INT",
-          "ignoreExtraGroups": "NX_BOOLEAN", "ignoreExtraFields": "NX_BOOLEAN",
-          "ignoreExtraAttributes": "NX_BOOLEAN", "minOccus": "NX_INT",
-           "maxOccus": "NX_INT"
-        }
+           "file_update_time": "NX_DATE_TIME", "restricts": "NX_INT",
+           "ignoreExtraGroups": "NX_BOOLEAN",
+           "ignoreExtraFields": "NX_BOOLEAN",
+           "ignoreExtraAttributes": "NX_BOOLEAN",
+           "minOccus": "NX_INT", "maxOccus": "NX_INT"}
 
     ## map of vector tag attribute types
     aTnv = {"vector": "NX_FLOAT"}

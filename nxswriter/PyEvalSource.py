@@ -174,7 +174,7 @@ class PyEvalSource(DataSource):
             rec = None
             with self.__lock:
                 exec(self.__script.strip(), {}, {
-                        "ds": ds, "commonblock": self.__common})
+                    "ds": ds, "commonblock": self.__common})
                 rec = copy.deepcopy(getattr(ds, self.__name))
         ntp = NTP()
         rank, shape, pythonDType = ntp.arrayRankShape(rec)

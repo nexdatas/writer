@@ -87,7 +87,7 @@ class CommandThread(Thread):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
     def __failed(self):
         with self.server.lock:
@@ -141,7 +141,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             PyTango.DevState.EXTRACT: "Entry Open",
             PyTango.DevState.RUNNING: "Writing ...",
             PyTango.DevState.FAULT: "Error",
-            }
+        }
         NXSDataWriter.init_device(self)
 
 #------------------------------------------------------------------
@@ -182,7 +182,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
         self.get_device_properties(self.get_device_class())
 
@@ -305,9 +305,9 @@ class NXSDataWriter(PyTango.Device_4Impl):
 #---- FileName attribute Write State Machine -----------------
     def is_FileName_write_allowed(self):
         if self.get_state() in [PyTango.DevState.OFF,
-                                 PyTango.DevState.EXTRACT,
-                                 PyTango.DevState.OPEN,
-                                 PyTango.DevState.RUNNING]:
+                                PyTango.DevState.EXTRACT,
+                                PyTango.DevState.OPEN,
+                                PyTango.DevState.RUNNING]:
             return False
         return True
 
@@ -388,7 +388,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
 #---- OpenFile command State Machine -----------------
     def is_OpenFile_allowed(self):
@@ -422,7 +422,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
 #---- OpenEntry command State Machine -----------------
     def is_OpenEntry_allowed(self):
@@ -456,7 +456,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
 #---- Record command State Machine -----------------
     def is_Record_allowed(self):
@@ -492,7 +492,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
 #---- CloseEntry command State Machine -----------------
     def is_CloseEntry_allowed(self):
@@ -603,7 +603,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
                 str(sys.exc_info()[2])
-                )
+            )
 
 #---- CloseFile command State Machine -----------------
     def is_CloseFile_allowed(self):
@@ -624,81 +624,81 @@ class NXSDataWriterClass(PyTango.DeviceClass):
 
     ##    Class Properties
     class_property_list = {
-        }
+    }
 
     ##    Device Properties
     device_property_list = {
         'NumberOfThreads':
-            [PyTango.DevLong,
-             "maximal number of threads",
-             [100]],
-        }
+        [PyTango.DevLong,
+         "maximal number of threads",
+         [100]],
+    }
 
     ##    Command definitions
     cmd_list = {
         'OpenFile':
-            [[PyTango.DevVoid, ""],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevVoid, ""]],
         'OpenEntry':
-            [[PyTango.DevVoid, ""],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevVoid, ""]],
         'Record':
-            [[PyTango.DevString, "JSON string with data"],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevString, "JSON string with data"],
+         [PyTango.DevVoid, ""]],
         'CloseEntry':
-            [[PyTango.DevVoid, ""],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevVoid, ""]],
         'OpenEntryAsynch':
-            [[PyTango.DevVoid, ""],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevVoid, ""]],
         'RecordAsynch':
-            [[PyTango.DevString, "JSON string with data"],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevString, "JSON string with data"],
+         [PyTango.DevVoid, ""]],
         'CloseEntryAsynch':
-            [[PyTango.DevVoid, ""],
-            [PyTango.DevVoid, ""]],
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevVoid, ""]],
         'CloseFile':
-            [[PyTango.DevVoid, ""],
-            [PyTango.DevVoid, ""]],
-        }
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevVoid, ""]],
+    }
 
     ##    Attribute definitions
     attr_list = {
         'XMLSettings':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'label':"XML Configuration",
-                'description':"An XML string with Nexus configuration.",
-                'Display level':PyTango.DispLevel.EXPERT,
-            }],
+        [[PyTango.DevString,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'label': "XML Configuration",
+             'description': "An XML string with Nexus configuration.",
+             'Display level': PyTango.DispLevel.EXPERT,
+        }],
         'JSONRecord':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'label':"JSON string with client data",
-                'description':"A JSON string with global client data.",
-                'Display level':PyTango.DispLevel.EXPERT,
-            }],
+        [[PyTango.DevString,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+            'label': "JSON string with client data",
+            'description': "A JSON string with global client data.",
+            'Display level': PyTango.DispLevel.EXPERT,
+        }],
         'FileName':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'label':"Output file with its path",
-                'description':"A name of H5 output file with its full path",
-            }],
+        [[PyTango.DevString,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'label': "Output file with its path",
+             'description': "A name of H5 output file with its full path",
+        }],
         'Errors':
-            [[PyTango.DevString,
-            PyTango.SPECTRUM,
-            PyTango.READ, 1000],
-            {
-                'label':"list of errors",
-                'description':"list of errors",
-            }],
-        }
+        [[PyTango.DevString,
+          PyTango.SPECTRUM,
+          PyTango.READ, 1000],
+         {
+             'label': "list of errors",
+             'description': "list of errors",
+        }],
+    }
 
 #------------------------------------------------------------------
 ##    NXSDataWriterClass Constructor

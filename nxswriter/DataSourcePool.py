@@ -56,7 +56,7 @@ class DataSourcePool(object):
             for dk in configJSON['datasources'].keys():
                 pkl = configJSON['datasources'][dk].split(".")
                 dec = __import__(".".join(pkl[:-1]),
-                                  globals(), locals(), pkl[-1])
+                                 globals(), locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
 
     ## checks it the datasource is registered

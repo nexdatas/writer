@@ -152,7 +152,7 @@ class FElement(Element):
                     if isinstance(data, dict):
                         dh = DataHolder(**data)
                         shape = self._reshape(dh.shape, rank, extends,
-                                               extraD, exDim)
+                                              extraD, exDim)
                         if shape is not None:
                             found = True
 

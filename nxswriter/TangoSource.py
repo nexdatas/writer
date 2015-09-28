@@ -173,7 +173,7 @@ class TangoSource(DataSource):
             memberType = dv[0].getAttribute("member") \
                 if dv[0].hasAttribute("member") else None
             if not memberType or memberType not in [
-                "attribute", "command", "property"]:
+                    "attribute", "command", "property"]:
                 memberType = "attribute"
             if group != '__CLIENT__':
                 self.group = group
@@ -190,7 +190,7 @@ class TangoSource(DataSource):
 
         if hostname and port and device:
             self.device = "%s:%s/%s" % (hostname.encode(),
-                                    port.encode(), device.encode())
+                                        port.encode(), device.encode())
         elif device:
             self.device = "%s" % (device.encode())
 
@@ -213,7 +213,7 @@ class TangoSource(DataSource):
             self.client = "%s:%s/%s/%s" % (
                 host, port.encode(),
                 device.encode(), name.lower()
-                )
+            )
 
     ## sets the used decoders
     # \param decoders pool to be set

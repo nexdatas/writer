@@ -228,7 +228,7 @@ class FieldArray(object):
                         for j in range(len(value[0][0])):
                             self.__fList[
                                 ir[i] * self.shape[2] + jr[j]
-                                ].__setitem__(kr[k], value[k][i][j])
+                            ].__setitem__(kr[k], value[k][i][j])
 
             elif rank == 2:
                 if len(kr) == 1:
@@ -237,44 +237,44 @@ class FieldArray(object):
                             if hasattr(value[i][j], "encode"):
                                 self.__fList[
                                     ir[i] * self.shape[2] + jr[j]
-                                    ][kr[0]] = value[i][j].encode()
+                                ][kr[0]] = value[i][j].encode()
                             else:
                                 self.__fList[
                                     ir[i] * self.shape[2] + jr[j]
-                                    ][kr[0]] = value[i][j]
+                                ][kr[0]] = value[i][j]
                 elif len(ir) == 1:
                     for k in range(len(value)):
                         for j in range(len(value[0])):
                             self.__fList[
                                 ir[0] * self.shape[2] + jr[j]
-                                ].__setitem__(kr[k], value[k][j])
+                            ].__setitem__(kr[k], value[k][j])
                 elif len(jr) == 1:
                     for k in range(len(value)):
                         for i in range(len(value[0])):
                             self.__fList[
                                 ir[i] * self.shape[2] + jr[0]
-                                ].__setitem__(kr[k], value[k][i])
+                            ].__setitem__(kr[k], value[k][i])
 
             elif rank == 1:
                 if len(kr) == 1 and len(ir) == 1:
                     for j in range(len(value)):
                         self.__fList[
                             ir[0] * self.shape[2] + jr[j]
-                            ].__setitem__(kr[0], value[j])
+                        ].__setitem__(kr[0], value[j])
                 if len(kr) == 1 and len(jr) == 1:
                     for i in range(len(value)):
                         self.__fList[
                             ir[i] * self.shape[2] + jr[0]
-                            ].__setitem__(kr[0], value[i])
+                        ].__setitem__(kr[0], value[i])
                 if len(ir) == 1 and len(jr) == 1:
                     for k in range(len(value)):
                         self.__fList[
                             ir[0] * self.shape[2] + jr[0]
-                            ].__setitem__(kr[k], value[k])
+                        ].__setitem__(kr[k], value[k])
             elif rank == 0:
                 self.__fList[
                     ir[0] * self.shape[2] + jr[0]
-                    ].__setitem__(kr[0], value)
+                ].__setitem__(kr[0], value)
 
     ## stores the field value
     # \param value the stored value

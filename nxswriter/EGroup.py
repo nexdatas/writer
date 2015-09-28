@@ -60,10 +60,10 @@ class EGroup(FElementWithAttr):
                         "or change the group name." % \
                         (gname, attrs["type"].encode())
                 raise XMLSettingSyntaxError(
-                        "The group '%s' of '%s' type cannot be created. \n"
-                        "Please remove the old file, change the file name "
-                        "or change the group name." %
-                        (gname, attrs["type"].encode()))
+                    "The group '%s' of '%s' type cannot be created. \n"
+                    "Please remove the old file, change the file name "
+                    "or change the group name." %
+                    (gname, attrs["type"].encode()))
 
         else:
             if Streams.log_error:
@@ -79,39 +79,39 @@ class EGroup(FElementWithAttr):
                     if hasattr(attrs[key], "encode"):
                         try:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                    attrs[key].encode()
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                attrs[key].encode()
                         except:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())).value = \
-                                    NTP.convert[
-                                        str(self.h5Object.attr(
-                                                key.encode()
-                                                ).dtype)](attrs[key].encode())
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.convert[
+                                    str(self.h5Object.attr(
+                                        key.encode()
+                                    ).dtype)](attrs[key].encode())
 
                     else:
                         try:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())
                              ).value = attrs[key]
                         except:
                             (self.h5Object.attr(
-                                    key.encode(),
-                                    NTP.nTnp[NTP.aTn[key]].encode())
+                                key.encode(),
+                                NTP.nTnp[NTP.aTn[key]].encode())
                              ).value \
-                             = NTP.convert[
-                                 str(self.h5Object.attr(key.encode()).dtype)
-                                 ](attrs[key])
+                                = NTP.convert[
+                                    str(self.h5Object.attr(key.encode()).dtype)
+                            ](attrs[key])
 
                 elif key in NTP.aTnv.keys():
 
                     shape = (len(attrs[key]),)
                     (self.h5Object.attr(
-                            key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
-                            shape)).value = numpy.array(attrs[key])
+                        key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
+                        shape)).value = numpy.array(attrs[key])
                 else:
                     (self.h5Object.attr(key.encode(), "string")).value = \
                         attrs[key].encode()

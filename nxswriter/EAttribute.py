@@ -136,7 +136,7 @@ class EAttribute(FElement):
                 else:
                     if Streams.log_error:
                         print >> Streams.log_error, \
-                        "Group::run() - %s  " % str(self.error)
+                            "Group::run() - %s  " % str(self.error)
                 print >> sys.stderr, "Group::run() - ERROR", \
                     str(self.error)
 
