@@ -375,8 +375,8 @@ if __name__ == "__main__":
 #    xmlf = "../XMLExamples/test.xml"
     xmlf = "../XMLExamples/MNI.xml"
 
-    print "usage: TangoDataWriter.py  <XMLfile1>  "\
-        "<XMLfile2>  ...  <XMLfileN>  <H5file>"
+    print("usage: TangoDataWriter.py  <XMLfile1>  "
+          "<XMLfile2>  ...  <XMLfileN>  <H5file>")
 
     ## No arguments
     argc = len(sys.argv)
@@ -384,7 +384,7 @@ if __name__ == "__main__":
         tdw.fileName = sys.argv[argc - 1]
 
     if argc > 1:
-        print "opening the H5 file"
+        print("opening the H5 file")
         tdw.openFile()
 
         for i in range(1, argc - 1):
@@ -394,32 +394,32 @@ if __name__ == "__main__":
             xml = open(xmlf, 'r').read()
             tdw.xmlsettings = xml
 
-            print "opening the data entry "
+            print("opening the data entry ")
             tdw.openEntry()
 
-            print "recording the H5 file"
+            print("recording the H5 file")
             tdw.record('{"data": {"emittance_x": 0.8} , '
                        ' "triggers":["trigger1", "trigger2"] }')
 
-            print "sleeping for 1s"
+            print("sleeping for 1s")
             time.sleep(1)
-            print "recording the H5 file"
+            print("recording the H5 file")
             tdw.record('{"data": {"emittance_x": 1.2}, '
                        ' "triggers":["trigger2"] }')
 
-            print "sleeping for 1s"
+            print("sleeping for 1s")
             time.sleep(1)
-            print "recording the H5 file"
+            print("recording the H5 file")
             tdw.record('{"data": {"emittance_x": 1.1}  , '
                        ' "triggers":["trigger1"] }')
 
-            print "sleeping for 1s"
+            print("sleeping for 1s")
             time.sleep(1)
-            print "recording the H5 file"
+            print("recording the H5 file")
             tdw.record('{"data": {"emittance_x": 0.7} }')
 
-            print "closing the data entry "
+            print("closing the data entry ")
             tdw.closeEntry()
 
-        print "closing the H5 file"
+        print("closing the H5 file")
         tdw.closeFile()
