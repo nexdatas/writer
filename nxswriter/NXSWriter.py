@@ -297,7 +297,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         else:
             print("To change the file name please close the file.",
                   file=self.log_warn)
-                
+
             raise Exception(
                 "To change the file name please close the file.")
 
