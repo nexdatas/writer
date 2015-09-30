@@ -305,8 +305,8 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(AttributeArrayTest) )
 
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(FieldArrayTest) )
+#    suite.addTests(
+#        unittest.defaultTestLoader.loadTestsFromModule(FieldArrayTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest) )

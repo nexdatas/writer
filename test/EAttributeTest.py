@@ -125,7 +125,7 @@ class EAttributeTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         at = EAttribute({}, None)
         self.assertTrue(isinstance(at, Element))
@@ -153,7 +153,7 @@ class EAttributeTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         at = EAttribute({}, None)
         self.assertTrue(isinstance(at, Element))
@@ -183,7 +183,7 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"test"}, eFile)
         at = EAttribute({}, el)
@@ -203,7 +203,7 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"test"}, eFile)
         at = EAttribute({"name":"mystring"}, el)
@@ -220,7 +220,7 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"test"}, eFile)
         at = EAttribute({"name":"mystring"}, el)
@@ -240,7 +240,7 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"test"}, eFile)
         at = EAttribute({"name":"mystring", "type":"NX_INT"}, el)
@@ -269,7 +269,7 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"test"}, eFile)
         at = EAttribute({"name":"mystring"}, el)
@@ -316,7 +316,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool"]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
 
@@ -370,7 +370,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
 
@@ -428,7 +428,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
 
@@ -501,7 +501,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
         
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
         
@@ -574,7 +574,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
 
@@ -647,7 +647,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
 
@@ -723,7 +723,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( {"name":"test"}, eFile)
 
@@ -799,7 +799,7 @@ class EAttributeTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool"]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -830,7 +830,7 @@ class EAttributeTest(unittest.TestCase):
         for k in attrs.keys():
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes() 
-            at = el[k].h5Object.attr(k)
+            at = el[k].h5Object.attributes[k]
 #            at = el[k].h5Attribute(k)
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                           attrs[k][3] if len(attrs[k])>3 else 0)
@@ -842,7 +842,7 @@ class EAttributeTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
 #            at = el[k].h5Attribute(k)
-            at = el[k].h5Object.attr(k)
+            at = el[k].h5Object.attributes(k)
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
 
@@ -887,7 +887,7 @@ class EAttributeTest(unittest.TestCase):
             
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -973,7 +973,7 @@ class EAttributeTest(unittest.TestCase):
             
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1061,7 +1061,7 @@ class EAttributeTest(unittest.TestCase):
             
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1147,7 +1147,7 @@ class EAttributeTest(unittest.TestCase):
             
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1233,7 +1233,7 @@ class EAttributeTest(unittest.TestCase):
             
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1325,7 +1325,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1411,7 +1411,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1500,7 +1500,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1596,7 +1596,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1689,7 +1689,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1784,7 +1784,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1873,7 +1873,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -1975,7 +1975,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -2073,7 +2073,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -2181,7 +2181,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -2279,7 +2279,7 @@ class EAttributeTest(unittest.TestCase):
 
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 
@@ -2381,7 +2381,7 @@ class EAttributeTest(unittest.TestCase):
             }
             
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
 

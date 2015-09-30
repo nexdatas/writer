@@ -123,7 +123,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
         name = "myfield"
         dtype = "string"
         shape = (10,2)
@@ -164,7 +164,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
 
         attrs = {
@@ -240,7 +240,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -345,7 +345,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -439,7 +439,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -541,7 +541,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -642,7 +642,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -738,7 +738,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -842,7 +842,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -951,7 +951,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,), (1,), (1,)],
@@ -1048,7 +1048,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,), (1,), (1,)],
@@ -1153,7 +1153,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
 
         value = {}
@@ -1264,7 +1264,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
 
         value = {}
@@ -1373,7 +1373,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
 
         value = {}
@@ -1482,7 +1482,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
 
         value = {}
@@ -1581,7 +1581,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -1703,7 +1703,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -1827,7 +1827,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -1946,7 +1946,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -2064,7 +2064,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -2177,7 +2177,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -2297,7 +2297,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -2412,7 +2412,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         value = {}
         attrs = {
@@ -2520,7 +2520,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,)],
@@ -2547,6 +2547,7 @@ class FieldArrayTest(unittest.TestCase):
 
         
         for k in attrs:
+            print k
             slen = self.__rnd.randint(0, 3)
             attrs[k][3] = tuple([self.__rnd.randint(2, 6) for s in range(slen)])
             
@@ -2620,7 +2621,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
@@ -2702,7 +2703,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
@@ -2786,7 +2787,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],
@@ -2869,7 +2870,7 @@ class FieldArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
         attrs = {
             "string":["Mystring","NX_CHAR", "string" , (1,), (1,)],

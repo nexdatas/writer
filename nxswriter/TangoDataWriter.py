@@ -172,7 +172,7 @@ class TangoDataWriter(object):
             self.__nxFile = nx.open_file(self.fileName, False)
             self.__fileCreated = False
         else:
-            self.__nxFile = nx.create_file(self.fileName)
+            self.__nxFile = nx.create_file(self.fileName).root()
             self.__fileCreated = True
 
         ## element file objects

@@ -38,8 +38,7 @@ class EGroup(FElementWithAttr):
     # \param last the last element from the stack
     def __init__(self, attrs, last):
         FElementWithAttr.__init__(self, "group", attrs, last)
-
-        if self._lastObject():
+        if self._lastObject() is not None:
             if ("type" in attrs.keys()) and ("name" in attrs.keys()):
                 gname = attrs["name"].encode()
             elif "type" in attrs.keys():
@@ -83,43 +82,45 @@ class EGroup(FElementWithAttr):
                 if key in NTP.aTn.keys():
                     if hasattr(attrs[key], "encode"):
                         try:
-                            (self.h5Object.attr(
+                            (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.nTnp[NTP.aTn[key]].encode()))[...] = \
                                 attrs[key].encode()
                         except:
-                            (self.h5Object.attr(
+                            (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.nTnp[NTP.aTn[key]].encode()))[...] = \
                                 NTP.convert[
-                                    str(self.h5Object.attr(
+                                    str(self.h5Object.attribute[
                                         key.encode()
-                                    ).dtype)](attrs[key].encode())
+                                    ].dtype)](attrs[key].encode())
 
                     else:
                         try:
-                            (self.h5Object.attr(
+                            self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())
-                             ).value = attrs[key]
+                                NTP.nTnp[NTP.aTn[key]].encode()
+                            )[...] = attrs[key]
                         except:
-                            (self.h5Object.attr(
+                            self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())
-                             ).value \
-                                = NTP.convert[
-                                    str(self.h5Object.attr(key.encode()).dtype)
-                            ](attrs[key])
+                                NTP.nTnp[NTP.aTn[key]].encode()
+                            )[...] \
+                             = NTP.convert[
+                                 str(self.h5Object.attributes[
+                                     key.encode()].dtype)
+                             ](attrs[key])
 
                 elif key in NTP.aTnv.keys():
 
                     shape = (len(attrs[key]),)
-                    (self.h5Object.attr(
+                    (self.h5Object.attributes.create(
                         key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
-                        shape)).value = numpy.array(attrs[key])
+                        shape))[...] = numpy.array(attrs[key])
                 else:
-                    (self.h5Object.attr(key.encode(), "string")).value = \
-                        attrs[key].encode()
+                    (self.h5Object.attributes.create(
+                        key.encode(), "string"))[...] \
+                        = attrs[key].encode()
 
     ## stores the tag content
     # \param xml xml setting

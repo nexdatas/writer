@@ -143,7 +143,7 @@ class EDimensionsTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -179,7 +179,7 @@ class EDimensionsTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 

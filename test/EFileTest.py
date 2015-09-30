@@ -114,7 +114,7 @@ class EFileTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         el = EFile( {}, None, self._nxFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -124,7 +124,7 @@ class EFileTest(unittest.TestCase):
         self.assertEqual(el.source, None)
         self.assertEqual(el.error, None)
         self.assertEqual(el._tagAttrs, {})
-        self.assertEqual(type(el.h5Object),nx.nxh5.NXFile )
+        self.assertEqual(type(el.h5Object),nx._nxh5.nxgroup )
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -138,7 +138,7 @@ class EFileTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         el = EFile(self._fattrs, None, self._nxFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -152,7 +152,7 @@ class EFileTest(unittest.TestCase):
             self.assertEqual(el._tagAttrs[k], self._fattrs[k])
         
         self.assertEqual(el._tagAttrs, self._fattrs)
-        self.assertEqual(type(el.h5Object),nx.nxh5.NXFile )
+        self.assertEqual(type(el.h5Object),nx._nxh5.nxgroup )
 
         self._nxFile.close()
         os.remove(self._fname)

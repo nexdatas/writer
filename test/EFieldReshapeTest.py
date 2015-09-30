@@ -164,7 +164,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -262,7 +262,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -358,7 +358,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -463,7 +463,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -570,7 +570,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -697,7 +697,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -818,7 +818,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -955,7 +955,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1081,7 +1081,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1208,7 +1208,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1330,7 +1330,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1457,7 +1457,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1584,7 +1584,7 @@ class EFieldReshapeTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1715,7 +1715,7 @@ class EFieldReshapeTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1843,7 +1843,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1967,7 +1967,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2084,7 +2084,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2214,7 +2214,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2330,7 +2330,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2450,7 +2450,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2572,7 +2572,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2702,7 +2702,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2822,7 +2822,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2936,7 +2936,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3056,7 +3056,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3183,7 +3183,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3310,7 +3310,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3421,7 +3421,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0

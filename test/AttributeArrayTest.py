@@ -75,7 +75,7 @@ class AttributeArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
         parent = []
         for i in range(10):
             parent.append(nxFile.create_field("data_%s" % i,"string"))
@@ -91,9 +91,10 @@ class AttributeArrayTest(unittest.TestCase):
         self.assertEqual(el.value, avalue)
 
         for i in range(10):
-            self.assertEqual(parent[i].nattrs, 1)
-            at = parent[i].attr(aname)
-            self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
+            self.assertEqual(len(parent[i].attributes), 1)
+            at = parent[i].attributes[aname]
+            print type(at)
+            self.assertTrue(isinstance(at,nx._nxh5.nxattribute))
             self.assertTrue(at.valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
             self.assertEqual(len(at.shape),0)
@@ -112,7 +113,7 @@ class AttributeArrayTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True)
+        nxFile = nx.create_file(fname, overwrite=True).root()
 
 
         attrs = {
@@ -159,9 +160,9 @@ class AttributeArrayTest(unittest.TestCase):
             
             
             for i in range(10):
-                self.assertEqual(parent[i].nattrs, cnt)
-                at = parent[i].attr(a)
-                self.assertTrue(isinstance(at,nx.nxh5.NXAttribute))
+                self.assertEqual(len(parent[i].attributes), cnt)
+                at = parent[i].attributes[a]
+                self.assertTrue(isinstance(at,nx._nxh5.nxattribute))
                 self.assertTrue(at.valid)
                 self.assertTrue(hasattr(at.shape,"__iter__"))
                 self.assertEqual(len(at.shape),0)

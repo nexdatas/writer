@@ -47,7 +47,7 @@ class AttributeArray(object):
         ## list of attributes
         self.__aObject = []
         for f in parents:
-            self.__aObject.append(f.attr(name, dtype))
+            self.__aObject.append(f.attributes.create(name, dtype))
 
     ## gets the value
     # \returns the value from the first attribute object

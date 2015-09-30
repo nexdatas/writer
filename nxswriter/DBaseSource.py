@@ -205,7 +205,7 @@ class DBaseSource(DataSource):
         else:
             if Streams.log_error:
                 print("DBaseSource::getData() - "
-                    "Support for %s database not available" % self.dbtype,
+                      "Support for %s database not available" % self.dbtype,
                       file=Streams.log_error)
 
             raise PackageError(

@@ -135,7 +135,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
 
         el = EField( self._fattrs, None)
         self.assertTrue(isinstance(el, Element))
@@ -163,7 +163,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         self.assertTrue(isinstance(el, Element))
@@ -195,7 +195,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         self.assertTrue(isinstance(el, Element))
@@ -228,7 +228,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         fattrs = {"name":"test","units":"m", "type":"NX_INT" }
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField(fattrs, eFile)
         self.assertTrue(isinstance(el, Element))
@@ -260,7 +260,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
@@ -281,7 +281,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), (None, None))
 
-        self.assertEqual(type(el.h5Object), nx.nxh5.NXField)
+        self.assertEqual(type(el.h5Object), nx._nxh5.nxfield)
 
         self.assertEqual(el.grows, None)
         self._nxFile.close()
@@ -294,7 +294,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
@@ -327,7 +327,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
@@ -361,7 +361,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
@@ -393,7 +393,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
         ds = TestDataSource()
@@ -426,7 +426,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField(self._fattrs, eFile)
         el.rank = '2'
@@ -461,7 +461,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fattrs = {"name":"test","units":"m", "type":"NX_INT64" }
         el = EField(fattrs, eFile)
@@ -522,7 +522,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         for k in attrs: 
@@ -556,7 +556,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(h5.shape,(0,))
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             self.assertEqual(h5.size,0)
-            self.assertEqual(h5.nattrs, 2)
+            self.assertEqual(len(h5.attributes), 2)
             self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
             self._sc.checkScalarAttribute(h5, "units", "string", "m")
             
@@ -596,7 +596,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         flip = False
@@ -637,7 +637,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(h5.shape,(1,))
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             self.assertEqual(h5.size,1)
-            self.assertEqual(h5.nattrs, 2)
+            self.assertEqual(len(h5.attributes), 2)
             self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
             self._sc.checkScalarAttribute(h5, "units", "string", "m")
             
@@ -677,7 +677,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         for k in attrs: 
@@ -713,7 +713,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(h5.shape,(1,))
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             self.assertEqual(h5.size,1)
-            self.assertEqual(h5.nattrs, 3)
+            self.assertEqual(len(h5.attributes), 3)
             self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
             self._sc.checkScalarAttribute(h5, "units", "string", "m")
             self._sc.checkScalarAttribute(h5, "postrun", "string", k)
@@ -757,7 +757,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quot = 0
@@ -821,7 +821,7 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(h5.shape, (0,1))
 
                 self.assertEqual(h5.size,0)
-                self.assertEqual(h5.nattrs, 2)
+                self.assertEqual(len(h5.attributes), 2)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
             else:
@@ -866,7 +866,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         flip = False
@@ -922,7 +922,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(h5.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string':
                 self.assertEqual(h5.size,1)
-                self.assertEqual(h5.nattrs, 2)
+                self.assertEqual(len(h5.attributes), 2)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
             
@@ -963,7 +963,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         flip = False
@@ -1019,7 +1019,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(h5.shape,(1,))
             self.assertEqual(h5.size,1)
             if attrs[k][2] and attrs[k][2] != 'string':
-                self.assertEqual(h5.nattrs, 3)
+                self.assertEqual(len(h5.attributes), 3)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
                 self._sc.checkScalarAttribute(h5, "postrun", "string", k)
@@ -1075,7 +1075,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1125,7 +1125,7 @@ class EFieldTest(unittest.TestCase):
                 else:
                     self.assertEqual(h5.shape,(0,1,1))
                 self.assertEqual(h5.size,0)
-                self.assertEqual(h5.nattrs, 2)
+                self.assertEqual(len(h5.attributes), 2)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
             else:
@@ -1185,7 +1185,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1233,7 +1233,7 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] and attrs[k][2] != 'string':
                 self.assertEqual(h5.shape,(1,1))
                 self.assertEqual(h5.size, 1)
-                self.assertEqual(h5.nattrs, 2)
+                self.assertEqual(len(h5.attributes), 2)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
             else:
@@ -1294,7 +1294,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1343,7 +1343,7 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] and attrs[k][2] != 'string':
                 self.assertEqual(h5.shape,(1, 1))
                 self.assertEqual(h5.size, 1)
-                self.assertEqual(h5.nattrs, 3)
+                self.assertEqual(len(h5.nattributes), 3)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
                 self._sc.checkScalarAttribute(h5, "postrun", "string", k)
@@ -1363,7 +1363,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
         fattrs = {"name":"testfield", "type":"NX_INT"}
@@ -1384,17 +1384,17 @@ class EFieldTest(unittest.TestCase):
         
         el.store() 
 
-        self.assertEqual(type(el.h5Object), nx.nxh5.NXField)
+        self.assertEqual(type(el.h5Object), nx._nxh5.nxfield)
         self.assertEqual(el.h5Object.name, fattrs["name"])
-        self.assertEqual(el.h5Object.nattrs, 14)
-        self.assertEqual(el.h5Object.attr("type").value, fattrs["type"])
-        self.assertEqual(el.h5Object.attr("type").dtype, "string")
-        self.assertEqual(el.h5Object.attr("type").shape, ())
+        self.assertEqual(len(el.h5Object.attributes), 14)
+        self.assertEqual(el.h5Object.attributes["type"].value, fattrs["type"])
+        self.assertEqual(el.h5Object.attributes["type"].dtype, "string")
+        self.assertEqual(el.h5Object.attributes["type"].shape, (1,))
             
         for k in maTn.keys():
-            self.assertEqual(el.h5Object.attr(k).value, fattrs[k])
-            self.assertEqual(el.h5Object.attr(k).dtype, NTP.nTnp[NTP.aTn[k]])
-            self.assertEqual(el.h5Object.attr(k).shape, ())
+            self.assertEqual(el.h5Object.attributes[k].value, fattrs[k])
+            self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
+            self.assertEqual(el.h5Object.attributes[k].shape, (1,))
             
 
 
@@ -1415,7 +1415,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
         fattrs = {"name":"testfield", "type":"NX_INT"}
@@ -1432,19 +1432,19 @@ class EFieldTest(unittest.TestCase):
         
         el.store() 
 
-        self.assertEqual(type(el.h5Object), nx.nxh5.NXField)
+        self.assertEqual(type(el.h5Object), nx._nxh5.nxfield)
         self.assertEqual(el.h5Object.name, fattrs["name"])
-        self.assertEqual(el.h5Object.nattrs, 2)
-        self.assertEqual(el.h5Object.attr("type").value, fattrs["type"])
-        self.assertEqual(el.h5Object.attr("type").dtype, "string")
-        self.assertEqual(el.h5Object.attr("type").shape, ())
+        self.assertEqual(len(el.h5Object.attributes), 2)
+        self.assertEqual(el.h5Object.attributes["type"].value, fattrs["type"])
+        self.assertEqual(el.h5Object.attributes["type"].dtype, "string")
+        self.assertEqual(el.h5Object.attributes["type"].shape, (1,))
 
         
         for k in maTnv.keys():
             for i in range(len(fattrs[k])):
-                self.assertTrue(abs(el.h5Object.attr(k).value[i]- fattrs[k][i]) <= error)
-            self.assertEqual(el.h5Object.attr(k).dtype, NTP.nTnp[NTP.aTnv[k]])
-            self.assertEqual(el.h5Object.attr(k).shape, (len(fattrs[k]),))
+                self.assertTrue(abs(el.h5Object.attributes[k].value[i]- fattrs[k][i]) <= error)
+            self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
+            self.assertEqual(el.h5Object.attributes[k].shape, (len(fattrs[k]),))
             
             
             
@@ -1488,7 +1488,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool"]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
         el = {}
@@ -1517,7 +1517,7 @@ class EFieldTest(unittest.TestCase):
         for k in attrs.keys():
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes() 
-            at = el[k].h5Object.attr(k)
+            at = el[k].h5Object.attributes[k]
 #            at = el[k].h5Attribute(k)
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                           attrs[k][3] if len(attrs[k])>3 else 0)
@@ -1529,8 +1529,10 @@ class EFieldTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
 #            at = el[k].h5Attribute(k)
-            at = el[k].h5Object.attr(k)
-            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+            at = el[k].h5Object.attributes[k]
+#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+#                                            attrs[k][3] if len(attrs[k])>3 else 0)
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
 
         self._nxFile.close()
@@ -1569,7 +1571,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
         el = {}
@@ -1585,9 +1587,11 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = 'STEP'
 
             el[k].store() 
-            at = el[k].h5Object.attr(k)
-            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
+            at = el[k].h5Object.attributes[k]
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
+#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
+#                                            attrs[k][3] if len(attrs[k])>3 else 0)
 
 
 
@@ -1645,7 +1649,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],)
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
         el = {}
@@ -1662,7 +1666,7 @@ class EFieldTest(unittest.TestCase):
 
             el[k].store() 
 
-            at = el[k].h5Object.attr(k)
+            at = el[k].h5Object.attributes[k]
 
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0] , 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
@@ -1720,7 +1724,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
             
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
         el = {}
@@ -1742,7 +1746,7 @@ class EFieldTest(unittest.TestCase):
             el[k].store() 
 
 
-            at = el[k].h5Object.attr(k)
+            at = el[k].h5Object.attributes[k]
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0] , 
                                             attrs[k][4] if len(attrs[k])>4 else 0)
 
@@ -1798,7 +1802,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1879,7 +1883,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -1982,7 +1986,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2102,7 +2106,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2223,7 +2227,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2297,7 +2301,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"myfield", "units":"m"}, eFile)
         ds = TestDataSource()
@@ -2365,7 +2369,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2453,7 +2457,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64"],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64",1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
@@ -2463,7 +2468,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2559,7 +2564,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2654,7 +2659,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[65,"NX_UINT8", "uint8",numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[453,"NX_UINT16", "uint16",numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12235,"NX_UINT32", "uint32",numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-16.345,"NX_FLOAT", "float64",numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-2.345e+2,"NX_NUMBER", "float64",numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-4.355e-1,"NX_FLOAT32", "float32",numpy.finfo(getattr(numpy, 'float32')).max,1.e-5],
@@ -2664,7 +2670,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2771,7 +2777,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -2884,7 +2890,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -2898,7 +2905,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3019,7 +3026,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3146,7 +3153,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -3156,7 +3164,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3282,7 +3290,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3408,7 +3416,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3521,7 +3529,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -3533,7 +3542,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3655,7 +3664,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3777,7 +3786,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -3786,7 +3796,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -3907,7 +3917,7 @@ class EFieldTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4027,7 +4037,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -4038,7 +4049,7 @@ class EFieldTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4166,7 +4177,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4280,7 +4291,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,),numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,),numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,),numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -4289,7 +4301,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4408,7 +4420,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4529,7 +4541,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -4538,7 +4551,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4654,7 +4667,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4766,7 +4779,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,),numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,),numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,),numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14,numpy.finfo(getattr(numpy, 'float64')).max],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14,numpy.finfo(getattr(numpy, 'float64')).max],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5,numpy.finfo(getattr(numpy, 'float32')).max],
@@ -4775,7 +4789,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -4894,7 +4908,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5015,7 +5029,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -5024,7 +5039,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5144,7 +5159,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5255,7 +5270,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -5264,7 +5280,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5381,7 +5397,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5499,7 +5515,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -5508,7 +5525,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5631,7 +5648,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0
@@ -5738,7 +5755,8 @@ class EFieldTest(unittest.TestCase):
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -5747,7 +5765,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
         quin = 0

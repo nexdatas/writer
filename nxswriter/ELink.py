@@ -91,7 +91,7 @@ class ELink(FElement):
         if ("name" in self._tagAttrs.keys()) and \
                 ("target" in self._tagAttrs.keys()):
             path = (self.__typesToNames(
-                    self._tagAttrs["target"], groupTypes)).encode()
+                self._tagAttrs["target"], groupTypes)).encode()
             name = self._tagAttrs["name"].encode()
             try:
                 self.h5Object = self._lastObject().link(path, name)

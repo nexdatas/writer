@@ -89,13 +89,8 @@ class FElementWithAttrTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
-        ## element file objects
-        self._group = self._nxFile.create_group(self._gname, self._gtype)
-        self._field = self._group.create_field(self._fdname, self._fdtype)
         print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print "SEED =", self.__seed
 
     ## test closer
     # \brief Common tear down
@@ -103,6 +98,13 @@ class FElementWithAttrTest(unittest.TestCase):
         print "tearing down ..."
         self._nxFile.close()
         os.remove(self._fname)
+
+    def createTree(self):    
+        ## file handle
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        ## element file objects
+        self._group = self._nxFile.create_group(self._gname, self._gtype)
+        self._field = self._group.create_field(self._fdname, self._fdtype)
 
     ## Exception tester
     # \param exception expected exception
@@ -121,7 +123,10 @@ class FElementWithAttrTest(unittest.TestCase):
     ## default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
-        print "Run: %s.test_default_constructor() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
         el = FElementWithAttr(self._tfname, self._fattrs, None)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -138,7 +143,10 @@ class FElementWithAttrTest(unittest.TestCase):
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
         self.assertTrue(isinstance(el2, Element))
@@ -159,7 +167,10 @@ class FElementWithAttrTest(unittest.TestCase):
     ## constructor test
     # \brief It tests default settings
     def test_createAttributes_0d(self):
-        print "Run: %s.test_createAttributes_0d() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
         self.assertEqual(el2.tagAttributes, {})
@@ -233,13 +244,16 @@ class FElementWithAttrTest(unittest.TestCase):
                 if isinstance(at.value, numpy.ndarray): 
                     self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
                 else:
-                    self.assertEqual([at.value], attrs[nm][0])
+                    self.assertEqual(at.value, attrs[nm][0])
 
 
     ## constructor test
     # \brief It tests default settings
     def test_createAttributes_1d_single(self):
-        print "Run: %s.test_createAttributes_1d_single() " % self.__class__.__name__
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
         self.assertEqual(el2.tagAttributes, {})
@@ -288,7 +302,7 @@ class FElementWithAttrTest(unittest.TestCase):
                 if isinstance(at.value, numpy.ndarray): 
                     self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
                 else:
-                    self.assertEqual([at.value], attrs[nm][0])
+                    self.assertEqual(at.value, attrs[nm][0])
 
 
 
@@ -297,8 +311,11 @@ class FElementWithAttrTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_createAttributes_1d(self):
-        print "Run: %s.test_createAttributes_1d() " % self.__class__.__name__
+    def test_createAttributes_1d_single(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
         self.assertEqual(el2.tagAttributes, {})
@@ -331,10 +348,10 @@ class FElementWithAttrTest(unittest.TestCase):
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                mlen = [1]
                 attrs[nm][0] =  [ attrs[nm][0]*self.__rnd.randint(0, 3) for r in range(mlen[0])]
             else:    
-                mlen = [self.__rnd.randint(1, 10)]
+                mlen = [1]
                 if nm == 'bool':
                     attrs[nm][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
                 else:
@@ -350,15 +367,18 @@ class FElementWithAttrTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value[i])
-                pass
+                    ## new version
+                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value)
+                        
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
-                    self.assertTrue(abs(at.value[i] - attrs[nm][0][i]) <= attrs[nm][4])
+                    ## new version
+                    self.assertTrue(abs(at.value - attrs[nm][0][i]) <= attrs[nm][4])
             else: 
                 
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(at.value[i], attrs[nm][0][i])
+                    self.assertEqual(at.value, attrs[nm][0][i])
+
 
 
 
@@ -366,8 +386,11 @@ class FElementWithAttrTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_createAttributes_2d(self):
-        print "Run: %s.test_createAttributes_1d() " % self.__class__.__name__
+    def test_createAttributes_1d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
         self.assertEqual(el2.tagAttributes, {})
@@ -400,12 +423,323 @@ class FElementWithAttrTest(unittest.TestCase):
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), 
+                mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(0, 3)]
+                attrs[nm][0] =  [ attrs[nm][0]*self.__rnd.randint(0, 3) for r in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(2, 10)]
+                if nm == 'bool':
+                    attrs[nm][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
+                else:
+                    attrs[nm][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+
+            attrs[nm][3] =  (mlen[0],)
+
+
+        for nm in attrs.keys():
+            el2.tagAttributes[nm] = (attrs[nm][1], "".join([str(it)+ " "  for it in attrs[nm][0]]),attrs[nm][3] )
+            el2._createAttributes() 
+            at = el2.h5Attribute(nm)
+            self.assertEqual(at.dtype, attrs[nm][2])
+            if attrs[nm][2] == "bool":
+                for i in range(len(attrs[nm][0])):
+                    ## new version
+                    if len(attrs[nm][0]) == 1:
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value)
+                    else:
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value[i])
+                        
+            elif len(attrs[nm]) > 4:
+                for i in range(len(attrs[nm][0])):
+                    ## new version
+                    if len(attrs[nm][0]) == 1:
+                        self.assertTrue(abs(at.value - attrs[nm][0][i]) <= attrs[nm][4])
+                    else:
+                        self.assertTrue(abs(at.value[i] - attrs[nm][0][i]) <= attrs[nm][4])
+            else: 
+                
+                for i in range(len(attrs[nm][0])):
+                    ## new version
+                    if len(attrs[nm][0]) == 1:
+                        self.assertEqual(at.value, attrs[nm][0][i])
+                    else:
+                        self.assertEqual(at.value[i], attrs[nm][0][i])
+
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createAttributes_2d_single(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
+        el = FElement(self._tfname, self._fattrs, None )
+        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
+        self.assertEqual(el2.tagAttributes, {})
+
+        
+
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", "int64", (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", "uint64", (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+        for nm in attrs.keys():
+            if attrs[nm][2] != "bool":
+                mlen = [1, 1]
+                attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+            else:    
+                mlen = [1 , 1]
+                if nm == 'bool':
+                    attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                else:
+                    attrs[nm][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+            attrs[nm][3] =  (mlen[0],mlen[1])
+
+            
+        for nm in attrs.keys():
+            el2.tagAttributes[nm] = (attrs[nm][1], 
+                                     "".join(["".join([str(it)+ " "  for it in sub]
+                                                      ) + "\n" for sub in attrs[nm][0]]),
+                                     attrs[nm][3] 
+                                     )
+            el2._createAttributes() 
+            at = el2.h5Attribute(nm)
+            self.assertEqual(at.dtype, attrs[nm][2])
+            if attrs[nm][2] == "bool":
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value)
+                pass
+            elif len(attrs[nm]) > 4:
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertTrue(abs(at.value - attrs[nm][0][i][j]) <= attrs[nm][4])
+            else: 
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertEqual(at.value, attrs[nm][0][i][j])
+
+
+
+                        
+    ## constructor test
+    # \brief It tests default settings
+    def test_createAttributes_2d(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
+        el = FElement(self._tfname, self._fattrs, None )
+        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
+        self.assertEqual(el2.tagAttributes, {})
+
+        
+
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", "int64", (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", "uint64", (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+        for nm in attrs.keys():
+            if attrs[nm][2] != "bool":
+                mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10), 
                         (2 << numpy.dtype(attrs[nm][2]).itemsize)  ]
 #                print "SH",nm,mlen[2]    
                 attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10) ]
+                if nm == 'bool':
+                    attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                else:
+                    attrs[nm][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+            attrs[nm][3] =  (mlen[0],mlen[1])
+
+            
+        for nm in attrs.keys():
+            el2.tagAttributes[nm] = (attrs[nm][1], 
+                                     "".join(["".join([str(it)+ " "  for it in sub]
+                                                      ) + "\n" for sub in attrs[nm][0]]),
+                                     attrs[nm][3] 
+                                     )
+            el2._createAttributes() 
+            at = el2.h5Attribute(nm)
+            self.assertEqual(at.dtype, attrs[nm][2])
+            if attrs[nm][2] == "bool":
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
+                pass
+            elif len(attrs[nm]) > 4:
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertTrue(abs(at.value[i][j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+            else: 
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createAttributes_2d_1X(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
+        el = FElement(self._tfname, self._fattrs, None )
+        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
+        self.assertEqual(el2.tagAttributes, {})
+
+        
+
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", "int64", (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", "uint64", (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+        for nm in attrs.keys():
+            if attrs[nm][2] != "bool":
+                mlen = [1, self.__rnd.randint(2, 10), 
+                        (2 << numpy.dtype(attrs[nm][2]).itemsize)  ]
+#                print "SH",nm,mlen[2]    
+                attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+            else:    
+                mlen = [1, self.__rnd.randint(2, 10) ]
+                if nm == 'bool':
+                    attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                else:
+                    attrs[nm][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    
+            attrs[nm][3] =  (mlen[0],mlen[1])
+
+            
+        for nm in attrs.keys():
+            el2.tagAttributes[nm] = (attrs[nm][1], 
+                                     "".join(["".join([str(it)+ " "  for it in sub]
+                                                      ) + "\n" for sub in attrs[nm][0]]),
+                                     attrs[nm][3] 
+                                     )
+            el2._createAttributes() 
+            at = el2.h5Attribute(nm)
+            self.assertEqual(at.dtype, attrs[nm][2])
+            if attrs[nm][2] == "bool":
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
+                pass
+            elif len(attrs[nm]) > 4:
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertTrue(abs(at.value[i][j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+            else: 
+                for i in range(len(attrs[nm][0])):
+                    for j in range(len(attrs[nm][0][i])):
+                        self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_createAttributes_2d_X1(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self.createTree()
+        el = FElement(self._tfname, self._fattrs, None )
+        el2 = FElementWithAttr(self._tfname, self._fattrs, el, self._group)
+        self.assertEqual(el2.tagAttributes, {})
+
+        
+
+        attrs = {
+#            "string":["My string","NX_CHAR", "string" , (1,)],
+#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int":[-123,"NX_INT", "int64", (1,)],
+            "int8":[12,"NX_INT8", "int8", (1,)],
+            "int16":[-123,"NX_INT16", "int16", (1,)],
+            "int32":[12345,"NX_INT32", "int32", (1,)],
+            "int64":[-12345,"NX_INT64", "int64", (1,)],
+            "uint":[123,"NX_UINT", "uint64", (1,)],
+            "uint8":[12,"NX_UINT8", "uint8", (1,)],
+            "uint16":[123,"NX_UINT16", "uint16", (1,)],
+            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
+            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
+            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
+            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
+            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
+            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
+            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
+            }
+
+        for nm in attrs.keys():
+            if attrs[nm][2] != "bool":
+                mlen = [self.__rnd.randint(2, 10), 1] 
+                attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+            else:    
+                mlen = [self.__rnd.randint(2, 10), 1]
                 if nm == 'bool':
                     attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
                 else:

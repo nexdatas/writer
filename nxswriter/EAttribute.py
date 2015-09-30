@@ -181,7 +181,8 @@ class EAttribute(FElement):
     def markFailed(self):
         field = self._lastObject()
         if field:
-            field.attr("nexdatas_canfail", "string").value = "FAILED"
+            field.attributes.create("nexdatas_canfail", "string")[...] \
+                = "FAILED"
             if Streams.log_info:
                 print("EAttribute::markFailed() - "
                       "%s of %s marked as failed" %

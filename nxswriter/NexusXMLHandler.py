@@ -92,13 +92,14 @@ class NexusXMLHandler(sax.ContentHandler):
         self.__storedName = None
 
         ## map of tag names to related classes
-        self.elementClass = {'group': EGroup, 'field': EField,
-                             'attribute': EAttribute, 'link': ELink,
-                             'symbols': Element, 'symbol': ESymbol,
-                             'dimensions': EDimensions, 'dim': EDim,
-                             'enumeration': Element, 'item': Element,
-                             'strategy': EStrategy
-                             }
+        self.elementClass = {
+            'group': EGroup, 'field': EField,
+            'attribute': EAttribute, 'link': ELink,
+            'symbols': Element, 'symbol': ESymbol,
+            'dimensions': EDimensions, 'dim': EDim,
+            'enumeration': Element, 'item': Element,
+            'strategy': EStrategy
+        }
 
         ## transparent tags
         self.transparentTags = ['definition']
@@ -270,7 +271,7 @@ if __name__ == "__main__":
             mparser = sax.make_parser()
 
             ## file  handle
-            nxFile = nx.create_file(fo, overwrite=True)
+            nxFile = nx.create_file(fo, overwrite=True).root()
             ## element file objects
             mfileElement = EFile([], None, nxFile)
             ## a SAX2 handler object

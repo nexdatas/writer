@@ -92,7 +92,7 @@ class FElementTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._group = self._nxFile.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
@@ -924,11 +924,11 @@ class FElementTest(unittest.TestCase):
         self.assertEqual(el.setMessage(message),(text % (uob, str(ds)), message))
 
         el2 = FElement(self._tfname, self._fattrs, el, self._group )
-        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name, uds), None))
-        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name, uds), message))
+        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name + ":NXentry", uds), None))
+        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name + ":NXentry", uds), message))
         el2.source = ds
-        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name, str(ds)), None))
-        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name, str(ds)), message))
+        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name + ":NXentry", str(ds)), None))
+        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name + ":NXentry", str(ds)), message))
         
 
 

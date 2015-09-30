@@ -49,6 +49,8 @@ class FElement(Element):
         self.error = None
         ##  flag for devices for which is allowed to failed
         self.canfail = False
+        ## scalar type
+        self._scalar =  False
 
     ## runner
     # \brief During its thread run it fetches the data from the source
@@ -128,6 +130,7 @@ class FElement(Element):
     # \returns shape of the object
     def _findShape(self, rank, lengths=None, extraD=False,
                    grows=None, extends=False, checkData=False):
+        self._scalar =  False
         shape = []
         exDim = self._getExtra(grows, extraD)
         if int(rank) > 0:
@@ -173,6 +176,10 @@ class FElement(Element):
         elif extraD:
             shape = [0]
 
+        ## ?? probably wrong    
+        if shape == []:
+            shape = [1]
+            self._scalar =  True
         return shape
 
     ## creates the error message
@@ -244,9 +251,11 @@ class FElementWithAttr(FElement):
         for key in self.tagAttributes.keys():
             if key not in ["name", "type"]:
                 if len(self.tagAttributes[key]) < 3:
-                    self.__h5Instances[key.encode()] = self.h5Object.attr(
-                        key.encode(),
-                        NTP.nTnp[self.tagAttributes[key][0]].encode())
+                    if key.encode() not in self.__h5Instances:
+                        self.__h5Instances[key.encode()] \
+                            = self.h5Object.attributes.create(
+                                key.encode(),
+                                NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(),
                         "DevString", [1, 0])
@@ -254,10 +263,12 @@ class FElementWithAttr(FElement):
                         dh.cast(self.__h5Instances[key.encode()].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
-                    self.__h5Instances[key.encode()] = self.h5Object.attr(
-                        key.encode(),
-                        NTP.nTnp[self.tagAttributes[key][0]].encode(),
-                        shape)
+                    if key.encode() not in self.__h5Instances:
+                        self.__h5Instances[key.encode()] \
+                            = self.h5Object.attributes.create(
+                                key.encode(),
+                                NTP.nTnp[self.tagAttributes[key][0]].encode(),
+                                shape)
                     val = self.tagAttributes[key][1].strip().encode()
                     if val:
                         rank = len(shape)

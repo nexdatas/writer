@@ -62,21 +62,23 @@ class Checker(object):
     # \returns detector group object    
     def checkFieldTree(self, f, fname, children):
         self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
-        self._tc.assertEqual(6, f.nattrs)
-        self._tc.assertEqual( f.attr("file_name").value, fname)
-        self._tc.assertTrue(f.attr("NX_class").value,"NXroot")
+        self._tc.assertEqual(6, len(f.attributes))
+        self._tc.assertEqual( f.attributes["file_name"].value, fname)
+        f = f.root()
+        self._tc.assertTrue(f.attributes["NX_class"].value,"NXroot")
         self._tc.assertEqual(f.nchildren, 2)
             
         en = f.open("entry1")
         self._tc.assertTrue(en.valid)
         self._tc.assertEqual(en.name,"entry1")
-        self._tc.assertEqual(en.nattrs,1)
+        self._tc.assertEqual(len(en.attributes),1)
         self._tc.assertEqual(en.nchildren, 1)
 
-        at = en.attr("NX_class")
+        at = en.attibutes["NX_class"]
         self._tc.assertTrue(at.valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(len(at.shape),1)
+        self._tc.assertEqual(at.shape,(1,))
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at.value,"NXentry")
@@ -88,7 +90,7 @@ class Checker(object):
         self._tc.assertEqual(ins.nchildren, 1)
         
             
-        at = ins.attr("NX_class")
+        at = ins.attributes["NX_class"]
         self._tc.assertTrue(at.valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
         self._tc.assertEqual(len(at.shape),0)
@@ -99,13 +101,14 @@ class Checker(object):
         det = ins.open("detector")
         self._tc.assertTrue(det.valid)
         self._tc.assertEqual(det.name,"detector")
-        self._tc.assertEqual(det.nattrs,1)
+        self._tc.assertEqual(len(det.attributes),1)
         self._tc.assertEqual(det.nchildren, children)
             
-        at = det.attr("NX_class")
+        at = det.attributes["NX_class"]
         self._tc.assertTrue(at.valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(len(at.shape), 1)
+        self._tc.assertEqual(at.shape, (1,))
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at.value,"NXdetector")
@@ -122,11 +125,11 @@ class Checker(object):
     def checkAttributeTree(self, f, fname, gattributes, fattributes):
         self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
         self._tc.assertEqual(6, f.nattrs)
-        self._tc.assertEqual( f.attr("file_name").value, fname)
-        self._tc.assertTrue(f.attr("NX_class").value,"NXroot")
+        self._tc.assertEqual( f.attributes["file_name"].value, fname)
+        self._tc.assertTrue(f.attributes["NX_class"].value,"NXroot")
         self._tc.assertEqual(f.nchildren, 2)
             
-        en = f.open("entry1")
+        en = f.open("entry1").next()
         self._tc.assertTrue(en.valid)
         self._tc.assertEqual(en.name,"entry1")
         self._tc.assertEqual(en.nattrs,1)
@@ -158,20 +161,20 @@ class Checker(object):
         det = ins.open("detector")
         self._tc.assertTrue(det.valid)
         self._tc.assertEqual(det.name,"detector")
-        self._tc.assertEqual(det.nattrs, 1 + gattributes)
+        self._tc.assertEqual(len(det.attributes), 1 + gattributes)
         self._tc.assertEqual(det.nchildren, 0)
 
         det = ins.open("detector")
         self._tc.assertTrue(det.valid)
         self._tc.assertEqual(det.name,"detector")
-        self._tc.assertEqual(det.nattrs, 1 + gattributes)
+        self._tc.assertEqual(len(det.attributes), 1 + gattributes)
         self._tc.assertEqual(det.nchildren, 0)
 
 
         field = ins.open("counter")
         self._tc.assertTrue(field.valid)
         self._tc.assertEqual(field.name,"counter")
-        self._tc.assertEqual(field.nattrs, 1 + fattributes)
+        self._tc.assertEqual(len(field.attributes), 1 + fattributes)
             
         at = det.attr("NX_class")
         self._tc.assertTrue(at.valid)
@@ -193,13 +196,13 @@ class Checker(object):
     # \param error data precision
     def checkScalarAttribute(self, det, name, dtype, values, error = 0):
 
-        cnt = det.attr(name)
+        cnt = det.attributes[name]
         self._tc.assertTrue(cnt.valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
 #        print name, "SHAPE", cnt.shape,len(cnt.shape)
-        self._tc.assertEqual(len(cnt.shape), 0)
-        self._tc.assertEqual(cnt.shape, ())
+        self._tc.assertEqual(len(cnt.shape), 1)
+        self._tc.assertEqual(cnt.shape, (1,))
         self._tc.assertEqual(cnt.dtype, dtype)
         # pninx is not supporting reading string areas 
         if not isinstance(values, str):
@@ -227,7 +230,7 @@ class Checker(object):
     # \param error data precision
     def checkSpectrumAttribute(self, det, name, dtype, values, error = 0):
 
-        cnt = det.attr(name)
+        cnt = det.attributes[name]
         self._tc.assertTrue(cnt.valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -259,7 +262,7 @@ class Checker(object):
     # \param error data precision
     def checkImageAttribute(self, det, name, dtype, values, error = 0):
 
-        cnt = det.attr(name)
+        cnt = det.attributes[name]
         self._tc.assertTrue(cnt.valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -334,7 +337,7 @@ class Checker(object):
         if attrs is not None:
             atts = attrs
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
@@ -362,12 +365,13 @@ class Checker(object):
                 self._tc.assertEqual(values[i],cnt[i])
             
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name,a)
             if atts[a] is not None:
@@ -391,7 +395,7 @@ class Checker(object):
         if attrs is not None:
             atts = attrs
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
@@ -416,13 +420,14 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
-            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
+            self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
                 self._tc.assertEqual(at.value,atts[a])
@@ -449,7 +454,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
@@ -460,12 +465,13 @@ class Checker(object):
 
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -490,7 +496,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
@@ -500,12 +506,13 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -549,7 +556,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         if grows > 1:
@@ -580,13 +587,14 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
-            self._tc.assertEqual(at.dtype,"string")
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
+            self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
                 self._tc.assertEqual(at.value,atts[a])
@@ -611,7 +619,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
@@ -634,12 +642,13 @@ class Checker(object):
                 self._tc.assertEqual(values[i], cnt[i])
             
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -665,7 +674,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
@@ -689,12 +698,13 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(cnt.shape, (len(values),))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -721,19 +731,20 @@ class Checker(object):
             
 
         for cnt in cnts:
-            self._tc.assertTrue(cnt.valid)
+            self._tc.assertTrue(cnt.is_valid)
             self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
             self._tc.assertEqual(len(cnt.shape), 1)
             self._tc.assertEqual(cnt.shape, (len(values),))
             self._tc.assertEqual(cnt.dtype, dtype)
             self._tc.assertEqual(cnt.size, len(values))        
 
-            self._tc.assertEqual(cnt.nattrs,len(atts))
+            self._tc.assertEqual(len(cnt.attributes),len(atts))
             for a in atts:
-                at = cnt.attr(a)
+                at = cnt.attributes[a]
                 self._tc.assertTrue(at.valid)
                 self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-                self._tc.assertEqual(len(at.shape),0)
+                self._tc.assertEqual(len(at.shape), 1)
+                self._tc.assertEqual(at.shape, (1,))
                 self._tc.assertEqual(at.dtype,"string")
                 self._tc.assertEqual(at.name, a)
                 if atts[a] is not None:
@@ -770,7 +781,7 @@ class Checker(object):
         self._tc.assertEqual(cnt.name,name )
             
 
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
         self._tc.assertEqual(cnt.shape, (len(values),))
@@ -779,12 +790,13 @@ class Checker(object):
         
             
         
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -815,7 +827,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         if grows == 3:
@@ -847,12 +859,13 @@ class Checker(object):
                         self._tc.assertEqual(lvalues[i][j][k], cnt[i,j,k])
             
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -877,7 +890,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 2)
@@ -903,12 +916,13 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -932,7 +946,7 @@ class Checker(object):
             atts = attrs
 
         cnt = det.open(name)
-        self._tc.assertTrue(cnt.valid)
+        self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 2)
@@ -957,12 +971,12 @@ class Checker(object):
             
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape),1)
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -991,7 +1005,7 @@ class Checker(object):
 
         for icnt in cnts:
             for cnt in icnt:
-                self._tc.assertTrue(cnt.valid)
+                self._tc.assertTrue(cnt.is_valid)
                 self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
                 self._tc.assertEqual(len(cnt.shape), 1)
                 self._tc.assertEqual(cnt.shape, (len(values),))
@@ -999,12 +1013,13 @@ class Checker(object):
                 self._tc.assertEqual(cnt.size, len(values))        
 
 
-                self._tc.assertEqual(cnt.nattrs,len(atts))
+                self._tc.assertEqual(len(cnt.attributes),len(atts))
                 for a in atts:
-                    at = cnt.attr(a)
+                    at = cnt.attributes[a]
                     self._tc.assertTrue(at.valid)
                     self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-                    self._tc.assertEqual(len(at.shape),0)
+                    self._tc.assertEqual(len(at.shape), 1)
+                    self._tc.assertEqual(at.shape, (1,) )
                     self._tc.assertEqual(at.dtype,"string")
                     self._tc.assertEqual(at.name, a)
                     if atts[a] is not None:
@@ -1040,7 +1055,7 @@ class Checker(object):
             
 
         for cnt in cnts:
-            self._tc.assertTrue(cnt.valid)
+            self._tc.assertTrue(cnt.is_valid)
             self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
             self._tc.assertEqual(len(cnt.shape), 1)
             self._tc.assertEqual(cnt.shape, (len(values),))
@@ -1048,12 +1063,13 @@ class Checker(object):
             self._tc.assertEqual(cnt.size, len(values))        
 
 
-            self._tc.assertEqual(cnt.nattrs,len(atts))
+            self._tc.assertEqual(len(cnt.attributes),len(atts))
             for a in atts:
-                at = cnt.attr(a)
+                at = cnt.attributes[a]
                 self._tc.assertTrue(at.valid)
                 self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-                self._tc.assertEqual(len(at.shape),0)
+                self._tc.assertEqual(len(at.shape), 1)
+                self._tc.assertEqual(at.shape, (1,))
                 self._tc.assertEqual(at.dtype,"string")
                 self._tc.assertEqual(at.name, a)
                 if atts[a] is not None:
@@ -1090,7 +1106,7 @@ class Checker(object):
             
 
         for cnt in cnts:
-            self._tc.assertTrue(cnt.valid)
+            self._tc.assertTrue(cnt.is_valid)
             self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
             self._tc.assertEqual(len(cnt.shape), 1)
             self._tc.assertEqual(cnt.shape, (len(values),))
@@ -1098,12 +1114,13 @@ class Checker(object):
             self._tc.assertEqual(cnt.size, len(values))        
 
 
-        self._tc.assertEqual(cnt.nattrs,len(atts))
+        self._tc.assertEqual(len(cnt.attributes),len(atts))
         for a in atts:
-            at = cnt.attr(a)
+            at = cnt.attributes[a]
             self._tc.assertTrue(at.valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),0)
+            self._tc.assertEqual(len(at.shape), 1)
+            self._tc.assertEqual(at.shape, (1,))
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:

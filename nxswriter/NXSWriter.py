@@ -670,16 +670,16 @@ class NXSDataWriterClass(PyTango.DeviceClass):
              'label': "XML Configuration",
              'description': "An XML string with Nexus configuration.",
              'Display level': PyTango.DispLevel.EXPERT,
-        }],
+         }],
         'JSONRecord':
         [[PyTango.DevString,
           PyTango.SCALAR,
           PyTango.READ_WRITE],
          {
-            'label': "JSON string with client data",
-            'description': "A JSON string with global client data.",
-            'Display level': PyTango.DispLevel.EXPERT,
-        }],
+             'label': "JSON string with client data",
+             'description': "A JSON string with global client data.",
+             'Display level': PyTango.DispLevel.EXPERT,
+         }],
         'FileName':
         [[PyTango.DevString,
           PyTango.SCALAR,
@@ -687,7 +687,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "Output file with its path",
              'description': "A name of H5 output file with its full path",
-        }],
+         }],
         'Errors':
         [[PyTango.DevString,
           PyTango.SPECTRUM,
@@ -695,7 +695,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "list of errors",
              'description': "list of errors",
-        }],
+         }],
     }
 
     #------------------------------------------------------------------

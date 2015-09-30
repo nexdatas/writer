@@ -82,7 +82,7 @@ class EStrategyTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True)
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._group = self._nxFile.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)

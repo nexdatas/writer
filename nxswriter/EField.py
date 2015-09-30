@@ -157,7 +157,7 @@ class EField(FElementWithAttr):
         # create Filter
 
         if self.compression:
-            deflate = nx.NXDeflateFilter()
+            deflate = nx.nxdeflatefilter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
 
@@ -211,53 +211,54 @@ class EField(FElementWithAttr):
                 if key in NTP.aTn.keys():
                     if hasattr(self._tagAttrs[key], "encode"):
                         try:
-                            (self.h5Object.attr(
+                            (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.nTnp[NTP.aTn[key]].encode()))[...] = \
                                 self._tagAttrs[key].strip().encode()
                         except:
-                            (self.h5Object.attr(
+                            (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())).value = \
+                                NTP.nTnp[NTP.aTn[key]].encode()))[...] = \
                                 NTP.convert[
-                                    str(self.h5Object.attr(
-                                        key.encode()
-                                    ).dtype)
-                            ](self._tagAttrs[key].strip().encode())
+                                    str(self.h5Object.attributes[
+                                        key.encode()].dtype)
+                                ](self._tagAttrs[key].strip().encode())
                     else:
                         try:
-                            (self.h5Object.attr(
+                            self.h5Object.attributes.create(
                                 key.encode(), NTP.nTnp[
                                     NTP.aTn[key]
-                                ].encode())
-                             ).value = self._tagAttrs[key]
+                                ].encode()
+                            )[...] = self._tagAttrs[key]
                         except:
-                            (self.h5Object.attr(
+                            self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode())
-                             ).value = \
-                                NTP.convert[str(self.h5Object.attr(
-                                    key.encode()).dtype)
-                            ](self._tagAttrs[key])
+                                NTP.nTnp[NTP.aTn[key]].encode()
+                            )[...] = \
+                                     NTP.convert[
+                                         str(self.h5Object.attributes[
+                                             key.encode()].dtype)
+                                     ](self._tagAttrs[key])
 
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
-                    (self.h5Object.attr(
+                    self.h5Object.attributes.create(
                         key.encode(),
                         NTP.nTnp[NTP.aTnv[key]].encode(),
-                        shape)
-                     ).value = \
-                        numpy.array(self._tagAttrs[key])
+                        shape
+                    )[...] = numpy.array(self._tagAttrs[key])
                 else:
-                    (self.h5Object.attr(key.encode(), "string")).value = \
-                        self._tagAttrs[key].strip().encode()
+                    self.h5Object.attributes.create(
+                        key.encode(), "string")[...] \
+                        = self._tagAttrs[key].strip().encode()
 
         self._createAttributes()
 
         if self.strategy == "POSTRUN":
-            self.h5Object.attr("postrun".encode(),
-                               "string".encode()).value = \
-                self.postrun.encode().strip()
+            self.h5Object.attributes.create(
+                "postrun".encode(),
+                "string".encode())[...] \
+                = self.postrun.encode().strip()
 
     ## provides strategy or fill the value in
     # \param name object name
@@ -555,7 +556,7 @@ class EField(FElementWithAttr):
             j = 0
             for i in range(len(h5shape)):
                 if not self.__extraD or (
-                    self.grows - 1 != i and
+                        self.grows - 1 != i and
                         not (i == 0 and self.grows == 0)):
                     if shape[j] - h5shape[i] > 0:
                         self.h5Object.grow(i, shape[j] - h5shape[i])
@@ -649,7 +650,12 @@ class EField(FElementWithAttr):
             value = False
         elif nptype != "string":
             try:
-                value = numpy.iinfo(getattr(numpy, nptype)).max
+                # workaround for bug #5618 in numpy for 1.8 < ver < 1.9.2
+                # 
+                if nptype == 'uint64':
+                    value = numpy.iinfo(getattr(numpy, 'int64')).max
+                else:
+                    value = numpy.iinfo(getattr(numpy, nptype)).max
             except:
                 try:
                     value = numpy.asscalar(
@@ -660,7 +666,7 @@ class EField(FElementWithAttr):
             nptype = "str"
 
         dformat = 'SCALAR'
-        if shape and len(shape) > 0 and shape[0] >= 1:
+        if not self._scalar and shape and len(shape) > 0 and shape[0] >= 1:
             arr = numpy.empty(shape, dtype=nptype)
             arr.fill(value)
             if len(shape) == 1:
@@ -682,8 +688,9 @@ class EField(FElementWithAttr):
     ## marks the field as failed
     # \brief It marks the field as failed
     def markFailed(self):
-        if self.h5Object:
-            self.h5Object.attr("nexdatas_canfail", "string").value = "FAILED"
+        if self.h5Object is not None:
+            self.h5Object.attributes.create(
+                "nexdatas_canfail", "string", overwrite=True)[...] = "FAILED"
             if Streams.log_info:
                 print("EField::markFailed() - %s marked as failed" %
                       (self.h5Object.name),
