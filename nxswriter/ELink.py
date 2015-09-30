@@ -21,6 +21,8 @@
 
 """ Definitions of link tag evaluation classes """
 
+from __future__ import print_function
+
 from .FElement import FElement
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
@@ -71,10 +73,11 @@ class ELink(FElement):
                                 valid = False
                     if not valid:
                         if Streams.log_error:
-                            print >> Streams.log_error, \
-                                "ELink::__typesToNames() - "\
-                                "Link creation problem: %s cannot be found" \
-                                % str(res + "/" + sgr[0])
+                            print("ELink::__typesToNames() - "
+                                  "Link creation problem: %s cannot be found"
+                                  % str(res + "/" + sgr[0]),
+                                  file=Streams.log_error)
+
                         raise XMLSettingSyntaxError(
                             "Link creation problem: %s cannot be found"
                             % str(res + "/" + sgr[0]))
@@ -94,15 +97,17 @@ class ELink(FElement):
                 self.h5Object = self._lastObject().link(path, name)
             except:
                 if Streams.log_error:
-                    print >> Streams.log_error, \
-                        "ELink::createLink() - "\
-                        "The link '%s' to '%s' type cannot be created" \
-                        % (name, path)
+                    print("ELink::createLink() - "
+                          "The link '%s' to '%s' type cannot be created"
+                          % (name, path),
+                          file=Streams.log_error)
+
                 raise XMLSettingSyntaxError(
                     "The link '%s' to '%s' type cannot be created"
                     % (name, path))
         else:
             if Streams.log_error:
-                print >> Streams.log_error, \
-                    "ELink::createLink() - No name or type"
+                print("ELink::createLink() - No name or type",
+                      file=Streams.log_error)
+
             raise XMLSettingSyntaxError("No name or type")

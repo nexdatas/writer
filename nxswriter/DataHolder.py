@@ -21,6 +21,8 @@
 
 """ definition of a data holder with casting methods """
 
+from __future__ import print_function
+
 import numpy
 
 from .Types import NTP
@@ -68,9 +70,10 @@ class DataHolder(object):
                 rank = NTP().arrayRank(self.value)
                 if rank > 2:
                     if Streams.log_error:
-                        print >> Streams.log_error,  \
-                            "DataHolder::__setupEncoded() - "\
-                            "Unsupported variables format"
+                        print("DataHolder::__setupEncoded() - "
+                              "Unsupported variables format",
+                              file=Streams.log_error)
+
                     raise ValueError("Unsupported variables format")
                 self.format = ["SCALAR", "SPECTRUM",
                                "IMAGE", "VERTEX"][rank]
@@ -82,17 +85,19 @@ class DataHolder(object):
 
         if self.value is None:
             if Streams.log_error:
-                print >> Streams.log_error,  \
-                    "DataHolder::__setupEncoded() - "\
-                    "Encoding of DevEncoded variables not defined"
+                print("DataHolder::__setupEncoded() - "
+                      "Encoding of DevEncoded variables not defined",
+                      file=Streams.log_error)
+
             raise ValueError(
                 "Encoding of DevEncoded variables not defined")
 
         if self.shape is None:
             if Streams.log_error:
-                print >> Streams.log_error, \
-                    "DataHolder::__setupEncoded() - "\
-                    "Encoding or Shape not defined"
+                print("DataHolder::__setupEncoded() - "
+                      "Encoding or Shape not defined",
+                      file=Streams.log_error)
+
             raise ValueError("Encoding or Shape not defined")
 
     ## casts the data into given type

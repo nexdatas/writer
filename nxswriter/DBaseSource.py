@@ -21,6 +21,8 @@
 
 """ Definitions of DB datasource """
 
+from __future__ import print_function
+
 import sys
 from xml.dom import minidom
 
@@ -37,26 +39,26 @@ DB_AVAILABLE = []
 try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
-except ImportError, e:
-    print >> sys.stdout, "MYSQL not available: %s" % e
+except ImportError as e:
+    print("MYSQL not available: %s" % e, file=sys.stdout)
     if Streams.log_info:
-        print >> Streams.log_info, "MYSQL not available: %s" % e
+        print("MYSQL not available: %s" % e, file=Streams.log_info)
 
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
-except ImportError, e:
-    print >> sys.stdout, "PGSQL not available: %s" % e
+except ImportError as e:
+    print("PGSQL not available: %s" % e, file=sys.stdout)
     if Streams.log_info:
-        print >> Streams.log_info, "PGSQL not available: %s" % e
+        print("PGSQL not available: %s" % e, file=Streams.log_info)
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
-except ImportError, e:
-    print >> sys.stdout, "ORACLE not available: %s" % e
+except ImportError as e:
+    print("ORACLE not available: %s" % e, file=sys.stdout)
     if Streams.log_info:
-        print >> Streams.log_info, "ORACLE not available: %s" % e
+        print("ORACLE not available: %s" % e, file=Streams.log_info)
 
 
 ## DataBase data source
@@ -111,9 +113,10 @@ class DBaseSource(DataSource):
 
         if not self.format or not self.query:
             if Streams.log_error:
-                print >> Streams.log_error, \
-                    "DBaseSource::setup() - "\
-                    "Database query or its format not defined: %s" % xml
+                print("DBaseSource::setup() - "
+                      "Database query or its format not defined: %s" % xml,
+                      file=Streams.log_error)
+
             raise DataSourceSetupError(
                 "Database query or its format not defined: %s" % xml)
 
@@ -201,9 +204,10 @@ class DBaseSource(DataSource):
             db = self.__dbConnect[self.dbtype]()
         else:
             if Streams.log_error:
-                print >> Streams.log_error, \
-                    "DBaseSource::getData() - "\
-                    "Support for %s database not available" % self.dbtype
+                print("DBaseSource::getData() - "
+                    "Support for %s database not available" % self.dbtype,
+                      file=Streams.log_error)
+
             raise PackageError(
                 "Support for %s database not available" % self.dbtype)
 

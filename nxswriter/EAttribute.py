@@ -21,6 +21,8 @@
 
 """ Definitions of attribute tag evaluation classes """
 
+from __future__ import print_function
+
 import sys
 
 import numpy
@@ -95,7 +97,8 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        print >> sys.stderr, "Group::run() - %s " % message[0]
+                        print("Group::run() - %s " % message[0],
+                              file=sys.stderr)
                         self.error = message
                     else:
                         arr = dh.cast(self.h5Object.dtype)
@@ -114,31 +117,34 @@ class EAttribute(FElement):
                             ## pniio does not support this case
                             self.h5Object.value = arr
                             if Streams.log_error:
-                                print >> Streams.log_error, \
-                                    "EAttribute::run() - "\
-                                    "Storing multi-dimension "\
-                                    "string attributes"\
-                                    " not supported by pniio"
+                                print("EAttribute::run() - "
+                                      "Storing multi-dimension "
+                                      "string attributes"
+                                      " not supported by pniio",
+                                      file=Streams.log_error)
+
                             raise Exception("Storing multi-dimension string "
                                             "attributes not supported "
                                             "by pniio")
         except:
             message = self.setMessage(sys.exc_info()[1].__str__())
-            print >> sys.stderr, "Group::run() - %s " % message[0]
+            print("Group::run() - %s " % message[0], file=sys.stderr)
             self.error = message
         #            self.error = sys.exc_info()
         finally:
             if self.error:
                 if self.canfail:
                     if Streams.log_warn:
-                        print >> Streams.log_warn, \
-                            "Group::run() - %s  " % str(self.error)
+                        print("Group::run() - %s  " % str(self.error),
+                              file=Streams.log_warn)
+
                 else:
                     if Streams.log_error:
-                        print >> Streams.log_error, \
-                            "Group::run() - %s  " % str(self.error)
-                print >> sys.stderr, "Group::run() - ERROR", \
-                    str(self.error)
+                        print("Group::run() - %s  " % str(self.error),
+                              file=Streams.log_error)
+
+                print("Group::run() - ERROR %s" % str(self.error),
+                      file=sys.stderr)
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value
@@ -177,10 +183,12 @@ class EAttribute(FElement):
         if field:
             field.attr("nexdatas_canfail", "string").value = "FAILED"
             if Streams.log_info:
-                print >> Streams.log_info, \
-                    "EAttribute::markFailed() - "\
-                    "%s of %s marked as failed" % \
-                    (self.h5Object.name, field.name)
-                print >> Streams.log_info, \
-                    "EAttribute::markFailed() - marked as failed  "
+                print("EAttribute::markFailed() - "
+                      "%s of %s marked as failed" %
+                      (self.h5Object.name, field.name),
+                      file=Streams.log_info)
+
+                print("EAttribute::markFailed() - marked as failed",
+                      file=Streams.log_info)
+
             self.__fillMax()

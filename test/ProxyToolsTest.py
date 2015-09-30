@@ -159,13 +159,13 @@ class proxy(object):
     ## get proxy state
     def state(self):
         if not self.valid:
-            raise Exception, "Not valid proxy"
+            raise Exception("Not valid proxy")
         return "something"
 
     ## ping method
     def ping(self):
         if not self.valid:
-            raise Exception, "Not valid proxy"
+            raise Exception("Not valid proxy")
         return "something"
 
 if __name__ == '__main__':

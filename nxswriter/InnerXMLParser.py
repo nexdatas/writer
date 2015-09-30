@@ -108,7 +108,7 @@ class InnerXMLHandler(sax.ContentHandler):
 if __name__ == "__main__":
 
     if len(sys.argv) < 2:
-        print "usage: InnerXMLParser.py  <XMLinput>"
+        print("usage: InnerXMLParser.py  <XMLinput>")
 
     else:
         ## input XML file
@@ -123,4 +123,4 @@ if __name__ == "__main__":
             parser.setContentHandler(handler)
 
             parser.parse(open(fi))
-            print "GT:", handler.xml
+            print("GT: %s" % handler.xml)

@@ -100,7 +100,7 @@ class UINT32decoder(object):
     # \returns the data shape if data was loaded
     def shape(self):
         if self.__data:
-            return [len(self.__data[1]) / 4, 0]
+            return [len(self.__data[1]) // 4, 0]
 
     ## provides the decoded data
     # \returns the decoded data if data was loaded
@@ -111,8 +111,8 @@ class UINT32decoder(object):
             raise ValueError("Wrong encoded UINT32 data length")
         if not self.__value:
             self.__value = numpy.array(
-                struct.unpack('I' * (len(self.__data[1]) / 4), self.__data[1]),
-                dtype=self.dtype).reshape(len(self.__data[1]) / 4)
+                struct.unpack('I' * (len(self.__data[1]) // 4), self.__data[1]),
+                dtype=self.dtype).reshape(len(self.__data[1]) // 4)
         return self.__value
 
 
@@ -183,7 +183,7 @@ class VDEOdecoder(object):
             dformat = self.__formatID[self.__header['imageMode']]
             fSize = struct.calcsize(dformat)
             self.__value = numpy.array(
-                struct.unpack(dformat * (len(image) / fSize), image),
+                struct.unpack(dformat * (len(image) // fSize), image),
                 dtype=self.dtype).reshape(self.__header['width'],
                                           self.__header['height'])
         return self.__value

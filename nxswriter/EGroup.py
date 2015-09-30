@@ -21,6 +21,8 @@
 
 """ Definitions of group tag evaluation classes """
 
+from __future__ import print_function
+
 import numpy
 
 from .FElement import FElementWithAttr
@@ -44,8 +46,9 @@ class EGroup(FElementWithAttr):
                 gname = attrs["type"][2:].encode()
             else:
                 if Streams.log_error:
-                    print >> Streams.log_error, \
-                        "EGroup::__init__() - The group type not defined"
+                    print("EGroup::__init__() - The group type not defined",
+                          file=Streams.log_error)
+
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
                 ## stored H5 file object (defined in base class)
@@ -53,12 +56,13 @@ class EGroup(FElementWithAttr):
                     gname, attrs["type"].encode())
             except:
                 if Streams.log_error:
-                    print >> Streams.log_error, \
-                        "EGroup::__init__() - "\
-                        "The group '%s' of '%s' type cannot be created. \n"\
-                        "Please remove the old file, change the file name "\
-                        "or change the group name." % \
-                        (gname, attrs["type"].encode())
+                    print("EGroup::__init__() - "
+                          "The group '%s' of '%s' type cannot be created. \n"
+                          "Please remove the old file, change the file name "
+                          "or change the group name." %
+                          (gname, attrs["type"].encode()),
+                          file=Streams.log_error)
+
                 raise XMLSettingSyntaxError(
                     "The group '%s' of '%s' type cannot be created. \n"
                     "Please remove the old file, change the file name "
@@ -67,9 +71,10 @@ class EGroup(FElementWithAttr):
 
         else:
             if Streams.log_error:
-                print >> Streams.log_error, \
-                    "EGroup::__init__() - "\
-                    "File object for the last element does not exist"
+                print("EGroup::__init__() - "
+                      "File object for the last element does not exist",
+                      file=Streams.log_error)
+
             raise XMLSettingSyntaxError(
                 "File object for the last element does not exist")
 

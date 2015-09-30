@@ -271,7 +271,7 @@ class PyEvalTangoSourceTest(unittest.TestCase):
         script = """
 try:
     ds.res = ds.inp + ds.inp2
-    print "BNB"
+    print("BNB")
 except:
     try:
        ds.res = unicode(ds.inp) + unicode(ds.inp2)
@@ -822,7 +822,7 @@ ds.res = commonblock["myres"]
         script = """
 try:
     ds.res = ds.inp + ds.inp2
-    print "BNB"
+    print("BNB")
 except:
     try:
        ds.res = unicode(ds.inp) + unicode(ds.inp2)

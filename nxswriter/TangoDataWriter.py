@@ -22,6 +22,8 @@
 
 """ Tango Data Writer implementation """
 
+from __future__ import print_function
+
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
@@ -260,11 +262,13 @@ class TangoDataWriter(object):
 
         if self.__stepPool:
             if Streams.log_info:
-                print >> Streams.log_info, \
-                    "TangoDataWriter::record() - Default trigger"
+                print("TangoDataWriter::record() - Default trigger",
+                      file=Streams.log_info)
+
             else:
-                print >> sys.stdout, \
-                    "TangoDataWriter::record() - Default trigger"
+                print("TangoDataWriter::record() - Default trigger",
+                      file=sys.stdout)
+
             self.__stepPool.setJSON(json.loads(self.jsonrecord), localJSON)
             self.__stepPool.runAndWait()
             self.__stepPool.checkErrors()
@@ -277,11 +281,13 @@ class TangoDataWriter(object):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
                     if Streams.log_info:
-                        print >> Streams.log_info, \
-                            "TangoDataWriter:record() - Trigger: %s" % pool
+                        print("TangoDataWriter:record() - Trigger: %s" % pool,
+                              file=Streams.log_info)
+
                     else:
-                        print >> sys.stdout, \
-                            "TangoDataWriter:record() - Trigger: %s" % pool
+                        print("TangoDataWriter:record() - Trigger: %s" % pool,
+                              file=sys.stdout)
+
                     self.__triggerPools[pool].setJSON(
                         json.loads(self.jsonrecord), localJSON)
                     self.__triggerPools[pool].runAndWait()

@@ -21,6 +21,8 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
+from __future__ import print_function
+
 import pni.io.nx.h5 as nx
 from xml import sax
 
@@ -167,19 +169,22 @@ class NexusXMLHandler(sax.ContentHandler):
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
                     if Streams.log_error:
-                        print >> Streams.log_error, \
-                            "NexusXMLHandler::startElement() - "\
-                            "Unsupported tag: %s, %s " % (name, attrs.keys())
+                        print("NexusXMLHandler::startElement() - "
+                              "Unsupported tag: %s, %s "
+                              % (name, attrs.keys()),
+                              file=Streams.log_error)
+
                     raise UnsupportedTagError("Unsupported tag: %s, %s "
                                               % (name, attrs.keys()))
                 if Streams.log_warn:
-                    print >> Streams.log_warn,  \
-                        "NexusXMLHandler::startElement() - "\
-                        "Unsupported tag: %s, %s " % (name, attrs.keys())
+                    print("NexusXMLHandler::startElement() - "
+                          "Unsupported tag: %s, %s " % (name, attrs.keys()),
+                          file=Streams.log_warn)
+
                 else:
-                    print >> sys.stderr, \
-                        "NexusXMLHandler::startElement() - "\
-                        "Unsupported tag: %s, %s " % (name, attrs.keys())
+                    print("NexusXMLHandler::startElement() - "
+                          "Unsupported tag: %s, %s " % (name, attrs.keys()),
+                          file=sys.stderr)
 
                 self.__unsupportedTag = name
 
@@ -252,7 +257,7 @@ class NexusXMLHandler(sax.ContentHandler):
 if __name__ == "__main__":
 
     if len(sys.argv) < 3:
-        print "usage: NexusXMLHandler.py  <XMLinput>  <h5output>"
+        print("usage: NexusXMLHandler.py  <XMLinput>  <h5output>")
 
     else:
         ## input XML file
