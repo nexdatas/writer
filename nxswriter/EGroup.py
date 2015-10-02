@@ -89,9 +89,11 @@ class EGroup(FElementWithAttr):
                         except:
                             (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode()))[...] = \
+                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                overwrite=True
+                            ))[...] = \
                                 NTP.convert[
-                                    str(self.h5Object.attribute[
+                                    str(self.h5Object.attributes[
                                         key.encode()
                                     ].dtype)](attrs[key].encode())
 

@@ -176,9 +176,8 @@ class FElement(Element):
         elif extraD:
             shape = [0]
 
-        ## ?? probably wrong    
+        ## ?? probably wrong
         if shape == []:
-            shape = [1]
             self._scalar =  True
         return shape
 
@@ -259,7 +258,7 @@ class FElementWithAttr(FElement):
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(),
                         "DevString", [1, 0])
-                    self.__h5Instances[key.encode()].value = \
+                    self.__h5Instances[key.encode()][...] = \
                         dh.cast(self.__h5Instances[key.encode()].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
@@ -272,10 +271,15 @@ class FElementWithAttr(FElement):
                     val = self.tagAttributes[key][1].strip().encode()
                     if val:
                         rank = len(shape)
-                        dh = self._setValue(rank, val)
-                        self.__h5Instances[key.encode()].value = \
-                            dh.cast(self.__h5Instances[key.encode()].dtype)
-
+#                        dh = self._setValue(rank, val)
+                        hsp = self.__h5Instances[key.encode()].shape
+                        if hsp and set(hsp) == set([1]) and \
+                           self.__h5Instances[key.encode()].dtype == 'string':
+                            dh = self._setValue(0, val)
+                        else:
+                            dh = self._setValue(rank, val)
+                        self.__h5Instances[key.encode()][...] = dh.cast(
+                            self.__h5Instances[key.encode()].dtype)
     ## provides attribute h5 object
     # \param name attribute name
     # \returns instance of the attribute object if created

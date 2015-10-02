@@ -329,7 +329,7 @@ class EAttributeTest(unittest.TestCase):
             el[k].strategy = "INIT"
             self.assertEqual(el[k].h5Object, None)
             self.assertEqual(el[k].store(), ('INIT',None))
-            self.assertEqual(fi.tagAttributes[k],(attrs[k][1],''))
+            self.assertEqual(fi.tagAttributes[k],(attrs[k][1], ''))
 
         self._nxFile.close()
         os.remove(self._fname) 
@@ -776,7 +776,8 @@ class EAttributeTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
-            "string":["My string","NX_CHAR", "string"],
+            "string":["My_string","NX_CHAR", "string"],
+#            "string":["My_string","NX_CHAR", "string"],
             "datetime":["12:34:34","NX_DATE_TIME", "string"],
             "iso8601":["12:34:34","ISO8601", "string"],
             "int":[-123,"NX_INT", "int64"],
@@ -819,31 +820,95 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
             
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
 
         for k in attrs.keys():
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes() 
             at = el[k].h5Object.attributes[k]
-#            at = el[k].h5Attribute(k)
-            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                          attrs[k][3] if len(attrs[k])>3 else 0)
+            print at[...], at.dtype, at.shape
+            self._sc.checkScalarAttribute(
+                el[k].h5Object, k, attrs[k][2] or 'string', attrs[k][0], 
+                attrs[k][3] if len(attrs[k])>3 else 0)
 
         for k in attrs.keys():
-            if attrs[k][2] == 'string':
-                "writing multi-dimensional string is not supported by pniio"
-                continue
+            print "K", k
+#            if attrs[k][2] == 'string':
+#                "writing multi-dimensional string is not supported by pniio"
+#                continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
 #            at = el[k].h5Attribute(k)
-            at = el[k].h5Object.attributes(k)
-            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+            at = el[k].h5Object.attributes[k]
+#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+#                                            attrs[k][3] if len(attrs[k])>3 else 0)
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                            attrs[k][3] if len(attrs[k])>3 else 0)
+
+        self._nxFile.close()
+ 
+        os.remove(self._fname)
+
+
+            ## constructor test
+    # \brief It tests default settings
+    def test_run_value_no_string_shape_reduction(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+
+        attrs = {
+            "string":["My string","NX_CHAR", "string"],
+            "datetime":["12 34 34","NX_DATE_TIME", "string"],
+            "iso8601":["12 3434","ISO8601", "string"],
+            }
+
+        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        eFile = EFile( {}, None, self._nxFile)
+
+
+
+        el = {}
+        for k in attrs.keys():
+            el[k] = EField( {"name":k, "type":attrs[k][1], "units":"m"}, eFile)
+
+            self.assertEqual(el[k].tagAttributes, {})
+            el[k].tagAttributes[k] = (attrs[k][1], '')
+            ds = TestDataSource()
+            ds.valid = True
+            el[k].source = ds
+            el[k].strategy = 'STEP'
+
+            el[k].store() 
+            at = el[k].h5Attribute(k)
+            self.assertEqual(at.dtype, attrs[k][2])
+            if attrs[k][2] == "bool":
+                self.assertEqual(Converters.toBool(str(0)),at[...])
+            
+            elif len(attrs[k]) > 3:
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
+            else: 
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
+
+
+        for k in attrs.keys():
+            print "K", k
+#            if attrs[k][2] == 'string':
+#                "writing multi-dimensional string is not supported by pniio"
+#                continue
+            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
+            el[k]._createAttributes() 
+#            at = el[k].h5Attribute(k)
+            at = el[k].h5Object.attributes[k]
+#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+#                                            attrs[k][3] if len(attrs[k])>3 else 0)
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
 
         self._nxFile.close()
@@ -911,12 +976,12 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
                 
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
 
         for k in attrs.keys():
@@ -928,12 +993,12 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
                 
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
         self._nxFile.close()
  
         os.remove(self._fname)
@@ -1001,12 +1066,12 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
                 
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
 
         for k in attrs.keys():
@@ -1014,7 +1079,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1047,11 +1112,13 @@ class EAttributeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64"],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64"],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64",1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
@@ -1089,19 +1156,19 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2] if attrs[k][2] else "string" )
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
                 
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string'  or not attrs[k][2] else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string'  or not attrs[k][2] else 0)
 
 
         for k in attrs.keys():
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1175,12 +1242,12 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
                 
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string' else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
 
         for k in attrs.keys():
@@ -1188,7 +1255,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1219,11 +1286,13 @@ class EAttributeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64"],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64"],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64",1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
@@ -1261,12 +1330,12 @@ class EAttributeTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2] if attrs[k][2] else "string")
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(0)),at.value)
+                self.assertEqual(Converters.toBool(str(0)),at[...])
                 
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value ) <= attrs[k][3])
+                self.assertTrue(abs(at[...] ) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, '' if attrs[k][2] == 'string' or not attrs[k][2] else 0)
+                self.assertEqual(at[...], '' if attrs[k][2] == 'string' or not attrs[k][2] else 0)
 
 
         for k in attrs.keys():
@@ -1274,7 +1343,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1361,15 +1430,15 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
-#            self.assertEqual(ea[k].h5Object.shape,(1,))
+            self.assertEqual(ea[k].h5Object.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string' :
                 self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
                                                 attrs[k][4] if len(attrs[k])>4 else 0)
             else:
                 self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                                attrs[k][4] if len(attrs[k])>4 else 0)
+                                              attrs[k][4] if len(attrs[k])>4 else 0)
                 
 
         self._nxFile.close()
@@ -1397,11 +1466,13 @@ class EAttributeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -1447,7 +1518,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             self.assertEqual(ea[k].markFailed(),None)
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
 #            self.assertEqual(ea[k].h5Object.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string' :
@@ -1475,9 +1546,9 @@ class EAttributeTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["My string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1551,7 +1622,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][4] if len(attrs[k])>4 else 0)
@@ -1574,19 +1645,21 @@ class EAttributeTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
-#            "string":["","NX_CHAR", "string" , (1,)],
-#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["","ISO8601", "string", (1,)],
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -1645,7 +1718,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][5] if len(attrs[k])>5 else 0)
@@ -1664,9 +1737,9 @@ class EAttributeTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["My string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1744,7 +1817,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][4] if len(attrs[k])>4 else 0)
@@ -1762,19 +1835,21 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         attrs = {
-#            "string":["","NX_CHAR", "string" , (1,)],
-#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["","ISO8601", "string", (1,)],
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -1829,7 +1904,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][5] if len(attrs[k])>5 else 0)
@@ -1926,16 +2001,16 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
-            if ea[k].h5Object.dtype != 'string':
-                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                             attrs[k][4] if len(attrs[k])>4 else 0)
-            else:
-                self.assertEqual(ea[k].error[0], 
-                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-                self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pniio')
+#            if ea[k].h5Object.dtype != 'string':
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                         attrs[k][4] if len(attrs[k])>4 else 0)
+#            else:
+#                self.assertEqual(ea[k].error[0], 
+#                                 'Data for %s not found. DATASOURCE:Test DataSource' % k)
+#                self.assertEqual(ea[k].error[1], 
+#                                'Storing multi-dimension string attributes not supported by pniio')
 
         self._nxFile.close()
  
@@ -1952,19 +2027,21 @@ class EAttributeTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
-#            "string":["","NX_CHAR", "string" , (1,)],
-#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["","ISO8601", "string", (1,)],
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -2017,16 +2094,16 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
-            if ea[k].h5Object.dtype != 'string':
-                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                             attrs[k][5] if len(attrs[k])>5 else 0)
-            else:
-                self.assertEqual(ea[k].error[0], 
-                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-                self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pniio')
+#           if ea[k].h5Object.dtype != 'string':
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                         attrs[k][5] if len(attrs[k])>5 else 0)
+#            else:
+#                self.assertEqual(ea[k].error[0], 
+#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+#                self.assertEqual(ea[k].error[1], 
+#                                'Storing multi-dimension string attributes not supported by pniio')
 
         self._nxFile.close()
  
@@ -2128,16 +2205,16 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
-            if ea[k].h5Object.dtype != 'string':
-                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                             attrs[k][4] if len(attrs[k])>4 else 0)
-            else:
-                self.assertEqual(ea[k].error[0], 
-                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-                self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pniio')
+#            if ea[k].h5Object.dtype != 'string':
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                         attrs[k][4] if len(attrs[k])>4 else 0)
+#            else:
+#                self.assertEqual(ea[k].error[0], 
+#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+#                self.assertEqual(ea[k].error[1], 
+#                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)
@@ -2158,19 +2235,21 @@ class EAttributeTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
-#            "string":["","NX_CHAR", "string" , (1,)],
-#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["","ISO8601", "string", (1,)],
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -2226,16 +2305,16 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
-            if ea[k].h5Object.dtype != 'string':
-                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                             attrs[k][5] if len(attrs[k])>5 else 0)
-            else:
-                self.assertEqual(ea[k].error[0], 
-                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-                self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pniio')
+#            if ea[k].h5Object.dtype != 'string':
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                         attrs[k][5] if len(attrs[k])>5 else 0)
+#            else:
+#                self.assertEqual(ea[k].error[0], 
+#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+#                self.assertEqual(ea[k].error[1], 
+#                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)
@@ -2334,17 +2413,17 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
 
-            if ea[k].h5Object.dtype != 'string':
-                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                             attrs[k][4] if len(attrs[k])>4 else 0)
-            else:
-                self.assertEqual(ea[k].error[0],
-                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-                self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pniio')
+#            if ea[k].h5Object.dtype != 'string':
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                         attrs[k][4] if len(attrs[k])>4 else 0)
+#            else:
+#                self.assertEqual(ea[k].error[0],
+#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+#                self.assertEqual(ea[k].error[1], 
+#                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)
@@ -2360,19 +2439,21 @@ class EAttributeTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         attrs = {
-#            "string":["","NX_CHAR", "string" , (1,)],
-#            "datetime":["","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["","ISO8601", "string", (1,)],
+            "string":["","NX_CHAR", "string" , (1,)],
+            "datetime":["","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["","ISO8601", "string", (1,)],
             "int":[numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
             "int8":[numpy.iinfo(getattr(numpy, 'int8')).max,"NX_INT8", "int8", (1,)],
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -2427,17 +2508,17 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),nx.nxh5.NXAttribute)
+            self.assertEqual(type(ea[k].h5Object),nx._nxh5.nxattribute)
             self.assertEqual(ea[k].h5Object.name,k)
 
-            if ea[k].h5Object.dtype != 'string':
-                self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                             attrs[k][5] if len(attrs[k])>5 else 0)
-            else:
-                self.assertEqual(ea[k].error[0],
-                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-                self.assertEqual(ea[k].error[1], 
-                                'Storing multi-dimension string attributes not supported by pniio')
+#            if ea[k].h5Object.dtype != 'string':
+            self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
+                                         attrs[k][5] if len(attrs[k])>5 else 0)
+#            else:
+#                self.assertEqual(ea[k].error[0],
+#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
+#                self.assertEqual(ea[k].error[1], 
+#                                'Storing multi-dimension string attributes not supported by pniio')
         self._nxFile.close()
  
         os.remove(self._fname)

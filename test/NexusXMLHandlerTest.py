@@ -582,19 +582,20 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 0)
+        self.assertEqual(len(en.attributes),1)
+        self.assertEqual(en.size, 0)
         
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
         self.assertEqual(el.close(), None)
 
@@ -632,28 +633,32 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry")
-        self.assertEqual(en.nattrs,2)
-        self.assertEqual(en.nchildren, 0)
+        self.assertEqual(len(en.attributes),2)
+        self.assertEqual(en.size, 0)
         
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
 
-        at = en.attr("shortname")
-        self.assertTrue(at.valid)
+        at = en.attributes["shortname"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"shortname")
-        self.assertEqual(at.value,"myentry")
+        self.assertEqual(at[...],"myentry")
 
         self.assertEqual(el.close(), None)
 
@@ -692,32 +697,36 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 1)
+        self.assertEqual(len(en.attributes),1)
+        self.assertEqual(en.size, 1)
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
         ins = en.open(attr2["name"])
-        self.assertTrue(ins.valid)
+        self.assertTrue(ins.is_valid)
         self.assertEqual(ins.name,"instrument")
-        self.assertEqual(ins.nattrs,1)
-        self.assertEqual(ins.nchildren, 0)
+        self.assertEqual(len(ins.attributes),1)
+        self.assertEqual(ins.size, 0)
         
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
 
         self.assertEqual(el.close(), None)
@@ -767,40 +776,46 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 1)
+        self.assertEqual(len(en.attributes),1)
+        self.assertEqual(en.size, 1)
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
         ins = en.open(attr2["name"])
-        self.assertTrue(ins.valid)
+        self.assertTrue(ins.is_valid)
         self.assertEqual(ins.name,"instrument")
-        self.assertEqual(ins.nattrs,2)
-        self.assertEqual(ins.nchildren, 0)
+        self.assertEqual(len(ins.attributes),2)
+        self.assertEqual(ins.size, 0)
         
-        at = ins.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = ins.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXinstrument")
+        self.assertEqual(at[...],"NXinstrument")
 
-        at = ins.attr("signal")
-        self.assertTrue(at.valid)
+        at = ins.attributes["signal"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"int64")
         self.assertEqual(at.name,"signal")
-        self.assertEqual(at.value,1)
+        self.assertEqual(at[...],1)
 
 
         self.assertEqual(el.close(), None)
@@ -843,30 +858,34 @@ class NexusXMLHandlerTest(unittest.TestCase):
         
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"counter")
-        self.assertEqual(en.nattrs,2)
+        self.assertEqual(len(en.attributes),2)
         self.assertEqual(en.read(), value)
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
         self.assertEqual(en.shape[0],1)
         
 
-        at = en.attr("type")
-        self.assertTrue(at.valid)
+        at = en.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_CHAR")
+        self.assertEqual(at[...],"NX_CHAR")
 
-        at = en.attr("axis")
-        self.assertTrue(at.valid)
+        at = en.attributes["axis"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"int64")
         self.assertEqual(at.name,"axis")
-        self.assertEqual(at.value, 1)
+        self.assertEqual(at[...], 1)
 
         self.assertEqual(el.close(), None)
 
@@ -903,22 +922,24 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"counter")
-        self.assertEqual(en.nattrs,1)
+        self.assertEqual(len(en.attributes),1)
         self.assertEqual(en.read(),"field")
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
         self.assertEqual(en.shape[0],1)
         
 
-        at = en.attr("type")
-        self.assertTrue(at.valid)
+        at = en.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_CHAR")
+        self.assertEqual(at[...],"NX_CHAR")
 
         self.assertEqual(el.close(), None)
 
@@ -954,22 +975,24 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"counter")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.read(),"")
+        self.assertEqual(len(en.attributes),1)
+        self.myAssertRaise(MemoryError, en.read)
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
-        self.assertEqual(en.shape[0],1)
+        self.assertEqual(en.shape[0],0)
         
 
-        at = en.attr("type")
-        self.assertTrue(at.valid)
+        at = en.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_CHAR")
+        self.assertEqual(at[...],"NX_CHAR")
 
         self.assertEqual(el.close(), None)
 
@@ -1011,22 +1034,25 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"counter")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.read(),"")
+        self.assertEqual(len(en.attributes),1)
+        self.myAssertRaise(MemoryError, en.read)
+#        self.assertEqual(en.read(), "")
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
-        self.assertEqual(en.shape[0],1)
+        self.assertEqual(en.shape[0],0)
         
 
-        at = en.attr("type")
-        self.assertTrue(at.valid)
+        at = en.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_CHAR")
+        self.assertEqual(at[...],"NX_CHAR")
 
         self.assertEqual(el.close(), None)
 
@@ -1134,35 +1160,39 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 1)
+        self.assertEqual(len(en.attributes),1)
+        self.assertEqual(en.size, 1)
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
         cnt = en.open(attr2["name"])
-        self.assertTrue(cnt.valid)
+        self.assertTrue(cnt.is_valid)
         self.assertEqual(cnt.name,"counter")
-        self.assertEqual(cnt.nattrs,1)
+        self.assertEqual(len(cnt.attributes),1)
         self.assertEqual(cnt.read(),1234)
         self.assertTrue(hasattr(cnt.shape,"__iter__"))
         self.assertEqual(len(cnt.shape),1)
         self.assertEqual(cnt.shape[0],1)
         
-        at = cnt.attr("type")
-        self.assertTrue(at.valid)
+        at = cnt.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_INT")
+        self.assertEqual(at[...],"NX_INT")
 
 
         self.assertEqual(el.close(), None)
@@ -1217,35 +1247,39 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,1)
-        self.assertEqual(en.nchildren, 1)
+        self.assertEqual(len(en.attributes),1)
+        self.assertEqual(en.size, 1)
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
         cnt = en.open(attr2["name"])
-        self.assertTrue(cnt.valid)
+        self.assertTrue(cnt.is_valid)
         self.assertEqual(cnt.name,"counter")
-        self.assertEqual(cnt.nattrs,1)
+        self.assertEqual(len(cnt.attributes),1)
         self.assertEqual(cnt.read(),1234)
         self.assertTrue(hasattr(cnt.shape,"__iter__"))
         self.assertEqual(len(cnt.shape),1)
         self.assertEqual(cnt.shape[0],1)
 
-        at = cnt.attr("type")
-        self.assertTrue(at.valid)
+        at = cnt.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_INT")
+        self.assertEqual(at[...],"NX_INT")
 
 
         self.assertEqual(el.close(), None)
@@ -1300,25 +1334,29 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,2)
+        self.assertEqual(len(en.attributes),2)
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
-        at = en.attr(attr2["name"])
-        self.assertTrue(at.valid)
+        at = en.attributes[attr2["name"]]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.name,"counter")
         self.assertEqual(at.dtype,"int32")
-        self.assertEqual(at.value,1234)
+        self.assertEqual(at[...],1234)
         
 
 
@@ -1361,25 +1399,29 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,2)
+        self.assertEqual(len(en.attributes),2)
 
-        at = en.attr("NX_class")
-        self.assertTrue(at.valid)
+        at = en.attributes["NX_class"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"NX_class")
-        self.assertEqual(at.value,"NXentry")
+        self.assertEqual(at[...],"NXentry")
 
-        at = en.attr(attr2["name"])
-        self.assertTrue(at.valid)
+        at = en.attributes[attr2["name"]]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.name,"counter")
         self.assertEqual(at.dtype,"int32")
-        self.assertEqual(at.value,1234)
+        self.assertEqual(at[...],1234)
         
 
 
@@ -1441,29 +1483,33 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,2)
+        self.assertEqual(len(en.attributes),2)
         self.assertEqual(en.read(),'1234')
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
         self.assertEqual(en.shape[0],1)
 
-        at = en.attr("type")
-        self.assertTrue(at.valid)
+        at = en.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_CHAR")
+        self.assertEqual(at[...],"NX_CHAR")
 
-        at = en.attr(attr2["name"])
-        self.assertTrue(at.valid)
+        at = en.attributes[attr2["name"]]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.name,"counter")
         self.assertEqual(at.dtype,"int32")
-        self.assertEqual(at.value,34)
+        self.assertEqual(at[...],34)
         
 
 
@@ -1507,29 +1553,33 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertEqual(el.triggerPools, {})
         
         en = self._nxFile.open(attr1["name"])
-        self.assertTrue(en.valid)
+        self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"entry1")
-        self.assertEqual(en.nattrs,2)
+        self.assertEqual(len(en.attributes),2)
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
         self.assertEqual(en.shape[0],1)
         self.assertEqual(en.read(),12)
 
-        at = en.attr("type")
-        self.assertTrue(at.valid)
+        at = en.attributes["type"]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.dtype,"string")
         self.assertEqual(at.name,"type")
-        self.assertEqual(at.value,"NX_INT")
+        self.assertEqual(at[...],"NX_INT")
 
-        at = en.attr(attr2["name"])
-        self.assertTrue(at.valid)
+        at = en.attributes[attr2["name"]]
+        self.assertTrue(at.is_valid)
         self.assertTrue(hasattr(at.shape,"__iter__"))
-        self.assertEqual(len(at.shape),0)
+        self.assertEqual(len(at.shape),1)
+        self.assertEqual(at.shape ,(1,))
+
         self.assertEqual(at.name,"counter")
         self.assertEqual(at.dtype,"int32")
-        self.assertEqual(at.value,1234)
+        self.assertEqual(at[...],1234)
         
 
 

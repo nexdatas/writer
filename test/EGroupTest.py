@@ -129,7 +129,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
@@ -157,7 +157,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
@@ -188,10 +188,10 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 2)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
-        self.assertEqual(el.h5Object.attributes["short_name"].value, gattrs["short_name"])
+        self.assertEqual(el.h5Object.attributes["short_name"][...], gattrs["short_name"])
         self.assertEqual(el.h5Object.attributes["short_name"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["short_name"].shape, (1,))
         
@@ -254,12 +254,12 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 14)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         
         for k in maTn.keys():
-            self.assertEqual(el.h5Object.attributes[k].value, gattrs[k])
+            self.assertEqual(el.h5Object.attributes[k][...], gattrs[k])
             self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
             
@@ -293,13 +293,13 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 2)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         
         for k in maTnv.keys():
             for i in range(len(gattrs[k])):
-                self.assertTrue(abs(el.h5Object.attributes[k].value[i]- gattrs[k][i]) <= error)
+                self.assertTrue(abs(el.h5Object.attributes[k][i]- gattrs[k][i]) <= error)
             self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (len(gattrs[k]),))
             
@@ -327,7 +327,7 @@ class EGroupTest(unittest.TestCase):
         el.store()
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
 #        self.myAssertRaise(ValueError, el.store)
         
         self._nxFile.close()
@@ -380,12 +380,12 @@ class EGroupTest(unittest.TestCase):
             at = el.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 3:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][3])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
             else: 
-                self.assertEqual(at.value, attrs[nm][0])
+                self.assertEqual(at[...], attrs[nm][0])
 
 
         for nm in attrs.keys():
@@ -394,12 +394,12 @@ class EGroupTest(unittest.TestCase):
             at = el.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 3:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][3])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
             else: 
-                self.assertEqual(at.value, attrs[nm][0])
+                self.assertEqual(at[...], attrs[nm][0])
 
         for nm in attrs.keys():
             if attrs[nm][2] == 'string':
@@ -411,16 +411,16 @@ class EGroupTest(unittest.TestCase):
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 3:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][3])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
             else: 
                 
-                if isinstance(at.value, numpy.ndarray): 
-                    self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+                if isinstance(at[...], numpy.ndarray): 
+                    self.assertEqual(at[...], numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
                 else:
-                    self.assertEqual(at.value, attrs[nm][0])
+                    self.assertEqual(at[...], attrs[nm][0])
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -471,16 +471,16 @@ class EGroupTest(unittest.TestCase):
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 4:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][4])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][4])
             else: 
                 
-                if isinstance(at.value, numpy.ndarray): 
-                    self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+                if isinstance(at[...], numpy.ndarray): 
+                    self.assertEqual(at[...], numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
                 else:
-                    self.assertEqual(at.value, attrs[nm][0])
+                    self.assertEqual(at[...], attrs[nm][0])
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -547,15 +547,15 @@ class EGroupTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value)
+                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[...])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
-                    self.assertTrue(abs(at.value - attrs[nm][0][i]) <= attrs[nm][4])
+                    self.assertTrue(abs(at[...] - attrs[nm][0][i]) <= attrs[nm][4])
             else: 
                 
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(at.value, attrs[nm][0][i])
+                    self.assertEqual(at[...], attrs[nm][0][i])
 
 
         self._nxFile.close()
@@ -621,15 +621,15 @@ class EGroupTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value[i])
+                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[i])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
-                    self.assertTrue(abs(at.value[i] - attrs[nm][0][i]) <= attrs[nm][4])
+                    self.assertTrue(abs(at[i] - attrs[nm][0][i]) <= attrs[nm][4])
             else: 
                 
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(at.value[i], attrs[nm][0][i])
+                    self.assertEqual(at[i], attrs[nm][0][i])
 
 
         self._nxFile.close()
@@ -702,16 +702,16 @@ class EGroupTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[i,j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at.value[i][j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[i,j] - attrs[nm][0][i][j]) <= attrs[nm][4])
             else: 
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+                        self.assertEqual(at[i,j], attrs[nm][0][i][j])
 
 
         self._nxFile.close()
@@ -783,16 +783,16 @@ class EGroupTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value)
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[...])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at.value - attrs[nm][0][i][j]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[...] - attrs[nm][0][i][j]) <= attrs[nm][4])
             else: 
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at.value, attrs[nm][0][i][j])
+                        self.assertEqual(at[...], attrs[nm][0][i][j])
 
 
         self._nxFile.close()
@@ -818,7 +818,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
@@ -853,7 +853,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
@@ -887,7 +887,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxgroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"].value, gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
 

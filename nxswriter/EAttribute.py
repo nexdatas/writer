@@ -109,13 +109,13 @@ class EAttribute(FElement):
                                     and len(dh.shape) > 0 \
                                     and dh.shape[0] == 1 \
                                     and type(arr).__name__ != "str":
-                                self.h5Object.value = arr[0]
+                                self.h5Object[...] = arr[0]
                             else:
-                                self.h5Object.value = arr
+                                self.h5Object[...] = arr
 
                         else:
                             ## pniio does not support this case
-                            self.h5Object.value = arr
+                            self.h5Object[...] = arr
                             if Streams.log_error:
                                 print("EAttribute::run() - "
                                       "Storing multi-dimension "
@@ -158,7 +158,12 @@ class EAttribute(FElement):
 
         if nptype != "string":
             try:
-                value = numpy.iinfo(getattr(numpy, nptype)).max
+                # workaround for bug #5618 in numpy for 1.8 < ver < 1.9.2
+                # 
+                if nptype == 'uint64':
+                    value = numpy.iinfo(getattr(numpy, 'int64')).max
+                else:
+                    value = numpy.iinfo(getattr(numpy, nptype)).max
             except:
                 try:
                     value = numpy.asscalar(
@@ -174,7 +179,7 @@ class EAttribute(FElement):
         else:
             arr = value
 
-        self.h5Object.value = arr
+        self.h5Object[...] = arr
 
     ## marks the field as failed
     # \brief It marks the field as failed

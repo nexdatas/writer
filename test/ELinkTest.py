@@ -128,7 +128,7 @@ class ELinkTest(unittest.TestCase):
 #        self.assertEqual(type(el.h5Object), None)
 #        self.assertEqual(el.h5Object.name, self._gattrs["name"])
 #        self.assertEqual(el.h5Object.nattrs, 1)
-#        self.assertEqual(el.h5Object.attr("NX_class").value, self._gattrs["type"])
+#        self.assertEqual(el.h5Object.attr("NX_class")[...], self._gattrs["type"])
 #        self.assertEqual(el.h5Object.attr("NX_class").dtype, "string")
 #        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
         
@@ -218,29 +218,29 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l1.read(), fi2.h5Object.read() )
         self.assertEqual(l1.dtype, fi2.h5Object.dtype )
         self.assertEqual(l1.shape, fi2.h5Object.shape )
-        self.assertEqual(l1.nattrs, fi2.h5Object.nattrs )
-        self.assertEqual(l1.attr("units").value, fi2.h5Object.attr("units").value )
-        self.assertEqual(l1.attr("units").dtype, fi2.h5Object.attr("units").dtype )
-        self.assertEqual(l1.attr("units").shape, fi2.h5Object.attr("units").shape )
+        self.assertEqual(len(l1.attributes), len(fi2.h5Object.attributes) )
+        self.assertEqual(l1.attributes["units"][...], fi2.h5Object.attributes["units"][...] )
+        self.assertEqual(l1.attributes["units"].dtype, fi2.h5Object.attributes["units"].dtype )
+        self.assertEqual(l1.attributes["units"].shape, fi2.h5Object.attributes["units"].shape )
 
         l2 = self._nxFile.open("link2")
         self.assertEqual(l2.read(), fi3.h5Object.read() )
         self.assertEqual(l2.dtype, fi3.h5Object.dtype )
         self.assertEqual(l2.shape, fi3.h5Object.shape )
-        self.assertEqual(l2.nattrs, fi3.h5Object.nattrs )
-        self.assertEqual(l2.attr("units").value, fi3.h5Object.attr("units").value )
-        self.assertEqual(l2.attr("units").dtype, fi3.h5Object.attr("units").dtype )
-        self.assertEqual(l2.attr("units").shape, fi3.h5Object.attr("units").shape )
+        self.assertEqual(len(l2.attributes), len(fi3.h5Object.attributes) )
+        self.assertEqual(l2.attributes["units"][...], fi3.h5Object.attributes["units"][...] )
+        self.assertEqual(l2.attributes["units"].dtype, fi3.h5Object.attributes["units"].dtype )
+        self.assertEqual(l2.attributes["units"].shape, fi3.h5Object.attributes["units"].shape )
 
 
         l3 = self._nxFile.open("link3")
         self.assertEqual(l3.read(), fi4.h5Object.read() )
         self.assertEqual(l3.dtype, fi4.h5Object.dtype )
         self.assertEqual(l3.shape, fi4.h5Object.shape )
-        self.assertEqual(l3.nattrs, fi4.h5Object.nattrs )
-        self.assertEqual(l3.attr("units").value, fi4.h5Object.attr("units").value )
-        self.assertEqual(l3.attr("units").dtype, fi4.h5Object.attr("units").dtype )
-        self.assertEqual(l3.attr("units").shape, fi4.h5Object.attr("units").shape )
+        self.assertEqual(len(l3.attributes), len(fi4.h5Object.attributes))
+        self.assertEqual(l3.attributes["units"][...], fi4.h5Object.attributes["units"][...] )
+        self.assertEqual(l3.attributes["units"].dtype, fi4.h5Object.attributes["units"].dtype )
+        self.assertEqual(l3.attributes["units"].shape, fi4.h5Object.attributes["units"].shape )
 
 
 
@@ -248,16 +248,17 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.read(), fi.h5Object.read() )
         self.assertEqual(l4.dtype, fi.h5Object.dtype )
         self.assertEqual(l4.shape, fi.h5Object.shape )
-        self.assertEqual(l4.nattrs, fi.h5Object.nattrs )
-        self.assertEqual(l4.attr("units").value, fi.h5Object.attr("units").value )
-        self.assertEqual(l4.attr("units").dtype, fi.h5Object.attr("units").dtype )
-        self.assertEqual(l4.attr("units").shape, fi.h5Object.attr("units").shape )
+        self.assertEqual(len(l4.attributes), len(fi.h5Object.attributes) )
+        self.assertEqual(l4.attributes["units"][...], fi.h5Object.attributes["units"][...] )
+        self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
+        self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
+
         
 
         l5 = self._nxFile.open("testGroup")
-        self.assertEqual(l5.attr("NX_class").value, gr.h5Object.attr("NX_class").value )
-        self.assertEqual(l5.attr("NX_class").dtype, gr.h5Object.attr("NX_class").dtype )
-        self.assertEqual(l5.attr("NX_class").shape, gr.h5Object.attr("NX_class").shape )
+        self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
+        self.assertEqual(l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype )
+        self.assertEqual(l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape )
         self.assertEqual(l5.name, gr.h5Object.name )
 
 

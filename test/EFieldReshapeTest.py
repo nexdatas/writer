@@ -248,11 +248,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64"],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64"],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64"],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64",1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER", "float64",1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32",1.e-5],
@@ -449,11 +451,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-223,"NX_INT16", "int16",numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[13235,"NX_INT32", "int32",numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12425,"NX_INT64", "int64",numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[65,"NX_UINT8", "uint8",numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[453,"NX_UINT16", "uint16",numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12235,"NX_UINT32", "uint32",numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[14345,"NX_UINT64", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-16.345,"NX_FLOAT", "float64",numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-2.345e+2,"NX_NUMBER", "float64",numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-4.355e-1,"NX_FLOAT32", "float32",numpy.finfo(getattr(numpy, 'float32')).max,1.e-5],
@@ -679,11 +683,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -891,7 +897,7 @@ class EFieldReshapeTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
-            if attrs[k][2] == "string":
+            if attrs[k][2] == "string_old":
                 val = [a[0] for a  in attrs[k][0]]
                 self._sc.checkSingleStringSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], val, 
@@ -941,11 +947,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -1023,7 +1031,7 @@ class EFieldReshapeTest(unittest.TestCase):
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
-            if attrs[k][2] == "string":
+            if attrs[k][2] == "string_old":
                 val = [a[0] for a  in attrs[k][0]]
                 self._sc.checkSingleStringSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], val, 
@@ -1192,11 +1200,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -1306,9 +1316,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-#            "string":["Mystring","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1406,16 +1416,16 @@ class EFieldReshapeTest(unittest.TestCase):
 #            self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 #            print "nn", k
-            if attrs[k][2] == "string" or not attrs[k][2]:
-                self._sc.checkStringSpectrumField(self._nxFile, k, 'string', 
-                                            attrs[k][1], attrs[k][0],
-                                            attrs = {"type":attrs[k][1],"units":"m"})
-            else:
-                self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2],
-                                            attrs[k][1], attrs[k][0],
-                                            attrs[k][4] if len(attrs[k])> 4 else 0,
-                                            grows = grow,
-                                            attrs = {"type":attrs[k][1],"units":"m"})
+#            if attrs[k][2] == "string" or not attrs[k][2]:
+#                self._sc.checkStringSpectrumField(self._nxFile, k, 'string', 
+#                                            attrs[k][1], attrs[k][0],
+#                                            attrs = {"type":attrs[k][1],"units":"m"})
+#            else:
+            self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] or 'string',
+                                        attrs[k][1], attrs[k][0],
+                                        attrs[k][4] if len(attrs[k])> 4 else 0,
+                                        grows = grow,
+                                        attrs = {"type":attrs[k][1],"units":"m"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -1444,11 +1454,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -1533,16 +1545,16 @@ class EFieldReshapeTest(unittest.TestCase):
     
 
                     
-            if attrs[k][2] == "string" or not attrs[k][2]:
-                self._sc.checkScalarField(self._nxFile, k, 'string', 
-                                          attrs[k][1], ['']*steps,
-                                          attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-            else:
-                self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2],
-                                            attrs[k][1], [[a[0]] for a in attrs[k][0]],
-                                            attrs[k][5] if len(attrs[k])> 5 else 0,
-                                            grows = grow,
-                                            attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            if attrs[k][2] == "string" or not attrs[k][2]:
+#                self._sc.checkScalarField(self._nxFile, k, 'string', 
+#                                          attrs[k][1], ['']*steps,
+#                                          attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            else:
+            self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2] or 'string',
+                                        attrs[k][1], [[a[0]] for a in attrs[k][0]],
+                                        attrs[k][5] if len(attrs[k])> 5 else 0,
+                                        grows = grow,
+                                        attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -1652,14 +1664,14 @@ class EFieldReshapeTest(unittest.TestCase):
             if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
-                if  attrs[k][2] == "string" or not  attrs[k][2]:
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                    attrs[k][2] if attrs[k][2] else 'string', 
-                                                    attrs[k][1], attrs[k][0][0][0],0 ,
-                                                    attrs = {"type":attrs[k][1],"units":"m"})
-                    
-                elif stt != 'POSTRUN':
+#               if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                   self.assertEqual(el[k].grows, None)
+#                   self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                   attrs[k][2] if attrs[k][2] else 'string', 
+#                                                   attrs[k][1], attrs[k][0][0][0],0 ,
+#                                                   attrs = {"type":attrs[k][1],"units":"m"})
+#                   
+                if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
                     self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                    attrs[k][1], attrs[k][0],
@@ -1700,11 +1712,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -1773,20 +1787,20 @@ class EFieldReshapeTest(unittest.TestCase):
             if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
-                if  attrs[k][2] == "string" or not  attrs[k][2]:
-                    self.assertEqual(el[k].grows, None)
-                    if stt != 'POSTRUN':
-                        self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                        attrs[k][2] if attrs[k][2] else 'string', 
-                                                        attrs[k][1], attrs[k][0][0][0],0 ,
-                                                        attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                    else:
-                        self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                        attrs[k][2] if attrs[k][2] else 'string', 
-                                                        attrs[k][1], attrs[k][0][0][0],0 ,
-                                                        attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"})
+#             if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                   self.assertEqual(el[k].grows, None)
+#                   if stt != 'POSTRUN':
+#                       self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                       attrs[k][2] if attrs[k][2] else 'string', 
+#                                                       attrs[k][1], attrs[k][0][0][0],0 ,
+#                                                       attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#                   else:
+#                       self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                       attrs[k][2] if attrs[k][2] else 'string', 
+#                                                       attrs[k][1], attrs[k][0][0][0],0 ,
+#                                                       attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"})
                     
-                elif stt != 'POSTRUN':
+                if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
                     self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                    attrs[k][1], attrs[k][0],
@@ -1919,17 +1933,18 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].error, None)
 #            self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkScalarField(self._nxFile, k, 
-                                                  attrs[k][2] if attrs[k][2] else 'string', 
-                                                  attrs[k][1], [c[0][0] for c in attrs[k][0]] ,0, 
-                                                  attrs = {"type":attrs[k][1],"units":"m"})
-                
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                         attrs[k][1], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k])> 4 else 0, grow,
-                                         attrs = {"type":attrs[k][1],"units":"m"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self._sc.checkScalarField(self._nxFile, k, 
+#                                                  attrs[k][2] if attrs[k][2] else 'string', 
+#                                                  attrs[k][1], [c[0][0] for c in attrs[k][0]] ,0, 
+#                                                  attrs = {"type":attrs[k][1],"units":"m"})
+#                
+#            else:
+
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                     attrs[k][1], attrs[k][0],
+                                     attrs[k][4] if len(attrs[k])> 4 else 0, grow,
+                                     attrs = {"type":attrs[k][1],"units":"m"})
            
         self._nxFile.close()
         os.remove(self._fname)
@@ -1954,11 +1969,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,),numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,),numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,),numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,),numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,),numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -2033,17 +2050,17 @@ class EFieldReshapeTest(unittest.TestCase):
 
             self.assertEqual(el[k].error, None)
                     
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkScalarField(self._nxFile, k, 
-                                                  attrs[k][2] if attrs[k][2] else 'string', 
-                                                  attrs[k][1], [c[0][0] for c in attrs[k][0]] ,0, 
-                                                  attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                pass               
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                         attrs[k][1], attrs[k][0],
-                                         attrs[k][5] if len(attrs[k])> 5 else 0, grow,
-                                         attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self._sc.checkScalarField(self._nxFile, k, 
+#                                                  attrs[k][2] if attrs[k][2] else 'string', 
+#                                                  attrs[k][1], [c[0][0] for c in attrs[k][0]] ,0, 
+#                                                  attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#                pass               
+#            else:
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                     attrs[k][1], attrs[k][0],
+                                     attrs[k][5] if len(attrs[k])> 5 else 0, grow,
+                                     attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
            
         self._nxFile.close()
         os.remove(self._fname)
@@ -2149,20 +2166,20 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                if  stt != 'POSTRUN':
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],[attrs[k][0][0][0]] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m"})
-                else:
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],[attrs[k][0][0][0]] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None})
-                    
-            elif stt != 'POSTRUN':
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self.assertEqual(el[k].grows, None)
+#                if  stt != 'POSTRUN':
+#                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1],[attrs[k][0][0][0]] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m"})
+#                else:
+#                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1],[attrs[k][0][0][0]] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None})
+#                    
+            if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                 attrs[k][1], attrs[k][0],
@@ -2201,11 +2218,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -2265,20 +2284,20 @@ class EFieldReshapeTest(unittest.TestCase):
             
             self.assertEqual(el[k].markFailed(), None)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                if  stt != 'POSTRUN':
-                    self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],attrs[k][0][0][0] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                else:
-                    self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],attrs[k][0][0][0] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None, "nexdatas_canfail":"FAILED"})
-                    
-            elif stt != 'POSTRUN':
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self.assertEqual(el[k].grows, None)
+#                if  stt != 'POSTRUN':
+#                    self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1],attrs[k][0][0][0] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#                else:
+#                    self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1],attrs[k][0][0][0] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None, "nexdatas_canfail":"FAILED"})
+#                    
+            if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                 attrs[k][1], [[attrs[k][0][0][0]]],
@@ -2306,9 +2325,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-#            "string":["Mystring","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -2402,16 +2421,16 @@ class EFieldReshapeTest(unittest.TestCase):
 
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkStringSpectrumField(self._nxFile, k, 
-                                            attrs[k][2] if attrs[k][2] else 'string', 
-                                            attrs[k][1],  [[ row[0]  for row in img]for img in attrs[k][0]] ,
-                                            attrs = {"type":attrs[k][1],"units":"m"})
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k])> 4 else 0,grow,
-                                                attrs = {"type":attrs[k][1],"units":"m"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self._sc.checkStringSpectrumField(self._nxFile, k, 
+#                                            attrs[k][2] if attrs[k][2] else 'string', 
+#                                            attrs[k][1],  [[ row[0]  for row in img]for img in attrs[k][0]] ,
+#                                            attrs = {"type":attrs[k][1],"units":"m"})
+#            else:
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] or 'string',
+                                     attrs[k][1], attrs[k][0],
+                                     attrs[k][4] if len(attrs[k])> 4 else 0,grow,
+                                     attrs = {"type":attrs[k][1],"units":"m"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -2437,11 +2456,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,),numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,),numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,),numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,),numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,),numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14,numpy.finfo(getattr(numpy, 'float64')).max],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14,numpy.finfo(getattr(numpy, 'float64')).max],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5,numpy.finfo(getattr(numpy, 'float32')).max],
@@ -2461,8 +2482,8 @@ class EFieldReshapeTest(unittest.TestCase):
             quot = (quot + 1) %4
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
-            if attrs[k][2] == 'string':
-                grow = 0 
+#            if attrs[k][2] == 'string':
+#                grow = 0 
 
             mlen = self.__rnd.randint(2, 10)
             attrs[k][0] =  [[[ (attrs[k][4])  for c in range(mlen)  ] ] for r in range(steps)  ]
@@ -2515,22 +2536,22 @@ class EFieldReshapeTest(unittest.TestCase):
                 else:
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
-                if i and attrs[k][2] != "string":
+                if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
                 else:
                     self.assertEqual(el[k].error, None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkScalarField(self._nxFile, k, 
-                                          attrs[k][2] if attrs[k][2] else 'string', 
-                                          attrs[k][1],  ['']*steps ,
-                                          attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                                attrs[k][1], [[[r[0][0]]] for r in  attrs[k][0]],
-                                                attrs[k][5] if len(attrs[k])> 5 else 0, grow,
-                                                attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self._sc.checkScalarField(self._nxFile, k, 
+#                                          attrs[k][2] if attrs[k][2] else 'string', 
+#                                          attrs[k][1],  ['']*steps ,
+#                                          attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            else:
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] or 'string',
+                                    attrs[k][1], [[[r[0][0]]] for r in  attrs[k][0]],
+                                     attrs[k][5] if len(attrs[k])> 5 else 0, grow,
+                                     attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -2637,20 +2658,20 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                if  stt != 'POSTRUN':
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], [c[0] for c in attrs[k][0]] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m"})
-                else:
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], [c[0] for c in attrs[k][0]] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None})
-                    
-            elif stt != 'POSTRUN':
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self.assertEqual(el[k].grows, None)
+#                if  stt != 'POSTRUN':
+#                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1], [c[0] for c in attrs[k][0]] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m"})
+#                else:
+#                    self._sc.checkSingleSpectrumField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1], [c[0] for c in attrs[k][0]] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None})
+#                    
+            if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                 attrs[k][1], attrs[k][0],
@@ -2689,11 +2710,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -2756,20 +2779,20 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                if  stt != 'POSTRUN':
-                    self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0][0][0] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                else:
-                    self._sc.checkSingleScalarField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0][0][0] ,0 ,
-                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None, "nexdatas_canfail":"FAILED"})
-                    
-            elif stt != 'POSTRUN':
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self.assertEqual(el[k].grows, None)
+#                if  stt != 'POSTRUN':
+#                    self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1], attrs[k][0][0][0] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#                else:
+#                    self._sc.checkSingleScalarField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1], attrs[k][0][0][0] ,0 ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None, "nexdatas_canfail":"FAILED"})
+#                    
+            if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                 attrs[k][1], [[attrs[k][0][0][0]]],
@@ -2798,9 +2821,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-#            "string":["Mystring","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -2888,17 +2911,17 @@ class EFieldReshapeTest(unittest.TestCase):
 
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-
-                self._sc.checkStringSpectrumField(self._nxFile, k, 
-                                            attrs[k][2] if attrs[k][2] else 'string', 
-                                            attrs[k][1], [[ row[0]  for row in img]for img in attrs[k][0]] ,
-                                            attrs = {"type":attrs[k][1],"units":"m"})
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k])> 4 else 0,grow,
-                                                attrs = {"type":attrs[k][1],"units":"m"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#
+#                self._sc.checkStringSpectrumField(self._nxFile, k, 
+#                                            attrs[k][2] if attrs[k][2] else 'string', 
+#                                            attrs[k][1], [[ row[0]  for row in img]for img in attrs[k][0]] ,
+#                                            attrs = {"type":attrs[k][1],"units":"m"})
+#            else:
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] or 'string',
+                                     attrs[k][1], attrs[k][0],
+                                     attrs[k][4] if len(attrs[k])> 4 else 0,grow,
+                                     attrs = {"type":attrs[k][1],"units":"m"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -2923,11 +2946,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -2947,8 +2972,8 @@ class EFieldReshapeTest(unittest.TestCase):
             quot = (quot + 1) %4
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
-            if attrs[k][2] == 'string':
-                grow = 0
+#            if attrs[k][2] == 'string':
+#                grow = 0
 
             mlen = self.__rnd.randint(2, 10)
             attrs[k][0] =  [[[ attrs[k][4]]  for c in range(mlen)   ] for r in range(steps)  ]
@@ -2998,24 +3023,24 @@ class EFieldReshapeTest(unittest.TestCase):
                 else:
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
-                if i and attrs[k][2] != "string":
+                if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
                 else:
                     self.assertEqual(el[k].error, None)
                     
                     
             
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-
-                self._sc.checkScalarField(self._nxFile, k, 
-                                            attrs[k][2] if attrs[k][2] else 'string', 
-                                            attrs[k][1], [ ''  for row in range(steps)] ,
-                                            attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                                attrs[k][1], [ [[row[0][0]]]  for row in attrs[k][0] ],
-                                                attrs[k][5] if len(attrs[k])> 5 else 0,grow,
-                                                attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#
+#                self._sc.checkScalarField(self._nxFile, k, 
+#                                            attrs[k][2] if attrs[k][2] else 'string', 
+#                                            attrs[k][1], [ ''  for row in range(steps)] ,
+#                                            attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            else:
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] or 'string',
+                                     attrs[k][1], [ [[row[0][0]]]  for row in attrs[k][0] ],
+                                     attrs[k][5] if len(attrs[k])> 5 else 0,grow,
+                                     attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -3032,9 +3057,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-#            "string":["Mystring","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -3120,20 +3145,20 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                if  stt != 'POSTRUN':
-                    self._sc.checkSingleStringImageField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0] ,
-                                                      attrs = {"type":attrs[k][1],"units":"m"})
-                else:
-                    self._sc.checkSingleStringImageField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1],attrs[k][0] ,
-                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None})
-                    
-            elif stt != 'POSTRUN':
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self.assertEqual(el[k].grows, None)
+#                if  stt != 'POSTRUN':
+#                    self._sc.checkSingleStringImageField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1], attrs[k][0] ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m"})
+#                else:
+#                    self._sc.checkSingleStringImageField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1],attrs[k][0] ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m","postrun":None})
+#                    
+            if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                                 attrs[k][1], attrs[k][0],
@@ -3170,11 +3195,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
-            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
+            "uint64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT64", "uint64", (1,)],
+#            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_FLOAT", "float64", (1,),1.e-14],
             "number":[numpy.finfo(getattr(numpy, 'float64')).max,"NX_NUMBER",  "float64",(1,),1.e-14],
             "float32":[numpy.finfo(getattr(numpy, 'float32')).max,"NX_FLOAT32", "float32", (1,), 1.e-5],
@@ -3238,22 +3265,22 @@ class EFieldReshapeTest(unittest.TestCase):
             self.assertEqual(el[k].markFailed(), None)
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self.assertEqual(el[k].grows, None)
-                if  stt != 'POSTRUN':
-                    self._sc.checkSingleScalarField(
-                        self._nxFile, k, 
-                        attrs[k][2] if attrs[k][2] else 'string', 
-                        attrs[k][1], attrs[k][0][0][0],
-                        attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                else:
-                    self._sc.checkSingleScalarField(
-                        self._nxFile, k, 
-                        attrs[k][2] if attrs[k][2] else 'string', 
-                        attrs[k][1], attrs[k][0][0][0],
-                        attrs = {"type":attrs[k][1],"units":"m","postrun":None, "nexdatas_canfail":"FAILED"})
-                    
-            elif stt != 'POSTRUN':
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self.assertEqual(el[k].grows, None)
+#                if  stt != 'POSTRUN':
+#                    self._sc.checkSingleScalarField(
+#                        self._nxFile, k, 
+#                        attrs[k][2] if attrs[k][2] else 'string', 
+#                        attrs[k][1], attrs[k][0][0][0],
+#                        attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#                else:
+#                    self._sc.checkSingleScalarField(
+#                        self._nxFile, k, 
+#                        attrs[k][2] if attrs[k][2] else 'string', 
+#                        attrs[k][1], attrs[k][0][0][0],
+#                        attrs = {"type":attrs[k][1],"units":"m","postrun":None, "nexdatas_canfail":"FAILED"})
+#                    
+            if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
@@ -3285,9 +3312,9 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
         attrs = {
-#            "string":["Mystring","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["Mystring","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -3375,16 +3402,16 @@ class EFieldReshapeTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k, 
-                                                      attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0] ,
-                                                      attrs = {"type":attrs[k][1],"units":"m"})
-            else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k])> 4 else 0,grow,
-                                                attrs = {"type":attrs[k][1],"units":"m"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self._sc.checkStringImageField(self._nxFile, k, 
+#                                                      attrs[k][2] if attrs[k][2] else 'string', 
+#                                                      attrs[k][1], attrs[k][0] ,
+#                                                      attrs = {"type":attrs[k][1],"units":"m"})
+#            else:
+            self._sc.checkImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                     attrs[k][1], attrs[k][0],
+                                     attrs[k][4] if len(attrs[k])> 4 else 0,grow,
+                                     attrs = {"type":attrs[k][1],"units":"m"})
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -3408,11 +3435,13 @@ class EFieldReshapeTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+#            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             "float":[-12.345,"NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),numpy.finfo(getattr(numpy, 'float64')).max,1.e-14],
             "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,),numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
@@ -3432,8 +3461,8 @@ class EFieldReshapeTest(unittest.TestCase):
             quot = (quot + 1) %4
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
-            if attrs[k][2]== 'string':
-                grow = 0
+#            if attrs[k][2]== 'string':
+#                grow = 0
             
             mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10)]
             attrs[k][0] =  [[[(attrs[k][4])  for c in range(mlen[0])  ] for c2 in range(mlen[1])  ] for r in range(steps)  ]
@@ -3486,24 +3515,24 @@ class EFieldReshapeTest(unittest.TestCase):
                 else:
                     self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
-                if i and attrs[k][2] != "string":
+                if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
                 else:
                     self.assertEqual(el[k].error, None)
                     
 
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
-                self._sc.checkScalarField(
-                    self._nxFile, k, 
-                    attrs[k][2] if attrs[k][2] else 'string', 
-                    attrs[k][1], ['']*steps,
-                    attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-            else:
-                self._sc.checkImageField(
-                    self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                    attrs[k][1], [[[a[0][0]]] for a in  attrs[k][0]],
-                    attrs[k][5] if len(attrs[k])> 5 else 0,grow,
-                    attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            if  attrs[k][2] == "string" or not  attrs[k][2]:
+#                self._sc.checkScalarField(
+#                    self._nxFile, k, 
+#                    attrs[k][2] if attrs[k][2] else 'string', 
+#                    attrs[k][1], ['']*steps,
+#                    attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
+#            else:
+            self._sc.checkImageField(
+                self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                attrs[k][1], [[[a[0][0]]] for a in  attrs[k][0]],
+                attrs[k][5] if len(attrs[k])> 5 else 0,grow,
+                attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             
         self._nxFile.close()
         os.remove(self._fname)

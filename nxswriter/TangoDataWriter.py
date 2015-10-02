@@ -75,6 +75,8 @@ class TangoDataWriter(object):
         ## collection of thread pool with triggered STEP elements
         self.__triggerPools = {}
         ## H5 file handle
+        self.__nxRoot = None
+        ## H5 file handle
         self.__nxFile = None
         ## element file objects
         self.__eFile = None
@@ -172,11 +174,13 @@ class TangoDataWriter(object):
             self.__nxFile = nx.open_file(self.fileName, False)
             self.__fileCreated = False
         else:
-            self.__nxFile = nx.create_file(self.fileName).root()
+            self.__nxFile = nx.create_file(self.fileName)
             self.__fileCreated = True
+        self.__nxRoot = self.__nxFile.root()
+   
 
         ## element file objects
-        self.__eFile = EFile([], None, self.__nxFile)
+        self.__eFile = EFile([], None, self.__nxRoot)
 
         name = "NexusConfigurationLogs"
         if self.addingLogs:
@@ -186,13 +190,13 @@ class TangoDataWriter(object):
                 while error:
                     cname = name if counter == 1 else \
                         ("%s_%s" % (name, counter))
-                    if not self.__nxFile.exists(cname):
+                    if not self.__nxRoot.exists(cname):
                         error = False
                     else:
                         counter += 1
             else:
                 cname = name
-            self.__logGroup = self.__nxFile.create_group(
+            self.__logGroup = self.__nxRoot.create_group(
                 cname, "NXcollection")
             vfield = self.__logGroup.create_field(
                 "python_version", "string")
@@ -358,9 +362,12 @@ class TangoDataWriter(object):
                 self.__triggerPools[pool].close()
             self.__triggerPools = {}
 
+        if self.__nxRoot:
+            self.__nxRoot.close()
         if self.__nxFile:
             self.__nxFile.close()
 
+        self.__nxRoot = None
         self.__nxFile = None
         self.__eFile = None
         gc.collect()

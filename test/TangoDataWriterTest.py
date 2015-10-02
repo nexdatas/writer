@@ -140,7 +140,7 @@ class TangoDataWriterTest(unittest.TestCase):
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
-            self.assertTrue(tdw.getFile().valid)
+            self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
             
             tdw.closeFile()
@@ -156,26 +156,26 @@ class TangoDataWriterTest(unittest.TestCase):
             # check the created file
 
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            f = f.root()
 
 #            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at.value
-            self.assertEqual(cnt, f.nattrs)
-            self.assertEqual(6, f.nattrs)
+#                print at.name,"=",at[...]
+            self.assertEqual(cnt, len(f.attributes))
+            self.assertEqual(6, len(f.attributes))
 #            print ""    
 
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
 
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.size, 1)
 
             cnt = 0
-            for ch in f.children:
+            for ch in f:
                 cnt += 1
-            self.assertEqual(cnt, f.nchildren)
+            self.assertEqual(cnt, f.size)
 
             f.close()
 
@@ -201,7 +201,7 @@ class TangoDataWriterTest(unittest.TestCase):
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
-            self.assertTrue(tdw.getFile().valid)
+            self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
             try:
                 error = False
@@ -223,26 +223,26 @@ class TangoDataWriterTest(unittest.TestCase):
             # check the created file
 
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            f = f.root()
 
 #            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at.value
-            self.assertEqual(cnt, f.nattrs)
-            self.assertEqual(6, f.nattrs)
+#                print at.name,"=",at[...]
+            self.assertEqual(cnt, len(f.attributes))
+            self.assertEqual(6, len(f.attributes))
 #            print ""    
 
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
 
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.size, 1)
 
             cnt = 0
-            for ch in f.children:
+            for ch in f:
                 cnt += 1
-            self.assertEqual(cnt, f.nchildren)
+            self.assertEqual(cnt, f.size)
 
             f.close()
 
@@ -269,7 +269,7 @@ class TangoDataWriterTest(unittest.TestCase):
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
-            self.assertTrue(tdw.getFile().valid)
+            self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
             try:
                 error = False
@@ -291,26 +291,26 @@ class TangoDataWriterTest(unittest.TestCase):
             # check the created file
 
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            f = f.root()
 
 #            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at.value
-            self.assertEqual(cnt, f.nattrs)
-            self.assertEqual(6, f.nattrs)
+#                print at.name,"=",at[...]
+            self.assertEqual(cnt, len(f.attributes))
+            self.assertEqual(6, len(f.attributes))
 #            print ""    
 
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
 
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.size, 1)
 
             cnt = 0
-            for ch in f.children:
+            for ch in f:
                 cnt += 1
-            self.assertEqual(cnt, f.nchildren)
+            self.assertEqual(cnt, f.size)
 
             f.close()
 
@@ -356,7 +356,7 @@ class TangoDataWriterTest(unittest.TestCase):
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
-            self.assertTrue(tdw.getFile().valid)
+            self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
             
             tdw.closeFile()
@@ -372,25 +372,25 @@ class TangoDataWriterTest(unittest.TestCase):
             # check the created file
 
             f = open_file(fname,readonly=True)
-
+            f = f.root()
 #            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at.value
-            self.assertEqual(cnt, f.nattrs)
-            self.assertEqual(6, f.nattrs)
+#                print at.name,"=",at[...]
+            self.assertEqual(cnt, len(f.attributes))
+            self.assertEqual(6, len(f.attributes))
 #            print ""    
 
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
 
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.size, 1)
 
             cnt = 0
-            for ch in f.children:
+            for ch in f:
                 cnt += 1
-            self.assertEqual(cnt, f.nchildren)
+            self.assertEqual(cnt, f.size)
 
             f.close()
 
@@ -416,7 +416,7 @@ class TangoDataWriterTest(unittest.TestCase):
             tdw.closeEntry()
 
             self.assertTrue(tdw.getFile() is not None)
-            self.assertTrue(tdw.getFile().valid)
+            self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
             self.assertEqual(tdw.fileName, fname)
             self.assertNotEqual(tdw.xmlsettings, "")
@@ -429,36 +429,37 @@ class TangoDataWriterTest(unittest.TestCase):
              # check the created file
             
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            f = f.root()
 
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-            self.assertEqual(cnt, f.nattrs)
+            self.assertEqual(cnt, len(f.attributes))
 
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
 
-            self.assertEqual(f.nchildren, 2)
+            self.assertEqual(f.size, 2)
 
             cnt = 0
-            for ch in f.children:
-                self.assertTrue(ch.valid)
+            for ch in f:
+                self.assertTrue(ch.is_valid)
                 cnt += 1
                 if ch.name == "entry":
                     self.assertEqual(ch.name,"entry")
-                    self.assertEqual(ch.nattrs,1)
+                    self.assertEqual(len(ch.attributes),1)
                     for at in ch.attributes:
-                        self.assertTrue(at.valid)
+                        self.assertTrue(at.is_valid)
                         self.assertTrue(hasattr(at.shape,"__iter__"))
-                        self.assertEqual(len(at.shape),0)
+                        self.assertEqual(len(at.shape),1)
+                        self.assertEqual(at.shape,(1,))
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
-                        self.assertEqual(at.value,"NXentry")                
+                        self.assertEqual(at[...],"NXentry")                
                 else:
                     self.assertEqual(ch.name,"NexusConfigurationLogs")
-                    for c in ch.children:
+                    for c in ch:
                         if c.name == "Nexus__entry__1_XML":
                             self.assertEqual(
                                 c.read(), 
@@ -468,19 +469,20 @@ class TangoDataWriterTest(unittest.TestCase):
                             self.assertEqual(c.name,"python_version")
                             self.assertEqual(c.read(),sys.version)
                             
-                    self.assertEqual(ch.nattrs,1)
+                    self.assertEqual(len(ch.attributes),1)
                     for at in ch.attributes:
-                        self.assertTrue(at.valid)
+                        self.assertTrue(at.is_valid)
                         self.assertTrue(hasattr(at.shape,"__iter__"))
-                        self.assertEqual(len(at.shape),0)
+                        self.assertEqual(len(at.shape),1)
+                        self.assertEqual(at.shape,(1,))
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
-                        self.assertEqual(at.value,"NXcollection")                
+                        self.assertEqual(at[...],"NXcollection")                
                         
                     
                 
-            self.assertEqual(cnt, f.nchildren)
+            self.assertEqual(cnt, f.size)
 
             f.close()
 
@@ -532,23 +534,23 @@ class TangoDataWriterTest(unittest.TestCase):
             # check the created file
             
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
+            f = f.root()
 
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-            self.assertEqual(cnt, f.nattrs)
+            self.assertEqual(cnt, len(f.attributes))
 
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
 
-            self.assertEqual(f.nchildren, 1)
+            self.assertEqual(f.size, 1)
 
             cnt = 0
-            for ch in f.children:
+            for ch in f:
                 cnt += 1
                 
-            self.assertEqual(cnt, f.nchildren)
+            self.assertEqual(cnt, f.size)
 
             f.close()
 
@@ -592,70 +594,73 @@ class TangoDataWriterTest(unittest.TestCase):
              # check the created file
             
             f = open_file(fname,readonly=True)
-            self.assertEqual(f.name, fname)
-            self.assertEqual(6, f.nattrs)
-            self.assertEqual(f.attr("file_name").value, fname)
-            self.assertTrue(f.attr("NX_class").value,"NXroot")
-            self.assertEqual(f.nchildren, 2)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 2)
             
             en = f.open("entry1")
-            self.assertTrue(en.valid)
+            self.assertTrue(en.is_valid)
             self.assertEqual(en.name,"entry1")
-            self.assertEqual(en.nattrs,1)
-            self.assertEqual(en.nchildren, 2)
+            self.assertEqual(len(en.attributes),1)
+            self.assertEqual(en.size, 2)
 
-            at = en.attr("NX_class")
-            self.assertTrue(at.valid)
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
-            self.assertEqual(at.value,"NXentry")
+            self.assertEqual(at[...],"NXentry")
 
 #            ins = f.open("entry1/instrument:NXinstrument")    #bad exception
 #            ins = f.open("entry1/instrument")
             ins = en.open("instrument")
-            self.assertTrue(ins.valid)
+            self.assertTrue(ins.is_valid)
             self.assertEqual(ins.name,"instrument")
-            self.assertEqual(ins.nattrs,2)
-            self.assertEqual(ins.nchildren, 1)
+            self.assertEqual(len(ins.attributes),2)
+            self.assertEqual(ins.size, 1)
 
             
-            at = ins.attr("NX_class")
-            self.assertTrue(at.valid)
+            at = ins.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
-            self.assertEqual(at.value,"NXinstrument")
+            self.assertEqual(at[...],"NXinstrument")
 
 
-            at = ins.attr("short_name")
-            self.assertTrue(at.valid)
+            at = ins.attributes["short_name"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"short_name")
-            self.assertEqual(at.value,"scan instrument")
+            self.assertEqual(at[...],"scan instrument")
 
 
             det = ins.open("detector")
-            self.assertTrue(det.valid)
+            self.assertTrue(det.is_valid)
             self.assertEqual(det.name,"detector")
-            self.assertEqual(det.nattrs,1)
-            self.assertEqual(det.nchildren, 2)
+            self.assertEqual(len(det.attributes),1)
+            self.assertEqual(det.size, 2)
             
-            at = det.attr("NX_class")
-            self.assertTrue(at.valid)
+            at = det.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
-            self.assertEqual(at.value,"NXdetector")
+            self.assertEqual(at[...],"NXdetector")
             
 #            cnt = det.open("counter")              # bad exception
             cnt = det.open("counter1")
-            self.assertTrue(cnt.valid)
+            self.assertTrue(cnt.is_valid)
             self.assertEqual(cnt.name,"counter1")
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -669,37 +674,40 @@ class TangoDataWriterTest(unittest.TestCase):
                 
 
 
-            self.assertEqual(cnt.nattrs,3)
+            self.assertEqual(len(cnt.attributes),3)
             
 
 
 
-            at = cnt.attr("type")
-            self.assertTrue(at.valid)
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
-            self.assertEqual(at.value,"NX_FLOAT")
+            self.assertEqual(at[...],"NX_FLOAT")
 
 
-            at = cnt.attr("units")
-            self.assertTrue(at.valid)
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
-            self.assertEqual(at.value,"m")
+            self.assertEqual(at[...],"m")
 
-            at = cnt.attr("nexdatas_source")
-            self.assertTrue(at.valid)
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
 
 
             mca = det.open("mca")
-            self.assertTrue(mca.valid)
+            self.assertTrue(mca.is_valid)
             self.assertEqual(mca.name,"mca")
             
 
@@ -714,45 +722,49 @@ class TangoDataWriterTest(unittest.TestCase):
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(mca.nattrs,3)
+            self.assertEqual(len(mca.attributes),3)
 
-            at = mca.attr("type")
-            self.assertTrue(at.valid)
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
-            self.assertEqual(at.value,"NX_FLOAT")
+            self.assertEqual(at[...],"NX_FLOAT")
 
 
-            at = mca.attr("units")
-            self.assertTrue(at.valid)
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
-            self.assertEqual(at.value,"")
+            self.assertEqual(at[...],"")
 
-            at = mca.attr("nexdatas_source")
-            self.assertTrue(at.valid)
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             
             dt = en.open("data")
-            self.assertTrue(dt.valid)
+            self.assertTrue(dt.is_valid)
             self.assertEqual(dt.name,"data")
-            self.assertEqual(dt.nattrs,1)
-            self.assertEqual(dt.nchildren, 2)
+            self.assertEqual(len(dt.attributes),1)
+            self.assertEqual(dt.size, 2)
 
             
-            at = dt.attr("NX_class")
-            self.assertTrue(at.valid)
+            at = dt.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
-            self.assertEqual(at.value,"NXdata")
+            self.assertEqual(at[...],"NXdata")
 
 
 
@@ -760,7 +772,7 @@ class TangoDataWriterTest(unittest.TestCase):
 
 
             cnt = dt.open("counter1")
-            self.assertTrue(cnt.valid)
+            self.assertTrue(cnt.is_valid)
             self.assertEqual(cnt.name,"counter1")
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -774,37 +786,40 @@ class TangoDataWriterTest(unittest.TestCase):
                 
 
 
-            self.assertEqual(cnt.nattrs,3)
+            self.assertEqual(len(cnt.attributes),3)
             
 
 
 
-            at = cnt.attr("type")
-            self.assertTrue(at.valid)
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
-            self.assertEqual(at.value,"NX_FLOAT")
+            self.assertEqual(at[...],"NX_FLOAT")
 
 
-            at = cnt.attr("units")
-            self.assertTrue(at.valid)
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
-            self.assertEqual(at.value,"m")
+            self.assertEqual(at[...],"m")
 
-            at = cnt.attr("nexdatas_source")
-            self.assertTrue(at.valid)
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
 
 
             mca = dt.open("data")
-            self.assertTrue(mca.valid)
+            self.assertTrue(mca.is_valid)
             self.assertEqual(mca.name,"data")
             
 
@@ -819,29 +834,32 @@ class TangoDataWriterTest(unittest.TestCase):
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(mca.nattrs,3)
+            self.assertEqual(len(mca.attributes),3)
 
-            at = mca.attr("type")
-            self.assertTrue(at.valid)
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
-            self.assertEqual(at.value,"NX_FLOAT")
+            self.assertEqual(at[...],"NX_FLOAT")
 
 
-            at = mca.attr("units")
-            self.assertTrue(at.valid)
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
-            self.assertEqual(at.value,"")
+            self.assertEqual(at[...],"")
 
-            at = mca.attr("nexdatas_source")
-            self.assertTrue(at.valid)
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),0)
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
 
             f.close()

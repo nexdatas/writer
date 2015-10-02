@@ -60,8 +60,6 @@ import ElementThreadTest
 import ThreadPoolTest
 import FetchNameHandlerTest
 import InnerXMLParserTest
-import AttributeArrayTest
-import FieldArrayTest
 import TNObjectTest
 import TgDeviceTest
 
@@ -301,12 +299,6 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest) )
-
-    suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(AttributeArrayTest) )
-
-#    suite.addTests(
-#        unittest.defaultTestLoader.loadTestsFromModule(FieldArrayTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest) )

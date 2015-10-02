@@ -180,10 +180,9 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.compression, False)
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
-        
+
         self.assertEqual(el.store(),None)
         
-
         self.assertEqual(el.grows, None)
         self._nxFile.close()
         os.remove(self._fname)
@@ -213,6 +212,8 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
         
+#        self.myAssertRaise(ValueError, el.store)
+#        el.content= ["sdf"]
         self.assertEqual(el.store(),None)
         
         self.myAssertRaise(XMLSettingSyntaxError, el.store)
@@ -450,7 +451,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.rate, 5)
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), ('STEP', None))
-        self.assertEqual(el.grows, 1)
+        self.assertEqual(el.grows, 2)
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -634,9 +635,9 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs: 
             h5 = el[k].h5Object
-            self.assertEqual(h5.shape,(1,))
+            self.assertEqual(h5.shape,(0,))
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            self.assertEqual(h5.size,1)
+            self.assertEqual(h5.size,0)
             self.assertEqual(len(h5.attributes), 2)
             self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
             self._sc.checkScalarAttribute(h5, "units", "string", "m")
@@ -710,9 +711,9 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs: 
             h5 = el[k].h5Object
-            self.assertEqual(h5.shape,(1,))
+            self.assertEqual(h5.shape,(0,))
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            self.assertEqual(h5.size,1)
+            self.assertEqual(h5.size, 0)
             self.assertEqual(len(h5.attributes), 3)
             self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
             self._sc.checkScalarAttribute(h5, "units", "string", "m")
@@ -814,7 +815,7 @@ class EFieldTest(unittest.TestCase):
             grow = trip -1 if trip else  None
             h5 = el[k].h5Object
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            if attrs[k][2] and attrs[k][2] != 'string':
+            if attrs[k][2] and attrs[k][2] != 'string_old':
                 if el[k].grows == 2:
                     self.assertEqual(h5.shape, (1,0))
                 else:
@@ -1110,14 +1111,14 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), ("STEP",None))
-            if attrs[k][2] and attrs[k][2] != 'string':
-                self.assertEqual(el[k].grows, grow if grow else 1)
+#            if attrs[k][2] and attrs[k][2] != 'string':
+            self.assertEqual(el[k].grows, grow if grow else 1)
             
 
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            if attrs[k][2] and attrs[k][2] != 'string':
+            if attrs[k][2] and attrs[k][2] != 'string_old':
                 if el[k].grows == 3:
                     self.assertEqual(h5.shape,(1,1,0))
                 elif el[k].grows == 2:
@@ -1230,7 +1231,7 @@ class EFieldTest(unittest.TestCase):
             h5 = el[k].h5Object
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
  
-            if attrs[k][2] and attrs[k][2] != 'string':
+            if attrs[k][2] and attrs[k][2] != 'string_old':
                 self.assertEqual(h5.shape,(1,1))
                 self.assertEqual(h5.size, 1)
                 self.assertEqual(len(h5.attributes), 2)
@@ -1340,10 +1341,10 @@ class EFieldTest(unittest.TestCase):
         for k in attrs: 
             h5 = el[k].h5Object
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            if attrs[k][2] and attrs[k][2] != 'string':
+            if attrs[k][2] and attrs[k][2] != 'string_old':
                 self.assertEqual(h5.shape,(1, 1))
                 self.assertEqual(h5.size, 1)
-                self.assertEqual(len(h5.nattributes), 3)
+                self.assertEqual(len(h5.attributes), 3)
                 self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
                 self._sc.checkScalarAttribute(h5, "units", "string", "m")
                 self._sc.checkScalarAttribute(h5, "postrun", "string", k)
@@ -1387,12 +1388,12 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxfield)
         self.assertEqual(el.h5Object.name, fattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 14)
-        self.assertEqual(el.h5Object.attributes["type"].value, fattrs["type"])
+        self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
         self.assertEqual(el.h5Object.attributes["type"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["type"].shape, (1,))
             
         for k in maTn.keys():
-            self.assertEqual(el.h5Object.attributes[k].value, fattrs[k])
+            self.assertEqual(el.h5Object.attributes[k][...], fattrs[k])
             self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
             
@@ -1435,14 +1436,14 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), nx._nxh5.nxfield)
         self.assertEqual(el.h5Object.name, fattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 2)
-        self.assertEqual(el.h5Object.attributes["type"].value, fattrs["type"])
+        self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
         self.assertEqual(el.h5Object.attributes["type"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["type"].shape, (1,))
 
         
         for k in maTnv.keys():
             for i in range(len(fattrs[k])):
-                self.assertTrue(abs(el.h5Object.attributes[k].value[i]- fattrs[k][i]) <= error)
+                self.assertTrue(abs(el.h5Object.attributes[k][...][i]- fattrs[k][i]) <= error)
             self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (len(fattrs[k]),))
             
@@ -1465,7 +1466,8 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
-            "string":["My string","NX_CHAR", "string"],
+            "string":["My_string","NX_CHAR", "string"], 
+#            "string":["My string","NX_CHAR", "string"],
             "datetime":["12:34:34","NX_DATE_TIME", "string"],
             "iso8601":["12:34:34","ISO8601", "string"],
             "int":[-123,"NX_INT", "int64"],
@@ -1506,12 +1508,12 @@ class EFieldTest(unittest.TestCase):
             at = el[k].h5Attribute(k)
             self.assertEqual(at.dtype, attrs[k][2])
             if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[k][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[k][0])),at[...])
             
             elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at.value - attrs[k][0]) <= attrs[k][3])
+                self.assertTrue(abs(at[...] - attrs[k][0]) <= attrs[k][3])
             else: 
-                self.assertEqual(at.value, attrs[k][0])
+                self.assertEqual(at[...], attrs[k][0])
 
 
         for k in attrs.keys():
@@ -1523,16 +1525,16 @@ class EFieldTest(unittest.TestCase):
                                           attrs[k][3] if len(attrs[k])>3 else 0)
 
         for k in attrs.keys():
-            if attrs[k][2] == 'string':
-                "writing multi-dimensional string is not supported by pninx"
-                continue
+#            if attrs[k][2] == 'string':
+#                "writing multi-dimensional string is not supported by pninx"
+#                continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes() 
 #            at = el[k].h5Attribute(k)
             at = el[k].h5Object.attributes[k]
 #            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
 #                                            attrs[k][3] if len(attrs[k])>3 else 0)
-            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]], 
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
 
         self._nxFile.close()
@@ -1549,8 +1551,9 @@ class EFieldTest(unittest.TestCase):
 
         attrs = {
 #            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["My_string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1588,7 +1591,7 @@ class EFieldTest(unittest.TestCase):
 
             el[k].store() 
             at = el[k].h5Object.attributes[k]
-            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
+            self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                             attrs[k][3] if len(attrs[k])>3 else 0)
 #            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
 #                                            attrs[k][3] if len(attrs[k])>3 else 0)
@@ -1612,8 +1615,9 @@ class EFieldTest(unittest.TestCase):
 
         attrs = {
 #            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["My_string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1636,7 +1640,10 @@ class EFieldTest(unittest.TestCase):
 
 
         for k in attrs.keys():
-            if attrs[k][2] != "bool":
+            if attrs[k][2] == "string":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 3)]
+                attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(1, 3)  for r in range(mlen[0])]
+            elif attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 attrs[k][0] =  [ attrs[k][0]*self.__rnd.randint(0, 3)  for r in range(mlen[0])]
             else:    
@@ -1687,9 +1694,9 @@ class EFieldTest(unittest.TestCase):
         
 
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "string":["My_string","NX_CHAR", "string" , (1,)],
+            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            "iso8601":["12:34:34","ISO8601", "string", (1,)],
             "int":[-123,"NX_INT", "int64", (1,)],
             "int8":[12,"NX_INT8", "int8", (1,)],
             "int16":[-123,"NX_INT16", "int16", (1,)],
@@ -1711,7 +1718,10 @@ class EFieldTest(unittest.TestCase):
             }
 
         for k in attrs.keys():
-            if attrs[k][2] != "bool":
+            if attrs[k][2] == "string":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+                attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(1,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
+            elif attrs[k][2] != "bool":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
                 attrs[k][0] =  [[ attrs[k][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
             else:    
@@ -1754,16 +1764,16 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "bool":
                 for i in range(len(attrs[k][0])):
                     for j in range(len(attrs[k][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[k][0][i][j])), at.value[i,j])
+                        self.assertEqual(Converters.toBool(str(attrs[k][0][i][j])), at[i,j])
                 pass
             elif len(attrs[k]) > 4:
                 for i in range(len(attrs[k][0])):
                     for j in range(len(attrs[k][0][i])):
-                        self.assertTrue(abs(at.value[i][j] - attrs[k][0][i][j]) <= attrs[k][4])
+                        self.assertTrue(abs(at[i,j] - attrs[k][0][i][j]) <= attrs[k][4])
             else: 
                 for i in range(len(attrs[k][0])):
                     for j in range(len(attrs[k][0][i])):
-                        self.assertEqual(at.value[i][j], attrs[k][0][i][j])
+                        self.assertEqual(at[i,j], attrs[k][0][i][j])
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -2143,7 +2153,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
-            if attrs[k][2] =='string': 
+            if attrs[k][2] =='string_old': 
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
                     self._sc.checkXMLSpectrumField(self._nxFile, k, 
@@ -2264,7 +2274,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), None)
-            if attrs[k][2] =='string':
+            if attrs[k][2] =='string_old':
                 self.assertEqual(el[k].grows, None)
 #                self.assertEqual(el[k].grows, 1 if stt == 'STEP' else None)
                 self._sc.checkXMLStringImageField(self._nxFile, k, 
@@ -2453,7 +2463,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16"],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32"],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64"],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64"],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64"],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8"],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16"],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32"],
@@ -2655,7 +2666,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-223,"NX_INT16", "int16",numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[13235,"NX_INT32", "int32",numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12425,"NX_INT64", "int64",numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64",numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[65,"NX_UINT8", "uint8",numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[453,"NX_UINT16", "uint16",numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12235,"NX_UINT32", "uint32",numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -2886,7 +2898,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
@@ -3099,7 +3112,7 @@ class EFieldTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
-            if attrs[k][2] == "string":
+            if attrs[k][2] == "string_old":
                 val = [a[0] for a  in attrs[k][0]]
                 self._sc.checkSingleStringSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], val, 
@@ -3149,7 +3162,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -3232,7 +3246,7 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
-            if attrs[k][2] == "string":
+            if attrs[k][2] == "string_old":
                 val = [a[0] for a  in attrs[k][0]]
                 self._sc.checkSingleStringSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], val, 
@@ -3525,7 +3539,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
@@ -3744,7 +3759,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 #            print "nn", k
-            if attrs[k][2] == "string" or not attrs[k][2]:
+            if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self._sc.checkStringSpectrumField(self._nxFile, k, 'string', 
                                             attrs[k][1], attrs[k][0],
                                             attrs = {"type":attrs[k][1],"units":"m"})
@@ -3782,7 +3797,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -3866,7 +3882,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
 #            self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if attrs[k][2] == "string" or not attrs[k][2]:
+            if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self._sc.checkStringSpectrumField(self._nxFile, k, 'string', 
                                             attrs[k][1], attrs[k][0],
                                             attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
@@ -3985,7 +4001,7 @@ class EFieldTest(unittest.TestCase):
             if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
-                if  attrs[k][2] == "string" or not  attrs[k][2]:
+                if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                     self.assertEqual(el[k].grows, None)
                     self._sc.checkSingleScalarField(self._nxFile, k, 
                                                     attrs[k][2] if attrs[k][2] else 'string', 
@@ -4033,7 +4049,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
@@ -4107,7 +4124,7 @@ class EFieldTest(unittest.TestCase):
             if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
-                if  attrs[k][2] == "string" or not  attrs[k][2]:
+                if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                     self.assertEqual(el[k].grows, None)
                     if stt != 'POSTRUN':
                         self._sc.checkSingleScalarField(self._nxFile, k, 
@@ -4252,7 +4269,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].error, None)
 #            self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkScalarField(self._nxFile, k, 
                                                   attrs[k][2] if attrs[k][2] else 'string', 
                                                   attrs[k][1], [c[0][0] for c in attrs[k][0]] ,0, 
@@ -4287,7 +4304,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,),numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,),numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,),numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,),numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,),numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -4369,7 +4387,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].error, None)
 #            self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkScalarField(self._nxFile, k, 
                                                   attrs[k][2] if attrs[k][2] else 'string', 
                                                   attrs[k][1], [c[0][0] for c in attrs[k][0]] ,0, 
@@ -4485,7 +4503,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleStringImageField(self._nxFile, k, 
@@ -4537,7 +4555,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
@@ -4602,7 +4621,7 @@ class EFieldTest(unittest.TestCase):
             
             self.assertEqual(el[k].markFailed(), None)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleStringImageField(self._nxFile, k, 
@@ -4681,7 +4700,7 @@ class EFieldTest(unittest.TestCase):
 
 
             mlen = self.__rnd.randint(2, 10)
-            if attrs[k][2] == "string":
+            if attrs[k][2] == "string_old":
                 attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(1, 3)  for c in range(mlen)  ] ] for r in range(steps)  ]
             elif attrs[k][2] != "bool":
                 attrs[k][0] =  [[[ attrs[k][0]*self.__rnd.randint(0, 3)  for c in range(mlen) ] ] for r in range(steps)  ]
@@ -4739,7 +4758,7 @@ class EFieldTest(unittest.TestCase):
 
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkStringImageField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
 #                                            attrs[k][1],  [[ row[0]  for row in img]for img in attrs[k][0]] ,
@@ -4775,7 +4794,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,),numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,),numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,),numpy.iinfo(getattr(numpy, 'int64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,),numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,),numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,),numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -4857,7 +4877,7 @@ class EFieldTest(unittest.TestCase):
 
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkStringImageField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1],  [[ row  for row in img] for img in attrs[k][0]] ,
@@ -4973,7 +4993,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleSpectrumField(self._nxFile, k, 
@@ -5025,7 +5045,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
@@ -5093,7 +5114,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleSpectrumField(self._nxFile, k, 
@@ -5231,7 +5252,7 @@ class EFieldTest(unittest.TestCase):
 
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
 
                 self._sc.checkStringImageField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
@@ -5266,7 +5287,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -5291,8 +5313,8 @@ class EFieldTest(unittest.TestCase):
             quot = (quot + 1) %4
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
-            if attrs[k][2] == 'string':
-                grow = 0
+#            if attrs[k][2] == 'string':
+#                grow = 0
 
             mlen = self.__rnd.randint(2, 10)
             attrs[k][0] =  [[[ attrs[k][0] if not r%2 else attrs[k][4]]  for c in range(mlen)   ] for r in range(steps)  ]
@@ -5347,7 +5369,7 @@ class EFieldTest(unittest.TestCase):
                     
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkStringImageField(self._nxFile, k, 
                                             attrs[k][2] if attrs[k][2] else 'string', 
                                             attrs[k][1], [[ row  for row in img]for img in attrs[k][0]] ,
@@ -5461,7 +5483,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleStringImageField(self._nxFile, k, 
@@ -5511,7 +5533,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[numpy.iinfo(getattr(numpy, 'int16')).max,"NX_INT16", "int16", (1,)],
             "int32":[numpy.iinfo(getattr(numpy, 'int32')).max,"NX_INT32", "int32", (1,)],
             "int64":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_INT64", "int64", (1,)],
-            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
+            "uint":[numpy.iinfo(getattr(numpy, 'int64')).max,"NX_UINT", "uint64", (1,)],
+#            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
             "uint8":[numpy.iinfo(getattr(numpy, 'uint8')).max,"NX_UINT8", "uint8", (1,)],
             "uint16":[numpy.iinfo(getattr(numpy, 'uint16')).max,"NX_UINT16", "uint16", (1,)],
             "uint32":[numpy.iinfo(getattr(numpy, 'uint32')).max,"NX_UINT32", "uint32", (1,)],
@@ -5580,7 +5603,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].markFailed(), None)
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if  stt != 'POSTRUN':
                     self._sc.checkSingleStringImageField(self._nxFile, k, 
@@ -5718,7 +5741,7 @@ class EFieldTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkStringImageField(self._nxFile, k, 
                                                       attrs[k][2] if attrs[k][2] else 'string', 
                                                       attrs[k][1], attrs[k][0] ,
@@ -5751,7 +5774,8 @@ class EFieldTest(unittest.TestCase):
             "int16":[-123,"NX_INT16", "int16", (1,), numpy.iinfo(getattr(numpy, 'int16')).max],
             "int32":[12345,"NX_INT32", "int32", (1,), numpy.iinfo(getattr(numpy, 'int32')).max],
             "int64":[-12345,"NX_INT64", "int64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
-            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
+            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
+#            "uint":[123,"NX_UINT", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint8":[12,"NX_UINT8", "uint8", (1,), numpy.iinfo(getattr(numpy, 'uint8')).max],
             "uint16":[123,"NX_UINT16", "uint16", (1,), numpy.iinfo(getattr(numpy, 'uint16')).max],
             "uint32":[12345,"NX_UINT32", "uint32", (1,), numpy.iinfo(getattr(numpy, 'uint32')).max],
@@ -5832,7 +5856,7 @@ class EFieldTest(unittest.TestCase):
                     
 
             self.assertEqual(el[k].error, None)
-            if  attrs[k][2] == "string" or not  attrs[k][2]:
+            if  attrs[k][2] == "string_old" or not  attrs[k][2]:
                 self._sc.checkStringImageField(self._nxFile, k, 
                                                       attrs[k][2] if attrs[k][2] else 'string', 
                                                       attrs[k][1], attrs[k][0] ,
