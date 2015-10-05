@@ -22,7 +22,7 @@
 """ Tango Data Writer """
 
 ## package version
-__version__ = "1.8.2"
+__version__ = "2.0.0"
 
 import sys
 

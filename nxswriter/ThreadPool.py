@@ -97,8 +97,10 @@ class ThreadPool(object):
             if el.error:
                 mess = "ThreadPool::checkErrors() - %s" % str(el.error) 
                 if hasattr(el, "canfail") and el.canfail:
-                    if Streams.warn_stream:
-                        Streams.warn_stream(mess)
+                    if Streams.log_warn:
+                        Streams.log_warn.write(mess)
+#                    if Streams.warn_stream:
+#                        Streams.warn_stream(mess)
                         
                     else:
                         print(mess, file=sys.stderr)
