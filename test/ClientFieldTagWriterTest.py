@@ -298,7 +298,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                   [abs(c) for c in self._counter]) 
         self._sc.checkScalarField(
             det, "ucounter64_canfail", "uint64", "NX_UINT64", 
-            [self._counter[i] if not i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max 
+            [self._counter[i] if not i%2 else numpy.iinfo(getattr(numpy, 'int64')).max 
              for i in range(len(self._counter))], 
             attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} ) 
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
@@ -1380,18 +1380,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 30)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkSpectrumField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
-        self._sc.checkStringSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
-        self._sc.checkStringSpectrumField(det, "string_time", "string", "NX_CHAR", dates)
+        self._sc.checkSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkSpectrumField(det, "string_time", "string", "NX_CHAR", dates, grows=2)
         self._sc.checkSpectrumField(det, "flags", "bool", "NX_BOOLEAN", logical)
-        self._sc.checkStringSpectrumField(det, "isotime", "string", "ISO8601", dates)
-        self._sc.checkStringSpectrumField(det, "string_time_dim", "string", "NX_CHAR", dates)
+        self._sc.checkSpectrumField(det, "isotime", "string", "ISO8601", dates, grows=2)
+        self._sc.checkSpectrumField(det, "string_time_dim", "string", "NX_CHAR", dates, grows=2)
 
-        self._sc.checkSingleStringSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleSpectrumField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
 
-        self._sc.checkSingleStringSpectrumField(
+        self._sc.checkSingleSpectrumField(
             det, "init_string_time_canfail", 
             "string", "NX_CHAR", ['']*len(dates[0]),
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
@@ -1400,7 +1400,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             "NX_BOOLEAN", [False]*len(logical[0]),
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
-        self._sc.checkSingleStringSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
 
 
@@ -1412,11 +1412,15 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
 
-        self._sc.checkStringSpectrumField(
+        self._sc.checkSpectrumField(
             det, "string_time_canfail", "string", "NX_CHAR", 
             [[(dates[j][i] if not j%2 else '') 
               for i in range(len(dates[j]))] for j in range(len(dates))  ],
-            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
+            attrs = {
+                "type": "NX_CHAR","units":"","nexdatas_source":None,
+                "nexdatas_canfail":"FAILED"},
+            grows=2
+        )
 
 
         
@@ -1584,13 +1588,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 #        self._sc.checkSpectrumAttribute(field, "flag_spectrum_string", "string", logical)
     
         self._sc.checkSpectrumAttribute(det, "spectrum_uint64_canfail", "uint64", 
-                                        [numpy.iinfo(getattr(numpy, 'uint64')).max]*1024)
+                                        [numpy.iinfo(getattr(numpy, 'int64')).max]*1024)
         self._sc.checkSpectrumAttribute(det, "spectrum_bool_canfail", "bool", 
                                         [False]*8)
 
 
         self._sc.checkSpectrumAttribute(field, "final_spectrum_uint64_canfail", "uint64", 
-                                        [numpy.iinfo(getattr(numpy, 'uint64')).max]*256)
+                                        [numpy.iinfo(getattr(numpy, 'int64')).max]*256)
         self._sc.checkSpectrumAttribute(field, "init_spectrum_bool_canfail", "bool", 
                                         [False]*8)
 
@@ -1845,7 +1849,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         
         self._sc.checkSingleImageField(
             det, "final_pco_uint_canfail",  "uint64", "NX_UINT", 
-            [[numpy.iinfo(getattr(numpy, 'uint64')).max for el in rpco] for rpco in self._pco1[0]],
+            [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco] for rpco in self._pco1[0]],
             attrs = {"type":"NX_UINT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         
         self._sc.checkImageField(
@@ -2332,18 +2336,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 79)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkImageField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
-        self._sc.checkStringImageField(det, "time", "string", "NX_DATE_TIME", dates)
-        self._sc.checkStringImageField(det, "string_time", "string", "NX_CHAR", dates)
-        self._sc.checkStringImageField(det, "isotime", "string", "ISO8601", dates)
+        self._sc.checkImageField(det, "time", "string", "NX_DATE_TIME", dates)
+        self._sc.checkImageField(det, "string_time", "string", "NX_CHAR", dates, grows=2)
+        self._sc.checkImageField(det, "isotime", "string", "ISO8601", dates, grows=2)
         self._sc.checkImageField(det, "flags_dim", "bool", "NX_BOOLEAN", logical)
 
-        self._sc.checkSingleStringImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
+        self._sc.checkSingleImageField(det, "init_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleImageField(det, "final_flags", "bool", "NX_BOOLEAN", logical[0])
 
-        self._sc.checkSingleStringImageField(
+        self._sc.checkSingleImageField(
             det, "final_string_time_canfail", "string", "NX_CHAR", 
             [['' for el in rpco] for rpco in dates[0]],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
@@ -2360,12 +2364,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
 
 
-        self._sc.checkStringImageField(
+        self._sc.checkImageField(
             det, "string_time_canfail", "string", "NX_CHAR", 
             [[[(el if not j%2 else '' )
                for el in rpco] for rpco in dates[j]] for j in range(len(dates))  ],
-            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
-        self._sc.checkStringImageField(
+            attrs = {
+            "type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
+            grows=2)
+        self._sc.checkImageField(
             det, "time_canfail", "string", "NX_DATE_TIME", 
             [[[(el if not j%2 else '' )
                for el in rpco] for rpco in dates[j]] for j in range(len(dates))  ],
@@ -2598,7 +2604,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageAttribute(
             field, "image_uint64_canfail", "uint64", 
-            [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]))
+            [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]))
         self._sc.checkImageAttribute(
             field, "image_bool_canfail", "bool", 
             [[False]*len(logical[0])]*len(logical))

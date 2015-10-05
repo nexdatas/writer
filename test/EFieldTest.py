@@ -635,9 +635,9 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs: 
             h5 = el[k].h5Object
-            self.assertEqual(h5.shape,(0,))
+            self.assertEqual(h5.shape,(1,))
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
-            self.assertEqual(h5.size,0)
+            self.assertEqual(h5.size,1)
             self.assertEqual(len(h5.attributes), 2)
             self._sc.checkScalarAttribute(h5, "type", "string", attrs[k][1])
             self._sc.checkScalarAttribute(h5, "units", "string", "m")

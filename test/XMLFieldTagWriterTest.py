@@ -831,7 +831,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 28)
+        det = self._sc.checkFieldTree(f, fname , 19)
         self._sc.checkXMLImageField(det, "pco_int",  "int64", "NX_INT", image)
         self._sc.checkXMLImageField(det, "pco_int8", "int8", "NX_INT8", image)
         self._sc.checkXMLImageField(det, "pco_int16", "int16", "NX_INT16", image)
@@ -853,9 +853,9 @@ class XMLFieldTagWriterTest(unittest.TestCase):
                                     error = 1.0e-14)
 
         self._sc.checkXMLImageField(det, "flags", "bool", "NX_BOOLEAN", bimage)
-        self._sc.checkXMLStringImageField(det, "time", "string", "NX_DATE_TIME", simage)
-        self._sc.checkXMLStringImageField(det, "string_time", "string", "NX_CHAR", simage)
-        self._sc.checkXMLStringImageField(det, "isotime", "string", "ISO8601", simage)
+        self._sc.checkXMLImageField(det, "time", "string", "NX_DATE_TIME", simage)
+        self._sc.checkXMLImageField(det, "string_time", "string", "NX_CHAR", simage)
+        self._sc.checkXMLImageField(det, "isotime", "string", "ISO8601", simage)
         self._sc.checkXMLImageField(det, "flags_dim", "bool", "NX_BOOLEAN", bimage)
 
         f.close()

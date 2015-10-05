@@ -169,23 +169,24 @@ class EField(FElementWithAttr):
 #                else:
                 if not chunk:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape or [0], [],
+                        name.encode(), dtype.encode(), shape, [],
                         deflate)
                 elif self.canfail:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape or [0], chunk,
+                        name.encode(), dtype.encode(), shape, chunk,
                         deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), minshape or [0], chunk,
+                        name.encode(), dtype.encode(), minshape or [1], chunk,
                         deflate)
             else:
+                mshape = [1] if self.strategy in ['INIT', 'FINAL'] else [0]
                 if deflate:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), [0], [1], deflate)
+                        name.encode(), dtype.encode(), mshape, [1], deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), [0], [1])
+                        name.encode(), dtype.encode(), mshape, [1])
         except:
             info = sys.exc_info()
             import traceback
@@ -200,7 +201,6 @@ class EField(FElementWithAttr):
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
                 (name.encode(), dtype.encode(), message))
-
         return f
 
     ## creates attributes
@@ -400,8 +400,11 @@ class EField(FElementWithAttr):
 #                self.h5Object[:, :, :] = sts
         else:
             try:
+#                print ("STORE", holder.cast(self.h5Object.dtype))
+#                print ("SHAPE",self.h5Object.shape, self.h5Object.name )
                 self.h5Object[...] = holder.cast(self.h5Object.dtype)
-            except Exception:
+            except Exception as e:
+#                print("ERROR", str(e))
                 if Streams.log_error:
                     print("EField::__writedata() - "
                           "Storing two-dimension single fields "
@@ -613,9 +616,8 @@ class EField(FElementWithAttr):
             if self.error:
                 if self.canfail:
                     if Streams.log_warn:
-                        print("EField::run() - %s  " % str(self.error),
-                              file=Streams.log_warn)
-
+                        Streams.log_warn.write(
+                            "EField::run() - %s  " % str(self.error))
                     else:
                         print("EField::run() - %s\n %s " %
                               (self.error[0], self.error[1]),

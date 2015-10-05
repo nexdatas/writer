@@ -111,6 +111,16 @@ class TangoDataWriter(object):
                 Streams.log_info = server.log_info
             if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
+            if hasattr(self.__server, "fatal_stream"):
+                Streams.fatal_stream = server.fatal_stream
+            if hasattr(self.__server, "error_stream"):
+                Streams.error_stream = server.error_stream
+            if hasattr(self.__server, "warn_stream"):
+                Streams.warn_stream = server.warn_stream
+            if hasattr(self.__server, "info_stream"):
+                Streams.info_stream = server.info_stream
+            if hasattr(self.__server, "debug_stream"):
+                Streams.debug_stream = server.debug_stream
 
     ## get method for jsonrecord attribute
     # \returns value of jsonrecord

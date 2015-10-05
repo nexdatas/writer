@@ -205,12 +205,12 @@ class FElementWithAttrTest(unittest.TestCase):
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 3:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][3])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
             else: 
-                self.assertEqual(at.value, attrs[nm][0])
+                self.assertEqual(at[...], attrs[nm][0])
 
 
         for nm in attrs.keys():
@@ -219,12 +219,12 @@ class FElementWithAttrTest(unittest.TestCase):
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 3:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][3])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
             else: 
-                self.assertEqual(at.value, attrs[nm][0])
+                self.assertEqual(at[...], attrs[nm][0])
 
         for nm in attrs.keys():
             if attrs[nm][2] == 'string':
@@ -235,16 +235,16 @@ class FElementWithAttrTest(unittest.TestCase):
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 3:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][3])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
             else: 
                 
-                if isinstance(at.value, numpy.ndarray): 
-                    self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+                if isinstance(at[...], numpy.ndarray): 
+                    self.assertEqual(at[...], numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
                 else:
-                    self.assertEqual(at.value, attrs[nm][0])
+                    self.assertEqual(at[...], attrs[nm][0])
 
 
     ## constructor test
@@ -293,16 +293,16 @@ class FElementWithAttrTest(unittest.TestCase):
             at = el2.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at.value)
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
             
             elif len(attrs[nm]) > 4:
-                self.assertTrue(abs(at.value - attrs[nm][0]) <= attrs[nm][4])
+                self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][4])
             else: 
                 
-                if isinstance(at.value, numpy.ndarray): 
-                    self.assertEqual(at.value, numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+                if isinstance(at[...], numpy.ndarray): 
+                    self.assertEqual(at[...], numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
                 else:
-                    self.assertEqual(at.value, attrs[nm][0])
+                    self.assertEqual(at[...], attrs[nm][0])
 
 
 
@@ -368,16 +368,16 @@ class FElementWithAttrTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     ## new version
-                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value)
+                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[...])
                         
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     ## new version
-                    self.assertTrue(abs(at.value - attrs[nm][0][i]) <= attrs[nm][4])
+                    self.assertTrue(abs(at[...] - attrs[nm][0][i]) <= attrs[nm][4])
             else: 
                 
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(at.value, attrs[nm][0][i])
+                    self.assertEqual(at[...], attrs[nm][0][i])
 
 
 
@@ -444,25 +444,25 @@ class FElementWithAttrTest(unittest.TestCase):
                 for i in range(len(attrs[nm][0])):
                     ## new version
                     if len(attrs[nm][0]) == 1:
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value)
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[...])
                     else:
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at.value[i])
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[i])
                         
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     ## new version
                     if len(attrs[nm][0]) == 1:
-                        self.assertTrue(abs(at.value - attrs[nm][0][i]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[...] - attrs[nm][0][i]) <= attrs[nm][4])
                     else:
-                        self.assertTrue(abs(at.value[i] - attrs[nm][0][i]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[i] - attrs[nm][0][i]) <= attrs[nm][4])
             else: 
                 
                 for i in range(len(attrs[nm][0])):
                     ## new version
                     if len(attrs[nm][0]) == 1:
-                        self.assertEqual(at.value, attrs[nm][0][i])
+                        self.assertEqual(at[...], attrs[nm][0][i])
                     else:
-                        self.assertEqual(at.value[i], attrs[nm][0][i])
+                        self.assertEqual(at[i], attrs[nm][0][i])
 
 
 
@@ -530,16 +530,16 @@ class FElementWithAttrTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value)
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[...])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at.value - attrs[nm][0][i][j]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[...] - attrs[nm][0][i][j]) <= attrs[nm][4])
             else: 
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at.value, attrs[nm][0][i][j])
+                        self.assertEqual(at[...], attrs[nm][0][i][j])
 
 
 
@@ -609,16 +609,16 @@ class FElementWithAttrTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[i,j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at.value[i][j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[i,j] - attrs[nm][0][i][j]) <= attrs[nm][4])
             else: 
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+                        self.assertEqual(at[i,j], attrs[nm][0][i][j])
 
 
     ## constructor test
@@ -686,16 +686,16 @@ class FElementWithAttrTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[i,j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at.value[i][j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[i,j] - attrs[nm][0][i][j]) <= attrs[nm][4])
             else: 
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+                        self.assertEqual(at[i,j], attrs[nm][0][i][j])
 
     ## constructor test
     # \brief It tests default settings
@@ -760,16 +760,16 @@ class FElementWithAttrTest(unittest.TestCase):
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at.value[i,j])
+                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[i,j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at.value[i][j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+                        self.assertTrue(abs(at[i,j] - attrs[nm][0][i][j]) <= attrs[nm][4])
             else: 
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at.value[i][j], attrs[nm][0][i][j])
+                        self.assertEqual(at[i,j], attrs[nm][0][i][j])
 
 
 

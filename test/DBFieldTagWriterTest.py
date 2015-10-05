@@ -410,8 +410,10 @@ class DBFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 17)
-        self._sc.checkScalarField(det, "pid_scalar_string", "string", "NX_CHAR", [scalar] *3)
-        self._sc.checkScalarField(det, "pid_scalar2_string", "string", "NX_CHAR", [scalar] *3)
+        self._sc.checkSpectrumField(det, "pid_scalar_string", "string", "NX_CHAR", [[scalar]] *3,
+                                    attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
+        self._sc.checkSpectrumField(det, "pid_scalar2_string", "string", "NX_CHAR", [[scalar]] *3,
+                                    attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
         self._sc.checkScalarField(det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar4_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar_uint", "uint64", "NX_UINT", [int(scalar)] *3)
@@ -420,10 +422,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                   error = 1e-14)
         self._sc.checkScalarField(det, "pid_scalar_float32", "float32", "NX_FLOAT32", [float(scalar)] *3, 
                                   error = 1e-5)
-        self._sc.checkScalarField(det, "pid2_image_string", "string", "NX_CHAR", 
-                                       [str(scalar)]*3)
-        self._sc.checkScalarField(det, "pid3_image_string", "string", "NX_CHAR", 
-                                       [str(scalar)]*3)
+        self._sc.checkImageField(det, "pid2_image_string", "string", "NX_CHAR", 
+                                       [[[str(scalar)]]]*3,
+                                    attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
+        self._sc.checkImageField(det, "pid3_image_string", "string", "NX_CHAR", 
+                                       [[[str(scalar)]]]*3,
+                                    attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
        
 
         self._sc.checkSingleScalarField(det, "init_pid_scalar_int32", "int32", "NX_INT32", int(scalar))
@@ -432,8 +436,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                         float(scalar), error = 1e-6)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64", 
                                         float(scalar), error = 1e-14)
-        self._sc.checkSingleScalarField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
-                                        str(scalar))
+        self._sc.checkSingleImageField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+                                          [[str(scalar)]],
+                                    attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
         self._sc.checkSingleScalarField(det, "final_pid2_scalar_string", "string", "NX_CHAR", 
                                         str(scalar))
         self._sc.checkSingleScalarField(det, "final_pid3_scalar_string", "string", "NX_CHAR", 
@@ -676,8 +681,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 17)
-        self._sc.checkScalarField(
-            det, "pid_scalar_string", "string", "NX_CHAR", [''] *3,
+        self._sc.checkSpectrumField(
+            det, "pid_scalar_string", "string", "NX_CHAR", [['']] *3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkScalarField(
             det, "pid_scalar2_string", "string", "NX_CHAR", [''] *3,
@@ -689,7 +694,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
             det, "pid_scalar4_string", "string", "NX_CHAR", [''] *3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkScalarField(
-            det, "pid_scalar_uint", "uint64", "NX_UINT", [numpy.iinfo(getattr(numpy, 'uint64')).max] *3,
+            det, "pid_scalar_uint", "uint64", "NX_UINT", [numpy.iinfo(getattr(numpy, 'int64')).max] *3,
             attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkScalarField(
             det, "pid_scalar_int64","int64", "NX_INT64", [numpy.iinfo(getattr(numpy, 'int64')).max] *3,
@@ -973,8 +978,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 23)
-        self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
+        det = self._sc.checkFieldTree(f, fname , 13)
+        self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [[str(sub[0]) for sub in spectrum ]]*3)
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
                                     [[sub[0] for sub in spectrum ]]*3, grows=2)
@@ -984,21 +989,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[int(scalar)] ]*3)
         self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
                                     [[float(scalar)] ]*3)
-        self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
-                                       [[str(sub[0]) for sub in name]]*3)
+        print "IMAGE ", [[str(sub[0]) for sub in name]]*3
+        self._sc.checkImageField(det, "name_spectrum_string", "string", "NX_CHAR", 
+                                 [[[str(sub[0])] for sub in name]]*3)
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
                                           [sub[0] for sub in spectrum ])
         self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
                                           [sub[0] for sub in spectrum ])
        
 
-        self._sc.checkSingleStringSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
                                                 [str(sub[0]) for sub in spectrum ])
-        self._sc.checkSingleStringSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
                                                 [scalar])
-        self._sc.checkSingleStringSpectrumField(det, "final_pid_image_string", "string", "NX_CHAR", 
-                                    [str(sub[0]) for sub in spectrum])
-        self._sc.checkSingleStringSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSingleImageField(det, "final_pid_image_string", "string", "NX_CHAR", 
+                                       [[str(sub[0])] for sub in spectrum])
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
                                     [str(sub[0]) for sub in spectrum])
 
 
@@ -1259,8 +1265,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 23)
-        self._sc.checkStringSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
+        det = self._sc.checkFieldTree(f, fname , 13)
+        self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
                                           [['']*len(spectrum) ]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
@@ -1275,7 +1281,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
                                     [[numpy.finfo(getattr(numpy, 'float64')).max]]*3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkStringSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
                                        [['']*len(name)]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
@@ -1286,16 +1292,16 @@ class DBFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
        
 
-        self._sc.checkSingleStringSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
                                                 ['' for sub in spectrum ] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleStringSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
                                                 [''] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleStringSpectrumField(det, "final_pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_image_string", "string", "NX_CHAR", 
                                     ['' for sub in spectrum] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleStringSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
                                     ['' for sub in spectrum] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
@@ -1741,12 +1747,12 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 41)
-        self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
+        det = self._sc.checkFieldTree(f, fname , 19)
+        self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
-        self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in name]]*3)
-        self._sc.checkStringImageField(det, "pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR", 
                                        [[[str(it) for it in sub] for sub in pid]]*3)
         self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
                                        [[[float(it) for it in sub] for sub in pid]]*3)
@@ -1762,7 +1768,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [pid_exported]*3, grows=3)
         self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32", 
                                     [pid_exported]*3, grows=2, error=1e-6)
-        self._sc.checkSingleStringImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
+        self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
                                     [[str(it) for it in sub] for sub in pid_exported])
         self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64", 
                                     pid_exported, grows=3)
@@ -2148,14 +2154,14 @@ class DBFieldTagWriterTest(unittest.TestCase):
         # check the created file
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 45)
-        self._sc.checkStringImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
+        det = self._sc.checkFieldTree(f, fname , 19)
+        self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
                                        [[['' for it in sub] for sub in name_pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkStringImageField(det, "name_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR", 
                                        [[['' for it in sub] for sub in name]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkStringImageField(det, "pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR", 
                                        [[['' for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
@@ -2179,8 +2185,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32", 
                                     [[[numpy.finfo(getattr(numpy, 'float32')).max]*6]*2]*3, grows=2, error=1e-6 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleStringImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
-                                    [['' ] ]*2 ,
+        self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
+                                    [['' ]*6 ]*2 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64", 
                                     [[numpy.iinfo(getattr(numpy, 'int64')).max]*6]*2, grows=3 ,
@@ -2198,7 +2204,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT", 
-                                       [[[numpy.iinfo(getattr(numpy, 'uint64')).max]]]*3 ,
+                                       [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,
             attrs = {"type":"NX_UINT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT", 
                                         [[numpy.finfo(getattr(numpy, 'float64')).max]] ,

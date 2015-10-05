@@ -61,20 +61,21 @@ class Checker(object):
     # \param children number of detector children   
     # \returns detector group object    
     def checkFieldTree(self, f, fname, children):
-        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+#        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+        f = f.root()
         self._tc.assertEqual(6, len(f.attributes))
         self._tc.assertEqual( f.attributes["file_name"][...], fname)
-        f = f.root()
+#        f = f.root()
         self._tc.assertTrue(f.attributes["NX_class"][...],"NXroot")
-        self._tc.assertEqual(f.nchildren, 2)
+        self._tc.assertEqual(f.size, 2)
             
         en = f.open("entry1")
         self._tc.assertTrue(en.is_valid)
         self._tc.assertEqual(en.name,"entry1")
         self._tc.assertEqual(len(en.attributes),1)
-        self._tc.assertEqual(en.nchildren, 1)
+        self._tc.assertEqual(en.size, 1)
 
-        at = en.attibutes["NX_class"]
+        at = en.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
         self._tc.assertEqual(len(at.shape),1)
@@ -86,14 +87,15 @@ class Checker(object):
         ins = en.open("instrument")
         self._tc.assertTrue(ins.is_valid)
         self._tc.assertEqual(ins.name,"instrument")
-        self._tc.assertEqual(ins.nattrs,1)
-        self._tc.assertEqual(ins.nchildren, 1)
+        self._tc.assertEqual(len(ins.attributes),1)
+        self._tc.assertEqual(ins.size, 1)
         
             
         at = ins.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(len(at.shape),1)
+        self._tc.assertEqual(at.shape,(1,))
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXinstrument")
@@ -102,7 +104,7 @@ class Checker(object):
         self._tc.assertTrue(det.is_valid)
         self._tc.assertEqual(det.name,"detector")
         self._tc.assertEqual(len(det.attributes),1)
-        self._tc.assertEqual(det.nchildren, children)
+        self._tc.assertEqual(det.size, children)
             
         at = det.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
@@ -123,22 +125,24 @@ class Checker(object):
     # \param fattributes number of field attributes
     # \returns detector group object    
     def checkAttributeTree(self, f, fname, gattributes, fattributes):
-        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
-        self._tc.assertEqual(6, f.nattrs)
+#        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+        f = f.root()
+        self._tc.assertEqual(6, len(f.attributes))
         self._tc.assertEqual( f.attributes["file_name"][...], fname)
         self._tc.assertTrue(f.attributes["NX_class"][...],"NXroot")
-        self._tc.assertEqual(f.nchildren, 2)
+        self._tc.assertEqual(f.size, 2)
             
-        en = f.open("entry1").next()
+        en = f.open("entry1")
         self._tc.assertTrue(en.is_valid)
         self._tc.assertEqual(en.name,"entry1")
-        self._tc.assertEqual(en.nattrs,1)
-        self._tc.assertEqual(en.nchildren, 1)
+        self._tc.assertEqual(len(en.attributes),1)
+        self._tc.assertEqual(en.size, 1)
 
-        at = en.attr("NX_class")
+        at = en.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(len(at.shape),1)
+        self._tc.assertEqual(at.shape,(1,))
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXentry")
@@ -146,14 +150,15 @@ class Checker(object):
         ins = en.open("instrument")
         self._tc.assertTrue(ins.is_valid)
         self._tc.assertEqual(ins.name,"instrument")
-        self._tc.assertEqual(ins.nattrs,1)
-        self._tc.assertEqual(ins.nchildren, 2)
+        self._tc.assertEqual(len(ins.attributes),1)
+        self._tc.assertEqual(ins.size, 2)
         
             
-        at = ins.attr("NX_class")
+        at = ins.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(len(at.shape),1)
+        self._tc.assertEqual(at.shape,(1,))
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXinstrument")
@@ -162,13 +167,13 @@ class Checker(object):
         self._tc.assertTrue(det.is_valid)
         self._tc.assertEqual(det.name,"detector")
         self._tc.assertEqual(len(det.attributes), 1 + gattributes)
-        self._tc.assertEqual(det.nchildren, 0)
+        self._tc.assertEqual(det.size, 0)
 
         det = ins.open("detector")
         self._tc.assertTrue(det.is_valid)
         self._tc.assertEqual(det.name,"detector")
         self._tc.assertEqual(len(det.attributes), 1 + gattributes)
-        self._tc.assertEqual(det.nchildren, 0)
+        self._tc.assertEqual(det.size, 0)
 
 
         field = ins.open("counter")
@@ -176,10 +181,11 @@ class Checker(object):
         self._tc.assertEqual(field.name,"counter")
         self._tc.assertEqual(len(field.attributes), 1 + fattributes)
             
-        at = det.attr("NX_class")
+        at = det.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),0)
+        self._tc.assertEqual(len(at.shape),1)
+        self._tc.assertEqual(at.shape,(1,))
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXdetector")
@@ -239,14 +245,15 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         # pninx is not supporting reading string areas 
 
-
+#        print "values", values
+#        print "cnt", cnt[...]
         for i in range(len(values)):
 #            print name, i, values[i],  cnt[i]
             if dtype != "string" and self._isNumeric(cnt[i]):
                 if dtype == "bool":
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
-#                    print "CMP",cnt[i] , values[i] ,cnt[i] - values[i] , error
+#                    print "CMP",name, cnt[i] , values[i] ,cnt[i] - values[i] , error
                     self._tc.assertTrue(abs(cnt[i] - values[i] ) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt[i])
@@ -458,9 +465,9 @@ class Checker(object):
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         self._tc.assertEqual(len(cnt.shape), 1)
-        self._tc.assertEqual(cnt.shape, (1,))
+        self._tc.assertEqual(cnt.shape, (0,))
         self._tc.assertEqual(cnt.dtype, dtype)
-        self._tc.assertEqual(cnt.size, 1)        
+        self._tc.assertEqual(cnt.size, 0)        
             
 
 
@@ -637,7 +644,7 @@ class Checker(object):
                 if nxtype == "NX_BOOLEAN":
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
-                    print "CHECK", name, values[i], cnt[i]
+#                    print "CHECK", name, values[i], cnt[i]
                     self._tc.assertTrue(abs(values[i] - cnt[i]) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt[i])
@@ -907,7 +914,7 @@ class Checker(object):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
                     else:
-#                        print "CK",cnt[i,j],  values[i][j],cnt[i,j] - values[i][j]
+#                        print "CK", name, cnt[i,j],  values[i][j],cnt[i,j] - values[i][j]
                         self._tc.assertTrue(abs(cnt[i,j] - values[i][j] ) <= error)
                 else:
                     self._tc.assertEqual(values[i][j], cnt[i,j])

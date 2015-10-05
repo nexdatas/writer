@@ -29,4 +29,14 @@ log_warn = None
 ## Tango info log
 log_info = None
 ## Tango debug log
-log_debug = None
+debug_stream = None
+## Tango fatal stream
+fatal_stream = None
+## Tango error stream
+error_stream = None
+## Tango warn stream
+warn_stream = None
+## Tango info stream
+info_stream = None
+## Tango debug stream
+_debug_stream = None

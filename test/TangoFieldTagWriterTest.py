@@ -582,7 +582,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_INT","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarULong", "uint64", "NX_UINT", 
-            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max) for  i in range(steps)],
+            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarLong64", "int64", "NX_INT64", 
@@ -590,7 +590,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarULong64", "uint64", "NX_UINT", 
-            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint64')).max) for  i in range(steps)],
+            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarFloat", "float32", "NX_FLOAT32", 
@@ -877,7 +877,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 18)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkSpectrumField(
             det, "SpectrumBoolean", "bool", "NX_BOOLEAN", 
             [(self._logical[i] if not i%2 else [False]*len(self._logical[i])) for  i in range(steps)],
@@ -924,7 +924,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumULong64", "uint64", "NX_UINT64", 
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._mca2[i])) 
+            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca2[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
             grows=2)
@@ -948,7 +948,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
-        self._sc.checkStringSpectrumField(
+        self._sc.checkSpectrumField(
             det, "SpectrumString", "string", "NX_CHAR", 
             [(self._dates[i] if not i%2 else  ['']*len(self._dates[i])) 
              for  i in range(steps)],
@@ -1205,7 +1205,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 18)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
         self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps], 
                                     grows = 2)
@@ -1227,7 +1227,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps], 
                                     error = 1e-14)
         
-        self._sc.checkStringSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
+        self._sc.checkSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
         # writing encoded attributes not supported for PyTango 7.2.3
 
         self._sc.checkSpectrumField(det, "SpectrumEncoded", "int32", "NX_INT32", self._mca2[:steps])
@@ -1458,7 +1458,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 22)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
         self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
                                  grows = 2)
@@ -1478,7 +1478,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                                  grows = 3, error = 1.0e-6)
         self._sc.checkImageField(det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps],
                                  grows = 1, error = 1.0e-14)
-        self._sc.checkStringImageField(det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
+        self._sc.checkImageField(det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
         self._sc.checkImageField(det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
                                  grows = 3)
 
@@ -1715,7 +1715,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         
         
         f = open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 22)
+        det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkImageField(
             det, "ImageBoolean", "bool", "NX_BOOLEAN", 
             [(self._logical2[i] if not i%2 else [[False]*len(self._logical2[i][0])]*len(self._logical2[i])) for  i in range(steps)],
@@ -1772,7 +1772,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64", 
             [(self._pco1[i] if not i%2 else 
-              [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
+              [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i])) 
              for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             grows = 2 )
@@ -1795,7 +1795,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
-        self._sc.checkStringImageField(
+        self._sc.checkImageField(
             det, "ImageString", "string", "NX_CHAR", 
             [(self._dates2[i] if not i%2 else 
               [['']*len(self._dates2[i][0])]*len(self._dates2[i])) 
@@ -1822,7 +1822,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64", 
-             [[numpy.iinfo(getattr(numpy, 'uint64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]) ,
+             [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]) ,
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32", 
