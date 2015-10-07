@@ -159,13 +159,13 @@ class PGSQLSourceTest(unittest.TestCase):
         ds = DBaseSource()
         ds.dbtype = self.__dbtype
 #        dt = ds.getData()
-        self.myAssertRaise(psycopg2.InterfaceError, ds.getData)
+        self.myAssertRaise(TypeError, ds.getData)
 
 
         ds = DBaseSource()
         ds.dbtype = self.__dbtype
         ds.query = query
-        self.myAssertRaise(psycopg2.InterfaceError, ds.getData)
+        self.myAssertRaise(TypeError, ds.getData)
 
 
         ds = DBaseSource()

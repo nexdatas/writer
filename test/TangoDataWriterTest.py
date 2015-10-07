@@ -23,10 +23,7 @@ import unittest
 import os
 import sys
 
-try:
-    from pni.io.nx.h5 import open_file
-except:
-    from pni.nx.h5 import open_file
+from pni.io.nx.h5 import open_file
 
 from  xml.sax import SAXParseException
 
