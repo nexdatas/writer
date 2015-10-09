@@ -261,14 +261,7 @@ class TangoDataWriter(object):
             localJSON = json.loads(jsonstring)
 
         if self.__stepPool:
-            if Streams.log_info:
-                print("TangoDataWriter::record() - Default trigger",
-                      file=Streams.log_info)
-
-            else:
-                print("TangoDataWriter::record() - Default trigger",
-                      file=sys.stdout)
-
+            Streams.info("TangoDataWriter::record() - Default trigger")
             self.__stepPool.setJSON(json.loads(self.jsonrecord), localJSON)
             self.__stepPool.runAndWait()
             self.__stepPool.checkErrors()
@@ -280,14 +273,8 @@ class TangoDataWriter(object):
         if hasattr(triggers, "__iter__"):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
-                    if Streams.log_info:
-                        print("TangoDataWriter:record() - Trigger: %s" % pool,
-                              file=Streams.log_info)
-
-                    else:
-                        print("TangoDataWriter:record() - Trigger: %s" % pool,
-                              file=sys.stdout)
-
+                    Streams.info(
+                        "TangoDataWriter:record() - Trigger: %s" % pool)
                     self.__triggerPools[pool].setJSON(
                         json.loads(self.jsonrecord), localJSON)
                     self.__triggerPools[pool].runAndWait()

@@ -21,8 +21,6 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
-from __future__ import print_function
-
 import pni.io.nx.h5 as nx
 from xml import sax
 
@@ -92,13 +90,14 @@ class NexusXMLHandler(sax.ContentHandler):
         self.__storedName = None
 
         ## map of tag names to related classes
-        self.elementClass = {'group': EGroup, 'field': EField,
-                             'attribute': EAttribute, 'link': ELink,
-                             'symbols': Element, 'symbol': ESymbol,
-                             'dimensions': EDimensions, 'dim': EDim,
-                             'enumeration': Element, 'item': Element,
-                             'strategy': EStrategy
-                             }
+        self.elementClass = {
+            'group': EGroup, 'field': EField,
+            'attribute': EAttribute, 'link': ELink,
+            'symbols': Element, 'symbol': ESymbol,
+            'dimensions': EDimensions, 'dim': EDim,
+            'enumeration': Element, 'item': Element,
+            'strategy': EStrategy
+        }
 
         ## transparent tags
         self.transparentTags = ['definition']
@@ -168,23 +167,17 @@ class NexusXMLHandler(sax.ContentHandler):
                     self.__last().createLink(self.__groupTypes)
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
-                    if Streams.log_error:
-                        print("NexusXMLHandler::startElement() - "
-                              "Unsupported tag: %s, %s "
-                              % (name, attrs.keys()),
-                              file=Streams.log_error)
+                    Streams.error(
+                        "NexusXMLHandler::startElement() - "
+                        "Unsupported tag: %s, %s "
+                        % (name, attrs.keys()),
+                        std=False)
 
                     raise UnsupportedTagError("Unsupported tag: %s, %s "
                                               % (name, attrs.keys()))
-                if Streams.log_warn:
-                    print("NexusXMLHandler::startElement() - "
-                          "Unsupported tag: %s, %s " % (name, attrs.keys()),
-                          file=Streams.log_warn)
-
-                else:
-                    print("NexusXMLHandler::startElement() - "
-                          "Unsupported tag: %s, %s " % (name, attrs.keys()),
-                          file=sys.stderr)
+                Streams.warn(
+                    "NexusXMLHandler::startElement() - "
+                    "Unsupported tag: %s, %s " % (name, attrs.keys()))
 
                 self.__unsupportedTag = name
 

@@ -21,8 +21,6 @@
 
 """ Definitions of TANGO datasource """
 
-from __future__ import print_function
-
 import time
 import sys
 import threading
@@ -41,12 +39,7 @@ try:
     PYTANGO_AVAILABLE = True
 except ImportError as e:
     PYTANGO_AVAILABLE = False
-    if Streams.log_info:
-        print("PYTANGO not available: %s" % e,
-              file=Streams.log_info)
-    else:
-        print("PYTANGO not available: %s" % e,
-              file=sys.stdout)
+    Streams.info("PYTANGO not available: %s" % e)
 
 
 ## tools for proxy
@@ -65,11 +58,10 @@ class ProxyTools(object):
             proxy = PyTango.DeviceProxy(device)
 
         except:
-            if Streams.log_error:
-                print("ProxyTools.proxySetup() - "
-                      "Cannot connect to %s " % device,
-                      file=Streams.log_error)
-
+            Streams.error(
+                "ProxyTools.proxySetup() - "
+                "Cannot connect to %s " % device,
+                std=False)
             raise
 
         while not found and cnt < 1000:
@@ -154,10 +146,10 @@ class TangoSource(DataSource):
             name = rec[0].getAttribute("name") \
                 if rec[0].hasAttribute("name") else None
         if not name:
-            if Streams.log_error:
-                print("TangoSource::setup() - "
-                      "Tango record name not defined: %s" % xml,
-                      file=Streams.log_error)
+            Streams.error(
+                "TangoSource::setup() - "
+                "Tango record name not defined: %s" % xml,
+                std=False)
 
             raise DataSourceSetupError(
                 "Tango record name not defined: %s" % xml)
@@ -186,10 +178,10 @@ class TangoSource(DataSource):
                 client = True
             self.member = TgMember(name, memberType, encoding)
         if not device:
-            if Streams.log_error:
-                print("TangoSource::setup() - "
-                      "Tango device name not defined: %s" % xml,
-                      file=Streams.log_error)
+            Streams.error(
+                "TangoSource::setup() - "
+                "Tango device name not defined: %s" % xml,
+                std=False)
 
             raise DataSourceSetupError(
                 "Tango device name not defined: %s" % xml)
@@ -203,10 +195,10 @@ class TangoSource(DataSource):
         self.__proxy = ProxyTools.proxySetup(self.device)
 
         if not self.__proxy:
-            if Streams.log_error:
-                print("TangoSource::setup() - "
-                      "Cannot connect to: %s \ndefined by %s"
-                      % (self.device, xml), file=Streams.log_error)
+            Streams.error(
+                "TangoSource::setup() - "
+                "Cannot connect to: %s \ndefined by %s"
+                % (self.device, xml), std=False)
 
             raise DataSourceSetupError(
                 "Cannot connect to: %s \ndefined by %s" % (self.device, xml))
@@ -246,10 +238,10 @@ class TangoSource(DataSource):
             if res:
                 return res
         if not PYTANGO_AVAILABLE:
-            if Streams.log_error:
-                print("TangoSource::getData() - "
-                      "Support for PyTango datasources not available",
-                      file=Streams.log_error)
+            Streams.error(
+                "TangoSource::getData() - "
+                "Support for PyTango datasources not available",
+                std=False)
 
             raise PackageError(
                 "Support for PyTango datasources not available")
@@ -258,10 +250,10 @@ class TangoSource(DataSource):
             if not self.__proxy or not ProxyTools.isProxyValid(self.__proxy):
                 self.__proxy = ProxyTools.proxySetup(self.device)
                 if not self.__proxy:
-                    if Streams.log_error:
-                        print("TangoSource::getData() - "
-                              "Setting up lasts to long: %s" % self.device,
-                              file=Streams.log_error)
+                    Streams.error(
+                        "TangoSource::getData() - "
+                        "Setting up lasts to long: %s" % self.device,
+                        std=False)
 
                     raise DataSourceSetupError(
                         "Setting up lasts to long: %s" % self.device)
@@ -270,10 +262,10 @@ class TangoSource(DataSource):
                 self.member.getData(self.__proxy)
             else:
                 if not hasattr(self.__tngrp, "getData"):
-                    if Streams.log_error:
-                        print("TangoSource::getData() - "
-                              "DataSource pool not set up",
-                              file=Streams.log_error)
+                    Streams.error(
+                        "TangoSource::getData() - "
+                        "DataSource pool not set up",
+                        std=False)
 
                     raise DataSourceSetupError("DataSource pool not set up")
 
@@ -345,11 +337,11 @@ class TgGroup(object):
             if a.encode().lower() not in alist:
                 errors.append((a, device.device))
         if errors:
-            if Streams.log_error:
-                print("TgGroup::getData() - "
-                      "attribute not in tango "
-                      "device attributes:%s" % errors,
-                      file=Streams.log_error)
+            Streams.error(
+                "TgGroup::getData() - "
+                "attribute not in tango "
+                "device attributes:%s" % errors,
+                std=False)
 
             raise DataSourceSetupError(
                 "TgGroup::getData() - "
@@ -423,10 +415,10 @@ class TgGroup(object):
                 if not dv.proxy or not ProxyTools.isProxyValid(dv.proxy):
                     dv.proxy = ProxyTools.proxySetup(dv.device)
                     if not dv.proxy:
-                        if Streams.log_error:
-                            print("TgGroup::getData() - "
-                                  "Setting up lasts to long: %s" % dv.device,
-                                  file=Streams.log_error)
+                        Streams.error(
+                            "TgGroup::getData() - "
+                            "Setting up lasts to long: %s" % dv.device,
+                            std=False)
 
                         raise DataSourceSetupError(
                             "TgGroup::getData() - "
@@ -527,10 +519,10 @@ class TgMember(object):
         if self.__value:
             return self.__value
         if self.__da is None:
-            if Streams.log_error:
-                print("TgMember::getValue() - "
-                      "Data for %s not fetched" % self.name,
-                      file=Streams.log_error)
+            Streams.error(
+                "TgMember::getValue() - "
+                "Data for %s not fetched" % self.name,
+                std=False)
 
             raise DataSourceSetupError(
                 "TgMember::getValue() -  "
@@ -563,10 +555,10 @@ class TgMember(object):
                     "shape": shape}
         elif self.memberType == "command":
             if self.__cd is None:
-                if Streams.log_error:
-                    print("TgMember::getValue() - "
-                          "Data for %s not fetched" % self.name,
-                          file=Streams.log_error)
+                Streams.error(
+                    "TgMember::getValue() - "
+                    "Data for %s not fetched" % self.name,
+                    std=Flase)
 
                 raise DataSourceSetupError(
                     "TgMember::getValue() -  "

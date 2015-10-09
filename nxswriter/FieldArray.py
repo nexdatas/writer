@@ -21,8 +21,6 @@
 
 """ splits string arrays to one dimensional ones """
 
-from __future__ import print_function
-
 import numpy
 
 from . import Streams
@@ -190,10 +188,10 @@ class FieldArray(object):
     def __setitem__(self, key, value):
 
         if not self.__fList:
-            if Streams.log_error:
-                print("FieldArray::__setitem__() - "
-                      "Field list without elements",
-                      file=Streams.log_error)
+            Streams.error(
+                "FieldArray::__setitem__() - "
+                "Field list without elements",
+                std=False)
 
             raise CorruptedFieldArrayError(
                 "Field list without elements")
@@ -308,9 +306,9 @@ class FieldArray(object):
     # \param ext a number of grow units
     def grow(self, dim=0, ext=1):
         if dim:
-            if Streams.log_error:
-                print("FieldArray::grow() - dim >0  not supported",
-                      file=Streams.log_error)
+            Streams.error(
+                "FieldArray::grow() - dim >0  not supported",
+                std=False)
 
             raise ValueError(
                 "dim >0  not supported by FieldArray.grow")

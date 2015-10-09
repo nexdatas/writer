@@ -1,3 +1,7 @@
+2015-04-XX Jan Kotanski <jankotan@gmail.com>
+	* adding streaming functions into Streams
+	* tagged as 1.8.3
+
 2015-04-21 Jan Kotanski <jankotan@gmail.com>
 	* adding support for tango:// prefix in __CLIENT__ TANGO datasources
 	* tagged as 1.8.2

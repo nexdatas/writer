@@ -21,8 +21,6 @@
 
 """ Definitions of file tag evaluation classes """
 
-from __future__ import print_function
-
 from .DataHolder import DataHolder
 from .Element import Element
 from .Types import NTP
@@ -94,10 +92,10 @@ class FElement(Element):
             image = [ln.split() for ln in lines]
             return [len(image), len(image[0])]
         else:
-            if Streams.log_error:
-                print("FElement::__fetchShape() "
-                      "- Case with not supported rank = %s" % rank,
-                      file=Streams.log_error)
+            Streams.error(
+                "FElement::__fetchShape() "
+                "- Case with not supported rank = %s" % rank,
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s" % rank)
@@ -228,10 +226,10 @@ class FElementWithAttr(FElement):
             dh = DataHolder("IMAGE", image, "DevString",
                             [len(image), len(image[0])])
         else:
-            if Streams.log_error:
-                print("FElement::_createAttributes() - "
-                      "Case with not supported rank = %s" % rank,
-                      file=Streams.log_error)
+            Streams.error(
+                "FElement::_createAttributes() - "
+                "Case with not supported rank = %s" % rank,
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s", rank)

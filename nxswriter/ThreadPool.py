@@ -21,8 +21,6 @@
 
 """ Provides a pool with element threads """
 
-from __future__ import print_function
-
 import Queue
 import sys
 
@@ -95,21 +93,14 @@ class ThreadPool(object):
         errors = []
         for el in self.__elementList:
             if el.error:
+                mess = "ThreadPool::checkErrors() - %s" % str(el.error)
                 if hasattr(el, "canfail") and el.canfail:
-                    if Streams.log_warn:
-                        print("ThreadPool::checkErrors() - %s" % str(el.error),
-                              file=Streams.log_warn)
-
-                    else:
-                        print("ThreadPool::checkErrors() - %s" % str(el.error),
-                              file=sys.stderr)
                     if hasattr(el, "markFailed"):
                         el.markFailed()
+                    Streams.warn(mess)
                 else:
                     errors.append(el.error)
-                    if Streams.log_error:
-                        print("ThreadPool::checkErrors() - %s" % str(el.error),
-                              file=Streams.log_error)
+                    Streams.error(mess, std=False)
         if errors:
             raise ThreadError("Problems in storing data: %s" % str(errors))
 

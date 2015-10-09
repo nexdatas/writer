@@ -97,8 +97,7 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        print("Group::run() - %s " % message[0],
-                              file=sys.stderr)
+                        Streams.warn("Group::run() - %s " % message[0])
                         self.error = message
                     else:
                         arr = dh.cast(self.h5Object.dtype)
@@ -116,35 +115,26 @@ class EAttribute(FElement):
                         else:
                             ## pniio does not support this case
                             self.h5Object.value = arr
-                            if Streams.log_error:
-                                print("EAttribute::run() - "
-                                      "Storing multi-dimension "
-                                      "string attributes"
-                                      " not supported by pniio",
-                                      file=Streams.log_error)
+                            Streams.error(
+                                "EAttribute::run() - "
+                                "Storing multi-dimension "
+                                "string attributes"
+                                " not supported by pniio",
+                                std=False)
 
                             raise Exception("Storing multi-dimension string "
                                             "attributes not supported "
                                             "by pniio")
         except:
             message = self.setMessage(sys.exc_info()[1].__str__())
-            print("Group::run() - %s " % message[0], file=sys.stderr)
             self.error = message
         #            self.error = sys.exc_info()
         finally:
             if self.error:
                 if self.canfail:
-                    if Streams.log_warn:
-                        print("Group::run() - %s  " % str(self.error),
-                              file=Streams.log_warn)
-
+                    Streams.warn("Group::run() - %s  " % str(self.error))
                 else:
-                    if Streams.log_error:
-                        print("Group::run() - %s  " % str(self.error),
-                              file=Streams.log_error)
-
-                print("Group::run() - ERROR %s" % str(self.error),
-                      file=sys.stderr)
+                    Streams.error("Group::run() - %s  " % str(self.error))
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value
@@ -180,15 +170,11 @@ class EAttribute(FElement):
     # \brief It marks the field as failed
     def markFailed(self):
         field = self._lastObject()
-        if field:
+        if field is not None:
             field.attr("nexdatas_canfail", "string").value = "FAILED"
-            if Streams.log_info:
-                print("EAttribute::markFailed() - "
-                      "%s of %s marked as failed" %
-                      (self.h5Object.name, field.name),
-                      file=Streams.log_info)
-
-                print("EAttribute::markFailed() - marked as failed",
-                      file=Streams.log_info)
-
+            Streams.info("EAttribute::markFailed() - "
+                         "%s of %s marked as failed" %
+                         (self.h5Object.name
+                          if hasattr(self.h5Object, "name") else None,
+                          field.name if hasattr(field, "name") else None))
             self.__fillMax()

@@ -21,8 +21,6 @@
 
 """ Provides the base class Element for xml tags """
 
-from __future__ import print_function
-
 import sys
 from . import Streams
 
@@ -52,15 +50,9 @@ class Element(object):
         if hasattr(self.last, "h5Object"):
             return self.last.h5Object
         else:
-            if Streams.log_warn:
-                print("Element::_lastObject() - H5 Object not found : %s"
-                      % self.tagName,
-                      file=Streams.log_warn)
-
-            else:
-                print("Element::_lastObject() -  H5 Object not found : %s"
-                      % self.tagName,
-                      file=sys.stderr)
+            Streams.warn(
+                "Element::_lastObject() - H5 Object not found : %s"
+                % self.tagName)
 
     ## before last stack element
     # \returns  before last element placed on the stack

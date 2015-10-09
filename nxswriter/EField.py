@@ -21,8 +21,6 @@
 
 """ Definitions of field tag evaluation classes """
 
-from __future__ import print_function
-
 import sys
 
 import numpy
@@ -94,9 +92,9 @@ class EField(FElementWithAttr):
                 tp = "string"
             return tp, nm
         else:
-            if Streams.log_error:
-                print("FElement::__typeAndName() - Field without a name",
-                      file=Streams.log_error)
+            Streams.error(
+                "FElement::__typeAndName() - Field without a name",
+                std=False)
 
             raise XMLSettingSyntaxError("Field without a name")
 
@@ -191,11 +189,11 @@ class EField(FElementWithAttr):
             import traceback
             message = str(info[1].__str__()) + "\n " + (" ").join(
                 traceback.format_tb(sys.exc_info()[2]))
-            if Streams.log_error:
-                print("EField::__createObject() - "
-                      "The field '%s' of '%s' type cannot be created: %s" %
-                      (name.encode(), dtype.encode(), message),
-                      file=Streams.log_error)
+            Streams.error(
+                "EField::__createObject() - "
+                "The field '%s' of '%s' type cannot be created: %s" %
+                (name.encode(), dtype.encode(), message),
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
@@ -287,23 +285,18 @@ class EField(FElementWithAttr):
 
             elif self.strategy != "POSTRUN":
                 if self.h5Object.dtype != "string":
-                    if Streams.log_error:
-                        print("EField::__setStrategy() - "
-                              "Warning: Invalid datasource for %s" % name,
-                              file=Streams.log_error)
+                    Streams.error(
+                        "EField::__setStrategy() - "
+                        "Warning: Invalid datasource for %s" % name,
+                        std=False)
 
                     raise ValueError(
                         "Warning: Invalid datasource for %s" % name)
                 else:
-                    if Streams.log_error:
-                        print("EField::__setStrategy() - "
-                              "Warning: Empty value for the field: %s" % name,
-                              file=Streams.log_error)
-
-                    else:
-                        print("EField::__setStrategy() - "
-                              "Warning: Empty value for the field: %s" % name,
-                              file=sys.stderr)
+                    Streams.error(
+                        "EField::__setStrategy() - "
+                        "Warning: Empty value for the field: %s" % name,
+                        std=False)
 
     ## stores the tag content
     # \param xml xml setting
@@ -353,11 +346,11 @@ class EField(FElementWithAttr):
                     try:
                         self.h5Object.write(sts)
                     except:
-                        if Streams.log_error:
-                            print("EField::__writedata() - "
-                                  "Storing one-dimension single fields"
-                                  " not supported by pniio",
-                                  file=Streams.log_error)
+                        Streams.error(
+                            "EField::__writedata() - "
+                            "Storing one-dimension single fields"
+                            " not supported by pniio",
+                            std=False)
 
                         raise Exception(
                             "Storing one-dimension single fields"
@@ -398,11 +391,11 @@ class EField(FElementWithAttr):
             try:
                 self.h5Object.write(holder.cast(self.h5Object.dtype))
             except:
-                if Streams.log_error:
-                    print("EField::__writedata() - "
-                          "Storing two-dimension single fields "
-                          "not supported by pniio",
-                          file=Streams.log_error)
+                Streams.error(
+                    "EField::__writedata() - "
+                    "Storing two-dimension single fields "
+                    "not supported by pniio",
+                    std=False)
 
                 raise Exception("Storing two-dimension single fields"
                                 " not supported by pniio")
@@ -452,9 +445,7 @@ class EField(FElementWithAttr):
                         and len(arr) == 1:
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
                 else:
-                    if Streams.log_error:
-                        print("Rank mismatch", file=Streams.log_error)
-
+                    Streams.error("Rank mismatch", std=False)
                     raise XMLSettingSyntaxError("Rank mismatch")
 
         else:
@@ -492,11 +483,8 @@ class EField(FElementWithAttr):
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0] - 1] = arr[0][0]
             else:
-                if Streams.log_error:
-                    print("Rank mismatch", file=Streams.log_error)
-
-                raise XMLSettingSyntaxError(
-                    "Rank mismatch")
+                Streams.error("Rank mismatch", std=False)
+                raise XMLSettingSyntaxError("Rank mismatch")
 
         elif self.grows == 2:
             if len(self.h5Object.shape) == 3:
@@ -506,11 +494,8 @@ class EField(FElementWithAttr):
                 self.h5Object[0: len(arr[0]),
                               self.h5Object.shape[1] - 1] = arr[0]
             else:
-                if Streams.log_error:
-                    print("Rank mismatch", file=Streams.log_error)
-
-                raise XMLSettingSyntaxError(
-                    "Rank mismatch")
+                Streams.error("Rank mismatch", std=False)
+                raise XMLSettingSyntaxError("Rank mismatch")
         else:
             self.h5Object[0: len(arr), 0: len(arr[0]),
                           self.h5Object.shape[2] - 1] = arr
@@ -525,10 +510,10 @@ class EField(FElementWithAttr):
         elif str(holder.format).split('.')[-1] == "IMAGE":
             self.__writeImageGrowingData(holder)
         else:
-            if Streams.log_error:
-                print("Case with %s format not supported " %
-                      str(holder.format).split('.')[-1],
-                      file=Streams.log_error)
+            Streams.error(
+                "Case with %s format not supported " %
+                str(holder.format).split('.')[-1],
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with %s  format not supported " %
@@ -610,23 +595,9 @@ class EField(FElementWithAttr):
         finally:
             if self.error:
                 if self.canfail:
-                    if Streams.log_warn:
-                        print("EField::run() - %s  " % str(self.error),
-                              file=Streams.log_warn)
-
-                    else:
-                        print("EField::run() - %s\n %s " %
-                              (self.error[0], self.error[1]),
-                              file=sys.stderr)
-
+                    Streams.warn("EField::run() - %s  " % str(self.error))
                 else:
-                    if Streams.log_error:
-                        print("EField::run() - %s  " % str(self.error),
-                              file=Streams.log_error)
-
-                    else:
-                        print("EField::run() - ERROR %s" % str(self.error),
-                              file=sys.stderr)
+                    Streams.error("EField::run() - %s  " % str(self.error))
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value
@@ -682,11 +653,11 @@ class EField(FElementWithAttr):
     ## marks the field as failed
     # \brief It marks the field as failed
     def markFailed(self):
-        if self.h5Object:
+        if self.h5Object is not None:
             self.h5Object.attr("nexdatas_canfail", "string").value = "FAILED"
-            if Streams.log_info:
-                print("EField::markFailed() - %s marked as failed" %
-                      (self.h5Object.name),
-                      file=Streams.log_info)
+            Streams.info(
+                "EField::markFailed() - %s marked as failed" %
+                (self.h5Object.name if hasattr(self.h5Object, "name")
+                 else None))
 
             self.__fillMax()

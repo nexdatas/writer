@@ -21,8 +21,6 @@
 
 """ Definitions of PYEVAL datasource """
 
-from __future__ import print_function
-
 import sys
 import threading
 import copy
@@ -92,20 +90,20 @@ class PyEvalSource(DataSource):
                         name = name[3:]
                     self.__sources[name] = (dstype, inp.toxml())
                 else:
-                    if Streams.log_error:
-                        print("PyEvalSource::setup() - "
-                              "PyEval input %s not defined" % name,
-                              file=Streams.log_error)
+                    Streams.error(
+                        "PyEvalSource::setup() - "
+                        "PyEval input %s not defined" % name,
+                        std=False)
 
                     raise DataSourceSetupError(
                         "PyEvalSource::setup() - "
                         "PyEval input %s not defined" % name)
 
             else:
-                if Streams.log_error:
-                    print("PyEvalSource::setup() - "
-                          "PyEval input name wrongly defined",
-                          file=Streams.log_error)
+                Streams.error(
+                    "PyEvalSource::setup() - "
+                    "PyEval input name wrongly defined",
+                    std=False)
 
                 raise DataSourceSetupError(
                     "PyEvalSource::setup() - "
@@ -119,10 +117,10 @@ class PyEvalSource(DataSource):
             self.__script = self._getText(res[0])
 
         if len(self.__script) == 0:
-            if Streams.log_error:
-                print("PyEvalSource::setup() - "
-                      "PyEval script %s not defined" % self.__name,
-                      file=Streams.log_error)
+            Streams.error(
+                "PyEvalSource::setup() - "
+                "PyEval script %s not defined" % self.__name,
+                std=False)
 
             raise DataSourceSetupError(
                 "PyEvalSource::setup() - "
@@ -154,9 +152,9 @@ class PyEvalSource(DataSource):
     # \returns  dictionary with collected data
     def getData(self):
         if not self.__name:
-            if Streams.log_error:
-                print("PyEvalSource::getData() - PyEval datasource not set up",
-                      file=Streams.log_error)
+            Streams.error(
+                "PyEvalSource::getData() - PyEval datasource not set up",
+                std=False)
 
             raise DataSourceSetupError(
                 "PyEvalSource::getData() - PyEval datasource not set up")
@@ -230,12 +228,6 @@ class PyEvalSource(DataSource):
                     self.__datasources[name].setDataSources(pool)
 
             else:
-                if Streams.log_error:
-                    print("PyEvalSource::setDataSources - Unknown data source",
-                          file=Streams.log_error)
-
-                else:
-                    print("PyEvalSource::setDataSources - Unknown data source",
-                          file=sys.stderr)
-
+                Streams.error(
+                    "PyEvalSource::setDataSources - Unknown data source")
                 self.__datasources[name] = DataSource()

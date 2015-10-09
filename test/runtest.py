@@ -64,6 +64,7 @@ import AttributeArrayTest
 import FieldArrayTest
 import TNObjectTest
 import TgDeviceTest
+import StreamsTest
 
 try:
     import PyTango
@@ -189,6 +190,9 @@ def main():
     
     ## test suit
     suite = unittest.TestSuite()
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(StreamsTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )

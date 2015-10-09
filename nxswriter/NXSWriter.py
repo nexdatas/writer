@@ -31,8 +31,6 @@
 #
 """ Nexus Data Writer - Tango Server """
 
-from __future__ import print_function
-
 import PyTango
 import sys
 from threading import Thread, Lock
@@ -295,9 +293,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         if self.is_FileName_write_allowed():
             self.tdw.fileName = attr.get_write_value()
         else:
-            print("To change the file name please close the file.",
-                  file=self.log_warn)
-
+            self.warn_stream("To change the file name please close the file.")
             raise Exception(
                 "To change the file name please close the file.")
 
@@ -676,9 +672,9 @@ class NXSDataWriterClass(PyTango.DeviceClass):
           PyTango.SCALAR,
           PyTango.READ_WRITE],
          {
-            'label': "JSON string with client data",
-            'description': "A JSON string with global client data.",
-            'Display level': PyTango.DispLevel.EXPERT,
+             'label': "JSON string with client data",
+             'description': "A JSON string with global client data.",
+             'Display level': PyTango.DispLevel.EXPERT,
         }],
         'FileName':
         [[PyTango.DevString,
