@@ -21,8 +21,6 @@
 
 """ factory with datasources """
 
-from __future__ import print_function
-
 import sys
 
 from . import Streams
@@ -52,25 +50,14 @@ class DataSourceFactory(Element):
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
                 self.last.source = self.__dsPool.get(attrs["type"])()
             else:
-                print("DataSourceFactory::__createDSource - "
-                      "Unknown data source",
-                      file=sys.stderr)
-
-                if Streams.log_error:
-                    print("DataSourceFactory::__createDSource - "
-                          "Unknown data source",
-                          file=Streams.log_error)
-
+                Streams.error(
+                    "DataSourceFactory::__createDSource - "
+                    "Unknown data source")
                 self.last.source = DataSources.DataSource()
         else:
-            print("DataSourceFactory::__createDSource - Typeless data source",
-                  file=sys.stderr)
-
-            if Streams.log_error:
-                print("DataSourceFactory::__createDSource - "
-                      "Typeless data source",
-                      file=Streams.log_error)
-
+            Streams.error(
+                "DataSourceFactory::__createDSource - "
+                "Typeless data source")
             self.last.source = DataSources.DataSource()
 
     ##  sets the datasource form xml string

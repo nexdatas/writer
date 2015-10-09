@@ -21,8 +21,6 @@
 
 """ Definitions of field tag evaluation classes """
 
-from __future__ import print_function
-
 import sys
 
 import numpy
@@ -91,16 +89,15 @@ class EField(FElementWithAttr):
                 tp = "string"
             return tp, nm
         else:
-            if Streams.log_error:
-                print("FElement::__typeAndName() - Field without a name",
-                      file=Streams.log_error)
+            Streams.error(
+                "FElement::__typeAndName() - Field without a name",
+                std=False)
 
             raise XMLSettingSyntaxError("Field without a name")
 
     ## provides shape
-    # \param dtypy object type
     # \returns object shape
-    def __getShape(self, dtype):
+    def __getShape(self):
         try:
             shape = self._findShape(
                 self.rank, self.lengths,
@@ -158,11 +155,11 @@ class EField(FElementWithAttr):
             import traceback
             message = str(info[1].__str__()) + "\n " + (" ").join(
                 traceback.format_tb(sys.exc_info()[2]))
-            if Streams.log_error:
-                print("EField::__createObject() - "
-                      "The field '%s' of '%s' type cannot be created: %s" %
-                      (name.encode(), dtype.encode(), message),
-                      file=Streams.log_error)
+            Streams.error(
+                "EField::__createObject() - "
+                "The field '%s' of '%s' type cannot be created: %s" %
+                (name.encode(), dtype.encode(), message),
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
@@ -186,8 +183,7 @@ class EField(FElementWithAttr):
                                 key.encode(),
                                 NTP.nTnp[NTP.aTn[key]].encode(),
                                 overwrite=True
-                            ))[...] = \
-                            NTP.convert[
+                            ))[...] = NTP.convert[
                                 str(self.h5Object.attributes[
                                     key.encode()].dtype)
                             ](self._tagAttrs[key].strip().encode())
@@ -202,11 +198,10 @@ class EField(FElementWithAttr):
                             self.h5Object.attributes.create(
                                 key.encode(),
                                 NTP.nTnp[NTP.aTn[key]].encode()
-                            )[...] = \
-                                     NTP.convert[
-                                         str(self.h5Object.attributes[
-                                             key.encode()].dtype)
-                                     ](self._tagAttrs[key])
+                            )[...] = NTP.convert[
+                                str(self.h5Object.attributes[
+                                    key.encode()].dtype)
+                            ](self._tagAttrs[key])
 
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
@@ -227,7 +222,7 @@ class EField(FElementWithAttr):
                 "postrun".encode(),
                 "string".encode())[...] \
                 = self.postrun.encode().strip()
-            
+
     ## provides strategy or fill the value in
     # \param name object name
     # \returns strategy or strategy,trigger it trigger defined
@@ -243,11 +238,11 @@ class EField(FElementWithAttr):
                 self.h5Object[...] = dh.cast(self.h5Object.dtype)
             elif self.strategy != "POSTRUN":
                 if self.h5Object.dtype != "string":
-                    if Streams.log_error:
-                        print("EField::__setStrategy() - "
-                              "Warning: Invalid datasource for %s" % name,
-                              file=Streams.log_error)
-                    
+                    Streams.error(
+                        "EField::__setStrategy() - "
+                        "Warning: Invalid datasource for %s" % name,
+                        std=False)
+
                     raise ValueError(
                         "Warning: Invalid datasource for %s" % name)
 
@@ -262,7 +257,7 @@ class EField(FElementWithAttr):
         # type and name
         tp, nm = self.__typeAndName()
         # shape
-        shape = self.__getShape(tp)
+        shape = self.__getShape()
         ## stored H5 file object (defined in base class)
         self.h5Object = self.__createObject(tp, nm, shape)
         # create attributes
@@ -276,13 +271,13 @@ class EField(FElementWithAttr):
     def __writeData(self, holder):
         try:
             self.h5Object[...] = holder.cast(self.h5Object.dtype)
-        except Exception as e:
-            if Streams.log_error:
-                print("EField::__writedata() - "
-                      "Storing single fields "
-                      "not supported by pniio",
-                      file=Streams.log_error)
-                
+        except Exception:
+            Streams.error(
+                "EField::__writedata() - "
+                "Storing single fields "
+                "not supported by pniio",
+                std=False)
+
             raise Exception("Storing single fields"
                             " not supported by pniio")
 
@@ -331,9 +326,7 @@ class EField(FElementWithAttr):
                         and len(arr) == 1:
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
                 else:
-                    if Streams.log_error:
-                        print("Rank mismatch", file=Streams.log_error)
-
+                    Streams.error("Rank mismatch", std=False)
                     raise XMLSettingSyntaxError("Rank mismatch")
 
         else:
@@ -371,11 +364,8 @@ class EField(FElementWithAttr):
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0] - 1] = arr[0][0]
             else:
-                if Streams.log_error:
-                    print("Rank mismatch", file=Streams.log_error)
-
-                raise XMLSettingSyntaxError(
-                    "Rank mismatch")
+                Streams.error("Rank mismatch", std=False)
+                raise XMLSettingSyntaxError("Rank mismatch")
 
         elif self.grows == 2:
             if len(self.h5Object.shape) == 3:
@@ -385,11 +375,8 @@ class EField(FElementWithAttr):
                 self.h5Object[0: len(arr[0]),
                               self.h5Object.shape[1] - 1] = arr[0]
             else:
-                if Streams.log_error:
-                    print("Rank mismatch", file=Streams.log_error)
-
-                raise XMLSettingSyntaxError(
-                    "Rank mismatch")
+                Streams.error("Rank mismatch", std=False)
+                raise XMLSettingSyntaxError("Rank mismatch")
         else:
             self.h5Object[0: len(arr), 0: len(arr[0]),
                           self.h5Object.shape[2] - 1] = arr
@@ -404,10 +391,10 @@ class EField(FElementWithAttr):
         elif str(holder.format).split('.')[-1] == "IMAGE":
             self.__writeImageGrowingData(holder)
         else:
-            if Streams.log_error:
-                print("Case with %s format not supported " %
-                      str(holder.format).split('.')[-1],
-                      file=Streams.log_error)
+            Streams.error(
+                "Case with %s format not supported " %
+                str(holder.format).split('.')[-1],
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with %s  format not supported " %
@@ -466,9 +453,9 @@ class EField(FElementWithAttr):
                         self.__growshape(dh.shape)
                         self.__writeData(dh)
                     else:
-                        if len(self.h5Object.shape) >= self.grows and \
-                           (self.h5Object.shape[self.grows - 1] == 1
-                            or self.canfail):
+                        if len(self.h5Object.shape) >= self.grows \
+                           and (self.h5Object.shape[self.grows - 1] == 1
+                                or self.canfail):
                             self.__growshape(dh.shape)
                         self.__writeGrowingData(dh)
         except:
@@ -487,25 +474,9 @@ class EField(FElementWithAttr):
         finally:
             if self.error:
                 if self.canfail:
-                    if Streams.log_warn:
-#                        print(
-#                            "EField::run() - %s  " % str(self.error),
-#                            file=Streams.log_warn)
-                        Streams.log_warn.write(
-                            "EField::run() - %s  " % str(self.error))
-                    else:
-                        print("EField::run() - %s\n %s " %
-                              (self.error[0], self.error[1]),
-                              file=sys.stderr)
-
+                    Streams.warn("EField::run() - %s  " % str(self.error))
                 else:
-                    if Streams.log_error:
-                        print("EField::run() - %s  " % str(self.error),
-                              file=Streams.log_error)
-
-                    else:
-                        print("EField::run() - ERROR %s" % str(self.error),
-                              file=sys.stderr)
+                    Streams.error("EField::run() - %s  " % str(self.error))
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value
@@ -529,7 +500,7 @@ class EField(FElementWithAttr):
         elif nptype != "string":
             try:
                 # workaround for bug #5618 in numpy for 1.8 < ver < 1.9.2
-                # 
+                #
                 if nptype == 'uint64':
                     value = numpy.iinfo(getattr(numpy, 'int64')).max
                 else:
@@ -569,11 +540,9 @@ class EField(FElementWithAttr):
         if self.h5Object is not None:
             self.h5Object.attributes.create(
                 "nexdatas_canfail", "string", overwrite=True)[...] = "FAILED"
-#            self.h5Object.attributes.create(
-#                "nexdatas_canfail", "string", overwrite=True).write("FAILED")
-            if Streams.log_info:
-                print("EField::markFailed() - %s marked as failed" %
-                      (self.h5Object.name),
-                      file=Streams.log_info)
+            Streams.info(
+                "EField::markFailed() - %s marked as failed" %
+                (self.h5Object.name if hasattr(self.h5Object, "name")
+                 else None))
 
             self.__fillMax()

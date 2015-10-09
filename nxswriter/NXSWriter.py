@@ -31,8 +31,6 @@
 #
 """ Nexus Data Writer - Tango Server """
 
-from __future__ import print_function
-
 import PyTango
 import sys
 from threading import Thread, Lock
@@ -295,9 +293,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         if self.is_FileName_write_allowed():
             self.tdw.fileName = attr.get_write_value()
         else:
-            print("To change the file name please close the file.",
-                  file=self.log_warn)
-
+            self.warn_stream("To change the file name please close the file.")
             raise Exception(
                 "To change the file name please close the file.")
 
@@ -670,7 +666,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
              'label': "XML Configuration",
              'description': "An XML string with Nexus configuration.",
              'Display level': PyTango.DispLevel.EXPERT,
-         }],
+        }],
         'JSONRecord':
         [[PyTango.DevString,
           PyTango.SCALAR,
@@ -679,7 +675,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
              'label': "JSON string with client data",
              'description': "A JSON string with global client data.",
              'Display level': PyTango.DispLevel.EXPERT,
-         }],
+        }],
         'FileName':
         [[PyTango.DevString,
           PyTango.SCALAR,
@@ -687,7 +683,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "Output file with its path",
              'description': "A name of H5 output file with its full path",
-         }],
+        }],
         'Errors':
         [[PyTango.DevString,
           PyTango.SPECTRUM,
@@ -695,7 +691,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "list of errors",
              'description': "list of errors",
-         }],
+        }],
     }
 
     #------------------------------------------------------------------

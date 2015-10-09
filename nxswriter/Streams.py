@@ -20,6 +20,8 @@
 
 """ labels to Tango Streams """
 
+import sys
+
 ## Tango fatal log
 log_fatal = None
 ## Tango error log
@@ -29,14 +31,59 @@ log_warn = None
 ## Tango info log
 log_info = None
 ## Tango debug log
-debug_stream = None
-## Tango fatal stream
-fatal_stream = None
-## Tango error stream
-error_stream = None
-## Tango warn stream
-warn_stream = None
-## Tango info stream
-info_stream = None
-## Tango debug stream
-_debug_stream = None
+log_debug = None
+
+
+## writer fatal error message
+# \param message error message
+# \param std if writes to sys stream
+#        when log stream does not exist
+def fatal(message, std=True):
+    if log_fatal:
+        log_fatal.write(message)
+    elif std:
+        sys.stderr.write(message)
+
+
+## writer fatal error message
+# \param message error message
+# \param std if writes to sys stream
+#        when log stream does not exist
+def error(message, std=True):
+    if log_error:
+        log_error.write(message)
+    elif std:
+        sys.stderr.write(message)
+
+
+## writer fatal error message
+# \param message error message
+# \param std if writes to sys stream
+#        when log stream does not exist
+def warn(message, std=True):
+    if log_warn:
+        log_warn.write(message)
+    elif std:
+        sys.stderr.write(message)
+
+
+## writer fatal error message
+# \param message error message
+# \param std if writes to sys stream
+#        when log stream does not exist
+def info(message, std=True):
+    if log_info:
+        log_fatal.write(message)
+    elif std:
+        sys.stdout.write(message)
+
+
+## writer fatal error message
+# \param message error message
+# \param std if writes to sys stream
+#        when log stream does not exist
+def debug(message, std=True):
+    if log_debug:
+        log_fatal.write(message)
+    elif std:
+        sys.stdout.write(message)

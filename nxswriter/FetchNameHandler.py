@@ -21,8 +21,6 @@
 
 """ SAX parser for fetching name attributes of tags """
 
-from __future__ import print_function
-
 from xml import sax
 
 import sys
@@ -133,10 +131,10 @@ class FetchNameHandler(sax.ContentHandler):
                 if self.__current.nxtype and len(self.__current.nxtype) > 2:
                     self.__current.name = self.__current.nxtype[2:]
                 else:
-                    if Streams.log_error:
-                        print("FetchNameHandler::endElement() - "
-                              "The group type not defined",
-                              file=Streams.log_error)
+                    Streams.error(
+                        "FetchNameHandler::endElement() - "
+                        "The group type not defined",
+                        std=False)
 
                     raise XMLSyntaxError("The group type not defined")
             self.__current = self.__current.parent

@@ -21,8 +21,6 @@
 
 """ Definitions of attribute tag evaluation classes """
 
-from __future__ import print_function
-
 import sys
 
 import numpy
@@ -97,32 +95,20 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        print("Group::run() - %s " % message[0],
-                              file=sys.stderr)
+                        Streams.warn("Group::run() - %s " % message[0])
                         self.error = message
                     else:
-                        arr = dh.cast(self.h5Object.dtype)
-
-                        self.h5Object[...] = arr
+                        self.h5Object[...] = dh.cast(self.h5Object.dtype)
         except:
             message = self.setMessage(sys.exc_info()[1].__str__())
-            print("Group::run() - %s " % message[0], file=sys.stderr)
             self.error = message
         #            self.error = sys.exc_info()
         finally:
             if self.error:
                 if self.canfail:
-                    if Streams.log_warn:
-                        print("Group::run() - %s  " % str(self.error),
-                              file=Streams.log_warn)
-
+                    Streams.warn("Group::run() - %s  " % str(self.error))
                 else:
-                    if Streams.log_error:
-                        print("Group::run() - %s  " % str(self.error),
-                              file=Streams.log_error)
-
-                print("Group::run() - ERROR %s" % str(self.error),
-                      file=sys.stderr)
+                    Streams.error("Group::run() - %s  " % str(self.error))
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value
@@ -137,7 +123,7 @@ class EAttribute(FElement):
         if nptype != "string":
             try:
                 # workaround for bug #5618 in numpy for 1.8 < ver < 1.9.2
-                # 
+                #
                 if nptype == 'uint64':
                     value = numpy.iinfo(getattr(numpy, 'int64')).max
                 else:
@@ -166,13 +152,9 @@ class EAttribute(FElement):
         if field is not None:
             field.attributes.create("nexdatas_canfail", "string",
                                     overwrite=True)[...] = "FAILED"
-            if Streams.log_info:
-                print("EAttribute::markFailed() - "
-                      "%s of %s marked as failed" %
-                      (self.h5Object.name, field.name),
-                      file=Streams.log_info)
-
-                print("EAttribute::markFailed() - marked as failed",
-                      file=Streams.log_info)
-
+            Streams.info("EAttribute::markFailed() - "
+                         "%s of %s marked as failed" %
+                         (self.h5Object.name
+                          if hasattr(self.h5Object, "name") else None,
+                          field.name if hasattr(field, "name") else None))
             self.__fillMax()

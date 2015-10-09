@@ -21,8 +21,6 @@
 
 """ definition of a data holder with casting methods """
 
-from __future__ import print_function
-
 import numpy
 
 from .Types import NTP
@@ -69,10 +67,10 @@ class DataHolder(object):
                 self.value = decoder.decode()
                 rank = NTP().arrayRank(self.value)
                 if rank > 2:
-                    if Streams.log_error:
-                        print("DataHolder::__setupEncoded() - "
-                              "Unsupported variables format",
-                              file=Streams.log_error)
+                    Streams.error(
+                        "DataHolder::__setupEncoded() - "
+                        "Unsupported variables format",
+                        std=False)
 
                     raise ValueError("Unsupported variables format")
                 self.format = ["SCALAR", "SPECTRUM",
@@ -84,19 +82,19 @@ class DataHolder(object):
                 self.tangoDType = NTP.npTt[tp]
 
         if self.value is None:
-            if Streams.log_error:
-                print("DataHolder::__setupEncoded() - "
-                      "Encoding of DevEncoded variables not defined",
-                      file=Streams.log_error)
+            Streams.error(
+                "DataHolder::__setupEncoded() - "
+                "Encoding of DevEncoded variables not defined",
+                std=False)
 
             raise ValueError(
                 "Encoding of DevEncoded variables not defined")
 
         if self.shape is None:
-            if Streams.log_error:
-                print("DataHolder::__setupEncoded() - "
-                      "Encoding or Shape not defined",
-                      file=Streams.log_error)
+            Streams.error(
+                "DataHolder::__setupEncoded() - "
+                "Encoding or Shape not defined",
+                std=False)
 
             raise ValueError("Encoding or Shape not defined")
 
@@ -133,4 +131,3 @@ class DataHolder(object):
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]),
                         dtype=dtype)
-                

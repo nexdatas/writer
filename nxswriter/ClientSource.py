@@ -21,8 +21,6 @@
 
 """ Definitions of CLIENT datasource """
 
-from __future__ import print_function
-
 from xml.dom import minidom
 
 from . import Streams
@@ -52,10 +50,10 @@ class ClientSource(DataSource):
             self.name = rec[0].getAttribute("name") \
                 if rec[0].hasAttribute("name") else None
         if not self.name:
-            if Streams.log_error:
-                print("ClientSource::setup() - "
-                      "Client record name not defined: %s" % xml,
-                      file=Streams.log_error)
+            Streams.error(
+                "ClientSource::setup() - "
+                "Client record name not defined: %s" % xml,
+                std=False)
             raise DataSourceSetupError(
                 "Client record name not defined: %s" % xml)
 

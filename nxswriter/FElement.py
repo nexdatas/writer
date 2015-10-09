@@ -21,8 +21,6 @@
 
 """ Definitions of file tag evaluation classes """
 
-from __future__ import print_function
-
 from .DataHolder import DataHolder
 from .Element import Element
 from .Types import NTP
@@ -50,7 +48,7 @@ class FElement(Element):
         ##  flag for devices for which is allowed to failed
         self.canfail = False
         ## scalar type
-        self._scalar =  False
+        self._scalar = False
 
     ## runner
     # \brief During its thread run it fetches the data from the source
@@ -96,10 +94,10 @@ class FElement(Element):
             image = [ln.split() for ln in lines]
             return [len(image), len(image[0])]
         else:
-            if Streams.log_error:
-                print("FElement::__fetchShape() "
-                      "- Case with not supported rank = %s" % rank,
-                      file=Streams.log_error)
+            Streams.error(
+                "FElement::__fetchShape() "
+                "- Case with not supported rank = %s" % rank,
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s" % rank)
@@ -130,7 +128,7 @@ class FElement(Element):
     # \returns shape of the object
     def _findShape(self, rank, lengths=None, extraD=False,
                    grows=None, extends=False, checkData=False):
-        self._scalar =  False
+        self._scalar = False
         shape = []
         exDim = self._getExtra(grows, extraD)
         if int(rank) > 0:
@@ -178,7 +176,7 @@ class FElement(Element):
 
         ## ?? probably wrong
         if shape == []:
-            self._scalar =  True
+            self._scalar = True
         return shape
 
     ## creates the error message
@@ -234,10 +232,10 @@ class FElementWithAttr(FElement):
             dh = DataHolder("IMAGE", image, "DevString",
                             [len(image), len(image[0])])
         else:
-            if Streams.log_error:
-                print("FElement::_createAttributes() - "
-                      "Case with not supported rank = %s" % rank,
-                      file=Streams.log_error)
+            Streams.error(
+                "FElement::_createAttributes() - "
+                "Case with not supported rank = %s" % rank,
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s", rank)
@@ -271,7 +269,6 @@ class FElementWithAttr(FElement):
                     val = self.tagAttributes[key][1].strip().encode()
                     if val:
                         rank = len(shape)
-#                        dh = self._setValue(rank, val)
                         hsp = self.__h5Instances[key.encode()].shape
                         if hsp and set(hsp) == set([1]) and \
                            self.__h5Instances[key.encode()].dtype == 'string':
@@ -280,6 +277,7 @@ class FElementWithAttr(FElement):
                             dh = self._setValue(rank, val)
                         self.__h5Instances[key.encode()][...] = dh.cast(
                             self.__h5Instances[key.encode()].dtype)
+
     ## provides attribute h5 object
     # \param name attribute name
     # \returns instance of the attribute object if created

@@ -21,8 +21,6 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
-from __future__ import print_function
-
 import pni.io.nx.h5 as nx
 from xml import sax
 
@@ -169,23 +167,17 @@ class NexusXMLHandler(sax.ContentHandler):
                     self.__last().createLink(self.__groupTypes)
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
-                    if Streams.log_error:
-                        print("NexusXMLHandler::startElement() - "
-                              "Unsupported tag: %s, %s "
-                              % (name, attrs.keys()),
-                              file=Streams.log_error)
+                    Streams.error(
+                        "NexusXMLHandler::startElement() - "
+                        "Unsupported tag: %s, %s "
+                        % (name, attrs.keys()),
+                        std=False)
 
                     raise UnsupportedTagError("Unsupported tag: %s, %s "
                                               % (name, attrs.keys()))
-                if Streams.log_warn:
-                    print("NexusXMLHandler::startElement() - "
-                          "Unsupported tag: %s, %s " % (name, attrs.keys()),
-                          file=Streams.log_warn)
-
-                else:
-                    print("NexusXMLHandler::startElement() - "
-                          "Unsupported tag: %s, %s " % (name, attrs.keys()),
-                          file=sys.stderr)
+                Streams.warn(
+                    "NexusXMLHandler::startElement() - "
+                    "Unsupported tag: %s, %s " % (name, attrs.keys()))
 
                 self.__unsupportedTag = name
 

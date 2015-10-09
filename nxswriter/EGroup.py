@@ -21,8 +21,6 @@
 
 """ Definitions of group tag evaluation classes """
 
-from __future__ import print_function
-
 import numpy
 
 from .FElement import FElementWithAttr
@@ -44,9 +42,9 @@ class EGroup(FElementWithAttr):
             elif "type" in attrs.keys():
                 gname = attrs["type"][2:].encode()
             else:
-                if Streams.log_error:
-                    print("EGroup::__init__() - The group type not defined",
-                          file=Streams.log_error)
+                Streams.error(
+                    "EGroup::__init__() - The group type not defined",
+                    std=False)
 
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
@@ -54,13 +52,13 @@ class EGroup(FElementWithAttr):
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())
             except:
-                if Streams.log_error:
-                    print("EGroup::__init__() - "
-                          "The group '%s' of '%s' type cannot be created. \n"
-                          "Please remove the old file, change the file name "
-                          "or change the group name." %
-                          (gname, attrs["type"].encode()),
-                          file=Streams.log_error)
+                Streams.error(
+                    "EGroup::__init__() - "
+                    "The group '%s' of '%s' type cannot be created. \n"
+                    "Please remove the old file, change the file name "
+                    "or change the group name." %
+                    (gname, attrs["type"].encode()),
+                    std=False)
 
                 raise XMLSettingSyntaxError(
                     "The group '%s' of '%s' type cannot be created. \n"
@@ -69,10 +67,10 @@ class EGroup(FElementWithAttr):
                     (gname, attrs["type"].encode()))
 
         else:
-            if Streams.log_error:
-                print("EGroup::__init__() - "
-                      "File object for the last element does not exist",
-                      file=Streams.log_error)
+            Streams.error(
+                "EGroup::__init__() - "
+                "File object for the last element does not exist",
+                std=False)
 
             raise XMLSettingSyntaxError(
                 "File object for the last element does not exist")
@@ -108,10 +106,8 @@ class EGroup(FElementWithAttr):
                                 key.encode(),
                                 NTP.nTnp[NTP.aTn[key]].encode()
                             )[...] \
-                             = NTP.convert[
-                                 str(self.h5Object.attributes[
-                                     key.encode()].dtype)
-                             ](attrs[key])
+                                = NTP.convert[str(self.h5Object.attributes[
+                                    key.encode()].dtype)](attrs[key])
 
                 elif key in NTP.aTnv.keys():
 
