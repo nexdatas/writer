@@ -104,29 +104,6 @@ class EAttribute(FElement):
                         arr = dh.cast(self.h5Object.dtype)
 
                         self.h5Object[...] = arr
-#                        if self.h5Object.dtype != "string" \
-#                                or len(self.h5Object.shape) == 0:
-#                            if self.h5Object.dtype == "string" \
-#                                    and len(dh.shape) > 0 \
-#                                    and dh.shape[0] == 1 \
-#                                    and type(arr).__name__ != "str":
-#                                self.h5Object[...] = arr[0]
-#                            else:
-#                                self.h5Object[...] = arr
-#
-#                        else:
-#                            ## pniio does not support this case
-#                            self.h5Object[...] = arr
-#                            if Streams.log_error:
-#                                print("EAttribute::run() - "
-#                                      "Storing multi-dimension "
-#                                      "string attributes"
-#                                      " not supported by pniio",
-#                                      file=Streams.log_error)
-#
-#                            raise Exception("Storing multi-dimension string "
-#                                            "attributes not supported "
-#                                            "by pniio")
         except:
             message = self.setMessage(sys.exc_info()[1].__str__())
             print("Group::run() - %s " % message[0], file=sys.stderr)
