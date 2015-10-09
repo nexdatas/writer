@@ -62,6 +62,7 @@ import FetchNameHandlerTest
 import InnerXMLParserTest
 import TNObjectTest
 import TgDeviceTest
+import StreamsTest
 
 try:
     import PyTango
@@ -190,6 +191,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(StreamsTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest) )
