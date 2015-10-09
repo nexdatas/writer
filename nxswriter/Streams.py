@@ -73,7 +73,7 @@ def warn(message, std=True):
 #        when log stream does not exist
 def info(message, std=True):
     if log_info:
-        log_fatal.write(message)
+        log_info.write(message)
     elif std:
         sys.stdout.write(message)
 
@@ -84,6 +84,6 @@ def info(message, std=True):
 #        when log stream does not exist
 def debug(message, std=True):
     if log_debug:
-        log_fatal.write(message)
+        log_debug.write(message)
     elif std:
         sys.stdout.write(message)
