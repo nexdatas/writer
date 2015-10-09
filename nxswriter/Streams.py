@@ -40,9 +40,9 @@ log_debug = None
 #        when log stream does not exist
 def fatal(message, std=True):
     if log_fatal:
-        log_fatal.write(message)
+        log_fatal.write(message + '\n')
     elif std:
-        sys.stderr.write(message)
+        sys.stderr.write(message + '\n')
 
 
 ## writer fatal error message
@@ -51,9 +51,9 @@ def fatal(message, std=True):
 #        when log stream does not exist
 def error(message, std=True):
     if log_error:
-        log_error.write(message)
+        log_error.write(message + '\n')
     elif std:
-        sys.stderr.write(message)
+        sys.stderr.write(message + '\n')
 
 
 ## writer fatal error message
@@ -62,9 +62,9 @@ def error(message, std=True):
 #        when log stream does not exist
 def warn(message, std=True):
     if log_warn:
-        log_warn.write(message)
+        log_warn.write(message + '\n')
     elif std:
-        sys.stderr.write(message)
+        sys.stderr.write(message + '\n')
 
 
 ## writer fatal error message
@@ -73,9 +73,9 @@ def warn(message, std=True):
 #        when log stream does not exist
 def info(message, std=True):
     if log_info:
-        log_info.write(message)
+        log_info.write(message + '\n')
     elif std:
-        sys.stdout.write(message)
+        sys.stdout.write(message + '\n')
 
 
 ## writer fatal error message
@@ -84,6 +84,6 @@ def info(message, std=True):
 #        when log stream does not exist
 def debug(message, std=True):
     if log_debug:
-        log_debug.write(message)
+        log_debug.write(message + '\n')
     elif std:
-        sys.stdout.write(message)
+        sys.stdout.write(message + '\n')

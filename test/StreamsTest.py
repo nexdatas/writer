@@ -104,7 +104,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_info, None)
             self.assertEqual(Streams.log_debug, None)
             self.assertEqual(self.mystdout.getvalue(), "")
-            self.assertEqual(self.mystderr.getvalue(), name)
+            self.assertEqual(self.mystderr.getvalue(), name + '\n')
             sys.stdout = self.old_stdout
             sys.stderr = self.old_stderr
 
@@ -144,7 +144,7 @@ class StreamsTest(unittest.TestCase):
                 Streams.fatal(name, std=False)
             elif i % 3 == 2:
                 Streams.fatal(name, std=True)
-            self.assertEqual(Streams.log_fatal.getvalue(), name)
+            self.assertEqual(Streams.log_fatal.getvalue(), name + '\n')
             self.assertEqual(Streams.log_error.getvalue(), "")
             self.assertEqual(Streams.log_warn.getvalue(), "")
             self.assertEqual(Streams.log_info.getvalue(), "")
@@ -171,7 +171,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_info, None)
             self.assertEqual(Streams.log_debug, None)
             self.assertEqual(self.mystdout.getvalue(), "")
-            self.assertEqual(self.mystderr.getvalue(), name)
+            self.assertEqual(self.mystderr.getvalue(), name + '\n')
             sys.stdout = self.old_stdout
             sys.stderr = self.old_stderr
 
@@ -214,7 +214,7 @@ class StreamsTest(unittest.TestCase):
             elif i % 3 == 2:
                 Streams.error(name, std=True)
             self.assertEqual(Streams.log_fatal.getvalue(), "")
-            self.assertEqual(Streams.log_error.getvalue(), name)
+            self.assertEqual(Streams.log_error.getvalue(), name + '\n')
             self.assertEqual(Streams.log_warn.getvalue(), "")
             self.assertEqual(Streams.log_info.getvalue(), "")
             self.assertEqual(Streams.log_debug.getvalue(), "")
@@ -240,7 +240,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_info, None)
             self.assertEqual(Streams.log_debug, None)
             self.assertEqual(self.mystdout.getvalue(), "")
-            self.assertEqual(self.mystderr.getvalue(), name)
+            self.assertEqual(self.mystderr.getvalue(), name + '\n')
             sys.stdout = self.old_stdout
             sys.stderr = self.old_stderr
 
@@ -282,7 +282,7 @@ class StreamsTest(unittest.TestCase):
                 Streams.warn(name, std=True)
             self.assertEqual(Streams.log_fatal.getvalue(), "")
             self.assertEqual(Streams.log_error.getvalue(), "")
-            self.assertEqual(Streams.log_warn.getvalue(), name)
+            self.assertEqual(Streams.log_warn.getvalue(), name + '\n')
             self.assertEqual(Streams.log_info.getvalue(), "")
             self.assertEqual(Streams.log_debug.getvalue(), "")
             self.assertEqual(self.mystdout.getvalue(), "")
@@ -306,7 +306,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_warn, None)
             self.assertEqual(Streams.log_info, None)
             self.assertEqual(Streams.log_debug, None)
-            self.assertEqual(self.mystdout.getvalue(), name)
+            self.assertEqual(self.mystdout.getvalue(), name + '\n')
             self.assertEqual(self.mystderr.getvalue(), "")
             sys.stdout = self.old_stdout
             sys.stderr = self.old_stderr
@@ -352,7 +352,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_fatal.getvalue(), "")
             self.assertEqual(Streams.log_error.getvalue(), "")
             self.assertEqual(Streams.log_warn.getvalue(), "")
-            self.assertEqual(Streams.log_info.getvalue(), name)
+            self.assertEqual(Streams.log_info.getvalue(), name + '\n')
             self.assertEqual(Streams.log_debug.getvalue(), "")
             self.assertEqual(self.mystdout.getvalue(), "")
             self.assertEqual(self.mystderr.getvalue(), "")
@@ -375,7 +375,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_warn, None)
             self.assertEqual(Streams.log_info, None)
             self.assertEqual(Streams.log_debug, None)
-            self.assertEqual(self.mystdout.getvalue(), name)
+            self.assertEqual(self.mystdout.getvalue(), name + '\n')
             self.assertEqual(self.mystderr.getvalue(), "")
             sys.stdout = self.old_stdout
             sys.stderr = self.old_stderr
@@ -422,7 +422,7 @@ class StreamsTest(unittest.TestCase):
             self.assertEqual(Streams.log_error.getvalue(), "")
             self.assertEqual(Streams.log_warn.getvalue(), "")
             self.assertEqual(Streams.log_info.getvalue(), "")
-            self.assertEqual(Streams.log_debug.getvalue(), name)
+            self.assertEqual(Streams.log_debug.getvalue(), name + '\n')
             self.assertEqual(self.mystdout.getvalue(), "")
             self.assertEqual(self.mystderr.getvalue(), "")
             sys.stdout = self.old_stdout
