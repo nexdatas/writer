@@ -22,7 +22,6 @@
 """ Provides a pool with element threads """
 
 import Queue
-import sys
 
 from . import Streams
 from .ElementThread import ElementThread

@@ -176,7 +176,8 @@ class EField(FElementWithAttr):
                         try:
                             (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode()
+                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                overwrite=True
                             ))[...] = self._tagAttrs[key].strip().encode()
                         except:
                             (self.h5Object.attributes.create(
@@ -192,12 +193,14 @@ class EField(FElementWithAttr):
                             self.h5Object.attributes.create(
                                 key.encode(), NTP.nTnp[
                                     NTP.aTn[key]
-                                ].encode()
+                                ].encode(),
+                                overwrite=True
                             )[...] = self._tagAttrs[key]
                         except:
                             self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode()
+                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                overwrite=True
                             )[...] = NTP.convert[
                                 str(self.h5Object.attributes[
                                     key.encode()].dtype)
@@ -208,11 +211,12 @@ class EField(FElementWithAttr):
                     self.h5Object.attributes.create(
                         key.encode(),
                         NTP.nTnp[NTP.aTnv[key]].encode(),
-                        shape
+                        shape,
+                        overwrite=True
                     )[...] = numpy.array(self._tagAttrs[key])
                 else:
                     self.h5Object.attributes.create(
-                        key.encode(), "string")[...] \
+                        key.encode(), "string", overwrite=True)[...] \
                         = self._tagAttrs[key].strip().encode()
 
         self._createAttributes()
@@ -220,7 +224,7 @@ class EField(FElementWithAttr):
         if self.strategy == "POSTRUN":
             self.h5Object.attributes.create(
                 "postrun".encode(),
-                "string".encode())[...] \
+                "string".encode(), overwrite=True)[...] \
                 = self.postrun.encode().strip()
 
     ## provides strategy or fill the value in

@@ -82,7 +82,8 @@ class EGroup(FElementWithAttr):
                         try:
                             (self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode()))[...] = \
+                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                overwrite=True))[...] = \
                                 attrs[key].encode()
                         except:
                             (self.h5Object.attributes.create(
@@ -99,12 +100,14 @@ class EGroup(FElementWithAttr):
                         try:
                             self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode()
+                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                overwrite=True
                             )[...] = attrs[key]
                         except:
                             self.h5Object.attributes.create(
                                 key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode()
+                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                overwrite=True
                             )[...] \
                                 = NTP.convert[str(self.h5Object.attributes[
                                     key.encode()].dtype)](attrs[key])
@@ -114,10 +117,10 @@ class EGroup(FElementWithAttr):
                     shape = (len(attrs[key]),)
                     (self.h5Object.attributes.create(
                         key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
-                        shape))[...] = numpy.array(attrs[key])
+                        shape, overwrite=True))[...] = numpy.array(attrs[key])
                 else:
                     (self.h5Object.attributes.create(
-                        key.encode(), "string"))[...] \
+                        key.encode(), "string", overwrite=True))[...] \
                         = attrs[key].encode()
 
     ## stores the tag content

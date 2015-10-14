@@ -106,9 +106,9 @@ class EAttribute(FElement):
         finally:
             if self.error:
                 if self.canfail:
-                    Streams.warn("Group::run() - %s  " % str(self.error))
+                    Streams.warn("Attribute::run() - %s  " % str(self.error))
                 else:
-                    Streams.error("Group::run() - %s  " % str(self.error))
+                    Streams.error("Attribute::run() - %s  " % str(self.error))
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value

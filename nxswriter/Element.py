@@ -21,7 +21,6 @@
 
 """ Provides the base class Element for xml tags """
 
-import sys
 from . import Streams
 
 

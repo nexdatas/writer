@@ -1,5 +1,6 @@
 2015-XX-XX Jan Kotanski <jankotan@gmail.com>
 	* adding streaming functions in Streams
+	* adding support for external links and datasource links
 	* changes for python-pni > 1.0.0
 	* tagged as 2.0.0
 

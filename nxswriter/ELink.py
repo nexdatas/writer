@@ -21,9 +21,12 @@
 
 """ Definitions of link tag evaluation classes """
 
+import sys
+
 from .FElement import FElement
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
+from .DataHolder import DataHolder
 
 
 ## link H5 tag element
@@ -35,14 +38,100 @@ class ELink(FElement):
         FElement.__init__(self, "link", attrs, last)
         ## stored H5 file object (defined in base class)
         self.h5Object = None
+        ## strategy, i.e. INIT, STEP, FINAL
+        self.strategy = None
+        ## trigger for asynchronous writting
+        self.trigger = None
+        self.__groupTypes = None
+        self.__target = None
+        self.__name = None
 
+    ## stores the tag content
+    # \param xml xml setting
+    # \param globalJSON global JSON string
+    # \returns (strategy,trigger)
+    def store(self, xml=None, globalJSON=None):
+
+        if "name" in self._tagAttrs.keys():
+            if self.source:
+                if self.source.isValid():
+                    return self.strategy, self.trigger
+
+    ## runner
+    # \brief During its thread run it fetches the data from the source
+    def run(self):
+        try:
+            if self._tagAttrs["name"].encode() is not None:
+                if self.source:
+                    dt = self.source.getData()
+                    dh = None
+                    if dt:
+                        dh = DataHolder(**dt)
+                    if not dh:
+                        message = self.setMessage("Data without value")
+                        self.error = message
+                    target = dh.cast('string')
+                    self.createLink(self.__groupTypes, target)
+        except:
+            message = self.setMessage(sys.exc_info()[1].__str__())
+            self.error = message
+        #            self.error = sys.exc_info()
+        finally:
+            if self.error:
+                if self.canfail:
+                    Streams.warn("Link::run() - %s  " % str(self.error))
+                else:
+                    Streams.error("Link::run() - %s  " % str(self.error))
+
+    ## creates the link the H5 file
+    # \param groupTypes dictionary with type:name group pairs
+    def createLink(self, groupTypes=None, target=None):
+        if groupTypes:
+            self.__groupTypes = groupTypes
+        if "name" in self._tagAttrs.keys():
+            self.__setTarget(target)
+            if self.__target:
+                name = self._tagAttrs["name"].encode()
+                try:
+                    self.h5Object = self._lastObject().link(
+                        self.__target, name)
+                except:
+                    Streams.error(
+                        "ELink::createLink() - "
+                        "The link '%s' to '%s' type cannot be created"
+                        % (name, self.__target),
+                        std=False)
+                    raise XMLSettingSyntaxError(
+                        "The link '%s' to '%s' type cannot be created"
+                        % (name, self.__target))
+        else:
+            Streams.error("ELink::createLink() - No name or type",
+                          std=False)
+
+            raise XMLSettingSyntaxError("No name or type")
+
+    def __setTarget(self, target=None):
+        if target is None and "target" in self._tagAttrs.keys():
+            target = self._tagAttrs["target"].encode()
+        if target is not None:
+            print "TARGET", target
+            if '://' not in str(target) \
+               and self.__groupTypes is not None:
+                print "IN", '://' not in str(target)
+                self.__target = (self.__typesToNames(
+                    target, self.__groupTypes)).encode()
+            else:
+                self.__target = str(target)
+            print "TARGET", self.__target
+
+            
     ## converts types to Names using groupTypes dictionary
     # \param text original directory
     # \param groupTypes tree of TNObject with name:nxtype
     # \returns directory defined by group names
     @classmethod
     def __typesToNames(cls, text, groupTypes):
-        sp = text.split("/")
+        sp = str(text).split("/")
         res = ""
         ch = groupTypes
         valid = True if ch.name == "root" else False
@@ -82,29 +171,3 @@ class ELink(FElement):
         res = res + "/" + sp[-1]
 
         return res
-
-    ## creates the link the H5 file
-    # \param groupTypes dictionary with type:name group pairs
-    def createLink(self, groupTypes):
-        if ("name" in self._tagAttrs.keys()) and \
-                ("target" in self._tagAttrs.keys()):
-            path = (self.__typesToNames(
-                self._tagAttrs["target"], groupTypes)).encode()
-            name = self._tagAttrs["name"].encode()
-            try:
-                self.h5Object = self._lastObject().link(path, name)
-            except:
-                Streams.error(
-                    "ELink::createLink() - "
-                    "The link '%s' to '%s' type cannot be created"
-                    % (name, path),
-                    std=False)
-
-                raise XMLSettingSyntaxError(
-                    "The link '%s' to '%s' type cannot be created"
-                    % (name, path))
-        else:
-            Streams.error("ELink::createLink() - No name or type",
-                          std=False)
-
-            raise XMLSettingSyntaxError("No name or type")

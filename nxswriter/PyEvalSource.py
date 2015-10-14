@@ -21,7 +21,6 @@
 
 """ Definitions of PYEVAL datasource """
 
-import sys
 import threading
 import copy
 from xml.dom import minidom

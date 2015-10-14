@@ -22,7 +22,6 @@
 """ Definitions of TANGO datasource """
 
 import time
-import sys
 import threading
 from xml.dom import minidom
 
@@ -558,7 +557,7 @@ class TgMember(object):
                 Streams.error(
                     "TgMember::getValue() - "
                     "Data for %s not fetched" % self.name,
-                    std=Flase)
+                    std=False)
 
                 raise DataSourceSetupError(
                     "TgMember::getValue() -  "
