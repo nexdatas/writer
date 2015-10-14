@@ -42,6 +42,7 @@ from .DataSourceFactory import DataSourceFactory
 from .ThreadPool import ThreadPool
 from .InnerXMLParser import InnerXMLHandler
 from .Errors import UnsupportedTagError
+from .FetchNameHandler import TNObject
 
 
 ## SAX2 parser
@@ -60,7 +61,7 @@ class NexusXMLHandler(sax.ContentHandler):
         sax.ContentHandler.__init__(self)
 
         ## map of NXclass : name
-        self.__groupTypes = {"": ""}
+        self.__groupTypes = TNObject()
         ## if name fetching required
         self.__fetching = True
         if groupTypes:
