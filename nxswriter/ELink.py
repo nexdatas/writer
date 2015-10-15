@@ -118,9 +118,9 @@ class ELink(FElement):
             target = self._tagAttrs["target"].encode()
         if target is not None:
             print "TARGET", target
-            if '://' not in str(target) \
+            if ':///' not in str(target) \
                and self.__groupTypes is not None:
-                print "IN", '://' not in str(target)
+                print "IN", ':///' not in str(target)
                 self.__target = (self.__typesToNames(
                     target, self.__groupTypes)).encode()
             else:
