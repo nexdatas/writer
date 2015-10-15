@@ -90,7 +90,7 @@ class NXSDataWriterTest(unittest.TestCase):
       </group>
     </group>
     <group type="NXdata" name="data">
-      <link target="/NXentry/NXinstrument/NXdetector/mca" name="data">
+      <link target="%s://entry1/instrument/detector/mca" name="data">
         <doc>
           Link to mca in /NXentry/NXinstrument/NXdetector
         </doc>
@@ -481,7 +481,7 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.XMLSettings = self._scanXml
+            dp.XMLSettings = self._scanXml % fname
             self.assertEqual(dp.state(),PyTango.DevState.OPEN)
 
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -748,7 +748,9 @@ class NXSDataWriterTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-            self.assertEqual(mca.name,"data")
+# ???????
+            self.assertEqual(mca.name, "mca")
+#????            self.assertEqual(mca.name,"data")
             
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))

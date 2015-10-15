@@ -73,7 +73,7 @@ class TangoDataWriterTest(unittest.TestCase):
           Link to mca in /NXentry/NXinstrument/NXdetector
         </doc>
       </link>
-      <link target="/NXentry/NXinstrument/NXdetector/counter1" name="counter1">
+      <link target="%s://entry1/instrument/detector/counter1" name="cnt1">
         <doc>
           Link to counter1 in /NXentry/NXinstrument/NXdetector
         </doc>
@@ -570,7 +570,7 @@ class TangoDataWriterTest(unittest.TestCase):
             
             tdw.openFile()
 
-            tdw.xmlsettings = self._scanXml
+            tdw.xmlsettings = self._scanXml % fname
             tdw.openEntry()
 
 
@@ -768,9 +768,12 @@ class TangoDataWriterTest(unittest.TestCase):
 
 
 
-            cnt = dt.open("counter1")
+            cnt = dt.open("cnt1")
             self.assertTrue(cnt.is_valid)
+            #            ???
+            #            self.assertEqual(cnt.name,"cnt1")
             self.assertEqual(cnt.name,"counter1")
+            
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
