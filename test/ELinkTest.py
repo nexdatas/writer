@@ -258,11 +258,11 @@ class ELinkTest(unittest.TestCase):
 
         
 
-        l5 = self._nxFile.open("testGroup")
+        l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
         self.assertEqual(l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype )
         self.assertEqual(l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape )
-        self.assertEqual(l5.name, gr.h5Object.name )
+#        self.assertEqual(l5.name, gr.h5Object.name )
 
 
 
@@ -577,11 +577,11 @@ class ELinkTest(unittest.TestCase):
 
         
 
-        l5 = self._nxFile.open("testGroup")
+        l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
         self.assertEqual(l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype )
         self.assertEqual(l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape )
-        self.assertEqual(l5.name, gr.h5Object.name )
+#        self.assertEqual(l5.name, gr.h5Object.name )
 
 
         
@@ -790,11 +790,11 @@ class ELinkTest(unittest.TestCase):
 
         
 
-        l5 = self._nxFile.open("testGroup")
+        l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
         self.assertEqual(l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype )
         self.assertEqual(l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape )
-        self.assertEqual(l5.name, gr.h5Object.name )
+ #       self.assertEqual(l5.name, gr.h5Object.name )
 
 
         
