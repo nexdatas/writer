@@ -95,7 +95,7 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        Streams.warn("Group::run() - %s " % message[0])
+                        Streams.warn("Attribute::run() - %s " % message[0])
                         self.error = message
                     else:
                         self.h5Object[...] = dh.cast(self.h5Object.dtype)

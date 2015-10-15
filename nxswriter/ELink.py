@@ -28,6 +28,8 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 from .DataHolder import DataHolder
 
+import pni.io.nx.h5 as nx
+
 
 ## link H5 tag element
 class ELink(FElement):
@@ -85,6 +87,7 @@ class ELink(FElement):
 
     ## creates the link the H5 file
     # \param groupTypes dictionary with type:name group pairs
+    # \param target NeXus target path
     def createLink(self, groupTypes=None, target=None):
         if groupTypes:
             self.__groupTypes = groupTypes
@@ -93,8 +96,10 @@ class ELink(FElement):
             if self.__target:
                 name = self._tagAttrs["name"].encode()
                 try:
-                    self.h5Object = self._lastObject().link(
-                        self.__target, name)
+                    self.h5Object = nx.link(
+                        self.__target,
+                        self._lastObject(),
+                        name)
                 except:
                     Streams.error(
                         "ELink::createLink() - "
@@ -124,7 +129,6 @@ class ELink(FElement):
                 self.__target = str(target)
             print "TARGET", self.__target
 
-            
     ## converts types to Names using groupTypes dictionary
     # \param text original directory
     # \param groupTypes tree of TNObject with name:nxtype
