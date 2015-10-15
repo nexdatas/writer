@@ -28,6 +28,7 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 from .DataHolder import DataHolder
 
+
 ## link H5 tag element
 class ELink(FElement):
     ## constructor
@@ -96,6 +97,8 @@ class ELink(FElement):
                     self.h5Object = self._lastObject().link(
                         self.__target, name)
                 except:
+                    message = self.setMessage(sys.exc_info()[1].__str__())
+                    Streams.debug(str(message))
                     Streams.error(
                         "ELink::createLink() - "
                         "The link '%s' to '%s' type cannot be created"
@@ -124,7 +127,6 @@ class ELink(FElement):
                 self.__target = str(target)
             print "TARGET", self.__target
 
-            
     ## converts types to Names using groupTypes dictionary
     # \param text original directory
     # \param groupTypes tree of TNObject with name:nxtype

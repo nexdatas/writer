@@ -42,7 +42,7 @@ from .DataSourceFactory import DataSourceFactory
 from .ThreadPool import ThreadPool
 from .InnerXMLParser import InnerXMLHandler
 from .Errors import UnsupportedTagError
-
+from .FetchNameHandler import TNObject
 
 ## SAX2 parser
 class NexusXMLHandler(sax.ContentHandler):
@@ -60,7 +60,7 @@ class NexusXMLHandler(sax.ContentHandler):
         sax.ContentHandler.__init__(self)
 
         ## map of NXclass : name
-        self.__groupTypes = {"": ""}
+        self.__groupTypes = TNObject()
         ## if name fetching required
         self.__fetching = True
         if groupTypes:
@@ -192,9 +192,9 @@ class NexusXMLHandler(sax.ContentHandler):
                 res = self.__last().store()
                 if res:
                     self.__addToPool(res, self.__last())
-                if hasattr(self.__last(), "createLink") and \
-                        callable(self.__last().createLink):
-                    self.__last().createLink(self.__groupTypes)
+            if hasattr(self.__last(), "createLink") and \
+                    callable(self.__last().createLink):
+                self.__last().createLink(self.__groupTypes)
             self.__stack.pop()
         elif name not in self.transparentTags:
             if self.__unsupportedTag == name:
