@@ -97,7 +97,7 @@ class EAttribute(FElement):
                         self.error = message
                     elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        Streams.warn("Group::run() - %s " % message[0])
+                        Streams.warn("Attribute::run() - %s " % message[0])
                         self.error = message
                     else:
                         arr = dh.cast(self.h5Object.dtype)
@@ -132,9 +132,9 @@ class EAttribute(FElement):
         finally:
             if self.error:
                 if self.canfail:
-                    Streams.warn("Group::run() - %s  " % str(self.error))
+                    Streams.warn("Atribute::run() - %s  " % str(self.error))
                 else:
-                    Streams.error("Group::run() - %s  " % str(self.error))
+                    Streams.error("Attribute::run() - %s  " % str(self.error))
 
     ## fills object with maximum value
     # \brief It fills object or an extend part of object by default value

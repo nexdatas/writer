@@ -21,7 +21,6 @@
 
 """ Definitions of DB datasource """
 
-import sys
 from xml.dom import minidom
 
 from .Types import NTP

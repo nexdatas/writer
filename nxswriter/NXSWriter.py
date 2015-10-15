@@ -83,8 +83,8 @@ class CommandThread(Thread):
         except:
             self.__failed()
             PyTango.Except.throw_exception(
-                str(sys.exc_info()[0]),
                 str(sys.exc_info()[1]),
+                str(sys.exc_info()[0]),
                 str(sys.exc_info()[2])
             )
 

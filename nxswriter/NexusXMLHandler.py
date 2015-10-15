@@ -161,10 +161,6 @@ class NexusXMLHandler(sax.ContentHandler):
             elif name in self.elementClass:
                 self.__stack.append(
                     self.elementClass[name](attrs, self.__last()))
-
-                if hasattr(self.__last(), "createLink") \
-                        and callable(self.__last().createLink):
-                    self.__last().createLink(self.__groupTypes)
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
                     Streams.error(
@@ -196,6 +192,9 @@ class NexusXMLHandler(sax.ContentHandler):
                 res = self.__last().store()
                 if res:
                     self.__addToPool(res, self.__last())
+                if hasattr(self.__last(), "createLink") and \
+                        callable(self.__last().createLink):
+                    self.__last().createLink(self.__groupTypes)
             self.__stack.pop()
         elif name not in self.transparentTags:
             if self.__unsupportedTag == name:

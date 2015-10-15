@@ -22,9 +22,7 @@
 """ Tango Data Writer """
 
 ## package version
-__version__ = "1.8.3"
-
-import sys
+__version__ = "1.9.0"
 
 
 ## runs the TANGO server

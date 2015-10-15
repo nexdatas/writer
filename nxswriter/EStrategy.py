@@ -21,8 +21,6 @@
 
 """ Definitions of strategy evaluation classes """
 
-import sys
-
 from .Element import Element
 from . import Streams
 
