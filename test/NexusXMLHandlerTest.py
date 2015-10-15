@@ -117,14 +117,18 @@ class TElement(FElement):
         self.h5Object = Closeable()
         
 
+    @classmethod    
+    def getGroupTypes(self, tno, gt):
+        gt[tno.nxtype] = tno.name
+        for ch in tno.children:
+            self.getGroupTypes(ch, gt)
 
 
     ## creates links
     def createLink(self, groupTypes):
         self.linked = True
-        self.groupTypes = {}
-        for k in groupTypes:
-            self.groupTypes[k] = groupTypes[k]
+        self.groupTypes = {"":""}
+        self.getGroupTypes(groupTypes, self.groupTypes)
 
     ## stores names   
     def store(self):
@@ -1864,7 +1868,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self._nxFile = nx.create_file(self._fname, overwrite=True)
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
-        groupTypes = {"NXmmyentry2":"mmyentry2","NXmmyentry3":"mmyentry3"}
+        groupTypes = TNObject()
+        TNObject("mmyentry2","NXmmyentry2", groupTypes)
+        TNObject("mmyentry3","NXmmyentry3", groupTypes)
 
 
         el = NexusXMLHandler(self._eFile,groupTypes = groupTypes)
