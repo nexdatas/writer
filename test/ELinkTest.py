@@ -1631,6 +1631,7 @@ class ELinkTest(unittest.TestCase):
 
         
         self._nxFile.close()
+        self._nxFile2.close()
         os.remove(self._fname)
         os.remove(self._fname2)
         
