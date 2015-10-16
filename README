@@ -82,7 +82,13 @@ NXDL extensions
 -----------------
 
 In order to describe various data sources the NXDL standard has been extended by XML tags listed 
-below. Thus, <strategy /> and <datasource /> can be situated inside <field/> or <attribute/> tags. 
+below. Thus, <strategy /> and <datasource /> can be situated inside 
+
+  * <field /> -- for its value
+  * <attribute /> -- for its value
+  * <dim /> -- for its value (from nxswriter v1.7.0)
+  * <link /> -- for its target (from nxswriter v1.9.0)
+
 The other ones are nested inside <datasource/> tag.
 
 ------------------
