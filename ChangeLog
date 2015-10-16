@@ -1,5 +1,6 @@
-2015-10-XX Jan Kotanski <jankotan@gmail.com>
+2015-10-16 Jan Kotanski <jankotan@gmail.com>
 	* adding datasources to link targets
+	* adding support for external links
 	* adding streaming functions into Streams
 	* tagged as 1.9.0
 
