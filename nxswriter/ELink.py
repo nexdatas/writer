@@ -119,15 +119,12 @@ class ELink(FElement):
         if target is None and "target" in self._tagAttrs.keys():
             target = self._tagAttrs["target"].encode()
         if target is not None:
-            print "TARGET", target
             if '://' not in str(target) \
                and self.__groupTypes is not None:
-                print "IN", '://' not in str(target)
                 self.__target = (self.__typesToNames(
                     target, self.__groupTypes)).encode()
             else:
                 self.__target = str(target)
-            print "TARGET", self.__target
 
     ## converts types to Names using groupTypes dictionary
     # \param text original directory
