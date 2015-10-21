@@ -106,7 +106,11 @@ class DataHolder(object):
         if str(self.format).split('.')[-1] == "SCALAR":
             if dtype in NTP.npTt.keys() \
                     and NTP.npTt[dtype] == str(self.tangoDType):
-                return self.value
+                ## workaround for bug python-pni #8
+                if isinstance(self.value, unicode):
+                    return str(self.value)
+                else:
+                    return self.value
             else:
                 if self.value == "" and dtype != 'string':
                     return NTP.convert[dtype](0)

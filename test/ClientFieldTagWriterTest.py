@@ -565,10 +565,6 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             numpy.finfo(getattr(numpy, 'float32')).max , 
             attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
         f.close()
-
-            
-
-        
         os.remove(fname)
 
 
