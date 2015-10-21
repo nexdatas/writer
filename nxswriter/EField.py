@@ -172,39 +172,27 @@ class EField(FElementWithAttr):
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
                 if key in NTP.aTn.keys():
+                    h5att = self.h5Object.attributes.create(
+                        key.encode(),
+                        NTP.nTnp[NTP.aTn[key]].encode(),
+                        overwrite=True
+                    )
                     if hasattr(self._tagAttrs[key], "encode"):
                         try:
-                            (self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True
-                            ))[...] = self._tagAttrs[key].strip().encode()
-                        except:
-                            (self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True
-                            ))[...] = NTP.convert[
+                            h5att[...] = NTP.convert[
                                 str(self.h5Object.attributes[
                                     key.encode()].dtype)
                             ](self._tagAttrs[key].strip().encode())
+                        except:
+                            h5att[...] = self._tagAttrs[key].strip().encode()
                     else:
                         try:
-                            self.h5Object.attributes.create(
-                                key.encode(), NTP.nTnp[
-                                    NTP.aTn[key]
-                                ].encode(),
-                                overwrite=True
-                            )[...] = self._tagAttrs[key]
-                        except:
-                            self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True
-                            )[...] = NTP.convert[
+                            h5att[...] = NTP.convert[
                                 str(self.h5Object.attributes[
                                     key.encode()].dtype)
                             ](self._tagAttrs[key])
+                        except:
+                            h5att[...] = self._tagAttrs[key]
 
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)

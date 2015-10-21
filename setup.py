@@ -51,7 +51,7 @@ class TestCommand(Command):
     ## finalizes options
     def finalize_options(self):
         pass
-    
+
     ## runs command
     def run(self):
         import sys
@@ -64,8 +64,8 @@ class TestCommand(Command):
 REQUIRED = [
     'numpy (>=1.5.0)',
     'PyTango (>=7.2.2)',
-    'pninx (>=4.0.2)'
-    ]
+    'pni (>=1.0.0)'
+]
 
 ## metadata for distutils
 SETUPDATA = dict(
