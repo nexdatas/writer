@@ -51,7 +51,7 @@
 	* 	getNXFile -> getFile
 	* 	openNXFile -> openFile
 	* 	closeNXFile -> closeFile
-        * 	jsonRecord -> jsonrecord 
+        * 	jsonRecord -> jsonrecord
         * 	xmlSettings -> xmlsettings
         * 	numThreads -> numberOfThreads
 	* tagged as 1.6.0
