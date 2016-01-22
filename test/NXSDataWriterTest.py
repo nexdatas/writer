@@ -130,7 +130,7 @@ class NXSDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):     
-        print "Run: NXSDataWriterTest.test_openFile()"
+        print("Run: NXSDataWriterTest.test_openFile()")
         try:
             fname= '%s/test.h5' % os.getcwd()   
             dp = PyTango.DeviceProxy(self._sv.device)
@@ -267,7 +267,7 @@ class NXSDataWriterTest(unittest.TestCase):
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
-        print "Run: NXSDataWriterTest.test_openEntry() "
+        print("Run: NXSDataWriterTest.test_openEntry() ")
         fname= '%s/test2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
@@ -343,7 +343,7 @@ class NXSDataWriterTest(unittest.TestCase):
                             self.assertEqual(
                                 c.read(), 
                                 '<definition> <group type="NXentry" name="entry"/></definition>')
-                            print c.read()
+                            print(c.read())
                         else:
                             self.assertEqual(c.name,"python_version")
                             self.assertEqual(c.read(),sys.version)
@@ -373,7 +373,7 @@ class NXSDataWriterTest(unittest.TestCase):
     ## openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: NXSDataWriterTest.test_openEntryWithSAXParseException() "
+        print("Run: NXSDataWriterTest.test_openEntryWithSAXParseException() ")
         fname= '%s/test2.h5' % os.getcwd()   
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -393,7 +393,7 @@ class NXSDataWriterTest(unittest.TestCase):
                 dp.XMLSettings = wrongXml
             except PyTango.DevFailed,e:
                 error = True
-            except Exception, e: 
+            except Exception as e: 
                 error = False
             self.assertEqual(error, True)
             self.assertTrue(error is not None)
@@ -465,7 +465,7 @@ class NXSDataWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        print("Run: NXSDataWriterTest.test_scanRecord() ")
         fname= '%s/scantest2.h5' % os.getcwd()   
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:

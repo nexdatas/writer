@@ -90,7 +90,7 @@ class PyEvalSourceTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -405,7 +405,7 @@ else:
         dp = DataSourcePool()
         arr = {
             "int":[1243,"SPECTRUM","DevLong64",[]],
-            "long":[-10000000000000000000000003L,"SPECTRUM","DevLong64",[]],
+            "long":[-10000000000000000000000003,"SPECTRUM","DevLong64",[]],
             "float":[-1.223e-01,"SPECTRUM","DevDouble",[]],
             "str":['My String',"SPECTRUM","DevString",[]],
             "unicode":["Hello","SPECTRUM","DevString",[]],
@@ -416,7 +416,7 @@ else:
 
         arr2 = {
             "int":[1123,"SPECTRUM","DevLong64",[]],
-            "long":[-1012300000000000000000L,"SPECTRUM","DevLong64",[]],
+            "long":[-1012300000000000000000,"SPECTRUM","DevLong64",[]],
             "float":[-1.112e-01,"SPECTRUM","DevDouble",[]],
             "str":['My String2',"SPECTRUM","DevString",[]],
             "unicode":["Hello!","SPECTRUM","DevString",[]],

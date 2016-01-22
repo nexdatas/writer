@@ -2288,7 +2288,6 @@ class EAttributeTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c[0])] for c in attrs[k][0]], 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
@@ -2396,7 +2395,6 @@ class EAttributeTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c) for c in row] for row in attrs[k][0]], 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
@@ -2491,7 +2489,6 @@ class EAttributeTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c) for c in row] for row in attrs[k][0]], 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 

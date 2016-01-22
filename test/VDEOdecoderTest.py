@@ -134,7 +134,7 @@ class VDEOdecoderTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 

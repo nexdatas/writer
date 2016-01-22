@@ -123,7 +123,7 @@ class TgMemberTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -262,7 +262,7 @@ class TgMemberTest(unittest.TestCase):
             "ScalarLong":[ "int64", "DevLong", -124],
             "ScalarULong":["uint64" , "DevULong", 234],
             "ScalarLong64":[ "int64", "DevLong64", 234],
-            "ScalarULong64":[ "uint64", "DevULong64", 23L],
+            "ScalarULong64":[ "uint64", "DevULong64", 23],
             "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
             "ScalarString":[ "string", "DevString", "MyTrue"],
@@ -422,8 +422,8 @@ class TgMemberTest(unittest.TestCase):
             "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
             "GetLong":["ScalarLong", "int64", "DevLong", -124],
             "GetULong":["ScalarULong","uint64" , "DevULong", 234],
-            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234L],
-            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02,1e-14],
             "GetString":["ScalarString", "string", "DevString", "MyTrue"],
@@ -460,8 +460,8 @@ class TgMemberTest(unittest.TestCase):
             "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong":["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong":["ScalarULong","uint64" , "DevULong", 234],
-#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234L],
-#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234],
             "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
             "DeviceString":["ScalarString", "string", "DevString", "MyTrue"],
@@ -504,7 +504,7 @@ class TgMemberTest(unittest.TestCase):
             "ScalarLong":[ "int64", "DevLong", -124],
             "ScalarULong":["uint64" , "DevULong", 234],
             "ScalarLong64":[ "int64", "DevLong64", 234],
-            "ScalarULong64":[ "uint64", "DevULong64", 23L],
+            "ScalarULong64":[ "uint64", "DevULong64", 23],
             "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
             "ScalarString":[ "string", "DevString", "MyTrue"],
@@ -668,8 +668,8 @@ class TgMemberTest(unittest.TestCase):
             "GetUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
             "GetLong":["ScalarLong", "int64", "DevLong", -124],
             "GetULong":["ScalarULong","uint64" , "DevULong", 234],
-            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234L],
-            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat":["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02,1e-14],
             "GetString":["ScalarString", "string", "DevString", "MyTrue"],
@@ -708,8 +708,8 @@ class TgMemberTest(unittest.TestCase):
             "DeviceUShort":["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong":["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong":["ScalarULong","uint64" , "DevULong", 234],
-#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234L],
-#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+#            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+#            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "DeviceFloat":["ScalarFloat", "float32", "DevFloat", 12.234],
             "DeviceDouble":["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
             "DeviceString":["ScalarString", "string", "DevString", "MyTrue"],

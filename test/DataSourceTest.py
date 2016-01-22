@@ -39,9 +39,9 @@ try:
     import PyTango
     ## global variable if PyTango module installed
     PYTANGO_AVAILABLE = True
-except ImportError, e:
+except ImportError as e:
     PYTANGO_AVAILABLE = False
-    print "PYTANGO not available: %s" % e
+    print("PYTANGO not available: %s" % e)
 
 
 ## list of available databases
@@ -50,20 +50,20 @@ DB_AVAILABLE = []
 try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
-except ImportError, e:
-    print "MYSQL not available: %s" % e
+except ImportError as e:
+    print("MYSQL not available: %s" % e)
     
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
-except ImportError, e:
-    print "PGSQL not available: %s" % e
+except ImportError as e:
+    print("PGSQL not available: %s" % e)
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
-except ImportError, e:
-    print "ORACLE not available: %s" % e
+except ImportError as e:
+    print("ORACLE not available: %s" % e)
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -113,7 +113,7 @@ class DataSourceTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 

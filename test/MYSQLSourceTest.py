@@ -95,7 +95,7 @@ class MYSQLSourceTest(unittest.TestCase):
                      'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
-            print "ARGS:", args2
+            print("ARGS: %s" % args2)
         print("SEED =%s" % self.__seed) 
 
     def setsource(self, sr):
@@ -118,7 +118,7 @@ class MYSQLSourceTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 

@@ -88,7 +88,7 @@ class DataHolderTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -360,7 +360,7 @@ class DataHolderTest(unittest.TestCase):
                     for j in range(el.shape[1]):
                         self.assertEqual(el.value[i][j], arr[a][5][i][j])
             else:
-                print "WARNING", a, "Case not supported"
+                print("WARNING %s Case not supported" % a)
                     
 
 

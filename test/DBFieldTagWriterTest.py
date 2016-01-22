@@ -105,7 +105,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
                      'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
-            print "ARGS:", args2
+            print("ARGS: %s" % args2)
 
         print("SEED = %s" % self.seed) 
         print("CHECKER SEED =%s" % self._sc.seed) 
@@ -134,7 +134,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -989,7 +989,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
                                     [[int(scalar)] ]*3)
         self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
                                     [[float(scalar)] ]*3)
-        print "IMAGE ", [[str(sub[0]) for sub in name]]*3
+        print("IMAGE %s" % [[str(sub[0]) for sub in name]]*3)
         self._sc.checkImageField(det, "name_spectrum_string", "string", "NX_CHAR", 
                                  [[[str(sub[0])] for sub in name]]*3)
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 

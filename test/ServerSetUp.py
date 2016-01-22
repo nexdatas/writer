@@ -60,15 +60,15 @@ class ServerSetUp(object):
                 stderr =  None,  shell= True)
         else:
             self._psub = subprocess.call(
-                "NXSDataWriter %s &" % self.instance,stdout =  None, 
+                "NXSDataWriter %s &" % self.instance, stdout =  None, 
                 stderr = None , shell= True)
-        print "waiting for server",
+        sys.stdout.write("waiting for simple server ")
         
         found = False
         cnt = 0
         while not found and cnt < 1000:
             try:
-                print "\b.",
+                sys.stdout.write(".")
                 dp = PyTango.DeviceProxy(self.new_device_info_writer.name)
                 time.sleep(0.01)
                 if dp.state() == PyTango.DevState.ON:
@@ -76,7 +76,7 @@ class ServerSetUp(object):
             except:    
                 found = False
             cnt +=1
-        print ""
+        print("")
 
     ## test closer
     # \brief Common tear down oif Tango Server
