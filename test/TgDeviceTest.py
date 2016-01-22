@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -129,7 +129,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         name ="myname%s"% self.__rnd.randint(0, 9)
@@ -156,7 +156,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setMember(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         device ="device/%s"% self.__rnd.randint(0, 9)

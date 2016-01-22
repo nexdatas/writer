@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -22,7 +22,7 @@
 """ Implementation of element thread of tag evaluation """
 
 from threading import Thread
-import Queue
+import queue
 
 
 ## Single Thread Element
@@ -49,5 +49,5 @@ class ElementThread(Thread):
                     elem.error = None
                     elem.run()
 
-            except Queue.Empty:
+            except queue.Empty:
                 full = False

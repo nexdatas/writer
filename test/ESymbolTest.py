@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -97,7 +97,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         el = ESymbol({}, None)
         self.assertTrue(isinstance(el, Element))
@@ -113,7 +113,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing store method
     def test_store(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs2 )
         el2 = ESymbol(self._fattrs2,  el )
         self.assertEqual(el2.tagName, self._tfname)
@@ -132,7 +132,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_lastObject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -171,7 +171,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing _beforeLast method
     def test_beforeLast(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
 
@@ -193,7 +193,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing _beforeLast method
     def test_store_beforeLast(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
 

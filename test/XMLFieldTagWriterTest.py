@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -102,7 +102,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -221,7 +221,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlAttrScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -289,7 +289,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -514,7 +514,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlAttrSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -610,7 +610,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -867,7 +867,7 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlAttrImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         xml= """<definition>
   <group type="NXentry" name="entry1">

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -142,7 +142,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         query = 'select * from (select IDENT from telefonbuch) where ROWNUM <= 1'
@@ -191,7 +191,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         arr = {
@@ -234,7 +234,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":['select IDENT from telefonbuch where ROWNUM <= 1',
@@ -279,7 +279,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_trans(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         arr = {
@@ -325,7 +325,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":['select IDENT from telefonbuch where ROWNUM <= 5',
@@ -373,7 +373,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         arr = {

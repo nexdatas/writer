@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -164,7 +164,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -376,7 +376,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -651,7 +651,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -995,7 +995,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -1252,7 +1252,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
@@ -1499,7 +1499,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoImage_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">

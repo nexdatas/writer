@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -93,7 +93,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -122,7 +122,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_name(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name":"entry","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
@@ -146,7 +146,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_names(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name":"entry1","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
@@ -178,7 +178,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name":"entry1","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
@@ -209,7 +209,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name":"entry1","type":"NXentry"}
         sattr1 = {attr1["type"]:attr1["name"]}
@@ -240,7 +240,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group_name(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -272,7 +272,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group_names(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -306,7 +306,7 @@ class InnerXMLParserTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()

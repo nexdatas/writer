@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -117,7 +117,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -146,7 +146,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -275,7 +275,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_nods(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -396,7 +396,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_ds(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -593,7 +593,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -808,7 +808,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -1019,7 +1019,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_failed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -1190,7 +1190,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_rel(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -1413,7 +1413,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_twofiles(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._fname2= '%s/%s%s_2.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()

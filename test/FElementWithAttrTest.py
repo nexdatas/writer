@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -124,7 +124,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElementWithAttr(self._tfname, self._fattrs, None)
@@ -144,7 +144,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -168,7 +168,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -251,7 +251,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -313,7 +313,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -388,7 +388,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -471,7 +471,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -548,7 +548,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -625,7 +625,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_1X(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )
@@ -701,7 +701,7 @@ class FElementWithAttrTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_X1(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self.createTree()
         el = FElement(self._tfname, self._fattrs, None )

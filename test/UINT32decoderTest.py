@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -96,7 +96,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -108,7 +108,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
@@ -127,7 +127,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_shape(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
@@ -155,7 +155,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_decode_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -206,7 +206,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load_wrong_len(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
 
         dc = UINT32decoder()
@@ -224,7 +224,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         
 
         arr =[[None,None]]*20

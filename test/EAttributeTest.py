@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -123,7 +123,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -151,7 +151,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -180,7 +180,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
@@ -200,7 +200,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_simple(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
@@ -217,7 +217,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_ds(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
@@ -237,7 +237,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_strategy(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
@@ -266,7 +266,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_trigger(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
@@ -289,7 +289,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -343,7 +343,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -401,7 +401,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -474,7 +474,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -547,7 +547,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -620,7 +620,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -696,7 +696,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -772,7 +772,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_no(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -860,7 +860,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_no_string_shape_reduction(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -923,7 +923,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1009,7 +1009,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1098,7 +1098,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
 
@@ -1185,7 +1185,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1274,7 +1274,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1365,7 +1365,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1454,7 +1454,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         attrs = {
@@ -1542,7 +1542,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1641,7 +1641,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1733,7 +1733,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -1832,7 +1832,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         attrs = {
             "string":["","NX_CHAR", "string" , (1,)],
@@ -1919,7 +1919,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -2023,7 +2023,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -2121,7 +2121,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -2231,7 +2231,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -2329,7 +2329,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         
         attrs = {
@@ -2436,7 +2436,7 @@ class EAttributeTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         attrs = {
             "string":["","NX_CHAR", "string" , (1,)],

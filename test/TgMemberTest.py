@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -131,7 +131,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         name ="myname%s"% self.__rnd.randint(0, 9)
@@ -204,7 +204,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         device = 'stestp09/testss/s1r228'
@@ -249,7 +249,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -309,7 +309,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arr = {
@@ -360,7 +360,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         device = 'stestp09/testss/s1r228'
@@ -410,7 +410,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -451,7 +451,7 @@ class TgMemberTest(unittest.TestCase):
         self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", True],
@@ -491,7 +491,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -553,7 +553,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arr = {
@@ -605,7 +605,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         device = 'stestp09/testss/s1r228'
@@ -656,7 +656,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -699,7 +699,7 @@ class TgMemberTest(unittest.TestCase):
         self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean":["ScalarBoolean", "bool", "DevBoolean", True],

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -63,18 +63,18 @@ class ElementTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
+        print("\nsetting up...")
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -87,7 +87,7 @@ class ElementTest(unittest.TestCase):
     # \brief It tests executing store method
     def test_store(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs )
         el2 = Element(self._tfname, self._fattrs,  el )
         self.assertEqual(el2.tagName, self._tfname)
@@ -97,18 +97,18 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.store(), None)
         self.assertEqual(el2.last, el)
         self.assertEqual(el2.store("<tag/>"), None)
-        
+
 
 
     ## lastObject method test
     # \brief It tests executing _lastObject method
     def test_lastObject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
-        eFile = None        
+        eFile = None
 
         gname = "testGroup"
         gtype = "NXentry"
@@ -131,7 +131,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.doc, "")
         self.assertEqual(el._lastObject(), nxFile)
         self.assertEqual(el2._lastObject(), None)
-        
+
         nxFile.close()
         os.remove(fname)
 
@@ -142,7 +142,7 @@ class ElementTest(unittest.TestCase):
     # \brief It tests executing _beforeLast method
     def test_beforeLast(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
 
@@ -156,7 +156,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
-        
+
 
 
 

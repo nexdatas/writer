@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -30,11 +30,7 @@ import pni.io.nx.h5 as nx
 
 from xml import sax
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
+from io import BytesIO
 import json
 import sys
 import os
@@ -218,7 +214,7 @@ class TangoDataWriter(object):
             parser.setErrorHandler(errorHandler)
 
             inpsrc = sax.InputSource()
-            inpsrc.setByteStream(StringIO(self.xmlsettings))
+            inpsrc.setByteStream(BytesIO(self.xmlsettings))
             parser.parse(inpsrc)
 
             self.__initPool = handler.initPool

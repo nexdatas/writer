@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -68,7 +68,7 @@ class UTF8decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dc = UTF8decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -80,7 +80,7 @@ class UTF8decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UTF8decoder()
         self.assertEqual(dc.name, self.__name)
@@ -98,7 +98,7 @@ class UTF8decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_shape(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UTF8decoder()
         self.assertEqual(dc.name, self.__name)
@@ -125,7 +125,7 @@ class UTF8decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UTF8decoder()
         self.assertEqual(dc.name, self.__name)

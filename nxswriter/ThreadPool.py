@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -21,7 +21,7 @@
 
 """ Provides a pool with element threads """
 
-import Queue
+import queue
 
 from . import Streams
 from .ElementThread import ElementThread
@@ -36,7 +36,7 @@ class ThreadPool(object):
         ## maximal number of threads
         self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
         ## queue of the appended elements
-        self.__elementQueue = Queue.Queue()
+        self.__elementQueue = queue.Queue()
         ## list of the appended elements
         self.__elementList = []
         ## list of the threads related to the appended elements
@@ -61,7 +61,7 @@ class ThreadPool(object):
     # \brief It runs the threads from the pool
     def run(self):
         self.__threadList = []
-        self.__elementQueue = Queue.Queue()
+        self.__elementQueue = queue.Queue()
 
         for eth in self.__elementList:
             self.__elementQueue.put(eth)

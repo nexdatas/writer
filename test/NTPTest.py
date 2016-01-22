@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -145,7 +145,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_dict(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = NTP()
@@ -190,7 +190,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_arrayRank(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         mlen = [self.__rnd.randint(1, 100),self.__rnd.randint(1, 50),self.__rnd.randint(1, 20),self.__rnd.randint(2, 10)]
         arr = [
@@ -254,7 +254,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_arrayRankRShape(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         mlen = [self.__rnd.randint(2, 100),self.__rnd.randint(2, 50),self.__rnd.randint(2, 20),self.__rnd.randint(2, 10)]
         arr = [
@@ -338,7 +338,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_arrayRankShape(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         mlen = [self.__rnd.randint(2, 100),self.__rnd.randint(2, 50),self.__rnd.randint(2, 20),self.__rnd.randint(2, 10)]
         arr = [
@@ -424,7 +424,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createArray_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}
@@ -496,7 +496,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createArray_scalar_from_string(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}
@@ -572,7 +572,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createArray_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}
@@ -674,7 +674,7 @@ class NTPTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createArray_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}

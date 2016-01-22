@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -122,7 +122,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         index = self.__rnd.randint(1, 1000)
         el = ElementThread(index, None)
@@ -135,7 +135,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         index = self.__rnd.randint(1, 1000)
@@ -165,7 +165,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_jobs(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         jlist = [ Job() for c in range(self.__rnd.randint(1, 20))]
 
@@ -188,7 +188,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_jobs_with_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         jlist = [ EJob() for c in range(self.__rnd.randint(1, 20))]
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -96,12 +96,12 @@ class TangoDataWriterTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
 
 
@@ -123,7 +123,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -184,7 +184,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_valueerror(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -252,7 +252,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_typeerror(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -320,7 +320,7 @@ class TangoDataWriterTest(unittest.TestCase):
     # \brief It tests validation of opening and closing H5 files.
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         
         directory = '#nexdatas_test_directoryS#' 
         dirCreated = False
@@ -399,7 +399,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
-        print "Run: TangoDataWriterTest.test_openEntry() "
+        print("Run: TangoDataWriterTest.test_openEntry() ")
         fname = "test.h5"
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:

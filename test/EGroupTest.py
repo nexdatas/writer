@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -115,7 +115,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -143,7 +143,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor_thesame_name(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -173,7 +173,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -203,7 +203,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_noobject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         gattrs = {"type":"NXentry" , "short_name":"shortname" }
         self.myAssertRaise(XMLSettingSyntaxError, EGroup, gattrs, None)
@@ -215,7 +215,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_notype(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -232,7 +232,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_aTn(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -273,7 +273,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_aTnv(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -313,7 +313,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -343,7 +343,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -429,7 +429,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -493,7 +493,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d_single_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -567,7 +567,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -641,7 +641,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -722,7 +722,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -804,7 +804,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -838,7 +838,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -872,7 +872,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_notype(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)

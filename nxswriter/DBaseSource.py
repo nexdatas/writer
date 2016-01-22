@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
 #    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
@@ -34,7 +34,7 @@ from .Errors import (PackageError, DataSourceSetupError)
 DB_AVAILABLE = []
 
 try:
-    import MySQLdb
+    import mysql.connector
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
     Streams.info("MYSQL not available: %s" % e)
