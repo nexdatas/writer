@@ -106,7 +106,7 @@ class TgMemberTest(unittest.TestCase):
     def setUp(self):
         self._simps.setUp()
         ## file handle
-        print "SEED =",self.__seed 
+        print("SEED = %s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down

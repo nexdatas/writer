@@ -128,12 +128,12 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -152,7 +152,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSourcePool()
@@ -178,7 +178,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_hasDataSource(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSourcePool()
@@ -203,7 +203,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_get(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSourcePool()
@@ -235,7 +235,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_append(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSourcePool()
@@ -313,7 +313,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSourcePool()

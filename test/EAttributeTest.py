@@ -97,14 +97,14 @@ class EAttributeTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
-        print "CHECKER SEED =", self._sc.seed 
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed) 
+        print("CHECKER SEED =%s" % self._sc.seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -115,7 +115,7 @@ class EAttributeTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -832,13 +832,13 @@ class EAttributeTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes() 
             at = el[k].h5Object.attributes[k]
-            print at[...], at.dtype, at.shape
+            print("%s %s %s" % (at[...], at.dtype, at.shape))
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2] or 'string', attrs[k][0], 
                 attrs[k][3] if len(attrs[k])>3 else 0)
 
         for k in attrs.keys():
-            print "K", k
+            print("K %s" % k)
 #            if attrs[k][2] == 'string':
 #                "writing multi-dimensional string is not supported by pniio"
 #                continue
@@ -898,7 +898,7 @@ class EAttributeTest(unittest.TestCase):
 
 
         for k in attrs.keys():
-            print "K", k
+            print("K %s" % k)
 #            if attrs[k][2] == 'string':
 #                "writing multi-dimensional string is not supported by pniio"
 #                continue
@@ -2189,7 +2189,6 @@ class EAttributeTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
 
-            print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c[0])] for c in attrs[k][0]], 
                         "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 

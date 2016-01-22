@@ -104,7 +104,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "SEED =",self.__seed 
+        print("SEED = %s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down

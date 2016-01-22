@@ -68,9 +68,9 @@ try:
     import PyTango
     ## if module PyTango avalable
     PYTANGO_AVAILABLE = True
-except ImportError, e:
+except ImportError as e:
     PYTANGO_AVAILABLE = False
-    print "PyTango is not available: %s" % e
+    print("PyTango is not available: %s" % e)
     
 ## list of available databases
 DB_AVAILABLE = []
@@ -99,12 +99,12 @@ except:
         mydb.close()
         DB_AVAILABLE.append("MYSQL")
         
-    except ImportError, e:
-        print "MYSQL not available: %s" % e
-    except Exception, e:
-        print "MYSQL not available: %s" % e
+    except ImportError as e:
+        print("MYSQL not available: %s" % e)
+    except Exception as e:
+        print("MYSQL not available: %s" % e)
     except:
-        print "MYSQL not available"
+        print("MYSQL not available")
 
 
 try:
@@ -116,12 +116,12 @@ try:
     pgdb = psycopg2.connect(**args)
     pgdb.close()
     DB_AVAILABLE.append("PGSQL")
-except ImportError, e:
-    print "PGSQL not available: %s" % e
-except Exception,e:
-    print "PGSQL not available: %s" % e
+except ImportError as e:
+    print("PGSQL not available: %s" % e)
+except Exception as e:
+    print("PGSQL not available: %s" % e)
 except:
-    print "PGSQL not available"
+    print("PGSQL not available")
 
 
 
@@ -139,12 +139,12 @@ try:
     ordb = cx_Oracle.connect(**args)
     ordb.close()
     DB_AVAILABLE.append("ORACLE")
-except ImportError, e:
-    print "ORACLE not available: %s" % e
-except Exception,e:
-    print "ORACLE not available: %s" % e
+except ImportError as e:
+    print("ORACLE not available: %s" % e)
+except Exception as e:
+    print("ORACLE not available: %s" % e)
 except:
-    print "ORACLE not available"
+    print("ORACLE not available")
     
 
 if "MYSQL" in DB_AVAILABLE:

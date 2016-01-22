@@ -82,7 +82,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."       
+        print("\nsetting up...")       
         ## connection arguments to ORACLE DB
         args = {}
         args["user"] = self.__user
@@ -90,12 +90,12 @@ class ORACLESourceTest(unittest.TestCase):
         args["password"] = self.__passwd
         ## inscance of cx_Oracle
         self._mydb = cx_Oracle.connect(**args)
-        print "SEED =", self.__seed 
+        print("SEED =%s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     ## Exception tester

@@ -114,7 +114,7 @@ class TangoDataWriterTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -155,14 +155,11 @@ class TangoDataWriterTest(unittest.TestCase):
             f = open_file(fname,readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -203,7 +200,7 @@ class TangoDataWriterTest(unittest.TestCase):
             try:
                 error = False
                 tdw.jsonrecord =  "}"
-            except ValueError, e:
+            except ValueError as e:
                 error = True
             self.assertEqual(error, True)
 
@@ -222,14 +219,11 @@ class TangoDataWriterTest(unittest.TestCase):
             f = open_file(fname,readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -271,7 +265,7 @@ class TangoDataWriterTest(unittest.TestCase):
             try:
                 error = False
                 tdw.jsonrecord =  1223
-            except TypeError, e:
+            except TypeError as e:
                 error = True
             self.assertEqual(error, True)
 
@@ -290,14 +284,11 @@ class TangoDataWriterTest(unittest.TestCase):
             f = open_file(fname,readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -370,14 +361,11 @@ class TangoDataWriterTest(unittest.TestCase):
 
             f = open_file(fname,readonly=True)
             f = f.root()
-#            print "\nFile attributes:"
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -461,7 +449,7 @@ class TangoDataWriterTest(unittest.TestCase):
                             self.assertEqual(
                                 c.read(), 
                                 '<definition> <group type="NXentry" name="entry"/></definition>')
-                            print c.read()
+                            print(c.read())
                         else:
                             self.assertEqual(c.name,"python_version")
                             self.assertEqual(c.read(),sys.version)
@@ -491,7 +479,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: TangoDataWriterTest.test_openEntryWithSAXParseException() "
+        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException() ")
         fname = "test.h5"
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -504,9 +492,9 @@ class TangoDataWriterTest(unittest.TestCase):
             try:
                 error = None
                 tdw.xmlsettings = wrongXml
-            except SAXParseException,e:
+            except SAXParseException as e:
                 error = True
-            except Exception, e:
+            except Exception as e:
                 error = False
             self.assertTrue(error is not None)
             self.assertEqual(error, True)
@@ -517,9 +505,9 @@ class TangoDataWriterTest(unittest.TestCase):
                 tdw.xmlsettings = xml
                 error = None
                 tdw.openEntry()
-            except SAXParseException,e:
+            except SAXParseException as e:
                 error = True
-            except Exception, e:
+            except Exception as e:
                 error = False
             self.assertTrue(error is None)
                                 
@@ -562,7 +550,7 @@ class TangoDataWriterTest(unittest.TestCase):
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
-        print "Run: TangoDataWriterTest.test_scanRecord() "
+        print("Run: TangoDataWriterTest.test_scanRecord() ")
         fname = "scantest.h5"
         try:
             tdw = TangoDataWriter()
@@ -779,7 +767,6 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])

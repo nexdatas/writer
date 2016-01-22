@@ -91,7 +91,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
         try:
             args = {}
             args["db"] = 'tango'
@@ -107,8 +107,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
             self._largs = args2
             print "ARGS:", args2
 
-        print "SEED =", self.seed 
-        print "CHECKER SEED =", self._sc.seed 
+        print("SEED = %s" % self.seed) 
+        print("CHECKER SEED =%s" % self._sc.seed) 
 
     def setmycnf(self, xml):
         if not self._largs or 'read_default_file' not in self._largs.keys():
@@ -121,7 +121,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
 

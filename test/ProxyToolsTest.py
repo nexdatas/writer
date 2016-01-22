@@ -93,7 +93,7 @@ class TangoSourceTest(unittest.TestCase):
         self._simps.setUp()
         self._simps2.setUp()
         ## file handle
-        print "SEED =",self.__seed 
+        print("SEED = %s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down

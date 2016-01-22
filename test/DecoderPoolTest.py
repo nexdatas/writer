@@ -144,12 +144,12 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception

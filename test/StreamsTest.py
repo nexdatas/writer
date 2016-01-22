@@ -67,8 +67,8 @@ class StreamsTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "SEED =", self.__seed
-        print "\nsetting up..."
+        print("SEED =%s" % self.__seed)
+        print("\nsetting up...")
         hasattr(Streams, "log_fatal")
         hasattr(Streams, "log_error")
         hasattr(Streams, "log_warn")
@@ -85,7 +85,7 @@ class StreamsTest(unittest.TestCase):
     def tearDown(self):
         sys.stdout = self.old_stdout
         sys.stderr = self.old_stderr
-        print "tearing down ..."
+        print("tearing down ...")
 
     def test_fatal(self):
         fun = sys._getframe().f_code.co_name

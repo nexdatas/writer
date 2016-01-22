@@ -65,13 +65,13 @@ class ElementTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## constructor test
     # \brief It tests default settings

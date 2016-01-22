@@ -78,7 +78,7 @@ class PyEvalTangoSourceTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         self._simps.setUp()
-        print "SEED =", self.__seed
+        print("SEED =%s" % self.__seed)
 
     ## test closer
     # \brief Common tear down

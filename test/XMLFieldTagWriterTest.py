@@ -59,13 +59,13 @@ class XMLFieldTagWriterTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "CHECKER SEED =", self._sc.seed 
+        print("\nsetting up...")
+        print("CHECKER SEED =%s" % self._sc.seed)
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
 
 

@@ -81,12 +81,12 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -131,7 +131,7 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         ds = DataSourceFactory(self._fattrs, None)
@@ -158,7 +158,7 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = Element(self._tfname, self._fattrs )
@@ -327,7 +327,7 @@ ds.result = ds.myclient + 1
     # \brief It tests default settings
     def test_check_flow(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
 

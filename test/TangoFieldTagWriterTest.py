@@ -120,8 +120,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         self._simps.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED =%s" % self._sc.seed)
 
     ## test closer
     # \brief Common tear down
@@ -1427,8 +1427,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.ImageDouble = self._fpco1[0]
         self._simps.dp.ImageString = self._dates2[0]
 
-#        print self._fmca1[0]
-
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
 
@@ -1677,7 +1675,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.dp.ImageDouble = self._fpco1[0]
         self._simps.dp.ImageString = self._dates2[0]
 
-#        print self._fmca1[0]
 
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )

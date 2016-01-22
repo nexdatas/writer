@@ -49,7 +49,7 @@ class ServerSetUp(object):
     ## test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        print "tearing down ..."
+        print("tearing down ...")
         db = PyTango.Database()
         db.add_device(self.new_device_info_writer)
         db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
@@ -81,7 +81,7 @@ class ServerSetUp(object):
     ## test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self): 
-        print "tearing down ..."
+        print("tearing down ...")
         db = PyTango.Database()
         db.delete_server(self.new_device_info_writer.server)
         

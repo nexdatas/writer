@@ -80,7 +80,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."       
+        print("\nsetting up...")       
         ## connection arguments to MYSQL DB
         try:
             args = {}
@@ -96,7 +96,7 @@ class MYSQLSourceTest(unittest.TestCase):
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
             print "ARGS:", args2
-        print "SEED =", self.__seed 
+        print("SEED =%s" % self.__seed) 
 
     def setsource(self, sr):
         if self._largs:
@@ -106,7 +106,7 @@ class MYSQLSourceTest(unittest.TestCase):
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     ## Exception tester

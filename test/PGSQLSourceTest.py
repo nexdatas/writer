@@ -77,18 +77,18 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."       
+        print("\nsetting up...")       
         ## connection arguments to PGSQL DB
         args = {}
         args["database"] = 'mydb'
         ## inscance of psycog2
         self._mydb = psycopg2.connect(**args)
-        print "SEED =", self.__seed 
+        print("SEED =%s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     ## Exception tester

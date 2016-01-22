@@ -67,8 +67,8 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     def setUp(self):
         self._sv.setUp()
         self._simps.setUp()
-        print "SEED =", self.seed 
-        print "CHECKER SEED =", self._sc.seed 
+        print("SEED = %s" % self.seed) 
+        print("CHECKER SEED =%s" % self._sc.seed) 
 
     ## test closer
     # \brief Common tear down

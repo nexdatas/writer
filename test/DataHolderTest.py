@@ -71,13 +71,13 @@ class DataHolderTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "SEED =",self.__seed 
+        print("\nsetting up...")        
+        print("SEED = %s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -119,7 +119,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
         el = DataHolder(**self.__data) 
@@ -136,7 +136,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         arr = {
@@ -182,7 +182,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
@@ -244,7 +244,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         arr = {
@@ -312,7 +312,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_encode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dp = DecoderPool()
         spectrum = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
         image = numpy.array([[2,5,4,6],[3,4,3,4],[3,6,7,8]],dtype='uint8')
@@ -368,7 +368,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_encode_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dp = DecoderPool()
         spectrum = numpy.array([1234], dtype=numpy.uint32)
         image = numpy.array([[2]],dtype='uint16')
@@ -408,7 +408,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}
@@ -499,7 +499,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_scalar_from_string(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}
@@ -590,7 +590,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}
@@ -699,7 +699,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         
         arrs = {}

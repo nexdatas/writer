@@ -92,13 +92,13 @@ class ELinkTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "CHECKER SEED =", self._sc.seed 
+        print("\nsetting up...")        
+        print("CHECKER SEED =%s" % self._sc.seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -109,7 +109,7 @@ class ELinkTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -501,13 +501,13 @@ class ELinkTest(unittest.TestCase):
         
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        print "ST1"
+        print("ST1")
         self.assertEqual(li1.store(), (None,None))
-        print "ST2"
+        print("ST2")
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        print "rN1"
+        print("rN1")
         li1.run()
-        print "rN2"
+        print("rN2")
 
         self.myAssertRaise(Exception, self._nxFile.open, "link2")
         self.assertEqual(li2.store(), (None,None))

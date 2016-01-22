@@ -73,13 +73,13 @@ class ClientSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -98,7 +98,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         
         
         ds = ClientSource()
@@ -110,7 +110,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_str_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         name = 'myrecord'
@@ -144,7 +144,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         ds = ClientSource()
@@ -192,7 +192,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         name = 'myrecord'
@@ -232,7 +232,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_global_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":[1243,"SCALAR","DevLong64",[]],
@@ -263,7 +263,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_local_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":[-23243,"SCALAR","DevLong64",[]],
@@ -296,7 +296,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":[1243,"SPECTRUM","DevLong64",[]],
@@ -343,7 +343,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_local_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":[1243,"SPECTRUM","DevLong64",[]],
@@ -389,7 +389,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings with global json string
     def test_getData_global_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":[1243,"IMAGE","DevLong64",[]],
@@ -435,7 +435,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings with local json string
     def test_getData_local_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int":[1243,"IMAGE","DevLong64",[]],
@@ -482,7 +482,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_isValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = ClientSource()

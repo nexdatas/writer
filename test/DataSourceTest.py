@@ -97,12 +97,12 @@ class DataSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -121,7 +121,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSource()
@@ -138,7 +138,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSource()
@@ -150,7 +150,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSource()
@@ -162,7 +162,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_isValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSource()
@@ -175,7 +175,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_str(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSource()
@@ -187,7 +187,7 @@ class DataSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getText_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
 
         el = DataSource()

@@ -89,14 +89,14 @@ class EGroupTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
-        print "CHECKER SEED =", self._sc.seed 
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed) 
+        print("CHECKER SEED =%s" % self._sc.seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -107,7 +107,7 @@ class EGroupTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 

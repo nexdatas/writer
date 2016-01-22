@@ -44,11 +44,7 @@ from nxswriter.FetchNameHandler import TNObject
 
 from xml import sax
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
+from io import BytesIO
 
 try:
     import pni.io.nx.h5 as nx
@@ -235,7 +231,7 @@ class InnerTagDSDC(object):
     ## stores names   
     def store(self, xml, myjson):
         self.xml = xml
-        print "JSON",self.json
+        print("JSON %s" % self.json)
         self.json = myjson
         self.stored = True
         if InnerTagDC.trigger:
@@ -299,7 +295,7 @@ class InnerTagDS(object):
     ## stores names   
     def store(self, xml, myjson):
         self.xml = xml
-        print "JSON",self.json
+        print("JSON %s" % self.json)
         self.json = myjson
         self.stored = True
         if InnerTagDS.trigger:
@@ -358,7 +354,7 @@ class InnerTagDC(object):
     ## stores names   
     def store(self, xml, myjson):
         self.xml = xml
-        print "JSON",self.json
+        print("JSON %s" % self.json)
         self.json = myjson
         self.stored = True
         if InnerTagDC.trigger:
@@ -504,12 +500,12 @@ class NexusXMLHandlerTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
 
     ## Exception tester
@@ -521,7 +517,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -2844,7 +2840,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         inpsrc = sax.InputSource()
-        inpsrc.setByteStream(StringIO(xml))
+        inpsrc.setByteStream(BytesIO(xml))
         parser.parse(inpsrc)
 
 

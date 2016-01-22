@@ -57,12 +57,12 @@ class UTF8decoderTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## constructor test
     # \brief It tests default settings

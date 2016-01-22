@@ -89,13 +89,13 @@ class FElementWithAttrTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed)
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -115,7 +115,7 @@ class FElementWithAttrTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 

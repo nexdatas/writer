@@ -92,13 +92,13 @@ class EDimTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -109,7 +109,7 @@ class EDimTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -379,7 +379,7 @@ class EDimTest(unittest.TestCase):
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
         el3.store()
-        print el3._beforeLast().lengths
+        print(el3._beforeLast().lengths)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)

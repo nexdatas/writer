@@ -75,12 +75,12 @@ class EDimensionsTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
+        print("\nsetting up...")        
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     ## Exception tester
     # \param exception expected exception
@@ -91,7 +91,7 @@ class EDimensionsTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -130,7 +130,7 @@ class EDimensionsTest(unittest.TestCase):
     ## last method test
     # \brief It tests executing _lastObject method
     def test_last(self):
-        print "Run: %s.test_last() " % self.__class__.__name__
+        print("Run: %s.test_last() " % self.__class__.__name__)
 
         fname = "test.h5"
         nxFile = None

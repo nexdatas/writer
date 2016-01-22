@@ -96,13 +96,13 @@ class FElementTest(unittest.TestCase):
         ## element file objects
         self._group = self._nxFile.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print("\nsetting up...")        
+        print("SEED =%s" % self.__seed) 
 
     ## test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -115,7 +115,7 @@ class FElementTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -123,7 +123,7 @@ class FElementTest(unittest.TestCase):
     ## default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
-        print "Run: %s.test_default_constructor() " % self.__class__.__name__
+        print("Run: %s.test_default_constructor() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -137,7 +137,7 @@ class FElementTest(unittest.TestCase):
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None )
         el2 = FElement(self._tfname, self._fattrs, el, self._group)
         self.assertTrue(isinstance(el2, Element))
@@ -156,7 +156,7 @@ class FElementTest(unittest.TestCase):
     ## store method test
     # \brief It tests default settings
     def test_store(self):
-        print "Run: %s.test_store() " % self.__class__.__name__
+        print("Run: %s.test_store() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None, self._group )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
@@ -169,7 +169,7 @@ class FElementTest(unittest.TestCase):
     ## run method test
     # \brief It tests run method
     def test_run(self):
-        print "Run: %s.test_run() " % self.__class__.__name__
+        print("Run: %s.test_run() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None,  self._group )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
@@ -188,7 +188,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_lengths_1d(self):
-        print "Run: %s.test_findShape_lengths_1d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_lengths_1d() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None)
 
 
@@ -245,7 +245,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_lengths_2d(self):
-        print "Run: %s.test_findShape_lengths_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_lengths_2d() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None)
 
         
@@ -307,7 +307,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_lengths_3d(self):
-        print "Run: %s.test_findShape_lengths_3d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_lengths_3d() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None)
 
 
@@ -375,7 +375,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_1d(self):
-        print "Run: %s.test_findShape_ds_1d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_1d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -461,7 +461,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -499,7 +499,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_checkData(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -538,7 +538,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_ext_checkData(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -580,7 +580,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_extends_checkData(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -621,7 +621,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_extends2_checkData(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -658,7 +658,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_extends3_checkData(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -692,19 +692,10 @@ class FElementTest(unittest.TestCase):
         for i in range(3, 5):
             self.assertEqual(el._findShape("2", extraD=True, grows = i, checkData=True), [1,1] + [0] )
 
-
-
-
-
-
-
-
-
-
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_ext(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -738,15 +729,10 @@ class FElementTest(unittest.TestCase):
         for i in range(3, 5):
             self.myAssertRaise(XMLSettingSyntaxError, el._findShape,"2", extraD=True, grows = i, extends=True)
 
-
-
-
-
-
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_extends(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -787,7 +773,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_extends2(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -824,7 +810,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_ds_2d_extends3(self):
-        print "Run: %s.test_findShape_ds_2d() " % self.__class__.__name__
+        print("Run: %s.test_findShape_ds_2d() " % self.__class__.__name__)
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
         el.source = ds
@@ -864,7 +850,7 @@ class FElementTest(unittest.TestCase):
     ## run _findShape test
     # \brief It tests _findShape method
     def test_findShape_xml(self):
-        print "Run: %s.test_findShape_xml() " % self.__class__.__name__
+        print("Run: %s.test_findShape_xml() " % self.__class__.__name__)
         el = FElement(self._tfname, self._fattrs, None)
         
         el.content = ["123"]
@@ -896,21 +882,10 @@ class FElementTest(unittest.TestCase):
         for i in range(-2, 5):
             self.assertEqual(el._findShape("2", extraD=True, grows = i), mlen )
 
-
-
-
-
-
-
-
-
-
-
-
     ## run setMessage test
     # \brief It tests setMessage method
     def test_setMessage(self):
-        print "Run: %s.test_setMessage() " % self.__class__.__name__
+        print("Run: %s.test_setMessage() " % self.__class__.__name__)
         message = "My Exception"
         text = "Data for %s not found. DATASOURCE:%s"
         uob = "unnamed object"
