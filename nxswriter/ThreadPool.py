@@ -34,7 +34,7 @@ class ThreadPool(object):
     # \brief It cleans the member variables
     def __init__(self, numberOfThreads=None):
         ## maximal number of threads
-        self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
+        self.numberOfThreads = numberOfThreads or -1
         ## queue of the appended elements
         self.__elementQueue = queue.Queue()
         ## list of the appended elements

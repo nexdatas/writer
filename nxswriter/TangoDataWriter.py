@@ -30,7 +30,7 @@ import pni.io.nx.h5 as nx
 
 from xml import sax
 
-from io import BytesIO
+from io import StringIO
 import json
 import sys
 import os
@@ -135,7 +135,7 @@ class TangoDataWriter(object):
     # \param xmlset xml settings
     def __setXML(self, xmlset):
         self.__fetcher = FetchNameHandler()
-        sax.parseString(xmlset, self.__fetcher)
+        sax.parseString(bytes(xmlset, 'utf-8'), self.__fetcher)
         self.__xmlsettings = xmlset
 
     ## del method for xmlsettings attribute
@@ -214,7 +214,7 @@ class TangoDataWriter(object):
             parser.setErrorHandler(errorHandler)
 
             inpsrc = sax.InputSource()
-            inpsrc.setByteStream(BytesIO(self.xmlsettings))
+            inpsrc.setByteStream(StringIO(self.xmlsettings))
             parser.parse(inpsrc)
 
             self.__initPool = handler.initPool

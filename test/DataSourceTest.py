@@ -48,7 +48,7 @@ except ImportError as e:
 DB_AVAILABLE = []
 
 try:
-    import MySQLdb
+    import mysql.connector
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
     print("MYSQL not available: %s" % e)

@@ -23,7 +23,7 @@
 
 import struct
 import numpy
-
+import importlib
 
 ## UTF8 decoder
 class UTF8decoder(object):
@@ -213,6 +213,7 @@ class DecoderPool(object):
                 and hasattr(configJSON['decoders'], 'keys'):
             for dk in configJSON['decoders'].keys():
                 pkl = configJSON['decoders'][dk].split(".")
+                print("GLOH %s" % globals())
                 dec = __import__(".".join(pkl[:-1]), globals(),
                                  locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
