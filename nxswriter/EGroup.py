@@ -38,9 +38,9 @@ class EGroup(FElementWithAttr):
         FElementWithAttr.__init__(self, "group", attrs, last)
         if self._lastObject() is not None:
             if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-                gname = attrs["name"].encode()
+                gname = attrs["name"]
             elif "type" in attrs.keys():
-                gname = attrs["type"][2:].encode()
+                gname = attrs["type"][2:]
             else:
                 Streams.error(
                     "EGroup::__init__() - The group type not defined",
@@ -50,21 +50,21 @@ class EGroup(FElementWithAttr):
             try:
                 ## stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
-                    gname, attrs["type"].encode())
+                    gname, attrs["type"])
             except:
                 Streams.error(
                     "EGroup::__init__() - "
                     "The group '%s' of '%s' type cannot be created. \n"
                     "Please remove the old file, change the file name "
                     "or change the group name." %
-                    (gname, attrs["type"].encode()),
+                    (gname, attrs["type"]),
                     std=False)
 
                 raise XMLSettingSyntaxError(
                     "The group '%s' of '%s' type cannot be created. \n"
                     "Please remove the old file, change the file name "
                     "or change the group name." %
-                    (gname, attrs["type"].encode()))
+                    (gname, attrs["type"]))
 
         else:
             Streams.error(
@@ -81,47 +81,47 @@ class EGroup(FElementWithAttr):
                     if hasattr(attrs[key], "encode"):
                         try:
                             (self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                key,
+                                NTP.nTnp[NTP.aTn[key]],
                                 overwrite=True))[...] = \
-                                attrs[key].encode()
+                                attrs[key]
                         except:
                             (self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                key,
+                                NTP.nTnp[NTP.aTn[key]],
                                 overwrite=True
                             ))[...] = \
                                 NTP.convert[
                                     str(self.h5Object.attributes[
-                                        key.encode()
-                                    ].dtype)](attrs[key].encode())
+                                        key
+                                    ].dtype)](attrs[key])
 
                     else:
                         try:
                             self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                key,
+                                NTP.nTnp[NTP.aTn[key]],
                                 overwrite=True
                             )[...] = attrs[key]
                         except:
                             self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
+                                key,
+                                NTP.nTnp[NTP.aTn[key]],
                                 overwrite=True
                             )[...] \
                                 = NTP.convert[str(self.h5Object.attributes[
-                                    key.encode()].dtype)](attrs[key])
+                                    key].dtype)](attrs[key])
 
                 elif key in NTP.aTnv.keys():
 
                     shape = (len(attrs[key]),)
                     (self.h5Object.attributes.create(
-                        key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
+                        key, NTP.nTnp[NTP.aTnv[key]],
                         shape, overwrite=True))[...] = numpy.array(attrs[key])
                 else:
                     (self.h5Object.attributes.create(
-                        key.encode(), "string", overwrite=True))[...] \
-                        = attrs[key].encode()
+                        key, "string", overwrite=True))[...] \
+                        = attrs[key]
 
     ## stores the tag content
     # \param xml xml setting

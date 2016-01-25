@@ -65,6 +65,9 @@ import TgDeviceTest
 import StreamsTest
 
 try:
+    ## switch tango off 
+    raise ImportError("TANGO SWITCHED OFF")
+    ## switch tango off end
     import PyTango
     ## if module PyTango avalable
     PYTANGO_AVAILABLE = True
@@ -76,14 +79,14 @@ except ImportError as e:
 DB_AVAILABLE = []
     
 try:
-    import MySQLdb    
+    import mysql.connector
     ## connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
     args["host"] = 'localhost'
     args["read_default_file"] = '/etc/my.cnf'
     ## inscance of MySQLdb
-    mydb = MySQLdb.connect(**args)
+    mydb = mysql.connector.connect(**args)
     mydb.close()
     DB_AVAILABLE.append("MYSQL")
 except:
@@ -292,9 +295,6 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest) )
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
-
-    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest) )
 
     suite.addTests(
@@ -327,6 +327,9 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(ORACLESourceTest) )
 
     if PYTANGO_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
+
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
 

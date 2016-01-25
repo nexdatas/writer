@@ -63,7 +63,7 @@ class ELink(FElement):
     # \brief During its thread run it fetches the data from the source
     def run(self):
         try:
-            if self._tagAttrs["name"].encode() is not None:
+            if self._tagAttrs["name"] is not None:
                 if self.source:
                     dt = self.source.getData()
                     dh = None
@@ -94,7 +94,7 @@ class ELink(FElement):
         if "name" in self._tagAttrs.keys():
             self.__setTarget(target)
             if self.__target:
-                name = self._tagAttrs["name"].encode()
+                name = self._tagAttrs["name"]
                 try:
                     self.h5Object = nx.link(
                         self.__target,
@@ -117,12 +117,12 @@ class ELink(FElement):
 
     def __setTarget(self, target=None):
         if target is None and "target" in self._tagAttrs.keys():
-            target = self._tagAttrs["target"].encode()
+            target = self._tagAttrs["target"]
         if target is not None:
             if '://' not in str(target) \
                and self.__groupTypes is not None:
                 self.__target = (self.__typesToNames(
-                    target, self.__groupTypes)).encode()
+                    target, self.__groupTypes))
             else:
                 self.__target = str(target)
 

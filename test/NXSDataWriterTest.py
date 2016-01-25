@@ -391,7 +391,7 @@ class NXSDataWriterTest(unittest.TestCase):
             try:
                 error = None
                 dp.XMLSettings = wrongXml
-            except PyTango.DevFailed,e:
+            except PyTango.DevFailed as e:
                 error = True
             except Exception as e: 
                 error = False

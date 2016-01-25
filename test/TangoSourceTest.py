@@ -52,7 +52,6 @@ from nxswriter import DataSources
 from nxswriter.Types import Converters
 
 import threading
-import thread
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -92,10 +91,10 @@ class TangoSourceTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
+            self.__seed  = int(time.time() * 256) # use fractional seconds
          
         self.__rnd = random.Random(self.__seed)
 

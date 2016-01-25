@@ -59,10 +59,10 @@ class SimpleServerSetUp(object):
             'DeviceUShort':1,
             'DeviceULong':23234,
             'DeviceString':"My Sting"
-            }
+        }
 
         ##  class properties
-	self.class_prop = {
+        self.class_prop = {
             'ClassBoolean':True,
             'ClassShort':1,
             'ClassLong':-123555,
@@ -71,7 +71,7 @@ class SimpleServerSetUp(object):
             'ClassUShort':1,
             'ClassULong':12343,
             'ClassString':"My ClassString",
-            }
+        }
         
 
     ## test starter

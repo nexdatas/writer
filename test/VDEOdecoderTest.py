@@ -62,9 +62,9 @@ class VDEOdecoderTest(unittest.TestCase):
 
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = int(time.time() * 256) 
          
         self.__rnd = random.Random(self.__seed)
 
@@ -80,7 +80,7 @@ class VDEOdecoderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width,height  = image.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = ord(str(struct.pack('=H', 1)[-1]))
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1, 
                              width,  height, endian, hsize, 0, 0)

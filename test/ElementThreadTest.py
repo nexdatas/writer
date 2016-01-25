@@ -27,7 +27,7 @@ import random
 import struct
 import binascii
 import time
-import Queue
+import queue
 from threading import Thread
 
 from nxswriter.ElementThread import ElementThread
@@ -97,10 +97,10 @@ class ElementThreadTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
+            self.__seed  = int(time.time() * 256) # use fractional seconds
          
         self.__rnd = random.Random(self.__seed)
 
@@ -139,7 +139,7 @@ class ElementThreadTest(unittest.TestCase):
 
 
         index = self.__rnd.randint(1, 1000)
-        elementQueue = Queue.Queue()
+        elementQueue = queue.Queue()
 
         el = ElementThread(index, elementQueue)
         self.assertEqual(el.index,index)
@@ -149,7 +149,7 @@ class ElementThreadTest(unittest.TestCase):
         jlist = [ WJob() for c in range(self.__rnd.randint(1, 20))]
 
         index = self.__rnd.randint(1, 1000)
-        elementQueue = Queue.Queue()
+        elementQueue = queue.Queue()
 
         for eth in jlist:
             elementQueue.put(eth)
@@ -170,7 +170,7 @@ class ElementThreadTest(unittest.TestCase):
         jlist = [ Job() for c in range(self.__rnd.randint(1, 20))]
 
         index = self.__rnd.randint(1, 1000)
-        elementQueue = Queue.Queue()
+        elementQueue = queue.Queue()
 
         for eth in jlist:
             elementQueue.put(eth)
@@ -193,7 +193,7 @@ class ElementThreadTest(unittest.TestCase):
         jlist = [ EJob() for c in range(self.__rnd.randint(1, 20))]
 
         index = self.__rnd.randint(1, 1000)
-        elementQueue = Queue.Queue()
+        elementQueue = queue.Queue()
 
         for eth in jlist:
             elementQueue.put(eth)

@@ -138,15 +138,15 @@ class DBaseSource(DataSource):
     def __connectMYSQL(self):
         args = {}
         if self.mycnf:
-            args["read_default_file"] = self.mycnf.encode()
+            args["read_default_file"] = self.mycnf
         if self.dbname:
-            args["db"] = self.dbname.encode()
+            args["db"] = self.dbname
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["passwd"] = self.passwd.encode()
+            args["passwd"] = self.passwd
         if self.hostname:
-            args["host"] = self.hostname.encode()
+            args["host"] = self.hostname
         if self.port:
             args["port"] = int(self.port)
         return MySQLdb.connect(**args)
@@ -157,13 +157,13 @@ class DBaseSource(DataSource):
         args = {}
 
         if self.dbname:
-            args["database"] = self.dbname.encode()
+            args["database"] = self.dbname
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["password"] = self.passwd.encode()
+            args["password"] = self.passwd
         if self.hostname:
-            args["host"] = self.hostname.encode()
+            args["host"] = self.hostname
         if self.port:
             args["port"] = int(self.port)
 
@@ -174,13 +174,13 @@ class DBaseSource(DataSource):
     def __connectORACLE(self):
         args = {}
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["password"] = self.passwd.encode()
+            args["password"] = self.passwd
         if self.dsn:
-            args["dsn"] = self.dsn.encode()
+            args["dsn"] = self.dsn
         if self.mode:
-            args["mode"] = self.mode.encode()
+            args["mode"] = self.mode
 
         return cx_Oracle.connect(**args)
 

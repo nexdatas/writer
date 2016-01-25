@@ -31,7 +31,7 @@ class Converters(object):
     # \returns result in bool type
     @classmethod
     def toBool(cls, value):
-        if type(value).__name__ == 'str' or type(value).__name__ == 'unicode':
+        if type(value).__name__ == 'str':
             lvalue = value.strip().lower()
             if lvalue == 'false' or lvalue == '0':
                 return False

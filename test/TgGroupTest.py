@@ -31,7 +31,7 @@ import PyTango
 import binascii
 import time
 import json
-
+import _thread
 
 import SimpleServerSetUp
 
@@ -50,7 +50,6 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter import DataSources
 
 import threading
-import thread
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -90,10 +89,10 @@ class TgGroupTest(unittest.TestCase):
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
+            self.__seed  = int(time.time() * 256) # use fractional seconds
          
         self.__rnd = random.Random(self.__seed)
 
@@ -139,13 +138,13 @@ class TgGroupTest(unittest.TestCase):
         gr = TgGroup()
         self.assertEqual(gr.counter, 0)
         self.assertEqual(gr.devices, {})
-        self.assertEqual(type(gr.lock),thread.LockType)
+        self.assertEqual(type(gr.lock),_thread.LockType)
 
 
         gr = TgGroup(counter)
         self.assertEqual(gr.counter, counter)
         self.assertEqual(gr.devices, {})
-        self.assertEqual(type(gr.lock),thread.LockType)
+        self.assertEqual(type(gr.lock),_thread.LockType)
 
 
 
@@ -160,7 +159,7 @@ class TgGroupTest(unittest.TestCase):
         gr = TgGroup(counter)
         self.assertEqual(gr.counter, counter)
         self.assertEqual(gr.devices, {})
-        self.assertEqual(type(gr.lock),thread.LockType)
+        self.assertEqual(type(gr.lock),_thread.LockType)
 
         name1 ="device%s" % self.__rnd.randint(1, 9)
         dv1 = gr.getDevice(name1)
@@ -256,7 +255,7 @@ class TgGroupTest(unittest.TestCase):
             "ScalarLong64":[ "int64", "DevLong64", 214],
             "ScalarULong64":[ "uint64", "DevULong64", 244465],
             "ScalarFloat":[ "float32", "DevFloat", 11.123, 1e-5],
-            "ScalarDouble":[ "float64", "DevDouble", -1.414532+02,1e-14],
+            "ScalarDouble":[ "float64", "DevDouble", -1.414532e+02,1e-14],
             "ScalarString":[ "string", "DevString", "MyFalse"],
             }
 

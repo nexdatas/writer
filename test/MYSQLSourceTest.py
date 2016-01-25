@@ -62,10 +62,10 @@ class MYSQLSourceTest(unittest.TestCase):
         self.__mycnf  = '/etc/my.cnf'
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
+            self.__seed  = int(time.time() * 256) # use fractional seconds
          
         self.__rnd = random.Random(self.__seed)
 

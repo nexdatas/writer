@@ -27,7 +27,8 @@ import random
 import struct
 import binascii
 import string
-from cStringIO import StringIO
+
+from io import StringIO
 
 from nxswriter import Streams
 
@@ -43,9 +44,9 @@ class StreamsTest(unittest.TestCase):
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
         try:
-            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed = long(time.time() * 256)
+            self.__seed = int(time.time() * 256)
 
         self.__rnd = random.Random(self.__seed)
 

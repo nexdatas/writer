@@ -30,7 +30,7 @@ import numpy
 from xml.dom import minidom
 
 import nxswriter
-import thread
+import _thread
 
 from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.DataSources import DataSource
@@ -184,7 +184,7 @@ class DataSourcePoolTest(unittest.TestCase):
         el = DataSourcePool()
         self.assertEqual(el.common,{})
         self.assertEqual(el.counter,0)
-        self.assertEqual(type(el.lock),thread.LockType)
+        self.assertEqual(type(el.lock),_thread.LockType)
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))

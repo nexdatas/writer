@@ -132,24 +132,24 @@ class EField(FElementWithAttr):
             if shape:
                 if not chunk:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape, [],
+                        name, dtype, shape, [],
                         deflate)
                 elif self.canfail:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape, chunk,
+                        name, dtype, shape, chunk,
                         deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), minshape or [1], chunk,
+                        name, dtype, minshape or [1], chunk,
                         deflate)
             else:
                 mshape = [1] if self.strategy in ['INIT', 'FINAL'] else [0]
                 if deflate:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), mshape, [1], deflate)
+                        name, dtype, mshape, [1], deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), mshape, [1])
+                        name, dtype, mshape, [1])
         except:
             info = sys.exc_info()
             import traceback
@@ -158,12 +158,12 @@ class EField(FElementWithAttr):
             Streams.error(
                 "EField::__createObject() - "
                 "The field '%s' of '%s' type cannot be created: %s" %
-                (name.encode(), dtype.encode(), message),
+                (name, dtype, message),
                 std=False)
 
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
-                (name.encode(), dtype.encode(), message))
+                (name, dtype, message))
         return f
 
     ## creates attributes
@@ -173,23 +173,23 @@ class EField(FElementWithAttr):
             if key not in ["name"]:
                 if key in NTP.aTn.keys():
                     h5att = self.h5Object.attributes.create(
-                        key.encode(),
-                        NTP.nTnp[NTP.aTn[key]].encode(),
+                        key,
+                        NTP.nTnp[NTP.aTn[key]],
                         overwrite=True
                     )
                     if hasattr(self._tagAttrs[key], "encode"):
                         try:
                             h5att[...] = NTP.convert[
                                 str(self.h5Object.attributes[
-                                    key.encode()].dtype)
-                            ](self._tagAttrs[key].strip().encode())
+                                    key].dtype)
+                            ](self._tagAttrs[key].strip())
                         except:
-                            h5att[...] = self._tagAttrs[key].strip().encode()
+                            h5att[...] = self._tagAttrs[key].strip()
                     else:
                         try:
                             h5att[...] = NTP.convert[
                                 str(self.h5Object.attributes[
-                                    key.encode()].dtype)
+                                    key].dtype)
                             ](self._tagAttrs[key])
                         except:
                             h5att[...] = self._tagAttrs[key]
@@ -197,23 +197,23 @@ class EField(FElementWithAttr):
                 elif key in NTP.aTnv.keys():
                     shape = (len(self._tagAttrs[key]),)
                     self.h5Object.attributes.create(
-                        key.encode(),
-                        NTP.nTnp[NTP.aTnv[key]].encode(),
+                        key,
+                        NTP.nTnp[NTP.aTnv[key]],
                         shape,
                         overwrite=True
                     )[...] = numpy.array(self._tagAttrs[key])
                 else:
                     self.h5Object.attributes.create(
-                        key.encode(), "string", overwrite=True)[...] \
-                        = self._tagAttrs[key].strip().encode()
+                        key, "string", overwrite=True)[...] \
+                        = self._tagAttrs[key].strip()
 
         self._createAttributes()
 
         if self.strategy == "POSTRUN":
             self.h5Object.attributes.create(
-                "postrun".encode(),
-                "string".encode(), overwrite=True)[...] \
-                = self.postrun.encode().strip()
+                "postrun",
+                "string", overwrite=True)[...] \
+                = self.postrun.strip()
 
     ## provides strategy or fill the value in
     # \param name object name
@@ -223,7 +223,7 @@ class EField(FElementWithAttr):
             if self.source.isValid():
                 return self.strategy, self.trigger
         else:
-            val = ("".join(self.content)).strip().encode()
+            val = ("".join(self.content)).strip()
             if val:
                 dh = self._setValue(int(self.rank), val)
                 self.__growshape(dh.shape)

@@ -186,10 +186,10 @@ class TangoSource(DataSource):
                 "Tango device name not defined: %s" % xml)
 
         if hostname and port and device:
-            self.device = "%s:%s/%s" % (hostname.encode(),
-                                        port.encode(), device.encode())
+            self.device = "%s:%s/%s" % (hostname,
+                                        port, device)
         elif device:
-            self.device = "%s" % (device.encode())
+            self.device = "%s" % (device)
 
         self.__proxy = ProxyTools.proxySetup(self.device)
 
@@ -205,10 +205,10 @@ class TangoSource(DataSource):
             try:
                 host = self.__proxy.get_db_host().split(".")[0]
             except:
-                host = hostname.encode().split(".")[0]
+                host = hostname.split(".")[0]
             self.client = "%s:%s/%s/%s" % (
-                host, port.encode(),
-                device.encode(), name.lower()
+                host, port,
+                device, name.lower()
             )
 
     ## sets the used decoders
@@ -333,7 +333,7 @@ class TgGroup(object):
 
         errors = []
         for a in attr:
-            if a.encode().lower() not in alist:
+            if a.lower() not in alist:
                 errors.append((a, device.device))
         if errors:
             Streams.error(
@@ -360,7 +360,7 @@ class TgGroup(object):
         alist = proxy.get_attribute_list()
         alist = [a.lower() for a in alist]
         if member.name.lower() in alist:
-            da = proxy.read_attribute(member.name.encode())
+            da = proxy.read_attribute(member.name)
             member.setData(da)
 
     ## fetches property data for given member
@@ -370,9 +370,9 @@ class TgGroup(object):
     def __fetchProperty(cls, proxy, member):
         plist = proxy.get_property_list('*')
         plist = [a.lower() for a in plist]
-        if member.name.encode().lower() in plist:
+        if member.name.lower() in plist:
             da = proxy.get_property(
-                member.name.encode())[member.name.encode()]
+                member.name)[member.name]
             member.setData(da)
 
     ## fetches command data for given member
@@ -383,9 +383,9 @@ class TgGroup(object):
         clist = [cm.cmd_name
                  for cm in proxy.command_list_query()]
         clist = [a.lower() for a in clist]
-        if member.name.encode().lower() in clist:
-            cd = proxy.command_query(member.name.encode())
-            da = proxy.command_inout(member.name.encode())
+        if member.name.lower() in clist:
+            cd = proxy.command_query(member.name)
+            da = proxy.command_inout(member.name)
             member.setData(da, cd)
 
     ## reads data from device proxy
@@ -465,11 +465,11 @@ class TgDevice(object):
     # \param member given tango device member
     def __setFlag(self, member):
         if member.memberType == 'attribute':
-            self.attributes.append(member.name.encode())
+            self.attributes.append(member.name)
         elif member.memberType == 'property':
-            self.properties.append(member.name.encode())
+            self.properties.append(member.name)
         elif member.memberType == 'command':
-            self.commands.append(member.name.encode())
+            self.commands.append(member.name)
 
 
 ## tango device member
@@ -578,17 +578,17 @@ class TgMember(object):
         if self.memberType == "attribute":
             alist = proxy.get_attribute_list()
             alist = [a.lower() for a in alist]
-            if self.name.encode().lower() in alist:
-                self.__da = proxy.read_attribute(self.name.encode())
+            if self.name.lower() in alist:
+                self.__da = proxy.read_attribute(self.name)
         elif self.memberType == "property":
             plist = proxy.get_property_list('*')
             plist = [a.lower() for a in plist]
-            if self.name.encode().lower() in plist:
+            if self.name.lower() in plist:
                 self.__da = proxy.get_property(
-                    self.name.encode())[self.name.encode()]
+                    self.name)[self.name]
         elif self.memberType == "command":
             clist = [cm.cmd_name for cm in proxy.command_list_query()]
             clist = [a.lower() for a in clist]
-            if self.name.encode().lower() in clist:
-                self.__cd = proxy.command_query(self.name.encode())
-                self.__da = proxy.command_inout(self.name.encode())
+            if self.name.lower() in clist:
+                self.__cd = proxy.command_query(self.name)
+                self.__da = proxy.command_inout(self.name)

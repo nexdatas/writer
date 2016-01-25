@@ -27,7 +27,7 @@ import random
 import struct
 import binascii
 import time
-import Queue
+import queue
 import json
 
 from xml import sax
@@ -35,11 +35,7 @@ from xml import sax
 from nxswriter.InnerXMLParser import InnerXMLHandler
 from nxswriter.Errors import XMLSyntaxError
 
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from io import StringIO
 
 
 ## if 64-bit machione
@@ -104,7 +100,7 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.xml,None)
         
         inpsrc = sax.InputSource()
-        inpsrc.setByteStream(StringIO('<device> Something</device>'))
+        inpsrc.setByteStream(BytesIO('<device> Something</device>'))
         parser.parse(inpsrc)
 
         self.assertEqual(parser.getContentHandler(),el)

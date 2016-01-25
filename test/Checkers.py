@@ -47,10 +47,10 @@ class Checker(object):
 
         try:
             ## random seed
-            self.seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.seed  = long(time.time() * 256) # use fractional seconds
+            self.seed  = int(time.time() * 256) # use fractional seconds
 #        self.seed = 113927724434234094860192629108901591122
         self.__rnd = random.Random(self.seed)
 

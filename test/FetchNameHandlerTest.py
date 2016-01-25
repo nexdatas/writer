@@ -27,7 +27,7 @@ import random
 import struct
 import binascii
 import time
-import Queue
+import queue
 import json
 
 from xml import sax

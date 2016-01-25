@@ -147,7 +147,7 @@ class FElement(Element):
                 if extraD:
                     shape.insert(exDim - 1, 0)
             except:
-                val = ("".join(self.content)).strip().encode()
+                val = ("".join(self.content)).strip()
                 found = False
                 if checkData and self.source and self.source.isValid():
                     data = self.source.getData()
@@ -248,35 +248,35 @@ class FElementWithAttr(FElement):
         for key in self.tagAttributes.keys():
             if key not in ["name", "type"]:
                 if len(self.tagAttributes[key]) < 3:
-                    if key.encode() not in self.__h5Instances:
-                        self.__h5Instances[key.encode()] \
+                    if key not in self.__h5Instances:
+                        self.__h5Instances[key] \
                             = self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[self.tagAttributes[key][0]].encode())
+                                key,
+                                NTP.nTnp[self.tagAttributes[key][0]])
                     dh = DataHolder(
-                        "SCALAR", self.tagAttributes[key][1].strip().encode(),
+                        "SCALAR", self.tagAttributes[key][1].strip(),
                         "DevString", [1, 0])
-                    self.__h5Instances[key.encode()][...] = \
-                        dh.cast(self.__h5Instances[key.encode()].dtype)
+                    self.__h5Instances[key][...] = \
+                        dh.cast(self.__h5Instances[key].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
-                    if key.encode() not in self.__h5Instances:
-                        self.__h5Instances[key.encode()] \
+                    if key not in self.__h5Instances:
+                        self.__h5Instances[key] \
                             = self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[self.tagAttributes[key][0]].encode(),
+                                key,
+                                NTP.nTnp[self.tagAttributes[key][0]],
                                 shape)
-                    val = self.tagAttributes[key][1].strip().encode()
+                    val = self.tagAttributes[key][1].strip()
                     if val:
                         rank = len(shape)
-                        hsp = self.__h5Instances[key.encode()].shape
+                        hsp = self.__h5Instances[key].shape
                         if hsp and set(hsp) == set([1]) and \
-                           self.__h5Instances[key.encode()].dtype == 'string':
+                           self.__h5Instances[key].dtype == 'string':
                             dh = self._setValue(0, val)
                         else:
                             dh = self._setValue(rank, val)
-                        self.__h5Instances[key.encode()][...] = dh.cast(
-                            self.__h5Instances[key.encode()].dtype)
+                        self.__h5Instances[key][...] = dh.cast(
+                            self.__h5Instances[key].dtype)
 
     ## provides attribute h5 object
     # \param name attribute name

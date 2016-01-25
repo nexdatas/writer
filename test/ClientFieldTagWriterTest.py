@@ -54,11 +54,11 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         try:
             # random seed
-            self.seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.seed  = int(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
             ## random seed
-            self.seed  = long(time.time() * 256) # use fractional seconds
+            self.seed  = int(time.time() * 256) # use fractional seconds
 #        self.seed = 53867028435352363366241944565880343254
         self.__rnd = random.Random(self.seed)
 
