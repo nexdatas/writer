@@ -1592,7 +1592,7 @@ class EFieldTest(unittest.TestCase):
             el[k].store() 
             at = el[k].h5Object.attributes[k]
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                            attrs[k][3] if len(attrs[k])>3 else 0)
+                                            attrs[k][4] if len(attrs[k])>4 else 0)
 #            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
 #                                            attrs[k][3] if len(attrs[k])>3 else 0)
 
@@ -1676,7 +1676,7 @@ class EFieldTest(unittest.TestCase):
             at = el[k].h5Object.attributes[k]
 
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0] , 
-                                            attrs[k][3] if len(attrs[k])>3 else 0)
+                                            attrs[k][4] if len(attrs[k])>4 else 0)
 
 
         self._nxFile.close()
