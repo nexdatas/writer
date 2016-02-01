@@ -579,7 +579,6 @@ class TgMember(object):
             alist = proxy.get_attribute_list()
             alist = [a.lower() for a in alist]
             if self.name.lower() in alist:
-                print("NAME %s %s" % (self.name, type(self.name)))
                 self.__da = proxy.read_attribute(self.name)
         elif self.memberType == "property":
             plist = proxy.get_property_list('*')

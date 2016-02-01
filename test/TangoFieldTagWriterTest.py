@@ -328,7 +328,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             self._simps.dp.ScalarFloat = self._fcounter[i]
             self._simps.dp.ScalarDouble = self._dcounter[i]
             self._simps.dp.ScalarString = self._bools[i]
-            self._simps.dp.ScalarULong64 =long(abs(self._counter[i]))
+            self._simps.dp.ScalarULong64 =int(abs(self._counter[i]))
             self.record(tdw,'{}')
 #            self._fcounter[i] = self._simps.dp.ScalarFloat
 #            self._dcounter[i] = self._simps.dp.ScalarDouble
@@ -546,7 +546,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
                 self._simps.dp.ScalarFloat = self._fcounter[i]
                 self._simps.dp.ScalarDouble = self._dcounter[i]
                 self._simps.dp.ScalarString = self._bools[i]
-                self._simps.dp.ScalarULong64 =long(abs(self._counter[i]))
+                self._simps.dp.ScalarULong64 =int(abs(self._counter[i]))
             else:
                 self._simps.tearDown()
 

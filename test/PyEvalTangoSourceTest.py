@@ -213,7 +213,7 @@ class PyEvalTangoSourceTest(unittest.TestCase):
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 62,"DevLong64",[])
 
-        dp = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        dp = DataSourcePool(json.loads('{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -274,10 +274,10 @@ try:
     print("BNB")
 except:
     try:
-       ds.res = unicode(ds.inp) + unicode(ds.inp2)
+       ds.res = str(ds.inp) + str(ds.inp2)
     except:
         try:
-            ds.res = str(unicode(ds.inp))+ ds.inp2
+            ds.res = str(str(ds.inp))+ ds.inp2
         except:
             ds.res = ds.inp2
 
@@ -358,9 +358,9 @@ except:
                 except:
                     error = 0
                     try:
-                        vv = unicode(v1)+ unicode(v2)
+                        vv = str(v1)+ str(v2)
                     except:
-                        vv = str(unicode(v1)) + v2
+                        vv = str(str(v1)) + v2
                 self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3], error = error)
 
 
@@ -399,10 +399,10 @@ except:
                     vv = v1 + v2
                 except:
                     try:
-                        vv = unicode(v1)+ unicode(v2)
+                        vv = str(v1)+ str(v2)
                     except:
                         try:
-                            vv = str(unicode(v1)) + v2
+                            vv = str(str(v1)) + v2
                         except:
                             vv = v2
 
@@ -424,10 +424,10 @@ except:
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
-if type(ds.inp[0]) == type(ds.inp2[0]):
+if type(ds.inp[0]) == type(ds.inp2[0]) and type(ds.inp) == type(ds.inp2):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
+    ds.res = [str(i) for i in ds.inp] + [str(i2) for i2 in ds.inp2]
 """
 
         dsp = DataSourcePool()
@@ -530,7 +530,7 @@ else:
                     vv = v1 + v2
                     error = ( arr[k2][4] if len(arr[k2])>4 else 0)
                 else:
-                    vv = [unicode(i) for i in v1] + [unicode(i2) for i2 in v2]
+                    vv = [str(i) for i in v1] + [str(i2) for i2 in v2]
                     error = 0
                 shape = [len(vv)]
                 self.checkData(dt, carr[k][1], vv, NTP.pTt[type(vv[0]).__name__], shape,error=error)
@@ -547,10 +547,10 @@ else:
 
 
         script = """
-if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
+if type(ds.inp[0][0]) == type(ds.inp2[0][0]) and type(ds.inp[0]) == type(ds.inp2[0]):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[str(j) for j in i] for i in ds.inp] + [[str(j2) for j2 in i2] for i2 in ds.inp2]
 """
         dsp = DataSourcePool()
         dcp = DecoderPool()
@@ -649,7 +649,7 @@ else:
                     vv = v1 + v2
                     error = ( arr[k2][4] if len(arr[k2])>4 else 0)
                 else:
-                    vv = [[unicode(j) for j in i] for i in v1] + [[unicode(j2) for j2 in i2] for i2 in v2]
+                    vv = [[str(j) for j in i] for i in v1] + [[str(j2) for j2 in i2] for i2 in v2]
                     error = 0
                 shape = [len(vv),len(vv[0])]
                 self.checkData(dt, carr[k][1], vv, NTP.pTt[type(vv[0][0]).__name__], shape,error=error)
@@ -660,7 +660,7 @@ else:
 
     ## isValid test
     # \brief It tests default settings
-    def ttest_isValid(self):
+    def test_isValid(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -747,7 +747,7 @@ ds.res = commonblock["myres"]
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 62,"DevLong64",[])
 
-        dp = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        dp = DataSourcePool(json.loads('{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -825,10 +825,10 @@ try:
     print("BNB")
 except:
     try:
-       ds.res = unicode(ds.inp) + unicode(ds.inp2)
+       ds.res = str(ds.inp) + str(ds.inp2)
     except:
         try:
-            ds.res = str(unicode(ds.inp))+ ds.inp2
+            ds.res = str(str(ds.inp))+ ds.inp2
         except:
             ds.res = ds.inp2
 commonblock["myres"] = ds.res
@@ -910,9 +910,9 @@ commonblock["myres"] = ds.res
                 except:
                     error = 0
                     try:
-                        vv = unicode(v1)+ unicode(v2)
+                        vv = str(v1)+ str(v2)
                     except:
-                        vv = str(unicode(v1)) + v2
+                        vv = str(str(v1)) + v2
                 self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3], error = error)
 
 
@@ -966,10 +966,10 @@ commonblock["myres"] = ds.res
                     vv = v1 + v2
                 except:
                     try:
-                        vv = unicode(v1)+ unicode(v2)
+                        vv = str(v1)+ str(v2)
                     except:
                         try:
-                            vv = str(unicode(v1)) + v2
+                            vv = str(str(v1)) + v2
                         except:
                             vv = v2
 
@@ -1010,10 +1010,10 @@ commonblock["myres"] = ds.res
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
-if type(ds.inp[0]) == type(ds.inp2[0]):
+if type(ds.inp[0]) == type(ds.inp2[0]) and type(ds.inp) == type(ds.inp2):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
+    ds.res = [str(i) for i in ds.inp] + [str(i2) for i2 in ds.inp2]
 commonblock["my1res"] = ds.res
 """
 
@@ -1118,7 +1118,7 @@ commonblock["my1res"] = ds.res
                     vv = v1 + v2
                     error = ( arr[k2][4] if len(arr[k2])>4 else 0)
                 else:
-                    vv = [unicode(i) for i in v1] + [unicode(i2) for i2 in v2]
+                    vv = [str(i) for i in v1] + [str(i2) for i2 in v2]
                     error = 0
                 shape = [len(vv)]
                 self.checkData(dt, carr[k][1], vv, NTP.pTt[type(vv[0]).__name__], shape,error=error)
@@ -1153,10 +1153,10 @@ commonblock["my1res"] = ds.res
 
 
         script = """
-if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
+if type(ds.inp[0][0]) == type(ds.inp2[0][0]) and type(ds.inp[0]) == type(ds.inp2[0]):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[str(j) for j in i] for i in ds.inp] + [[str(j2) for j2 in i2] for i2 in ds.inp2]
 commonblock["myre3"] = ds.res
 """
         script2 = 'ds.res2 = commonblock["myre3"]'
@@ -1257,7 +1257,7 @@ commonblock["myre3"] = ds.res
                     vv = v1 + v2
                     error = ( arr[k2][4] if len(arr[k2])>4 else 0)
                 else:
-                    vv = [[unicode(j) for j in i] for i in v1] + [[unicode(j2) for j2 in i2] for i2 in v2]
+                    vv = [[str(j) for j in i] for i in v1] + [[str(j2) for j2 in i2] for i2 in v2]
                     error = 0
                 shape = [len(vv),len(vv[0])]
                 self.checkData(dt, carr[k][1], vv, NTP.pTt[type(vv[0][0]).__name__], shape,error=error)

@@ -198,7 +198,7 @@ class MYSQLSourceTest(unittest.TestCase):
         ds.dbname = self.__dbname
         dt = ds.getData()
 
-        self.checkData(dt,'SPECTRUM',[long(scalar)], 'DevLong64',[1,0])
+        self.checkData(dt,'SPECTRUM',[int(scalar)], 'DevLong64',[1,0])
         
 
     ## setup test

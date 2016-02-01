@@ -132,7 +132,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_constructor_default(self):
+    def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -149,7 +149,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## __str__ test
     # \brief It tests default settings
-    def ttest_str_default(self):
+    def test_str_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -230,7 +230,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## setup test
     # \brief It tests default settings
-    def ttest_setup_default(self):
+    def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -368,7 +368,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## setup test
     # \brief It tests default settings
-    def ttest_setup_client_default(self):
+    def test_setup_client_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -517,7 +517,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_client_default(self):
+    def test_getData_client_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -543,7 +543,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_default(self):
+    def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -579,7 +579,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_setDataSources_default(self):
+    def test_setDataSources_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -661,7 +661,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_scalar(self):
+    def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -855,7 +855,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_client_scalar_tango(self):
+    def test_getData_client_scalar_tango(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -994,7 +994,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_scalar_tl(self):
+    def test_getData_scalar_tl(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1055,7 +1055,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_scalar_group(self):
+    def test_getData_scalar_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1183,7 +1183,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_scalar_group_tl(self):
+    def test_getData_scalar_group_tl(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1311,7 +1311,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_scalar_group_noorder(self):
+    def test_getData_scalar_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1440,7 +1440,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_spectrum(self):
+    def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1483,7 +1483,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_client_spectrum(self):
+    def test_getData_client_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1622,7 +1622,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_spectrum_group(self):
+    def test_getData_spectrum_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1748,7 +1748,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_spectrum_group_noorder(self):
+    def test_getData_spectrum_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1874,7 +1874,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_image(self):
+    def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1926,7 +1926,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_client_image(self):
+    def test_getData_client_image(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2127,7 +2127,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_image_group(self):
+    def test_getData_image_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2261,7 +2261,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_image_group_noorder(self):
+    def test_getData_image_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2395,7 +2395,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_command(self):
+    def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2432,7 +2432,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_command_lt(self):
+    def test_getData_command_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2471,7 +2471,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_command_group(self):
+    def test_getData_command_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2584,7 +2584,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_command_group_lt(self):
+    def test_getData_command_group_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2696,7 +2696,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_command_group_noorder(self):
+    def test_getData_command_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2809,7 +2809,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_dev_prop_group(self):
+    def test_getData_dev_prop_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2847,13 +2847,13 @@ class TangoSourceTest(unittest.TestCase):
             "DeviceString":["ScalarString", "string", "DevString", "M11rue"],
             }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
 
 
-        prop = self._simps2.dp.get_property(arrb.keys())
+        prop = self._simps2.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps2.dp.put_property(prop)
@@ -2887,14 +2887,14 @@ class TangoSourceTest(unittest.TestCase):
         dt = el[k].getData()
         dt = el2[k].getData()
 
-        prop = self._simps.dp.get_property(arrb.keys())
+        prop = self._simps.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
 
 
-        prop = self._simps2.dp.get_property(arr.keys())
+        prop = self._simps2.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps2.dp.put_property(prop)
@@ -2930,7 +2930,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_dev_prop_group_lt(self):
+    def test_getData_dev_prop_group_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2968,13 +2968,13 @@ class TangoSourceTest(unittest.TestCase):
             "DeviceString":["ScalarString", "string", "DevString", "M11rue"],
             }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
 
 
-        prop = self._simps2.dp.get_property(arrb.keys())
+        prop = self._simps2.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3008,14 +3008,14 @@ class TangoSourceTest(unittest.TestCase):
         dt = el[k].getData()
         dt = el2[k].getData()
 
-        prop = self._simps.dp.get_property(arrb.keys())
+        prop = self._simps.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
 
 
-        prop = self._simps2.dp.get_property(arr.keys())
+        prop = self._simps2.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3052,7 +3052,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_dev_prop_group_noorder(self):
+    def test_getData_dev_prop_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3090,13 +3090,13 @@ class TangoSourceTest(unittest.TestCase):
             "DeviceString":["ScalarString", "string", "DevString", "M11rue"],
             }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
 
 
-        prop = self._simps2.dp.get_property(arrb.keys())
+        prop = self._simps2.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3132,14 +3132,14 @@ class TangoSourceTest(unittest.TestCase):
         dt = el[k].getData()
         dt = el2[k].getData()
 
-        prop = self._simps.dp.get_property(arrb.keys())
+        prop = self._simps.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
 
 
-        prop = self._simps2.dp.get_property(arr.keys())
+        prop = self._simps2.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3180,7 +3180,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_dev_prop(self):
+    def test_getData_dev_prop(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3219,7 +3219,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def ttest_getData_dev_prop_lt(self):
+    def test_getData_dev_prop_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3258,7 +3258,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## isValid test
     # \brief It tests default settings
-    def ttest_isValid(self):
+    def test_isValid(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3273,7 +3273,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def ttest_setDecoders_default(self):
+    def test_setDecoders_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
