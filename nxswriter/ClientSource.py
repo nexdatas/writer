@@ -44,7 +44,7 @@ class ClientSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-        dom = minidom.parseString(xml)
+        dom = minidom.parseString(bytes(xml, "UTF-8"))
         rec = dom.getElementsByTagName("record")
         if rec and len(rec) > 0:
             self.name = rec[0].getAttribute("name") \

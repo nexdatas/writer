@@ -1592,7 +1592,7 @@ class EFieldTest(unittest.TestCase):
             el[k].store() 
             at = el[k].h5Object.attributes[k]
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
-                                            attrs[k][3] if len(attrs[k])>3 else 0)
+                                            attrs[k][4] if len(attrs[k])>4 else 0)
 #            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]] , 
 #                                            attrs[k][3] if len(attrs[k])>3 else 0)
 
@@ -1676,7 +1676,7 @@ class EFieldTest(unittest.TestCase):
             at = el[k].h5Object.attributes[k]
 
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0] , 
-                                            attrs[k][3] if len(attrs[k])>3 else 0)
+                                            attrs[k][4] if len(attrs[k])>4 else 0)
 
 
         self._nxFile.close()
@@ -1950,11 +1950,11 @@ class EFieldTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0)
+                                               attrs[k][4] if len(attrs[k])> 4 else 0)
             else:
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                               attrs[k][4] if len(attrs[k])> 4 else 0, 
                                                attrs = {"type":attrs[k][1],"units":"", "postrun":None}
                                                )
             
@@ -2052,11 +2052,11 @@ class EFieldTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0)
+                                               attrs[k][4] if len(attrs[k])> 4 else 0)
             else:
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0, 
+                                               attrs[k][4] if len(attrs[k])> 4 else 0, 
                                                attrs = {"type":attrs[k][1],"units":"", "postrun":None}
                                                )
             
@@ -2385,7 +2385,7 @@ class EFieldTest(unittest.TestCase):
         quin = 0
         quot = 0
 
-        for k in attrs: 
+        for k in attrs:
             quot = (quot + 1) %4
             grow = quot-1  if quot else  None
             quin = (quin+1) % 5 
@@ -3120,7 +3120,7 @@ class EFieldTest(unittest.TestCase):
                                             )
             else:
                 
-                if grow>1:
+                if grow and grow>1:
                     val = [[a[0] for a  in attrs[k][0]]] 
                 else:
                     val = attrs[k][0]
@@ -3254,7 +3254,7 @@ class EFieldTest(unittest.TestCase):
                                             )
             else:
                 
-                if grow>1:
+                if grow and grow > 1:
                     val = [[a[0] for a  in attrs[k][0]]] 
                 else:
                     val = attrs[k][0]
@@ -3874,7 +3874,7 @@ class EFieldTest(unittest.TestCase):
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
     
 
@@ -4380,7 +4380,7 @@ class EFieldTest(unittest.TestCase):
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             
@@ -4871,7 +4871,7 @@ class EFieldTest(unittest.TestCase):
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
 
@@ -5364,7 +5364,7 @@ class EFieldTest(unittest.TestCase):
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                     
 #            self.myAssertRaise(ValueError, el[k].store)
@@ -5851,7 +5851,7 @@ class EFieldTest(unittest.TestCase):
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                     
 

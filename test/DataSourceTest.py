@@ -194,23 +194,23 @@ class DataSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         self.myAssertRaise(AttributeError,el._getText, None) 
 
-        dom = minidom.parseString("<tag/>")
+        dom = minidom.parseString(bytes("<tag/>", "utf-8"))
         node = dom.getElementsByTagName("tag")
         self.assertEqual(el._getText(node[0]).strip(),'') 
 
         text = "My test \n text"
-        dom = minidom.parseString("<tag> %s</tag>" % text)
+        dom = minidom.parseString(bytes("<tag> %s</tag>" % text, "utf-8"))
         node = dom.getElementsByTagName("tag")
         self.assertEqual(el._getText(node[0]).strip(),text) 
 
 
         text = "My test text"
-        dom = minidom.parseString("<node> %s</node>" % text)
+        dom = minidom.parseString(bytes("<node> %s</node>" % text, "utf-8"))
         node = dom.getElementsByTagName("node")
         self.assertEqual(el._getText(node[0]).strip(),text) 
 
 
-        dom = minidom.parseString("<node></node>" )
+        dom = minidom.parseString(bytes("<node></node>", "utf-8"))
         node = dom.getElementsByTagName("node")
         self.assertEqual(el._getText(node[0]).strip(),'') 
 

@@ -33,13 +33,15 @@ class ServerSetUp(object):
 
     ## constructor
     # \brief defines server parameters
-    def __init__(self, device = "testp09/testtdw/testr228", instance = "TDWTEST"):
+    def __init__(self, device = "testp09/testtdw/testr228",
+                 instance = "TDWTEST"):
         ## information about tango writer
         self.instance = instance
         self.device = device
         self.new_device_info_writer = PyTango.DbDevInfo()
         self.new_device_info_writer._class = "NXSDataWriter"
-        self.new_device_info_writer.server = "NXSDataWriter/%s" % self.instance
+        self.new_device_info_writer.server \
+            = "NXSDataWriter/%s" % self.instance
         self.new_device_info_writer.name = device
 
         self._psub = None
@@ -52,18 +54,20 @@ class ServerSetUp(object):
         print("tearing down ...")
         db = PyTango.Database()
         db.add_device(self.new_device_info_writer)
-        db.add_server(self.new_device_info_writer.server, self.new_device_info_writer)
-        
+        db.add_server(
+            self.new_device_info_writer.server,
+            self.new_device_info_writer)
+
         if os.path.isfile("../NXSDataWriter"):
             self._psub = subprocess.call(
-                "cd ..; ./NXSDataWriter %s &" % self.instance, stdout =  None, 
-                stderr =  None,  shell= True)
+                "cd ..; ./NXSDataWriter %s &" % self.instance,
+                stdout = None, stderr = None, shell= True)
         else:
             self._psub = subprocess.call(
-                "NXSDataWriter %s &" % self.instance, stdout =  None, 
+                "NXSDataWriter %s &" % self.instance, stdout =  None,
                 stderr = None , shell= True)
         sys.stdout.write("waiting for simple server ")
-        
+
         found = False
         cnt = 0
         while not found and cnt < 1000:
@@ -73,27 +77,35 @@ class ServerSetUp(object):
                 time.sleep(0.01)
                 if dp.state() == PyTango.DevState.ON:
                     found = True
-            except:    
+            except:
                 found = False
             cnt +=1
         print("")
 
     ## test closer
     # \brief Common tear down oif Tango Server
-    def tearDown(self): 
+    def tearDown(self):
         print("tearing down ...")
         db = PyTango.Database()
         db.delete_server(self.new_device_info_writer.server)
-        
+
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'NXSDataWriter %s'" % self.instance, stdout=subprocess.PIPE , shell= True).stdout
+            "ps -ef | grep 'NXSDataWriter %s'" % self.instance,
+            stdout=subprocess.PIPE , shell= True).stdout
 
-        res = pipe.read().split("\n")
+        res = pipe.read().decode("utf-8").split("\n")
         for r in res:
             sr = r.split()
             if len(sr)>2:
-                 subprocess.call("kill -9 %s" % sr[1],stderr=subprocess.PIPE , shell= True)
+                 subprocess.call(
+                     "kill -9 %s" % sr[1],
+                     stderr=subprocess.PIPE, shell=True)
+        pipe.close()
 
-        
-
+if __name__ == '__main__':
+    st =  ServerSetUp()
+    st.setUp()
+    import time
+    time.sleep(1)
+    st.tearDown()

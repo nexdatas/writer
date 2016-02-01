@@ -123,7 +123,8 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
-        print("Run: %s.test_openFile() " % self.__class__.__name__)
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -133,7 +134,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
@@ -146,7 +147,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             self.assertTrue(tdw.getFile() is None)
             
 
@@ -156,6 +157,7 @@ class TangoDataWriterTest(unittest.TestCase):
             f = f.root()
 
             cnt = 0
+            print("ATTR %s %s" % (f.attributes, len(f.attributes)))
             for at in f.attributes:
                 cnt += 1
             self.assertEqual(cnt, len(f.attributes))
@@ -181,7 +183,8 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_valueerror(self):
-        print("Run: %s.test_openFile() " % self.__class__.__name__)
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -191,7 +194,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
@@ -210,7 +213,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             self.assertTrue(tdw.getFile() is None)
             
 
@@ -246,7 +249,8 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_typeerror(self):
-        print("Run: %s.test_openFile() " % self.__class__.__name__)
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -256,7 +260,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
@@ -275,7 +279,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             self.assertTrue(tdw.getFile() is None)
             
 
@@ -340,7 +344,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
@@ -353,7 +357,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
             self.assertTrue(tdw.getFile() is None)
             
 
@@ -387,7 +391,8 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
-        print("Run: TangoDataWriterTest.test_openEntry() ")
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "test.h5"
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
@@ -407,7 +412,7 @@ class TangoDataWriterTest(unittest.TestCase):
             self.assertNotEqual(tdw.xmlsettings, "")
             self.assertEqual(tdw.jsonrecord, "{}")
             self.assertTrue(tdw.numberOfThreads > 0)
-            self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
+            self.assertTrue(isinstance(tdw.numberOfThreads, int))
 
             tdw.closeFile()
            
@@ -479,7 +484,8 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException() ")
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "test.h5"
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -549,8 +555,9 @@ class TangoDataWriterTest(unittest.TestCase):
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_scanRecord(self):
-        print("Run: TangoDataWriterTest.test_scanRecord() ")
+    def test_scanRecord(self): 
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "scantest.h5"
         try:
             tdw = TangoDataWriter()

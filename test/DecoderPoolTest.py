@@ -177,7 +177,7 @@ class DecoderPoolTest(unittest.TestCase):
         el = DecoderPool(json.loads("{}"))
         self.assertTrue(isinstance(el, object))
 
-        jsn = json.loads('{"decoders":{"UTF":"DecoderPool.Decode"}}')
+        jsn = json.loads('{"decoders":{"UTF":"nxswriter.DecoderPool.Decode"}}')
         self.myAssertRaise(AttributeError,DecoderPool,jsn)
 
 
@@ -185,7 +185,7 @@ class DecoderPoolTest(unittest.TestCase):
         self.myAssertRaise(ImportError,DecoderPool,jsn)
 
 
-        el = DecoderPool(json.loads('{"decoders":{"UTF":"DecoderPool.UTF8decoder"}}'))
+        el = DecoderPool(json.loads('{"decoders":{"UTF":"nxswriter.DecoderPool.UTF8decoder"}}'))
 
 
 
@@ -204,7 +204,7 @@ class DecoderPoolTest(unittest.TestCase):
         self.assertTrue(not el.hasDecoder("DBB"))
         self.assertTrue(not el.hasDecoder("CL"))
 
-        el = DecoderPool(json.loads('{"decoders":{"UTF":"DecoderPool.UTF8decoder"}}'))
+        el = DecoderPool(json.loads('{"decoders":{"UTF":"nxswriter.DecoderPool.UTF8decoder"}}'))
         self.assertTrue(el.hasDecoder("UTF8"))
         self.assertTrue(el.hasDecoder("UINT32"))
         self.assertTrue(el.hasDecoder("LIMA_VIDEO_IMAGE"))
@@ -230,7 +230,7 @@ class DecoderPoolTest(unittest.TestCase):
         self.assertEqual(el.get("CL"),None)
         
 
-        el = DecoderPool(json.loads('{"decoders":{"UTF":"DecoderPool.UTF8decoder"}}'))
+        el = DecoderPool(json.loads('{"decoders":{"UTF":"nxswriter.DecoderPool.UTF8decoder"}}'))
         ds = el.get("UTF8")
         self.assertTrue(isinstance(ds, UTF8decoder))
         ds = el.get("UINT32")

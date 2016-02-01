@@ -75,7 +75,7 @@ class PyEvalSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-        dom = minidom.parseString(xml)
+        dom = minidom.parseString(bytes(xml, "UTF-8"))
         mds = dom.getElementsByTagName("datasource")
         inputs = []
         if mds and len(mds) > 0:

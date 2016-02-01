@@ -62,7 +62,7 @@ class InnerXMLParserTest(unittest.TestCase):
 
     ## Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
@@ -78,7 +78,7 @@ class InnerXMLParserTest(unittest.TestCase):
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print("\nsetting up...")        
+        print("\nsetting up...")
 
     ## test closer
     # \brief Common tear down
@@ -96,11 +96,11 @@ class InnerXMLParserTest(unittest.TestCase):
         name = "datasource"
         attrs = {"type":"TANGO"}
         el = InnerXMLHandler(parser, handler, name, attrs)
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
-        
+
         inpsrc = sax.InputSource()
-        inpsrc.setByteStream(BytesIO('<device> Something</device>'))
+        inpsrc.setByteStream(StringIO('<device> Something</device>'))
         parser.parse(inpsrc)
 
         self.assertEqual(parser.getContentHandler(),el)
@@ -128,15 +128,22 @@ class InnerXMLParserTest(unittest.TestCase):
         name = "datasource"
         attrs = {}
         el = InnerXMLHandler(parser, handler, name, attrs)
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
         self.assertTrue(isinstance(el,sax.ContentHandler))
         self.assertEqual(el.startElement("group",attr1), None)
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("datasource"), None)
-        self.assertEqual(el.xml,('<datasource>', 
-                                 '<group type="NXentry" name="entry"></group>', '</datasource>'))
-
+        try:
+            self.assertEqual(el.xml,
+                             ('<datasource>',
+                              '<group type="NXentry" name="entry"></group>',
+                              '</datasource>'))
+        except:
+            self.assertEqual(el.xml,
+                             ('<datasource>',
+                              '<group name="entry" type="NXentry"></group>',
+                              '</datasource>'))
 
     ## constructor test
     # \brief It tests default settings
@@ -155,7 +162,7 @@ class InnerXMLParserTest(unittest.TestCase):
         name = "group"
         attrs = {}
         el = InnerXMLHandler(parser, handler, name, attrs)
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
         self.assertTrue(isinstance(el,sax.ContentHandler))
         self.assertEqual(el.startElement("group",attr1), None)
@@ -165,7 +172,10 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(len(el.xml),3)
         self.assertEqual(el.xml[0],'<group>')
-        self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"></group><field type="NXinstrument" name="instrument"></field>')
+        try:
+            self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"></group><field type="NXinstrument" name="instrument"></field>')
+        except:
+            self.assertEqual(el.xml[1],'<group name="entry1" type="NXentry"></group><field name="instrument" type="NXinstrument"></field>')
         self.assertEqual(el.xml[2],'</group>')
 
 
@@ -187,7 +197,7 @@ class InnerXMLParserTest(unittest.TestCase):
         name = "group"
         attrs = {"type":"NXentry"}
         el = InnerXMLHandler(parser, handler, name, attrs)
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
         self.assertTrue(isinstance(el,sax.ContentHandler))
         self.assertEqual(el.startElement("group",attr1), None)
@@ -197,7 +207,19 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(len(el.xml),3)
         self.assertEqual(el.xml[0],'<group type="NXentry">')
-        self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"><group type="NXinstrument" name="instrument"></group></group>')
+        try:
+            self.assertEqual(
+                el.xml[1],
+                '<group type="NXentry" name="entry1">'
+                '<group type="NXinstrument" name="instrument">'
+                '</group></group>')
+        except:
+            self.assertEqual(
+                el.xml[1],
+                '<group name="entry1" type="NXentry">'
+                '<group name="instrument" type="NXinstrument">'
+                '</group></group>')
+            
         self.assertEqual(el.xml[2],'</group>')
 
 
@@ -218,7 +240,7 @@ class InnerXMLParserTest(unittest.TestCase):
         name = "group"
         attrs = {}
         el = InnerXMLHandler(parser, handler, name, attrs)
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
         self.assertTrue(isinstance(el,sax.ContentHandler))
         self.assertEqual(el.startElement("group",attr1), None)
@@ -228,7 +250,19 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(len(el.xml),3)
         self.assertEqual(el.xml[0],'<group>')
-        self.assertEqual(el.xml[1],'<group type="NXentry" name="entry1"></group><attribute type="NXinstrument" name="instrument"></attribute>')
+        try:
+            
+            self.assertEqual(
+                el.xml[1],
+                '<group type="NXentry" name="entry1"></group>'
+                '<attribute type="NXinstrument" name="instrument">'
+                '</attribute>')
+        except:
+            self.assertEqual(
+                el.xml[1],
+                '<group name="entry1" type="NXentry"></group>'
+                '<attribute name="instrument" type="NXinstrument">'
+                '</attribute>')
         self.assertEqual(el.xml[2],'</group>')
 
 
@@ -243,9 +277,9 @@ class InnerXMLParserTest(unittest.TestCase):
         name = "datasource"
 
         el = InnerXMLHandler(parser, handler, name, {})
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
-        
+
         inpsrc = sax.InputSource()
         inpsrc.setByteStream(StringIO('<group type="NXentry" name="entry"></group>'))
         parser.parse(inpsrc)
@@ -254,10 +288,17 @@ class InnerXMLParserTest(unittest.TestCase):
 
         self.assertEqual(el.endElement("datasource"), None)
 
-
-        self.assertEqual(el.xml,('<datasource>', 
-                                 '<group type="NXentry" name="entry"></group>', '</datasource>'))
-
+        try:
+            self.assertEqual(el.xml,(
+                '<datasource>',
+                '<group type="NXentry" name="entry"></group>',
+                '</datasource>'))
+        except:
+            self.assertEqual(el.xml,(
+                '<datasource>',
+                '<group name="entry" type="NXentry"></group>',
+                '</datasource>'))
+        
 
         self.assertEqual(parser.getContentHandler(),handler)
 
@@ -274,12 +315,12 @@ class InnerXMLParserTest(unittest.TestCase):
         handler = sax.ContentHandler()
         name = "group"
         xml = '<group type="NXentry" name="entry1"><field type="NXinstrument" name="instrument"></field></group>'
-#        xml = '<group type="NXentry" name="entry1"></group>'
-
-        el = InnerXMLHandler(parser, handler, name, {})
-        parser.setContentHandler(el) 
-        self.assertEqual(el.xml,None)
+        xml2 = '<group name="entry1" type="NXentry"><field name="instrument" type="NXinstrument"></field></group>'
         
+        el = InnerXMLHandler(parser, handler, name, {})
+        parser.setContentHandler(el)
+        self.assertEqual(el.xml,None)
+
         inpsrc = sax.InputSource()
         inpsrc.setByteStream(StringIO(xml))
         parser.parse(inpsrc)
@@ -289,7 +330,10 @@ class InnerXMLParserTest(unittest.TestCase):
 
         self.assertEqual(len(el.xml),3)
         self.assertEqual(el.xml[0],'<group>')
-        self.assertEqual(el.xml[1],xml)
+        try:
+            self.assertEqual(el.xml[1],xml)
+        except:
+            self.assertEqual(el.xml[1],xml2)
         self.assertEqual(el.xml[2],'</group>')
 
 
@@ -310,11 +354,12 @@ class InnerXMLParserTest(unittest.TestCase):
 
         name = "group"
         xml = '<group type="NXentry" name="entry1"><group type="NXinstrument" name="instrument"></group></group>'
+        xml2 = '<group name="entry1" type="NXentry"><group name="instrument" type="NXinstrument"></group></group>'
 
         el = InnerXMLHandler(parser, handler, name, attrs)
-        parser.setContentHandler(el) 
+        parser.setContentHandler(el)
         self.assertEqual(el.xml,None)
-        
+
         inpsrc = sax.InputSource()
         inpsrc.setByteStream(StringIO(xml))
         parser.parse(inpsrc)
@@ -324,7 +369,10 @@ class InnerXMLParserTest(unittest.TestCase):
 
         self.assertEqual(len(el.xml),3)
         self.assertEqual(el.xml[0],'<group type="NXentry">')
-        self.assertEqual(el.xml[1],xml)
+        try:
+            self.assertEqual(el.xml[1],xml)
+        except:
+            self.assertEqual(el.xml[1],xml2)
         self.assertEqual(el.xml[2],'</group>')
 
 

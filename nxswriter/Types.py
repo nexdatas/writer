@@ -46,7 +46,7 @@ class Converters(object):
 class NTP(object):
 
     ## map of Python:Tango types
-    pTt = {"int": "DevLong64", "int": "DevLong64",
+    pTt = {"int": "DevLong64",
            "float": "DevDouble", "str": "DevString",
            "unicode": "DevString", "bool": "DevBoolean"}
 
@@ -57,7 +57,7 @@ class NTP(object):
             "uint16": "DevUShort",
             "uint8": "DevUChar", "float": "DevDouble", "float64": "DevDouble",
             "float32": "DevFloat", "float16": "DevFloat",
-            "string": "DevString", "bool": "DevBoolean"}
+            "string": "DevString","str": "DevString", "bool": "DevBoolean"}
 
     ## map of NEXUS :  numpy types
     nTnp = {"NX_FLOAT32": "float32", "NX_FLOAT64": "float64",
@@ -75,7 +75,7 @@ class NTP(object):
                "float": float, "int64": int, "int32": int,
                "int16": int, "int8": int, "int": int, "uint64": int,
                "uint32": int, "uint16": int,
-               "uint8": int, "uint": int, "string": str,
+               "uint8": int, "uint": int, "string": str, "str": str,
                "bool": Converters.toBool}
 
     ## map of tag attribute types

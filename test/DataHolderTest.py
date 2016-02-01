@@ -102,7 +102,7 @@ class DataHolderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width,height  = image.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1, 
                              width,  height, endian, hsize, 0, 0)
@@ -150,8 +150,8 @@ class DataHolderTest(unittest.TestCase):
             "ScalarULong64":[ "uint64", "DevULong64", 23],
             "ScalarFloat":[ "float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,1e-14],
-            "ScalarString":[ "string", "DevString", "MyTrue"],
-#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            "ScalarString":[ "str", "DevString", "MyTrue"],
+#            "State":[ "str", "DevState", PyTango._PyTango.DevState.ON],
             }
 
 
@@ -195,7 +195,7 @@ class DataHolderTest(unittest.TestCase):
             "SpectrumULong64":[ "uint64", "DevULong64", 23, [1,0]],
             "SpectrumFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
             "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
-            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
+            "SpectrumString":[ "str", "DevString", "MyTrue", [1,0]],
             }
 
 
@@ -258,7 +258,7 @@ class DataHolderTest(unittest.TestCase):
             "ImageULong64":[ "uint64", "DevULong64", 23, [1,0]],
             "ImageFloat":[ "float32", "DevFloat", 12.234, [1,0], 1e-5],
             "ImageDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], 1e-14],
-            "ImageString":[ "string", "DevString", "MyTrue", [1,0]],
+            "ImageString":[ "str", "DevString", "MyTrue", [1,0]],
             }
 
 
@@ -439,8 +439,8 @@ class DataHolderTest(unittest.TestCase):
             }
 
         arrs["s"] = {
-            "ScalarString":[ "string", "DevString", "MyTrue"],
-#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            "ScalarString":[ "str", "DevString", "MyTrue"],
+#            "State":[ "str", "DevState", PyTango._PyTango.DevState.ON],
             }
 
         types = {}
@@ -448,7 +448,7 @@ class DataHolderTest(unittest.TestCase):
         types["i"] = ["int","int8","int16","int32","int64"]
         types["u"] = ["uint","uint8","uint16","uint32","uint64"]
         types["f"] = ["float","float16","float32","float64"]
-        types["s"] = ["string"]
+        types["s"] = ["str"]
         types["b"] = ["bool"]
 
 
@@ -507,35 +507,35 @@ class DataHolderTest(unittest.TestCase):
 
         
         arrs["f"] = {
-            "ScalarString1":[ "string", "DevString", "12.3243"],
-            "ScalarString2":[ "string", "DevString", "-12.3243"],
-            "ScalarString3":[ "string", "DevString", "12.3243"],
+            "ScalarString1":[ "str", "DevString", "12.3243"],
+            "ScalarString2":[ "str", "DevString", "-12.3243"],
+            "ScalarString3":[ "str", "DevString", "12.3243"],
             }
 
 
         arrs["i"] = {
-            "ScalarString1":[ "string", "DevString", "-1"],
-            "ScalarString2":[ "string", "DevString", "-125"],
-            "ScalarString3":[ "string", "DevString", "-124"],
+            "ScalarString1":[ "str", "DevString", "-1"],
+            "ScalarString2":[ "str", "DevString", "-125"],
+            "ScalarString3":[ "str", "DevString", "-124"],
             }
 
         arrs["u"] = {
-            "ScalarString1":[ "string", "DevString", "-1"],
-            "ScalarString2":[ "string", "DevString", "-125"],
-            "ScalarString3":[ "string", "DevString", "-124"],
+            "ScalarString1":[ "str", "DevString", "-1"],
+            "ScalarString2":[ "str", "DevString", "-125"],
+            "ScalarString3":[ "str", "DevString", "-124"],
             }
 
         arrs["s"] = {
-            "ScalarString1":[ "string", "DevString", "bnle"],
-            "ScalarString2":[ "string", "DevString", "What"],
-            "ScalarString3":[ "string", "DevString", "Cos"],
+            "ScalarString1":[ "str", "DevString", "bnle"],
+            "ScalarString2":[ "str", "DevString", "What"],
+            "ScalarString3":[ "str", "DevString", "Cos"],
             }
 
 
         arrs["b"] = {
-            "ScalarString1":[ "string", "DevString", "True"],
-            "ScalarString2":[ "string", "DevString", "False"],
-            "ScalarString3":[ "string", "DevString", "true"],
+            "ScalarString1":[ "str", "DevString", "True"],
+            "ScalarString2":[ "str", "DevString", "False"],
+            "ScalarString3":[ "str", "DevString", "true"],
             }
 
         types = {}
@@ -543,7 +543,7 @@ class DataHolderTest(unittest.TestCase):
         types["i"] = ["int","int8","int16","int32","int64"]
         types["u"] = ["uint","uint8","uint16","uint32","uint64"]
         types["f"] = ["float","float16","float32","float64"]
-        types["s"] = ["string"]
+        types["s"] = ["str"]
         types["b"] = ["bool"]
 
 
@@ -621,8 +621,8 @@ class DataHolderTest(unittest.TestCase):
             }
 
         arrs["s"] = {
-            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
-#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            "SpectrumString":[ "str", "DevString", "MyTrue", [1,0]],
+#            "State":[ "str", "DevState", PyTango._PyTango.DevState.ON],
             }
 
         types = {}
@@ -630,7 +630,7 @@ class DataHolderTest(unittest.TestCase):
         types["i"] = {"int":0,"int8":0,"int16":0,"int32":0,"int64":0}
         types["u"] = {"uint":0,"uint8":0,"uint16":0,"uint32":0,"uint64":0}
         types["f"] = {"float":1e-5,"float16":1e-01,"float32":1e-5,"float64":1e-14}
-        types["s"] = {"string":0}
+        types["s"] = {"str":0}
         types["b"] = {"bool":0}
 
 
@@ -730,8 +730,8 @@ class DataHolderTest(unittest.TestCase):
             }
 
         arrs["s"] = {
-            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0]],
-#            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            "SpectrumString":[ "str", "DevString", "MyTrue", [1,0]],
+#            "State":[ "str", "DevState", PyTango._PyTango.DevState.ON],
             }
 
         types = {}
@@ -739,7 +739,7 @@ class DataHolderTest(unittest.TestCase):
         types["i"] = {"int":0,"int8":0,"int16":0,"int32":0,"int64":0}
         types["u"] = {"uint":0,"uint8":0,"uint16":0,"uint32":0,"uint64":0}
         types["f"] = {"float":1e-5,"float16":1e-01,"float32":1e-5,"float64":1e-14}
-        types["s"] = {"string":0}
+        types["s"] = {"str":0}
         types["b"] = {"bool":0}
 
 

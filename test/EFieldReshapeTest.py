@@ -905,7 +905,7 @@ class EFieldReshapeTest(unittest.TestCase):
                                             )
             else:
                 
-                if grow>1:
+                if grow and grow>1:
                     val = [[a[0] for a  in attrs[k][0]]] 
                 else:
                     val = attrs[k][0]
@@ -1039,7 +1039,7 @@ class EFieldReshapeTest(unittest.TestCase):
                                             )
             else:
                 
-                if grow>1:
+                if grow and grow>1:
                     val = [[a[0] for a  in attrs[k][0]]] 
                 else:
                     val = attrs[k][0]
@@ -1533,7 +1533,7 @@ class EFieldReshapeTest(unittest.TestCase):
                     el[k].run()
                     self.assertEqual(el[k].markFailed(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string":
                     self.assertEqual(not el[k].error, False)
@@ -2045,7 +2045,7 @@ class EFieldReshapeTest(unittest.TestCase):
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -2534,7 +2534,7 @@ class EFieldReshapeTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                     self.assertEqual(el[k].markFailed(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
@@ -3021,7 +3021,7 @@ class EFieldReshapeTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                     self.assertEqual(el[k].markFailed(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
@@ -3513,7 +3513,7 @@ class EFieldReshapeTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                     self.assertEqual(el[k].markFailed(), None)
                 else:
-                    self.assertEqual(el[k].h5Object.grow(grow-1 if grow>0 else 0), None)
+                    self.assertEqual(el[k].h5Object.grow(grow-1 if (grow and grow>0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)

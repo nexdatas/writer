@@ -102,7 +102,7 @@ class EField(FElementWithAttr):
             shape = self._findShape(
                 self.rank, self.lengths,
                 self.__extraD, self.grows, True, checkData=True)
-            if self.grows > len(shape):
+            if self.grows and self.grows > len(shape):
                 self.grows = len(shape)
             return shape
         except XMLSettingSyntaxError:
@@ -477,7 +477,7 @@ class EField(FElementWithAttr):
         nptype = self.h5Object.dtype
         value = ''
 
-        if self.grows > len(shape):
+        if self.grows and self.grows > len(shape):
             self.grows = len(shape)
         if not self.grows and self.__extraD:
             self.grows = 1

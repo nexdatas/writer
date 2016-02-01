@@ -138,7 +138,7 @@ class TangoSource(DataSource):
     ## sets the parrameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
-        dom = minidom.parseString(xml)
+        dom = minidom.parseString(bytes(xml, "UTF-8"))
         rec = dom.getElementsByTagName("record")
         name = None
         if rec and len(rec) > 0:
@@ -579,6 +579,7 @@ class TgMember(object):
             alist = proxy.get_attribute_list()
             alist = [a.lower() for a in alist]
             if self.name.lower() in alist:
+                print("NAME %s %s" % (self.name, type(self.name)))
                 self.__da = proxy.read_attribute(self.name)
         elif self.memberType == "property":
             plist = proxy.get_property_list('*')

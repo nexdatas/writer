@@ -44,7 +44,7 @@ from nxswriter.FetchNameHandler import TNObject
 
 from xml import sax
 
-from io import BytesIO
+from io import StringIO
 
 try:
     import pni.io.nx.h5 as nx
@@ -134,7 +134,7 @@ class TElement(FElement):
             return TElement.strategy,TElement.trigger
         if TElement.strategy:
             self.strategy = TElement.strategy
-            return TElement.strategy
+            return TElement.strategy, None
 
     ## run method
     def run(self):
@@ -628,7 +628,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml = '<group%s/>' % (st)
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -769,7 +769,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
 
@@ -852,7 +852,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -1029,7 +1029,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -1117,7 +1117,9 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        self.myAssertRaise(ValueError,sax.parseString,xml, el)
+        self.myAssertRaise(
+            ValueError,
+            sax.parseString, bytes(xml, "utf-8"), el)
  
 
 
@@ -1241,7 +1243,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -1328,7 +1330,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -1477,7 +1479,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</field>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -1611,7 +1613,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         TElement.strategy = None
         TElement.trigger = None
         TElement.groupTypes = TNObject()
-        TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
+        TNObject("mmyentry1","NXmmyentry", TElement.groupTypes)
         el.elementClass = {"field":TElement}
 
 
@@ -1626,7 +1628,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -1683,7 +1685,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -1738,7 +1740,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -1791,7 +1793,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         
@@ -1859,7 +1861,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -1952,7 +1954,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -2033,7 +2035,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool,ThreadPool))
@@ -2064,8 +2066,6 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(ins.started)
         
         
-
-
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -2106,7 +2106,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool,ThreadPool))
@@ -2181,7 +2181,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool,ThreadPool))
@@ -2254,7 +2254,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  value
         xml +=  '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
         self.assertEqual(len(el.triggerPools), 1)
         self.assertTrue(isinstance(el.triggerPools["mytrigger"],ThreadPool))
@@ -2344,7 +2344,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -2435,7 +2435,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -2526,7 +2526,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -2617,7 +2617,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</mydefinition>'
         
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
         self.assertEqual(el.triggerPools, {})
@@ -2710,7 +2710,10 @@ class NexusXMLHandlerTest(unittest.TestCase):
         
         parser = sax.make_parser()
         self.assertTrue(el.raiseUnsupportedTag)
-        self.myAssertRaise(UnsupportedTagError, sax.parseString,xml, el)
+        self.myAssertRaise(
+            UnsupportedTagError,
+            sax.parseString,
+            bytes(xml, "utf-8"), el)
 
 
 
@@ -2767,7 +2770,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         parser = sax.make_parser()
         el.raiseUnsupportedTag=False
         self.assertTrue(not el.raiseUnsupportedTag)
-        sax.parseString(xml, el)
+        sax.parseString(bytes(xml, "UTF-8"), el)
 
 
 
@@ -2840,7 +2843,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         xml +=  '</group>'
         
         inpsrc = sax.InputSource()
-        inpsrc.setByteStream(BytesIO(xml))
+        inpsrc.setByteStream(StringIO(xml))
         parser.parse(inpsrc)
 
 

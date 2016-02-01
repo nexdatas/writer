@@ -5,4 +5,4 @@ then
 fi
 SCRIPT=$(readlink -f $0)
 LOCALDIR=$(dirname "$SCRIPT")
-exec python $LOCALDIR/SimpleServer.py $*
+exec python3 $LOCALDIR/SimpleServer.py $*

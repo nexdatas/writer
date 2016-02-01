@@ -64,29 +64,35 @@ class NTPTest(unittest.TestCase):
 
 
         ## map of Python:Tango types
-        self._pTt = {"int":"DevLong64","long":"DevLong64", "float":"DevDouble", "str":"DevString", "unicode":"DevString", 
-                     "bool":"DevBoolean"}
+        self._pTt = {"int":"DevLong64",
+                     "float":"DevDouble", "str":"DevString",
+                     "unicode":"DevString", "bool":"DevBoolean"}
 
         ## map of Numpy:Tango types
         self._npTt = {"int":"DevLong64", "int64":"DevLong64", "int32":"DevLong",
                       "int16":"DevShort", "int8":"DevUChar", "uint":"DevULong64", 
-                      "uint64":"DevULong64", "uint32":"DevULong", "uint16":"DevUShort", 
+                      "uint64":"DevULong64", "uint32":"DevULong",
+                      "uint16":"DevUShort", 
                       "uint8":"DevUChar", "float":"DevDouble", "float64":"DevDouble", 
                       "float32":"DevFloat","float16":"DevFloat", 
-                      "string":"DevString", "bool":"DevBoolean"}
+                      "string":"DevString", "str":"DevString", "bool":"DevBoolean"}
         
         ## map of NEXUS : numpy types 
-        self._nTnp = {"NX_FLOAT32":"float32", "NX_FLOAT64":"float64", "NX_FLOAT":"float64", 
-                      "NX_NUMBER":"float64", "NX_INT":"int64", "NX_INT64":"int64", 
+        self._nTnp = {"NX_FLOAT32":"float32", "NX_FLOAT64":"float64",
+                      "NX_FLOAT":"float64", "NX_NUMBER":"float64",
+                      "NX_INT":"int64", "NX_INT64":"int64", 
                       "NX_INT32":"int32", "NX_INT16":"int16", "NX_INT8":"int8", 
-                      "NX_UINT64":"uint64", "NX_UINT32":"uint32", "NX_UINT16":"uint16", "NX_UINT8":"uint8", 
+                      "NX_UINT64":"uint64", "NX_UINT32":"uint32",
+                      "NX_UINT16":"uint16", "NX_UINT8":"uint8", 
                       "NX_UINT":"uint64", "NX_POSINT":"uint64", 
-                      "NX_DATE_TIME":"string", "ISO8601":"string", "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
+                      "NX_DATE_TIME":"string", "ISO8601":"string",
+                      "NX_CHAR":"string", "NX_BOOLEAN":"bool"}
 
         ## map of type : converting function
         self._convert = {"float16":float,"float32":float, "float64":float, "float":float, "int64":int, "int32":int,  
                          "int16":int, "int8":int, "int":int, "uint64":int, "uint32":int, "uint16":int,
-                         "uint8":int, "uint":int, "string":str, "bool":Converters.toBool}
+                         "uint8":int, "uint":int, "string":str, "str":str,
+                         "bool":Converters.toBool}
         
         ## map of tag attribute types 
         self._aTn = {"signal":"NX_INT", "axis":"NX_INT", "primary":"NX_INT32", "offset":"NX_INT", 

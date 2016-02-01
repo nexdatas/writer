@@ -105,10 +105,10 @@ class DataHolder(object):
     def cast(self, dtype):
         if str(self.format).split('.')[-1] == "SCALAR":
             if dtype in NTP.npTt.keys() \
-                    and NTP.npTt[dtype] == str(self.tangoDType):
+               and NTP.npTt[dtype] == str(self.tangoDType):
                 return self.value
             else:
-                if self.value == "" and dtype != 'string':
+                if self.value == "" and (dtype not in ['str', 'string']):
                     return NTP.convert[dtype](0)
                 else:
                     return NTP.convert[dtype](self.value)
@@ -117,16 +117,15 @@ class DataHolder(object):
 
             if dtype in NTP.npTt.keys() \
                     and NTP.npTt[dtype] == str(self.tangoDType) \
-                    and dtype != "string":
+                    and (dtype not in ['str', 'string']):
                 if type(self.value).__name__ == 'ndarray' and \
                         self.value.dtype.name == dtype:
                     return self.value
                 else:
                     return numpy.array(self.value, dtype=dtype)
             else:
-                if dtype == "string":
-                    return numpy.array(self.value, dtype=dtype)
-#                    return NTP().createArray(self.value, NTP.convert[dtype])
+                if dtype in ['str', 'string']:
+                    return numpy.array(self.value, dtype='str')
                 else:
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]),

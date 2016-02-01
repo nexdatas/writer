@@ -161,7 +161,7 @@ class DataSourcePoolTest(unittest.TestCase):
         el = DataSourcePool(json.loads("{}"))
         self.assertTrue(isinstance(el, object))
 
-        jsn = json.loads('{"datasources":{"CL":"DataSources.Source"}}')
+        jsn = json.loads('{"datasources":{"CL":"nxswriter.DataSources.Source"}}')
         self.myAssertRaise(AttributeError,DataSourcePool,jsn)
 
 
@@ -169,7 +169,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.myAssertRaise(ImportError,DataSourcePool,jsn)
 
 
-        el = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        el = DataSourcePool(json.loads(
+            '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
 
 
@@ -191,7 +192,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertTrue(not el.hasDataSource("DBB"))
         self.assertTrue(not el.hasDataSource("CL"))
 
-        el = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        el = DataSourcePool(json.loads(
+            '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))
@@ -217,7 +219,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertEqual(el.get("CL"),None)
         
 
-        el = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        el = DataSourcePool(json.loads(
+            '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()

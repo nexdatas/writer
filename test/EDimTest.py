@@ -281,7 +281,6 @@ class EDimTest(unittest.TestCase):
         fdname = "testField"
         fdtype = "int64"
 
-
         ## file handle
         nxFile = nx.create_file(fname, overwrite=True).root()
         ## element file objects
@@ -587,7 +586,7 @@ class EDimTest(unittest.TestCase):
         self.assertEqual(fi._lastObject(), None)
         self.assertEqual(type(el2.last), EField)
         self.assertEqual(el2.last.rank, "1")
-        self.assertEqual(el3._beforeLast().lengths,{'1':''})
+        self.assertEqual(el3._beforeLast().lengths, {'1':''})
         self.assertEqual(fi.lengths,{'1':''})
         self.assertEqual(fi.rank,"1")
         

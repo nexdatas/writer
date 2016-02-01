@@ -270,7 +270,8 @@ class PyEvalSourceTest(unittest.TestCase):
         dt = ds.getData()
         self.checkData(dt, "SCALAR", 62,"DevLong64",[])        
 
-        dp = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        dp = DataSourcePool(json.loads(
+            '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -329,7 +330,7 @@ class PyEvalSourceTest(unittest.TestCase):
 if type(ds.inp) == type(ds.inp2):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = unicode(ds.inp) + unicode(ds.inp2)
+    ds.res = str(ds.inp) + str(ds.inp2)
 """
         dp = DataSourcePool()
 
@@ -383,7 +384,7 @@ else:
                 dt = ds.getData()
                 v1 = Converters.toBool(arr[a][0]) if arr[a][2] == "DevBoolean" else arr[a][0]
                 v2 = Converters.toBool(arr2[a2][0]) if arr2[a2][2] == "DevBoolean" else arr2[a2][0]
-                vv = v1 + v2  if type(v1) == type(v2) else unicode(v1)+ unicode(v2)
+                vv = v1 + v2  if type(v1) == type(v2) else str(v1)+ str(v2)
                 self.checkData(dt, arr[a][1], vv, NTP.pTt[type(vv).__name__], arr[a][3])        
 
 
@@ -399,7 +400,7 @@ else:
 if type(ds.inp[0]) == type(ds.inp2[0]):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
+    ds.res = [str(i) for i in ds.inp] + [str(i2) for i2 in ds.inp2]
 """
 
         dp = DataSourcePool()
@@ -491,7 +492,7 @@ else:
                 v1 = [Converters.toBool(a) for a in arr[k][0]] if arr[k][2] == "DevBoolean" else arr[k][0]
                 v2 = [Converters.toBool(a) for a in arr2[k2][0]] if arr2[k2][2] == "DevBoolean" else arr2[k2][0]
                 vv = v1 + v2  if type(v1[0]).__name__ == type(v2[0]).__name__ \
-                    else [unicode(i) for i in v1] + [unicode(i2) for i2 in v2]
+                    else [str(i) for i in v1] + [str(i2) for i2 in v2]
                 self.checkData(dt, arr[k][1], vv, NTP.pTt[type(vv[0]).__name__], [arr[k][3][0]+arr2[k2][3][0]])        
 
 
@@ -508,7 +509,7 @@ else:
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[str(j) for j in i] for i in ds.inp] + [[str(j2) for j2 in i2] for i2 in ds.inp2]
 """
 
         dp = DataSourcePool()
@@ -601,7 +602,7 @@ else:
                 v1 = [[Converters.toBool(a) for a in row ]for row in arr[k][0]] if arr[k][2] == "DevBoolean" else arr[k][0]
                 v2 = [[Converters.toBool(a) for a in row ]for row in arr2[k2][0]] if arr2[k2][2] == "DevBoolean" else arr2[k2][0]
                 vv = v1 + v2  if type(v1[0][0]) == type(v2[0][0]) \
-                    else ([[unicode(j) for j in i] for i in v1] + [[unicode(j2) for j2 in i2] for i2 in v2])
+                    else ([[str(j) for j in i] for i in v1] + [[str(j2) for j2 in i2] for i2 in v2])
                 self.checkData(dt, arr[k][1], vv, NTP.pTt[type(vv[0][0]).__name__], [arr[k][3][0]+arr2[k2][3][0],arr[k][3][1]])        
 
 

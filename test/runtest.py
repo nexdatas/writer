@@ -66,7 +66,7 @@ import StreamsTest
 
 try:
     ## switch tango off 
-    raise ImportError("TANGO SWITCHED OFF")
+    #raise ImportError("TANGO SWITCHED OFF")
     ## switch tango off end
     import PyTango
     ## if module PyTango avalable

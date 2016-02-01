@@ -225,19 +225,18 @@ class UINT32decoderTest(unittest.TestCase):
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        
 
-        arr =[[None,None]]*20
+        arr =[[None, None]] * 20
 
         for a in arr:
 
             mlen = self.__rnd.randint(1, 10)
             lt = [self.__rnd.randint(0, 0xffffffff) for c in range(mlen)]
             a[1] = numpy.array(lt, dtype=numpy.uint32)
-            a[0] = ('INT32',struct.pack('I'*mlen,*lt))
+            a[0] = ('UINT32', struct.pack('I' * mlen, *lt))
 
             dc = UINT32decoder()
-            self.assertEqual(dc.load(a[0]),None)
+            self.assertEqual(dc.load(a[0]), None)
             
             res = dc.decode()
             

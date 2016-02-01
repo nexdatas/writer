@@ -227,7 +227,10 @@ class VDEOdecoderTest(unittest.TestCase):
     def test_load_wrong_len(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        data = ('VIDEO_IMAGE', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
+        data = (
+            'VIDEO_IMAGE',
+            '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00'
+        )
 
         dc = VDEOdecoder()
 
@@ -236,7 +239,7 @@ class VDEOdecoderTest(unittest.TestCase):
         self.assertEqual(dc.shape(), None)
         self.assertEqual(dc.format, None )
         
-        self.myAssertRaise(struct.error,dc.load,data)
+        self.myAssertRaise(Exception, dc.load,data)
 
 
     ## decode method test

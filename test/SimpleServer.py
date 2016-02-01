@@ -149,7 +149,7 @@ class SimpleServer(PyTango.Device_4Impl):
         #        mode = 1
         width, height = self.attr_ImageUChar.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack(
             '!IHHqiiHHHH', 0x5644454f, version, mode, -1,
@@ -294,7 +294,7 @@ class SimpleServer(PyTango.Device_4Impl):
         print("In %s::read_ScalarULong64()" % self.get_name())
 
         #    Add your own code here
-        attr.set_value(long(self.attr_ScalarULong64))
+        attr.set_value(int(self.attr_ScalarULong64))
         # Do not work as well
 
     #------------------------------------------------------------------

@@ -52,6 +52,7 @@ from nxswriter import DataSources
 from nxswriter.Types import Converters
 
 import threading
+import _thread
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -131,7 +132,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_constructor_default(self):
+    def ttest_constructor_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -148,7 +149,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## __str__ test
     # \brief It tests default settings
-    def test_str_default(self):
+    def ttest_str_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -229,7 +230,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## setup test
     # \brief It tests default settings
-    def test_setup_default(self):
+    def ttest_setup_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -367,7 +368,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## setup test
     # \brief It tests default settings
-    def test_setup_client_default(self):
+    def ttest_setup_client_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -516,7 +517,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_client_default(self):
+    def ttest_getData_client_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -542,7 +543,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_default(self):
+    def ttest_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -578,7 +579,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_setDataSources_default(self):
+    def ttest_setDataSources_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -632,7 +633,7 @@ class TangoSourceTest(unittest.TestCase):
 
         gr= cm['bleble2']
 
-        self.assertEqual(type(gr.lock),thread.LockType)
+        self.assertEqual(type(gr.lock),_thread.LockType)
         self.assertEqual(gr.counter, 0)
         self.assertEqual(len(gr.devices), 1)
         dv = gr.devices[el.device]
@@ -660,7 +661,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_scalar(self):
+    def ttest_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -737,7 +738,6 @@ class TangoSourceTest(unittest.TestCase):
             }
 
 
-
         arr2 = {
            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON, "DevState", PyTango._PyTango.DevState.ON],
            }
@@ -760,6 +760,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            print(k)
             dt = el.getData()
             self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, 
                            arr[k][5] if len(arr[k]) > 5 else 0)
@@ -854,7 +855,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_client_scalar_tango(self):
+    def ttest_getData_client_scalar_tango(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -993,7 +994,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_scalar_tl(self):
+    def ttest_getData_scalar_tl(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1054,7 +1055,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_scalar_group(self):
+    def ttest_getData_scalar_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1182,7 +1183,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_scalar_group_tl(self):
+    def ttest_getData_scalar_group_tl(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1310,7 +1311,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_scalar_group_noorder(self):
+    def ttest_getData_scalar_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1439,7 +1440,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_spectrum(self):
+    def ttest_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1482,7 +1483,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_client_spectrum(self):
+    def ttest_getData_client_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1621,7 +1622,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_spectrum_group(self):
+    def ttest_getData_spectrum_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1747,7 +1748,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_spectrum_group_noorder(self):
+    def ttest_getData_spectrum_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1873,7 +1874,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_image(self):
+    def ttest_getData_image(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -1925,7 +1926,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_client_image(self):
+    def ttest_getData_client_image(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2126,7 +2127,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_image_group(self):
+    def ttest_getData_image_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2260,7 +2261,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_image_group_noorder(self):
+    def ttest_getData_image_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2394,7 +2395,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_command(self):
+    def ttest_getData_command(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2431,7 +2432,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_command_lt(self):
+    def ttest_getData_command_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2470,7 +2471,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_command_group(self):
+    def ttest_getData_command_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2583,7 +2584,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_command_group_lt(self):
+    def ttest_getData_command_group_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2695,7 +2696,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_command_group_noorder(self):
+    def ttest_getData_command_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2808,7 +2809,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_dev_prop_group(self):
+    def ttest_getData_dev_prop_group(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -2929,7 +2930,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_dev_prop_group_lt(self):
+    def ttest_getData_dev_prop_group_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3051,7 +3052,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_dev_prop_group_noorder(self):
+    def ttest_getData_dev_prop_group_noorder(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3179,7 +3180,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_dev_prop(self):
+    def ttest_getData_dev_prop(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3218,7 +3219,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
-    def test_getData_dev_prop_lt(self):
+    def ttest_getData_dev_prop_lt(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3257,7 +3258,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## isValid test
     # \brief It tests default settings
-    def test_isValid(self):
+    def ttest_isValid(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
@@ -3272,7 +3273,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## constructor test
     # \brief It tests default settings
-    def test_setDecoders_default(self):
+    def ttest_setDecoders_default(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
