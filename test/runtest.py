@@ -79,26 +79,28 @@ except ImportError as e:
 DB_AVAILABLE = []
     
 try:
-    import mysql.connector
+    import pymysql
+    pymysql.install_as_MySQLdb()
     ## connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
     args["host"] = 'localhost'
     args["read_default_file"] = '/etc/my.cnf'
-    ## inscance of MySQLdb
-    mydb = mysql.connector.connect(**args)
+    ## inscance of pymysql
+    mydb = pymysql.connect(**args)
     mydb.close()
     DB_AVAILABLE.append("MYSQL")
 except:
     try:
-        import MySQLdb    
+        import pymysql
+        pymysql.install_as_MySQLdb()
         from os.path import expanduser
         home = expanduser("~")
         ## connection arguments to MYSQL DB
         args2 = {'host': u'localhost', 'db': u'tango', 
                 'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
-        ## inscance of MySQLdb
-        mydb = MySQLdb.connect(**args2)
+        ## inscance of pymysql
+        mydb = pymysql.connect(**args2)
         mydb.close()
         DB_AVAILABLE.append("MYSQL")
         

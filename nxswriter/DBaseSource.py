@@ -34,7 +34,8 @@ from .Errors import (PackageError, DataSourceSetupError)
 DB_AVAILABLE = []
 
 try:
-    import mysql.connector
+    import pymysql
+    pymysql.install_as_MySQLdb()
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
     Streams.info("MYSQL not available: %s" % e)
@@ -149,7 +150,7 @@ class DBaseSource(DataSource):
             args["host"] = self.hostname
         if self.port:
             args["port"] = int(self.port)
-        return MySQLdb.connect(**args)
+        return pymysql.connect(**args)
 
     ## connects to PGSQL database
     # \returns open database object

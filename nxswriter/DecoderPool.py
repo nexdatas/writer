@@ -26,6 +26,7 @@ import numpy
 import importlib
 import sys
 
+
 ## UTF8 decoder
 class UTF8decoder(object):
 
@@ -114,9 +115,9 @@ class UINT32decoder(object):
             if isinstance(self.__data[1], str):
                 data = bytearray()
                 data.extend(map(ord, self.__data[1]))
-            else:    
+            else:
                 data = self.__data[1]
-            res  = struct.unpack('I' * (len(data) // 4), data)
+            res = struct.unpack('I' * (len(data) // 4), data)
             self.__value = numpy.array(
                 struct.unpack('I' * (len(data) // 4),
                               data),

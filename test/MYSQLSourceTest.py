@@ -31,7 +31,8 @@ import json
 import binascii
 import time
 
-import MySQLdb
+import pymysql
+pymysql.install_as_MySQLdb()
 
 from nxswriter.DataSources import DataSource
 from nxswriter.DBaseSource import DBaseSource
@@ -87,13 +88,13 @@ class MYSQLSourceTest(unittest.TestCase):
             args["db"] = 'tango'
             args["host"] = 'localhost'
             args["read_default_file"] = '/etc/my.cnf'
-            self._mydb = MySQLdb.connect(**args)
+            self._mydb = pymysql.connect(**args)
         except:
             from os.path import expanduser
             home = expanduser("~")
             args2 = {'host': u'localhost', 'db': u'tango', 
                      'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
-            self._mydb = MySQLdb.connect(**args2)
+            self._mydb = pymysql.connect(**args2)
             self._largs = args2
             print("ARGS: %s" % args2)
         print("SEED =%s" % self.__seed) 
@@ -187,7 +188,7 @@ class MYSQLSourceTest(unittest.TestCase):
         self.setsource(ds)
         ds.dbtype = self.__dbtype
         ds.query = query
-        self.myAssertRaise(MySQLdb.OperationalError, ds.getData)
+        self.myAssertRaise(Exception, ds.getData)
 
 
         ds = DBaseSource()
