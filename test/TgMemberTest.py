@@ -715,7 +715,7 @@ class TgMemberTest(unittest.TestCase):
             }
 
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
