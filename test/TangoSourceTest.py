@@ -857,6 +857,141 @@ class TangoSourceTest(unittest.TestCase):
             self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_client_scalar_sar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        arr1 = {
+            "ScalarBoolean":[ "bool", "DevBoolean", True, "DevBoolean", False],
+            "ScalarUChar":[ "uint8", "DevUChar", 23, "DevLong64", 443],
+            "ScalarShort":[ "int16", "DevShort", -123, "DevLong64", 234],
+            "ScalarUShort":[ "uint16", "DevUShort", 1234, "DevLong64", 23],
+            "ScalarLong":[ "int64", "DevLong", -124, "DevLong64", -23],
+            "ScalarULong":["uint64" , "DevULong", 234, "DevLong64", 23],
+            "ScalarLong64":[ "int64", "DevLong64", 234, "DevLong64",  -13],
+            "ScalarULong64":[ "uint64", "DevULong64", 23L, "DevLong64", 223L],
+            "ScalarFloat":[ "float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
+            "ScalarDouble":[ "float64", "DevDouble", -2.456673e+02,  "DevDouble", +2.456673e+02,1e-14],
+            "ScalarString":[ "string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
+            }
+
+
+
+        arr2 = {
+           "State":[ "string", "DevState", PyTango._PyTango.DevState.ON, "DevState", PyTango._PyTango.DevState.ON],
+           }
+
+
+        arr3 = {
+           "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded":[ "string", "DevEncoded",
+                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+           }
+
+        for k in arr1 :
+            self._simps.dp.write_attribute( k, arr1[k][2])
+
+        arr = dict(arr1,**(arr2))
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None,
+                           arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                gjson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                gjson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+            self.assertEqual(el.setJSON(json.loads(gjson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                ljson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                ljson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+            gjson = '{}'
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                ljson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                ljson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+            gjson = '{}'
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+        for k in arr1:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            if k == "ScalarString":
+                gjson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][2])
+                ljson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+            elif k == "ScalarBoolean":
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][2]).lower())
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+            else:
+                gjson = '{"data":{"%s":%s}}' % (el.client, arr[k][2])
+                ljson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr[k][4],
+                           arr[k][3],[],None,None, arr[k][5] if len(arr[k]) > 5 else 0)
+
+
+        for k in arr3:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            el.member.encoding = arr3[k][2][0]
+            dp = DecoderPool()
+            dt = el.setDecoders(dp)
+            dt = el.getData()
+            self.checkData(dt,"SCALAR", arr3[k][2],arr3[k][1],[1,0],arr3[k][2][0],dp)
+
+
 
     ## getData test
     # \brief It tests default settings
@@ -1630,6 +1765,148 @@ class TangoSourceTest(unittest.TestCase):
 
     ## getData test
     # \brief It tests default settings
+    def test_getData_client_spectrum_sar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        arr = {
+            "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0], "DevBoolean", False],
+            "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0],"DevLong64", 2],
+            "SpectrumShort":[ "int16", "DevShort", -123, [1,0], "DevLong64", -13],
+            "SpectrumUShort":[ "uint16", "DevUShort", 1234, [1,0], "DevLong64", 134],
+            "SpectrumLong":[ "int64", "DevLong", -124, [1,0], "DevLong64", -1213],
+            "SpectrumULong":["uint64" , "DevULong", 234, [1,0], "DevLong64", 23],
+            "SpectrumLong64":[ "int64", "DevLong64", 234, [1,0], "DevLong64", 24],
+            "SpectrumULong64":[ "uint64", "DevULong64", 23, [1,0], "DevLong64", 2],
+            "SpectrumFloat":[ "float32", "DevFloat", 12.23, [1,0], "DevDouble", 1.234, 1e-5],
+            "SpectrumDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], "DevDouble", -2.4563e+02, 1e-14],
+            "SpectrumString":[ "string", "DevString", "MyTrue", [1,0], "DevString", "MyTsfdrue"],
+            }
+
+
+        for k in arr :
+            if arr[k][1] != "DevBoolean":
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
+                arr[k][2] =  [ arr[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
+                arr[k][5] =  [ arr[k][5]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
+            else:
+                mlen = [self.__rnd.randint(1, 10)]
+                arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
+                arr[k][5] =  [("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+
+            arr[k][3] =  [mlen[0],0]
+            self._simps.dp.write_attribute( k, arr[k][2])
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            dt = el.getData()
+            self.checkData(dt, "SPECTRUM", arr[k][2],arr[k][1],arr[k][3],
+                           None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "SpectrumString":
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+            elif k == "SpectrumBoolean":
+                gjson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([a + ',' for a in arr[k][5]])[:-1]+"]")
+            else:
+                gjson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([str(a) + ',' for a in arr[k][5]])[:-1]+"]")
+
+
+            self.assertEqual(el.setJSON(json.loads(gjson)),None)
+            dt = el.getData()
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
+                               arr[k][4],[arr[k][3][0]],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt, "SPECTRUM", arr[k][5],arr[k][4],[arr[k][3][0]],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "SpectrumString":
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+            elif k == "SpectrumBoolean":
+                ljson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([a + ',' for a in arr[k][5]])[:-1]+"]")
+            else:
+                ljson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([str(a) + ',' for a in arr[k][5]])[:-1]+"]")
+
+
+            gjson = '{}'
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
+                               arr[k][4],[arr[k][3][0]],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt, "SPECTRUM", arr[k][5],arr[k][4],[arr[k][3][0]],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "SpectrumString":
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][2]).replace("'","\""))
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+            elif k == "SpectrumBoolean":
+                ljson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([a + ',' for a in arr[k][5]])[:-1]+"]")
+                gjson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([str(a).lower() + ',' for a in arr[k][2]])[:-1]+"]")
+            else:
+                ljson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([str(a) + ',' for a in arr[k][5]])[:-1]+"]")
+                gjson = '{"data":{"%s":%s}}' % (el.client,
+                                                '['+''.join([str(a) + ',' for a in arr[k][2]])[:-1]+"]")
+
+
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "SPECTRUM", [Converters.toBool(a) for a in arr[k][5]],
+                               arr[k][4],[arr[k][3][0]],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt, "SPECTRUM", arr[k][5],arr[k][4],[arr[k][3][0]],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+    ## getData test
+    # \brief It tests default settings
     def test_getData_spectrum_group(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -2117,6 +2394,210 @@ class TangoSourceTest(unittest.TestCase):
                                   for row in arr[k][5]])[:-1] +']')
                 gjson = '{"data":{"%s":%s}}' % (
                     sclient,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][2]])[:-1] +']')
+
+
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "IMAGE",
+                               [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
+                               arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt,"IMAGE", arr[k][5],arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_client_image_sar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+
+        arr = {
+            "ImageBoolean":[ "bool", "DevBoolean", True, [1,0], "DevBoolean", False],
+            "ImageUChar":[ "uint8", "DevUChar", 23, [1,0],"DevLong64", 2],
+            "ImageShort":[ "int16", "DevShort", -123, [1,0], "DevLong64", -13],
+            "ImageUShort":[ "uint16", "DevUShort", 1234, [1,0], "DevLong64", 134],
+            "ImageLong":[ "int64", "DevLong", -124, [1,0], "DevLong64", -1213],
+            "ImageULong":["uint64" , "DevULong", 234, [1,0], "DevLong64", 23],
+            "ImageLong64":[ "int64", "DevLong64", 234, [1,0], "DevLong64", 24],
+            "ImageULong64":[ "uint64", "DevULong64", 23, [1,0], "DevLong64", 2],
+            "ImageFloat":[ "float32", "DevFloat", 12.23, [1,0], "DevDouble", 1.234, 1e-5],
+            "ImageDouble":[ "float64", "DevDouble", -2.456673e+02, [1,0], "DevDouble", -2.4563e+02, 1e-14],
+            "ImageString":[ "string", "DevString", "MyTrue", [1,0], "DevString", "MyTsfdrue"],
+            }
+
+
+
+        for k in arr :
+
+
+            mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
+            if arr[k][1] != "DevBoolean":
+                arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+                arr[k][5] =  [[ arr[k][5]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
+            else:
+                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                if arr[k][1] == 'DevBoolean':
+                    arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    arr[k][5] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
+
+            arr[k][3] =  [mlen[0],mlen[1]]
+            self._simps.dp.write_attribute( k, arr[k][2])
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            dt = el.getData()
+            self.checkData(dt,"IMAGE", arr[k][2],arr[k][1],arr[k][3],
+                           None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "ImageString":
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+            elif k == "ImageBoolean":
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+            else:
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+
+
+            self.assertEqual(el.setJSON(json.loads(gjson)),None)
+            dt = el.getData()
+
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "IMAGE",
+                               [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
+                               arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt,"IMAGE", arr[k][5],arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "ImageString":
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+            elif k == "ImageBoolean":
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+            else:
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+
+
+            self.assertEqual(el.setJSON(json.loads(gjson)),None)
+            dt = el.getData()
+
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "IMAGE",
+                               [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
+                               arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt,"IMAGE", arr[k][5],arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "ImageString":
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+            elif k == "ImageBoolean":
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+            else:
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+
+
+            gjson = '{}'
+            self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
+            dt = el.getData()
+
+            if arr[k][1] == "DevBoolean":
+                self.checkData(dt, "IMAGE",
+                               [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
+                               arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+            else:
+                self.checkData(dt,"IMAGE", arr[k][5],arr[k][4],arr[k][3],
+                               None,None, arr[k][6] if len(arr[k])>6 else 0)
+
+
+
+        for k in arr:
+            el = TangoSource()
+            el.device = 'stestp09/testss/s1r228'
+            el.member.memberType = 'attribute'
+            el.member.name = k
+            el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
+            if k == "ImageString":
+                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][2]).replace("'","\""))
+            elif k == "ImageBoolean":
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([str(a).lower() + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][2]])[:-1] +']')
+            else:
+                ljson = '{"data":{"%s":%s}}' % (
+                    el.client,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
+                                  for row in arr[k][5]])[:-1] +']')
+                gjson = '{"data":{"%s":%s}}' % (
+                    el.client,
                     '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][2]])[:-1] +']')
 

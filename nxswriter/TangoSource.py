@@ -229,6 +229,13 @@ class TangoSource(DataSource):
                 res = None
             if not res:
                 try:
+                    res = self._getJSONData(
+                        self.client,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
+            if not res:
+                try:
                     sclient = "/".join(self.client.split('/')[:-1])
                     res = self._getJSONData(
                         sclient,
