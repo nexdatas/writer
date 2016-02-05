@@ -27,7 +27,7 @@ import random
 import struct
 import numpy
 from xml.dom import minidom
-import PyTango 
+import PyTango
 import binascii
 import time
 import json
@@ -65,7 +65,7 @@ class pool(object):
         self.common = {}
         self.lock = threading.Lock()
         self.counter = 0
-    
+
 ## test fixture
 class TangoSourceTest(unittest.TestCase):
 
@@ -81,7 +81,7 @@ class TangoSourceTest(unittest.TestCase):
         self._tfname = "doc"
         self._fname = "test.h5"
         self._nxDoc = None
-        self._eDoc = None        
+        self._eDoc = None
         self._fattrs = {"short_name":"test","units":"m" }
         self._gname = "testDoc"
         self._gtype = "NXentry"
@@ -96,7 +96,7 @@ class TangoSourceTest(unittest.TestCase):
         except NotImplementedError:
             import time
             self.__seed  = long(time.time() * 256) # use fractional seconds
-         
+
         self.__rnd = random.Random(self.__seed)
 
 
@@ -109,7 +109,7 @@ class TangoSourceTest(unittest.TestCase):
         self._simps.setUp()
         self._simps2.setUp()
         ## file handle
-        print "SEED =",self.__seed 
+        print "SEED =",self.__seed
 
     ## test closer
     # \brief Common tear down
@@ -119,7 +119,7 @@ class TangoSourceTest(unittest.TestCase):
 
     ## Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
@@ -184,16 +184,16 @@ class TangoSourceTest(unittest.TestCase):
 
 
 
-    ## Data check 
+    ## Data check
     # \brief It check the source Data
     # \param data  tested data
     # \param format data format
     # \param value data value
-    # \param ttype data Tango type    
-    # \param shape data shape    
-    # \param shape data shape    
-    # \param encoding data encoding    
-    # \param encoding data encoding    
+    # \param ttype data Tango type
+    # \param shape data shape
+    # \param shape data shape
+    # \param encoding data encoding
+    # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
     def checkData(self, data, format, value, ttype, shape, encoding = None, decoders = None, error = 0):
@@ -204,12 +204,12 @@ class TangoSourceTest(unittest.TestCase):
             self.assertEqual(data["encoding"], encoding)
         if decoders is not None:
             self.assertEqual(data["decoders"], decoders)
-        if format == 'SCALAR': 
+        if format == 'SCALAR':
                 if error:
                     self.assertTrue(abs(data["value"]- value)<= error)
                 else:
                     self.assertEqual(data["value"], value)
-        elif format == 'SPECTRUM': 
+        elif format == 'SPECTRUM':
             self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
                 if error:
@@ -225,7 +225,7 @@ class TangoSourceTest(unittest.TestCase):
                         self.assertTrue(abs(data["value"][i][j]-value[i][j])<=error)
                     else:
                         self.assertEqual(data["value"][i][j], value[i][j])
-                
+
 
 
     ## setup test
@@ -284,7 +284,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" %
                  (dname,device,ctype))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.client, None)
@@ -298,7 +298,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s'/> </datasource>" %
                  (dname,device,'strange'))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -311,7 +311,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s'/> </datasource>" %
                  (dname,device,host))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -324,8 +324,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s'/> </datasource>" % 
+
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s'/> </datasource>" %
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
@@ -340,7 +340,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.memberType = None
         ds.member.encoding = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s'/> </datasource>" %
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -354,7 +354,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group= '%s'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group= '%s'/> </datasource>" %
                  (dname,device,encoding, group))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -421,7 +421,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,ctype))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -435,7 +435,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' member ='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,'strange'))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -448,7 +448,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' group='__CLIENT__'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,host))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -460,8 +460,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" % 
+
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
@@ -474,8 +474,8 @@ class TangoSourceTest(unittest.TestCase):
         ds.device = None
         ds.member.name = None
         ds.member.memberType = None
-        
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" % 
+
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' hostname='%s' port='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
@@ -490,7 +490,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.memberType = None
         ds.member.encoding = None
         ds.group = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -504,7 +504,7 @@ class TangoSourceTest(unittest.TestCase):
         ds.member.name = None
         ds.member.memberType = None
         ds.member.encoding = None
-        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" % 
+        ds.setup("<datasource> <record name='%s'/> <device name='%s' encoding='%s' group='__CLIENT__'/> </datasource>" %
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
@@ -588,7 +588,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(el, object))
         pl = pool()
         self.assertTrue(not 'TANGO' in pl.common.keys())
-    
+
         self.assertEqual(el.setDataSources(pl), None)
         self.assertTrue('TANGO' in pl.common.keys())
         self.assertEqual(pl.common['TANGO'],{})
@@ -651,7 +651,7 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(mbs[el.member.name].name, el.member.name)
         self.assertEqual(mbs[el.member.name].memberType, el.member.memberType)
         self.assertEqual(mbs[el.member.name].encoding, el.member.encoding)
-        
+
 
 
 
@@ -688,13 +688,13 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
         for k in arr1 :
             self._simps.dp.write_attribute( k, arr1[k][2])
-            
+
         arr = dict(arr1,**(arr2))
 
         for k in arr:
@@ -746,13 +746,13 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
         for k in arr1 :
             self._simps.dp.write_attribute( k, arr1[k][2])
-            
+
         arr = dict(arr1,**(arr2))
 
         for k in arr:
@@ -761,8 +761,9 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             dt = el.getData()
-            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, 
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None,
                            arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
@@ -772,11 +773,11 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
             if k == "ScalarString":
-                gjson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+                gjson = '{"data":{"%s":"%s"}}' % (sclient, arr[k][4])
             elif k == "ScalarBoolean":
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][4]).lower())
             else:
-                gjson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+                gjson = '{"data":{"%s":%s}}' % (sclient, arr[k][4])
             self.assertEqual(el.setJSON(json.loads(gjson)),None)
             dt = el.getData()
             self.checkData(dt,"SCALAR", arr[k][4],
@@ -788,12 +789,13 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ScalarString":
-                ljson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+                ljson = '{"data":{"%s":"%s"}}' % (sclient, arr[k][4])
             elif k == "ScalarBoolean":
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][4]).lower())
             else:
-                ljson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+                ljson = '{"data":{"%s":%s}}' % (sclient, arr[k][4])
             gjson = '{}'
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
@@ -806,12 +808,13 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ScalarString":
-                ljson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+                ljson = '{"data":{"%s":"%s"}}' % (sclient, arr[k][4])
             elif k == "ScalarBoolean":
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][4]).lower())
             else:
-                ljson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+                ljson = '{"data":{"%s":%s}}' % (sclient, arr[k][4])
             gjson = '{}'
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
@@ -824,15 +827,16 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ScalarString":
-                gjson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][2])
-                ljson = '{"data":{"%s":"%s"}}' % (el.client, arr[k][4])
+                gjson = '{"data":{"%s":"%s"}}' % (sclient, arr[k][2])
+                ljson = '{"data":{"%s":"%s"}}' % (sclient, arr[k][4])
             elif k == "ScalarBoolean":
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][2]).lower())
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][4]).lower())
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][2]).lower())
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][4]).lower())
             else:
-                gjson = '{"data":{"%s":%s}}' % (el.client, arr[k][2])
-                ljson = '{"data":{"%s":%s}}' % (el.client, arr[k][4])
+                gjson = '{"data":{"%s":%s}}' % (sclient, arr[k][2])
+                ljson = '{"data":{"%s":%s}}' % (sclient, arr[k][4])
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
             self.checkData(dt,"SCALAR", arr[k][4],
@@ -845,6 +849,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228/'
             el.member.encoding = arr3[k][2][0]
             dp = DecoderPool()
             dt = el.setDecoders(dp)
@@ -882,13 +887,13 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
         for k in arr1 :
             self._simps.dp.write_attribute( k, arr1[k][2])
-            
+
         arr = dict(arr1,**(arr2))
 
         for k in arr:
@@ -898,7 +903,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
             dt = el.getData()
-            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None, 
+            self.checkData(dt,"SCALAR", arr[k][2],arr[k][1],[1,0],None,None,
                            arr[k][5] if len(arr[k]) > 5 else 0)
 
         for k in arr1:
@@ -1021,13 +1026,13 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
         for k in arr1 :
             self._simps.dp.write_attribute( k, arr1[k][2])
-            
+
         arr = dict(arr1,**(arr2))
 
         for k in arr:
@@ -1098,7 +1103,7 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
@@ -1108,7 +1113,7 @@ class TangoSourceTest(unittest.TestCase):
             self._simps.dp.write_attribute( k, arr1[k][2])
         for k in arr1b:
             self._simps2.dp.write_attribute( k, arr1b[k][2])
-            
+
         arr = dict(arr1,**(arr2))
         arrb = dict(arr1b,**(arr2))
 
@@ -1133,7 +1138,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -1226,7 +1231,7 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
@@ -1236,7 +1241,7 @@ class TangoSourceTest(unittest.TestCase):
             self._simps.dp.write_attribute( k, arr1[k][2])
         for k in arr1b:
             self._simps2.dp.write_attribute( k, arr1b[k][2])
-            
+
         arr = dict(arr1,**(arr2))
         arrb = dict(arr1b,**(arr2))
 
@@ -1261,7 +1266,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k.lower()
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -1354,7 +1359,7 @@ class TangoSourceTest(unittest.TestCase):
 
         arr3 = {
            "ScalarEncoded":[ "string", "DevEncoded", ("UTF8","Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded":[ "string", "DevEncoded", 
+           "SpectrumEncoded":[ "string", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
            }
 
@@ -1364,7 +1369,7 @@ class TangoSourceTest(unittest.TestCase):
             self._simps.dp.write_attribute( k, arr1[k][2])
         for k in arr1b:
             self._simps2.dp.write_attribute( k, arr1b[k][2])
-            
+
         arr = dict(arr1,**(arr2))
         arrb = dict(arr1b,**(arr2))
 
@@ -1391,7 +1396,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
             dt = el2[k].getData()
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -1444,7 +1449,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -1465,7 +1470,7 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 arr[k][2] =  [ arr[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
                 arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
 
@@ -1487,7 +1492,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0], "DevBoolean", False],
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0],"DevLong64", 2],
@@ -1508,7 +1513,7 @@ class TangoSourceTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 arr[k][2] =  [ arr[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
                 arr[k][5] =  [ arr[k][5]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
                 arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
                 arr[k][5] =  [("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
@@ -1532,16 +1537,17 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "SpectrumString":
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
             elif k == "SpectrumBoolean":
-                gjson = '{"data":{"%s":%s}}' % (el.client,  
+                gjson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([a + ',' for a in arr[k][5]])[:-1]+"]")
             else:
-                gjson = '{"data":{"%s":%s}}' % (el.client, 
+                gjson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([str(a) + ',' for a in arr[k][5]])[:-1]+"]")
 
-                
+
             self.assertEqual(el.setJSON(json.loads(gjson)),None)
             dt = el.getData()
             if arr[k][1] == "DevBoolean":
@@ -1562,16 +1568,17 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "SpectrumString":
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
             elif k == "SpectrumBoolean":
-                ljson = '{"data":{"%s":%s}}' % (el.client,  
+                ljson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([a + ',' for a in arr[k][5]])[:-1]+"]")
             else:
-                ljson = '{"data":{"%s":%s}}' % (el.client, 
+                ljson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([str(a) + ',' for a in arr[k][5]])[:-1]+"]")
 
-                
+
             gjson = '{}'
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
@@ -1593,21 +1600,22 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "SpectrumString":
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][2]).replace("'","\""))
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][2]).replace("'","\""))
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
             elif k == "SpectrumBoolean":
-                ljson = '{"data":{"%s":%s}}' % (el.client,  
+                ljson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([a + ',' for a in arr[k][5]])[:-1]+"]")
-                gjson = '{"data":{"%s":%s}}' % (el.client,  
+                gjson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([str(a).lower() + ',' for a in arr[k][2]])[:-1]+"]")
             else:
-                ljson = '{"data":{"%s":%s}}' % (el.client, 
+                ljson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([str(a) + ',' for a in arr[k][5]])[:-1]+"]")
-                gjson = '{"data":{"%s":%s}}' % (el.client, 
+                gjson = '{"data":{"%s":%s}}' % (sclient,
                                                 '['+''.join([str(a) + ',' for a in arr[k][2]])[:-1]+"]")
 
-                
+
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
             if arr[k][1] == "DevBoolean":
@@ -1626,7 +1634,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -1664,7 +1672,7 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 arr[k][2] =  [ arr[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
                 arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
 
@@ -1675,7 +1683,7 @@ class TangoSourceTest(unittest.TestCase):
             if arrb[k][1] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 arrb[k][2] =  [ arrb[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
                 arrb[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
 
@@ -1707,7 +1715,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -1752,7 +1760,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "SpectrumBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "SpectrumUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -1790,7 +1798,7 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 arr[k][2] =  [ arr[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
                 arr[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
 
@@ -1801,7 +1809,7 @@ class TangoSourceTest(unittest.TestCase):
             if arrb[k][1] != "DevBoolean":
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(0, 3)]
                 arrb[k][2] =  [ arrb[k][2]*self.__rnd.randint(0, 3) for c in range(mlen[0] )]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
                 arrb[k][2] =  [ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[0]) ]
 
@@ -1878,7 +1886,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "ImageBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -1902,11 +1910,11 @@ class TangoSourceTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
+
             arr[k][3] =  [mlen[0],mlen[1]]
             self._simps.dp.write_attribute( k, arr[k][2])
 
@@ -1930,7 +1938,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "ImageBoolean":[ "bool", "DevBoolean", True, [1,0], "DevBoolean", False],
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0],"DevLong64", 2],
@@ -1954,12 +1962,12 @@ class TangoSourceTest(unittest.TestCase):
             if arr[k][1] != "DevBoolean":
                 arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
                 arr[k][5] =  [[ arr[k][5]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
                     arr[k][5] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
+
             arr[k][3] =  [mlen[0],mlen[1]]
             self._simps.dp.write_attribute( k, arr[k][2])
 
@@ -1980,25 +1988,26 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
             elif k == "ImageBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
-                    el.client,   
-                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
-                    el.client,  
-                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
 
-                
+
             self.assertEqual(el.setJSON(json.loads(gjson)),None)
             dt = el.getData()
 
             if arr[k][1] == "DevBoolean":
-                self.checkData(dt, "IMAGE", 
+                self.checkData(dt, "IMAGE",
                                [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
                                arr[k][4],arr[k][3],
                                None,None, arr[k][6] if len(arr[k])>6 else 0)
@@ -2014,25 +2023,26 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
             elif k == "ImageBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
-                    el.client,   
-                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
-                    el.client,  
-                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
 
-                
+
             self.assertEqual(el.setJSON(json.loads(gjson)),None)
             dt = el.getData()
 
             if arr[k][1] == "DevBoolean":
-                self.checkData(dt, "IMAGE", 
+                self.checkData(dt, "IMAGE",
                                [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
                                arr[k][4],arr[k][3],
                                None,None, arr[k][6] if len(arr[k])>6 else 0)
@@ -2050,26 +2060,27 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
             elif k == "ImageBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
-                    el.client,   
-                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
-                    el.client,  
-                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
 
-                
+
             gjson = '{}'
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
 
             if arr[k][1] == "DevBoolean":
-                self.checkData(dt, "IMAGE", 
+                self.checkData(dt, "IMAGE",
                                [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
                                arr[k][4],arr[k][3],
                                None,None, arr[k][6] if len(arr[k])>6 else 0)
@@ -2086,34 +2097,35 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'attribute'
             el.member.name = k
             el.client = 'stestp09/testss/s1r228/%s' % (k.lower())
+            sclient = 'stestp09/testss/s1r228'
             if k == "ImageString":
-                ljson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][5]).replace("'","\""))
-                gjson = '{"data":{"%s":%s}}' % (el.client, str(arr[k][2]).replace("'","\""))
+                ljson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][5]).replace("'","\""))
+                gjson = '{"data":{"%s":%s}}' % (sclient, str(arr[k][2]).replace("'","\""))
             elif k == "ImageBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
-                    el.client,   
-                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
                 gjson = '{"data":{"%s":%s}}' % (
-                    el.client,   
-                    '['+"".join([ '['+''.join([str(a).lower() + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([str(a).lower() + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][2]])[:-1] +']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
-                    el.client,  
-                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][5]])[:-1] +']')
                 gjson = '{"data":{"%s":%s}}' % (
-                    el.client,  
-                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," 
+                    sclient,
+                    '['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"],"
                                   for row in arr[k][2]])[:-1] +']')
 
-                
+
             self.assertEqual(el.setJSON(json.loads(gjson),json.loads(ljson)),None)
             dt = el.getData()
 
             if arr[k][1] == "DevBoolean":
-                self.checkData(dt, "IMAGE", 
+                self.checkData(dt, "IMAGE",
                                [[Converters.toBool(a) for a in row ]for row in arr[k][5]],
                                arr[k][4],arr[k][3],
                                None,None, arr[k][6] if len(arr[k])>6 else 0)
@@ -2131,7 +2143,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "ImageBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -2169,11 +2181,11 @@ class TangoSourceTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
+
             arr[k][3] =  [mlen[0],mlen[1]]
             self._simps.dp.write_attribute( k, arr[k][2])
 
@@ -2185,11 +2197,11 @@ class TangoSourceTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
             if arrb[k][1] != "DevBoolean":
                 arrb[k][2] =  [[ arrb[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arrb[k][1] == 'DevBoolean':
                     arrb[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
+
             arrb[k][3] =  [mlen[0],mlen[1]]
             self._simps2.dp.write_attribute( k, arrb[k][2])
 
@@ -2219,7 +2231,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'attribute'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -2265,7 +2277,7 @@ class TangoSourceTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-        
+
         arr = {
             "ImageBoolean":[ "bool", "DevBoolean", True, [1,0]],
             "ImageUChar":[ "uint8", "DevUChar", 23, [1,0]],
@@ -2303,11 +2315,11 @@ class TangoSourceTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
             if arr[k][1] != "DevBoolean":
                 arr[k][2] =  [[ arr[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
+
             arr[k][3] =  [mlen[0],mlen[1]]
             self._simps.dp.write_attribute( k, arr[k][2])
 
@@ -2319,11 +2331,11 @@ class TangoSourceTest(unittest.TestCase):
             mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
             if arrb[k][1] != "DevBoolean":
                 arrb[k][2] =  [[ arrb[k][2]*self.__rnd.randint(0,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
+            else:
                 mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
                 if arrb[k][1] == 'DevBoolean':
                     arrb[k][2] =  [[ (True if self.__rnd.randint(0,1) else False)  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
+
             arrb[k][3] =  [mlen[0],mlen[1]]
             self._simps2.dp.write_attribute( k, arrb[k][2])
 
@@ -2355,7 +2367,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
             dt = el2[k].getData()
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -2536,7 +2548,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'command'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -2649,7 +2661,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'command'
             el2[k].member.name = k.lower()
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -2763,7 +2775,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
             dt = el2[k].getData()
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -2882,7 +2894,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'property'
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -3003,7 +3015,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.memberType = 'property'
             el2[k].member.name = k.lower()
             self.assertEqual(el2[k].setDataSources(pl), None)
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -3127,7 +3139,7 @@ class TangoSourceTest(unittest.TestCase):
             el2[k].member.name = k
             self.assertEqual(el2[k].setDataSources(pl), None)
             dt = el2[k].getData()
-        
+
 
         dt = el[k].getData()
         dt = el2[k].getData()
@@ -3207,7 +3219,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'property'
             el.member.name = k
             dt = el.getData()
-            dp = PyTango.DeviceProxy(el.device)  
+            dp = PyTango.DeviceProxy(el.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
                            'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
@@ -3246,7 +3258,7 @@ class TangoSourceTest(unittest.TestCase):
             el.member.memberType = 'property'
             el.member.name = k.lower()
             dt = el.getData()
-            dp = PyTango.DeviceProxy(el.device)  
+            dp = PyTango.DeviceProxy(el.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             self.checkData(dt,"SCALAR", dp.get_property([k])[k][0],
                            'DevString',[1,0],None,None, arr[k][4] if len(arr[k])>4 else 0)
@@ -3291,7 +3303,7 @@ class TangoSourceTest(unittest.TestCase):
         name = "myRecord"
         wjson = json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
-        
+
         el = EField(self._fattrs, None )
         ds = DataSourceFactory(atts, el)
         self.assertTrue(isinstance(ds, Element))
@@ -3312,6 +3324,6 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(len(ds.last.tagAttributes),1)
         self.assertEqual(ds.last.tagAttributes["nexdatas_source"],('NX_CHAR', "<datasource type='TANGO'><record name='writer'/> <device name='stestp09/testss/s1r228' encoding='UTF8'/></datasource>") )
 
-    
+
 if __name__ == '__main__':
     unittest.main()

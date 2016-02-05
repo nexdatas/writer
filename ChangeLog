@@ -1,3 +1,7 @@
+2016-02-05 Jan Kotanski <jankotan@gmail.com>
+	* fix __CLIENT__  group device keyword
+	* tagged as 2.0.1
+
 2015-10-22 Jan Kotanski <jankotan@gmail.com>
 	* adding streaming functions in Streams
 	* adding support for external links and datasource links
