@@ -24,7 +24,9 @@ Download the latest NexDaTaS version from
 
 Extract sources and run
 
-$ python setup.py install
+.. code-block:: console
+
+   $ python setup.py install
 
 ------------------
 General overview
