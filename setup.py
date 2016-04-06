@@ -29,6 +29,7 @@ NDTS = "nxswriter"
 ## nxswriter imported package
 INDTS = __import__(NDTS)
 
+from sphinx.setup_command import BuildDoc
 
 #__requires__ = 'nextdata ==%s' % INDTS.__version__
 
@@ -67,10 +68,14 @@ REQUIRED = [
     'pni (>=1.0.0)'
 ]
 
+release = INDTS.__version__
+version = ".".join(release.split(".")[:2])
+name = "NXSDataWriter"
+
 ## metadata for distutils
 SETUPDATA = dict(
-    name="nexdatas",
-    version=INDTS.__version__,
+    name=NDTS,
+    version=release,
     author="Jan Kotanski, Eugen Wintersberger , Halil Pasic",
     author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, "
     + "halil.pasic@gmail.com",
@@ -81,7 +86,12 @@ SETUPDATA = dict(
     packages=['nxswriter'],
     requires=REQUIRED,
     scripts=['NXSDataWriter'],
-    cmdclass={'test': TestCommand},
+    cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
+    command_options={
+        'build_sphinx': {
+            'project': ('setup.py', name),
+            'version': ('setup.py', version),
+            'release': ('setup.py', release)}},
     long_description=read('README')
 )
 
