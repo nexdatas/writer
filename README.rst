@@ -1,5 +1,5 @@
-NXSDataWriter project
-=====================
+Welcome to NXSDataWriter's documentation!
+=========================================
 
 Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
 Introduction
@@ -329,7 +329,8 @@ comments related to the client code.
 
 .. code-block:: python
 
-   # To use the Tango Server we must import the PyTango module and create DeviceProxy for the server.
+   # To use the Tango Server we must import the PyTango module and
+   # create DeviceProxy for the server.
 
    import PyTango
 
@@ -339,63 +340,70 @@ comments related to the client code.
 
    dpx.Init()
 
-   # Here device corresponds to a name of our Nexus Data Server. Init() method resets the state of the
-   # server.
+   # Here device corresponds to a name of our Nexus Data Server.
+   # The Init() method resets the state of the server.
 
    dpx.FileName = "test.h5"
    dpx.OpenFile()
 
    # We set the name of the output HDF5 file and open it.
 
-   # Now we are ready to pass the XML settings describing a structure of the output file as well as
-   # defining a way of data storing. Examples of the XMLSettings can be found in the XMLExamples
-   # directory.
+   # Now we are ready to pass the XML settings describing a structure of 
+   # the output file as well as defining a way of data storing.
+   # Examples of the XMLSettings can be found in the XMLExamples directory.
 
    xml = open("test.xml", 'r').read()
    dpx.XMLSettings = xml
 
    dpx.JSONRecord = '{"data": {"parameterA":0.2},
 			 "decoders":{"DESY2D":"desydecoders.desy2Ddec.desy2d"},
-			 "datasources":{"MCLIENT":"sources.DataSources.LocalClientSource"}
-			}'
+			 "datasources":{
+		              "MCLIENT":"sources.DataSources.LocalClientSource"}
+   }'
 
    dpx.OpenEntry()
 
-   # We read our XML settings settings from a file and pass them to the server via the XMLSettings
-   # attribute. Then we open an entry group related to the XML configuration. Optionally, we can also
-   # set JSONRecord, i.e. an attribute which contains a global JSON string with data needed to store
-   # during opening the entry and also other stages of recording. If external decoder for DevEncoded?
-   # data is need one can registred it passing its packages and class names in JSONRecord,
-   #  e.g. "desy2d" class of "DESY2D" label in "desydecoders.desy2Ddec" package.
-   # Similarly making use of "datasources" records of the JSON string one can registred additional
-   # datasources. The OpenEntry method stores data defined in the XML string with strategy=INIT.
+   # We read our XML settings settings from a file and pass them to the server via
+   # the XMLSettings attribute. Then we open an entry group related to the XML
+   # configuration. Optionally, we can also set JSONRecord, i.e. an attribute
+   # which contains a global JSON string with data needed to store during opening
+   # the entry and also other stages of recording. If external decoder for
+   # DevEncoded data is need one can registred it passing its packages and
+   # class names in JSONRecord,
+   # e.g. "desy2d" class of "DESY2D" label in "desydecoders.desy2Ddec" package.
+   # Similarly making use of "datasources" records of the JSON string one can
+   # registred additional datasources. The OpenEntry method stores data defined
+   # in the XML string with strategy=INIT.
    # The JSONRecord attribute can be changed during recording our data.
 
-   # After finalization of the configuration process we can start recording the main experiment
-   #  data in a STEP mode.
+   # After finalization of the configuration process we can start recording
+   # the main experiment data in a STEP mode.
 
    dpx.Record('{"data": {"p09/counter/exp.01":0.1, "p09/counter/exp.02":1.1}}')
 
-   # Every time we call the Record method all nexus fields defined with strategy=STEP are
-   # extended by one record unit and the assigned to them data is stored. As the method argument
-   # we pass a local JSON string with the client data. To record the client data one can also use
-   # the global JSONRecord string. Contrary to the global JSON string the local one is only
+   # Every time we call the Record method all nexus fields defined with
+   # strategy=STEP are extended by one record unit and the assigned to them data
+   # is stored. As the method argument we pass a local JSON string with the client
+   # data. To record the client data one can also use the global JSONRecord string.
+   # Contrary to the global JSON string the local one is only
    # valid during one record step.
 
    dpx.Record('{"data": {"emittance_x": 0.1},  "triggers":["trigger1", "trigger2"]  }')
 
-   # If you denote in your XML configuration string some fields by additional trigger attributes
-   # you may ask the server to store your data only in specific record steps. This can be helpful
-   # if you want to store your data in asynchronous mode. To this end you define in
-   # the local JSON string a list of triggers which are used in the current record step.
+   # If you denote in your XML configuration string some fields by additional
+   # trigger attributes you may ask the server to store your data only in specific
+   # record steps. This can be helpful if you want to store your data in
+   # asynchronous mode. To this end you define in the local JSON string a list of
+   # triggers which are used in the current record step.
 
    dpx.JSONRecord = '{"data": {"parameterB":0.3}}'
    dpx.CloseEntry()
 
-   # After scanning experiment data in 'STEP' mode we close the entry. To this end we call
-   # the CloseEntry method which also stores data defined with strategy=FINAL. Since our HDF5 file
-   # can contains many entries we can again open the entry and repeat our record procedure. If we
-   # define more than one entry in one XML setting string the defined entries are recorded parallel
+   # After scanning experiment data in 'STEP' mode we close the entry.
+   # To this end we call the CloseEntry method which also stores data defined
+   # with strategy=FINAL. Since our HDF5 file can contains many entries we can again
+   # open the entry and repeat our record procedure. If we define more than one entry
+   # in one XML setting string the defined entries are recorded parallel
    # with the same steps.
 
    # Finally, we can close our output file by
