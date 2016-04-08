@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file ThreadPool.py
-# Thread Pool class
+#
 
 """ Provides a pool with element threads """
 
@@ -28,38 +26,50 @@ from .ElementThread import ElementThread
 from .Errors import ThreadError
 
 
-## Pool with threads
 class ThreadPool(object):
-    ## constructor
-    # \brief It cleans the member variables
+    """ Pool with threads
+    """
+
     def __init__(self, numberOfThreads=None):
-        ## maximal number of threads
+        """ constructor
+
+        :brief: It cleans the member variables
+        :param numerOfThreads: number of threads
+        """
+
+        #: maximal number of threads
         self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
-        ## queue of the appended elements
+        #: queue of the appended elements
         self.__elementQueue = Queue.Queue()
-        ## list of the appended elements
+        #: list of the appended elements
         self.__elementList = []
-        ## list of the threads related to the appended elements
+        #: list of the threads related to the appended elements
         self.__threadList = []
 
-    ## appends the thread element
-    # \param elem the thread element
     def append(self, elem):
+        """ appends the thread element
+        :param elem: the thread element
+        """
         self.__elementList.append(elem)
 
-    ## sets the JSON string to threads
-    # \param globalJSON the static JSON string
-    # \param localJSON the dynamic JSON string
-    # \returns self object
     def setJSON(self, globalJSON, localJSON=None):
+        """ sets the JSON string to threads
+        :param globalJSON: the static JSON string
+        :param localJSON: the dynamic JSON string
+        :returns: self object
+        """
+
         for el in self.__elementList:
             if hasattr(el.source, "setJSON") and callable(el.source.setJSON):
                 el.source.setJSON(globalJSON, localJSON)
         return self
 
-    ## runner
-    # \brief It runs the threads from the pool
     def run(self):
+        """ thread runner
+
+        :brief: It runs the threads from the pool
+        """
+
         self.__threadList = []
         self.__elementQueue = Queue.Queue()
 
@@ -74,21 +84,28 @@ class ThreadPool(object):
             self.__threadList.append(th)
             th.start()
 
-    ## waits for all thread from the pool
-    # \param timeout the maximal waiting time
     def join(self, timeout=None):
+        """ waits for all thread from the pool
+        :param timeout: the maximal waiting time
+        """
+
         for th in self.__threadList:
             if th.isAlive():
                 th.join(timeout)
 
-    ## runner with waiting
-    # \brief It runs and waits the threads from the pool
     def runAndWait(self):
+        """ runner with waiting
+
+        :brief: It runs and waits the threads from the pool
+        """
+
         self.run()
         self.join()
 
-    ## checks errors from threads
     def checkErrors(self):
+        """ checks errors from threads
+        """
+
         errors = []
         for el in self.__elementList:
             if el.error:
@@ -103,9 +120,12 @@ class ThreadPool(object):
         if errors:
             raise ThreadError("Problems in storing data: %s" % str(errors))
 
-    ## closer
-    # \brief It close the threads from the pool
     def close(self):
+        """ closer
+
+        :brief: It close the threads from the pool
+        """
+
         for el in self.__elementList:
             if hasattr(el.h5Object, "close"):
                 el.h5Object.close()

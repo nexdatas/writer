@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,21 +15,22 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file __init__.py
-# package constructor
+#
 
 """ Tango Data Writer """
 
-## package version
+#: package version
 __version__ = "2.0.2"
 
 import sys
 
 
-## runs the TANGO server
-# \param argv command-line arguments
 def run(argv):
+    """ launches the TANGO server
+
+    :param argv: command-line arguments
+    """
+
     import PyTango
     from .NXSWriter import NXSDataWriter as NXSWriter
     from .NXSWriter import NXSDataWriterClass as NXSWriterClass

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,8 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \file setup.py
-# nxswriter installer
+#
 
 """ setup.py for Nexus Data Writer """
 
@@ -24,36 +23,36 @@
 import os
 from distutils.core import setup, Command
 
-## package name
+#: package name
 NDTS = "nxswriter"
-## nxswriter imported package
+#:nxswriter imported package
 INDTS = __import__(NDTS)
 
 from sphinx.setup_command import BuildDoc
 
 #__requires__ = 'nextdata ==%s' % INDTS.__version__
 
-## reading a file
 def read(fname):
     """ reading a file"""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-## test command class
 class TestCommand(Command):
-
-    ## user options
+    """ test command class
+    """
+    
+    #: user options
     user_options = []
 
-    ## initializes options
+    #: initializes options
     def initialize_options(self):
         pass
 
-    ## finalizes options
+    #: finalizes options
     def finalize_options(self):
         pass
 
-    ## runs command
+    #: runs command
     def run(self):
         import sys
         import subprocess
@@ -61,7 +60,7 @@ class TestCommand(Command):
         raise SystemExit(errno)
 
 
-## required files
+#: required files
 REQUIRED = [
     'numpy (>=1.5.0)',
     'PyTango (>=7.2.2)',
@@ -72,7 +71,7 @@ release = INDTS.__version__
 version = ".".join(release.split(".")[:2])
 name = "NXSDataWriter"
 
-## metadata for distutils
+#: metadata for distutils
 SETUPDATA = dict(
     name=NDTS,
     version=release,
@@ -96,7 +95,6 @@ SETUPDATA = dict(
 )
 
 
-## the main function
 def main():
     """ the main function """
     setup(**SETUPDATA)

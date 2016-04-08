@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,49 +15,55 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file Errors.py
-# Error classes
+#
 
 
 """ Tango Data Writer errors """
 
 
-## exception for problems in thread
 class ThreadError(Exception):
+    """ exception for problems in thread
+    """
     pass
 
 
-## exception for corrupted FieldArray
 class CorruptedFieldArrayError(Exception):
+    """ exception for corrupted FieldArray
+    """
     pass
 
 
-## exception for syntax in XML settings
 class XMLSettingSyntaxError(Exception):
+    """ exception for syntax in XML settings
+    """
     pass
 
 
-## exception for fetching data from data source
 class DataSourceError(Exception):
+    """ exception for fetching data from data source
+    """
     pass
 
 
-## exception for fetching data from data source
 class PackageError(Exception):
+    """ exception for fetching data from data source
+    """
     pass
 
 
-## exception for setting data source
 class DataSourceSetupError(Exception):
+    """ exception for setting data source
+    """
     pass
 
 
-## exception for syntax in XML settings
 class XMLSyntaxError(Exception):
+    """ exception for syntax in XML settings
+    """
     pass
 
 
-## unsupported tag exception
 class UnsupportedTagError(Exception):
+    """ unsupported tag exception
+    """
     pass
