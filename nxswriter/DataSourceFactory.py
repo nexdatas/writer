@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file DataSourceFactory.py
-# data-source types
+#
 
 """ factory with datasources """
 
@@ -26,24 +24,31 @@ from . import DataSources
 from .Element import Element
 
 
-## Data source creator
 class DataSourceFactory(Element):
-    ## constructor
-    # \param attrs dictionary with the tag attributes
-    # \param last the last element on the stack
+    """ Data source creator
+    """
     def __init__(self, attrs, last):
+        """ constructor
+
+        :param attrs: dictionary with the tag attributes
+        :param last: the last element on the stack
+        """
         Element.__init__(self, "datasource", attrs, last)
-        ## datasource pool
+        #: datasource pool
         self.__dsPool = None
 
-    ## sets the used datasources
-    # \param datasources pool to be set
     def setDataSources(self, datasources):
+        """ sets the used datasources
+
+        :param datasources: pool to be set
+        """
         self.__dsPool = datasources
 
-    ## creates data source
-    # \param attrs dictionary with the tag attributes
     def __createDSource(self, attrs):
+        """ creates data source
+
+        :param attrs: dictionary with the tag attributes
+        """
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
                 self.last.source = self.__dsPool.get(attrs["type"])()
@@ -58,10 +63,12 @@ class DataSourceFactory(Element):
                 "Typeless data source")
             self.last.source = DataSources.DataSource()
 
-    ##  sets the datasource form xml string
-    # \param xml input parameter
-    # \param globalJSON global JSON string
     def store(self, xml=None, globalJSON=None):
+        """ sets the datasource form xml string
+
+        :param xml: input parameter
+        :param globalJSON: global JSON string
+        """
         self.__createDSource(self._tagAttrs)
         jxml = "".join(xml)
         self.last.source.setup(jxml)
@@ -72,9 +79,11 @@ class DataSourceFactory(Element):
         if self.last and hasattr(self.last, "tagAttributes"):
             self.last.tagAttributes["nexdatas_source"] = ("NX_CHAR", jxml)
 
-    ## sets the used decoders
-    # \param decoders pool to be set
     def setDecoders(self, decoders):
+        """ sets the used decoders
+
+        :param decoders: pool to be set
+        """
         if self.last and self.last.source and self.last.source.isValid() \
                 and hasattr(self.last.source, "setDecoders"):
             self.last.source.setDecoders(decoders)

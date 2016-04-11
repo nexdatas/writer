@@ -25,22 +25,26 @@ from distutils.core import setup, Command
 
 #: package name
 NDTS = "nxswriter"
-#:nxswriter imported package
+#: nxswriter imported package
 INDTS = __import__(NDTS)
 
 from sphinx.setup_command import BuildDoc
 
-#__requires__ = 'nextdata ==%s' % INDTS.__version__
+# __requires__ = 'nextdata ==%s' % INDTS.__version__
+
 
 def read(fname):
-    """ reading a file"""
+    """ reading a file
+
+    :param fname: readme file name
+    """
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
 class TestCommand(Command):
     """ test command class
     """
-    
+
     #: user options
     user_options = []
 

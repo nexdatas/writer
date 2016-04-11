@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file EGroup.py
-# NeXus runnable elements
+#
 
 """ Definitions of group tag evaluation classes """
 
@@ -29,12 +27,15 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
 
-## group H5 tag element
 class EGroup(FElementWithAttr):
-    ## constructor
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
+    """ group H5 tag element
+    """
     def __init__(self, attrs, last):
+        """ constructor
+
+        :param attrs dictionary of the tag attributes
+        :param last the last element from the stack
+        """
         FElementWithAttr.__init__(self, "group", attrs, last)
         if self._lastObject() is not None:
             if ("type" in attrs.keys()) and ("name" in attrs.keys()):
@@ -48,7 +49,7 @@ class EGroup(FElementWithAttr):
 
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
-                ## stored H5 file object (defined in base class)
+                #: stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())
             except:
@@ -123,8 +124,11 @@ class EGroup(FElementWithAttr):
                         key.encode(), "string", overwrite=True))[...] \
                         = attrs[key].encode()
 
-    ## stores the tag content
-    # \param xml xml setting
-    # \param globalJSON global JSON string
     def store(self, xml=None, globalJSON=None):
+        """ stores the tag content
+
+        :param xml: xml setting
+        :param globalJSON: global JSON string
+        """
+
         self._createAttributes()

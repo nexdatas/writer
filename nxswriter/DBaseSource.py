@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file DBaseSource.py
-# data-source types
+#
 
 """ Definitions of DB datasource """
 
@@ -30,7 +28,7 @@ from .DataSources import DataSource
 from .Errors import (PackageError, DataSourceSetupError)
 
 
-## list of available databases
+#: list of available databases
 DB_AVAILABLE = []
 
 try:
@@ -52,49 +50,57 @@ except ImportError as e:
     Streams.info("ORACLE not available: %s" % e)
 
 
-## DataBase data source
 class DBaseSource(DataSource):
-    ## constructor
-    # \brief It cleans all member variables
+    """ DataBase data source
+    """
+
     def __init__(self):
+        """ constructor
+
+        :brief: It cleans all member variables
+        """
         DataSource.__init__(self)
-        ## name of the host with the data source
+        #: name of the host with the data source
         self.hostname = None
-        ## port related to the host
+        #: port related to the host
         self.port = None
-        ## database query
+        #: database query
         self.query = None
-        ## DSN string
+        #: DSN string
         self.dsn = None
-        ## database type, i.e. MYSQL, PGSQL, ORACLE
+        #: database type, i.e. MYSQL, PGSQL, ORACLE
         self.dbtype = None
-        ## oracle database mode
+        #: oracle database mode
         self.mode = None
-        ## database name
+        #: database name
         self.dbname = None
-        ## database user
+        #: database user
         self.user = None
-        ## database password
+        #: database password
         self.passwd = None
-        ## mysql database configuration file
+        #: mysql database configuration file
         self.mycnf = '/etc/my.cnf'
-        ## record format, i.e. SCALAR, SPECTRUM, IMAGE
+        #: record format, i.e. SCALAR, SPECTRUM, IMAGE
         self.format = None
 
-        ## map
+        #: map
         self.__dbConnect = {"MYSQL": self.__connectMYSQL,
                             "PGSQL": self.__connectPGSQL,
                             "ORACLE": self.__connectORACLE}
 
-    ## self-description
-    # \returns self-describing string
     def __str__(self):
+        """ self-description
+
+        :returns: self-describing string
+        """
         return " %s DB %s with %s " % (
             self.dbtype, self.dbname if self.dbname else "", self.query)
 
-    ## sets the parrameters up from xml
-    # \brief xml  datasource parameters
     def setup(self, xml):
+        """ sets the parrameters up from xml
+
+        :param: xml  datasource parameters
+        """
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query) > 0:
@@ -133,9 +139,11 @@ class DBaseSource(DataSource):
                 if db[0].hasAttribute("port") else None
             self.dsn = self._getText(db[0])
 
-    ## connects to MYSQL database
-    # \returns open database object
     def __connectMYSQL(self):
+        """ connects to MYSQL database
+
+        :returns: open database object
+        """
         args = {}
         if self.mycnf:
             args["read_default_file"] = self.mycnf.encode()
@@ -151,9 +159,11 @@ class DBaseSource(DataSource):
             args["port"] = int(self.port)
         return MySQLdb.connect(**args)
 
-    ## connects to PGSQL database
-    # \returns open database object
     def __connectPGSQL(self):
+        """ connects to PGSQL database
+
+        :returns: open database object
+        """
         args = {}
 
         if self.dbname:
@@ -169,9 +179,11 @@ class DBaseSource(DataSource):
 
         return psycopg2.connect(**args)
 
-    ## connects to ORACLE database
-    # \returns open database object
     def __connectORACLE(self):
+        """ connects to ORACLE database
+
+        :returns: open database object
+        """
         args = {}
         if self.user:
             args["user"] = self.user.encode()
@@ -184,9 +196,11 @@ class DBaseSource(DataSource):
 
         return cx_Oracle.connect(**args)
 
-    ## provides access to the data
-    # \returns  dictionary with collected data
     def getData(self):
+        """ provides access to the data
+
+        :returns: dictionary with collected data
+        """
 
         db = None
 

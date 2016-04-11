@@ -1,3 +1,8 @@
+2016-04-11 Jan Kotanski <jankotan@gmail.com>
+	* add sphinx comments
+	* add release module
+	* tagged as 2.1.0
+
 2016-02-05 Jan Kotanski <jankotan@gmail.com>
 	* extend __CLIENT__  group device keyword
 	* tagged as 2.0.2

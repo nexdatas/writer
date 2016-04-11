@@ -17,32 +17,8 @@
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-""" Tango Data Writer """
+""" Tango Data Writer realease"""
 
-import sys
 
 #: package version
-from .Release import __version__
-
-
-def run(argv):
-    """ launches the TANGO server
-
-    :param argv: command-line arguments
-    """
-
-    import PyTango
-    from .NXSWriter import NXSDataWriter as NXSWriter
-    from .NXSWriter import NXSDataWriterClass as NXSWriterClass
-    try:
-        py = PyTango.Util(argv)
-        py.add_class(NXSWriterClass, NXSWriter)
-
-        U = PyTango.Util.instance()
-        U.server_init()
-        U.server_run()
-
-    except PyTango.DevFailed as e:
-        print('-------> Received a DevFailed exception: %s' % e)
-    except Exception as e:
-        print('-------> An unforeseen exception occured.... %s' % e)
+__version__ = "2.1.0"

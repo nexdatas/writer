@@ -29,6 +29,7 @@
 #         (c) - Software Engineering Group - ESRF
 #=============================================================================
 #
+
 """ Nexus Data Writer - Tango Server """
 
 import PyTango
@@ -40,7 +41,7 @@ from .TangoDataWriter import TangoDataWriter as TDW
 
 
 #==================================================================
-##   CommandThread Class Description:
+#    CommandThread Class Description:
 #
 #         thread with server command
 #
@@ -58,15 +59,15 @@ class CommandThread(Thread):
     #------------------------------------------------------------------
     def __init__(self, server, command, finalState, args=None):
         Thread.__init__(self)
-        ## tango server
+        #: tango server
         self.server = server
-        ## command
+        #: command
         self.command = getattr(server.tdw, command)
-        ## final state
+        #: final state
         self.fstate = finalState
-        ## error state
+        #: error state
         self.estate = PyTango.DevState.FAULT
-        ## command arguments
+        #: command arguments
         self.args = args if isinstance(args, list) else []
 
     #------------------------------------------------------------------
@@ -96,7 +97,7 @@ class CommandThread(Thread):
 
 
 #==================================================================
-##   NXSDataWriter Class Description:
+#   NXSDataWriter Class Description:
 #
 #         Tango Server to store data in H5 files
 #
@@ -118,22 +119,22 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def __init__(self, cl, name):
         PyTango.Device_4Impl.__init__(self, cl, name)
         self.debug_stream("In __init__()")
-        ## thread lock
+        #: thread lock
         if not hasattr(self, "lock"):
             self.lock = Lock()
-        ## state flag
+        #: state flag
         self.state_flag = PyTango.DevState.OFF
-        ## openentry thread
+        #: openentry thread
         self.othread = None
-        ## record thread
+        #: record thread
         self.rthread = None
-        ## closentry thread
+        #: closentry thread
         self.cthread = None
-        ## Tango Data Writer
+        #: Tango Data Writer
         self.tdw = TDW(self)
-        ## list with errors
+        #: list with errors
         self.errors = []
-        ## status messages
+        #: status messages
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
             PyTango.DevState.ON: "Ready",
@@ -611,16 +612,16 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
 
 #==================================================================
-##    NXSDataWriterClass class definition
+#    NXSDataWriterClass class definition
 #
 #==================================================================
 class NXSDataWriterClass(PyTango.DeviceClass):
 
-    ##    Class Properties
+    #:    Class Properties
     class_property_list = {
     }
 
-    ##    Device Properties
+    #:    Device Properties
     device_property_list = {
         'NumberOfThreads':
         [PyTango.DevLong,
@@ -628,7 +629,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          [100]],
     }
 
-    ##    Command definitions
+    #:    Command definitions
     cmd_list = {
         'OpenFile':
         [[PyTango.DevVoid, ""],
@@ -656,7 +657,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          [PyTango.DevVoid, ""]],
     }
 
-    ##    Attribute definitions
+    #:    Attribute definitions
     attr_list = {
         'XMLSettings':
         [[PyTango.DevString,
@@ -695,7 +696,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     }
 
     #------------------------------------------------------------------
-    ##    NXSDataWriterClass Constructor
+    #    NXSDataWriterClass Constructor
     #
     #------------------------------------------------------------------
     def __init__(self, name):

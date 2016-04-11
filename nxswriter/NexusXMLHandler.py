@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-# \file NexusXMLHandler.py
-# An example of SAX Nexus parser
+#
 
 """ SAX parser for interpreting content of  XML configuration string """
 
@@ -45,52 +43,55 @@ from .Errors import UnsupportedTagError
 from .FetchNameHandler import TNObject
 
 
-## SAX2 parser
 class NexusXMLHandler(sax.ContentHandler):
+    """ SAX2 parser
+    """
 
-    ## constructor
-    # \brief It constructs parser and defines the H5 output file
-    # \param fileElement file element
-    # \param decoders decoder pool
-    # \param datasources datasource pool
-    # \param groupTypes map of NXclass : name
-    # \param parser instance of sax.xmlreader
-    # \param globalJSON global json string
     def __init__(self, fileElement, datasources=None, decoders=None,
                  groupTypes=None, parser=None, globalJSON=None):
+        """ constructor
+
+        :brief: It constructs parser and defines the H5 output file
+        :param fileElement: file element
+        :param decoders: decoder pool
+        :param datasources: datasource pool
+        :param groupTypes: map of NXclass : name
+        :param parser: instance of sax.xmlreader
+        :param globalJSON: global json string
+        """
         sax.ContentHandler.__init__(self)
 
-        ## map of NXclass : name
+        #: map of NXclass : name
         self.__groupTypes = TNObject()
-        ## if name fetching required
+        #: if name fetching required
         self.__fetching = True
         if groupTypes:
             self.__groupTypes = groupTypes
             self.__fetching = False
 
-        ## stack with open tag elements
+        #: stack with open tag elements
         self.__stack = [fileElement]
 
-        ## unsupported tag tracer
+        #: unsupported tag tracer
         self.__unsupportedTag = ""
-        ## True if raise exception on unsupported tag
+        #: True if raise exception on unsupported tag
         self.raiseUnsupportedTag = True
 
-        ## xmlreader
+        #: xmlreader
         self.__parser = parser
         self.__innerHandler = None
 
         self.__json = globalJSON
 
-        ## tags with innerxml as its input
+        #: tags with innerxml as its input
         self.withXMLinput = {'datasource': DataSourceFactory,
                              'doc': EDoc}
-        ##  stored attributes
+        #:  stored attributes
         self.__storedAttrs = None
-        ##  stored name
+        #:  stored name
         self.__storedName = None
 
-        ## map of tag names to related classes
+        #: map of tag names to related classes
         self.elementClass = {
             'group': EGroup, 'field': EField,
             'attribute': EAttribute, 'link': ELink,
@@ -100,53 +101,59 @@ class NexusXMLHandler(sax.ContentHandler):
             'strategy': EStrategy
         }
 
-        ## transparent tags
+        #: transparent tags
         self.transparentTags = ['definition']
 
-        ## thread pool with INIT elements
+        #: thread pool with INIT elements
         self.initPool = ThreadPool()
-        ## thread pool with STEP elements
+        #: thread pool with STEP elements
         self.stepPool = ThreadPool()
-        ## thread pool with FINAL elements
+        #: thread pool with FINAL elements
         self.finalPool = ThreadPool()
 
-        ## map of pool names to related classes
+        #: map of pool names to related classes
         self.__poolMap = {'INIT': self.initPool,
                           'STEP': self.stepPool,
                           'FINAL': self.finalPool}
-        ## collection of thread pool with triggered STEP elements
+        #: collection of thread pool with triggered STEP elements
         self.triggerPools = {}
 
-        ## pool with decoders
+        #: pool with decoders
         self.__decoders = decoders
 
-        ## pool with datasources
+        #: pool with datasources
         self.__datasources = datasources
 
-        ## if innerparse was running
+        #: if innerparse was running
         self.__inner = False
 
-    ## the last stack element
-    # \returns the last stack element
     def __last(self):
+        """ the last stack element
+
+        :returns: the last stack element
+        """
         if self.__stack:
             return self.__stack[-1]
         else:
             return None
 
-    ## adds the tag content
-    # \param content partial content of the tag
     def characters(self, content):
+        """ adds the tag content
+
+        :param content: partial content of the tag
+        """
         if self.__inner is True:
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
         if not self.__unsupportedTag:
             self.__last().content.append(content)
 
-    ##  parses the opening tag
-    # \param name tag name
-    # \param attrs attribute dictionary
     def startElement(self, name, attrs):
+        """ parses the opening tag
+
+        :param name: tag name
+        :param attrs: attribute dictionary
+        """
         if self.__inner is True:
             if hasattr(self.__innerHandler, "xml"):
                 self.__createInnerTag(self.__innerHandler.xml)
@@ -178,9 +185,11 @@ class NexusXMLHandler(sax.ContentHandler):
 
                 self.__unsupportedTag = name
 
-    ## parses the closing tag
-    # \param name tag name
     def endElement(self, name):
+        """ parses the closing tag
+
+        :param name: tag name
+        """
         if self.__inner is True:
             self.__createInnerTag(self.__innerHandler.xml)
             self.__inner = False
@@ -201,9 +210,11 @@ class NexusXMLHandler(sax.ContentHandler):
             if self.__unsupportedTag == name:
                 self.__unsupportedTag = ""
 
-    ## addding to pool
-    # \param res strategy or (strategy, trigger)
     def __addToPool(self, res, task):
+        """ addding to pool
+
+        :param res: strategy or (strategy, trigger)
+        """
         trigger = None
         strategy = None
         if res:
@@ -221,9 +232,11 @@ class NexusXMLHandler(sax.ContentHandler):
         elif strategy in self.__poolMap.keys():
             self.__poolMap[strategy].append(task)
 
-    ## creates class instance of the current inner xml
-    # \param xml inner xml
     def __createInnerTag(self, xml):
+        """ creates class instance of the current inner xml
+
+        :param xml: inner xml
+        """
         if self.__storedName in self.withXMLinput:
             res = None
             inner = self.withXMLinput[self.__storedName](
@@ -238,9 +251,11 @@ class NexusXMLHandler(sax.ContentHandler):
             if res:
                 self.__addToPool(res, inner)
 
-    ## closes the elements
-    # \brief It goes through all stack elements closing them
     def close(self):
+        """ closes the elements
+
+        :brief: It goes through all stack elements closing them
+        """
         for s in self.__stack:
             if isinstance(s, FElement) and not isinstance(s, EFile):
                 if hasattr(s.h5Object, "close") and callable(s.h5Object.close):
@@ -253,20 +268,20 @@ if __name__ == "__main__":
         print("usage: NexusXMLHandler.py  <XMLinput>  <h5output>")
 
     else:
-        ## input XML file
+        #: input XML file
         fi = sys.argv[1]
         if os.path.exists(fi):
-            ## output h5 file
+            #: output h5 file
             fo = sys.argv[2]
 
-            ## a parser object
+            #: a parser object
             mparser = sax.make_parser()
 
-            ## file  handle
+            #: file  handle
             nxFile = nx.create_file(fo, overwrite=True).root()
-            ## element file objects
+            #: element file objects
             mfileElement = EFile([], None, nxFile)
-            ## a SAX2 handler object
+            #: a SAX2 handler object
             mhandler = NexusXMLHandler(mfileElement)
             mparser.setContentHandler(mhandler)
 

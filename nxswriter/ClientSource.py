@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file ClientSource.py
-# data-source types
+#
 
 """ Definitions of CLIENT datasource """
 
@@ -28,22 +26,27 @@ from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
 
-## Client data source
 class ClientSource(DataSource):
-    ## constructor
-    # \brief It cleans all member variables
+    """ Client data source
+    """
     def __init__(self):
+        """ constructor
+
+        :brief: It cleans all member variables
+        """
         DataSource.__init__(self)
-        ## name of data
+        #: name of data
         self.name = None
-        ## the current  static JSON object
+        #: the current  static JSON object
         self.__globalJSON = None
-        ## the current  dynamic JSON object
+        #: the current  dynamic JSON object
         self.__localJSON = None
 
-    ## sets the parrameters up from xml
-    # \brief xml  datasource parameters
     def setup(self, xml):
+        """ sets the parrameters up from xml
+
+        :brief xml:  datasource parameters
+        """
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec) > 0:
@@ -57,21 +60,27 @@ class ClientSource(DataSource):
             raise DataSourceSetupError(
                 "Client record name not defined: %s" % xml)
 
-    ## self-description
-    # \returns self-describing string
     def __str__(self):
+        """ self-description
+
+        :returns: self-describing string
+        """
         return " CLIENT record %s" % (self.name)
 
-    ## sets JSON string
-    # \brief It sets the currently used  JSON string
-    # \param globalJSON static JSON string
-    # \param localJSON dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
+        """ sets JSON string
+
+        :brief: It sets the currently used  JSON string
+        :param globalJSON: static JSON string
+        :param localJSON: dynamic JSON string
+        """
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
 
-    ## provides access to the data
-    # \returns  dictionary with collected data
     def getData(self):
+        """ provides access to the data
+
+        :returns: dictionary with collected data
+        """
         return self._getJSONData(
             self.name, self.__globalJSON, self.__localJSON)

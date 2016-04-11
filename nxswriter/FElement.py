@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file FElement.py
-# NeXus runnable elements
+#
 
 """ Definitions of file tag evaluation classes """
 
@@ -28,43 +26,51 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
 
-## NeXuS runnable tag element
-# tag element corresponding to one of H5 objects
 class FElement(Element):
+    """ NeXuS runnable tag element
+    tag element corresponding to one of H5 objects
+    """
 
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    # \param h5object H5 file object
     def __init__(self, name, attrs, last, h5object=None):
+        """ constructor
+
+        :param name: tag name
+        :param attrs: dictionary of the tag attributes
+        :param last: the last element from the stack
+        :param h5object: H5 file object
+        """
         Element.__init__(self, name, attrs, last)
-        ## stored H5 file object
+        #: stored H5 file object
         self.h5Object = h5object
-        ## data source
+        #: data source
         self.source = None
-        ## notification of error in the run method
+        #: notification of error in the run method
         self.error = None
-        ##  flag for devices for which is allowed to failed
+        #:  flag for devices for which is allowed to failed
         self.canfail = False
-        ## scalar type
+        #: scalar type
         self._scalar = False
 
-    ## runner
-    # \brief During its thread run it fetches the data from the source
     def run(self):
+        """ runner
+
+        :brief: During its thread run it fetches the data from the source
+        """
         if self.source:
             self.source.getData()
 
-    ## recalculates shape
-    # \param dsShape origin shape of the object
-    # \param rank rank of the object
-    # \param extends If True extends the shape up to rank value
-    # \param exDim grows growing dimension + 1
-    # \param extraD if the object grows
-    # \returns shape of the  h5 field
     @classmethod
     def _reshape(cls, dsShape, rank, extends, extraD, exDim):
+        """ recalculates shape
+
+        :param dsShape: origin shape of the object
+        :param rank: rank of the object
+        :param extends: If True extends the shape up to rank value
+        :param exDim: grows growing dimension + 1
+        :param extraD: if the object grows
+        :returns: shape of the  h5 field
+
+        """
         shape = []
         if dsShape:
             for s in dsShape:
@@ -79,11 +85,13 @@ class FElement(Element):
                 shape.insert(exDim - 1, 0)
         return shape
 
-    ## fetches shape from value and rank
-    # \param rank rank of the object
-    # \param value of the object
     @classmethod
     def __fetchShape(cls, value, rank):
+        """ fetches shape from value and rank
+
+        :param rank: rank of the object
+        :param value: of the object
+        """
         if not rank or int(rank) == 0:
             return [1]
         elif int(rank) == 1:
@@ -102,12 +110,14 @@ class FElement(Element):
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s" % rank)
 
-    # provides growing dimension
-    # \param grows growing dimension
-    # \param extraD if the object grows
-    # \returns growing dimension
     @classmethod
     def _getExtra(cls, grows, extraD=False):
+        """ provides growing dimension
+
+        :param grows: growing dimension
+        :param extraD: if the object grows
+        :returns: growing dimension
+        """
         if extraD:
             if grows and grows > 1:
                 exDim = grows
@@ -117,17 +127,20 @@ class FElement(Element):
             exDim = 0
         return exDim
 
-    ## creates shape object from rank and lengths variables
-    # \param rank rank of the object
-    # \param lengths dictionary with dimensions as a string data ,
-    #    e.g. {"1":"34","2":"40"}
-    # \param extraD if the object grows
-    # \param grows growing dimension
-    # \param extends If True extends the shape up to rank value
-    # \raise XMLSettingSyntaxError if shape cannot be found
-    # \returns shape of the object
     def _findShape(self, rank, lengths=None, extraD=False,
                    grows=None, extends=False, checkData=False):
+        """ creates shape object from rank and lengths variables
+            raises XMLSettingSyntaxError: if shape cannot be found
+
+
+        :param rank: rank of the object
+        :param lengths: dictionary with dimensions as a string data ,
+                        e.g. {"1":"34","2":"40"}
+        :param extraD: if the object grows
+        :param grows: growing dimension
+        :param extends: If True extends the shape up to rank value
+        :returns shape: of the object
+        """
         self._scalar = False
         shape = []
         exDim = self._getExtra(grows, extraD)
@@ -174,14 +187,15 @@ class FElement(Element):
         elif extraD:
             shape = [0]
 
-        ## ?? probably wrong
         if shape == []:
             self._scalar = True
         return shape
 
-    ## creates the error message
-    # \param exceptionMessage additional message of exception
     def setMessage(self, exceptionMessage=None):
+        """ creates the error message
+
+        :param exceptionMessage: additional message of exception
+        """
         if hasattr(self.h5Object, "path"):
             name = self.h5Object.path
         elif hasattr(self.h5Object, "name"):
@@ -198,27 +212,33 @@ class FElement(Element):
         return message
 
 
-## NeXuS runnable tag element with attributes
-# tag element corresponding to one of H5 objects with attributes
 class FElementWithAttr(FElement):
+    """ NeXuS runnable tag element with attributes
+        tag element corresponding to one of H5 objects with attributes
+    """
 
-    ## constructor
-    # \param name tag name
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
-    # \param h5object H5 file object
     def __init__(self, name, attrs, last, h5object=None):
+        """ constructor
+
+        :param name: tag name
+        :param attrs: dictionary of the tag attributes
+        :param last: the last element from the stack
+        :param h5object: H5 file object
+        """
+
         FElement.__init__(self, name, attrs, last, h5object)
-        ## dictionary with attribures from sepatare attribute tags
+        #: dictionary with attribures from sepatare attribute tags
         self.tagAttributes = {}
         self.__h5Instances = {}
 
-    ## creates DataHolder with given rank and value
-    # \param rank data rank
-    # \param val data value
-    # \returns data holder
     @classmethod
     def _setValue(cls, rank, val):
+        """ creates DataHolder with given rank and value
+
+        :param rank: data rank
+        :param val: data value
+        :returns: data holder
+        """
         dh = None
         if not rank or rank == 0:
             dh = DataHolder("SCALAR", val, "DevString", [1, 0])
@@ -241,10 +261,12 @@ class FElementWithAttr(FElement):
                 "Case with not supported rank = %s", rank)
         return dh
 
-    ## creates h5 attributes
-    # \brief It creates attributes instances which have been
-    #   stored in tagAttributes dictionary
     def _createAttributes(self):
+        """ creates h5 attributes
+
+        :brief: It creates attributes instances which have been
+                stored in tagAttributes dictionary
+        """
         for key in self.tagAttributes.keys():
             if key not in ["name", "type"]:
                 if len(self.tagAttributes[key]) < 3:
@@ -278,8 +300,10 @@ class FElementWithAttr(FElement):
                         self.__h5Instances[key.encode()][...] = dh.cast(
                             self.__h5Instances[key.encode()].dtype)
 
-    ## provides attribute h5 object
-    # \param name attribute name
-    # \returns instance of the attribute object if created
     def h5Attribute(self, name):
+        """ provides attribute h5 object
+
+        :param name: attribute name
+        :returns: instance of the attribute object if created
+        """
         return self.__h5Instances.get(name)

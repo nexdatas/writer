@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,47 +15,58 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file DataSources.py
-# data-source types
+#
 
 """ Definitions of various datasources """
 
 from .Types import NTP
 
 
-## Data source
 class DataSource(object):
-    ## constructor
-    # \brief It cleans all member variables
+    """ Data source
+    """
     def __init__(self):
+        """ constructor
+
+        :brief: It cleans all member variables
+        """
         pass
 
-    ## sets the parrameters up from xml
-    # \brief xml  datasource parameters
     def setup(self, xml):
+        """ sets the parrameters up from xml
+
+        :param xml:  datasource parameters
+        """
         pass
 
-    ## access to data
-    # \brief It is an abstract method providing data
     def getData(self):
+        """ access to data
+
+        :brief: It is an abstract method providing data
+        """
         pass
 
-    ## checks if the data is valid
-    # \returns if the data is valid
     def isValid(self):
+        """ checks if the data is valid
+
+        :returns: if the data is valid
+        """
         return True
 
-    ## self-description
-    # \returns self-describing string
     def __str__(self):
+        """ self-description
+
+        :returns: self-describing string
+        """
         return "unknown DataSource"
 
-    ## provides xml content of the node
-    # \param node DOM node
-    # \returns xml content string
     @classmethod
     def _getText(cls, node):
+        """ provides xml content of the node
+
+        :param node: DOM node
+        :returns: xml content string
+        """
         xml = node.toxml()
         start = xml.find('>')
         end = xml.rfind('<')
@@ -65,10 +76,12 @@ class DataSource(object):
             replace("&gt;", ">").replace("&quot;", "\"").\
             replace("&amp;", "&")
 
-    ## provides access to the data
-    # \returns  dictionary with collected data
     @classmethod
     def _getJSONData(cls, name, globalJSON, localJSON):
+        """ provides access to the data
+
+        :returns: dictionary with collected data
+        """
         if globalJSON and 'data' not in globalJSON.keys():
             globalJSON = None
 
