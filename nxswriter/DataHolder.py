@@ -103,6 +103,7 @@ class DataHolder(object):
 
     def cast(self, dtype):
         """ casts the data into given type
+
         :param dtype: given type of data
         :returns: numpy array of defined type or list
                   for strings or value for SCALAR
