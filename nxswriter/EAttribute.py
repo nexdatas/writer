@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file EAttribute.py
-# NeXus runnable elements
+#
 
 """ Definitions of attribute tag evaluation classes """
 
@@ -30,30 +28,36 @@ from .FElement import FElement
 from . import Streams
 
 
-## attribute tag element
 class EAttribute(FElement):
+    """ attribute tag element
+    """
 
-    ## constructor
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
     def __init__(self, attrs, last):
+        """ constructor
+
+        :param attrs: dictionary of the tag attributes
+        :param last: the last element from the stack
+
+        """
         FElement.__init__(self, "attribute", attrs, last)
-        ## attribute name
+        #: attribute name
         self.name = ""
-        ## rank of the attribute
+        #: rank of the attribute
         self.rank = "0"
-        ## shape of the attribute
+        #: shape of the attribute
         self.lengths = {}
-        ## strategy, i.e. INIT, STEP, FINAL
+        #: strategy, i.e. INIT, STEP, FINAL
         self.strategy = None
-        ## trigger for asynchronous writting
+        #: trigger for asynchronous writting
         self.trigger = None
 
-    ## stores the tag content
-    # \param xml xml setting
-    # \param globalJSON global JSON string
-    # \returns (strategy,trigger)
     def store(self, xml=None, globalJSON=None):
+        """ stores the tag content
+
+        :param xml: xml setting
+        :param globalJSON: global JSON string
+        :returns: (strategy,trigger)
+        """
 
         if "name" in self._tagAttrs.keys():
             self.name = self._tagAttrs["name"]
@@ -77,13 +81,15 @@ class EAttribute(FElement):
                 if self.source.isValid():
                     return self.strategy, self.trigger
 
-    ## runner
-    # \brief During its thread run it fetches the data from the source
     def run(self):
+        """ runner
+
+        :brief: During its thread run it fetches the data from the source
+        """
         try:
             if self.name:
                 if not self.h5Object:
-                    ## stored H5 file object (defined in base class)
+                    #: stored H5 file object (defined in base class)
                     self.h5Object = self.last.h5Attribute(self.name)
                 if self.source:
                     dt = self.source.getData()
@@ -110,9 +116,12 @@ class EAttribute(FElement):
                 else:
                     Streams.error("Attribute::run() - %s  " % str(self.error))
 
-    ## fills object with maximum value
-    # \brief It fills object or an extend part of object by default value
     def __fillMax(self):
+        """ fills object with maximum value
+
+        :brief: It fills object or an extend part of object by default value
+
+        """
         if self.name and not self.h5Object:
             self.h5Object = self.last.h5Attribute(self.name)
         shape = list(self.h5Object.shape)
@@ -145,9 +154,11 @@ class EAttribute(FElement):
 
         self.h5Object[...] = arr
 
-    ## marks the field as failed
-    # \brief It marks the field as failed
     def markFailed(self):
+        """ marks the field as failed
+
+        :brief: It marks the field as failed
+        """
         field = self._lastObject()
         if field is not None:
             field.attributes.create("nexdatas_canfail", "string",

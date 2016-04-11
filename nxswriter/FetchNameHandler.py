@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-# \file FetchNameHandler.py
-# An example of SAX Nexus parser
+#
 
 """ SAX parser for fetching name attributes of tags """
 
@@ -30,31 +28,37 @@ from . import Streams
 from .Errors import XMLSyntaxError
 
 
-## Type Name object
 class TNObject(object):
-    ## constructor
-    # \param name name of the object
-    # \param nxtype Nexus type of the object
-    # \param parent object parent
-    # \brief It sets default values of TNObject
+    """ Type Name object
+    """
+
     def __init__(self, name="root", nxtype=None, parent=None):
-        ## object name
+        """ constructor
+
+        :brief: It sets default values of TNObject
+        :param name: name of the object
+        :param nxtype: Nexus type of the object
+        :param parent: object parent
+        """
+        #: object name
         self.name = name
-        ## object Nexus type
+        #: object Nexus type
         self.nxtype = nxtype
-        ## object parent
+        #: object parent
         self.parent = parent
-        ## object children
+        #: object children
         self.children = []
 
         if hasattr(self.parent, "children"):
             self.parent.children.append(self)
 
-    ## get child by name or nxtype
-    # \param name group name
-    # \param nxtype nexus group type
-    # \returns child instance
     def child(self, name='', nxtype=''):
+        """ get child by name or nxtype
+
+        :param name: group name
+        :param nxtype: nexus group type
+        :returns: child instance
+        """
         if name:
             found = None
             for ch in self.children:
@@ -74,31 +78,37 @@ class TNObject(object):
                 return self.children[0]
 
 
-## SAX2 parser
 class FetchNameHandler(sax.ContentHandler):
+    """ SAX2 parser
+    """
 
-    ## constructor
-    # \brief It constructs parser handler for fetching group names
     def __init__(self):
+        """ constructor
+
+        :brief: It constructs parser handler for fetching group names
+        """
         sax.ContentHandler.__init__(self)
 
-        ## tree of TNObjects with names and types
+        #: tree of TNObjects with names and types
         self.groupTypes = TNObject()
-        ## current object
+        #: current object
         self.__current = self.groupTypes
-        ## stack with open tag names
+        #: stack with open tag names
         self.__stack = []
-        ## name of attribute tag
+        #: name of attribute tag
         self.__attrName = ""
-        ## content of attribute tag
+        #: content of attribute tag
         self.__content = []
 
         self.__attribute = False
 
-    ##  parses the opening tag
-    # \param name tag name
-    # \param attrs attribute dictionary
     def startElement(self, name, attrs):
+        """ parses the opening tag
+
+        :param name: tag name
+        :param attrs: attribute dictionary
+        """
+
         ttype = ""
         tname = ""
 
@@ -116,15 +126,19 @@ class FetchNameHandler(sax.ContentHandler):
             if "name" in attrs.keys() and attrs["name"] in ["name", "type"]:
                 self.__attrName = attrs["name"]
 
-    ## adds the tag content
-    # \param content partial content of the tag
     def characters(self, content):
+        """ adds the tag content
+
+        :param content: partial content of the tag
+        """
         if self.__attribute and self.__stack[-1] == "group":
             self.__content.append(content)
 
-    ## parses an closing tag
-    # \param name tag name
     def endElement(self, name):
+        """ parses an closing tag
+
+        :param name: tag name
+        """
         if name == "group":
 
             if not self.__current.nxtype or not self.__current.name:
@@ -160,14 +174,14 @@ if __name__ == "__main__":
         print("usage: FetchNameHadler.py  <XMLinput>")
 
     else:
-        ## input XML file
+        #: input XML file
         fi = sys.argv[1]
         if os.path.exists(fi):
 
-            ## a parser object
+            #: a parser object
             parser = sax.make_parser()
 
-            ## a SAX2 handler object
+            #: a SAX2 handler object
             handler = FetchNameHandler()
             parser.setContentHandler(handler)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,8 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \file setup.py
-# nxswriter installer
+#
 
 """ setup.py for Nexus Data Writer """
 
@@ -24,35 +23,40 @@
 import os
 from distutils.core import setup, Command
 
-## package name
+#: package name
 NDTS = "nxswriter"
-## nxswriter imported package
+#: nxswriter imported package
 INDTS = __import__(NDTS)
 
+from sphinx.setup_command import BuildDoc
 
-#__requires__ = 'nextdata ==%s' % INDTS.__version__
+# __requires__ = 'nextdata ==%s' % INDTS.__version__
 
-## reading a file
+
 def read(fname):
-    """ reading a file"""
+    """ reading a file
+
+    :param fname: readme file name
+    """
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-## test command class
 class TestCommand(Command):
+    """ test command class
+    """
 
-    ## user options
+    #: user options
     user_options = []
 
-    ## initializes options
+    #: initializes options
     def initialize_options(self):
         pass
 
-    ## finalizes options
+    #: finalizes options
     def finalize_options(self):
         pass
 
-    ## runs command
+    #: runs command
     def run(self):
         import sys
         import subprocess
@@ -60,17 +64,21 @@ class TestCommand(Command):
         raise SystemExit(errno)
 
 
-## required files
+#: required files
 REQUIRED = [
     'numpy (>=1.5.0)',
     'PyTango (>=7.2.2)',
     'pni (>=1.0.0)'
 ]
 
-## metadata for distutils
+release = INDTS.__version__
+version = ".".join(release.split(".")[:2])
+name = "NXSDataWriter"
+
+#: metadata for distutils
 SETUPDATA = dict(
-    name="nexdatas",
-    version=INDTS.__version__,
+    name=NDTS,
+    version=release,
     author="Jan Kotanski, Eugen Wintersberger , Halil Pasic",
     author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, "
     + "halil.pasic@gmail.com",
@@ -81,12 +89,16 @@ SETUPDATA = dict(
     packages=['nxswriter'],
     requires=REQUIRED,
     scripts=['NXSDataWriter'],
-    cmdclass={'test': TestCommand},
-    long_description=read('README')
+    cmdclass={'test': TestCommand, 'build_sphinx': BuildDoc},
+    command_options={
+        'build_sphinx': {
+            'project': ('setup.py', name),
+            'version': ('setup.py', version),
+            'release': ('setup.py', release)}},
+    long_description=read('README.rst')
 )
 
 
-## the main function
 def main():
     """ the main function """
     setup(**SETUPDATA)

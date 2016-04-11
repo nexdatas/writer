@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file ELink.py
-# NeXus runnable elements
+#
 
 """ Definitions of link tag evaluation classes """
 
@@ -31,37 +29,46 @@ from .DataHolder import DataHolder
 import pni.io.nx.h5 as nx
 
 
-## link H5 tag element
 class ELink(FElement):
-    ## constructor
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
+    """ link H5 tag element
+    """
+
     def __init__(self, attrs, last):
+        """ constructor
+
+        :param attrs: dictionary of the tag attributes
+        :param last: the last element from the stack
+
+        """
         FElement.__init__(self, "link", attrs, last)
-        ## stored H5 file object (defined in base class)
+        #: stored H5 file object (defined in base class)
         self.h5Object = None
-        ## strategy, i.e. INIT, STEP, FINAL
+        #: strategy, i.e. INIT, STEP, FINAL
         self.strategy = None
-        ## trigger for asynchronous writting
+        #: trigger for asynchronous writting
         self.trigger = None
         self.__groupTypes = None
         self.__target = None
         self.__name = None
 
-    ## stores the tag content
-    # \param xml xml setting
-    # \param globalJSON global JSON string
-    # \returns (strategy,trigger)
     def store(self, xml=None, globalJSON=None):
+        """ stores the tag content
+
+        :param xml: xml setting
+        :param globalJSON: global JSON string
+        :returns: (strategy, trigger)
+        """
 
         if "name" in self._tagAttrs.keys():
             if self.source:
                 if self.source.isValid():
                     return self.strategy, self.trigger
 
-    ## runner
-    # \brief During its thread run it fetches the data from the source
     def run(self):
+        """ runner
+
+        :brief: During its thread run it fetches the data from the source
+        """
         try:
             if self._tagAttrs["name"].encode() is not None:
                 if self.source:
@@ -85,10 +92,12 @@ class ELink(FElement):
                 else:
                     Streams.error("Link::run() - %s  " % str(self.error))
 
-    ## creates the link the H5 file
-    # \param groupTypes dictionary with type:name group pairs
-    # \param target NeXus target path
     def createLink(self, groupTypes=None, target=None):
+        """ creates the link the H5 file
+
+        :param groupTypes: dictionary with type:name group pairs
+        :param target: NeXus target path
+        """
         if groupTypes:
             self.__groupTypes = groupTypes
         if "name" in self._tagAttrs.keys():
@@ -126,12 +135,14 @@ class ELink(FElement):
             else:
                 self.__target = str(target)
 
-    ## converts types to Names using groupTypes dictionary
-    # \param text original directory
-    # \param groupTypes tree of TNObject with name:nxtype
-    # \returns directory defined by group names
     @classmethod
     def __typesToNames(cls, text, groupTypes):
+        """ converts types to Names using groupTypes dictionary
+
+        :param text: original directory
+        :param groupTypes: tree of TNObject with name:nxtype
+        :returns: directory defined by group names
+        """
         sp = str(text).split("/")
         res = ""
         ch = groupTypes

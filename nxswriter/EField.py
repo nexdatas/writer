@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file EField.py
-# NeXus runnable elements
+#
 
 """ Definitions of field tag evaluation classes """
 
@@ -34,42 +32,46 @@ from . import Streams
 import pni.io.nx.h5 as nx
 
 
-## field H5 tag element
 class EField(FElementWithAttr):
-    ## constructor
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
+    """ field H5 tag element
+    """
     def __init__(self, attrs, last):
+        """ constructor
+
+        :param attrs: dictionary of the tag attributes
+        :param last: the last element from the stack
+        """
         FElementWithAttr.__init__(self, "field", attrs, last)
-        ## rank of the field
+        #: rank of the field
         self.rank = "0"
-        ## shape of the field
+        #: shape of the field
         self.lengths = {}
-        ## if field is stored in STEP mode
+        #: if field is stored in STEP mode
         self.__extraD = False
-        ## strategy, i.e. INIT, STEP, FINAL, POSTRUN
+        #: strategy, i.e. INIT, STEP, FINAL, POSTRUN
         self.strategy = None
-        ## trigger for asynchronous writing
+        #: trigger for asynchronous writing
         self.trigger = None
-        ## growing dimension
+        #: growing dimension
         self.grows = None
-        ## label for postprocessing data
+        #: label for postprocessing data
         self.postrun = ""
-        ## compression flag
+        #: compression flag
         self.compression = False
-        ## compression rate
+        #: compression rate
         self.rate = 5
-        ## compression shuffle
+        #: compression shuffle
         self.shuffle = True
-        ## grew flag
+        #: grew flag
         self.__grew = True
-        ## data format
+        #: data format
         self.__format = ''
 
-    ## checks if it is growing in extra dimension
-    # \brief It checks if it is growing in extra dimension
-    # and setup internal variables
     def __isgrowing(self):
+        """ checks if it is growing in extra dimension
+        :brief: It checks if it is growing in extra dimension
+                and setup internal variables
+        """
         self.__extraD = False
         if self.source and self.source.isValid() and self.strategy == "STEP":
             self.__extraD = True
@@ -78,9 +80,11 @@ class EField(FElementWithAttr):
         else:
             self.grows = None
 
-    ## provides type and name of the field
-    # \returns (type, name) tuple
     def __typeAndName(self):
+        """ provides type and name of the field
+
+        :returns: (type, name) tuple
+        """
         if "name" in self._tagAttrs.keys():
             nm = self._tagAttrs["name"]
             if "type" in self._tagAttrs.keys():
@@ -95,9 +99,11 @@ class EField(FElementWithAttr):
 
             raise XMLSettingSyntaxError("Field without a name")
 
-    ## provides shape
-    # \returns object shape
     def __getShape(self):
+        """ provides shape
+
+        :returns: object shape
+        """
         try:
             shape = self._findShape(
                 self.rank, self.lengths,
@@ -112,12 +118,14 @@ class EField(FElementWithAttr):
                 shape = [0]
             return shape
 
-    ## creates H5 object
-    # \param dtype object type
-    # \param name object name
-    # \param shape object shape
-    # \returns H5 object
     def __createObject(self, dtype, name, shape):
+        """ creates H5 object
+
+        :param dtype: object type
+        :param name: object name
+        :param shape: object shape
+        :returns: H5 object
+        """
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]
         deflate = None
@@ -166,9 +174,11 @@ class EField(FElementWithAttr):
                 (name.encode(), dtype.encode(), message))
         return f
 
-    ## creates attributes
-    # \brief It creates attributes in h5Object
     def __setAttributes(self):
+        """ creates attributes
+
+        :brief: It creates attributes in h5Object
+        """
         for key in self._tagAttrs.keys():
             if key not in ["name"]:
                 if key in NTP.aTn.keys():
@@ -215,10 +225,12 @@ class EField(FElementWithAttr):
                 "string".encode(), overwrite=True)[...] \
                 = self.postrun.encode().strip()
 
-    ## provides strategy or fill the value in
-    # \param name object name
-    # \returns strategy or strategy,trigger it trigger defined
     def __setStrategy(self, name):
+        """ provides strategy or fill the value in
+
+        :param name: object name
+        :returns: strategy or strategy,trigger it trigger defined
+        """
         if self.source:
             if self.source.isValid():
                 return self.strategy, self.trigger
@@ -238,11 +250,13 @@ class EField(FElementWithAttr):
                     raise ValueError(
                         "Warning: Invalid datasource for %s" % name)
 
-    ## stores the tag content
-    # \param xml xml setting
-    # \param globalJSON global JSON string
-    # \returns (strategy, trigger)
     def store(self, xml=None, globalJSON=None):
+        """ stores the tag content
+
+        :param xml: xml setting
+        :param globalJSON: global JSON string
+        :returns: (strategy, trigger)
+        """
 
         # if it is growing in extra dimension
         self.__isgrowing()
@@ -250,7 +264,7 @@ class EField(FElementWithAttr):
         tp, nm = self.__typeAndName()
         # shape
         shape = self.__getShape()
-        ## stored H5 file object (defined in base class)
+        #: stored H5 file object (defined in base class)
         self.h5Object = self.__createObject(tp, nm, shape)
         # create attributes
         self.__setAttributes()
@@ -258,9 +272,11 @@ class EField(FElementWithAttr):
         # return strategy or fill the value in
         return self.__setStrategy(nm)
 
-    ## writes non-growing data
-    # \param holder data holder
     def __writeData(self, holder):
+        """ writes non-growing data
+
+        :param holder: data holder
+        """
         try:
             self.h5Object[...] = holder.cast(self.h5Object.dtype)
         except Exception:
@@ -273,9 +289,11 @@ class EField(FElementWithAttr):
             raise Exception("Storing single fields"
                             " not supported by pniio")
 
-    ## writes growing scalar data
-    # \param holder data holder
     def __writeScalarGrowingData(self, holder):
+        """ writes growing scalar data
+
+        :param holder: data holder
+        """
 
         arr = holder.cast(self.h5Object.dtype)
         if len(self.h5Object.shape) == 1:
@@ -293,9 +311,11 @@ class EField(FElementWithAttr):
             else:
                 self.h5Object[self.h5Object.shape[0] - 1, 0, 0] = arr
 
-    ## writes growing spectrum data
-    # \param holder data holder
     def __writeSpectrumGrowingData(self, holder):
+        """ writes growing spectrum data
+
+        :param holder: data holder
+        """
 
         # way around for a bug in pniio
         arr = holder.cast(self.h5Object.dtype)
@@ -334,9 +354,11 @@ class EField(FElementWithAttr):
                 else:
                     self.h5Object[0:len(arr), self.h5Object.shape[1] - 1] = arr
 
-    ## writes growing spectrum data
-    # \param holder data holder
     def __writeImageGrowingData(self, holder):
+        """ writes growing spectrum data
+
+        :param holder: data holder
+        """
 
         arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
@@ -373,9 +395,11 @@ class EField(FElementWithAttr):
             self.h5Object[0: len(arr), 0: len(arr[0]),
                           self.h5Object.shape[2] - 1] = arr
 
-    ## writes growing data
-    # \param holder data holder
     def __writeGrowingData(self, holder):
+        """ writes growing data
+
+        :param holder: data holder
+        """
         if str(holder.format).split('.')[-1] == "SCALAR":
             self.__writeScalarGrowingData(holder)
         elif str(holder.format).split('.')[-1] == "SPECTRUM":
@@ -392,9 +416,12 @@ class EField(FElementWithAttr):
                 "Case with %s  format not supported " %
                 str(holder.format).split('.')[-1])
 
-    ## grows the h5 field
-    # \brief Ir runs the grow command of h5Object with grows-1 parameter
     def __grow(self):
+        """ grows the h5 field
+
+        :brief: Ir runs the grow command of h5Object with grows-1 parameter
+
+        """
         if self.grows and self.grows > 0 and hasattr(self.h5Object, "grow"):
             shape = self.h5Object.shape
             if self.grows > len(shape):
@@ -404,9 +431,11 @@ class EField(FElementWithAttr):
 
             self.h5Object.grow(self.grows - 1)
 
-    ## reshapes h5 object
-    # \param shape required shape
     def __growshape(self, shape):
+        """ reshapes h5 object
+
+        :param shape: required shape
+        """
         h5shape = self.h5Object.shape
         ln = len(shape)
         if ln > 0 and len(h5shape) > 0:
@@ -422,9 +451,11 @@ class EField(FElementWithAttr):
 
                     j += 1
 
-    ## runner
-    # \brief During its thread run it fetches the data from the source
     def run(self):
+        """ runner
+
+        :brief: During its thread run it fetches the data from the source
+        """
         self.__grew = False
         try:
             if self.source:
@@ -456,13 +487,11 @@ class EField(FElementWithAttr):
             message = self.setMessage(
                 str(info[1].__str__()) + "\n " + (" ").join(
                     traceback.format_tb(sys.exc_info()[2])))
-#            message = self.setMessage(  sys.exc_info()[1].__str__()  )
+            # message = self.setMessage(  sys.exc_info()[1].__str__()  )
             del info
-            ##  notification of error in the run method
-            #   (defined in base class)
+            #: notification of error in the run method (defined in base class)
             self.error = message
-
-#            self.error = sys.exc_info()
+            # self.error = sys.exc_info()
         finally:
             if self.error:
                 if self.canfail:
@@ -470,9 +499,11 @@ class EField(FElementWithAttr):
                 else:
                     Streams.error("EField::run() - %s  " % str(self.error))
 
-    ## fills object with maximum value
-    # \brief It fills object or an extend part of object by default value
     def __fillMax(self):
+        """ fills object with maximum value
+
+        :brief: It fills object or an extend part of object by default value
+        """
         shape = list(self.h5Object.shape)
         nptype = self.h5Object.dtype
         value = ''
@@ -526,9 +557,11 @@ class EField(FElementWithAttr):
                 self.__grow()
             self.__writeGrowingData(dh)
 
-    ## marks the field as failed
-    # \brief It marks the field as failed
     def markFailed(self):
+        """ marks the field as failed
+
+        :brief: It marks the field as failed
+        """
         if self.h5Object is not None:
             self.h5Object.attributes.create(
                 "nexdatas_canfail", "string", overwrite=True)[...] = "FAILED"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file DecoderPool.py
-# decoder classes
+#
 
 """ Provides a pool  with data decoders """
 
@@ -25,40 +23,49 @@ import struct
 import numpy
 
 
-## UTF8 decoder
 class UTF8decoder(object):
+    """ UTF8 decoder
+    """
 
-    ## constructor
-    # \brief It clears the local variables
     def __init__(self):
-        ## decoder name
+        """ constructor
+
+        :brief: It clears the local variables
+        """
+        #: decoder name
         self.name = "UTF8"
-        ## decoder format
+        #: decoder format
         self.format = None
-        ## data type
+        #: data type
         self.dtype = None
 
-        ## image data
+        #: image data
         self.__value = None
-        ## header and image data
+        #: header and image data
         self.__data = None
 
-    ## loads encoded data
-    # \param data encoded data
     def load(self, data):
+        """ loads encoded data
+
+        :param data: encoded data
+        """
         self.__data = data
         self.format = data[0]
         self.__value = None
         self.dtype = "string"
 
-    ## provides the data shape
-    # \returns the data shape if data was loaded
     def shape(self):
+        """ provides the data shape
+
+        :returns: the data shape if data was loaded
+        """
         return [1, 0]
 
-    ## provides the decoded data
-    # \returns the decoded data if data was loaded
     def decode(self):
+        """ provides the decoded data
+
+        :returns: the decoded data if data was loaded
+        """
         if not self.__data:
             return
         if not self.__value:
@@ -66,27 +73,32 @@ class UTF8decoder(object):
         return self.__value
 
 
-## INT decoder
 class UINT32decoder(object):
+    """ INT decoder
+    """
 
-    ## constructor
-    # \brief It clears the local variables
     def __init__(self):
-        ## decoder name
+        """ constructor
+
+        :brief: It clears the local variables
+        """
+        #: decoder name
         self.name = "UINT32"
-        ## decoder format
+        #: decoder format
         self.format = None
-        ## data type
+        #: data type
         self.dtype = None
 
-        ## image data
+        #: image data
         self.__value = None
-        ## header and image data
+        #: header and image data
         self.__data = None
 
-    ## loads encoded data
-    # \param data encoded data
     def load(self, data):
+        """ loads encoded data
+
+        :param data: encoded data
+        """
         if not hasattr(data, "__iter__"):
             raise ValueError("Wrong Data Format")
         if len(data[1]) % 4:
@@ -96,15 +108,19 @@ class UINT32decoder(object):
         self.__value = None
         self.dtype = "uint32"
 
-    ## provides the data shape
-    # \returns the data shape if data was loaded
     def shape(self):
+        """ provides the data shape
+
+        :returns: the data shape if data was loaded
+        """
         if self.__data:
             return [len(self.__data[1]) // 4, 0]
 
-    ## provides the decoded data
-    # \returns the decoded data if data was loaded
     def decode(self):
+        """ provides the decoded data
+
+        :returns: the decoded data if data was loaded
+        """
         if not self.__data:
             return
         if len(self.__data[1]) % 4:
@@ -117,43 +133,50 @@ class UINT32decoder(object):
         return self.__value
 
 
-## VIDEO IMAGE LIMA decoder
 class VDEOdecoder(object):
+    """ VIDEO IMAGE LIMA decoder
+    """
 
-    ## constructor
-    # \brief It clears the local variables
     def __init__(self):
-        ## decoder name
+        """ constructor
+
+        :brief: It clears the local variables
+        """
+        #: decoder name
         self.name = "LIMA_VIDEO_IMAGE"
-        ## decoder format
+        #: decoder format
         self.format = None
-        ## data type
+        #: data type
         self.dtype = None
 
-        ## image data
+        #: image data
         self.__value = None
-        ## header and image data
+        #: header and image data
         self.__data = None
-        ## struct header format
+        #: struct header format
         self.__headerFormat = '!IHHqiiHHHH'
-        ## header data
+        #: header data
         self.__header = {}
-        ## format modes
+        #: format modes
         self.__formatID = {0: 'B', 1: 'H', 2: 'I', 3: 'Q'}
-        ## dtype modes
+        #: dtype modes
         self.__dtypeID = {0: 'uint8', 1: 'uint16', 2: 'uint32', 3: 'uint64'}
 
-    ## loads encoded data
-    # \param data encoded data
     def load(self, data):
+        """  loads encoded data
+
+        :param data: encoded data
+        """
         self.__data = data
         self.format = data[0]
         self._loadHeader(data[1][:struct.calcsize(self.__headerFormat)])
         self.__value = None
 
-    ## loads the image header
-    # \param headerData buffer with header data
     def _loadHeader(self, headerData):
+        """ loads the image header
+
+        :param headerData: buffer with header data
+        """
         hdr = struct.unpack(self.__headerFormat, headerData)
         self.__header = {}
         self.__header['magic'] = hdr[0]
@@ -168,15 +191,19 @@ class VDEOdecoder(object):
 
         self.dtype = self.__dtypeID[self.__header['imageMode']]
 
-    ## provides the data shape
-    # \returns the data shape if data was loaded
     def shape(self):
+        """ provides the data shape
+
+        :returns: the data shape if data was loaded
+        """
         if self.__header:
             return [self.__header['width'], self.__header['height']]
 
-    ## provides the decoded data
-    # \returns the decoded data if data was loaded
     def decode(self):
+        """ provides the decoded data
+
+        :returns: the decoded data if data was loaded
+        """
         if not self.__header or not self.__data:
             return
         if not self.__value:
@@ -190,13 +217,16 @@ class VDEOdecoder(object):
         return self.__value
 
 
-## Decoder pool
 class DecoderPool(object):
+    """ Decoder pool
+    """
 
-    ## constructor
-    # \brief It creates know decoders
-    # \param configJSON string with decoders
     def __init__(self, configJSON=None):
+        """ constructor
+
+        :brief: It creates know decoders
+        :param configJSON: string with decoders
+        """
         self.__knowDecoders = {
             "LIMA_VIDEO_IMAGE": VDEOdecoder,
             "UTF8": UTF8decoder,
@@ -206,9 +236,11 @@ class DecoderPool(object):
         self.__createDecoders()
         self.appendUserDecoders(configJSON)
 
-    ## loads user decoders
-    # \param configJSON string with decoders
     def appendUserDecoders(self, configJSON):
+        """ loads user decoders
+
+        :param configJSON: string with decoders
+        """
         if configJSON and 'decoders' in configJSON.keys() \
                 and hasattr(configJSON['decoders'], 'keys'):
             for dk in configJSON['decoders'].keys():
@@ -217,35 +249,46 @@ class DecoderPool(object):
                                  locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
 
-    ## creates know decoders
-    # \brief It calls constructor of know decoders
     def __createDecoders(self):
+        """ creates know decoders
+
+        :brief: It calls constructor of know decoders
+        """
         for dk in self.__knowDecoders.keys():
             self.__pool[dk] = self.__knowDecoders[dk]()
 
-    ## checks it the decoder is registered
-    # \param decoder the given decoder
-    # \returns True if it the decoder is registered
     def hasDecoder(self, decoder):
+        """ checks it the decoder is registered
+
+        :param decoder: the given decoder
+        :returns: True if it the decoder is registered
+        """
         return True if decoder in self.__pool.keys() else False
 
-    ## checks it the decoder is registered
-    # \param decoder the given decoder
-    # \returns True if it the decoder is registered
     def get(self, decoder):
+        """ checks it the decoder is registered
+
+        :param decoder: the given decoder
+        :returns: True if it the decoder is registered
+        """
         if decoder in self.__pool.keys():
             return self.__pool[decoder]
 
-    ## adds additional decoder
-    # \param name name of the adding decoder
     def pop(self, name):
+        """ adds additional decoder
+
+        :param name: name of the adding decoder
+        """
         self.__pool.pop(name, None)
 
-    ## adds additional decoder
-    # \param name name of the adding decoder
-    # \param decoder instance of the adding decoder
-    # \returns name of decoder
     def append(self, decoder, name):
+        """ adds additional decoder
+
+        :param name: name of the adding decoder
+        :param decoder: instance of the adding decoder
+        :returns: name of decoder
+        """
+
         instance = decoder()
         self.__pool[name] = instance
 
