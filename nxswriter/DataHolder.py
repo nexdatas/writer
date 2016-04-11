@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file DataHolder.py
-# holder for data
+#
 
 """ definition of a data holder with casting methods """
 
@@ -27,36 +25,41 @@ from .Types import NTP
 from . import Streams
 
 
-## Holder for passing data
 class DataHolder(object):
+    """ Holder for passing data
+    """
 
-    ## constructor
-    # \param rank format of the data, i.e. SCALAR, SPECTRUM, IMAGE
-    # \param value value of the data. It may be also 1D and 2D array
-    # \param tangoDType type of the data
-    # \param shape shape of the data
-    # \param encoding encoding type of Tango DevEncoded varibles
-    # \param decoders poll with decoding classes
     def __init__(self, rank, value, tangoDType, shape,
                  encoding=None, decoders=None):
+        """ constructor
+        :param rank: format of the data, i.e. SCALAR, SPECTRUM, IMAGE
+        :param value: value of the data. It may be also 1D and 2D array
+        :param tangoDType: type of the data
+        :param shape: shape of the data
+        :param encoding: encoding type of Tango DevEncoded varibles
+        :param decoders: poll with decoding classes
 
-        ## data format
+        """
+
+        #: data format
         self.format = rank
-        ## data value
+        #: data value
         self.value = value
-        ## data type
+        #: data type
         self.tangoDType = tangoDType
-        ## data shape
+        #: data shape
         self.shape = shape
-        ## encoding type of Tango DevEncoded varibles
+        #: encoding type of Tango DevEncoded varibles
         self.encoding = str(encoding) if encoding else None
-        ## pool with decoding algorithm
+        #: pool with decoding algorithm
         self.decoders = decoders
 
         if str(self.tangoDType) == 'DevEncoded':
             self.__setupEncoded()
 
     def __setupEncoded(self):
+        """
+        """
         self.shape = None
         if self.encoding and self.decoders and \
                 self.decoders.hasDecoder(self.encoding):
@@ -98,15 +101,17 @@ class DataHolder(object):
 
             raise ValueError("Encoding or Shape not defined")
 
-    ## casts the data into given type
-    # \param dtype given type of data
-    # \returns numpy array of defined type or list
-    #          for strings or value for SCALAR
     def cast(self, dtype):
+        """ casts the data into given type
+        :param dtype: given type of data
+        :returns: numpy array of defined type or list
+                  for strings or value for SCALAR
+
+        """
         if str(self.format).split('.')[-1] == "SCALAR":
             if dtype in NTP.npTt.keys() \
                     and NTP.npTt[dtype] == str(self.tangoDType):
-                ## workaround for bug python-pni #8
+                # workaround for bug python-pni #8
                 if isinstance(self.value, unicode):
                     return str(self.value)
                 else:

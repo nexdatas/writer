@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,6 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file TangoDataWriter.py
-# NeXuS H5 Data Writer
 #
 
 """ Tango Data Writer implementation """
@@ -45,57 +42,60 @@ from .DecoderPool import DecoderPool
 from .DataSourcePool import DataSourcePool
 
 
-## NeXuS data writer
 class TangoDataWriter(object):
+    """ NeXuS data writer
+    """
 
-    ## constructor
-    # \brief It initialize the data writer for the H5 output file
-    # \param server Tango server
     def __init__(self, server=None):
-        ## output file name
+        """ constructor
+
+        :brief: It initialize the data writer for the H5 output file
+        :param server: Tango server
+        """
+        #: output file name
         self.fileName = ""
-        ## Tango server
+        #: Tango server
         self.__server = server
-        ## XML string with file settings
+        #: XML string with file settings
         self.__xmlsettings = ""
-        ## global JSON string with data records
+        #: global JSON string with data records
         self.__json = "{}"
-        ## maximal number of threads
+        #: maximal number of threads
         self.numberOfThreads = 100
 #        self.numberOfThreads = 1
 
-        ## thread pool with INIT elements
+        #: thread pool with INIT elements
         self.__initPool = None
-        ## thread pool with STEP elements
+        #: thread pool with STEP elements
         self.__stepPool = None
-        ## thread pool with FINAL elements
+        #: thread pool with FINAL elements
         self.__finalPool = None
-        ## collection of thread pool with triggered STEP elements
+        #: collection of thread pool with triggered STEP elements
         self.__triggerPools = {}
-        ## H5 file handle
+        #: H5 file handle
         self.__nxRoot = None
-        ## H5 file handle
+        #: H5 file handle
         self.__nxFile = None
-        ## element file objects
+        #: element file objects
         self.__eFile = None
 
-        ## pool with decoders
+        #: pool with decoders
         self.__decoders = DecoderPool()
 
-        ## pool with datasources
+        #: pool with datasources
         self.__datasources = DataSourcePool()
 
-        ## group name parser
+        #: group name parser
         self.__fetcher = None
 
-        ## adding logs
+        #: adding logs
         self.addingLogs = True
-        ## counter for open entries
+        #: counter for open entries
         self.__entryCounter = 0
-        ## group with Nexus log Info
+        #: group with Nexus log Info
         self.__logGroup = None
 
-        ## opend flag
+        #: opend flag
         self.__fileCreated = None
 
         if server:
@@ -110,55 +110,71 @@ class TangoDataWriter(object):
             if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
 
-    ## get method for jsonrecord attribute
-    # \returns value of jsonrecord
     def __getJSON(self):
+        """ get method for jsonrecord attribute
+
+        :returns: value of jsonrecord
+        """
         return self.__json
 
-    ## set method for jsonrecord attribute
-    # \param jsonstring value of jsonrecord
     def __setJSON(self, jsonstring):
+        """ set method for jsonrecord attribute
+
+        :param jsonstring: value of jsonrecord
+        """
+
         self.__decoders.appendUserDecoders(json.loads(jsonstring))
         self.__datasources.appendUserDataSources(json.loads(jsonstring))
         self.__json = jsonstring
 
-    ## del method for jsonrecord attribute
     def __delJSON(self):
+        """  del method for jsonrecord attribute
+        """
+
         del self.__json
 
-    ## the json data string
+    #: the json data string
     jsonrecord = property(__getJSON, __setJSON, __delJSON,
                           doc='the json data string')
 
-    ## get method for xmlsettings attribute
-    # \returns value of jsonrecord
     def __getXML(self):
+        """ get method for xmlsettings attribute
+
+        :returns: value of jsonrecord
+        """
         return self.__xmlsettings
 
-    ## set method for xmlsettings attribute
-    # \param xmlset xml settings
     def __setXML(self, xmlset):
+        """ set method for xmlsettings attribute
+
+        :param xmlset: xml settings
+        """
         self.__fetcher = FetchNameHandler()
         sax.parseString(xmlset, self.__fetcher)
         self.__xmlsettings = xmlset
 
-    ## del method for xmlsettings attribute
     def __delXML(self):
+        """ del method for xmlsettings attribute
+        """
         del self.__xmlsettings
 
-    ## the xmlsettings
+    #: the xmlsettings
     xmlsettings = property(__getXML, __setXML, __delXML,
                            doc='the xml settings')
 
-    ## the H5 file handle
-    # \returns the H5 file handle
     def getFile(self):
+        """ the H5 file handle
+
+        :returns: the H5 file handle
+        """
         return self.__nxFile
 
-    ## the H5 file opening
-    # \brief It opens the H5 file
     def openFile(self):
-        ## file handle
+        """ the H5 file opening
+
+        :brief: It opens the H5 file
+        """
+
         self.closeFile()
         self.__nxFile = None
         self.__eFile = None
@@ -166,7 +182,6 @@ class TangoDataWriter(object):
         self.__stepPool = None
         self.__finalPool = None
         self.__triggerPools = {}
-        ## file handle
 
         if os.path.isfile(self.fileName):
             self.__nxFile = nx.open_file(self.fileName, False)
@@ -176,7 +191,7 @@ class TangoDataWriter(object):
             self.__fileCreated = True
         self.__nxRoot = self.__nxFile.root()
 
-        ## element file objects
+        #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
 
         name = "NexusConfigurationLogs"
@@ -200,10 +215,12 @@ class TangoDataWriter(object):
             vfield.write(str(sys.version))
             vfield.close()
 
-    ##  opens the data entry corresponding to a new XML settings
-    # \brief It parse the XML settings, creates thread pools
-    # and runs the INIT pool.
     def openEntry(self):
+        """ opens the data entry corresponding to a new XML settings
+
+        :brief: It parse the XML settings, creates thread pools
+                and runs the INIT pool.
+        """
         if self.xmlsettings:
             # flag for INIT mode
             self.__datasources.counter = -1
@@ -248,10 +265,13 @@ class TangoDataWriter(object):
             if self.__nxFile and hasattr(self.__nxFile, "flush"):
                 self.__nxFile.flush()
 
-    ## close the data writer
-    # \brief It runs threads from the STEP pool
-    # \param jsonstring local JSON string with data records
     def record(self, jsonstring=None):
+        """ runs threads form the STEP pool
+
+        :brief: It runs threads from the STEP pool
+        :param jsonstring: local JSON string with data records
+        """
+
         # flag for STEP mode
         if self.__datasources.counter > 0:
             self.__datasources.counter += 1
@@ -284,10 +304,12 @@ class TangoDataWriter(object):
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
 
-    ## closes the data entry
-    # \brief It runs threads from the FINAL pool and
-    #  removes the thread pools
     def closeEntry(self):
+        """ closes the data entry
+
+        :brief: It runs threads from the FINAL pool and
+                removes the thread pools
+        """
         # flag for FINAL mode
         self.__datasources.counter = -2
 
@@ -325,9 +347,11 @@ class TangoDataWriter(object):
 
         gc.collect()
 
-    ## the H5 file closing
-    # \brief It closes the H5 file
     def closeFile(self):
+        """ the H5 file closing
+
+        :brief: It closes the H5 file
+        """
 
         if self.__initPool:
             self.__initPool.close()
@@ -362,20 +386,20 @@ if __name__ == "__main__":
     import time
 
     # Create a TDW object
-    ## instance of TangoDataWriter
+    #: instance of TangoDataWriter
     tdw = TangoDataWriter()
     tdw.fileName = 'test.h5'
 
     tdw.numberOfThreads = 1
 
-    ## xml file name
+    #: xml file name
 #    xmlf = "../XMLExamples/test.xml"
     xmlf = "../XMLExamples/MNI.xml"
 
     print("usage: TangoDataWriter.py  <XMLfile1>  "
           "<XMLfile2>  ...  <XMLfileN>  <H5file>")
 
-    ## No arguments
+    #: No arguments
     argc = len(sys.argv)
     if argc > 2:
         tdw.fileName = sys.argv[argc - 1]
@@ -387,7 +411,7 @@ if __name__ == "__main__":
         for i in range(1, argc - 1):
             xmlf = sys.argv[i]
 
-            ## xml string
+            #: xml string
             xml = open(xmlf, 'r').read()
             tdw.xmlsettings = xml
 

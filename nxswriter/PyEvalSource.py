@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file PyEvalSource.py
-# data-source types
+#
 
 """ Definitions of PYEVAL datasource """
 
@@ -33,38 +31,43 @@ from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
 
-## Variables for PyEval datasource
 class Variables(object):
+    """ Variables for PyEval datasource
+    """
     pass
 
 
-## Python Eval data source
 class PyEvalSource(DataSource):
-    ## constructor
-    # \brief It cleans all member variables
+    """ Python Eval data source
+    """
+
     def __init__(self):
+        """ constructor
+
+        :brief: It cleans all member variables
+        """
         DataSource.__init__(self)
-        ## name of data
+        #: name of data
         self.__name = None
-        ## the current  static JSON object
+        #: the current  static JSON object
         self.__globalJSON = None
-        ## the current  dynamic JSON object
+        #: the current  dynamic JSON object
         self.__localJSON = None
-        ## datasource pool
+        #: datasource pool
         self.__pool = None
-        ## datasources xml
+        #: datasources xml
         self.__sources = {}
-        ## datasources
+        #: datasources
         self.__datasources = {}
-        ## python script
+        #: python script
         self.__script = ""
-        ## common block
+        #: common block
         self.__commonblock = False
-        ## lock for common block
+        #: lock for common block
         self.__lock = None
-        ## common block variables
+        #: common block variables
         self.__common = None
-        ## data format
+        #: data format
         self.__result = {"rank": "SCALAR",
                          "value": None,
                          "tangoDType": "DevString",
@@ -72,9 +75,12 @@ class PyEvalSource(DataSource):
                          "encoding": None,
                          "decoders": None}
 
-    ## sets the parrameters up from xml
-    # \brief xml  datasource parameters
     def setup(self, xml):
+        """ sets the parrameters up from xml
+
+        :param xml:  datasource parameters
+        """
+
         dom = minidom.parseString(xml)
         mds = dom.getElementsByTagName("datasource")
         inputs = []
@@ -130,16 +136,21 @@ class PyEvalSource(DataSource):
         else:
             self.__commonblock = False
 
-    ## self-description
-    # \returns self-describing string
+    ##
     def __str__(self):
+        """ self-description
+
+        :returns: self-describing string
+        """
         return " PYEVAL %s" % (self.__script)
 
-    ## sets JSON string
-    # \brief It sets the currently used  JSON string
-    # \param globalJSON static JSON string
-    # \param localJSON dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
+        """ sets JSON string
+
+        :brief: It sets the currently used  JSON string
+        :param globalJSON: static JSON string
+        :param localJSON: dynamic JSON string
+        """
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
         for source in self.__datasources.values():
@@ -147,9 +158,11 @@ class PyEvalSource(DataSource):
                 source.setJSON(self.__globalJSON,
                                self.__localJSON)
 
-    ## provides access to the data
-    # \returns  dictionary with collected data
     def getData(self):
+        """ provides access to the data
+
+        :returns:  dictionary with collected data
+        """
         if not self.__name:
             Streams.error(
                 "PyEvalSource::getData() - PyEval datasource not set up",
@@ -190,17 +203,21 @@ class PyEvalSource(DataSource):
                     "tangoDType": NTP.pTt[pythonDType.__name__],
                     "shape": shape}
 
-    ## sets the used decoders
-    # \param decoders pool to be set
     def setDecoders(self, decoders):
+        """ sets the used decoders
+
+        :param decoders: pool to be set
+        """
         self.__result["decoders"] = decoders
         for source in self.__datasources.values():
             if hasattr(source, "setDecoders"):
                 source.setDecoders(decoders)
 
-    ## sets the datasources
-    # \param pool datasource pool
     def setDataSources(self, pool):
+        """ sets the datasources
+
+        :param pool: datasource pool
+        """
         self.__pool = pool
         pool.lock.acquire()
         try:

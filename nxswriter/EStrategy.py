@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file EStrategy.py
-# NeXus runnable elements
+#
 
 """ Definitions of strategy evaluation classes """
 
@@ -25,12 +23,16 @@ from .Element import Element
 from . import Streams
 
 
-## query tag element
 class EStrategy(Element):
-    ## constructor
-    # \param attrs dictionary of the tag attributes
-    # \param last the last element from the stack
+    """## strategy tag element
+
+    """
     def __init__(self, attrs, last):
+        """ constructor
+
+        :param attrs: dictionary of the tag attributes
+        :param last: the last element from the stack
+        """
         Element.__init__(self, "strategy", attrs, last)
 
         if "mode" in attrs.keys():
@@ -59,8 +61,10 @@ class EStrategy(Element):
                     self.last.shuffle = False \
                         if attrs["shuffle"].upper() == "FALSE" else True
 
-    ## stores the tag content
-    # \param xml xml setting
-    # \param globalJSON global JSON string
     def store(self, xml=None, globalJSON=None):
+        """ stores the tag content
+
+        :param xml: xml setting
+        :param globalJSON: global JSON string
+        """
         self.last.postrun = ("".join(self.content)).strip()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package nxswriter nexdatas
-## \file TangoSource.py
-# data-source types
+#
 
 """ Definitions of TANGO datasource """
 
@@ -34,22 +32,25 @@ from .Errors import (PackageError, DataSourceSetupError)
 
 try:
     import PyTango
-    ## global variable if PyTango module installed
+    #: global variable if PyTango module installed
     PYTANGO_AVAILABLE = True
 except ImportError as e:
     PYTANGO_AVAILABLE = False
     Streams.info("PYTANGO not available: %s" % e)
 
 
-## tools for proxy
 class ProxyTools(object):
+    """ tools for proxy
+    """
 
-    ## sets the Tango proxy up
-    ## \param cls ProxyTools class
-    ## \param device tango device
-    # \returns proxy if proxy is set up
     @classmethod
     def proxySetup(cls, device):
+        """ sets the Tango proxy up
+
+        :param cls: ProxyTools class
+        :param device: tango device
+        :returns: proxy if proxy is set up
+        """
         found = False
         cnt = 0
 
@@ -76,12 +77,14 @@ class ProxyTools(object):
         if found:
             return proxy
 
-    ## checks if proxy is valid
-    ## \param cls ProxyTools class
-    # \param proxy PyTango proxy
-    # \returns True if proxy is valid else false
     @classmethod
     def isProxyValid(cls, proxy):
+        """ checks if proxy is valid
+
+        :param proxy: PyTango proxy
+        :returns: True if proxy is valid else false
+
+        """
         failed = True
         try:
             proxy.ping()
@@ -91,53 +94,65 @@ class ProxyTools(object):
         return not failed
 
 
-## Tango data source
 class TangoSource(DataSource):
-    ## constructor
-    # \brief It cleans all member variables
+    """ Tango data source
+    """
     def __init__(self):
+        """ constructor
+
+        :brief: It cleans all member variables
+        """
+
         DataSource.__init__(self)
-        ## Tango device member
+        #: Tango device member
         self.member = TgMember(None)
-        ## datasource tango group
+        #: datasource tango group
         self.group = None
-        ## full device name
+        #: full device name
         self.device = None
 
-        ## global tango group for TANGO datasources
+        #: global tango group for TANGO datasources
         self.__tngrp = None
-        ## datasource pool
+        #: datasource pool
         self.__pool = None
-        ## device proxy
+        #: device proxy
         self.__proxy = None
 
-        ## the current  static JSON object
+        #: the current  static JSON object
         self.__globalJSON = None
-        ## the current  dynamic JSON object
+        #: the current  dynamic JSON object
         self.__localJSON = None
 
-        ## decoder pool
+        #: decoder pool
         self.__decoders = None
-        ## client datasource for mixed CLIENT/TANGO mode
+        #: client datasource for mixed CLIENT/TANGO mode
         self.client = None
 
-    ## self-description
-    # \returns self-describing string
     def __str__(self):
+        """ self-description
+
+        :returns: self-describing string
+        """
+
         return " TANGO Device %s : %s (%s)" % (
             self.device, self.member.name, self.member.memberType)
 
-    ## sets JSON string
-    # \brief It sets the currently used  JSON string
-    # \param globalJSON static JSON string
-    # \param localJSON dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
+        """ sets JSON string
+
+        :brief: It sets the currently used  JSON string
+        :param globalJSON: static JSON string
+        :param localJSON: dynamic JSON string
+        """
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
 
-    ## sets the parrameters up from xml
-    # \brief xml  datasource parameters
     def setup(self, xml):
+        """ sets the parrameters up from xml
+
+        :param xml:  datasource parameters
+        """
+
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         name = None
@@ -211,14 +226,18 @@ class TangoSource(DataSource):
                 device.encode(), name.lower()
             )
 
-    ## sets the used decoders
-    # \param decoders pool to be set
     def setDecoders(self, decoders):
+        """ sets the used decoders
+
+        :param decoders: pool to be set
+        """
         self.__decoders = decoders
 
-    ## data provider
-    # \returns dictionary with collected data
     def getData(self):
+        """ data provider
+
+        :returns: dictionary with collected data
+        """
         if self.client:
             res = None
             try:
@@ -288,9 +307,12 @@ class TangoSource(DataSource):
                     self.__tngrp.lock.release()
             return val
 
-    ## sets the datasources
-    # \param pool datasource pool
     def setDataSources(self, pool):
+        """ sets the datasources
+
+        :param pool: datasource pool
+        """
+
         self.__pool = pool
         pool.lock.acquire()
         try:
@@ -311,30 +333,41 @@ class TangoSource(DataSource):
             pool.lock.release()
 
 
-## Group of tango devices
 class TgGroup(object):
-    ## default constructor
-    # \param counter of steps
+    """ Group of tango devices
+    """
+
     def __init__(self, counter=0):
-        ## threading lock
+        """ default constructor
+
+        :param counter: counts of steps
+        """
+
+        #: threading lock
         self.lock = threading.Lock()
-        ## counter of steps
+        #: counter of steps
         self.counter = counter
-        ## TANGO devices
+        #: TANGO devices
         self.devices = {}
 
-    ## provides tango device
-    # \param device tango device name
-    # \returns TgDevice instance of tango device
     def getDevice(self, device):
+        """ provides tango device
+
+        :param device: tango device name
+        :returns: TgDevice instance of tango device
+        """
+
         if device not in self.devices:
             self.devices[device] = TgDevice(device)
         return self.devices[device]
 
-    ## fetches attribute data for given device
-    # \param device given device
     @classmethod
     def __fetchAttributes(cls, device):
+        """ fetches attribute data for given device
+
+        :param device: given device
+        """
+
         attr = device.attributes
         alist = device.proxy.get_attribute_list()
         alist = [a.lower() for a in alist]
@@ -360,22 +393,28 @@ class TgGroup(object):
             mb = device.members[attr[i]]
             mb.setData(res[i])
 
-    ## fetches attribute data for given proxy
-    # \param proxy given proxy
-    # \param member given member
     @classmethod
     def __fetchAttribute(cls, proxy, member):
+        """ fetches attribute data for given proxy
+
+        :param proxy: given proxy
+        :param member: given member
+        """
+
         alist = proxy.get_attribute_list()
         alist = [a.lower() for a in alist]
         if member.name.lower() in alist:
             da = proxy.read_attribute(member.name.encode())
             member.setData(da)
 
-    ## fetches property data for given member
-    # \param proxy given proxy
-    # \param member given member
     @classmethod
     def __fetchProperty(cls, proxy, member):
+        """ fetches property data for given member
+
+        :param proxy: given proxy
+        :param member: given member
+        """
+
         plist = proxy.get_property_list('*')
         plist = [a.lower() for a in plist]
         if member.name.encode().lower() in plist:
@@ -383,11 +422,14 @@ class TgGroup(object):
                 member.name.encode())[member.name.encode()]
             member.setData(da)
 
-    ## fetches command data for given member
-    # \param proxy given proxy
-    # \param member given member
     @classmethod
     def __fetchCommand(cls, proxy, member):
+        """ fetches command data for given member
+
+        :param proxy: given device proxy
+        :param member: given member
+        """
+
         clist = [cm.cmd_name
                  for cm in proxy.command_list_query()]
         clist = [a.lower() for a in clist]
@@ -396,11 +438,12 @@ class TgGroup(object):
             da = proxy.command_inout(member.name.encode())
             member.setData(da, cd)
 
-    ## reads data from device proxy
-    # \param counter counter of scan steps
-    # \param proxy device proxy
-    # \param member required member
     def getData(self, counter, proxy=None, member=None):
+        """ reads data from device proxy
+        :param counter: counts of scan steps
+        :param proxy: device proxy
+        :param member: required member
+        """
 
         with self.lock:
             if counter == self.counter:
@@ -441,37 +484,48 @@ class TgGroup(object):
                         self.__fetchCommand(dv.proxy, mb)
 
 
-## tango device
 class TgDevice(object):
-    ## default constructor
-    # \param device tango device name
-    # \param proxy device proxy
+    """ tango device
+    """
+
     def __init__(self, device, proxy=None):
-        ## tango device name
+        """ default constructor
+
+        :param device: tango device name
+        :param proxy: device proxy
+        """
+
+        #: tango device name
         self.device = device
-        ## dictionary with tango members
+        #: dictionary with tango members
         self.members = {}
-        ## device attribute names
+        #: device attribute names
         self.attributes = []
-        ## device property names
+        #: device property names
         self.properties = []
-        ## device command names
+        #: device command names
         self.commands = []
-        ## device proxy
+        #: device proxy
         self.proxy = proxy
 
-    ## provides tango device member
-    # \param member tango  device member
-    # \returns TgMember instance of tango device member
     def setMember(self, member):
+        """ provides tango device member
+
+        :param member: tango  device member
+        :returns: TgMember instance of tango device member
+        """
+
         if member.name not in self.members:
             self.members[member.name] = member
             self.__setFlag(member)
         return self.members[member.name]
 
-    ## sets corresponding flag related to member type
-    # \param member given tango device member
     def __setFlag(self, member):
+        """ sets corresponding flag related to member type
+
+        :param member: given tango device member
+        """
+
         if member.memberType == 'attribute':
             self.attributes.append(member.name.encode())
         elif member.memberType == 'property':
@@ -480,49 +534,63 @@ class TgDevice(object):
             self.commands.append(member.name.encode())
 
 
-## tango device member
 class TgMember(object):
-    ## default constructor
+    """ tango device member
+    """
+
     def __init__(self, name, memberType='attribute', encoding=None):
-        ## name of data record
+        """ default constructor
+        :param name: name of data record
+        :param memberType: member type of the data
+        :param encoding: encoding type of Tango DevEncoded variables
+        """
+        #: name of data record
         self.name = name
-        ## member type of the data, i.e. attribute, property,...
+        #: member type of the data, i.e. attribute, property,...
         self.memberType = memberType
-        ## encoding of Tango DevEncoded variables
+        #: encoding type of Tango DevEncoded variables
         self.encoding = encoding
-        ## data value
+        #: data value
         self.__value = None
-        ## output data
+        #: output data
         self.__da = None
-        ## input command data
+        #: input command data
         self.__cd = None
 
-    ## cleans output value
     def reset(self):
+        """ cleans output value
+        """
         self.__value = None
         self.__da = None
         self.__cd = None
 
-    ## sets tango data
-    # \param data output tango data
-    # \param cmd input command data
     def setData(self, data, cmd=None):
+        """ sets tango data
+
+        :param data: output tango data
+        :param cmd: input command data
+        """
+
         self.__da = data
         self.__cd = cmd
 
-    ## checks if data is set
-    # \returns True if data is set
     def isDataSet(self):
+        """ checks if data is set
+
+        :returns: True if data is set
+        """
         status = True if self.__da else False
         if self.memberType == 'command':
             status = status and (True if self.__cd else False)
         return status
 
-    ## provides value of tango member
-    # \returns dictionary with {"rank":, "value":, "tangoDType":,
-    #          "shape":, "encoding":, "decoders":}
-    # \param decoders decoder pool
     def getValue(self, decoders=None):
+        """ provides value of tango member
+
+        :param decoders: decoder pool
+        :returns: dictionary with {"rank":, "value":, "tangoDType":,
+                  "shape":, "encoding":, "decoders":}
+        """
         if self.__value:
             return self.__value
         if self.__da is None:
@@ -579,9 +647,11 @@ class TgMember(object):
                 "decoders": decoders}
         return self.__value
 
-    ## reads data from device proxy
-    # \param proxy device proxy
     def getData(self, proxy):
+        """ reads data from device proxy
+
+        :param proxy: device proxy
+        """
         self.reset()
         if self.memberType == "attribute":
             alist = proxy.get_attribute_list()
