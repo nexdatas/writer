@@ -1,2 +1,3 @@
 include COPYRIGHT
 include man/NXSDataWriter.1
+include README.rst
