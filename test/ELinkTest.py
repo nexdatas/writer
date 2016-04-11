@@ -28,7 +28,7 @@ import struct
 import random
 import numpy
 
-from TestDataSource import TestDataSource 
+from TestDataSource import TestDataSource
 
 
 try:
@@ -47,7 +47,7 @@ from nxswriter.Types import NTP, Converters
 from nxswriter.Errors import XMLSettingSyntaxError
 from nxswriter.FetchNameHandler import TNObject
 
-from Checkers import Checker 
+from Checkers import Checker
 
 #from  xml.sax import SAXParseException
 
@@ -66,7 +66,7 @@ class ELinkTest(unittest.TestCase):
         self._fname = "test.h5"
         self._fname2 = "test2.h5"
         self._nxFile = None
-        self._eFile = None        
+        self._eFile = None
 
         self._tfname = "field"
         self._tfname = "group"
@@ -92,8 +92,8 @@ class ELinkTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        print "\nsetting up..."        
-        print "CHECKER SEED =", self._sc.seed 
+        print "\nsetting up..."
+        print "CHECKER SEED =", self._sc.seed
 
     ## test closer
     # \brief Common tear down
@@ -102,7 +102,7 @@ class ELinkTest(unittest.TestCase):
 
     ## Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
@@ -118,7 +118,7 @@ class ELinkTest(unittest.TestCase):
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         li = ELink({}, eFile)
@@ -134,7 +134,7 @@ class ELinkTest(unittest.TestCase):
 #        self.assertEqual(el.h5Object.attr("NX_class")[...], self._gattrs["type"])
 #        self.assertEqual(el.h5Object.attr("NX_class").dtype, "string")
 #        self.assertEqual(el.h5Object.attr("NX_class").shape, ())
-        
+
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -147,7 +147,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -216,7 +216,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
         l1 = self._nxFile.open("link1")
         self.assertEqual(l1.read(), fi2.h5Object.read() )
         self.assertEqual(l1.dtype, fi2.h5Object.dtype )
@@ -256,7 +256,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
         self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
-        
+
 
         l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
@@ -276,7 +276,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_nods(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -352,7 +352,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         li1.store()
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
@@ -397,7 +397,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_ds(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -428,24 +428,24 @@ class ELinkTest(unittest.TestCase):
         ch = TNObject("entry3","NXentry",gT2)
 
         ds1 = TestDataSource()
-        ds1.value = {"rank":0, "value":tatts1["target1"], 
+        ds1.value = {"rank":0, "value":tatts1["target1"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds2 = TestDataSource()
-        ds2.value = {"rank":0, "value":tatts1["target2"], 
+        ds2.value = {"rank":0, "value":tatts1["target2"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds3 = TestDataSource()
-        ds3.value = {"rank":0, "value":tatts1["target3"], 
+        ds3.value = {"rank":0, "value":tatts1["target3"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds4 = TestDataSource()
-        ds4.value = {"rank":0, "value":tatts1["target4"], 
+        ds4.value = {"rank":0, "value":tatts1["target4"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds5 = TestDataSource()
-        ds5.value = {"rank":0, "value":tatts1["target5"], 
+        ds5.value = {"rank":0, "value":tatts1["target5"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds6 = TestDataSource()
-        ds6.value = {"rank":0, "value":tatts1["target6"], 
+        ds6.value = {"rank":0, "value":tatts1["target6"],
                         "tangoDType":"DevString", "shape":[0,0]}
-        
+
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
         li1.source = ds1
@@ -498,7 +498,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         print "ST1"
@@ -575,7 +575,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
         self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
-        
+
 
         l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
@@ -584,7 +584,7 @@ class ELinkTest(unittest.TestCase):
 #        self.assertEqual(l5.name, gr.h5Object.name )
 
 
-        
+
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -594,7 +594,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_strategy(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -631,24 +631,24 @@ class ELinkTest(unittest.TestCase):
         ch = TNObject("entry3","NXentry",gT2)
 
         ds1 = TestDataSource()
-        ds1.value = {"rank":0, "value":tatts1["target1"], 
+        ds1.value = {"rank":0, "value":tatts1["target1"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds2 = TestDataSource()
-        ds2.value = {"rank":0, "value":tatts1["target2"], 
+        ds2.value = {"rank":0, "value":tatts1["target2"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds3 = TestDataSource()
-        ds3.value = {"rank":0, "value":tatts1["target3"], 
+        ds3.value = {"rank":0, "value":tatts1["target3"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds4 = TestDataSource()
-        ds4.value = {"rank":0, "value":tatts1["target4"], 
+        ds4.value = {"rank":0, "value":tatts1["target4"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds5 = TestDataSource()
-        ds5.value = {"rank":0, "value":tatts1["target5"], 
+        ds5.value = {"rank":0, "value":tatts1["target5"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds6 = TestDataSource()
-        ds6.value = {"rank":0, "value":tatts1["target6"], 
+        ds6.value = {"rank":0, "value":tatts1["target6"],
                         "tangoDType":"DevString", "shape":[0,0]}
-        
+
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
         li1.source = ds1
@@ -709,7 +709,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         self.assertEqual(li1.store(), (stg["strategy1"],None))
@@ -739,8 +739,8 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link5")
         li5.run()
         self.assertTrue(li5.error is None)
-        
-        
+
+
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
         self.assertEqual(li6.store(), (stg["strategy6"],None))
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
@@ -788,7 +788,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
         self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
-        
+
 
         l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
@@ -797,7 +797,7 @@ class ELinkTest(unittest.TestCase):
  #       self.assertEqual(l5.name, gr.h5Object.name )
 
 
-        
+
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -809,7 +809,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_strategy_external(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -846,24 +846,24 @@ class ELinkTest(unittest.TestCase):
         ch = TNObject("entry3","NXentry",gT2)
 
         ds1 = TestDataSource()
-        ds1.value = {"rank":0, "value":tatts1["target1"], 
+        ds1.value = {"rank":0, "value":tatts1["target1"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds2 = TestDataSource()
-        ds2.value = {"rank":0, "value":tatts1["target2"], 
+        ds2.value = {"rank":0, "value":tatts1["target2"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds3 = TestDataSource()
-        ds3.value = {"rank":0, "value":tatts1["target3"], 
+        ds3.value = {"rank":0, "value":tatts1["target3"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds4 = TestDataSource()
-        ds4.value = {"rank":0, "value":tatts1["target4"], 
+        ds4.value = {"rank":0, "value":tatts1["target4"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds5 = TestDataSource()
-        ds5.value = {"rank":0, "value":tatts1["target5"], 
+        ds5.value = {"rank":0, "value":tatts1["target5"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds6 = TestDataSource()
-        ds6.value = {"rank":0, "value":tatts1["target6"], 
+        ds6.value = {"rank":0, "value":tatts1["target6"],
                         "tangoDType":"DevString", "shape":[0,0]}
-        
+
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
         li1.source = ds1
@@ -924,7 +924,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         self.assertEqual(li1.store(), (stg["strategy1"],None))
@@ -954,8 +954,8 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link5")
         li5.run()
         self.assertEqual(li5.error, None)
-        
-        
+
+
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
         self.assertEqual(li6.store(), (stg["strategy6"],None))
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
@@ -1003,7 +1003,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
         self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
-        
+
         l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
         self.assertEqual(l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype )
@@ -1011,7 +1011,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l5.name, gr.h5Object.name )
 
 
-        
+
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -1020,7 +1020,7 @@ class ELinkTest(unittest.TestCase):
     def test_createLink_strategy_external_failed(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -1057,24 +1057,24 @@ class ELinkTest(unittest.TestCase):
         ch = TNObject("entry3","NXentry",gT2)
 
         ds1 = TestDataSource()
-        ds1.value = {"rank":0, "value":tatts1["target1"], 
+        ds1.value = {"rank":0, "value":tatts1["target1"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds2 = TestDataSource()
-        ds2.value = {"rank":0, "value":tatts1["target2"], 
+        ds2.value = {"rank":0, "value":tatts1["target2"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds3 = TestDataSource()
-        ds3.value = {"rank":0, "value":tatts1["target3"], 
+        ds3.value = {"rank":0, "value":tatts1["target3"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds4 = TestDataSource()
-        ds4.value = {"rank":0, "value":tatts1["target4"], 
+        ds4.value = {"rank":0, "value":tatts1["target4"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds5 = TestDataSource()
-        ds5.value = {"rank":0, "value":tatts1["target5"], 
+        ds5.value = {"rank":0, "value":tatts1["target5"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds6 = TestDataSource()
-        ds6.value = {"rank":0, "value":tatts1["target6"], 
+        ds6.value = {"rank":0, "value":tatts1["target6"],
                         "tangoDType":"DevString", "shape":[0,0]}
-        
+
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
         li1.source = ds1
@@ -1135,7 +1135,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         self.assertEqual(li1.store(), (stg["strategy1"],None))
@@ -1165,8 +1165,8 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link5")
         li5.run()
         self.assertEqual(li5.error, None)
-        
-        
+
+
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
         self.assertEqual(li6.store(), (stg["strategy6"],None))
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
@@ -1175,23 +1175,23 @@ class ELinkTest(unittest.TestCase):
 
 
 
-        self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        self.myAssertRaise(Exception, self._nxFile.open, "link2")
-        self.myAssertRaise(Exception, self._nxFile.open, "link3")
-        self.myAssertRaise(Exception, self._nxFile.open, "link4")
-        self.myAssertRaise(Exception, self._nxFile.open, "link5")
+        self.assertTrue(not self._nxFile.open("link1").is_valid)
+        self.assertTrue(not self._nxFile.open("link2").is_valid)
+        self.assertTrue(not self._nxFile.open("link3").is_valid)
+        self.assertTrue(not self._nxFile.open("link4").is_valid)
+        self.assertTrue(not self._nxFile.open("link5").is_valid)
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
-        
+
         self._nxFile.close()
         os.remove(self._fname)
-        
+
 
     ## default constructor test
     # \brief It tests default settings
     def test_createLink_strategy_external_rel(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
@@ -1204,8 +1204,8 @@ class ELinkTest(unittest.TestCase):
         gr3 = EGroup({"type":"NXentry", "name":"entry3"}, eFile)
         gr3.store()
 
-        sfnm = self._fname.split('/') 
-        
+        sfnm = self._fname.split('/')
+
         fnm = sfnm[-1]
         fnm2 = fnm
         fnm3 = fnm
@@ -1213,7 +1213,7 @@ class ELinkTest(unittest.TestCase):
             fnm2 = '../'+'/'.join(sfnm[-2:])
         if len(sfnm) > 2:
             fnm3 = '../../'+'/'.join(sfnm[-3:])
-        
+
         atts1 = {"name":"link1"}
         atts2 = {"name":"link2"}
         atts3 = {"name":"link3"}
@@ -1238,24 +1238,24 @@ class ELinkTest(unittest.TestCase):
         ch = TNObject("entry3","NXentry",gT2)
 
         ds1 = TestDataSource()
-        ds1.value = {"rank":0, "value":tatts1["target1"], 
+        ds1.value = {"rank":0, "value":tatts1["target1"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds2 = TestDataSource()
-        ds2.value = {"rank":0, "value":tatts1["target2"], 
+        ds2.value = {"rank":0, "value":tatts1["target2"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds3 = TestDataSource()
-        ds3.value = {"rank":0, "value":tatts1["target3"], 
+        ds3.value = {"rank":0, "value":tatts1["target3"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds4 = TestDataSource()
-        ds4.value = {"rank":0, "value":tatts1["target4"], 
+        ds4.value = {"rank":0, "value":tatts1["target4"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds5 = TestDataSource()
-        ds5.value = {"rank":0, "value":tatts1["target5"], 
+        ds5.value = {"rank":0, "value":tatts1["target5"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds6 = TestDataSource()
-        ds6.value = {"rank":0, "value":tatts1["target6"], 
+        ds6.value = {"rank":0, "value":tatts1["target6"],
                         "tangoDType":"DevString", "shape":[0,0]}
-        
+
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
         li1.source = ds1
@@ -1316,7 +1316,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         self.assertEqual(li1.store(), (stg["strategy1"],None))
@@ -1346,8 +1346,8 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link5")
         li5.run()
         self.assertEqual(li5.error, None)
-        
-        
+
+
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
         self.assertEqual(li6.store(), (stg["strategy6"],None))
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
@@ -1395,7 +1395,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
         self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
-        
+
 
         l5 = self._nxFile.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
@@ -1404,18 +1404,18 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l5.name, gr.h5Object.name )
 
 
-        
+
         self._nxFile.close()
         os.remove(self._fname)
-        
+
 
     ## default constructor test
     # \brief It tests default settings
     def test_createLink_strategy_external_twofiles(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._fname2= '%s/%s%s_2.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname2= '%s/%s%s_2.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         self._nxFile2 = nx.create_file(self._fname2, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
@@ -1430,8 +1430,8 @@ class ELinkTest(unittest.TestCase):
         gr3 = EGroup({"type":"NXentry", "name":"entry3"}, eFile)
         gr3.store()
 
-        sfnm = self._fname.split('/') 
-        
+        sfnm = self._fname.split('/')
+
         fnm = sfnm[-1]
         fnm2 = fnm
         fnm3 = fnm
@@ -1439,7 +1439,7 @@ class ELinkTest(unittest.TestCase):
             fnm2 = '../'+'/'.join(sfnm[-2:])
         if len(sfnm) > 2:
             fnm3 = '../../'+'/'.join(sfnm[-3:])
-        
+
         atts1 = {"name":"link1"}
         atts2 = {"name":"link2"}
         atts3 = {"name":"link3"}
@@ -1464,24 +1464,24 @@ class ELinkTest(unittest.TestCase):
         ch = TNObject("entry3","NXentry",gT2)
 
         ds1 = TestDataSource()
-        ds1.value = {"rank":0, "value":tatts1["target1"], 
+        ds1.value = {"rank":0, "value":tatts1["target1"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds2 = TestDataSource()
-        ds2.value = {"rank":0, "value":tatts1["target2"], 
+        ds2.value = {"rank":0, "value":tatts1["target2"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds3 = TestDataSource()
-        ds3.value = {"rank":0, "value":tatts1["target3"], 
+        ds3.value = {"rank":0, "value":tatts1["target3"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds4 = TestDataSource()
-        ds4.value = {"rank":0, "value":tatts1["target4"], 
+        ds4.value = {"rank":0, "value":tatts1["target4"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds5 = TestDataSource()
-        ds5.value = {"rank":0, "value":tatts1["target5"], 
+        ds5.value = {"rank":0, "value":tatts1["target5"],
                         "tangoDType":"DevString", "shape":[0,0]}
         ds6 = TestDataSource()
-        ds6.value = {"rank":0, "value":tatts1["target6"], 
+        ds6.value = {"rank":0, "value":tatts1["target6"],
                         "tangoDType":"DevString", "shape":[0,0]}
-        
+
         li0 = ELink({}, eFile2)
         li1 = ELink(atts1, eFile2)
         li1.source = ds1
@@ -1541,7 +1541,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
-        
+
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         self.assertEqual(li1.store(), (stg["strategy1"],None))
@@ -1571,8 +1571,8 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link5")
         li5.run()
         self.assertEqual(li5.error, None)
-        
-        
+
+
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
         self.assertEqual(li6.store(), (stg["strategy6"],None))
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
@@ -1620,7 +1620,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l4.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
         self.assertEqual(l4.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
-        
+
 
         l5 = self._nxFile2.open("link5")
         self.assertEqual(l5.attributes["NX_class"][...], gr.h5Object.attributes["NX_class"][...] )
@@ -1629,13 +1629,13 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l5.name, gr.h5Object.name )
 
 
-        
+
         self._nxFile.close()
         self._nxFile2.close()
         os.remove(self._fname)
         os.remove(self._fname2)
-        
 
-        
+
+
 if __name__ == '__main__':
     unittest.main()
