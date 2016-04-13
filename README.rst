@@ -2,7 +2,10 @@ Welcome to NXSDataWriter's documentation!
 =========================================
 
 Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
+
+------------
 Introduction
+------------
 
 NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.
 
