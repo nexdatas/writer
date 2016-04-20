@@ -68,9 +68,9 @@ def error(message, std=True):
 
 
 def warn(message, std=True):
-    """ writes fatal error message
+    """ writes warning message
 
-    :param message: error message
+    :param message: warning message
     :param std: it writes to sys stream
                 when log stream does not exist
    """
