@@ -103,6 +103,9 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
     def __init__(self, cl, name):
         """ Device constructor
+
+        :param cl: class name
+        :param name: device name
         """
         PyTango.Device_4Impl.__init__(self, cl, name)
         self.debug_stream("In __init__()")
