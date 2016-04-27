@@ -14,11 +14,11 @@ as well as passed by a user client via JSON strings.
 
 Source code:
 
-    https://github.com//nexdatas/writer/
+    https://github.com//nexdatas/writer
 
 Web page:
     
-    http://www.desy.de/~jkotan/nxswriter/
+    http://www.desy.de/~jkotan/nxswriter
 
 ---------------------------
 Installation from sources
