@@ -44,7 +44,7 @@ class EDoc(Element):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
-        :param las:t the last element from the stack
+        :param last: the last element from the stack
         """
         Element.__init__(self, "doc", attrs, last)
 
