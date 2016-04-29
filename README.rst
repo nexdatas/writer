@@ -75,9 +75,10 @@ and
 	  $ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
 
 for component selector and Sardana related packages.
----------------------------
+
+-------------------------
 Installation from sources
----------------------------
+-------------------------
 
 
 Extract sources and run
@@ -86,9 +87,9 @@ Extract sources and run
 
    $ python setup.py install
 
-------------------
+----------------
 General overview
-------------------
+----------------
 
 All operations carried out on a beamline are orchestrated by the control client (CC),
 a software operated by the beamline-scientist and/or a user. Although the term client
@@ -106,9 +107,9 @@ the job of the CC to write the data recorded during the experiment (this is true
 for low rate data-sources). However, with the appearance of complex data formats
 like Nexus the IO code becomes more complex.
 
----------------
+-------------
 Project goals
----------------
+-------------
 
 The aim of this project is to implement a Tango server that manages data IO
 for synchrotron (and maybe neutron) beamlines. The server should satisfy the
@@ -195,7 +196,7 @@ Another example of usage:
      </strategy>
    </field>
 
-
+--------------------
 The <datasource> tag
 --------------------
 
@@ -213,8 +214,9 @@ The <datasouce> tag acquires the following attributes:
       - *other type name* of data source which has been registered via JSON data.
   + **name** datasource name (optional)
 
+-----------------
 CLIENT datasource
---------------------
+-----------------
 
 The **CLIENT** datasource allows to read data from client JSON strings. It should contain
 a <record /> tag. An example of usage:
@@ -227,7 +229,7 @@ a <record /> tag. An example of usage:
 
 
 <record>
-++++++++
+""""""""
 
 The **record** tag defines the fetched data by its name. It has an attrbute
 
@@ -240,7 +242,7 @@ An example of usage:
    <record name="Position"/>
 
 TANGO datasource
---------------------
+----------------
 
 The **TANGO** datasource allows to read data from other TANGO devices. It should contain <device/>
 and <record/> tags. An example of usage:
@@ -254,7 +256,7 @@ and <record/> tags. An example of usage:
    </datasource>
 
 <device>
-++++++++   
+""""""""
 
 The **device** tag describes the Tango device which is used to get the data.
 It has the following attributes:
@@ -273,7 +275,7 @@ If group attribute is defined data of the same group is read simultaneously and
 only ones during one experimental step.
 
 <record>
-++++++++
+""""""""
 
 The **record** tag defines the fetched data by its name. It has an attrbute
 
@@ -295,7 +297,7 @@ and <query> tags. An example of usage:
    </datasource>
 
 <database>
-++++++++++   
+""""""""""
 
 The **database** tag specifies parameters to connect to the required database. It acquires
 the attirbutes
@@ -315,7 +317,7 @@ the attirbutes
 The **content** of the database tag defines Oracle DSN string (optional)
 
 <query>
-+++++++
+"""""""
 
 The **query** tag defines the database query which fetches the data. It has one attribute
 
@@ -377,9 +379,9 @@ The **result** contains python script which evaluates input data. It has the fol
 
 The default value **name** ="result". (optional)
 
---------------------
+-----------
 Client code
---------------------
+-----------
 
 In order to use Nexus Data Server one has to write a client code. Some simple client codes
 are in the  nexdatas repository. In this section we add some
