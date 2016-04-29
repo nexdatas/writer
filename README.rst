@@ -12,20 +12,73 @@ NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.
 The server provides storing data from other Tango devices, various databases
 as well as passed by a user client via JSON strings.
 
-| Source code: https://github.com//nexdatas/writer
+| Source code: https://github.com/nexdatas/writer
 | Web page: http://www.desy.de/~jkotan/nxswriter
 
----------------------------
-Installation from sources
----------------------------
+------------
+Installation
+------------
 
 Install the dependencies:
 
     pni-libraries, PyTango, numpy
 
+From sources
+""""""""""""
+
 Download the latest NexDaTaS version from
 
-    https://github.com//nexdatas/writer
+    https://github.com/nexdatas/writer
+
+Extract sources and run
+
+.. code:: bash
+	  
+	  $ python setup.py install
+
+Debian packages
+"""""""""""""""
+
+Debian Jessie (and Wheezy) packages can be found in the HDRI repository.
+
+To install the debian packages, add the PGP repository key
+
+.. code:: bash
+
+	  $ sudo su
+	  $ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
+
+and then download the corresponding source list
+
+.. code:: bash
+
+	  $ cd /etc/apt/sources.list.d
+	  $ wget http://repos.pni-hdri.de/jessie-pni-hdri.list
+
+Finally,
+
+.. code:: bash
+
+	  $ apt-get update
+	  $ apt-get install python-nxswriter
+
+To instal other NexDaTaS packages	  
+
+.. code:: bash
+	  
+	  $ apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
+
+and 
+
+.. code:: bash
+
+	  $ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+
+for component selector and Sardana related packages.
+---------------------------
+Installation from sources
+---------------------------
+
 
 Extract sources and run
 
