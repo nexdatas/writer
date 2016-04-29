@@ -74,7 +74,7 @@ and
 
 	  $ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
 
-for component selector and Sardana related packages.
+for Component Selector and Sardana related packages.
 
 -------------------------
 Installation from sources
