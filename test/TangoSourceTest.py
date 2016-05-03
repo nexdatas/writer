@@ -469,7 +469,15 @@ class TangoSourceTest(unittest.TestCase):
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
-        self.assertEqual(ds.client, "%s:%s/%s/%s" %(host, port, device, dname.lower()))
+        try:
+            self.assertEqual(
+                ds.client, "%s:%s/%s/%s" %
+                (host, port, device, dname.lower()))
+        except:
+            self.assertEqual(
+                ds.client, "%s:%s/%s/%s" % (
+                    host.split(".")[0], port, device, dname.lower()))
+            
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, None)
         self.assertEqual(ds.group, None)
@@ -483,7 +491,12 @@ class TangoSourceTest(unittest.TestCase):
                  (dname,device,host,port))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, "%s:%s/%s" %(host, port, device))
-        self.assertEqual(ds.client, "%s:%s/%s/%s" %(host, port, device, dname.lower()))
+        try:
+            self.assertEqual(ds.client, "%s:%s/%s/%s" %
+                             (host, port, device, dname.lower()))
+        except:
+            self.assertEqual(ds.client, "%s:%s/%s/%s" %
+                             (host.split(".")[0], port, device, dname.lower()))
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, None)
         self.assertEqual(ds.group, None)
@@ -498,7 +511,12 @@ class TangoSourceTest(unittest.TestCase):
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
-        self.assertEqual(ds.client, "%s:%s/%s/%s" %(host, port, device, dname.lower()))
+        try:
+            self.assertEqual(ds.client, "%s:%s/%s/%s" %
+                             (host, port, device, dname.lower()))
+        except:
+            self.assertEqual(ds.client, "%s:%s/%s/%s" %
+                             (host.split('.')[0], port, device, dname.lower()))
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, encoding)
         self.assertEqual(ds.group, None)
@@ -512,7 +530,13 @@ class TangoSourceTest(unittest.TestCase):
                  (dname,device,encoding))
         self.assertEqual(ds.member.name, dname)
         self.assertEqual(ds.device, device)
-        self.assertEqual(ds.client, "%s:%s/%s/%s" %(host, port, device, dname.lower()))
+        try:
+            self.assertEqual(ds.client, "%s:%s/%s/%s" %
+                             (host, port, device, dname.lower()))
+        except:
+            self.assertEqual(ds.client, "%s:%s/%s/%s" %
+                             (host.split('.')[0], port, device, dname.lower()))
+            
         self.assertEqual(ds.group, None)
         self.assertEqual(ds.member.memberType, atype)
         self.assertEqual(ds.member.encoding, encoding)
