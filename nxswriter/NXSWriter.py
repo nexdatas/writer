@@ -141,8 +141,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
         self.debug_stream("In delete_device()")
         if hasattr(self, 'tdw') and self.tdw:
             if hasattr(self.tdw, 'closeFile'):
-                self.tdw.closeFile()
-            del self.tdw
+                try:
+                    self.tdw.closeFile()
+                    del self.tdw
+                except:
+                    pass
             self.tdw = None
         self.set_state(PyTango.DevState.OFF)
 
@@ -157,8 +160,11 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.errors = []
             if hasattr(self, 'tdw') and self.tdw:
                 if hasattr(self.tdw, 'closeFile'):
-                    self.tdw.closeFile()
-                del self.tdw
+                    try:
+                        self.tdw.closeFile()
+                        del self.tdw
+                    except:
+                        pass
                 self.tdw = None
             self.tdw = TDW(self)
             self.set_state(PyTango.DevState.ON)
