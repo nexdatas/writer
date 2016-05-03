@@ -114,12 +114,16 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
+        self._dbhost = None
+        self._dbport = None
 
 
     ## test starter
     # \brief Common set up
     def setUp(self):
         self._simps.setUp()
+        self._dbhost = self._simps.dp.get_db_host()
+        self._dbport = self._simps.dp.get_db_port()
         print "SEED =", self.seed
         print "CHECKER SEED =", self._sc.seed
 
@@ -310,7 +314,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
 
-
+        xml = xml.replace("localhost", self._dbhost)
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
         decoder = '"decoders":{"MUTF8":"nxswriter.DecoderPool.UTF8decoder"}'
@@ -524,6 +528,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
 
+        xml = xml.replace("localhost", self._dbhost)
 
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
@@ -824,6 +829,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 
 
 
+        xml = xml.replace("localhost", self._dbhost)
 
 
         self._simps.dp.SpectrumBoolean = self._logical[0]
@@ -1160,6 +1166,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
 """
 
 
+        xml = xml.replace("localhost", self._dbhost)
 
 
 
@@ -1414,6 +1421,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        xml = xml.replace("localhost", self._dbhost)
 
         self._simps.dp.ImageBoolean = self._logical2[0]
         self._simps.dp.ImageUChar = self._pco1[0]
@@ -1664,6 +1672,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        xml = xml.replace("localhost", self._dbhost)
 
         self._simps.dp.ImageBoolean = self._logical2[0]
         self._simps.dp.ImageUChar = self._pco1[0]

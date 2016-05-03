@@ -62,11 +62,16 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
             PyTango.DevState.FAULT:"Error",
             }
 
+        self._dbhost = None
+        self._dbport = None
+
     ## test starter
     # \brief Common set up
     def setUp(self):
         self._sv.setUp()
         self._simps.setUp()
+        self._dbhost = self._simps.dp.get_db_host()
+        self._dbport = self._simps.dp.get_db_port()
         print "SEED =", self.seed 
         print "CHECKER SEED =", self._sc.seed 
 

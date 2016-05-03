@@ -100,6 +100,8 @@ class TangoSourceTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
+        self._dbhost = None
+        self._dbport = None
 
 
 
@@ -108,6 +110,8 @@ class TangoSourceTest(unittest.TestCase):
     def setUp(self):
         self._simps.setUp()
         self._simps2.setUp()
+        self._dbhost = self._simps.dp.get_db_host()
+        self._dbport = self._simps.dp.get_db_port()
         ## file handle
         print "SEED =",self.__seed
 
@@ -238,7 +242,7 @@ class TangoSourceTest(unittest.TestCase):
         device = 'stestp09/testss/s1r228'
         ctype = 'command'
         atype = 'attribute'
-        host = 'localhost'
+        host = self._dbhost
         port = '10000'
         encoding = 'UTF8'
         group = 'common_motors'
@@ -376,7 +380,7 @@ class TangoSourceTest(unittest.TestCase):
         device = 'stestp09/testss/s1r228'
         ctype = 'command'
         atype = 'attribute'
-        host = 'localhost'
+        host = self._dbhost
         port = '10000'
         encoding = 'UTF8'
         group = 'common_motors'

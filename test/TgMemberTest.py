@@ -98,6 +98,8 @@ class TgMemberTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
+        self._dbhost = None
+        self._dbport = None
 
 
 
@@ -106,6 +108,8 @@ class TgMemberTest(unittest.TestCase):
     def setUp(self):
         self._simps.setUp()
         ## file handle
+        self._dbhost = self._simps.dp.get_db_host()
+        self._dbport = self._simps.dp.get_db_port()
         print "SEED =",self.__seed 
 
     ## test closer
@@ -210,7 +214,7 @@ class TgMemberTest(unittest.TestCase):
         device = 'stestp09/testss/s1r228'
         ctype = 'command'
         atype = 'attribute'
-        host = 'localhost'
+        host = self._dbhost
         port = '10000'
         encoding = 'UTF8'
         group = 'common_motors'

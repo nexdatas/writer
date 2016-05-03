@@ -1,5 +1,6 @@
 2016-05-03 Jan Kotanski <jankotan@gmail.com>
 	* workaround for closing for nonexisting files
+	* fix for tests when localhost is not defined
 	* tagged as 2.1.3
 
 2016-04-29 Jan Kotanski <jankotan@gmail.com>
