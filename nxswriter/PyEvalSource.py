@@ -173,13 +173,14 @@ class PyEvalSource(DataSource):
 
         ds = Variables()
         for name, source in self.__datasources.items():
-            dt = source.getData()
-            value = None
-            if dt:
-                dh = DataHolder(**dt)
-                if dh and hasattr(dh, "value"):
-                    value = dh.value
-            setattr(ds, name, value)
+            if name in self.__script:
+                dt = source.getData()
+                value = None
+                if dt:
+                    dh = DataHolder(**dt)
+                    if dh and hasattr(dh, "value"):
+                        value = dh.value
+                setattr(ds, name, value)
 
         setattr(ds, self.__name, None)
 
@@ -234,16 +235,17 @@ class PyEvalSource(DataSource):
             pool.lock.release()
 
         for name, inp in self.__sources.items():
-            if pool and pool.hasDataSource(inp[0]):
-                self.__datasources[name] = pool.get(inp[0])()
-                self.__datasources[name].setup(inp[1])
-                if hasattr(self.__datasources[name], "setJSON") \
-                        and self.__globalJSON:
-                    self.__datasources[name].setJSON(self.__globalJSON)
-                if hasattr(self.__datasources[name], "setDataSources"):
-                    self.__datasources[name].setDataSources(pool)
+            if name in self.__script:
+                if pool and pool.hasDataSource(inp[0]):
+                    self.__datasources[name] = pool.get(inp[0])()
+                    self.__datasources[name].setup(inp[1])
+                    if hasattr(self.__datasources[name], "setJSON") \
+                            and self.__globalJSON:
+                        self.__datasources[name].setJSON(self.__globalJSON)
+                    if hasattr(self.__datasources[name], "setDataSources"):
+                        self.__datasources[name].setDataSources(pool)
 
-            else:
-                Streams.error(
-                    "PyEvalSource::setDataSources - Unknown data source")
-                self.__datasources[name] = DataSource()
+                else:
+                    Streams.error(
+                        "PyEvalSource::setDataSources - Unknown data source")
+                    self.__datasources[name] = DataSource()

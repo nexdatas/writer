@@ -1,3 +1,7 @@
+2016-05-25 Jan Kotanski <jankotan@gmail.com>
+	* skip pyeval datasources is they are not used
+	* tagged as 2.2.0
+
 2016-05-03 Jan Kotanski <jankotan@gmail.com>
 	* workaround for closing for nonexisting files
 	* fix for tests when localhost is not defined
