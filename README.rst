@@ -76,6 +76,17 @@ and
 
 for Component Selector and Sardana related packages.
 
+Setting NeXus Writer Server
+"""""""""""""""""""""""""""
+
+To set up  NeXus Servers run
+
+.. code:: bash
+
+          $ nxsetup -x NXSDataWriter
+
+The *nxsetup* command comes from **python-nxstools** package.
+	  
 -------------------------
 Installation from sources
 -------------------------
