@@ -75,54 +75,7 @@ class EGroup(FElementWithAttr):
 
             raise XMLSettingSyntaxError(
                 "File object for the last element does not exist")
-
-        for key in attrs.keys():
-            if key not in ["name", "type"]:
-                if key in NTP.aTn.keys():
-                    if hasattr(attrs[key], "encode"):
-                        try:
-                            (self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True))[...] = \
-                                attrs[key].encode()
-                        except:
-                            (self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True
-                            ))[...] = \
-                                NTP.convert[
-                                    str(self.h5Object.attributes[
-                                        key.encode()
-                                    ].dtype)](attrs[key].encode())
-
-                    else:
-                        try:
-                            self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True
-                            )[...] = attrs[key]
-                        except:
-                            self.h5Object.attributes.create(
-                                key.encode(),
-                                NTP.nTnp[NTP.aTn[key]].encode(),
-                                overwrite=True
-                            )[...] \
-                                = NTP.convert[str(self.h5Object.attributes[
-                                    key.encode()].dtype)](attrs[key])
-
-                elif key in NTP.aTnv.keys():
-
-                    shape = (len(attrs[key]),)
-                    (self.h5Object.attributes.create(
-                        key.encode(), NTP.nTnp[NTP.aTnv[key]].encode(),
-                        shape, overwrite=True))[...] = numpy.array(attrs[key])
-                else:
-                    (self.h5Object.attributes.create(
-                        key.encode(), "string", overwrite=True))[...] \
-                        = attrs[key].encode()
+        self._setAttributes(["name", "type"])
 
     def store(self, xml=None, globalJSON=None):
         """ stores the tag content

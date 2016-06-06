@@ -19,6 +19,8 @@
 
 """ Definitions of file tag evaluation classes """
 
+import numpy
+
 from .DataHolder import DataHolder
 from .Element import Element
 from .Types import NTP
@@ -300,6 +302,61 @@ class FElementWithAttr(FElement):
                         self.__h5Instances[key.encode()][...] = dh.cast(
                             self.__h5Instances[key.encode()].dtype)
 
+    def _setAttributes(self, excluded=None):
+        """ creates attributes
+
+        :brief: It creates attributes in h5Object
+        """
+        excluded = excluded or []
+        for key in self._tagAttrs.keys():
+            if key not in excluded:
+                if key in NTP.aTn.keys():
+                    h5att = self.h5Object.attributes.create(
+                        key.encode(),
+                        NTP.nTnp[NTP.aTn[key]].encode(),
+                        overwrite=True
+                    )
+                    if hasattr(self._tagAttrs[key], "encode"):
+                        try:
+                            h5att[...] = NTP.convert[
+                                str(self.h5Object.attributes[
+                                    key.encode()].dtype)
+                            ](self._tagAttrs[key].strip().encode())
+                        except:
+                            h5att[...] = self._tagAttrs[key].strip().encode()
+                    else:
+                        try:
+                            h5att[...] = NTP.convert[
+                                str(self.h5Object.attributes[
+                                    key.encode()].dtype)
+                            ](self._tagAttrs[key])
+                        except:
+                            h5att[...] = self._tagAttrs[key]
+
+                elif key in NTP.aTnv.keys():
+                    try:
+                        dh = self._setValue(1, self._tagAttrs[key])
+                        shape = (dh.shape[0],)
+                        self.h5Object.attributes.create(
+                            key.encode(),
+                            NTP.nTnp[NTP.aTnv[key]].encode(),
+                            shape,
+                            overwrite=True
+                        )[...] = dh.cast(NTP.nTnp[NTP.aTnv[key]].encode())
+                    except:
+                        sarr = self._tagAttrs[key].split()
+                        self.h5Object.attributes.create(
+                            key.encode(),
+                            NTP.nTnp[NTP.aTnv[key]].encode(),
+                            (len(sarr),),
+                            overwrite=True
+                        )[...] = numpy.array(sarr)
+                else:
+                    self.h5Object.attributes.create(
+                        key.encode(), "string", overwrite=True)[...] \
+                        = self._tagAttrs[key].strip().encode()
+
+                        
     def h5Attribute(self, name):
         """ provides attribute h5 object
 

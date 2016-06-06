@@ -1,3 +1,7 @@
+2016-06-06 Jan Kotanski <jankotan@gmail.com>
+	* fix for aTnv attribute conversion
+	* tagged as 2.2.1
+
 2016-05-25 Jan Kotanski <jankotan@gmail.com>
 	* skip pyeval datasources is they are not used
 	* tagged as 2.2.0

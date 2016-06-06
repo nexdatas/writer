@@ -1420,10 +1420,14 @@ class EFieldTest(unittest.TestCase):
         eFile = EFile( {}, None, self._nxFile)
 
         fattrs = {"name":"testfield", "type":"NX_INT"}
-        maTnv = {"vector":(1.2,12.3,13.3)}
+        maTnv = {"vector": "1.2 12.3 13.3"}
+        raTnv = {"vector": (1.2, 12.3, 13.3)}
         error = 1.e-14
         
         fattrs = dict(fattrs,**(maTnv))
+        rattrs = dict(fattrs)
+        rattrs = dict(rattrs,**(raTnv))
+        
         el = EField(fattrs, eFile)
         
         ds = TestDataSource()
@@ -1439,18 +1443,16 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
         self.assertEqual(el.h5Object.attributes["type"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["type"].shape, (1,))
-
         
-        for k in maTnv.keys():
-            for i in range(len(fattrs[k])):
-                self.assertTrue(abs(el.h5Object.attributes[k][...][i]- fattrs[k][i]) <= error)
-            self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
-            self.assertEqual(el.h5Object.attributes[k].shape, (len(fattrs[k]),))
-            
-            
-            
-
-
+        for k in raTnv.keys():
+            for i in range(len(rattrs[k])):
+                self.assertTrue(
+                    abs(el.h5Object.attributes[k][...][i]
+                        - rattrs[k][i]) <= error)
+            self.assertEqual(
+                el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
+            self.assertEqual(
+                el.h5Object.attributes[k].shape, (len(rattrs[k]),))
 
         self._nxFile.close()
  

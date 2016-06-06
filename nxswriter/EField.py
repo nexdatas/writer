@@ -179,44 +179,7 @@ class EField(FElementWithAttr):
 
         :brief: It creates attributes in h5Object
         """
-        for key in self._tagAttrs.keys():
-            if key not in ["name"]:
-                if key in NTP.aTn.keys():
-                    h5att = self.h5Object.attributes.create(
-                        key.encode(),
-                        NTP.nTnp[NTP.aTn[key]].encode(),
-                        overwrite=True
-                    )
-                    if hasattr(self._tagAttrs[key], "encode"):
-                        try:
-                            h5att[...] = NTP.convert[
-                                str(self.h5Object.attributes[
-                                    key.encode()].dtype)
-                            ](self._tagAttrs[key].strip().encode())
-                        except:
-                            h5att[...] = self._tagAttrs[key].strip().encode()
-                    else:
-                        try:
-                            h5att[...] = NTP.convert[
-                                str(self.h5Object.attributes[
-                                    key.encode()].dtype)
-                            ](self._tagAttrs[key])
-                        except:
-                            h5att[...] = self._tagAttrs[key]
-
-                elif key in NTP.aTnv.keys():
-                    shape = (len(self._tagAttrs[key]),)
-                    self.h5Object.attributes.create(
-                        key.encode(),
-                        NTP.nTnp[NTP.aTnv[key]].encode(),
-                        shape,
-                        overwrite=True
-                    )[...] = numpy.array(self._tagAttrs[key])
-                else:
-                    self.h5Object.attributes.create(
-                        key.encode(), "string", overwrite=True)[...] \
-                        = self._tagAttrs[key].strip().encode()
-
+        self._setAttributes(["name"])
         self._createAttributes()
 
         if self.strategy == "POSTRUN":

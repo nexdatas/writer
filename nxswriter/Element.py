@@ -30,8 +30,11 @@ class Element(object):
         """ constructor
 
         :param name: tag name
+        :type name: str
         :param attrs: dictionary of the tag attributes
+        :type attrs: dict<str, str>
         :param last: the last element from the stack
+        :type last: Element
         """
         #: stored tag name
         self.tagName = name

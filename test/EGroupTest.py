@@ -278,8 +278,11 @@ class EGroupTest(unittest.TestCase):
         self._nxFile = nx.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
-        maTnv = {"vector":[1,2,3,4,5]}
+        maTnv = {"vector": "1 2 3 4 5"}
+        raTnv = {"vector":[1,2,3,4,5]}
         gattrs = dict(gattrs,**(maTnv))
+        rattrs = dict(gattrs)
+        rattrs = dict(rattrs,**(raTnv))
         error = 1.e-14
 
 
@@ -297,11 +300,11 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         
-        for k in maTnv.keys():
-            for i in range(len(gattrs[k])):
-                self.assertTrue(abs(el.h5Object.attributes[k][i]- gattrs[k][i]) <= error)
+        for k in raTnv.keys():
+            for i in range(len(rattrs[k])):
+                self.assertTrue(abs(el.h5Object.attributes[k][i]- rattrs[k][i]) <= error)
             self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
-            self.assertEqual(el.h5Object.attributes[k].shape, (len(gattrs[k]),))
+            self.assertEqual(el.h5Object.attributes[k].shape, (len(rattrs[k]),))
             
 
         self._nxFile.close()
