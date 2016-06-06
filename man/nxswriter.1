@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "May 25, 2016" "2.2" "NXSDataWriter"
+.TH "NXSWRITER" "1" "June 06, 2016" "2.2" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -139,6 +139,21 @@ $ apt\-get install python\-nxsrecselector nxselector python\-sardana\-nxsrecorde
 .UNINDENT
 .sp
 for Component Selector and Sardana related packages.
+.SS Setting NeXus Writer Server
+.sp
+To set up  NeXus Writer Server run
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ nxsetup \-x NXSDataWriter
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The \fInxsetup\fP command comes from the \fBpython\-nxstools\fP package.
 .SH INSTALLATION FROM SOURCES
 .sp
 Extract sources and run
@@ -1765,27 +1780,27 @@ constructor
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBname\fP \-\- tag name
+\fBname\fP (\fIstr\fP) \-\- tag name
 .IP \(bu 2
-\fBattrs\fP \-\- dictionary of the tag attributes
+\fBattrs\fP (\fIdict<str, str>\fP) \-\- dictionary of the tag attributes
 .IP \(bu 2
-\fBlast\fP \-\- the last element from the stack
+\fBlast\fP (\fIElement\fP) \-\- the last element from the stack
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B content = None
-stored tag content
+(list<str>) stored tag content
 .UNINDENT
 .INDENT 7.0
 .TP
 .B doc = None
-doc string
+(str) doc string
 .UNINDENT
 .INDENT 7.0
 .TP
 .B last = None
-the previous element
+(Element) the previous element
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1799,16 +1814,16 @@ abstract method to store the tag element
 .B Parameters
 .INDENT 7.0
 .IP \(bu 2
-\fBxml\fP \-\- tuple of xml code
+\fBxml\fP (\fIstr\fP) \-\- tuple of xml code
 .IP \(bu 2
-\fBglobalJSON\fP \-\- global JSON string
+\fBglobalJSON\fP (\fIstr\fP) \-\- global JSON string
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B tagName = None
-stored tag name
+(str) stored tag name
 .UNINDENT
 .UNINDENT
 .SS nxswriter.ElementThread module
