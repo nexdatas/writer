@@ -36,15 +36,15 @@ class Element(object):
         :param last: the last element from the stack
         :type last: Element
         """
-        #: stored tag name
+        #: (str) stored tag name
         self.tagName = name
         #: tag attributes
         self._tagAttrs = attrs
-        #: stored tag content
+        #: (list<str>) stored tag content
         self.content = []
-        #: doc string
+        #: (str) doc string
         self.doc = ""
-        #: the previous element
+        #: (Element) the previous element
         self.last = last
 
     def _lastObject(self):
@@ -73,6 +73,9 @@ class Element(object):
 
         :brief: abstract method to store the tag element
         :param xml: tuple of xml code
+        :type xml: str
         :param globalJSON: global JSON string
+        :type globalJSON: str
+
         """
         pass
