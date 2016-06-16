@@ -35,24 +35,29 @@ class DataSourcePool(object):
         """ constructor
 
         :brief: It creates know datasources
-        :param configJSON: string with datasources
+        :param configJSON: JSON dictionary with datasources
+        :type configJSON: \
+        :    :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.__pool = {"DB": DBaseSource.DBaseSource,
                        "TANGO": TangoSource.TangoSource,
                        "CLIENT": ClientSource.ClientSource,
                        "PYEVAL": PyEvalSource.PyEvalSource}
         self.appendUserDataSources(configJSON)
-        #: global variables for specific datasources
+        #: (:obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>) \
+        #:       global variables for specific datasources
         self.common = {}
-        #: step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2;
+        #: (:obj:`int`) step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2;
         self.counter = 0
-        #: pool lock
+        #: (:obj:`threading.Lock`) pool lock
         self.lock = threading.Lock()
 
     def appendUserDataSources(self, configJSON):
         """ loads user datasources
 
         :param configJSON: string with datasources
+        :type configJSON: \
+        :    :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         if configJSON and 'datasources' in configJSON.keys() \
                 and hasattr(configJSON['datasources'], 'keys'):
@@ -63,10 +68,12 @@ class DataSourcePool(object):
                 self.append(getattr(dec, pkl[-1]), dk)
 
     def hasDataSource(self, datasource):
-        """ checks it the datasource is registered
+        """ checks if the datasource is registered
 
         :param datasource: the given datasource
+        :type datasource: :obj:`str`
         :returns: True if it the datasource is registered
+        :rtype: :obj:`bool`
         """
         return True if datasource in self.__pool.keys() \
             else False
@@ -75,8 +82,10 @@ class DataSourcePool(object):
         """checks it the datasource is registered
 
         :param datasource: the given datasource name
+        :type datasource: :obj:`str`
         :returns: datasource type if it the datasource
                   is registered
+        :rtype: :obj:`DataSources.DataSource`
         """
         if datasource in self.__pool.keys():
             return self.__pool[datasource]
@@ -85,6 +94,7 @@ class DataSourcePool(object):
         """ adds additional datasource
 
         :param name: name of the adding datasource
+        :type name: :obj:`str`
         """
         self.__pool.pop(name, None)
 
@@ -92,8 +102,11 @@ class DataSourcePool(object):
         """ adds additional datasource
 
         :param name: name of the adding datasource
+        :type name: :obj:`str`
         :param datasource: instance of the adding datasource
+        :type datasource: :obj:`DataSources.DataSource`
         :returns: name of datasource
+        :rtype: :obj:`str`
         """
         self.__pool[name] = datasource
         if not hasattr(datasource, "setup") \

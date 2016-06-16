@@ -28,7 +28,7 @@ from .DataSources import DataSource
 from .Errors import (PackageError, DataSourceSetupError)
 
 
-#: list of available databases
+#: (:obj:`list<str>`) list of available databases
 DB_AVAILABLE = []
 
 try:
@@ -57,33 +57,33 @@ class DBaseSource(DataSource):
     def __init__(self):
         """ constructor
 
-        :brief: It cleans all member variables
+        :brief: It sets all member variables to None
         """
         DataSource.__init__(self)
-        #: name of the host with the data source
+        #: (:obj:`str`) name of the host with the data source
         self.hostname = None
-        #: port related to the host
+        #: (:obj:`str`) port related to the host
         self.port = None
-        #: database query
+        #: (:obj:`str`) database query
         self.query = None
-        #: DSN string
+        #: (:obj:`str`) DSN string
         self.dsn = None
-        #: database type, i.e. MYSQL, PGSQL, ORACLE
+        #: (:obj:`str`) database type, i.e. MYSQL, PGSQL, ORACLE
         self.dbtype = None
-        #: oracle database mode
+        #: (:obj:`str`) oracle database mode
         self.mode = None
-        #: database name
+        #: (:obj:`str`) database name
         self.dbname = None
-        #: database user
+        #: (:obj:`str`) database user
         self.user = None
-        #: database password
+        #: (:obj:`str`) database password
         self.passwd = None
-        #: mysql database configuration file
+        #: (:obj:`str`) mysql database configuration file
         self.mycnf = '/etc/my.cnf'
-        #: record format, i.e. SCALAR, SPECTRUM, IMAGE
+        #: (:obj:`str`) record format, i.e. `SCALAR`, `SPECTRUM`, `IMAGE`
         self.format = None
 
-        #: map
+        #: (:obj:`dict` <:obj:`str`, :obj:`instancemethod`>) map 
         self.__dbConnect = {"MYSQL": self.__connectMYSQL,
                             "PGSQL": self.__connectPGSQL,
                             "ORACLE": self.__connectORACLE}
@@ -92,6 +92,7 @@ class DBaseSource(DataSource):
         """ self-description
 
         :returns: self-describing string
+        :rtype: :obj:`str`
         """
         return " %s DB %s with %s " % (
             self.dbtype, self.dbname if self.dbname else "", self.query)
@@ -99,7 +100,10 @@ class DBaseSource(DataSource):
     def setup(self, xml):
         """ sets the parrameters up from xml
 
-        :param: xml  datasource parameters
+        :param xml: datasource parameters
+        :type xml: :obj:`str`
+        :raises: :obj:`Error.DataSourceSetupError`
+            if :obj:`format` or :obj:`query` is not defined
         """
         dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
@@ -143,6 +147,7 @@ class DBaseSource(DataSource):
         """ connects to MYSQL database
 
         :returns: open database object
+        :rtype: :obj:`MySQLdb.connections.Connection`
         """
         args = {}
         if self.mycnf:
@@ -163,6 +168,7 @@ class DBaseSource(DataSource):
         """ connects to PGSQL database
 
         :returns: open database object
+        :rtype: :obj:`psycopg2._psycopg.connection`
         """
         args = {}
 
@@ -183,6 +189,7 @@ class DBaseSource(DataSource):
         """ connects to ORACLE database
 
         :returns: open database object
+        :rtype: :obj:`cx_Oracle.Connection`
         """
         args = {}
         if self.user:
@@ -200,6 +207,7 @@ class DBaseSource(DataSource):
         """ provides access to the data
 
         :returns: dictionary with collected data
+        :rtype: :obj:`dict` <:obj:`str`, any>
         """
 
         db = None

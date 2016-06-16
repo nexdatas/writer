@@ -36,27 +36,34 @@ class EAttribute(FElement):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`> 
         :param last: the last element from the stack
-
+        :type last: :obj:`Element.Element`
         """
+        
         FElement.__init__(self, "attribute", attrs, last)
-        #: attribute name
+        #: (:obj:`str`) attribute name
         self.name = ""
-        #: rank of the attribute
+        #: (:obj:`str`) rank of the attribute
         self.rank = "0"
-        #: shape of the attribute
+        #: (:obj:`dict` <:obj:`str`, :obj:`str`>) \
+        #:         shape of the attribute, i.e. {index: length}
         self.lengths = {}
-        #: strategy, i.e. INIT, STEP, FINAL
+        #: (:obj:`str`) strategy, i.e. INIT, STEP, FINAL
         self.strategy = None
-        #: trigger for asynchronous writting
+        #: (:obj:`str`) trigger for asynchronous writting
         self.trigger = None
 
     def store(self, xml=None, globalJSON=None):
         """ stores the tag content
 
         :param xml: xml setting
+        :type xml: :obj:`str`
         :param globalJSON: global JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :returns: (strategy,trigger)
+        :rtype: (:obj:`str`, :obj:`str`)
         """
 
         if "name" in self._tagAttrs.keys():

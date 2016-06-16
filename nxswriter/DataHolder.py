@@ -32,24 +32,30 @@ class DataHolder(object):
     def __init__(self, rank, value, tangoDType, shape,
                  encoding=None, decoders=None):
         """ constructor
-        :param rank: format of the data, i.e. SCALAR, SPECTRUM, IMAGE
-        :param value: value of the data. It may be also 1D and 2D array
-        :param tangoDType: type of the data
-        :param shape: shape of the data
-        :param encoding: encoding type of Tango DevEncoded varibles
-        :param decoders: poll with decoding classes
 
+        :param rank: format of the data, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX
+        :type rank: :obj:`str`
+        :param value: value of the data. It may be also 1D and 2D array
+        :type value: any
+        :param tangoDType: type of the data
+        :type tangoDType: :obj:`str`
+        :param shape: shape of the data
+        :type shape: :obj:`list` <:obj:`int`>
+        :param encoding: encoding type of Tango DevEncoded varibles
+        :type encoding: :obj:`str`
+        :param decoders: poll with decoding classes
+        :type decoders: :obj:`DecoderPool.DecoderPool`
         """
 
-        #: data format
+        #: (:obj:`str`) data format, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX
         self.format = rank
-        #: data value
+        #: (any) data value
         self.value = value
-        #: data type
+        #: (:obj:`str`)  tango data type
         self.tangoDType = tangoDType
-        #: data shape
+        #: (:obj:`list` <:obj:`int`>) data shape
         self.shape = shape
-        #: encoding type of Tango DevEncoded varibles
+        #: (:obj:`str`)  encoding type of Tango DevEncoded varibles
         self.encoding = str(encoding) if encoding else None
         #: pool with decoding algorithm
         self.decoders = decoders
@@ -58,7 +64,7 @@ class DataHolder(object):
             self.__setupEncoded()
 
     def __setupEncoded(self):
-        """
+        """ decode value
         """
         self.shape = None
         if self.encoding and self.decoders and \
@@ -105,8 +111,10 @@ class DataHolder(object):
         """ casts the data into given type
 
         :param dtype: given type of data
+        :type dtype: :obj:`str`
         :returns: numpy array of defined type or list
                   for strings or value for SCALAR
+        :rtype: any
 
         """
         if str(self.format).split('.')[-1] == "SCALAR":

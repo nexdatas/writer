@@ -30,26 +30,27 @@ class Element(object):
         """ constructor
 
         :param name: tag name
-        :type name: str
+        :type name: :obj:`str`
         :param attrs: dictionary of the tag attributes
-        :type attrs: dict<str, str>
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: Element
+        :type last: :obj:`Element.Element`
         """
-        #: (str) stored tag name
+        #: (:obj:`str`) stored tag name
         self.tagName = name
         #: tag attributes
         self._tagAttrs = attrs
-        #: (list<str>) stored tag content
+        #: (:obj:`list` <:obj:`str`>) stored tag content
         self.content = []
-        #: (str) doc string
+        #: (:obj:`str`) doc string
         self.doc = ""
-        #: (Element) the previous element
+        #: (:obj:`Element.Element`) the previous element
         self.last = last
 
     def _lastObject(self):
         """ last H5 file object
         :returns: H5 file object of the previous element
+        :rtype: (:obj:`Element.Element`)
         """
         if hasattr(self.last, "h5Object"):
             return self.last.h5Object
@@ -62,6 +63,7 @@ class Element(object):
         """ before last stack element
 
         :returns:  before last element placed on the stack
+        :rtype: (:obj: `Element.Element`)
         """
         if self.last:
             return self.last.last
@@ -73,9 +75,9 @@ class Element(object):
 
         :brief: abstract method to store the tag element
         :param xml: tuple of xml code
-        :type xml: str
+        :type xml: :obj:`str`
         :param globalJSON: global JSON string
-        :type globalJSON: str
-
+        :type globalJSON: \
+        : :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         pass

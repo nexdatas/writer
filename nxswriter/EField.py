@@ -39,32 +39,35 @@ class EField(FElementWithAttr):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`> 
         :param last: the last element from the stack
+        :type last: :obj:`Element.Element`
         """
         FElementWithAttr.__init__(self, "field", attrs, last)
-        #: rank of the field
+        #: (:obj:`str`) rank of the field
         self.rank = "0"
-        #: shape of the field
+        #: (:obj:`dict` <:obj:`str`, :obj:`str`>) \
+        #:        shape of the field, i.e. {index: length}
         self.lengths = {}
-        #: if field is stored in STEP mode
+        #: (:obj:`bool`) True if field is stored in STEP mode
         self.__extraD = False
-        #: strategy, i.e. INIT, STEP, FINAL, POSTRUN
+        #: (:obj:`str`) strategy, i.e. INIT, STEP, FINAL, POSTRUN
         self.strategy = None
-        #: trigger for asynchronous writing
+        #: (:obj:`str`) trigger for asynchronous writing
         self.trigger = None
-        #: growing dimension
+        #: (:obj:`int`) growing dimension
         self.grows = None
-        #: label for postprocessing data
+        #: (:obj:`str`) label for postprocessing data
         self.postrun = ""
-        #: compression flag
+        #: (:obj:`bool`) compression flag
         self.compression = False
-        #: compression rate
+        #: (:obj:`int`) compression rate
         self.rate = 5
-        #: compression shuffle
+        #: (:obj:`bool`) compression shuffle
         self.shuffle = True
-        #: grew flag
+        #: (:obj:`bool`) grew flag
         self.__grew = True
-        #: data format
+        #: (:obj:`str`) data format
         self.__format = ''
 
     def __isgrowing(self):
@@ -103,6 +106,7 @@ class EField(FElementWithAttr):
         """ provides shape
 
         :returns: object shape
+        :rtype: :obj:`list` <:obj:`int` >
         """
         try:
             shape = self._findShape(
@@ -122,9 +126,13 @@ class EField(FElementWithAttr):
         """ creates H5 object
 
         :param dtype: object type
+        :type dtype: :obj:`str`
         :param name: object name
+        :type name: :obj:`str`
         :param shape: object shape
+        :type shape: :obj:`list` <:obj:`int` >
         :returns: H5 object
+        :rtype: :obj:`pni.io.nx.h5._nxh5.nxfield`
         """
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]
@@ -217,8 +225,12 @@ class EField(FElementWithAttr):
         """ stores the tag content
 
         :param xml: xml setting
+        :type xml: :obj:`str`
         :param globalJSON: global JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :returns: (strategy, trigger)
+        :rtype: (:obj:`str`, :obj:`str`)
         """
 
         # if it is growing in extra dimension
@@ -239,6 +251,7 @@ class EField(FElementWithAttr):
         """ writes non-growing data
 
         :param holder: data holder
+        :type holder: :obj:`DataHolder.DataHolder`
         """
         try:
             self.h5Object[...] = holder.cast(self.h5Object.dtype)
@@ -256,6 +269,7 @@ class EField(FElementWithAttr):
         """ writes growing scalar data
 
         :param holder: data holder
+        :type holder: :obj:`DataHolder.DataHolder`
         """
 
         arr = holder.cast(self.h5Object.dtype)
@@ -278,6 +292,7 @@ class EField(FElementWithAttr):
         """ writes growing spectrum data
 
         :param holder: data holder
+        :type holder: :obj:`DataHolder.DataHolder`
         """
 
         # way around for a bug in pniio
@@ -321,6 +336,7 @@ class EField(FElementWithAttr):
         """ writes growing spectrum data
 
         :param holder: data holder
+        :type holder: :obj:`DataHolder.DataHolder`
         """
 
         arr = holder.cast(self.h5Object.dtype)
@@ -362,6 +378,7 @@ class EField(FElementWithAttr):
         """ writes growing data
 
         :param holder: data holder
+        :type holder: :obj:`DataHolder.DataHolder`
         """
         if str(holder.format).split('.')[-1] == "SCALAR":
             self.__writeScalarGrowingData(holder)
@@ -398,6 +415,7 @@ class EField(FElementWithAttr):
         """ reshapes h5 object
 
         :param shape: required shape
+        :type shape: :obj:`list` <:obj:`int` >
         """
         h5shape = self.h5Object.shape
         ln = len(shape)

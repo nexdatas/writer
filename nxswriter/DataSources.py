@@ -36,6 +36,7 @@ class DataSource(object):
         """ sets the parrameters up from xml
 
         :param xml:  datasource parameters
+        :type xml: :obj:`str`
         """
         pass
 
@@ -49,7 +50,8 @@ class DataSource(object):
     def isValid(self):
         """ checks if the data is valid
 
-        :returns: if the data is valid
+        :returns: True if the data is valid
+        :rtype: :obj:`bool`
         """
         return True
 
@@ -57,6 +59,7 @@ class DataSource(object):
         """ self-description
 
         :returns: self-describing string
+        :rtype: :obj:`str`
         """
         return "unknown DataSource"
 
@@ -65,7 +68,9 @@ class DataSource(object):
         """ provides xml content of the node
 
         :param node: DOM node
+        :type node: :obj:`xml.dom.Node`
         :returns: xml content string
+        :rtype: :obj:`str`
         """
         xml = node.toxml()
         start = xml.find('>')
@@ -79,8 +84,17 @@ class DataSource(object):
     @classmethod
     def _getJSONData(cls, name, globalJSON, localJSON):
         """ provides access to the data
-
+        
+        :param name: data key name
+        :type name: :obj:`str:obj:`
+        :param globalJSON: static JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>
+        :param localJSON: dynamic JSON string
+        :type localJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :returns: dictionary with collected data
+        :rtype: :obj:`dict` <:obj:`str`, any>
         """
         if globalJSON and 'data' not in globalJSON.keys():
             globalJSON = None

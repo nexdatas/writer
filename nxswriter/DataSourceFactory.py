@@ -31,16 +31,19 @@ class DataSourceFactory(Element):
         """ constructor
 
         :param attrs: dictionary with the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element on the stack
+        :type last: :obj:`Element.Element`
         """
         Element.__init__(self, "datasource", attrs, last)
-        #: datasource pool
+        #: (:obj:`DataSourcePool.DataSourcePool`) datasource pool
         self.__dsPool = None
 
     def setDataSources(self, datasources):
         """ sets the used datasources
 
         :param datasources: pool to be set
+        :type datasources: :obj:`DataSourcePool.DataSourcePool`
         """
         self.__dsPool = datasources
 
@@ -48,6 +51,7 @@ class DataSourceFactory(Element):
         """ creates data source
 
         :param attrs: dictionary with the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         """
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
@@ -67,7 +71,10 @@ class DataSourceFactory(Element):
         """ sets the datasource form xml string
 
         :param xml: input parameter
+        :type xml: :obj:`str`
         :param globalJSON: global JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.__createDSource(self._tagAttrs)
         jxml = "".join(xml)
@@ -83,6 +90,7 @@ class DataSourceFactory(Element):
         """ sets the used decoders
 
         :param decoders: pool to be set
+        :type decoders: :obj:`DecoderPool.DecorderPool`
         """
         if self.last and self.last.source and self.last.source.isValid() \
                 and hasattr(self.last.source, "setDecoders"):

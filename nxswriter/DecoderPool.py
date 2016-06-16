@@ -32,22 +32,23 @@ class UTF8decoder(object):
 
         :brief: It clears the local variables
         """
-        #: decoder name
+        #: (:obj:`str`) decoder name
         self.name = "UTF8"
-        #: decoder format
+        #: (:obj:`str`) decoder format
         self.format = None
-        #: data type
+        #: (:obj:`str`) data type
         self.dtype = None
 
-        #: image data
+        #: (:obj:`numpy.array`) image data
         self.__value = None
-        #: header and image data
+        #: ([:obj:`str`, :obj:`str`]) header and image data
         self.__data = None
 
     def load(self, data):
         """ loads encoded data
 
         :param data: encoded data
+        :type data: [:obj:`str`, :obj:`str`]
         """
         self.__data = data
         self.format = data[0]
@@ -57,7 +58,8 @@ class UTF8decoder(object):
     def shape(self):
         """ provides the data shape
 
-        :returns: the data shape if data was loaded
+        :returns: the data shape i.e. `[1, 0]`
+        :rtype: :obj:`list` <:obj:`int` >
         """
         return [1, 0]
 
@@ -65,6 +67,7 @@ class UTF8decoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
+        :rtype: :obj:`numpy.array`
         """
         if not self.__data:
             return
@@ -82,22 +85,23 @@ class UINT32decoder(object):
 
         :brief: It clears the local variables
         """
-        #: decoder name
+        #: (:obj:`str`) decoder name
         self.name = "UINT32"
-        #: decoder format
+        #: (:obj:`str`) decoder format
         self.format = None
-        #: data type
+        #: (:obj:`str`) data type
         self.dtype = None
 
-        #: image data
+        #: (:obj:`numpy.array`) image data
         self.__value = None
-        #: header and image data
+        #: ([:obj:`str`, :obj:`str`]) header and image data
         self.__data = None
 
     def load(self, data):
         """ loads encoded data
 
         :param data: encoded data
+        :type data: [:obj:`str`, :obj:`str`]
         """
         if not hasattr(data, "__iter__"):
             raise ValueError("Wrong Data Format")
@@ -112,6 +116,7 @@ class UINT32decoder(object):
         """ provides the data shape
 
         :returns: the data shape if data was loaded
+        :rtype: :obj:`list` <:obj:`int` >
         """
         if self.__data:
             return [len(self.__data[1]) // 4, 0]
@@ -120,6 +125,8 @@ class UINT32decoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
+        :rtype: :obj:`numpy.array`
+
         """
         if not self.__data:
             return
@@ -142,30 +149,31 @@ class VDEOdecoder(object):
 
         :brief: It clears the local variables
         """
-        #: decoder name
+        #: (:obj:`str`) decoder name
         self.name = "LIMA_VIDEO_IMAGE"
-        #: decoder format
+        #: (:obj:`str`) decoder format
         self.format = None
-        #: data type
+        #: (:obj:`str`) data type
         self.dtype = None
 
-        #: image data
+        #: (:obj:`numpy.array`) image data
         self.__value = None
-        #: header and image data
+        #: ([:obj:`str`, :obj:`str`]) header and image data
         self.__data = None
-        #: struct header format
+        #: (:obj:`str`) struct header format
         self.__headerFormat = '!IHHqiiHHHH'
-        #: header data
+        #: (:obj:`dict` <:obj:`str`, :obj:`any` > ) header data
         self.__header = {}
-        #: format modes
+        #: (:obj:`dict` <:obj:`int`, :obj:`str` > ) format modes
         self.__formatID = {0: 'B', 1: 'H', 2: 'I', 3: 'Q'}
-        #: dtype modes
+        #: (:obj:`dict` <:obj:`int`, :obj:`str` > ) dtype modes
         self.__dtypeID = {0: 'uint8', 1: 'uint16', 2: 'uint32', 3: 'uint64'}
 
     def load(self, data):
         """  loads encoded data
 
         :param data: encoded data
+        :type data: [:obj:`str`, :obj:`str`]
         """
         self.__data = data
         self.format = data[0]
@@ -176,6 +184,7 @@ class VDEOdecoder(object):
         """ loads the image header
 
         :param headerData: buffer with header data
+        :type headerData: :obj:`str`
         """
         hdr = struct.unpack(self.__headerFormat, headerData)
         self.__header = {}
@@ -195,6 +204,7 @@ class VDEOdecoder(object):
         """ provides the data shape
 
         :returns: the data shape if data was loaded
+        :rtype: :obj:`list` <:obj:`int` >
         """
         if self.__header:
             return [self.__header['width'], self.__header['height']]
@@ -203,6 +213,7 @@ class VDEOdecoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
+        :rtype: :obj:`numpy.array`
         """
         if not self.__header or not self.__data:
             return
@@ -226,6 +237,8 @@ class DecoderPool(object):
 
         :brief: It creates know decoders
         :param configJSON: string with decoders
+        :type configJSON: \
+        :    :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.__knowDecoders = {
             "LIMA_VIDEO_IMAGE": VDEOdecoder,
@@ -240,6 +253,8 @@ class DecoderPool(object):
         """ loads user decoders
 
         :param configJSON: string with decoders
+        :type configJSON: \
+        :    :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         if configJSON and 'decoders' in configJSON.keys() \
                 and hasattr(configJSON['decoders'], 'keys'):
@@ -261,7 +276,9 @@ class DecoderPool(object):
         """ checks it the decoder is registered
 
         :param decoder: the given decoder
+        :type decoder: :obj:`str`
         :returns: True if it the decoder is registered
+        :rtype: :obj:`bool`
         """
         return True if decoder in self.__pool.keys() else False
 
@@ -269,7 +286,9 @@ class DecoderPool(object):
         """ checks it the decoder is registered
 
         :param decoder: the given decoder
+        :type decoder: :obj:`str`
         :returns: True if it the decoder is registered
+        :rtype: :obj:`object`
         """
         if decoder in self.__pool.keys():
             return self.__pool[decoder]
@@ -278,6 +297,7 @@ class DecoderPool(object):
         """ adds additional decoder
 
         :param name: name of the adding decoder
+        :type name: :obj:`str`
         """
         self.__pool.pop(name, None)
 
@@ -285,8 +305,11 @@ class DecoderPool(object):
         """ adds additional decoder
 
         :param name: name of the adding decoder
+        :type name: :obj:`str`
         :param decoder: instance of the adding decoder
+        :type decoder: :obj:`object`
         :returns: name of decoder
+        :rtype: :obj:`str`
         """
 
         instance = decoder()

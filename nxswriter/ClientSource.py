@@ -32,20 +32,24 @@ class ClientSource(DataSource):
     def __init__(self):
         """ constructor
 
-        :brief: It cleans all member variables
+        :brief: It sets all member variables to None
         """
         DataSource.__init__(self)
-        #: name of data
+        #: (:obj:`str`) data name
         self.name = None
-        #: the current  static JSON object
+        #: (:obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>)
+        #: the current static JSON object
         self.__globalJSON = None
-        #: the current  dynamic JSON object
+        #: (:obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>)
+        #: the current dynamic JSON object
         self.__localJSON = None
 
     def setup(self, xml):
         """ sets the parrameters up from xml
 
-        :brief xml:  datasource parameters
+        :param xml: datasource parameters
+        :type xml: :obj:`str`
+        :raises: :obj:`Error.DataSourceSetupError` if :obj:`name` is not defined
         """
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
@@ -64,6 +68,7 @@ class ClientSource(DataSource):
         """ self-description
 
         :returns: self-describing string
+        :rtype: :obj:`str`
         """
         return " CLIENT record %s" % (self.name)
 
@@ -72,7 +77,9 @@ class ClientSource(DataSource):
 
         :brief: It sets the currently used  JSON string
         :param globalJSON: static JSON string
+        :type globalJSON: :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :param localJSON: dynamic JSON string
+        :type localJSON: :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
@@ -81,6 +88,7 @@ class ClientSource(DataSource):
         """ provides access to the data
 
         :returns: dictionary with collected data
+        :rtype: :obj:`dict` <:obj:`str`, any>
         """
         return self._getJSONData(
             self.name, self.__globalJSON, self.__localJSON)
