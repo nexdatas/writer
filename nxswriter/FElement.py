@@ -139,8 +139,11 @@ class FElement(Element):
         """ provides growing dimension
 
         :param grows: growing dimension
-        :param extraD: if the object grows
+        :type grows: :obj:`int`
+        :param extraD: True if the object grows
+        :type extraD: :obj:`bool`
         :returns: growing dimension
+        :rtype: :obj:`int`
         """
         if extraD:
             if grows and grows > 1:
@@ -158,12 +161,18 @@ class FElement(Element):
 
 
         :param rank: rank of the object
+        :type rank: :obj:`str`
         :param lengths: dictionary with dimensions as a string data ,
                         e.g. {"1":"34","2":"40"}
+        :type lengths:  :obj:`dict` <:obj:`str`, :obj:`str`>
         :param extraD: if the object grows
+        :type extraD: :obj:`bool`
         :param grows: growing dimension
+        :type grows: :obj:`int`
         :param extends: If True extends the shape up to rank value
+        :type extends: :obj:`bool`
         :returns shape: of the object
+        :rtype: :obj:`list` <:obj:`int` >
         """
         self._scalar = False
         shape = []
