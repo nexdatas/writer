@@ -90,7 +90,7 @@ class DataSourceFactory(Element):
         """ sets the used decoders
 
         :param decoders: pool to be set
-        :type decoders: :obj:`DecoderPool.DecorderPool`
+        :type decoders: :obj:`nxswriter.DecoderPool.DecorderPool`
         """
         if self.last and self.last.source and self.last.source.isValid() \
                 and hasattr(self.last.source, "setDecoders"):
