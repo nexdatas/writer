@@ -31,7 +31,9 @@ class EStrategy(Element):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
+        :type last: :obj:`Element.Element`
         """
         Element.__init__(self, "strategy", attrs, last)
 
@@ -65,6 +67,9 @@ class EStrategy(Element):
         """ stores the tag content
 
         :param xml: xml setting
+        :type xml: :obj:`str`
         :param globalJSON: global JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.last.postrun = ("".join(self.content)).strip()

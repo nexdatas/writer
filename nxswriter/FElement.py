@@ -37,20 +37,32 @@ class FElement(Element):
         """ constructor
 
         :param name: tag name
+        :type name: :obj: `str`
         :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
+        :type last: :obj:`Element.Element`
         :param h5object: H5 file object
+        :type h5object: :obj:`pni.io.nx.h5._nxh5.nxfield` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxgroup` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxlink` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxattribute` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxfile`
         """
         Element.__init__(self, name, attrs, last)
-        #: stored H5 file object
+        #: (:obj:`pni.io.nx.h5._nxh5.nxfield` \
+        #:  :obj:`pni.io.nx.h5._nxh5.nxgroup` \
+        #:  :obj:`pni.io.nx.h5._nxh5.nxlink` \
+        #:  :obj:`pni.io.nx.h5._nxh5.nxattribute` \
+        #:  :obj:`pni.io.nx.h5._nxh5.nxfile`) stored H5 file object
         self.h5Object = h5object
-        #: data source
+        #: (:obj:`DataSources.DataSource`) data source
         self.source = None
-        #: notification of error in the run method
+        #: (:obj:`str`) notification of error in the run method
         self.error = None
-        #:  flag for devices for which is allowed to failed
+        #: (:obj:`bool`) flag for devices for which is allowed to failed
         self.canfail = False
-        #: scalar type
+        #: (:obj:`bool`) scalar type
         self._scalar = False
 
     def run(self):
@@ -66,11 +78,17 @@ class FElement(Element):
         """ recalculates shape
 
         :param dsShape: origin shape of the object
+        :type dsShape: :obj:`list` <:obj:`int` >
         :param rank: rank of the object
+        :type rank: : obj:`str` or obj:`int`
         :param extends: If True extends the shape up to rank value
+        :type extends: :obj:`bool`
         :param exDim: grows growing dimension + 1
-        :param extraD: if the object grows
+        :type exDim: :obj:`int`
+        :param extraD: True if the object grows
+        :type extraD: :obj:`bool`
         :returns: shape of the  h5 field
+        :rtype: :obj:`list` <:obj:`int` >
 
         """
         shape = []
@@ -92,7 +110,11 @@ class FElement(Element):
         """ fetches shape from value and rank
 
         :param rank: rank of the object
-        :param value: of the object
+        :type rank: : obj:`str` or obj:`int`
+        :param value: value of the object
+        :type value: : obj:`str`
+        :returns: shape of the value
+        :rtype: :obj:`list` <:obj:`int` >
         """
         if not rank or int(rank) == 0:
             return [1]
@@ -197,6 +219,9 @@ class FElement(Element):
         """ creates the error message
 
         :param exceptionMessage: additional message of exception
+        :type  exceptionMessage: :obj:`str`
+        :returns: error message
+        :rtype: :obj:`str`
         """
         if hasattr(self.h5Object, "path"):
             name = self.h5Object.path

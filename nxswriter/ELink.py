@@ -37,15 +37,18 @@ class ELink(FElement):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
+        :type last: :obj:`Element.Element`
 
         """
         FElement.__init__(self, "link", attrs, last)
-        #: stored H5 file object (defined in base class)
+        #: (:obj:`pni.io.nx.h5._nxh5.nxlink`) \
+        #:     stored H5 file object (defined in base class)
         self.h5Object = None
-        #: strategy, i.e. INIT, STEP, FINAL
+        #: (:obj:`str`) strategy, i.e. INIT, STEP, FINAL
         self.strategy = None
-        #: trigger for asynchronous writting
+        #: (:obj:`str`) trigger for asynchronous writting
         self.trigger = None
         self.__groupTypes = None
         self.__target = None
@@ -55,8 +58,12 @@ class ELink(FElement):
         """ stores the tag content
 
         :param xml: xml setting
+        :type xml: :obj:`str`
         :param globalJSON: global JSON string
         :returns: (strategy, trigger)
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
+        :rtype: (:obj:`str`, :obj:`str`)
         """
 
         if "name" in self._tagAttrs.keys():
@@ -96,7 +103,9 @@ class ELink(FElement):
         """ creates the link the H5 file
 
         :param groupTypes: dictionary with type:name group pairs
+        :type groupTypes: :obj:`dict` <:obj:`str` ,  :obj:`str` >
         :param target: NeXus target path
+        :type target: :obj: `str`
         """
         if groupTypes:
             self.__groupTypes = groupTypes
@@ -125,6 +134,11 @@ class ELink(FElement):
             raise XMLSettingSyntaxError("No name or type")
 
     def __setTarget(self, target=None):
+        """sets the link target
+
+        :param target: NeXus target path
+        :type target: :obj: `str`
+        """
         if target is None and "target" in self._tagAttrs.keys():
             target = self._tagAttrs["target"].encode()
         if target is not None:
@@ -140,8 +154,11 @@ class ELink(FElement):
         """ converts types to Names using groupTypes dictionary
 
         :param text: original directory
+        :type text: :obj: `str`
         :param groupTypes: tree of TNObject with name:nxtype
+        :type groupTypes: :obj:`dict` <:obj:`str` ,  :obj:`str` >
         :returns: directory defined by group names
+        :rtype: :obj: `str`
         """
         sp = str(text).split("/")
         res = ""

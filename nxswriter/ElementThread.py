@@ -17,7 +17,7 @@
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-""" Implementation of element thread of tag evaluation """
+""" Implementation of element thread for tag evaluation """
 
 from threading import Thread
 import Queue
@@ -33,12 +33,14 @@ class ElementThread(Thread):
 
         :brief: It creates ElementThread from the runnable element
         :param index: the current thread index
+        :type index: :obj:`int`
         :param queue: queue with tasks
+        :type queue: :obj:`Queue.Queue`
         """
         Thread.__init__(self)
-        #: thread index
+        #: (:obj:`int`) thread index
         self.index = index
-        #: queue with runnable elements
+        #: (:obj:`Queue.Queue`) queue with runnable elements
         self.__queue = queue
 
     def run(self):
