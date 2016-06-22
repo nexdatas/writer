@@ -85,8 +85,8 @@ class CommandThread(Thread):
     def __failed(self):
         with self.server.lock:
             self.server.state_flag = self.estate
-        self.server.errors.append(
-            str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
+            self.server.errors.append(
+                str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
 
 
 class NXSDataWriter(PyTango.Device_4Impl):
@@ -157,7 +157,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.lock = Lock()
         try:
             self.set_state(PyTango.DevState.RUNNING)
-            self.errors = []
+            with self.lock:
+                self.errors = []
             if hasattr(self, 'tdw') and self.tdw:
                 if hasattr(self.tdw, 'closeFile'):
                     try:
@@ -220,9 +221,10 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ on error
         """
         self.set_state(PyTango.DevState.FAULT)
-        self.errors.append(
-            str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
-
+        with self.lock:
+            self.errors.append(
+                str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
+        
     def read_XMLSettings(self, attr):
         """ Read XMLSettings attribute
         """
@@ -305,7 +307,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """
         self.debug_stream("In read_Errors()")
 
-        attr.set_value(self.errors)
+        with self.lock:
+            attr.set_value(self.errors)
 
     # ==================================================================
     #
@@ -351,7 +354,8 @@ class NXSDataWriter(PyTango.Device_4Impl):
         if state in [PyTango.DevState.OPEN]:
             self.CloseFile()
         self.set_state(PyTango.DevState.RUNNING)
-        self.errors = []
+        with self.lock:
+            self.errors = []
         try:
             self.tdw.openFile()
             self.set_state(PyTango.DevState.OPEN)
