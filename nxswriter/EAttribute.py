@@ -36,11 +36,11 @@ class EAttribute(FElement):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
-        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`> 
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :obj:`Element.Element`
         """
-        
+
         FElement.__init__(self, "attribute", attrs, last)
         #: (:obj:`str`) attribute name
         self.name = ""

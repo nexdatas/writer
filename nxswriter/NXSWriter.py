@@ -224,7 +224,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         with self.lock:
             self.errors.append(
                 str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
-        
+
     def read_XMLSettings(self, attr):
         """ Read XMLSettings attribute
         """

@@ -390,7 +390,6 @@ class FElementWithAttr(FElement):
                         key.encode(), "string", overwrite=True)[...] \
                         = self._tagAttrs[key].strip().encode()
 
-                        
     def h5Attribute(self, name):
         """ provides attribute h5 object
 

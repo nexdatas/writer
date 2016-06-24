@@ -39,7 +39,7 @@ class EField(FElementWithAttr):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
-        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`> 
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :obj:`Element.Element`
         """

@@ -49,7 +49,8 @@ class ClientSource(DataSource):
 
         :param xml: datasource parameters
         :type xml: :obj:`str`
-        :raises: :obj:`Error.DataSourceSetupError` if :obj:`name` is not defined
+        :raises: :obj:`Error.DataSourceSetupError` \
+        :        if :obj:`name` is not defined
         """
         dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
@@ -77,9 +78,11 @@ class ClientSource(DataSource):
 
         :brief: It sets the currently used  JSON string
         :param globalJSON: static JSON string
-        :type globalJSON: :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
+        :type globalJSON: :obj:`dict` \
+        :                 <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :param localJSON: dynamic JSON string
-        :type localJSON: :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
+        :type localJSON: :obj:`dict` \
+                         <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON

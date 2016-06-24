@@ -83,7 +83,7 @@ class DBaseSource(DataSource):
         #: (:obj:`str`) record format, i.e. `SCALAR`, `SPECTRUM`, `IMAGE`
         self.format = None
 
-        #: (:obj:`dict` <:obj:`str`, :obj:`instancemethod`>) map 
+        #: (:obj:`dict` <:obj:`str`, :obj:`instancemethod`>) map
         self.__dbConnect = {"MYSQL": self.__connectMYSQL,
                             "PGSQL": self.__connectPGSQL,
                             "ORACLE": self.__connectORACLE}

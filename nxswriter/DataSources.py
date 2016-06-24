@@ -84,7 +84,7 @@ class DataSource(object):
     @classmethod
     def _getJSONData(cls, name, globalJSON, localJSON):
         """ provides access to the data
-        
+
         :param name: data key name
         :type name: :obj:`str:obj:`
         :param globalJSON: static JSON string
