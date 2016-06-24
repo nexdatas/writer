@@ -257,14 +257,26 @@ class FElementWithAttr(FElement):
         """ constructor
 
         :param name: tag name
+        :type name: :obj:`str`
         :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
+        :type last: :obj:`Element.Element`
         :param h5object: H5 file object
+        :type h5object: :obj:`pni.io.nx.h5._nxh5.nxfield` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxgroup` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxlink` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxattribute` \
+        :               :obj:`pni.io.nx.h5._nxh5.nxfile`
         """
 
         FElement.__init__(self, name, attrs, last, h5object)
-        #: dictionary with attribures from sepatare attribute tags
+        #: (:obj:`dict` <:obj:`str`, (:obj:`str`, :obj:`str`, :obj:`tuple`)>  \
+        #:     or :obj:`dict` <:obj:`str`, (:obj:`str`, :obj:`str`) > ) \
+        #:     dictionary with attribures from sepatare attribute tags
+        #:     written as (name, value, shape)
         self.tagAttributes = {}
+        #: (:obj:`dict` <:obj:`str`, h5object>) h5 instances
         self.__h5Instances = {}
 
     @classmethod
@@ -272,8 +284,11 @@ class FElementWithAttr(FElement):
         """ creates DataHolder with given rank and value
 
         :param rank: data rank
+        :type rank: :obj:`int`
         :param val: data value
+        :type value: any
         :returns: data holder
+        :rtype: :obj:`DataHolder.DataHolder`
         """
         dh = None
         if not rank or rank == 0:
@@ -340,6 +355,9 @@ class FElementWithAttr(FElement):
         """ creates attributes
 
         :brief: It creates attributes in h5Object
+
+        :param excluded: names of excluded attributes
+        :type excluded: :obj:`list` <:obj:`str`>
         """
         excluded = excluded or []
         for key in self._tagAttrs.keys():
@@ -394,6 +412,12 @@ class FElementWithAttr(FElement):
         """ provides attribute h5 object
 
         :param name: attribute name
+        :type name: :obj:`str`
         :returns: instance of the attribute object if created
+        :rtype: :obj:`pni.io.nx.h5._nxh5.nxfield` \
+        :       :obj:`pni.io.nx.h5._nxh5.nxgroup` \
+        :       :obj:`pni.io.nx.h5._nxh5.nxlink` \
+        :       :obj:`pni.io.nx.h5._nxh5.nxattribute` \
+        :       :obj:`pni.io.nx.h5._nxh5.nxfile`
         """
         return self.__h5Instances.get(name)

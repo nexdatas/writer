@@ -29,6 +29,7 @@ def run(argv):
     """ launches the TANGO server
 
     :param argv: command-line arguments
+    :type argv: :obj:`list` <:obj:`str`>
     """
 
     import PyTango

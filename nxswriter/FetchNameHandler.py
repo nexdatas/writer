@@ -37,16 +37,19 @@ class TNObject(object):
 
         :brief: It sets default values of TNObject
         :param name: name of the object
+        :type name: :obj:`str`
         :param nxtype: Nexus type of the object
+        :type nxtype: :obj:`str`
         :param parent: object parent
+        :type parent: :obj:`Element.Element`
         """
-        #: object name
+        #: (:obj:`str`) object name
         self.name = name
-        #: object Nexus type
+        #: (:obj:`str`) object Nexus type
         self.nxtype = nxtype
-        #: object parent
+        #:  (:obj:`Element.Element`) object parent
         self.parent = parent
-        #: object children
+        #: (:obj`:list` <:obj:`Element.Element`>) object children
         self.children = []
 
         if hasattr(self.parent, "children"):
@@ -56,8 +59,11 @@ class TNObject(object):
         """ get child by name or nxtype
 
         :param name: group name
+        :type name: :obj:`str`
         :param nxtype: nexus group type
+        :type nxtype: :obj:`str`
         :returns: child instance
+        :rtype: :obj:`Element.Element`
         """
         if name:
             found = None
@@ -89,24 +95,26 @@ class FetchNameHandler(sax.ContentHandler):
         """
         sax.ContentHandler.__init__(self)
 
-        #: tree of TNObjects with names and types
+        #: (:obj:`TNObject`) tree of TNObjects with names and types
         self.groupTypes = TNObject()
-        #: current object
+        #: (:obj:`TNObject`) current object
         self.__current = self.groupTypes
-        #: stack with open tag names
+        #: (:obj:`list` <:obj:`str`>) stack with open tag names
         self.__stack = []
-        #: name of attribute tag
+        #: (:obj:`str`) name of attribute tag
         self.__attrName = ""
-        #: content of attribute tag
+        #: (:obj:`list` <:obj:`str`>) content of attribute tag
         self.__content = []
-
+        #: (:obj:`bool`) True if inside attribute tag
         self.__attribute = False
 
     def startElement(self, name, attrs):
         """ parses the opening tag
 
         :param name: tag name
+        :type name: :obj:`str`
         :param attrs: attribute dictionary
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         """
 
         ttype = ""
@@ -130,7 +138,8 @@ class FetchNameHandler(sax.ContentHandler):
         """ adds the tag content
 
         :param content: partial content of the tag
-        """
+        :type content: :obj:`str`
+       """
         if self.__attribute and self.__stack[-1] == "group":
             self.__content.append(content)
 
@@ -138,6 +147,7 @@ class FetchNameHandler(sax.ContentHandler):
         """ parses an closing tag
 
         :param name: tag name
+        :type name: :obj:`str`
         """
         if name == "group":
 
@@ -174,14 +184,14 @@ if __name__ == "__main__":
         print("usage: FetchNameHadler.py  <XMLinput>")
 
     else:
-        #: input XML file
+        #: (:obj:`str`) input XML file
         fi = sys.argv[1]
         if os.path.exists(fi):
 
-            #: a parser object
+            #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
             parser = sax.make_parser()
 
-            #: a SAX2 handler object
+            #: (:obj:`FetchNameHandler`) SAX2 handler object
             handler = FetchNameHandler()
             parser.setContentHandler(handler)
 

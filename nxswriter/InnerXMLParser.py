@@ -33,21 +33,29 @@ class InnerXMLHandler(sax.ContentHandler):
         """ constructor
 
         :brief: It constructs parser handler for taking xml od datasources
+        :param xmlReader: NeXus xml sax reader
+        :type xmlReader: :obj:`xml.sax.xmlreader.XMLReader`
+        :param contentHandler: NeXus XML content handler
+        :type contentHandler: :obj:`NeXusXMLHandler.NeXusXMLHandler`
+        :param name: tag name
+        :type name: :obj:`str`
+        :param attrs: dictionary of the tag attributes
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         """
         sax.ContentHandler.__init__(self)
-        #: xml string
+        #: (:obj:`str`) xml string
         self.xml = None
-        #: external contentHandler
+        #: (:obj:`NeXusXMLHandler.NeXusXMLHandler`) external contentHandler
         self.__contentHandler = contentHandler
-        #: external xmlreader
+        #: (:obj:`xml.sax.xmlreader.XMLReader`) external xmlreader
         self.__xmlReader = xmlReader
-        #: tag depth
+        #: (:obj:`int`) tag depth
         self.__depth = 1
-        #: first tag
+        #: (:obj:`str`) first tag
         self.__preXML = self.__openTag(name, attrs, eol=False)
-        #: last tag
+        #: (:obj:`str`) last tag
         self.__postXML = "</%s>" % name
-        #: tag content
+        #: (:obj:`str`) tag content
         self.__contentXML = ""
 
     @classmethod
@@ -55,7 +63,9 @@ class InnerXMLHandler(sax.ContentHandler):
         """ replaces characters not allowed in xml string
 
         :param string: text
+        :type string: :obj:`str`
         :returns: converted text with special characters
+        :rtype: :obj:`str`
         """
         return string.replace("&", "&amp;").\
             replace("<", "&lt;").replace(">", "&gt;")
@@ -64,7 +74,9 @@ class InnerXMLHandler(sax.ContentHandler):
         """ replaces characters not allowed in  xml attribute values
 
         :param string: text
+        :type string: :obj:`str`
         :returns: converted text with special characters
+        :rtype: :obj: `str`
         """
         return self.__replace(string).replace("\"", "&quot;").\
             replace("'", "&apos;")
@@ -73,6 +85,7 @@ class InnerXMLHandler(sax.ContentHandler):
         """ creates opening tag
 
         :param name: tag name
+        :type name: :obj:`str`
         :param attrs: tag attributes
         """
         xml = ""
@@ -93,7 +106,9 @@ class InnerXMLHandler(sax.ContentHandler):
         """ parses the opening tag
 
         :param name: tag name
+        :type name: :obj:`str`
         :param attrs: attribute dictionary
+        :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         """
         self.__depth += 1
         self.__contentXML += self.__openTag(name, attrs)
@@ -102,6 +117,7 @@ class InnerXMLHandler(sax.ContentHandler):
         """ adds the tag content
 
         :param content: partial content of the tag
+        :type content: :obj:`str`
         """
         self.__contentXML += self.__replace(content)
 
@@ -109,6 +125,7 @@ class InnerXMLHandler(sax.ContentHandler):
         """ parses an closing tag
 
         :param name: tag name
+        :type name: :obj:`str`
         """
         self.__depth -= 1
         if self.__depth == 0:
@@ -124,14 +141,14 @@ if __name__ == "__main__":
         print("usage: InnerXMLParser.py  <XMLinput>")
 
     else:
-        #: input XML file
+        #: (:obj:`str`) input XML file
         fi = sys.argv[1]
         if os.path.exists(fi):
 
-            #: a parser object
+            #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
             parser = sax.make_parser()
 
-            #: a SAX2 handler object
+            #: (:obj:`InnerXMLHandler`) SAX2 handler object
             handler = InnerXMLHandler()
             parser.setContentHandler(handler)
 
