@@ -24,17 +24,14 @@ class Converters(object):
     """ set of converters
     """
 
-    ##
-    # \param cls class instance
-    # \param value variable to convert
-    # \returns result in bool type
     @classmethod
     def toBool(cls, value):
         """ converts to bool
 
-        :param cls: class instance
         :param value: variable to convert
+        :type value: any
         :returns: result in bool type
+        :rtype: :obj:`bool`
         """
         if type(value).__name__ == 'str' or type(value).__name__ == 'unicode':
             lvalue = value.strip().lower()
@@ -51,12 +48,12 @@ class NTP(object):
     """ type converter
     """
 
-    #: map of Python:Tango types
+    #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types
     pTt = {"int": "DevLong64", "long": "DevLong64",
            "float": "DevDouble", "str": "DevString",
            "unicode": "DevString", "bool": "DevBoolean"}
 
-    #: map of Numpy:Tango types
+    #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of Numpy:Tango types
     npTt = {"int": "DevLong64", "int64": "DevLong64", "int32": "DevLong",
             "int16": "DevShort", "int8": "DevUChar", "uint": "DevULong64",
             "uint64": "DevULong64", "uint32": "DevULong",
@@ -65,7 +62,7 @@ class NTP(object):
             "float32": "DevFloat", "float16": "DevFloat",
             "string": "DevString", "bool": "DevBoolean"}
 
-    #: map of NEXUS :  numpy types
+    #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of NEXUS :  numpy types
     nTnp = {"NX_FLOAT32": "float32", "NX_FLOAT64": "float64",
             "NX_FLOAT": "float64", "NX_NUMBER": "float64",
             "NX_INT": "int64", "NX_INT64": "int64",
@@ -76,7 +73,8 @@ class NTP(object):
             "NX_DATE_TIME": "string", "ISO8601": "string", "NX_CHAR": "string",
             "NX_BOOLEAN": "bool"}
 
-    #: map of type : converting function
+    #: (:obj:`dict` <:obj:`str` , :obj:`type` or :obj:`instancemethod` >) \
+    #:      map of type : converting function
     convert = {"float16": float, "float32": float, "float64": float,
                "float": float, "int64": long, "int32": int,
                "int16": int, "int8": int, "int": int, "uint64": long,
@@ -84,7 +82,7 @@ class NTP(object):
                "uint8": int, "uint": int, "string": str,
                "bool": Converters.toBool}
 
-    #: map of tag attribute types
+    #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of tag attribute types
     aTn = {"signal": "NX_INT", "axis": "NX_INT", "primary": "NX_INT32",
            "offset": "NX_INT", "stride": "NX_INT", "file_time": "NX_DATE_TIME",
            "file_update_time": "NX_DATE_TIME", "restricts": "NX_INT",
@@ -93,10 +91,11 @@ class NTP(object):
            "ignoreExtraAttributes": "NX_BOOLEAN",
            "minOccus": "NX_INT", "maxOccus": "NX_INT"}
 
-    #: map of vector tag attribute types
+    #: (:obj:`dict` <:obj:`str` , :obj:`str` >) \
+    #:     map of vector tag attribute types
     aTnv = {"vector": "NX_FLOAT"}
 
-    #: map of rank :  data format
+    #: (:obj:`dict` <:obj:`int` , :obj:`str` >) map of rank :  data format
     rTf = {0: "SCALAR", 1: "SPECTRUM", 2: "IMAGE", 3: "VERTEX"}
 
     def arrayRank(self, array):
@@ -104,6 +103,9 @@ class NTP(object):
 
         :brief: It calculates the rank of the array
         :param array: given array
+        :type array: any
+        :returns: rank
+        :rtype: :obj:`int`
         """
         rank = 0
         if hasattr(array, "__iter__") and not isinstance(array, str):
@@ -122,6 +124,9 @@ class NTP(object):
         :brief: It calculates the rank, inverse shape and type of
                 the first element of the list array
         :param array: given array
+        :type array: any
+        :returns: (rank, inverse shape, type)
+        :rtype: (:obj:`int` , :obj:`list` <:obj:`int` > , :obj:`str` )
         """
         rank = 0
         shape = []
@@ -152,6 +157,9 @@ class NTP(object):
         :brief: It calculates the rank, shape and type of
                 the first element of the list array
         :param array: given array
+        :type array: any
+        :returns: (rank, shape, type)
+        :rtype: (:obj:`int` , :obj:`list` <:obj:`int` > , :obj:`str` )
 
         """
         rank, shape, pythonDType = self.arrayRankRShape(array)
@@ -164,8 +172,11 @@ class NTP(object):
             the given function to it elements
 
         :param value: given array
+        :type array: any
         :param fun: applied function
+        :type fun: :obj:`type` or :obj:`instancemethod`
         :returns: created array
+        :rtype: :obj:`list` <any>
         """
         if not hasattr(value, "__iter__") or isinstance(value, str):
             return fun(value) if fun else value

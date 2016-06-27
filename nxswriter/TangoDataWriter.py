@@ -52,50 +52,51 @@ class TangoDataWriter(object):
         :brief: It initialize the data writer for the H5 output file
         :param server: Tango server
         """
-        #: output file name
+        #: (:obj:`str`) output file name
         self.fileName = ""
-        #: Tango server
+        #: (:class:`PyTango.Device_4Impl`) Tango server
         self.__server = server
-        #: XML string with file settings
+        #: (:obj:`str`) XML string with file settings
         self.__xmlsettings = ""
-        #: global JSON string with data records
+        #: (:obj:`str`) global JSON string with data records
         self.__json = "{}"
-        #: maximal number of threads
+        #: (:obj:`int`) maximal number of threads
         self.numberOfThreads = 100
 #        self.numberOfThreads = 1
 
-        #: thread pool with INIT elements
+        #: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements
         self.__initPool = None
-        #: thread pool with STEP elements
+        #: (:class:`ThreadPool.ThreadPool`) thread pool with STEP elements
         self.__stepPool = None
-        #: thread pool with FINAL elements
+        #: (:class:`ThreadPool.ThreadPool`) thread pool with FINAL elements
         self.__finalPool = None
-        #: collection of thread pool with triggered STEP elements
+        #: (:obj:`dict`< :obj:`str`, :class:`ThreadPool.ThreadPool` >) \
+        #:     collection of thread pool with triggered STEP elements
         self.__triggerPools = {}
-        #: H5 file handle
+        #: (:class:`pni.io.nx.h5._nxh5.nxroot`) H5 file handle
         self.__nxRoot = None
-        #: H5 file handle
+        #: (:class:`pni.io.nx.h5._nxh5.nxfile`) H5 file handle
         self.__nxFile = None
-        #: element file objects
+        #: (:class:`H5Elements.EFile`) element file objects
         self.__eFile = None
 
-        #: pool with decoders
+        #: (:class:`DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
 
-        #: pool with datasources
+        #: (:class:`DataSourcePool.DataSourcePool`) pool with datasources
         self.__datasources = DataSourcePool()
 
-        #: group name parser
+        #: (:class:`FetchNameHandler.FetchNameHandler`) group name parser
         self.__fetcher = None
 
-        #: adding logs
+        #: (:obj:`str`) adding logs
         self.addingLogs = True
-        #: counter for open entries
+        #: (:obj:`int`) counter for open entries
         self.__entryCounter = 0
-        #: group with Nexus log Info
+        #: (:class:`pni.io.nx.h5._nxh5.nxgroup`) group with Nexus log Info
         self.__logGroup = None
 
-        #: opend flag
+        #: (:obj:`bool`) open file flag
         self.__fileCreated = None
 
         if server:
@@ -114,6 +115,7 @@ class TangoDataWriter(object):
         """ get method for jsonrecord attribute
 
         :returns: value of jsonrecord
+        :rtype: :obj:`str`
         """
         return self.__json
 
@@ -121,6 +123,7 @@ class TangoDataWriter(object):
         """ set method for jsonrecord attribute
 
         :param jsonstring: value of jsonrecord
+        :type jsonstring: :obj:`str`
         """
 
         self.__decoders.appendUserDecoders(json.loads(jsonstring))
@@ -135,12 +138,13 @@ class TangoDataWriter(object):
 
     #: the json data string
     jsonrecord = property(__getJSON, __setJSON, __delJSON,
-                          doc='the json data string')
+                          doc='(:obj:`str`) the json data string')
 
     def __getXML(self):
         """ get method for xmlsettings attribute
 
         :returns: value of jsonrecord
+        :rtype: :obj:`str`
         """
         return self.__xmlsettings
 
@@ -148,6 +152,7 @@ class TangoDataWriter(object):
         """ set method for xmlsettings attribute
 
         :param xmlset: xml settings
+        :type xmlset: :obj:`str`
         """
         self.__fetcher = FetchNameHandler()
         sax.parseString(xmlset, self.__fetcher)
@@ -160,12 +165,13 @@ class TangoDataWriter(object):
 
     #: the xmlsettings
     xmlsettings = property(__getXML, __setXML, __delXML,
-                           doc='the xml settings')
+                           doc='(:obj:`str`) the xml settings')
 
     def getFile(self):
         """ the H5 file handle
 
         :returns: the H5 file handle
+        :rtype: :class:`pni.io.nx.h5._nxh5.nxfile`
         """
         return self.__nxFile
 
@@ -270,6 +276,7 @@ class TangoDataWriter(object):
 
         :brief: It runs threads from the STEP pool
         :param jsonstring: local JSON string with data records
+        :type jsonstring: :obj:`str`
         """
 
         # flag for STEP mode
@@ -386,20 +393,20 @@ if __name__ == "__main__":
     import time
 
     # Create a TDW object
-    #: instance of TangoDataWriter
+    #: (:class:`TangoDataWriter`) instance of TangoDataWriter
     tdw = TangoDataWriter()
     tdw.fileName = 'test.h5'
 
     tdw.numberOfThreads = 1
 
-    #: xml file name
-#    xmlf = "../XMLExamples/test.xml"
+    #: (:obj:`str`) xml file name
     xmlf = "../XMLExamples/MNI.xml"
+    #    xmlf = "../XMLExamples/test.xml"
 
     print("usage: TangoDataWriter.py  <XMLfile1>  "
           "<XMLfile2>  ...  <XMLfileN>  <H5file>")
 
-    #: No arguments
+    #: (:obj:`str`) No arguments
     argc = len(sys.argv)
     if argc > 2:
         tdw.fileName = sys.argv[argc - 1]
@@ -411,7 +418,7 @@ if __name__ == "__main__":
         for i in range(1, argc - 1):
             xmlf = sys.argv[i]
 
-            #: xml string
+            #: (:obj:`str`) xml string
             xml = open(xmlf, 'r').read()
             tdw.xmlsettings = xml
 

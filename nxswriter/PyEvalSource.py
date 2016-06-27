@@ -34,7 +34,6 @@ from .Errors import DataSourceSetupError
 class Variables(object):
     """ Variables for PyEval datasource
     """
-    pass
 
 
 class PyEvalSource(DataSource):
@@ -47,27 +46,35 @@ class PyEvalSource(DataSource):
         :brief: It cleans all member variables
         """
         DataSource.__init__(self)
-        #: name of data
+        #: (:obj:`str`) name of data
         self.__name = None
-        #: the current  static JSON object
+        #: (:obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>) \
+        #:     the current  static JSON object
         self.__globalJSON = None
-        #: the current  dynamic JSON object
+        #: (:obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>) \
+        #:     the current  dynamic JSON object
         self.__localJSON = None
-        #: datasource pool
+        #: (:obj:`DataSourcePool.DataSourcePool`) datasource pool
         self.__pool = None
-        #: datasources xml
+        #: (:obj:`dict` <:obj:`str`, (:obj:`str`,:obj:`str`) > ) \
+        #:     datasources dictionary with {dsname: (dstype, dsxml)}
         self.__sources = {}
-        #: datasources
+        #: (:obj:`dict` <:obj:`str`, (:obj:`DataSources.DataSource`) > ) \
+        #:  datasource dictionary {name: DataSource}
         self.__datasources = {}
-        #: python script
+        #: (:obj:`str`) python script
         self.__script = ""
-        #: common block
+        #: (:obj:`bool`) True if common block used
         self.__commonblock = False
-        #: lock for common block
+        #: (:obj:`threading.Lock`) lock for common block
         self.__lock = None
-        #: common block variables
+        #: (:obj:`dict` <:obj:`str`, any> ) \
+        #:    common block variables
         self.__common = None
-        #: data format
+        #: ({"rank": :obj:`str`, "value": any, "tangoDType": :obj:`str`, \
+        #:   "shape": :obj:`list`<int>, "encoding": :obj:`str`, \
+        #:   "decoders": :obj:`str`} ) \
+        #:    data format
         self.__result = {"rank": "SCALAR",
                          "value": None,
                          "tangoDType": "DevString",
@@ -79,6 +86,7 @@ class PyEvalSource(DataSource):
         """ sets the parrameters up from xml
 
         :param xml:  datasource parameters
+        :type xml: :obj:`str`
         """
 
         dom = minidom.parseString(xml)
@@ -141,6 +149,7 @@ class PyEvalSource(DataSource):
         """ self-description
 
         :returns: self-describing string
+        :rtype: :obj:`str`
         """
         return " PYEVAL %s" % (self.__script)
 
@@ -149,7 +158,11 @@ class PyEvalSource(DataSource):
 
         :brief: It sets the currently used  JSON string
         :param globalJSON: static JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>
         :param localJSON: dynamic JSON string
+        :type localJSON: \
+        :     :obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>
         """
         self.__globalJSON = globalJSON
         self.__localJSON = localJSON
@@ -162,6 +175,9 @@ class PyEvalSource(DataSource):
         """ provides access to the data
 
         :returns:  dictionary with collected data
+        :rtype: {'rank': :obj:`str`, 'value': any, 'tangoDType': :obj:`str`, \
+        :        'shape': :obj:`list`<int>, 'encoding': :obj:`str`, \
+        :        'decoders': :obj:`str`} )
         """
         if not self.__name:
             Streams.error(
@@ -208,6 +224,7 @@ class PyEvalSource(DataSource):
         """ sets the used decoders
 
         :param decoders: pool to be set
+        :type decoders: :obj:`DecoderPool.DecoderPool`
         """
         self.__result["decoders"] = decoders
         for source in self.__datasources.values():
@@ -218,6 +235,7 @@ class PyEvalSource(DataSource):
         """ sets the datasources
 
         :param pool: datasource pool
+        :type pool: :obj:`DataSourcePool.DataSourcePool`
         """
         self.__pool = pool
         pool.lock.acquire()

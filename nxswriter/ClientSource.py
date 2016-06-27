@@ -91,7 +91,9 @@ class ClientSource(DataSource):
         """ provides access to the data
 
         :returns: dictionary with collected data
-        :rtype: :obj:`dict` <:obj:`str`, any>
+        :rtype: {'rank': :obj:`str`, 'value': any, 'tangoDType': :obj:`str`, \
+        :        'shape': :obj:`list`<int>, 'encoding': :obj:`str`, \
+        :        'decoders': :obj:`str`} )
         """
         return self._getJSONData(
             self.name, self.__globalJSON, self.__localJSON)

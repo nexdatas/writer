@@ -34,29 +34,40 @@ class ThreadPool(object):
         """ constructor
 
         :brief: It cleans the member variables
-        :param numerOfThreads: number of threads
+        :param numberOfThreads: number of threads
+        :type numberOfThreads: :obj:`int`
         """
 
-        #: maximal number of threads
+        #: (:obj:`int`) maximal number of threads
         self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
-        #: queue of the appended elements
+        #: (:class:`Queue.Queue`) queue of the appended elements
         self.__elementQueue = Queue.Queue()
-        #: list of the appended elements
+        #: (:obj:`list` <:class:`nxswriter.Element.Element`>) \
+        #:    list of the appended elements
         self.__elementList = []
-        #: list of the threads related to the appended elements
+        #: (:obj:`list` <:class:`nxswriter.ElementThread.ElementThread`>) \
+        #:     list of the threads related to the appended elements
         self.__threadList = []
 
     def append(self, elem):
         """ appends the thread element
+        
         :param elem: the thread element
+        :type elem: :class:`nxswriter.Element.Element`
         """
         self.__elementList.append(elem)
 
     def setJSON(self, globalJSON, localJSON=None):
         """ sets the JSON string to threads
+
         :param globalJSON: the static JSON string
+        :type globalJSON: \
+        :     :obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>
         :param localJSON: the dynamic JSON string
+        :type localJSON: \
+        :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :returns: self object
+        :rtype: :class:`ThreadPool`
         """
 
         for el in self.__elementList:
@@ -86,7 +97,9 @@ class ThreadPool(object):
 
     def join(self, timeout=None):
         """ waits for all thread from the pool
+
         :param timeout: the maximal waiting time
+        :type timeout: :obj:`int`
         """
 
         for th in self.__threadList:
