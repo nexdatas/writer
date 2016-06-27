@@ -51,7 +51,7 @@ class ThreadPool(object):
 
     def append(self, elem):
         """ appends the thread element
-        
+
         :param elem: the thread element
         :type elem: :class:`nxswriter.Element.Element`
         """
