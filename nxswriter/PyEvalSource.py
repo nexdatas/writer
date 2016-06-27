@@ -54,19 +54,20 @@ class PyEvalSource(DataSource):
         #: (:obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>) \
         #:     the current  dynamic JSON object
         self.__localJSON = None
-        #: (:obj:`DataSourcePool.DataSourcePool`) datasource pool
+        #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) datasource pool
         self.__pool = None
         #: (:obj:`dict` <:obj:`str`, (:obj:`str`,:obj:`str`) > ) \
         #:     datasources dictionary with {dsname: (dstype, dsxml)}
         self.__sources = {}
-        #: (:obj:`dict` <:obj:`str`, (:obj:`DataSources.DataSource`) > ) \
+        #: (:obj:`dict` \
+        #:     <:obj:`str`, (:class:`nxswriter.DataSources.DataSource`) > ) \
         #:  datasource dictionary {name: DataSource}
         self.__datasources = {}
         #: (:obj:`str`) python script
         self.__script = ""
         #: (:obj:`bool`) True if common block used
         self.__commonblock = False
-        #: (:obj:`threading.Lock`) lock for common block
+        #: (:class:`threading.Lock`) lock for common block
         self.__lock = None
         #: (:obj:`dict` <:obj:`str`, any> ) \
         #:    common block variables
@@ -224,7 +225,7 @@ class PyEvalSource(DataSource):
         """ sets the used decoders
 
         :param decoders: pool to be set
-        :type decoders: :obj:`DecoderPool.DecoderPool`
+        :type decoders: :class:`nxswriter.DecoderPool.DecoderPool`
         """
         self.__result["decoders"] = decoders
         for source in self.__datasources.values():
@@ -235,7 +236,7 @@ class PyEvalSource(DataSource):
         """ sets the datasources
 
         :param pool: datasource pool
-        :type pool: :obj:`DataSourcePool.DataSourcePool`
+        :type pool: :class:`nxswriter.DataSourcePool.DataSourcePool`
         """
         self.__pool = pool
         pool.lock.acquire()

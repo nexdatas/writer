@@ -39,11 +39,11 @@ class ELink(FElement):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
 
         """
         FElement.__init__(self, "link", attrs, last)
-        #: (:obj:`pni.io.nx.h5._nxh5.nxlink`) \
+        #: (:class:`pni.io.nx.h5._nxh5.nxlink`) \
         #:     stored H5 file object (defined in base class)
         self.h5Object = None
         #: (:obj:`str`) strategy, i.e. INIT, STEP, FINAL

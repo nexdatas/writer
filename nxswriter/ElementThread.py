@@ -35,12 +35,12 @@ class ElementThread(Thread):
         :param index: the current thread index
         :type index: :obj:`int`
         :param queue: queue with tasks
-        :type queue: :obj:`Queue.Queue`
+        :type queue: :class:`Queue.Queue`
         """
         Thread.__init__(self)
         #: (:obj:`int`) thread index
         self.index = index
-        #: (:obj:`Queue.Queue`) queue with runnable elements
+        #: (:class:`Queue.Queue`) queue with runnable elements
         self.__queue = queue
 
     def run(self):

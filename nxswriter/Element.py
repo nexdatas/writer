@@ -34,7 +34,7 @@ class Element(object):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         #: (:obj:`str`) stored tag name
         self.tagName = name
@@ -44,13 +44,13 @@ class Element(object):
         self.content = []
         #: (:obj:`str`) doc string
         self.doc = ""
-        #: (:obj:`Element.Element`) the previous element
+        #: (:class:`nxswriter.Element.Element`) the previous element
         self.last = last
 
     def _lastObject(self):
         """ last H5 file object
         :returns: H5 file object of the previous element
-        :rtype: (:obj:`Element.Element`)
+        :rtype: (:class:`nxswriter.Element.Element`)
         """
         if hasattr(self.last, "h5Object"):
             return self.last.h5Object

@@ -68,7 +68,7 @@ class DataSource(object):
         """ provides xml content of the node
 
         :param node: DOM node
-        :type node: :obj:`xml.dom.Node`
+        :type node: :class:`xml.dom.Node`
         :returns: xml content string
         :rtype: :obj:`str`
         """

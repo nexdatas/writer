@@ -44,7 +44,7 @@ class DataHolder(object):
         :param encoding: encoding type of Tango DevEncoded varibles
         :type encoding: :obj:`str`
         :param decoders: poll with decoding classes
-        :type decoders: :obj:`DecoderPool.DecoderPool`
+        :type decoders: :class:`nxswriter.DecoderPool.DecoderPool`
         """
 
         #: (:obj:`str`) data format, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX

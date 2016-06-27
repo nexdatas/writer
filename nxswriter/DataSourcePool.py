@@ -49,7 +49,7 @@ class DataSourcePool(object):
         self.common = {}
         #: (:obj:`int`) step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2;
         self.counter = 0
-        #: (:obj:`threading.Lock`) pool lock
+        #: (:class:`threading.Lock`) pool lock
         self.lock = threading.Lock()
 
     def appendUserDataSources(self, configJSON):
@@ -85,7 +85,7 @@ class DataSourcePool(object):
         :type datasource: :obj:`str`
         :returns: datasource type if it the datasource
                   is registered
-        :rtype: :obj:`DataSources.DataSource`
+        :rtype: :class:`nxswriter.DataSources.DataSource`
         """
         if datasource in self.__pool.keys():
             return self.__pool[datasource]
@@ -104,7 +104,7 @@ class DataSourcePool(object):
         :param name: name of the adding datasource
         :type name: :obj:`str`
         :param datasource: instance of the adding datasource
-        :type datasource: :obj:`DataSources.DataSource`
+        :type datasource: :class:`nxswriter.DataSources.DataSource`
         :returns: name of datasource
         :rtype: :obj:`str`
         """

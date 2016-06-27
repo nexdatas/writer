@@ -39,7 +39,7 @@ class UTF8decoder(object):
         #: (:obj:`str`) data type
         self.dtype = None
 
-        #: (:obj:`numpy.array`) image data
+        #: (:class:`numpy.array`) image data
         self.__value = None
         #: ([:obj:`str`, :obj:`str`]) header and image data
         self.__data = None
@@ -67,7 +67,7 @@ class UTF8decoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
-        :rtype: :obj:`numpy.array`
+        :rtype: :class:`numpy.array`
         """
         if not self.__data:
             return
@@ -92,7 +92,7 @@ class UINT32decoder(object):
         #: (:obj:`str`) data type
         self.dtype = None
 
-        #: (:obj:`numpy.array`) image data
+        #: (:class:`numpy.array`) image data
         self.__value = None
         #: ([:obj:`str`, :obj:`str`]) header and image data
         self.__data = None
@@ -125,7 +125,7 @@ class UINT32decoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
-        :rtype: :obj:`numpy.array`
+        :rtype: :class:`numpy.array`
 
         """
         if not self.__data:
@@ -156,7 +156,7 @@ class VDEOdecoder(object):
         #: (:obj:`str`) data type
         self.dtype = None
 
-        #: (:obj:`numpy.array`) image data
+        #: (:class:`numpy.array`) image data
         self.__value = None
         #: ([:obj:`str`, :obj:`str`]) header and image data
         self.__data = None
@@ -213,7 +213,7 @@ class VDEOdecoder(object):
         """ provides the decoded data
 
         :returns: the decoded data if data was loaded
-        :rtype: :obj:`numpy.array`
+        :rtype: :class:`numpy.array`
         """
         if not self.__header or not self.__data:
             return

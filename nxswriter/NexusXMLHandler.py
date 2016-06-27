@@ -53,22 +53,22 @@ class NexusXMLHandler(sax.ContentHandler):
 
         :brief: It constructs parser and defines the H5 output file
         :param fileElement: file element
-        :type fileElement: :obj:`H5Elements.EFile`
+        :type fileElement: :class:`nxswriter.H5Elements.EFile`
         :param decoders: decoder pool
-        :type decoders: :obj:`DecoderPool.DecoderPool`
+        :type decoders: :class:`nxswriter.DecoderPool.DecoderPool`
         :param datasources: datasource pool
-        :type datasources: :obj:`DataSourcePool.DataSourcePool`
+        :type datasources: :class:`nxswriter.DataSourcePool.DataSourcePool`
         :param groupTypes: map of NXclass : name
-        :type groupTypes: :obj:`TNObject`
+        :type groupTypes: :class:`nxswriter.FetchNameHandler.TNObject`
         :param parser: instance of sax.xmlreader
-        :type parser: :obj:`xml.sax.xmlreader.XMLReader`
+        :type parser: :class:`xml.sax.xmlreader.XMLReader`
         :param globalJSON: global json string
         :type globalJSON: \
         :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         sax.ContentHandler.__init__(self)
 
-        #: (:obj:`TNObject`) map of NXclass : name
+        #: (:class:`nxswriter.TNObject`) map of NXclass : name
         self.__groupTypes = TNObject()
         #: (:obj:`bool`) if name fetching required
         self.__fetching = True
@@ -76,7 +76,8 @@ class NexusXMLHandler(sax.ContentHandler):
             self.__groupTypes = groupTypes
             self.__fetching = False
 
-        #: (:obj:`list` <:obj:`Element.Element`>) stack with open tag elements
+        #: (:obj:`list` <:class:`nxswriter.Element.Element`>) \
+        #:      stack with open tag elements
         self.__stack = [fileElement]
 
         #: (:obj:`str`) traced unsupported tag name
@@ -84,16 +85,17 @@ class NexusXMLHandler(sax.ContentHandler):
         #: (:obj:`bool`) True if raise exception on unsupported tag
         self.raiseUnsupportedTag = True
 
-        #: (:obj:`xml.sax.xmlreader.XMLReader`) xmlreader
+        #: (:class:`xml.sax.xmlreader.XMLReader`) xmlreader
         self.__parser = parser
-        #: (:obj:`InnerXMLHandler.InnerXMLHandler`) inner xml handler
+        #: (:class:`nxswriter.InnerXMLHandler.InnerXMLHandler`) \
+        #:     inner xml handler
         self.__innerHandler = None
 
         #: (:obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>) \
         #:    global json string
         self.__json = globalJSON
 
-        #: (:obj:`dict` <:obj:`str`: :obj:`Element.Element` > ) \
+        #: (:obj:`dict` <:obj:`str`: :class:`nxswriter.Element.Element` > ) \
         #:     tags with inner xml as its input
         self.withXMLinput = {'datasource': DataSourceFactory,
                              'doc': EDoc}
@@ -116,26 +118,32 @@ class NexusXMLHandler(sax.ContentHandler):
         #: (:obj:`list` <:obj:`str`>) transparent tags
         self.transparentTags = ['definition']
 
-        #: (:obj:`ThreadPool.ThreadPool`) thread pool with INIT elements
+        #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
+        #:       thread pool with INIT elements
         self.initPool = ThreadPool()
-        #: (:obj:`ThreadPool.ThreadPool`) thread pool with STEP elements
+        #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
+        #:       thread pool with STEP elements
         self.stepPool = ThreadPool()
-        #: (:obj:`ThreadPool.ThreadPool`) thread pool with FINAL elements
+        #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
+        #:      thread pool with FINAL elements
         self.finalPool = ThreadPool()
 
-        #: (:obj:`dict` <:obj:`str`, :obj:`ThreadPool.ThreadPool`> ) \
-        #:    map of pool names to related classes
+        #: (:obj:`dict` \
+        #:  <:obj:`str`, :class:`nxswriter.ThreadPool.ThreadPool`> ) \
+        #:  map of pool names to related classes
         self.__poolMap = {'INIT': self.initPool,
                           'STEP': self.stepPool,
                           'FINAL': self.finalPool}
-        #: (:obj:`dict` <:obj:`str`, :obj:`ThreadPool.ThreadPool`> ) \
+        #: (:obj:`dict` <:obj:`str`, \
+        #:  :class:`nxswriter.ThreadPool.ThreadPool`> ) \
         #:     collection of thread pool with triggered STEP elements
         self.triggerPools = {}
 
-        #: (:obj:`DecoderPool.DecoderPool`) pool with decoders
+        #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = decoders
 
-        #: (:obj:`DataSourcePool.DataSourcePool`) pool with datasources
+        #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \
+        #:     pool with datasources
         self.__datasources = datasources
 
         #: (:obj:`bool`) if innerparse was running
@@ -145,7 +153,7 @@ class NexusXMLHandler(sax.ContentHandler):
         """ the last stack element
 
         :returns: the last stack element
-        :rtype: :obj:`Element.Element`
+        :rtype: :class:`nxswriter.Element.Element`
         """
         if self.__stack:
             return self.__stack[-1]
@@ -235,7 +243,7 @@ class NexusXMLHandler(sax.ContentHandler):
         :param res: strategy or (strategy, trigger)
         :type res: :obj:`str` or (:obj:`str`, :obj:`str`)
         :param task: Element with inner xml
-        :type task: :obj:`Element.Element`
+        :type task: :class:`nxswriter.Element.Element`
         """
         trigger = None
         strategy = None
@@ -304,7 +312,7 @@ if __name__ == "__main__":
             nxFile = nx.create_file(fo, overwrite=True).root()
             #: (:object:`H5Elements.EFile`) element file objects
             mfileElement = EFile([], None, nxFile)
-            #: (:obj:`NexusXMLHandler`) SAX2 handler object
+            #: (:class:`NexusXMLHandler`) SAX2 handler object
             mhandler = NexusXMLHandler(mfileElement)
             mparser.setContentHandler(mhandler)
 

@@ -36,7 +36,7 @@ class EGroup(FElementWithAttr):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         FElementWithAttr.__init__(self, "group", attrs, last)
         if self._lastObject() is not None:
@@ -51,7 +51,7 @@ class EGroup(FElementWithAttr):
 
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
-                #: (:obj:`pni.io.nx.h5._nxh5.nxgroup`) \
+                #: (:class:`pni.io.nx.h5._nxh5.nxgroup`) \
                 #:      stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())

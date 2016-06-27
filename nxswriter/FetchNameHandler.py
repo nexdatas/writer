@@ -41,15 +41,15 @@ class TNObject(object):
         :param nxtype: Nexus type of the object
         :type nxtype: :obj:`str`
         :param parent: object parent
-        :type parent: :obj:`Element.Element`
+        :type parent: :class:`nxswriter.Element.Element`
         """
         #: (:obj:`str`) object name
         self.name = name
         #: (:obj:`str`) object Nexus type
         self.nxtype = nxtype
-        #:  (:obj:`Element.Element`) object parent
+        #:  (:class:`nxswriter.Element.Element`) object parent
         self.parent = parent
-        #: (:obj`:list` <:obj:`Element.Element`>) object children
+        #: (:obj`:list` <:class:`nxswriter.Element.Element`>) object children
         self.children = []
 
         if hasattr(self.parent, "children"):
@@ -63,7 +63,7 @@ class TNObject(object):
         :param nxtype: nexus group type
         :type nxtype: :obj:`str`
         :returns: child instance
-        :rtype: :obj:`Element.Element`
+        :rtype: :class:`nxswriter.Element.Element`
         """
         if name:
             found = None
@@ -95,9 +95,9 @@ class FetchNameHandler(sax.ContentHandler):
         """
         sax.ContentHandler.__init__(self)
 
-        #: (:obj:`TNObject`) tree of TNObjects with names and types
+        #: (:class:`TNObject`) tree of TNObjects with names and types
         self.groupTypes = TNObject()
-        #: (:obj:`TNObject`) current object
+        #: (:class:`TNObject`) current object
         self.__current = self.groupTypes
         #: (:obj:`list` <:obj:`str`>) stack with open tag names
         self.__stack = []
@@ -188,10 +188,10 @@ if __name__ == "__main__":
         fi = sys.argv[1]
         if os.path.exists(fi):
 
-            #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
+            #: (:class:`xml.sax.xmlreader.XMLReader`) parser object
             parser = sax.make_parser()
 
-            #: (:obj:`FetchNameHandler`) SAX2 handler object
+            #: (:class:`FetchNameHandler`) SAX2 handler object
             handler = FetchNameHandler()
             parser.setContentHandler(handler)
 

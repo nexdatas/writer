@@ -116,7 +116,7 @@ class TangoSource(DataSource):
 
         #: (:class:`TgGroup`) global tango group for TANGO datasources
         self.__tngrp = None
-        #: (:class:`DataSourcePool.DataSourcePool`) datasource pool
+        #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) datasource pool
         self.__pool = None
         #: (:class:`PyTango.DeviceProxy`) device proxy
         self.__proxy = None
@@ -128,7 +128,7 @@ class TangoSource(DataSource):
         #:     the current  dynamic JSON object
         self.__localJSON = None
 
-        #: (:class:`DecoderPool.DecoderPool`) decoder pool
+        #: (:class:`nxswriter.DecoderPool.DecoderPool`) decoder pool
         self.__decoders = None
         #: (:obj:`str`) client datasource for mixed CLIENT/TANGO mode
         self.client = None

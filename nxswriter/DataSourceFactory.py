@@ -33,17 +33,17 @@ class DataSourceFactory(Element):
         :param attrs: dictionary with the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element on the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         Element.__init__(self, "datasource", attrs, last)
-        #: (:obj:`DataSourcePool.DataSourcePool`) datasource pool
+        #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) datasource pool
         self.__dsPool = None
 
     def setDataSources(self, datasources):
         """ sets the used datasources
 
         :param datasources: pool to be set
-        :type datasources: :obj:`DataSourcePool.DataSourcePool`
+        :type datasources: :class:`nxswriter.DataSourcePool.DataSourcePool`
         """
         self.__dsPool = datasources
 
@@ -90,7 +90,7 @@ class DataSourceFactory(Element):
         """ sets the used decoders
 
         :param decoders: pool to be set
-        :type decoders: :obj:`DecoderPool.DecorderPool`
+        :type decoders: :class:`nxswriter.DecoderPool.DecoderPool`
         """
         if self.last and self.last.source and self.last.source.isValid() \
                 and hasattr(self.last.source, "setDecoders"):

@@ -48,22 +48,22 @@ class CommandThread(Thread):
         """constructor
 
         :param server: Tango server implementation
-        :type server: :obj:`PyTango.Device_4Impl`
+        :type server: :class:`PyTango.Device_4Impl`
         :param command: Thread command
         :type command: :obj:`str`
         :param finalState: Final State Code
-        :type finalState: :obj:`PyTango.DevState`
+        :type finalState: :class:`PyTango.DevState`
         :param args: List of command arguments
         :type args: :obj:`list` <:obj:`str`>
         """
         Thread.__init__(self)
-        #: (:obj:`PyTango.Device_4Impl`) tango server
+        #: (:class:`PyTango.Device_4Impl`) tango server
         self.server = server
         #: (:obj:`__callable__`) command
         self.command = getattr(server.tdw, command)
-        #: (:obj:`PyTango.DevState`) final state
+        #: (:class:`PyTango.DevState`) final state
         self.fstate = finalState
-        #: (:obj:`PyTango.DevState`) error state
+        #: (:class:`PyTango.DevState`) error state
         self.estate = PyTango.DevState.FAULT
         #: (:obj:`list` <:obj:`str`>) command arguments
         self.args = args if isinstance(args, list) else []
@@ -116,21 +116,22 @@ class NXSDataWriter(PyTango.Device_4Impl):
         PyTango.Device_4Impl.__init__(self, cl, name)
         self.debug_stream("In __init__()")
         if not hasattr(self, "lock"):
-            #: (:obj:`threading.Lock`) thread lock
+            #: (:class:`threading.Lock`) thread lock
             self.lock = Lock()
-        #: (:obj:`PyTango.DevState`) state flag
+        #: (:class:`PyTango.DevState`) state flag
         self.state_flag = PyTango.DevState.OFF
-        #: (:obj:`CommandThread`) openentry thread
+        #: (:class:`CommandThread`) openentry thread
         self.othread = None
-        #: (:obj:`CommandThread`) record thread
+        #: (:class:`CommandThread`) record thread
         self.rthread = None
-        #: (:obj:`CommandThread`) closentry thread
+        #: (:class:`CommandThread`) closentry thread
         self.cthread = None
-        #: (:obj:`TangoDataWriter.TangoDataWriter`) Tango Data Writer
+        #: (:class:`nxswriter.TangoDataWriter.TangoDataWriter`) \
+        #:       Tango Data Writer
         self.tdw = TDW(self)
         #: (:obj:`list`<:obj:`str`>) list with errors
         self.errors = []
-        #: (:obj:`dict` < :obj:`PyTango.DevState`, :obj:`str`> ) \
+        #: (:obj:`dict` < :class:`PyTango.DevState`, :obj:`str`> ) \
         #:      status messages
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
@@ -193,7 +194,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """set_state method
 
         :param state: State Code
-        :type state: :obj:`PyTango.DevState`
+        :type state: :class:`PyTango.DevState`
         """
         with self.lock:
             if state is not None:
@@ -204,7 +205,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ get_state method
 
         :returns: State Code
-        :rtype: :obj:`PyTango.DevState`
+        :rtype: :class:`PyTango.DevState`
         """
         with self.lock:
             PyTango.Device_4Impl.set_state(self, self.state_flag)
@@ -238,7 +239,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Read XMLSettings attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In read_XMLSettings()")
         attr.set_value(self.tdw.xmlsettings)
@@ -247,7 +248,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Write XMLSettings attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In write_XMLSettings()")
         self.tdw.xmlsettings = attr.get_write_value()
@@ -268,7 +269,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Read JSONRecord attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In read_JSONRecord()")
 
@@ -278,7 +279,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Write JSONRecord attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In write_JSONRecord()")
         self.tdw.jsonrecord = attr.get_write_value()
@@ -298,7 +299,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Read FileName attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In read_FileName()")
 
@@ -308,7 +309,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Write FileName attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In write_FileName()")
         if self.is_FileName_write_allowed():
@@ -345,7 +346,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """ Read Errors attribute
 
         :param attr: attribute object
-        :type attr: :obj:`PyTango.Attribute`
+        :type attr: :class:`PyTango.Attribute`
         """
         self.debug_stream("In read_Errors()")
 
@@ -365,7 +366,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 (stored in its <i>device_state</i> data member)
                 and returns it to the caller.
         :returns: State Code
-        :rtype: :obj:`PyTango.DevState`
+        :rtype: :class:`PyTango.DevState`
         """
         self.debug_stream("In dev_state()")
         return self.get_state()
@@ -469,7 +470,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
         :brief: Record setting for one step
         :param argin: JSON string with data
-        :type argin: :obj:`PyTango.DevString`
+        :type argin: :class:`PyTango.DevString`
         """
         self.debug_stream("In Record()")
         self.set_state(PyTango.DevState.RUNNING)
@@ -662,13 +663,13 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     """
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [ :obj:`str`, :obj:`PyTango._PyTango.CmdArgType`, \
+    #:       [ :obj:`str`, :class:`PyTango._PyTango.CmdArgType`, \
     #:       [ :obj:`list`<:obj:`int`> ] ] > ) Class Properties
     class_property_list = {
     }
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [ :obj:`str`, :obj:`PyTango._PyTango.CmdArgType`, \
+    #:       [ :obj:`str`, :class:`PyTango._PyTango.CmdArgType`, \
     #:       [ :obj:`list`<:obj:`int`> ] ] > ) Device Properties
     device_property_list = {
         'NumberOfThreads':
@@ -678,7 +679,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     }
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [[ :obj:`PyTango._PyTango.CmdArgType`, :obj:`str`]] >)
+    #:       [[ :class:`PyTango._PyTango.CmdArgType`, :obj:`str`]] >)
     #:       Command definitions
     cmd_list = {
         'OpenFile':
@@ -708,10 +709,10 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     }
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [[ :obj:`PyTango._PyTango.CmdArgType`, \
-    #:          :obj:`PyTango._PyTango.AttrDataFormat`, \
-    #:          :obj:`PyTango._PyTango.AttrWriteType` ], \
-    #:          :obj:`dict`<:obj:`str`, any> ] > ) Attribute definitions
+    #:       [[ :class:`PyTango._PyTango.CmdArgType`, \
+    #:          :class:`PyTango._PyTango.AttrDataFormat`, \
+    #:          :class:`PyTango._PyTango.AttrWriteType` ], \
+    #:          :obj:`dict` <:obj:`str` , any> ] > ) Attribute definitions
     attr_list = {
         'XMLSettings':
         [[PyTango.DevString,

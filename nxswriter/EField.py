@@ -41,7 +41,7 @@ class EField(FElementWithAttr):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         FElementWithAttr.__init__(self, "field", attrs, last)
         #: (:obj:`str`) rank of the field
@@ -132,7 +132,7 @@ class EField(FElementWithAttr):
         :param shape: object shape
         :type shape: :obj:`list` <:obj:`int` >
         :returns: H5 object
-        :rtype: :obj:`pni.io.nx.h5._nxh5.nxfield`
+        :rtype: :class:`pni.io.nx.h5._nxh5.nxfield`
         """
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]
@@ -251,7 +251,7 @@ class EField(FElementWithAttr):
         """ writes non-growing data
 
         :param holder: data holder
-        :type holder: :obj:`DataHolder.DataHolder`
+        :type holder: :class:`nxswriter.DataHolder.DataHolder`
         """
         try:
             self.h5Object[...] = holder.cast(self.h5Object.dtype)
@@ -269,7 +269,7 @@ class EField(FElementWithAttr):
         """ writes growing scalar data
 
         :param holder: data holder
-        :type holder: :obj:`DataHolder.DataHolder`
+        :type holder: :class:`nxswriter.DataHolder.DataHolder`
         """
 
         arr = holder.cast(self.h5Object.dtype)
@@ -292,7 +292,7 @@ class EField(FElementWithAttr):
         """ writes growing spectrum data
 
         :param holder: data holder
-        :type holder: :obj:`DataHolder.DataHolder`
+        :type holder: :class:`nxswriter.DataHolder.DataHolder`
         """
 
         # way around for a bug in pniio
@@ -336,7 +336,7 @@ class EField(FElementWithAttr):
         """ writes growing spectrum data
 
         :param holder: data holder
-        :type holder: :obj:`DataHolder.DataHolder`
+        :type holder: :class:`nxswriter.DataHolder.DataHolder`
         """
 
         arr = holder.cast(self.h5Object.dtype)
@@ -378,7 +378,7 @@ class EField(FElementWithAttr):
         """ writes growing data
 
         :param holder: data holder
-        :type holder: :obj:`DataHolder.DataHolder`
+        :type holder: :class:`nxswriter.DataHolder.DataHolder`
         """
         if str(holder.format).split('.')[-1] == "SCALAR":
             self.__writeScalarGrowingData(holder)

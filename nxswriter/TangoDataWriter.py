@@ -70,23 +70,26 @@ class TangoDataWriter(object):
         self.__stepPool = None
         #: (:class:`ThreadPool.ThreadPool`) thread pool with FINAL elements
         self.__finalPool = None
-        #: (:obj:`dict`< :obj:`str`, :class:`ThreadPool.ThreadPool` >) \
+        #: (:obj:`dict`< :obj:`str`, \
+        #:  :class:`nxswriter.ThreadPool.ThreadPool` >) \
         #:     collection of thread pool with triggered STEP elements
         self.__triggerPools = {}
         #: (:class:`pni.io.nx.h5._nxh5.nxroot`) H5 file handle
         self.__nxRoot = None
         #: (:class:`pni.io.nx.h5._nxh5.nxfile`) H5 file handle
         self.__nxFile = None
-        #: (:class:`H5Elements.EFile`) element file objects
+        #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
 
-        #: (:class:`DecoderPool.DecoderPool`) pool with decoders
+        #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
 
-        #: (:class:`DataSourcePool.DataSourcePool`) pool with datasources
+        #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) \
+        #:      pool with datasources
         self.__datasources = DataSourcePool()
 
-        #: (:class:`FetchNameHandler.FetchNameHandler`) group name parser
+        #: (:class:`nxswriter.FetchNameHandler.FetchNameHandler`) \
+        #:       group name parser
         self.__fetcher = None
 
         #: (:obj:`str`) adding logs

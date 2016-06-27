@@ -34,9 +34,10 @@ class InnerXMLHandler(sax.ContentHandler):
 
         :brief: It constructs parser handler for taking xml od datasources
         :param xmlReader: NeXus xml sax reader
-        :type xmlReader: :obj:`xml.sax.xmlreader.XMLReader`
+        :type xmlReader: :class:`xml.sax.xmlreader.XMLReader`
         :param contentHandler: NeXus XML content handler
-        :type contentHandler: :obj:`NeXusXMLHandler.NeXusXMLHandler`
+        :type contentHandler: \
+              :class:`nxswriter.NexusXMLHandler.NexusXMLHandler`
         :param name: tag name
         :type name: :obj:`str`
         :param attrs: dictionary of the tag attributes
@@ -45,9 +46,10 @@ class InnerXMLHandler(sax.ContentHandler):
         sax.ContentHandler.__init__(self)
         #: (:obj:`str`) xml string
         self.xml = None
-        #: (:obj:`NeXusXMLHandler.NeXusXMLHandler`) external contentHandler
+        #: (:class:`nxswriter.NeXusXMLHandler.NeXusXMLHandler`) \
+        #:       external contentHandler
         self.__contentHandler = contentHandler
-        #: (:obj:`xml.sax.xmlreader.XMLReader`) external xmlreader
+        #: (:class:`xml.sax.xmlreader.XMLReader`) external xmlreader
         self.__xmlReader = xmlReader
         #: (:obj:`int`) tag depth
         self.__depth = 1
@@ -145,10 +147,10 @@ if __name__ == "__main__":
         fi = sys.argv[1]
         if os.path.exists(fi):
 
-            #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
+            #: (:class:`xml.sax.xmlreader.XMLReader`) parser object
             parser = sax.make_parser()
 
-            #: (:obj:`InnerXMLHandler`) SAX2 handler object
+            #: (:class:`nxswriter.InnerXMLHandler`) SAX2 handler object
             handler = InnerXMLHandler()
             parser.setContentHandler(handler)
 

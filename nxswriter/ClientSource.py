@@ -49,7 +49,7 @@ class ClientSource(DataSource):
 
         :param xml: datasource parameters
         :type xml: :obj:`str`
-        :raises: :obj:`Error.DataSourceSetupError` \
+        :raises: :exc:`nxswriter.Errors.DataSourceSetupError` \
         :        if :obj:`name` is not defined
         """
         dom = minidom.parseString(xml)

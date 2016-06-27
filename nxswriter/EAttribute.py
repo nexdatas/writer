@@ -38,7 +38,7 @@ class EAttribute(FElement):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
 
         FElement.__init__(self, "attribute", attrs, last)

@@ -33,9 +33,9 @@ class EFile(FElement):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         :param h5fileObject: H5 file object
-        :type h5fileObject: :obj:`pni.io.nx.h5._nxh5.nxfile`
+        :type h5fileObject: :class:`pni.io.nx.h5._nxh5.nxfile`
         """
         FElement.__init__(self, "file", attrs, last, h5fileObject)
 
@@ -49,7 +49,7 @@ class EDoc(Element):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         Element.__init__(self, "doc", attrs, last)
 
@@ -75,7 +75,7 @@ class ESymbol(Element):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         Element.__init__(self, "symbol", attrs, last)
         #: (:obj:`dict` <:obj:`str`, :obj:`str`>) \
@@ -104,7 +104,7 @@ class EDimensions(Element):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         Element.__init__(self, "dimensions", attrs, last)
         if "rank" in attrs.keys():
@@ -120,14 +120,14 @@ class EDim(Element):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         """
         Element.__init__(self, "dim", attrs, last)
         if ("index" in attrs.keys()) and ("value" in attrs.keys()):
             self._beforeLast().lengths[attrs["index"]] = attrs["value"]
         #: (:obj:`str`) index attribute
         self.__index = None
-        #: (:obj:`DataSources.DataSource`) data source
+        #: (:class:`nxswriter.DataSources.DataSource`) data source
         self.source = None
         #: (:obj:`list` <:obj:`str`>) tag content
         self.content = []

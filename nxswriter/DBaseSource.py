@@ -102,7 +102,7 @@ class DBaseSource(DataSource):
 
         :param xml: datasource parameters
         :type xml: :obj:`str`
-        :raises: :obj:`Error.DataSourceSetupError`
+        :raises: :exc:`nxswriter.Errors.DataSourceSetupError`
             if :obj:`format` or :obj:`query` is not defined
         """
         dom = minidom.parseString(xml)
@@ -147,7 +147,7 @@ class DBaseSource(DataSource):
         """ connects to MYSQL database
 
         :returns: open database object
-        :rtype: :obj:`MySQLdb.connections.Connection`
+        :rtype: :class:`MySQLdb.connections.Connection`
         """
         args = {}
         if self.mycnf:
@@ -168,7 +168,7 @@ class DBaseSource(DataSource):
         """ connects to PGSQL database
 
         :returns: open database object
-        :rtype: :obj:`psycopg2._psycopg.connection`
+        :rtype: :class:`psycopg2._psycopg.connection`
         """
         args = {}
 
@@ -189,7 +189,7 @@ class DBaseSource(DataSource):
         """ connects to ORACLE database
 
         :returns: open database object
-        :rtype: :obj:`cx_Oracle.Connection`
+        :rtype: :class:`cx_Oracle.Connection`
         """
         args = {}
         if self.user:

@@ -41,22 +41,22 @@ class FElement(Element):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         :param h5object: H5 file object
-        :type h5object: :obj:`pni.io.nx.h5._nxh5.nxfield` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxgroup` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxlink` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxattribute` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxfile`
+        :type h5object: :class:`pni.io.nx.h5._nxh5.nxfield` \
+        :               :class:`pni.io.nx.h5._nxh5.nxgroup` \
+        :               :class:`pni.io.nx.h5._nxh5.nxlink` \
+        :               :class:`pni.io.nx.h5._nxh5.nxattribute` \
+        :               :class:`pni.io.nx.h5._nxh5.nxfile`
         """
         Element.__init__(self, name, attrs, last)
-        #: (:obj:`pni.io.nx.h5._nxh5.nxfield` \
-        #:  :obj:`pni.io.nx.h5._nxh5.nxgroup` \
-        #:  :obj:`pni.io.nx.h5._nxh5.nxlink` \
-        #:  :obj:`pni.io.nx.h5._nxh5.nxattribute` \
-        #:  :obj:`pni.io.nx.h5._nxh5.nxfile`) stored H5 file object
+        #: (:class:`pni.io.nx.h5._nxh5.nxfield` \
+        #:  :class:`pni.io.nx.h5._nxh5.nxgroup` \
+        #:  :class:`pni.io.nx.h5._nxh5.nxlink` \
+        #:  :class:`pni.io.nx.h5._nxh5.nxattribute` \
+        #:  :class:`pni.io.nx.h5._nxh5.nxfile`) stored H5 file object
         self.h5Object = h5object
-        #: (:obj:`DataSources.DataSource`) data source
+        #: (:class:`nxswriter.DataSources.DataSource`) data source
         self.source = None
         #: (:obj:`str`) notification of error in the run method
         self.error = None
@@ -261,13 +261,13 @@ class FElementWithAttr(FElement):
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
-        :type last: :obj:`Element.Element`
+        :type last: :class:`nxswriter.Element.Element`
         :param h5object: H5 file object
-        :type h5object: :obj:`pni.io.nx.h5._nxh5.nxfield` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxgroup` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxlink` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxattribute` \
-        :               :obj:`pni.io.nx.h5._nxh5.nxfile`
+        :type h5object: :class:`pni.io.nx.h5._nxh5.nxfield` \
+        :               :class:`pni.io.nx.h5._nxh5.nxgroup` \
+        :               :class:`pni.io.nx.h5._nxh5.nxlink` \
+        :               :class:`pni.io.nx.h5._nxh5.nxattribute` \
+        :               :class:`pni.io.nx.h5._nxh5.nxfile`
         """
 
         FElement.__init__(self, name, attrs, last, h5object)
@@ -288,7 +288,7 @@ class FElementWithAttr(FElement):
         :param val: data value
         :type value: any
         :returns: data holder
-        :rtype: :obj:`DataHolder.DataHolder`
+        :rtype: :class:`nxswriter.DataHolder.DataHolder`
         """
         dh = None
         if not rank or rank == 0:
@@ -414,10 +414,10 @@ class FElementWithAttr(FElement):
         :param name: attribute name
         :type name: :obj:`str`
         :returns: instance of the attribute object if created
-        :rtype: :obj:`pni.io.nx.h5._nxh5.nxfield` \
-        :       :obj:`pni.io.nx.h5._nxh5.nxgroup` \
-        :       :obj:`pni.io.nx.h5._nxh5.nxlink` \
-        :       :obj:`pni.io.nx.h5._nxh5.nxattribute` \
-        :       :obj:`pni.io.nx.h5._nxh5.nxfile`
+        :rtype: :class:`pni.io.nx.h5._nxh5.nxfield` \
+        :       :class:`pni.io.nx.h5._nxh5.nxgroup` \
+        :       :class:`pni.io.nx.h5._nxh5.nxlink` \
+        :       :class:`pni.io.nx.h5._nxh5.nxattribute` \
+        :       :class:`pni.io.nx.h5._nxh5.nxfile`
         """
         return self.__h5Instances.get(name)
