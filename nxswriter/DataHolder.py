@@ -114,7 +114,7 @@ class DataHolder(object):
         :type dtype: :obj:`str`
         :returns: numpy array of defined type or list
                   for strings or value for SCALAR
-        :rtype: any
+        :rtype: :class:`numpy.ndarray`
 
         """
         if str(self.format).split('.')[-1] == "SCALAR":

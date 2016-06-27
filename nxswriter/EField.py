@@ -132,7 +132,7 @@ class EField(FElementWithAttr):
         :param shape: object shape
         :type shape: :obj:`list` <:obj:`int` >
         :returns: H5 object
-        :rtype: :class:`pni.io.nx.h5._nxh5.nxfield`
+        :rtype: :class:`pni.io.nx.h5.nxfield`
         """
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]

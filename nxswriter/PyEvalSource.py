@@ -177,7 +177,7 @@ class PyEvalSource(DataSource):
 
         :returns:  dictionary with collected data
         :rtype: {'rank': :obj:`str`, 'value': any, 'tangoDType': :obj:`str`, \
-        :        'shape': :obj:`list`<int>, 'encoding': :obj:`str`, \
+        :        'shape': :obj:`list` <int>, 'encoding': :obj:`str`, \
         :        'decoders': :obj:`str`} )
         """
         if not self.__name:

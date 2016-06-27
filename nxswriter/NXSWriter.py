@@ -470,7 +470,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
         :brief: Record setting for one step
         :param argin: JSON string with data
-        :type argin: :class:`PyTango.DevString`
+        :type argin: :obj:`str`
         """
         self.debug_stream("In Record()")
         self.set_state(PyTango.DevState.RUNNING)
@@ -571,6 +571,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
         :brief: Record setting for one step in asynchronous mode
         :param argin:  DevString    JSON string with data
+        :type argin: :obj:`str`
         """
         self.debug_stream("In RecordAsynch()")
         self.set_state(PyTango.DevState.RUNNING)
@@ -663,14 +664,14 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     """
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [ :obj:`str`, :class:`PyTango._PyTango.CmdArgType`, \
-    #:       [ :obj:`list`<:obj:`int`> ] ] > ) Class Properties
+    #:       [ :obj:`str`, :class:`PyTango.CmdArgType`, \
+    #:       [ :obj:`list` <:obj:`int`> ] ] > ) Class Properties
     class_property_list = {
     }
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [ :obj:`str`, :class:`PyTango._PyTango.CmdArgType`, \
-    #:       [ :obj:`list`<:obj:`int`> ] ] > ) Device Properties
+    #:       [ :obj:`str`, :class:`PyTango.CmdArgType`, \
+    #:       [ :obj:`list` <:obj:`int`> ] ] > ) Device Properties
     device_property_list = {
         'NumberOfThreads':
         [PyTango.DevLong,
@@ -679,7 +680,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     }
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [[ :class:`PyTango._PyTango.CmdArgType`, :obj:`str`]] >)
+    #:       [[ :class:`PyTango.CmdArgType`, :obj:`str`]] >)
     #:       Command definitions
     cmd_list = {
         'OpenFile':
@@ -709,9 +710,9 @@ class NXSDataWriterClass(PyTango.DeviceClass):
     }
 
     #: (:obj:`dict` <:obj:`str`, \
-    #:       [[ :class:`PyTango._PyTango.CmdArgType`, \
-    #:          :class:`PyTango._PyTango.AttrDataFormat`, \
-    #:          :class:`PyTango._PyTango.AttrWriteType` ], \
+    #:       [[ :class:`PyTango.CmdArgType`, \
+    #:          :class:`PyTango.AttrDataFormat`, \
+    #:          :class:`PyTango.AttrWriteType` ], \
     #:          :obj:`dict` <:obj:`str` , any> ] > ) Attribute definitions
     attr_list = {
         'XMLSettings':

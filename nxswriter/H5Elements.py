@@ -35,7 +35,7 @@ class EFile(FElement):
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
         :param h5fileObject: H5 file object
-        :type h5fileObject: :class:`pni.io.nx.h5._nxh5.nxfile`
+        :type h5fileObject: :class:`pni.io.nx.h5.nxfile`
         """
         FElement.__init__(self, "file", attrs, last, h5fileObject)
 

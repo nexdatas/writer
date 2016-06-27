@@ -250,7 +250,7 @@ class TangoSource(DataSource):
 
         :returns: dictionary with collected data
         :rtype: {'rank': :obj:`str`, 'value': any, 'tangoDType': :obj:`str`, \
-        :        'shape': :obj:`list`<int>, 'encoding': :obj:`str`, \
+        :        'shape': :obj:`list` <int>, 'encoding': :obj:`str`, \
         :        'decoders': :obj:`str`}
         """
         if self.client:
@@ -638,7 +638,7 @@ class TgMember(object):
                   "shape":, "encoding":, "decoders":}
         :returns: dictionary with collected data
         :rtype: {'rank': :obj:`str`, 'value': any, 'tangoDType': :obj:`str`, \
-        :        'shape': :obj:`list`<int>, 'encoding': :obj:`str`, \
+        :        'shape': :obj:`list` <int>, 'encoding': :obj:`str`, \
         :        'decoders': :obj:`str`}
         """
         if self.__value:

@@ -29,6 +29,7 @@ import os
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.intersphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
 ]
@@ -333,3 +334,12 @@ epub_exclude_files = ['search.html']
 #epub_use_index = True
 
 autoclass_content = 'both'
+
+
+intersphinx_mapping = {
+    'http://docs.python.org/dev': None,
+    'http://docs.scipy.org/doc/scipy/reference': None,
+    'http://docs.scipy.org/doc/numpy': None,
+    'http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/': None,
+    'file:///usr/share/doc/python-pni-doc/html/': None,
+}

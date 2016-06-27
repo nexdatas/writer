@@ -92,7 +92,7 @@ class ClientSource(DataSource):
 
         :returns: dictionary with collected data
         :rtype: {'rank': :obj:`str`, 'value': any, 'tangoDType': :obj:`str`, \
-        :        'shape': :obj:`list`<int>, 'encoding': :obj:`str`, \
+        :        'shape': :obj:`list` <int>, 'encoding': :obj:`str`, \
         :        'decoders': :obj:`str`} )
         """
         return self._getJSONData(

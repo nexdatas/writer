@@ -104,7 +104,7 @@ class NexusXMLHandler(sax.ContentHandler):
         #: (:obj:`str`) stored name
         self.__storedName = None
 
-        #: (:obj:`dict` <:obj:`str`: :obj:`__class__` > ) \
+        #: (:obj:`dict` <:obj:`str`, :obj:`type` > ) \
         #: map of tag names to related classes
         self.elementClass = {
             'group': EGroup, 'field': EField,
@@ -308,11 +308,12 @@ if __name__ == "__main__":
             #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
             mparser = sax.make_parser()
 
-            #: (:obj:`pni.io.nx.h5._nxh5.nxfile`) file handle
+            #: (:obj:`pni.io.nx.h5.nxfile`) file handle
             nxFile = nx.create_file(fo, overwrite=True).root()
-            #: (:object:`H5Elements.EFile`) element file objects
+            #: (:class:`nxswriter.H5Elements.EFile`) element file objects
             mfileElement = EFile([], None, nxFile)
-            #: (:class:`NexusXMLHandler`) SAX2 handler object
+            #: (:class:`nxswriter.NexusXMLHandler.NexusXMLHandler`) \
+            #:     SAX2 handler object
             mhandler = NexusXMLHandler(mfileElement)
             mparser.setContentHandler(mhandler)
 

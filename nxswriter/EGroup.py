@@ -51,7 +51,7 @@ class EGroup(FElementWithAttr):
 
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
-                #: (:class:`pni.io.nx.h5._nxh5.nxgroup`) \
+                #: (:class:`pni.io.nx.h5.nxgroup`) \
                 #:      stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())

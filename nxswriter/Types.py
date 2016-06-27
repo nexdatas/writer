@@ -73,7 +73,7 @@ class NTP(object):
             "NX_DATE_TIME": "string", "ISO8601": "string", "NX_CHAR": "string",
             "NX_BOOLEAN": "bool"}
 
-    #: (:obj:`dict` <:obj:`str` , :obj:`type` or :obj:`instancemethod` >) \
+    #: (:obj:`dict` <:obj:`str` , :obj:`type` or :obj:`types.MethodType` >) \
     #:      map of type : converting function
     convert = {"float16": float, "float32": float, "float64": float,
                "float": float, "int64": long, "int32": int,
@@ -174,7 +174,7 @@ class NTP(object):
         :param value: given array
         :type array: any
         :param fun: applied function
-        :type fun: :obj:`type` or :obj:`instancemethod`
+        :type fun: :obj:`type` or :obj:`types.MethodType`
         :returns: created array
         :rtype: :obj:`list` <any>
         """

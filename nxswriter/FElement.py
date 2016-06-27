@@ -43,18 +43,18 @@ class FElement(Element):
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
         :param h5object: H5 file object
-        :type h5object: :class:`pni.io.nx.h5._nxh5.nxfield` \
-        :               :class:`pni.io.nx.h5._nxh5.nxgroup` \
-        :               :class:`pni.io.nx.h5._nxh5.nxlink` \
-        :               :class:`pni.io.nx.h5._nxh5.nxattribute` \
-        :               :class:`pni.io.nx.h5._nxh5.nxfile`
+        :type h5object: :class:`pni.io.nx.h5.nxfield` \
+        :               :class:`pni.io.nx.h5.nxgroup` \
+        :               :class:`pni.io.nx.h5.nxlink` \
+        :               :class:`pni.io.nx.h5.nxattribute` \
+        :               :class:`pni.io.nx.h5.nxfile`
         """
         Element.__init__(self, name, attrs, last)
-        #: (:class:`pni.io.nx.h5._nxh5.nxfield` \
-        #:  :class:`pni.io.nx.h5._nxh5.nxgroup` \
-        #:  :class:`pni.io.nx.h5._nxh5.nxlink` \
-        #:  :class:`pni.io.nx.h5._nxh5.nxattribute` \
-        #:  :class:`pni.io.nx.h5._nxh5.nxfile`) stored H5 file object
+        #: (:class:`pni.io.nx.h5.nxfield` \
+        #:  :class:`pni.io.nx.h5.nxgroup` \
+        #:  :class:`pni.io.nx.h5.nxlink` \
+        #:  :class:`pni.io.nx.h5.nxattribute` \
+        #:  :class:`pni.io.nx.h5.nxfile`) stored H5 file object
         self.h5Object = h5object
         #: (:class:`nxswriter.DataSources.DataSource`) data source
         self.source = None
@@ -263,11 +263,11 @@ class FElementWithAttr(FElement):
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
         :param h5object: H5 file object
-        :type h5object: :class:`pni.io.nx.h5._nxh5.nxfield` \
-        :               :class:`pni.io.nx.h5._nxh5.nxgroup` \
-        :               :class:`pni.io.nx.h5._nxh5.nxlink` \
-        :               :class:`pni.io.nx.h5._nxh5.nxattribute` \
-        :               :class:`pni.io.nx.h5._nxh5.nxfile`
+        :type h5object: :class:`pni.io.nx.h5.nxfield` \
+        :               :class:`pni.io.nx.h5.nxgroup` \
+        :               :class:`pni.io.nx.h5.nxlink` \
+        :               :class:`pni.io.nx.h5.nxattribute` \
+        :               :class:`pni.io.nx.h5.nxfile`
         """
 
         FElement.__init__(self, name, attrs, last, h5object)
@@ -414,10 +414,10 @@ class FElementWithAttr(FElement):
         :param name: attribute name
         :type name: :obj:`str`
         :returns: instance of the attribute object if created
-        :rtype: :class:`pni.io.nx.h5._nxh5.nxfield` \
-        :       :class:`pni.io.nx.h5._nxh5.nxgroup` \
-        :       :class:`pni.io.nx.h5._nxh5.nxlink` \
-        :       :class:`pni.io.nx.h5._nxh5.nxattribute` \
-        :       :class:`pni.io.nx.h5._nxh5.nxfile`
+        :rtype: :class:`pni.io.nx.h5.nxfield` \
+        :       :class:`pni.io.nx.h5.nxgroup` \
+        :       :class:`pni.io.nx.h5.nxlink` \
+        :       :class:`pni.io.nx.h5.nxattribute` \
+        :       :class:`pni.io.nx.h5.nxfile`
         """
         return self.__h5Instances.get(name)

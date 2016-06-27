@@ -43,7 +43,7 @@ class ELink(FElement):
 
         """
         FElement.__init__(self, "link", attrs, last)
-        #: (:class:`pni.io.nx.h5._nxh5.nxlink`) \
+        #: (:class:`pni.io.nx.h5.nxlink`) \
         #:     stored H5 file object (defined in base class)
         self.h5Object = None
         #: (:obj:`str`) strategy, i.e. INIT, STEP, FINAL
