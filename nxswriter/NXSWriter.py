@@ -224,15 +224,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 PyTango.Device_4Impl.dev_state(self)
         return PyTango.Device_4Impl.get_state(self)
 
-    def dev_status(self):
-        """ dev_state method
-
-        :returns: Status string
-        :rtype: :obj:`str`
-        """
-        self.dev_state()
-        return PyTango.Device_4Impl.dev_status(self)
-
     def always_executed_hook(self):
         """ Always excuted hook method
         """
@@ -379,18 +370,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
     #    NXSDataWriter command methods
     #
     # ==================================================================
-
-    def dev_state(self):
-        """ State command
-
-        :brief: This command gets the device state
-                (stored in its <i>device_state</i> data member)
-                and returns it to the caller.
-        :returns: State Code
-        :rtype: :class:`PyTango.DevState`
-        """
-        self.debug_stream("In dev_state()")
-        return self.get_state()
 
     def dev_status(self):
         """ Status command
