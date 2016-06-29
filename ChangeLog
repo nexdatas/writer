@@ -1,4 +1,8 @@
 2016-06-29 Jan Kotanski <jankotan@gmail.com>
+	* refresh dev_state and dev_status
+	* tagged as 2.2.3
+
+2016-06-29 Jan Kotanski <jankotan@gmail.com>
 	* reimplement dev_state
 	* tagged as 2.2.2
 
