@@ -1,3 +1,7 @@
+2016-06-29 Jan Kotanski <jankotan@gmail.com>
+	* reimplement dev_state
+	* tagged as 2.2.2
+
 2016-06-06 Jan Kotanski <jankotan@gmail.com>
 	* fix for aTnv attribute conversion
 	* tagged as 2.2.1
