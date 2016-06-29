@@ -809,7 +809,7 @@ sets the parrameters up from xml
 Definitions of DB datasource
 .INDENT 0.0
 .TP
-.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq]
+.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq, \(aqORACLE\(aq]
 (\fI\%list\fP) list of available databases
 .UNINDENT
 .INDENT 0.0
@@ -2703,13 +2703,8 @@ Device destructor
 .INDENT 7.0
 .TP
 .B dev_state()
-State command
+dev_state method
 .INDENT 7.0
-.TP
-.B Brief
-This command gets the device state
-(stored in its <i>device_state</i> data member)
-and returns it to the caller.
 .TP
 .B Returns
 State Code
