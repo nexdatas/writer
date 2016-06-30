@@ -67,6 +67,7 @@ class CommandThread(Thread):
         self.estate = PyTango.DevState.FAULT
         #: (:obj:`list` <:obj:`str`>) command arguments
         self.args = args if isinstance(args, list) else []
+        self.dp = PyTango.DeviceProxy(self.server.get_name())
 
     def run(self):
         """ runs the given command on the server and changes the state on exit
@@ -75,6 +76,7 @@ class CommandThread(Thread):
             self.command(*self.args)
             with self.server.lock:
                 self.server.state_flag = self.fstate
+            self.dp.State()
         except (PyTango.DevFailed, BaseException):
             self.__failed()
             raise
@@ -91,6 +93,7 @@ class CommandThread(Thread):
             self.server.state_flag = self.estate
             self.server.errors.append(
                 str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
+        self.dp.State()
 
 
 class NXSDataWriter(PyTango.Device_4Impl):
