@@ -1,4 +1,0 @@
-include COPYRIGHT
-include man/NXSDataWriter.1
-include man/nxswriter.1
-include README.rst

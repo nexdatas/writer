@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nxswriter.ElementThread &mdash; NXSDataWriter 2.2.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="NXSDataWriter 2.2.4 documentation" href="../../index.html" />
+    <link rel="up" title="nxswriter" href="../nxswriter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NXSDataWriter 2.2.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../nxswriter.html" accesskey="U">nxswriter</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nxswriter.ElementThread</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c">#</span>
+<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">#    (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License</span>
+<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot; Implementation of element thread for tag evaluation &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">import</span> <span class="nn">Queue</span>
+
+
+<div class="viewcode-block" id="ElementThread"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.ElementThread.ElementThread">[docs]</a><span class="k">class</span> <span class="nc">ElementThread</span><span class="p">(</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; single thread element</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; constructor</span>
+
+<span class="sd">        :brief: It creates ElementThread from the runnable element</span>
+<span class="sd">        :param index: the current thread index</span>
+<span class="sd">        :type index: :obj:`int`</span>
+<span class="sd">        :param queue: queue with tasks</span>
+<span class="sd">        :type queue: :class:`Queue.Queue`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c">#: (:obj:`int`) thread index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="c">#: (:class:`Queue.Queue`) queue with runnable elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__queue</span> <span class="o">=</span> <span class="n">queue</span>
+
+<div class="viewcode-block" id="ElementThread.run"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.ElementThread.ElementThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; runner</span>
+
+<span class="sd">        :brief: It runs the defined thread</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">full</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">while</span> <span class="n">full</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="s">&quot;run&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">elem</span><span class="o">.</span><span class="n">run</span><span class="p">):</span>
+                    <span class="n">elem</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="bp">None</span>
+                    <span class="n">elem</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+            <span class="k">except</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+                <span class="n">full</span> <span class="o">=</span> <span class="bp">False</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NXSDataWriter 2.2.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../nxswriter.html" >nxswriter</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+
+GNU GENERAL PUBLIC LICENSE, version 3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

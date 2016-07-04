@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nxswriter.ClientSource &mdash; NXSDataWriter 2.2.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="NXSDataWriter 2.2.4 documentation" href="../../index.html" />
+    <link rel="up" title="nxswriter" href="../nxswriter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NXSDataWriter 2.2.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../nxswriter.html" accesskey="U">nxswriter</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nxswriter.ClientSource</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c">#</span>
+<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">#    (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License</span>
+<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot; Definitions of CLIENT datasource &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">xml.dom</span> <span class="kn">import</span> <span class="n">minidom</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Streams</span>
+<span class="kn">from</span> <span class="nn">.DataSources</span> <span class="kn">import</span> <span class="n">DataSource</span>
+<span class="kn">from</span> <span class="nn">.Errors</span> <span class="kn">import</span> <span class="n">DataSourceSetupError</span>
+
+
+<div class="viewcode-block" id="ClientSource"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.ClientSource.ClientSource">[docs]</a><span class="k">class</span> <span class="nc">ClientSource</span><span class="p">(</span><span class="n">DataSource</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Client data source</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; constructor</span>
+
+<span class="sd">        :brief: It sets all member variables to None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">DataSource</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c">#: (:obj:`str`) data name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;)</span>
+        <span class="c">#: the current static JSON object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c">#: (:obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;)</span>
+        <span class="c">#: the current dynamic JSON object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="ClientSource.setup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.ClientSource.ClientSource.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets the parrameters up from xml</span>
+
+<span class="sd">        :param xml: datasource parameters</span>
+<span class="sd">        :type xml: :obj:`str`</span>
+<span class="sd">        :raises: :exc:`nxswriter.Errors.DataSourceSetupError` \</span>
+<span class="sd">        :        if :obj:`name` is not defined</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dom</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span>
+        <span class="n">rec</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s">&quot;record&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rec</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> \
+                <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hasAttribute</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s">&quot;ClientSource::setup() - &quot;</span>
+                <span class="s">&quot;Client record name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
+                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
+                <span class="s">&quot;Client record name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; self-description</span>
+
+<span class="sd">        :returns: self-describing string</span>
+<span class="sd">        :rtype: :obj:`str`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&quot; CLIENT record </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ClientSource.setJSON"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.ClientSource.ClientSource.setJSON">[docs]</a>    <span class="k">def</span> <span class="nf">setJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">globalJSON</span><span class="p">,</span> <span class="n">localJSON</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets JSON string</span>
+
+<span class="sd">        :brief: It sets the currently used  JSON string</span>
+<span class="sd">        :param globalJSON: static JSON string</span>
+<span class="sd">        :type globalJSON: :obj:`dict` \</span>
+<span class="sd">        :                 &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;</span>
+<span class="sd">        :param localJSON: dynamic JSON string</span>
+<span class="sd">        :type localJSON: :obj:`dict` \</span>
+<span class="sd">                         &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span> <span class="o">=</span> <span class="n">globalJSON</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span> <span class="o">=</span> <span class="n">localJSON</span>
+</div>
+<div class="viewcode-block" id="ClientSource.getData"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.ClientSource.ClientSource.getData">[docs]</a>    <span class="k">def</span> <span class="nf">getData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; provides access to the data</span>
+
+<span class="sd">        :returns: dictionary with collected data</span>
+<span class="sd">        :rtype: {&#39;rank&#39;: :obj:`str`, &#39;value&#39;: any, &#39;tangoDType&#39;: :obj:`str`, \</span>
+<span class="sd">        :        &#39;shape&#39;: :obj:`list` &lt;int&gt;, &#39;encoding&#39;: :obj:`str`, \</span>
+<span class="sd">        :        &#39;decoders&#39;: :obj:`str`} )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getJSONData</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__globalJSON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__localJSON</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NXSDataWriter 2.2.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../nxswriter.html" >nxswriter</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+
+GNU GENERAL PUBLIC LICENSE, version 3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

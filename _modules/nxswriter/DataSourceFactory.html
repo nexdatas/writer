@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nxswriter.DataSourceFactory &mdash; NXSDataWriter 2.2.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2.2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="NXSDataWriter 2.2.4 documentation" href="../../index.html" />
+    <link rel="up" title="nxswriter" href="../nxswriter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NXSDataWriter 2.2.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../nxswriter.html" accesskey="U">nxswriter</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for nxswriter.DataSourceFactory</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c">#</span>
+<span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">#    (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    nexdatas is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License</span>
+<span class="c">#    along with nexdatas.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot; factory with datasources &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Streams</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">DataSources</span>
+<span class="kn">from</span> <span class="nn">.Element</span> <span class="kn">import</span> <span class="n">Element</span>
+
+
+<div class="viewcode-block" id="DataSourceFactory"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DataSourceFactory.DataSourceFactory">[docs]</a><span class="k">class</span> <span class="nc">DataSourceFactory</span><span class="p">(</span><span class="n">Element</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Data source creator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; constructor</span>
+
+<span class="sd">        :param attrs: dictionary with the tag attributes</span>
+<span class="sd">        :type attrs: :obj:`dict` &lt;:obj:`str`, :obj:`str`&gt;</span>
+<span class="sd">        :param last: the last element on the stack</span>
+<span class="sd">        :type last: :class:`nxswriter.Element.Element`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Element</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;datasource&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+        <span class="c">#: (:class:`nxswriter.DataSourcePool.DataSourcePool`) datasource pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dsPool</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="DataSourceFactory.setDataSources"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DataSourceFactory.DataSourceFactory.setDataSources">[docs]</a>    <span class="k">def</span> <span class="nf">setDataSources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasources</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets the used datasources</span>
+
+<span class="sd">        :param datasources: pool to be set</span>
+<span class="sd">        :type datasources: :class:`nxswriter.DataSourcePool.DataSourcePool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dsPool</span> <span class="o">=</span> <span class="n">datasources</span>
+</div>
+    <span class="k">def</span> <span class="nf">__createDSource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; creates data source</span>
+
+<span class="sd">        :param attrs: dictionary with the tag attributes</span>
+<span class="sd">        :type attrs: :obj:`dict` &lt;:obj:`str`, :obj:`str`&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsPool</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsPool</span><span class="o">.</span><span class="n">hasDataSource</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s">&quot;type&quot;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dsPool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s">&quot;type&quot;</span><span class="p">])()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;DataSourceFactory::__createDSource - &quot;</span>
+                    <span class="s">&quot;Unknown data source&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">DataSources</span><span class="o">.</span><span class="n">DataSource</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s">&quot;DataSourceFactory::__createDSource - &quot;</span>
+                <span class="s">&quot;Typeless data source&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">DataSources</span><span class="o">.</span><span class="n">DataSource</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DataSourceFactory.store"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DataSourceFactory.DataSourceFactory.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">globalJSON</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets the datasource form xml string</span>
+
+<span class="sd">        :param xml: input parameter</span>
+<span class="sd">        :type xml: :obj:`str`</span>
+<span class="sd">        :param globalJSON: global JSON string</span>
+<span class="sd">        :type globalJSON: \</span>
+<span class="sd">        :     :obj:`dict` &lt;:obj:`str`, :obj:`dict` &lt;:obj:`str`, any&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__createDSource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tagAttrs</span><span class="p">)</span>
+        <span class="n">jxml</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">jxml</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="s">&quot;setJSON&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">globalJSON</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">setJSON</span><span class="p">(</span><span class="n">globalJSON</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="s">&quot;setDataSources&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">setDataSources</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dsPool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="p">,</span> <span class="s">&quot;tagAttributes&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">tagAttributes</span><span class="p">[</span><span class="s">&quot;nexdatas_source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;NX_CHAR&quot;</span><span class="p">,</span> <span class="n">jxml</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DataSourceFactory.setDecoders"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DataSourceFactory.DataSourceFactory.setDecoders">[docs]</a>    <span class="k">def</span> <span class="nf">setDecoders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoders</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sets the used decoders</span>
+
+<span class="sd">        :param decoders: pool to be set</span>
+<span class="sd">        :type decoders: :class:`nxswriter.DecoderPool.DecoderPool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> \
+                <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="s">&quot;setDecoders&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">setDecoders</span><span class="p">(</span><span class="n">decoders</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">NXSDataWriter 2.2.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../nxswriter.html" >nxswriter</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+
+GNU GENERAL PUBLIC LICENSE, version 3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

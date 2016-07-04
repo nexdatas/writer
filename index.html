@@ -1,0 +1,743 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to NXSDataWriter’s documentation! &mdash; NXSDataWriter 2.2.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.2.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="NXSDataWriter 2.2.4 documentation" href="#" />
+    <link rel="next" title="nxswriter package" href="nxswriter.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nxswriter.html" title="nxswriter package"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">NXSDataWriter 2.2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to NXSDataWriter&#8217;s documentation!</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#from-sources">From sources</a></li>
+<li><a class="reference internal" href="#debian-packages">Debian packages</a></li>
+<li><a class="reference internal" href="#setting-nexus-writer-server">Setting NeXus Writer Server</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation-from-sources">Installation from sources</a></li>
+<li><a class="reference internal" href="#general-overview">General overview</a></li>
+<li><a class="reference internal" href="#project-goals">Project goals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nxdl-extensions">NXDL extensions</a><ul>
+<li><a class="reference internal" href="#the-strategy-tag">The &lt;strategy&gt; tag</a></li>
+<li><a class="reference internal" href="#the-datasource-tag">The &lt;datasource&gt; tag</a></li>
+<li><a class="reference internal" href="#client-datasource">CLIENT datasource</a><ul>
+<li><a class="reference internal" href="#record">&lt;record&gt;</a><ul>
+<li><a class="reference internal" href="#tango-datasource">TANGO datasource</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#device">&lt;device&gt;</a></li>
+<li><a class="reference internal" href="#id1">&lt;record&gt;</a><ul>
+<li><a class="reference internal" href="#db-datasource">DB datasource</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#database">&lt;database&gt;</a></li>
+<li><a class="reference internal" href="#query">&lt;query&gt;</a><ul>
+<li><a class="reference internal" href="#pyeval-datasource">PYEVAL datasource</a><ul>
+<li><a class="reference internal" href="#datasource">&lt;datasource&gt;</a></li>
+<li><a class="reference internal" href="#result">&lt;result&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#client-code">Client code</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nxswriter.html"
+                        title="next chapter">nxswriter package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-nxsdatawriter-s-documentation">
+<h1>Welcome to NXSDataWriter&#8217;s documentation!<a class="headerlink" href="#welcome-to-nxsdatawriter-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.</p>
+<p>The server provides storing data from other Tango devices, various databases
+as well as passed by a user client via JSON strings.</p>
+<div class="line-block">
+<div class="line">Source code: <a class="reference external" href="https://github.com/nexdatas/writer">https://github.com/nexdatas/writer</a></div>
+<div class="line">Web page: <a class="reference external" href="http://www.desy.de/~jkotan/nxswriter">http://www.desy.de/~jkotan/nxswriter</a></div>
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install the dependencies:</p>
+<blockquote>
+<div>pni-libraries, PyTango, numpy</div></blockquote>
+<div class="section" id="from-sources">
+<h3>From sources<a class="headerlink" href="#from-sources" title="Permalink to this headline">¶</a></h3>
+<p>Download the latest NexDaTaS version from</p>
+<blockquote>
+<div><a class="reference external" href="https://github.com/nexdatas/writer">https://github.com/nexdatas/writer</a></div></blockquote>
+<p>Extract sources and run</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="debian-packages">
+<h3>Debian packages<a class="headerlink" href="#debian-packages" title="Permalink to this headline">¶</a></h3>
+<p>Debian Jessie (and Wheezy) packages can be found in the HDRI repository.</p>
+<p>To install the debian packages, add the PGP repository key</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo su
+$ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
+</pre></div>
+</div>
+<p>and then download the corresponding source list</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ cd /etc/apt/sources.list.d
+$ wget http://repos.pni-hdri.de/jessie-pni-hdri.list
+</pre></div>
+</div>
+<p>Finally,</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get update
+$ apt-get install python-nxswriter
+</pre></div>
+</div>
+<p>To instal other NexDaTaS packages</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
+</pre></div>
+</div>
+<p>and</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+</pre></div>
+</div>
+<p>for Component Selector and Sardana related packages.</p>
+</div>
+<div class="section" id="setting-nexus-writer-server">
+<h3>Setting NeXus Writer Server<a class="headerlink" href="#setting-nexus-writer-server" title="Permalink to this headline">¶</a></h3>
+<p>To set up  NeXus Writer Server run</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>$ nxsetup -x NXSDataWriter
+</pre></div>
+</div>
+<p>The <em>nxsetup</em> command comes from the <strong>python-nxstools</strong> package.</p>
+</div>
+</div>
+<div class="section" id="installation-from-sources">
+<h2>Installation from sources<a class="headerlink" href="#installation-from-sources" title="Permalink to this headline">¶</a></h2>
+<p>Extract sources and run</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="general-overview">
+<h2>General overview<a class="headerlink" href="#general-overview" title="Permalink to this headline">¶</a></h2>
+<p>All operations carried out on a beamline are orchestrated by the control client (CC),
+a software operated by the beamline-scientist and/or a user. Although the term client
+suggests that it is only a minor component aside from all the hardware control servers,
+databases, and whatever software is running on a beamline it is responsible for all
+the other components and tells them what to do at which point in time. In terms of
+an orchestra the CC is the director which tells each group of instruments or individual
+artist what to do at a certain point in time.</p>
+<p>It is important to understand the role of the CC in the entire software system on a beamline
+as it determines who is responsible for certain operations. The CC might be a simple
+single script running on the control PC which can is configured by the user before start
+or it might be a whole application of its own like SPEC or ONLINE. Historically it is
+the job of the CC to write the data recorded during the experiment (this is true at least
+for low rate data-sources). However, with the appearance of complex data formats
+like Nexus the IO code becomes more complex.</p>
+</div>
+<div class="section" id="project-goals">
+<h2>Project goals<a class="headerlink" href="#project-goals" title="Permalink to this headline">¶</a></h2>
+<p>The aim of this project is to implement a Tango server that manages data IO
+for synchrotron (and maybe neutron) beamlines. The server should satisfy the
+following requirements</p>
+<blockquote>
+<div><ul>
+<li><p class="first">remove responsibility for data IO from the beamline control client</p>
+</li>
+<li><p class="first">provide a simple configuration mechanism via NXDL</p>
+</li>
+<li><dl class="first docutils">
+<dt>read data from the following sources without client interaction</dt>
+<dd><p class="first last"># SQL databases (MySQL, Postgres, Oracle, DB2, ...)
+# other TANGO servers
+# JSON records (important for the interaction with the client and SARDANA)</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">the first implementation of the server will be written in Python</p>
+</li>
+<li><dl class="first docutils">
+<dt>the communication model of the first implementation will be strictly synchronous</dt>
+<dd><p class="first last">(future version most probably will support other communication models too)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>the control client software has full control over the behavior of the server</dt>
+<dd><p class="first last">via TANGO commands</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">only low data-rate sources will be handled directly by the server. High data-rate</p>
+</li>
+<li><dl class="first docutils">
+<dt>sources will write their data independently and additional software will add this data</dt>
+<dd><p class="first last">to the Nexus file produced by the server once the experiment is finished.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The server should make it easy to implement control clients which write Nexus files
+as the entire Nexus logic is kept in the server. Clients only produce NXDL configurations
+or use third party tools for this job. The first Python implementation of
+this server will serve as a proof of concept.</p>
+</div>
+</div>
+<div class="section" id="nxdl-extensions">
+<h1>NXDL extensions<a class="headerlink" href="#nxdl-extensions" title="Permalink to this headline">¶</a></h1>
+<p>In order to describe various data sources the NXDL standard has been extended by XML tags listed
+below. Thus, &lt;strategy /&gt; and &lt;datasource /&gt; can be situated inside &lt;field/&gt; or &lt;attribute/&gt; tags.
+The other ones are nested inside &lt;datasource/&gt; tag.</p>
+<div class="section" id="the-strategy-tag">
+<h2>The &lt;strategy&gt; tag<a class="headerlink" href="#the-strategy-tag" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>strategy</strong> tag defines when and in which way the data is stored.</p>
+<p>An example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;energy&quot;</span> <span class="na">type=</span><span class="s">&quot;NX_FLOAT&quot;</span> <span class="na">units=</span><span class="s">&quot;GeV&quot;</span> <span class="nt">&gt;</span>
+  <span class="nt">&lt;strategy</span> <span class="na">mode=</span><span class="s">&quot;STEP&quot;</span> <span class="na">trigger=</span><span class="s">&quot;trigger1&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;CLIENT&quot;</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;record</span> <span class="na">name=</span><span class="s">&quot;counter_1&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/datasource&gt;</span>
+<span class="nt">&lt;/field&gt;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>The tag can have the following attributes:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><strong>mode</strong> specifies when the data is fetched, i.e.</dt>
+<dd><ul class="first last simple">
+<li><em>INIT</em> during opening a new entry</li>
+<li><em>STEP</em> when the record() command is performed</li>
+<li><em>FINAL</em> at the time of closing the entry</li>
+<li><em>POSTRUN</em> during post-processing stage</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>trigger</strong> stands for the name of the related trigger in asynchronous STEP mode (optional)</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>grows</strong> selects which a field dimension grows of in the STEP mode. The default growing</dt>
+<dd><p class="first last">dimension is the first one, i.e. grows=1 (optional)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>compression</strong> specifies if data is compressed (optional)</dt>
+<dd><ul class="first last simple">
+<li><em>true</em> data going to be compressed</li>
+<li><em>false</em> data stored without compression (default)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>rate</strong> compression rate (optional)</dt>
+<dd><ul class="first last simple">
+<li>from 0 to 9</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>shuffle</strong> compression shuffle (optional)</dt>
+<dd><ul class="first last simple">
+<li>true shuffle enabled (default)</li>
+<li>false shuffle disabled</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>canfail</strong> specifies if during reading data exception should be thrown (optional)</dt>
+<dd><ul class="first last">
+<li><p class="first">false on error exception is raised (default)</p>
+</li>
+<li><dl class="first docutils">
+<dt>true on error warning info is printed and the record is filled by a maximum value</dt>
+<dd><p class="first last">for the record type</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>The <strong>content</strong> of the strategy tags is an label describing data merged into the H5 file by
+a post-processing program.</p>
+<p>Another example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;energy&quot;</span> <span class="na">type=</span><span class="s">&quot;NX_FLOAT&quot;</span> <span class="na">units=</span><span class="s">&quot;GeV&quot;</span> <span class="nt">&gt;</span>
+  <span class="nt">&lt;strategy</span> <span class="na">mode=</span><span class="s">&quot;POSTRUN&quot;</span> <span class="nt">&gt;</span>
+    http://haso.desy.de:/data/energy.dat
+  <span class="nt">&lt;/strategy&gt;</span>
+<span class="nt">&lt;/field&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-datasource-tag">
+<h2>The &lt;datasource&gt; tag<a class="headerlink" href="#the-datasource-tag" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>datasource</strong> tag specifies a type of the used data sources. They can be one of built types,
+i.e. CLIENT, TANGO, DB, PYEVAL or external ones &#8211; defined in external python package
+and registered via JSON data.</p>
+<p>The &lt;datasouce&gt; tag acquires the following attributes:</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt><strong>type</strong> related to a type of data source with possible values:</dt>
+<dd><ul class="first last simple">
+<li><em>CLIENT</em> for communication with client via JSON strings</li>
+<li><em>TANGO</em> for taking data from Tango servers</li>
+<li><em>DB</em> for fetching data from databases</li>
+<li><em>PYEVAL</em> for evaluating data from other data sources by python script</li>
+<li><em>other type name</em> of data source which has been registered via JSON data.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>name</strong> datasource name (optional)</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="client-datasource">
+<h2>CLIENT datasource<a class="headerlink" href="#client-datasource" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>CLIENT</strong> datasource allows to read data from client JSON strings. It should contain
+a &lt;record /&gt; tag. An example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;CLIENT&quot;</span> <span class="na">name=</span><span class="s">&quot;exp_c01&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;record</span> <span class="na">name=</span><span class="s">&quot;counter_1&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/datasource&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="record">
+<h3>&lt;record&gt;<a class="headerlink" href="#record" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>record</strong> tag defines the fetched data by its name. It has an attrbute</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>name</strong> which for the CLIENT data source type denotes a name of the data in the JSON string</li>
+</ul>
+</div></blockquote>
+<p>An example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;record</span> <span class="na">name=</span><span class="s">&quot;Position&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="tango-datasource">
+<h4>TANGO datasource<a class="headerlink" href="#tango-datasource" title="Permalink to this headline">¶</a></h4>
+<p>The <strong>TANGO</strong> datasource allows to read data from other TANGO devices. It should contain &lt;device/&gt;
+and &lt;record/&gt; tags. An example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;TANGO&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;device</span> <span class="na">hostname=</span><span class="s">&quot;haso.desy.de&quot;</span> <span class="na">member=</span><span class="s">&quot;attribute&quot;</span> <span class="na">name=</span><span class="s">&quot;p09/motor/exp.01&quot;</span>
+          <span class="na">port=</span><span class="s">&quot;10000&quot;</span> <span class="na">encoding=</span><span class="s">&quot;LIMA_VIDEO_IMAGE&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;record</span> <span class="na">name=</span><span class="s">&quot;Position&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/datasource&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="device">
+<h3>&lt;device&gt;<a class="headerlink" href="#device" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>device</strong> tag describes the Tango device which is used to get the data.
+It has the following attributes:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><strong>name</strong> corresponding to a name of the Tango device</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>member</strong> defining a type of the class member, i.e.</dt>
+<dd><ul class="first last simple">
+<li><em>attribute</em> an attribute to read</li>
+<li><em>command</em> a result of a command to take</li>
+<li><em>property</em> a property to read</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>hostname</strong> a name of the host with the Tango device server (optional)</p>
+</li>
+<li><p class="first"><strong>port</strong> a port number related to the Tango device server (optional)</p>
+</li>
+<li><p class="first"><strong>encoding</strong> a label defining a required decoder for DevEncoded? data (optional)</p>
+</li>
+<li><p class="first"><em>group</em> tango group name (optional)</p>
+</li>
+</ul>
+</div></blockquote>
+<p>If group attribute is defined data of the same group is read simultaneously and
+only ones during one experimental step.</p>
+</div>
+<div class="section" id="id1">
+<h3>&lt;record&gt;<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>record</strong> tag defines the fetched data by its name. It has an attrbute</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>name</strong> which for the TANGO data source type a name of the tango class member</li>
+</ul>
+</div></blockquote>
+<div class="section" id="db-datasource">
+<h4>DB datasource<a class="headerlink" href="#db-datasource" title="Permalink to this headline">¶</a></h4>
+<p>The <em>DB</em> datasource allows to read data from accessible databases. It should contain &lt;database /&gt;
+and &lt;query&gt; tags. An example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;DB&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;database</span> <span class="na">dbname=</span><span class="s">&quot;tango&quot;</span> <span class="na">dbtype=</span><span class="s">&quot;MYSQL&quot;</span> <span class="na">hostname=</span><span class="s">&quot;haso.desy.de&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;query</span> <span class="na">format=</span><span class="s">&quot;SPECTRUM&quot;</span><span class="nt">&gt;</span>
+    SELECT pid FROM device limit 10
+  <span class="nt">&lt;/query&gt;</span>
+<span class="nt">&lt;/datasource&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="database">
+<h3>&lt;database&gt;<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>database</strong> tag specifies parameters to connect to the required database. It acquires
+the attirbutes</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt><strong>dbtype</strong> describing a type of the database, i.e.</dt>
+<dd><ul class="first last simple">
+<li><em>ORACLE</em> an ORACLE database</li>
+<li><em>MYSQL</em> a MySQL database</li>
+<li><em>PGSQL</em> a PostgreSQL database</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>dbname</strong> denoting a name of the database (optional)</p>
+</li>
+<li><p class="first"><strong>hostname</strong> being a name of the host with the database (optional)</p>
+</li>
+<li><p class="first"><strong>port</strong> corresponding to a port number related to the database (optional)</p>
+</li>
+<li><p class="first"><strong>user</strong> denoting a user name (optional)</p>
+</li>
+<li><p class="first"><strong>passwd</strong> being a user password (optional)</p>
+</li>
+<li><p class="first"><strong>mycnf</strong> defining a location of the my.cnf file with MySQL database access configuration (optional)</p>
+</li>
+<li><p class="first"><strong>node</strong> corresponding to a node parameter for the ORACLE database(optional)</p>
+</li>
+</ul>
+</div></blockquote>
+<p>The <strong>content</strong> of the database tag defines Oracle DSN string (optional)</p>
+</div>
+<div class="section" id="query">
+<h3>&lt;query&gt;<a class="headerlink" href="#query" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>query</strong> tag defines the database query which fetches the data. It has one attribute</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt><strong>format</strong> which specifies a dimension of the fetch data, i.e.</dt>
+<dd><ul class="first last">
+<li><p class="first"><em>SCALAR</em> corresponds to 0-dimensional data, e.g. a separate numerical value or string</p>
+</li>
+<li><p class="first"><em>SPECTRUM</em> is related to 1-dimensional data, e.g. a list of numerical values or strings</p>
+</li>
+<li><dl class="first docutils">
+<dt><em>IMAGE</em> describes 2-dimensional data, i.e. a table of specific type values,</dt>
+<dd><p class="first last">e.g. a table of strings</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The <strong>content</strong> of the query tags is the SQL query.
+Another example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;DB&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;database</span> <span class="na">dbname=</span><span class="s">&quot;mydb&quot;</span> <span class="na">dbtype=</span><span class="s">&quot;PGSQL&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;query</span> <span class="na">format=</span><span class="s">&quot;IMAGE&quot;</span><span class="nt">&gt;</span>
+    SELECT * FROM weather limit 3
+  <span class="nt">&lt;/query&gt;</span>
+<span class="nt">&lt;/datasource&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="pyeval-datasource">
+<h4>PYEVAL datasource<a class="headerlink" href="#pyeval-datasource" title="Permalink to this headline">¶</a></h4>
+<p>The <strong>PYEVAL</strong> datasource allows to read data from other datasources and evaluate it
+by user python script. An example of usage:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;PYEVAL&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;TANGO&quot;</span> <span class="na">name=</span><span class="s">&quot;position&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;device</span> <span class="na">hostname=</span><span class="s">&quot;haso.desy.de&quot;</span> <span class="na">member=</span><span class="s">&quot;attribute&quot;</span> <span class="na">name=</span><span class="s">&quot;p09/motor/exp.01&quot;</span> <span class="na">port=</span><span class="s">&quot;10000&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;record</span> <span class="na">name=</span><span class="s">&quot;Position&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/datasource&gt;</span>
+  <span class="nt">&lt;datasource</span> <span class="na">type=</span><span class="s">&quot;CLIENT&quot;</span> <span class="na">name=</span><span class="s">&quot;shift&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;record</span> <span class="na">name=</span><span class="s">&quot;exp_c01&quot;</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/datasource&gt;</span>
+  <span class="nt">&lt;result</span> <span class="na">name=</span><span class="s">&quot;finalposition&quot;</span><span class="nt">&gt;</span>
+    ds.finalposition = ds.position + ds.shift
+  <span class="nt">&lt;/result&gt;</span>
+<span class="nt">&lt;/datasource&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="datasource">
+<h5>&lt;datasource&gt;<a class="headerlink" href="#datasource" title="Permalink to this headline">¶</a></h5>
+<p>The <strong>PYEVAL</strong> datasource can contain other datasources. They have to have defined <strong>name</strong> attributes.
+Those names with additional prefix &#8216;ds.&#8217; correspond to input variable names from the python script,
+i.e. ds.name.</p>
+</div>
+<div class="section" id="result">
+<h5>&lt;result&gt;<a class="headerlink" href="#result" title="Permalink to this headline">¶</a></h5>
+<p>The <strong>result</strong> contains python script which evaluates input data. It has the following attribute:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>name</strong> corresponding to a result name. It is related to python script variable by ds.name.</li>
+</ul>
+</div></blockquote>
+<p>The default value <strong>name</strong> =&#8221;result&#8221;. (optional)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="client-code">
+<h2>Client code<a class="headerlink" href="#client-code" title="Permalink to this headline">¶</a></h2>
+<p>In order to use Nexus Data Server one has to write a client code. Some simple client codes
+are in the  nexdatas repository. In this section we add some
+comments related to the client code.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># To use the Tango Server we must import the PyTango module and</span>
+<span class="c"># create DeviceProxy for the server.</span>
+
+<span class="kn">import</span> <span class="nn">PyTango</span>
+
+<span class="n">device</span> <span class="o">=</span> <span class="s">&quot;p09/tdw/r228&quot;</span>
+<span class="n">dpx</span> <span class="o">=</span> <span class="n">PyTango</span><span class="o">.</span><span class="n">DeviceProxy</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">set_timeout_millis</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
+
+<span class="c"># Here device corresponds to a name of our Nexus Data Server.</span>
+<span class="c"># The Init() method resets the state of the server.</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">FileName</span> <span class="o">=</span> <span class="s">&quot;test.h5&quot;</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">()</span>
+
+<span class="c"># We set the name of the output HDF5 file and open it.</span>
+
+<span class="c"># Now we are ready to pass the XML settings describing a structure of</span>
+<span class="c"># the output file as well as defining a way of data storing.</span>
+<span class="c"># Examples of the XMLSettings can be found in the XMLExamples directory.</span>
+
+<span class="n">xml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;test.xml&quot;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">XMLSettings</span> <span class="o">=</span> <span class="n">xml</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">JSONRecord</span> <span class="o">=</span> <span class="s">&#39;{&quot;data&quot;: {&quot;parameterA&quot;:0.2},</span>
+                      <span class="s">&quot;decoders&quot;</span><span class="p">:{</span><span class="s">&quot;DESY2D&quot;</span><span class="p">:</span><span class="s">&quot;desydecoders.desy2Ddec.desy2d&quot;</span><span class="p">},</span>
+                      <span class="s">&quot;datasources&quot;</span><span class="p">:{</span>
+                           <span class="s">&quot;MCLIENT&quot;</span><span class="p">:</span><span class="s">&quot;sources.DataSources.LocalClientSource&quot;</span><span class="p">}</span>
+<span class="p">}</span><span class="s">&#39;</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">OpenEntry</span><span class="p">()</span>
+
+<span class="c"># We read our XML settings settings from a file and pass them to the server via</span>
+<span class="c"># the XMLSettings attribute. Then we open an entry group related to the XML</span>
+<span class="c"># configuration. Optionally, we can also set JSONRecord, i.e. an attribute</span>
+<span class="c"># which contains a global JSON string with data needed to store during opening</span>
+<span class="c"># the entry and also other stages of recording. If external decoder for</span>
+<span class="c"># DevEncoded data is need one can registred it passing its packages and</span>
+<span class="c"># class names in JSONRecord,</span>
+<span class="c"># e.g. &quot;desy2d&quot; class of &quot;DESY2D&quot; label in &quot;desydecoders.desy2Ddec&quot; package.</span>
+<span class="c"># Similarly making use of &quot;datasources&quot; records of the JSON string one can</span>
+<span class="c"># registred additional datasources. The OpenEntry method stores data defined</span>
+<span class="c"># in the XML string with strategy=INIT.</span>
+<span class="c"># The JSONRecord attribute can be changed during recording our data.</span>
+
+<span class="c"># After finalization of the configuration process we can start recording</span>
+<span class="c"># the main experiment data in a STEP mode.</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;p09/counter/exp.01&quot;:0.1, &quot;p09/counter/exp.02&quot;:1.1}}&#39;</span><span class="p">)</span>
+
+<span class="c"># Every time we call the Record method all nexus fields defined with</span>
+<span class="c"># strategy=STEP are extended by one record unit and the assigned to them data</span>
+<span class="c"># is stored. As the method argument we pass a local JSON string with the client</span>
+<span class="c"># data. To record the client data one can also use the global JSONRecord string.</span>
+<span class="c"># Contrary to the global JSON string the local one is only</span>
+<span class="c"># valid during one record step.</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="s">&#39;{&quot;data&quot;: {&quot;emittance_x&quot;: 0.1},  &quot;triggers&quot;:[&quot;trigger1&quot;, &quot;trigger2&quot;]  }&#39;</span><span class="p">)</span>
+
+<span class="c"># If you denote in your XML configuration string some fields by additional</span>
+<span class="c"># trigger attributes you may ask the server to store your data only in specific</span>
+<span class="c"># record steps. This can be helpful if you want to store your data in</span>
+<span class="c"># asynchronous mode. To this end you define in the local JSON string a list of</span>
+<span class="c"># triggers which are used in the current record step.</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">JSONRecord</span> <span class="o">=</span> <span class="s">&#39;{&quot;data&quot;: {&quot;parameterB&quot;:0.3}}&#39;</span>
+<span class="n">dpx</span><span class="o">.</span><span class="n">CloseEntry</span><span class="p">()</span>
+
+<span class="c"># After scanning experiment data in &#39;STEP&#39; mode we close the entry.</span>
+<span class="c"># To this end we call the CloseEntry method which also stores data defined</span>
+<span class="c"># with strategy=FINAL. Since our HDF5 file can contains many entries we can again</span>
+<span class="c"># open the entry and repeat our record procedure. If we define more than one entry</span>
+<span class="c"># in one XML setting string the defined entries are recorded parallel</span>
+<span class="c"># with the same steps.</span>
+
+<span class="c"># Finally, we can close our output file by</span>
+
+<span class="n">dpx</span><span class="o">.</span><span class="n">CloseFile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Additionally, one can use asynchronous versions of <strong>OpenEntry</strong>, <strong>Record</strong>, <strong>CloseEntry</strong>, i.e.
+<strong>OpenEntryAsynch</strong>, <strong>RecordAsynch</strong>, <strong>CloseEntryAsynch</strong>. In this case data is stored
+in a background thread and during this writing Tango Data Server has a state <em>RUNNING</em>.</p>
+<p>In order to build the XML configurations in the easy way the authors of the server provide
+for this purpose a specialized GUI tool, Component Designer.
+The attached to the server XML examples
+was created by XMLFile class defined in XMLCreator/simpleXML.py.</p>
+</div>
+</div>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nxswriter.html">nxswriter package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.ClientSource">nxswriter.ClientSource module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.DBaseSource">nxswriter.DBaseSource module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.DataHolder">nxswriter.DataHolder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.DataSourceFactory">nxswriter.DataSourceFactory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.DataSourcePool">nxswriter.DataSourcePool module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.DataSources">nxswriter.DataSources module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.DecoderPool">nxswriter.DecoderPool module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.EAttribute">nxswriter.EAttribute module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.EField">nxswriter.EField module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.EGroup">nxswriter.EGroup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.ELink">nxswriter.ELink module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.EStrategy">nxswriter.EStrategy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.Element">nxswriter.Element module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.ElementThread">nxswriter.ElementThread module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.Errors">nxswriter.Errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.FElement">nxswriter.FElement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.FetchNameHandler">nxswriter.FetchNameHandler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.H5Elements">nxswriter.H5Elements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.InnerXMLParser">nxswriter.InnerXMLParser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.Types">nxswriter.Types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nxswriter.html" title="nxswriter package"
+             >next</a> |</li>
+        <li><a href="#">NXSDataWriter 2.2.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+
+GNU GENERAL PUBLIC LICENSE, version 3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
