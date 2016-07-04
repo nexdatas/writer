@@ -51,6 +51,7 @@ class TangoDataWriter(object):
 
         :brief: It initialize the data writer for the H5 output file
         :param server: Tango server
+        :type server: :class:`PyTango.Device_4Impl`
         """
         #: (:obj:`str`) output file name
         self.fileName = ""
