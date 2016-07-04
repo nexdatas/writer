@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "June 30, 2016" "2.2" "NXSDataWriter"
+.TH "NXSWRITER" "1" "July 04, 2016" "2.2" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -40,7 +40,7 @@ The server provides storing data from other Tango devices, various databases
 as well as passed by a user client via JSON strings.
 .nf
 Source code: \fI\%https://github.com/nexdatas/writer\fP
-Web page: \fI\%http://www.desy.de/~jkotan/nxswriter\fP
+Web page: \fI\%https://nexdatas.github.io/writer\fP
 .fi
 .sp
 .SH INSTALLATION
@@ -809,7 +809,7 @@ sets the parrameters up from xml
 Definitions of DB datasource
 .INDENT 0.0
 .TP
-.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq, \(aqORACLE\(aq]
+.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq]
 (\fI\%list\fP) list of available databases
 .UNINDENT
 .INDENT 0.0
@@ -1142,7 +1142,7 @@ True if it the datasource is registered
 .INDENT 7.0
 .TP
 .B lock = None
-(\fI\%threading.Lock\fP) pool lock
+(\fBthreading.Lock\fP) pool lock
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2913,7 +2913,7 @@ True if the operation allowed
 .INDENT 7.0
 .TP
 .B lock = None
-(\fI\%threading.Lock\fP) thread lock
+(\fBthreading.Lock\fP) thread lock
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3427,7 +3427,7 @@ constructor
 It initialize the data writer for the H5 output file
 .TP
 .B Parameters
-\fBserver\fP \-\- Tango server
+\fBserver\fP (\fI\%PyTango.Device_4Impl\fP) \-\- Tango server
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3793,7 +3793,7 @@ TgDevice instance of tango device
 .INDENT 7.0
 .TP
 .B lock = None
-(\fI\%threading.Lock\fP) threading lock
+(\fBthreading.Lock\fP) threading lock
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
