@@ -173,6 +173,7 @@ An example of usage:
    </field>
 
 The tag can have the following attributes:
+
 + **mode** specifies when the data is fetched, i.e.
     - *INIT* during opening a new entry
     - *STEP* when the record() command is performed
