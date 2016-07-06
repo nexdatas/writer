@@ -21,14 +21,14 @@ Installation
 
 Install the dependencies:
 
-    pni-libraries, PyTango, numpy
+|    pni-libraries, PyTango, numpy
 
 From sources
 """"""""""""
 
 Download the latest NexDaTaS version from
 
-    https://github.com/nexdatas/writer
+|    https://github.com/nexdatas/writer
 
 Extract sources and run
 
@@ -126,20 +126,20 @@ The aim of this project is to implement a Tango server that manages data IO
 for synchrotron (and maybe neutron) beamlines. The server should satisfy the
 following requirements
 
-  * remove responsibility for data IO from the beamline control client
-  * provide a simple configuration mechanism via NXDL
-  * read data from the following sources without client interaction
-      # SQL databases (MySQL, Postgres, Oracle, DB2, ...)
-      # other TANGO servers
-      # JSON records (important for the interaction with the client and SARDANA)
-  * the first implementation of the server will be written in Python
-  * the communication model of the first implementation will be strictly synchronous
-      (future version most probably will support other communication models too)
-  * the control client software has full control over the behavior of the server
-      via TANGO commands
-  * only low data-rate sources will be handled directly by the server. High data-rate
-  * sources will write their data independently and additional software will add this data
-     to the Nexus file produced by the server once the experiment is finished.
+* remove responsibility for data IO from the beamline control client
+* provide a simple configuration mechanism via NXDL
+* read data from the following sources without client interaction
+    # SQL databases (MySQL, Postgres, Oracle, DB2, ...)
+    # other TANGO servers
+    # JSON records (important for the interaction with the client and SARDANA)
+* the first implementation of the server will be written in Python
+* the communication model of the first implementation will be strictly synchronous
+    (future version most probably will support other communication models too)
+* the control client software has full control over the behavior of the server
+    via TANGO commands
+* only low data-rate sources will be handled directly by the server. High data-rate
+* sources will write their data independently and additional software will add this data
+   to the Nexus file produced by the server once the experiment is finished.
 
 The server should make it easy to implement control clients which write Nexus files
 as the entire Nexus logic is kept in the server. Clients only produce NXDL configurations
@@ -173,25 +173,25 @@ An example of usage:
    </field>
 
 The tag can have the following attributes:
-  + **mode** specifies when the data is fetched, i.e.
-      - *INIT* during opening a new entry
-      - *STEP* when the record() command is performed
-      - *FINAL* at the time of closing the entry
-      - *POSTRUN* during post-processing stage
-  + **trigger** stands for the name of the related trigger in asynchronous STEP mode (optional)
-  + **grows** selects which a field dimension grows of in the STEP mode. The default growing
-            dimension is the first one, i.e. grows=1 (optional)
-  + **compression** specifies if data is compressed (optional)
-      - *true* data going to be compressed
-      - *false* data stored without compression (default)
-  + **rate** compression rate (optional)
-      - from 0 to 9
-  + **shuffle** compression shuffle (optional)
-      - true shuffle enabled (default)
-      - false shuffle disabled
-  + **canfail** specifies if during reading data exception should be thrown (optional)
-      - false on error exception is raised (default)
-      - true on error warning info is printed and the record is filled by a maximum value
++ **mode** specifies when the data is fetched, i.e.
+    - *INIT* during opening a new entry
+    - *STEP* when the record() command is performed
+    - *FINAL* at the time of closing the entry
+    - *POSTRUN* during post-processing stage
++ **trigger** stands for the name of the related trigger in asynchronous STEP mode (optional)
++ **grows** selects which a field dimension grows of in the STEP mode. The default growing
+          dimension is the first one, i.e. grows=1 (optional)
++ **compression** specifies if data is compressed (optional)
+    - *true* data going to be compressed
+    - *false* data stored without compression (default)
++ **rate** compression rate (optional)
+    - from 0 to 9
++ **shuffle** compression shuffle (optional)
+    - true shuffle enabled (default)
+    - false shuffle disabled
++ **canfail** specifies if during reading data exception should be thrown (optional)
+    - false on error exception is raised (default)
+    - true on error warning info is printed and the record is filled by a maximum value
              for the record type
 
 The **content** of the strategy tags is an label describing data merged into the H5 file by
@@ -217,13 +217,13 @@ and registered via JSON data.
 
 The <datasouce> tag acquires the following attributes:
 
-  + **type** related to a type of data source with possible values:
-      - *CLIENT* for communication with client via JSON strings
-      - *TANGO* for taking data from Tango servers
-      - *DB* for fetching data from databases
-      - *PYEVAL* for evaluating data from other data sources by python script
-      - *other type name* of data source which has been registered via JSON data.
-  + **name** datasource name (optional)
++ **type** related to a type of data source with possible values:
+    - *CLIENT* for communication with client via JSON strings
+    - *TANGO* for taking data from Tango servers
+    - *DB* for fetching data from databases
+    - *PYEVAL* for evaluating data from other data sources by python script
+    - *other type name* of data source which has been registered via JSON data.
++ **name** datasource name (optional)
 
 -----------------
 CLIENT datasource
@@ -244,7 +244,7 @@ a <record /> tag. An example of usage:
 
 The **record** tag defines the fetched data by its name. It has an attrbute
 
-  + **name** which for the CLIENT data source type denotes a name of the data in the JSON string
++ **name** which for the CLIENT data source type denotes a name of the data in the JSON string
 
 An example of usage:
 
@@ -272,15 +272,15 @@ and <record/> tags. An example of usage:
 The **device** tag describes the Tango device which is used to get the data.
 It has the following attributes:
 
-  + **name** corresponding to a name of the Tango device
-  + **member** defining a type of the class member, i.e.
-      - *attribute* an attribute to read
-      - *command* a result of a command to take
-      - *property* a property to read
-  + **hostname** a name of the host with the Tango device server (optional)
-  + **port** a port number related to the Tango device server (optional)
-  + **encoding** a label defining a required decoder for DevEncoded? data (optional)
-  + *group* tango group name (optional)
++ **name** corresponding to a name of the Tango device
++ **member** defining a type of the class member, i.e.
+    - *attribute* an attribute to read
+    - *command* a result of a command to take
+    - *property* a property to read
++ **hostname** a name of the host with the Tango device server (optional)
++ **port** a port number related to the Tango device server (optional)
++ **encoding** a label defining a required decoder for DevEncoded? data (optional)
++ *group* tango group name (optional)
 
 If group attribute is defined data of the same group is read simultaneously and
 only ones during one experimental step.
@@ -313,17 +313,17 @@ and <query> tags. An example of usage:
 The **database** tag specifies parameters to connect to the required database. It acquires
 the attirbutes
 
-  + **dbtype** describing a type of the database, i.e.
-      - *ORACLE* an ORACLE database
-      - *MYSQL* a MySQL database
-      - *PGSQL* a PostgreSQL database
-  + **dbname** denoting a name of the database (optional)
-  + **hostname** being a name of the host with the database (optional)
-  + **port** corresponding to a port number related to the database (optional)
-  + **user** denoting a user name (optional)
-  + **passwd** being a user password (optional)
-  + **mycnf** defining a location of the my.cnf file with MySQL database access configuration (optional)
-  + **node** corresponding to a node parameter for the ORACLE database(optional)
++ **dbtype** describing a type of the database, i.e.
+    - *ORACLE* an ORACLE database
+    - *MYSQL* a MySQL database
+    - *PGSQL* a PostgreSQL database
++ **dbname** denoting a name of the database (optional)
++ **hostname** being a name of the host with the database (optional)
++ **port** corresponding to a port number related to the database (optional)
++ **user** denoting a user name (optional)
++ **passwd** being a user password (optional)
++ **mycnf** defining a location of the my.cnf file with MySQL database access configuration (optional)
++ **node** corresponding to a node parameter for the ORACLE database(optional)
 
 The **content** of the database tag defines Oracle DSN string (optional)
 
@@ -332,11 +332,11 @@ The **content** of the database tag defines Oracle DSN string (optional)
 
 The **query** tag defines the database query which fetches the data. It has one attribute
 
-  + **format** which specifies a dimension of the fetch data, i.e.
-      - *SCALAR* corresponds to 0-dimensional data, e.g. a separate numerical value or string
-      - *SPECTRUM* is related to 1-dimensional data, e.g. a list of numerical values or strings
-      - *IMAGE* describes 2-dimensional data, i.e. a table of specific type values,
-                e.g. a table of strings
++ **format** which specifies a dimension of the fetch data, i.e.
+    - *SCALAR* corresponds to 0-dimensional data, e.g. a separate numerical value or string
+    - *SPECTRUM* is related to 1-dimensional data, e.g. a list of numerical values or strings
+    - *IMAGE* describes 2-dimensional data, i.e. a table of specific type values,
+	      e.g. a table of strings
 
 The **content** of the query tags is the SQL query.
 Another example of usage:
@@ -386,7 +386,7 @@ i.e. ds.name.
 
 The **result** contains python script which evaluates input data. It has the following attribute:
 
-  + **name** corresponding to a result name. It is related to python script variable by ds.name.
++ **name** corresponding to a result name. It is related to python script variable by ds.name.
 
 The default value **name** ="result". (optional)
 
