@@ -345,17 +345,19 @@ The other ones are nested inside &lt;datasource/&gt; tag.</p>
 <span class="nt">&lt;/field&gt;</span>
 </pre></div>
 </div>
-<p>The tag can have the following attributes:
-+ <strong>mode</strong> specifies when the data is fetched, i.e.</p>
-<blockquote>
-<div><ul class="simple">
+<p>The tag can have the following attributes:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>mode</strong> specifies when the data is fetched, i.e.</dt>
+<dd><ul class="first last simple">
 <li><em>INIT</em> during opening a new entry</li>
 <li><em>STEP</em> when the record() command is performed</li>
 <li><em>FINAL</em> at the time of closing the entry</li>
 <li><em>POSTRUN</em> during post-processing stage</li>
 </ul>
-</div></blockquote>
-<ul>
+</dd>
+</dl>
+</li>
 <li><p class="first"><strong>trigger</strong> stands for the name of the related trigger in asynchronous STEP mode (optional)</p>
 </li>
 <li><dl class="first docutils">
