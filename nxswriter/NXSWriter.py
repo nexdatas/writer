@@ -204,17 +204,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
                 self.state_flag = state
             PyTango.Device_4Impl.set_state(self, self.state_flag)
 
-    def get_state(self):
-        """ get_state method
-
-        :returns: State Code
-        :rtype: :class:`PyTango.DevState`
-        """
-        with self.lock:
-            PyTango.Device_4Impl.set_state(self, self.state_flag)
-            PyTango.Device_4Impl.get_state(self)
-            return self.state_flag
-
     def dev_state(self):
         """ dev_state method
 
@@ -225,7 +214,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             PyTango.Device_4Impl.set_state(self, self.state_flag)
             if self.state_flag != PyTango.DevState.ALARM:
                 PyTango.Device_4Impl.dev_state(self)
-        return PyTango.Device_4Impl.get_state(self)
+            return PyTango.Device_4Impl.get_state(self)
 
     def always_executed_hook(self):
         """ Always excuted hook method

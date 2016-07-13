@@ -1,3 +1,7 @@
+2016-07-13 Jan Kotanski <jankotan@gmail.com>
+	* remove override get_state
+	* tagged as 2.2.5
+
 2016-06-30 Jan Kotanski <jankotan@gmail.com>
 	* refresh dev_state and dev_status
 	* tagged as 2.2.4
