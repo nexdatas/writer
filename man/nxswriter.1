@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "July 04, 2016" "2.2" "NXSDataWriter"
+.TH "NXSWRITER" "1" "July 13, 2016" "2.2" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -36,29 +36,28 @@ Authors: Jan Kotanski, Eugen Wintersberger, Halil Pasic
 .sp
 NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.
 .sp
-The server provides storing data from other Tango devices, various databases
-as well as passed by a user client via JSON strings.
+The server provides storing data from other Tango devices,
+various databases as well as passed by a user client via JSON strings.
 .nf
 Source code: \fI\%https://github.com/nexdatas/writer\fP
-Web page: \fI\%https://nexdatas.github.io/writer\fP
+Project Web page: \fI\%https://nexdatas.github.io/writer\fP
+NexDaTaS Web page: \fI\%https://nexdatas.github.io\fP
 .fi
 .sp
 .SH INSTALLATION
 .sp
 Install the dependencies:
-.INDENT 0.0
-.INDENT 3.5
+.nf
 pni\-libraries, PyTango, numpy
-.UNINDENT
-.UNINDENT
+.fi
+.sp
 .SS From sources
 .sp
 Download the latest NexDaTaS version from
-.INDENT 0.0
-.INDENT 3.5
+.nf
 \fI\%https://github.com/nexdatas/writer\fP
-.UNINDENT
-.UNINDENT
+.fi
+.sp
 .sp
 Extract sources and run
 .INDENT 0.0
@@ -167,472 +166,6 @@ $ python setup.py install
 .fi
 .UNINDENT
 .UNINDENT
-.SH GENERAL OVERVIEW
-.sp
-All operations carried out on a beamline are orchestrated by the control client (CC),
-a software operated by the beamline\-scientist and/or a user. Although the term client
-suggests that it is only a minor component aside from all the hardware control servers,
-databases, and whatever software is running on a beamline it is responsible for all
-the other components and tells them what to do at which point in time. In terms of
-an orchestra the CC is the director which tells each group of instruments or individual
-artist what to do at a certain point in time.
-.sp
-It is important to understand the role of the CC in the entire software system on a beamline
-as it determines who is responsible for certain operations. The CC might be a simple
-single script running on the control PC which can is configured by the user before start
-or it might be a whole application of its own like SPEC or ONLINE. Historically it is
-the job of the CC to write the data recorded during the experiment (this is true at least
-for low rate data\-sources). However, with the appearance of complex data formats
-like Nexus the IO code becomes more complex.
-.SH PROJECT GOALS
-.sp
-The aim of this project is to implement a Tango server that manages data IO
-for synchrotron (and maybe neutron) beamlines. The server should satisfy the
-following requirements
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-remove responsibility for data IO from the beamline control client
-.IP \(bu 2
-provide a simple configuration mechanism via NXDL
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B read data from the following sources without client interaction
-# SQL databases (MySQL, Postgres, Oracle, DB2, ...)
-# other TANGO servers
-# JSON records (important for the interaction with the client and SARDANA)
-.UNINDENT
-.IP \(bu 2
-the first implementation of the server will be written in Python
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B the communication model of the first implementation will be strictly synchronous
-(future version most probably will support other communication models too)
-.UNINDENT
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B the control client software has full control over the behavior of the server
-via TANGO commands
-.UNINDENT
-.IP \(bu 2
-only low data\-rate sources will be handled directly by the server. High data\-rate
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B sources will write their data independently and additional software will add this data
-to the Nexus file produced by the server once the experiment is finished.
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The server should make it easy to implement control clients which write Nexus files
-as the entire Nexus logic is kept in the server. Clients only produce NXDL configurations
-or use third party tools for this job. The first Python implementation of
-this server will serve as a proof of concept.
-.sp
-In order to describe various data sources the NXDL standard has been extended by XML tags listed
-below. Thus, <strategy /> and <datasource /> can be situated inside <field/> or <attribute/> tags.
-The other ones are nested inside <datasource/> tag.
-.SH THE <STRATEGY> TAG
-.sp
-The \fBstrategy\fP tag defines when and in which way the data is stored.
-.sp
-An example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<field name="energy" type="NX_FLOAT" units="GeV" >
-  <strategy mode="STEP" trigger="trigger1" />
-  <datasource type="CLIENT">
-   <record name="counter_1"/>
-  </datasource>
-</field>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.INDENT 0.0
-.TP
-.B The tag can have the following attributes:
-.INDENT 7.0
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBmode\fP specifies when the data is fetched, i.e.
-.INDENT 7.0
-.IP \(bu 2
-\fIINIT\fP during opening a new entry
-.IP \(bu 2
-\fISTEP\fP when the record() command is performed
-.IP \(bu 2
-\fIFINAL\fP at the time of closing the entry
-.IP \(bu 2
-\fIPOSTRUN\fP during post\-processing stage
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-\fBtrigger\fP stands for the name of the related trigger in asynchronous STEP mode (optional)
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBgrows\fP selects which a field dimension grows of in the STEP mode. The default growing
-dimension is the first one, i.e. grows=1 (optional)
-.UNINDENT
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBcompression\fP specifies if data is compressed (optional)
-.INDENT 7.0
-.IP \(bu 2
-\fItrue\fP data going to be compressed
-.IP \(bu 2
-\fIfalse\fP data stored without compression (default)
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBrate\fP compression rate (optional)
-.INDENT 7.0
-.IP \(bu 2
-from 0 to 9
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBshuffle\fP compression shuffle (optional)
-.INDENT 7.0
-.IP \(bu 2
-true shuffle enabled (default)
-.IP \(bu 2
-false shuffle disabled
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBcanfail\fP specifies if during reading data exception should be thrown (optional)
-.INDENT 7.0
-.IP \(bu 2
-false on error exception is raised (default)
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B true on error warning info is printed and the record is filled by a maximum value
-for the record type
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The \fBcontent\fP of the strategy tags is an label describing data merged into the H5 file by
-a post\-processing program.
-.sp
-Another example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<field name="energy" type="NX_FLOAT" units="GeV" >
-  <strategy mode="POSTRUN" >
-    http://haso.desy.de:/data/energy.dat
-  </strategy>
-</field>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SH THE <DATASOURCE> TAG
-.sp
-The \fBdatasource\fP tag specifies a type of the used data sources. They can be one of built types,
-i.e. CLIENT, TANGO, DB, PYEVAL or external ones \-\- defined in external python package
-and registered via JSON data.
-.sp
-The <datasouce> tag acquires the following attributes:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBtype\fP related to a type of data source with possible values:
-.INDENT 7.0
-.IP \(bu 2
-\fICLIENT\fP for communication with client via JSON strings
-.IP \(bu 2
-\fITANGO\fP for taking data from Tango servers
-.IP \(bu 2
-\fIDB\fP for fetching data from databases
-.IP \(bu 2
-\fIPYEVAL\fP for evaluating data from other data sources by python script
-.IP \(bu 2
-\fIother type name\fP of data source which has been registered via JSON data.
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-\fBname\fP datasource name (optional)
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.SH CLIENT DATASOURCE
-.sp
-The \fBCLIENT\fP datasource allows to read data from client JSON strings. It should contain
-a <record /> tag. An example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<datasource type="CLIENT" name="exp_c01">
-  <record name="counter_1"/>
-</datasource>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS <record>
-.sp
-The \fBrecord\fP tag defines the fetched data by its name. It has an attrbute
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBname\fP which for the CLIENT data source type denotes a name of the data in the JSON string
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-An example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<record name="Position"/>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS TANGO datasource
-.sp
-The \fBTANGO\fP datasource allows to read data from other TANGO devices. It should contain <device/>
-and <record/> tags. An example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<datasource type="TANGO">
-  <device hostname="haso.desy.de" member="attribute" name="p09/motor/exp.01"
-          port="10000" encoding="LIMA_VIDEO_IMAGE"/>
-  <record name="Position"/>
-</datasource>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS <device>
-.sp
-The \fBdevice\fP tag describes the Tango device which is used to get the data.
-It has the following attributes:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBname\fP corresponding to a name of the Tango device
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBmember\fP defining a type of the class member, i.e.
-.INDENT 7.0
-.IP \(bu 2
-\fIattribute\fP an attribute to read
-.IP \(bu 2
-\fIcommand\fP a result of a command to take
-.IP \(bu 2
-\fIproperty\fP a property to read
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-\fBhostname\fP a name of the host with the Tango device server (optional)
-.IP \(bu 2
-\fBport\fP a port number related to the Tango device server (optional)
-.IP \(bu 2
-\fBencoding\fP a label defining a required decoder for DevEncoded? data (optional)
-.IP \(bu 2
-\fIgroup\fP tango group name (optional)
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-If group attribute is defined data of the same group is read simultaneously and
-only ones during one experimental step.
-.SS <record>
-.sp
-The \fBrecord\fP tag defines the fetched data by its name. It has an attrbute
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBname\fP which for the TANGO data source type a name of the tango class member
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.SS DB datasource
-.sp
-The \fIDB\fP datasource allows to read data from accessible databases. It should contain <database />
-and <query> tags. An example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<datasource type="DB">
-  <database dbname="tango" dbtype="MYSQL" hostname="haso.desy.de"/>
-  <query format="SPECTRUM">
-    SELECT pid FROM device limit 10
-  </query>
-</datasource>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS <database>
-.sp
-The \fBdatabase\fP tag specifies parameters to connect to the required database. It acquires
-the attirbutes
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBdbtype\fP describing a type of the database, i.e.
-.INDENT 7.0
-.IP \(bu 2
-\fIORACLE\fP an ORACLE database
-.IP \(bu 2
-\fIMYSQL\fP a MySQL database
-.IP \(bu 2
-\fIPGSQL\fP a PostgreSQL database
-.UNINDENT
-.UNINDENT
-.IP \(bu 2
-\fBdbname\fP denoting a name of the database (optional)
-.IP \(bu 2
-\fBhostname\fP being a name of the host with the database (optional)
-.IP \(bu 2
-\fBport\fP corresponding to a port number related to the database (optional)
-.IP \(bu 2
-\fBuser\fP denoting a user name (optional)
-.IP \(bu 2
-\fBpasswd\fP being a user password (optional)
-.IP \(bu 2
-\fBmycnf\fP defining a location of the my.cnf file with MySQL database access configuration (optional)
-.IP \(bu 2
-\fBnode\fP corresponding to a node parameter for the ORACLE database(optional)
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The \fBcontent\fP of the database tag defines Oracle DSN string (optional)
-.SS <query>
-.sp
-The \fBquery\fP tag defines the database query which fetches the data. It has one attribute
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fBformat\fP which specifies a dimension of the fetch data, i.e.
-.INDENT 7.0
-.IP \(bu 2
-\fISCALAR\fP corresponds to 0\-dimensional data, e.g. a separate numerical value or string
-.IP \(bu 2
-\fISPECTRUM\fP is related to 1\-dimensional data, e.g. a list of numerical values or strings
-.IP \(bu 2
-.INDENT 2.0
-.TP
-.B \fIIMAGE\fP describes 2\-dimensional data, i.e. a table of specific type values,
-e.g. a table of strings
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The \fBcontent\fP of the query tags is the SQL query.
-Another example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<datasource type="DB">
-  <database dbname="mydb" dbtype="PGSQL"/>
-  <query format="IMAGE">
-    SELECT * FROM weather limit 3
-  </query>
-</datasource>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS PYEVAL datasource
-.sp
-The \fBPYEVAL\fP datasource allows to read data from other datasources and evaluate it
-by user python script. An example of usage:
-.INDENT 0.0
-.INDENT 3.5
-.sp
-.nf
-.ft C
-<datasource type="PYEVAL">
-  <datasource type="TANGO" name="position">
-    <device hostname="haso.desy.de" member="attribute" name="p09/motor/exp.01" port="10000"/>
-    <record name="Position"/>
-  </datasource>
-  <datasource type="CLIENT" name="shift">
-    <record name="exp_c01"/>
-  </datasource>
-  <result name="finalposition">
-    ds.finalposition = ds.position + ds.shift
-  </result>
-</datasource>
-.ft P
-.fi
-.UNINDENT
-.UNINDENT
-.SS <datasource>
-.sp
-The \fBPYEVAL\fP datasource can contain other datasources. They have to have defined \fBname\fP attributes.
-Those names with additional prefix \(aqds.\(aq correspond to input variable names from the python script,
-i.e. ds.name.
-.SS <result>
-.sp
-The \fBresult\fP contains python script which evaluates input data. It has the following attribute:
-.INDENT 0.0
-.INDENT 3.5
-.INDENT 0.0
-.IP \(bu 2
-\fBname\fP corresponding to a result name. It is related to python script variable by ds.name.
-.UNINDENT
-.UNINDENT
-.UNINDENT
-.sp
-The default value \fBname\fP ="result". (optional)
 .SH CLIENT CODE
 .sp
 In order to use Nexus Data Server one has to write a client code. Some simple client codes
@@ -2051,7 +1584,7 @@ constructor
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
-\fBh5object\fP (\fI\%pni.io.nx.h5.nxfield\fP         :               \fI\%pni.io.nx.h5.nxgroup\fP         :               \fI\%pni.io.nx.h5.nxlink\fP         :               \fI\%pni.io.nx.h5.nxattribute\fP         :               \fI\%pni.io.nx.h5.nxfile\fP) \-\- H5 file object
+\fBh5object\fP (\fI\%pni.io.nx.h5.nxfield\fP or                         \fI\%pni.io.nx.h5.nxgroup\fP or                         \fI\%pni.io.nx.h5.nxlink\fP or                         \fI\%pni.io.nx.h5.nxattribute\fP or                         \fI\%pni.io.nx.h5.nxfile\fP) \-\- H5 file object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2067,11 +1600,7 @@ constructor
 .INDENT 7.0
 .TP
 .B h5Object = None
-.INDENT 7.0
-.TP
-.B (\fI\%pni.io.nx.h5.nxfield\fP 
-\fI\%pni.io.nx.h5.nxgroup\fP \fI\%pni.io.nx.h5.nxlink\fP \fI\%pni.io.nx.h5.nxattribute\fP \fI\%pni.io.nx.h5.nxfile\fP) stored H5 file object
-.UNINDENT
+(\fI\%pni.io.nx.h5.nxfield\fP or 
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2735,19 +2264,6 @@ Status description
 .TP
 .B errors = None
 (\fBlist\(ga<:obj:\(gastr\fP>) list with errors
-.UNINDENT
-.INDENT 7.0
-.TP
-.B get_state()
-get_state method
-.INDENT 7.0
-.TP
-.B Returns
-State Code
-.TP
-.B Return type
-\fI\%PyTango.DevState\fP
-.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
