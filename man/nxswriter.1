@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "July 13, 2016" "2.2" "NXSDataWriter"
+.TH "NXSWRITER" "1" "September 06, 2016" "2.2" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -342,7 +342,7 @@ sets the parrameters up from xml
 Definitions of DB datasource
 .INDENT 0.0
 .TP
-.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq]
+.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq, \(aqORACLE\(aq]
 (\fI\%list\fP) list of available databases
 .UNINDENT
 .INDENT 0.0
@@ -2832,7 +2832,7 @@ writes debug message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- debug message
 .IP \(bu 2
-\fBstd\fP (\fI\%str\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -2848,7 +2848,7 @@ writes error message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- error message
 .IP \(bu 2
-\fBstd\fP (\fI\%str\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -2864,7 +2864,7 @@ writes fatal error message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- error message
 .IP \(bu 2
-\fBstd\fP (\fI\%str\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -2880,7 +2880,7 @@ writes info message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- info message
 .IP \(bu 2
-\fBstd\fP (\fI\%str\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
@@ -2921,7 +2921,7 @@ writes warning message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- warning message
 .IP \(bu 2
-\fBstd\fP (\fI\%str\fP) \-\- True if it writes to sys stream
+\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
 .UNINDENT
 .UNINDENT
