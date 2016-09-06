@@ -190,7 +190,6 @@ comments related to the client code.
 
    dpx.CloseFile()
 
-
 Additionally, one can use asynchronous versions of **OpenEntry**, **Record**, **CloseEntry**, i.e.
 **OpenEntryAsynch**, **RecordAsynch**, **CloseEntryAsynch**. In this case data is stored
 in a background thread and during this writing Tango Data Server has a state *RUNNING*.

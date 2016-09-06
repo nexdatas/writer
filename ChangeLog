@@ -1,3 +1,7 @@
+2016-09-06 Jan Kotanski <jankotan@gmail.com>
+	* add set_source to device proxies
+	* tagged as 2.2.6
+
 2016-07-13 Jan Kotanski <jankotan@gmail.com>
 	* remove override get_state
 	* tagged as 2.2.5

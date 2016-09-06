@@ -68,6 +68,7 @@ class CommandThread(Thread):
         #: (:obj:`list` <:obj:`str`>) command arguments
         self.args = args if isinstance(args, list) else []
         self.dp = PyTango.DeviceProxy(self.server.get_name())
+        self.dp.set_source(PyTango.DevSource.DEV)
 
     def run(self):
         """ runs the given command on the server and changes the state on exit

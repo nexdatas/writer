@@ -57,6 +57,7 @@ class ProxyTools(object):
 
         try:
             proxy = PyTango.DeviceProxy(device)
+            proxy.set_source(PyTango.DevSource.DEV)
 
         except:
             Streams.error(
