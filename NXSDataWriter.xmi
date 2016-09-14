@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
   <classes name="NXSDataWriter" pogoRevision="8.1">
-    <description description="NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.&#xA;&#xA;The server provides storing data from other Tango devices,&#xA;various databases as well as passed by a user client via JSON strings.&#xA;&#xA;Source code: https://github.com/nexdatas/writer&#xA;Project Web page: https://nexdatas.github.io/writer&#xA;NexDaTaS Web page: https://nexdatas.github.io" title="NeXus Data Writer" sourcePath="/home/jkotan/ndts/nexdatas.writer" language="Python" filestogenerate="XMI   file,Code files,html Pages" license="GPL" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
+    <description description="NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.&#xA;&#xA;The server provides storing data from other Tango devices,&#xA;various databases as well as passed by a user client via JSON strings.&#xA;&#xA;Source code: https://github.com/nexdatas/writer&#xA;Project Web page: https://nexdatas.github.io/writer&#xA;NexDaTaS Web page: https://nexdatas.github.io" title="NeXus Data Writer" sourcePath="/home/jkotan/ndts/nexdatas.writer" language="Python" filestogenerate="XMI   file,html Pages" license="GPL" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at desy.de - jan.kotanski" author="jan.kotanski" emailDomain="desy.de" classFamily="Acquisition" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="DESY" reference=""/>
     </description>
@@ -28,7 +28,7 @@
       </argout>
       <status abstract="true" inherited="true" concrete="true" concreteHere="true"/>
     </commands>
-    <commands name="OpenFile" description="" execMethod="open_file" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="OpenFile" description="Opens the H5 file" execMethod="open_file" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -40,7 +40,7 @@
       <excludedStates>EXTRACT</excludedStates>
       <excludedStates>RUNNING</excludedStates>
     </commands>
-    <commands name="OpenEntry" description="" execMethod="open_entry" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="OpenEntry" description="Creates the new entry" execMethod="open_entry" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -54,7 +54,7 @@
       <excludedStates>RUNNING</excludedStates>
       <excludedStates>FAULT</excludedStates>
     </commands>
-    <commands name="Record" description="" execMethod="record" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="Record" description="Records data for one scan step" execMethod="record" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="JSON string with data">
         <type xsi:type="pogoDsl:StringType"/>
       </argin>
@@ -68,7 +68,7 @@
       <excludedStates>RUNNING</excludedStates>
       <excludedStates>FAULT</excludedStates>
     </commands>
-    <commands name="CloseEntry" description="" execMethod="close_entry" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="CloseEntry" description="Closes the entry" execMethod="close_entry" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -81,7 +81,7 @@
       <excludedStates>OPEN</excludedStates>
       <excludedStates>RUNNING</excludedStates>
     </commands>
-    <commands name="OpenEntryAsynch" description="" execMethod="open_entry_asynch" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="OpenEntryAsynch" description="Creates the new entry in asynchronous mode" execMethod="open_entry_asynch" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -95,7 +95,7 @@
       <excludedStates>RUNNING</excludedStates>
       <excludedStates>FAULT</excludedStates>
     </commands>
-    <commands name="RecordAsynch" description="" execMethod="record_asynch" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="RecordAsynch" description="Records data for one scan step in asynchronous mode" execMethod="record_asynch" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="JSON string with data">
         <type xsi:type="pogoDsl:StringType"/>
       </argin>
@@ -109,7 +109,7 @@
       <excludedStates>RUNNING</excludedStates>
       <excludedStates>FAULT</excludedStates>
     </commands>
-    <commands name="CloseEntryAsynch" description="" execMethod="close_entry_asynch" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="CloseEntryAsynch" description="Closes the entry is asynchronous mode" execMethod="close_entry_asynch" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>
@@ -122,7 +122,7 @@
       <excludedStates>OPEN</excludedStates>
       <excludedStates>RUNNING</excludedStates>
     </commands>
-    <commands name="CloseFile" description="" execMethod="close_file" displayLevel="OPERATOR" polledPeriod="0">
+    <commands name="CloseFile" description="Closes the H5 file" execMethod="close_file" displayLevel="OPERATOR" polledPeriod="0">
       <argin description="">
         <type xsi:type="pogoDsl:VoidType"/>
       </argin>

@@ -384,7 +384,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def OpenFile(self):
         """OpenFile command
 
-        :brief: Open the H5 file
+        :brief: Opens the H5 file
         """
         self.debug_stream("In OpenFile()")
 
@@ -423,7 +423,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def OpenEntry(self):
         """ OpenEntry command
 
-        :brief: Creating the new entry
+        :brief: Creates the new entry
         """
         self.debug_stream("In OpenEntry()")
 
@@ -461,7 +461,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def Record(self, argin):
         """ Record command
 
-        :brief: Record setting for one step
+        :brief: Records data for one scan step
         :param argin: JSON string with data
         :type argin: :obj:`str`
         """
@@ -498,7 +498,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def CloseEntry(self):
         """ CloseEntry command
 
-        :brief: Closing the entry
+        :brief: Closes the entry
         """
         self.debug_stream("In CloseEntry()")
         state = self.get_state()
@@ -535,7 +535,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def OpenEntryAsynch(self):
         """ OpenEntryAsynch command
 
-        :brief: Creating the new entry in asynchronous mode
+        :brief: Creates the new entry in asynchronous mode
         """
         self.debug_stream("In OpenEntryAsynch()")
         self.set_state(PyTango.DevState.RUNNING)
@@ -562,7 +562,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def RecordAsynch(self, argin):
         """ RecordAsynch command
 
-        :brief: Record setting for one step in asynchronous mode
+        :brief: Records data for one scan step in asynchronous mode
         :param argin:  DevString    JSON string with data
         :type argin: :obj:`str`
         """
@@ -589,7 +589,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
     def CloseEntryAsynch(self):
         """CloseEntryAsynch command
 
-        :brief: Closing the entry is asynchronous mode
+        :brief: Closes the entry is asynchronous mode
         """
         self.debug_stream("In CloseEntryAsynch()")
         state = self.get_state()
