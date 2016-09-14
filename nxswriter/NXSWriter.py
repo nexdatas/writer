@@ -104,7 +104,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             DevState.ON :       NeXuS Data Server is switch on
             DevState.OFF :      NeXuS Data Writer is switch off
             DevState.EXTRACT :  H5 file is open
-            DevState.OPEN :     XML configuration is initialzed
+            DevState.OPEN :     XML configuration is initialized
             DevState.RUNNING :  NeXus Data Server is writing
             DevState.FAULT :    Error state
     """
