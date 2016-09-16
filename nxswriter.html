@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter package &mdash; NXSDataWriter 2.2.6 documentation</title>
+    <title>nxswriter package &mdash; NXSDataWriter 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.2.6',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.2.6 documentation" href="index.html" />
+    <link rel="top" title="NXSDataWriter 2.3.0 documentation" href="index.html" />
     <link rel="prev" title="Welcome to NXSDataWriter’s documentation!" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -655,6 +655,12 @@ is registered</td>
 <dt id="nxswriter.DataSourcePool.DataSourcePool.lock">
 <tt class="descname">lock</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.DataSourcePool.DataSourcePool.lock" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">threading.Lock</span></tt>) pool lock</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nxswriter.DataSourcePool.DataSourcePool.nxroot">
+<tt class="descname">nxroot</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.DataSourcePool.DataSourcePool.nxroot" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">pni.io.nx.h5.nxroot</span></tt>) H5 file handle</p>
 </dd></dl>
 
 <dl class="method">
@@ -2315,7 +2321,7 @@ written as (name, value, shape)</dd>
 DevState.ON :       NeXuS Data Server is switch on
 DevState.OFF :      NeXuS Data Writer is switch off
 DevState.EXTRACT :  H5 file is open
-DevState.OPEN :     XML configuration is initialzed
+DevState.OPEN :     XML configuration is initialized
 DevState.RUNNING :  NeXus Data Server is writing
 DevState.FAULT :    Error state</td>
 </tr>
@@ -2342,7 +2348,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Closing the entry</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Closes the entry</td>
 </tr>
 </tbody>
 </table>
@@ -2356,7 +2362,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Closing the entry is asynchronous mode</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Closes the entry is asynchronous mode</td>
 </tr>
 </tbody>
 </table>
@@ -2384,7 +2390,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Creating the new entry</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Creates the new entry</td>
 </tr>
 </tbody>
 </table>
@@ -2398,7 +2404,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Creating the new entry in asynchronous mode</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Creates the new entry in asynchronous mode</td>
 </tr>
 </tbody>
 </table>
@@ -2412,7 +2418,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Open the H5 file</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Opens the H5 file</td>
 </tr>
 </tbody>
 </table>
@@ -2426,7 +2432,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Record setting for one step</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Records data for one scan step</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argin</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; JSON string with data</td>
 </tr>
@@ -2442,7 +2448,7 @@ DevState.FAULT :    Error state</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Record setting for one step in asynchronous mode</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">Records data for one scan step in asynchronous mode</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argin</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; DevString    JSON string with data</td>
 </tr>
@@ -2872,11 +2878,7 @@ and returns it to the caller.</td>
 <tt class="descname">attr_list</tt><em class="property"> = {'Errors': [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SPECTRUM, PyTango._PyTango.AttrWriteType.READ, 1000], {'description': 'list of errors', 'label': 'list of errors'}], 'JSONRecord': [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SCALAR, PyTango._PyTango.AttrWriteType.READ_WRITE], {'description': 'A JSON string with global client data.', 'Display level': PyTango._PyTango.DispLevel.EXPERT, 'label': 'JSON string with client data'}], 'FileName': [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SCALAR, PyTango._PyTango.AttrWriteType.READ_WRITE], {'description': 'A name of H5 output file with its full path', 'label': 'Output file with its path'}], 'XMLSettings': [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SCALAR, PyTango._PyTango.AttrWriteType.READ_WRITE], {'description': 'An XML string with Nexus configuration.', 'Display level': PyTango._PyTango.DispLevel.EXPERT, 'label': 'XML Configuration'}]}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.attr_list" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>(<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, </dt>
-<dd><dl class="first last docutils">
-<dt>[[ <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, </dt>
-<dd><a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrDataFormat" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrDataFormat</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrWriteType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrWriteType</span></tt></a> ], <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> , any&gt; ] &gt; ) Attribute definitions</dd>
-</dl>
-</dd>
+<dd>[[ <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrDataFormat" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrDataFormat</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrWriteType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrWriteType</span></tt></a>], <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, any&gt; ] &gt; ) Attribute definitions</dd>
 </dl>
 </dd></dl>
 

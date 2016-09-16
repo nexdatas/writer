@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.NXSWriter &mdash; NXSDataWriter 2.2.6 documentation</title>
+    <title>nxswriter.NXSWriter &mdash; NXSDataWriter 2.3.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.2.6',
+        VERSION:     '2.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.2.6 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.3.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -249,7 +249,7 @@
 <span class="sd">            DevState.ON :       NeXuS Data Server is switch on</span>
 <span class="sd">            DevState.OFF :      NeXuS Data Writer is switch off</span>
 <span class="sd">            DevState.EXTRACT :  H5 file is open</span>
-<span class="sd">            DevState.OPEN :     XML configuration is initialzed</span>
+<span class="sd">            DevState.OPEN :     XML configuration is initialized</span>
 <span class="sd">            DevState.RUNNING :  NeXus Data Server is writing</span>
 <span class="sd">            DevState.FAULT :    Error state</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -529,7 +529,7 @@
 <div class="viewcode-block" id="NXSDataWriter.OpenFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.OpenFile">[docs]</a>    <span class="k">def</span> <span class="nf">OpenFile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;OpenFile command</span>
 
-<span class="sd">        :brief: Open the H5 file</span>
+<span class="sd">        :brief: Opens the H5 file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In OpenFile()&quot;</span><span class="p">)</span>
 
@@ -568,7 +568,7 @@
 <div class="viewcode-block" id="NXSDataWriter.OpenEntry"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.OpenEntry">[docs]</a>    <span class="k">def</span> <span class="nf">OpenEntry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; OpenEntry command</span>
 
-<span class="sd">        :brief: Creating the new entry</span>
+<span class="sd">        :brief: Creates the new entry</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In OpenEntry()&quot;</span><span class="p">)</span>
 
@@ -606,7 +606,7 @@
 <div class="viewcode-block" id="NXSDataWriter.Record"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.Record">[docs]</a>    <span class="k">def</span> <span class="nf">Record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argin</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Record command</span>
 
-<span class="sd">        :brief: Record setting for one step</span>
+<span class="sd">        :brief: Records data for one scan step</span>
 <span class="sd">        :param argin: JSON string with data</span>
 <span class="sd">        :type argin: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -643,7 +643,7 @@
 <div class="viewcode-block" id="NXSDataWriter.CloseEntry"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.CloseEntry">[docs]</a>    <span class="k">def</span> <span class="nf">CloseEntry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; CloseEntry command</span>
 
-<span class="sd">        :brief: Closing the entry</span>
+<span class="sd">        :brief: Closes the entry</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In CloseEntry()&quot;</span><span class="p">)</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
@@ -680,7 +680,7 @@
 <div class="viewcode-block" id="NXSDataWriter.OpenEntryAsynch"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.OpenEntryAsynch">[docs]</a>    <span class="k">def</span> <span class="nf">OpenEntryAsynch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; OpenEntryAsynch command</span>
 
-<span class="sd">        :brief: Creating the new entry in asynchronous mode</span>
+<span class="sd">        :brief: Creates the new entry in asynchronous mode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In OpenEntryAsynch()&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
@@ -707,7 +707,7 @@
 <div class="viewcode-block" id="NXSDataWriter.RecordAsynch"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.RecordAsynch">[docs]</a>    <span class="k">def</span> <span class="nf">RecordAsynch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argin</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; RecordAsynch command</span>
 
-<span class="sd">        :brief: Record setting for one step in asynchronous mode</span>
+<span class="sd">        :brief: Records data for one scan step in asynchronous mode</span>
 <span class="sd">        :param argin:  DevString    JSON string with data</span>
 <span class="sd">        :type argin: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -734,7 +734,7 @@
 <div class="viewcode-block" id="NXSDataWriter.CloseEntryAsynch"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.CloseEntryAsynch">[docs]</a>    <span class="k">def</span> <span class="nf">CloseEntryAsynch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;CloseEntryAsynch command</span>
 
-<span class="sd">        :brief: Closing the entry is asynchronous mode</span>
+<span class="sd">        :brief: Closes the entry is asynchronous mode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In CloseEntryAsynch()&quot;</span><span class="p">)</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
@@ -848,10 +848,9 @@
     <span class="p">}</span>
 
     <span class="c">#: (:obj:`dict` &lt;:obj:`str`, \</span>
-    <span class="c">#:       [[ :class:`PyTango.CmdArgType`, \</span>
-    <span class="c">#:          :class:`PyTango.AttrDataFormat`, \</span>
-    <span class="c">#:          :class:`PyTango.AttrWriteType` ], \</span>
-    <span class="c">#:          :obj:`dict` &lt;:obj:`str` , any&gt; ] &gt; ) Attribute definitions</span>
+    <span class="c">#:  [[ :class:`PyTango.CmdArgType`, :class:`PyTango.AttrDataFormat`, \</span>
+    <span class="c">#:  :class:`PyTango.AttrWriteType`], :obj:`dict` &lt;:obj:`str`, any&gt; ] &gt; ) \</span>
+    <span class="c">#:  Attribute definitions</span>
     <span class="n">attr_list</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s">&#39;XMLSettings&#39;</span><span class="p">:</span>
         <span class="p">[[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevString</span><span class="p">,</span>
