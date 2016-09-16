@@ -42,6 +42,8 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
+from pni.io.nx.h5 import create_file
+
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -812,6 +814,35 @@ ds.res = commonblock["myres"]
 
 
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_common_h5obj(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+
+        f = create_file(fname, False)
+
+        try:
+            rt = f.root()
+            script = 'ds.res2 = id(commonblock["__nxroot__"])'
+            dp = DataSourcePool()
+            dp.nxroot = rt
+            dspid = id(dp.nxroot)
+
+            ds = PyEvalSource()
+            ds.setDataSources(dp)
+            self.assertTrue(isinstance(ds, DataSource))
+            self.myAssertRaise(DataSourceSetupError, ds.getData)
+            self.assertEqual(ds.setup("""
+<datasource>
+ <result name='res2'>%s</result>
+</datasource>""" % script ), None)
+            dt = ds.getData()
+            self.checkData(dt, "SCALAR", dspid,"DevLong64",[])
+        finally:
+            f.close()
+            os.remove(fname)
 
     ## setup test
     # \brief It tests default settings

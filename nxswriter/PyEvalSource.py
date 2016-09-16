@@ -248,6 +248,9 @@ class PyEvalSource(DataSource):
             self.__lock = self.__pool.common['PYEVAL']["lock"]
             if "common" not in self.__pool.common['PYEVAL'].keys():
                 self.__pool.common['PYEVAL']["common"] = {}
+                if self.__pool.nxroot is not None:
+                    self.__pool.common['PYEVAL']["common"]["__nxroot__"] = \
+                        self.__pool.nxroot
             self.__common = self.__pool.common['PYEVAL']["common"]
 
         finally:

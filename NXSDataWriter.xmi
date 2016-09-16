@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ASCII"?>
+<pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
+  <classes name="NXSDataWriter" pogoRevision="8.1">
+    <description description="NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.&#xA;&#xA;The server provides storing data from other Tango devices,&#xA;various databases as well as passed by a user client via JSON strings.&#xA;&#xA;Source code: https://github.com/nexdatas/writer&#xA;Project Web page: https://nexdatas.github.io/writer&#xA;NexDaTaS Web page: https://nexdatas.github.io" title="NeXus Data Writer" sourcePath="/home/jkotan/ndts/nexdatas.writer" language="Python" filestogenerate="XMI   file,html Pages" license="GPL" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
+      <inheritances classname="Device_Impl" sourcePath=""/>
+      <identification contact="at desy.de - jan.kotanski" author="jan.kotanski" emailDomain="desy.de" classFamily="Acquisition" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="DESY" reference=""/>
+    </description>
+    <deviceProperties name="NumberOfThreads" description="maximal number of threads">
+      <type xsi:type="pogoDsl:IntType"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <DefaultPropValue>100</DefaultPropValue>
+    </deviceProperties>
+    <commands name="State" description="This command gets the device state (stored in its device_state data member) and returns it to the caller." execMethod="dev_state" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="none">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="Device state">
+        <type xsi:type="pogoDsl:StateType"/>
+      </argout>
+      <status abstract="true" inherited="true" concrete="true" concreteHere="true"/>
+    </commands>
+    <commands name="Status" description="This command gets the device status (stored in its device_status data member) and returns it to the caller." execMethod="dev_status" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="none">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="Device status">
+        <type xsi:type="pogoDsl:ConstStringType"/>
+      </argout>
+      <status abstract="true" inherited="true" concrete="true" concreteHere="true"/>
+    </commands>
+    <commands name="OpenFile" description="Opens the H5 file" execMethod="open_file" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>EXTRACT</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+    </commands>
+    <commands name="OpenEntry" description="Creates the new entry" execMethod="open_entry" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>EXTRACT</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+      <excludedStates>FAULT</excludedStates>
+    </commands>
+    <commands name="Record" description="Records data for one scan step" execMethod="record" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="JSON string with data">
+        <type xsi:type="pogoDsl:StringType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>OPEN</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+      <excludedStates>FAULT</excludedStates>
+    </commands>
+    <commands name="CloseEntry" description="Closes the entry" execMethod="close_entry" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>OPEN</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+    </commands>
+    <commands name="OpenEntryAsynch" description="Creates the new entry in asynchronous mode" execMethod="open_entry_asynch" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>EXTRACT</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+      <excludedStates>FAULT</excludedStates>
+    </commands>
+    <commands name="RecordAsynch" description="Records data for one scan step in asynchronous mode" execMethod="record_asynch" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="JSON string with data">
+        <type xsi:type="pogoDsl:StringType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>OPEN</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+      <excludedStates>FAULT</excludedStates>
+    </commands>
+    <commands name="CloseEntryAsynch" description="Closes the entry is asynchronous mode" execMethod="close_entry_asynch" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>OPEN</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+    </commands>
+    <commands name="CloseFile" description="Closes the H5 file" execMethod="close_file" displayLevel="OPERATOR" polledPeriod="0">
+      <argin description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argin>
+      <argout description="">
+        <type xsi:type="pogoDsl:VoidType"/>
+      </argout>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <excludedStates>ON</excludedStates>
+      <excludedStates>OFF</excludedStates>
+      <excludedStates>RUNNING</excludedStates>
+    </commands>
+    <attributes name="XMLSettings" attType="Scalar" rwType="READ_WRITE" displayLevel="EXPERT" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
+      <dataType xsi:type="pogoDsl:StringType"/>
+      <changeEvent fire="false" libCheckCriteria="false"/>
+      <archiveEvent fire="false" libCheckCriteria="false"/>
+      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <properties description="An XML string with Nexus configuration." label="XML Configuration" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <readExcludedStates>OFF</readExcludedStates>
+      <readExcludedStates>EXTRACT</readExcludedStates>
+      <readExcludedStates>RUNNING</readExcludedStates>
+      <writeExcludedStates>OFF</writeExcludedStates>
+      <writeExcludedStates>EXTRACT</writeExcludedStates>
+      <writeExcludedStates>RUNNING</writeExcludedStates>
+    </attributes>
+    <attributes name="JSONRecord" attType="Scalar" rwType="READ_WRITE" displayLevel="EXPERT" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
+      <dataType xsi:type="pogoDsl:StringType"/>
+      <changeEvent fire="false" libCheckCriteria="false"/>
+      <archiveEvent fire="false" libCheckCriteria="false"/>
+      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <properties description="A JSON string with global client data." label="JSON string with client data" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <readExcludedStates>OFF</readExcludedStates>
+      <readExcludedStates>RUNNING</readExcludedStates>
+      <writeExcludedStates>OFF</writeExcludedStates>
+      <writeExcludedStates>RUNNING</writeExcludedStates>
+    </attributes>
+    <attributes name="FileName" attType="Scalar" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
+      <dataType xsi:type="pogoDsl:StringType"/>
+      <changeEvent fire="false" libCheckCriteria="false"/>
+      <archiveEvent fire="false" libCheckCriteria="false"/>
+      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <properties description="A name of H5 output file with its full path" label="Output file with its path" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <readExcludedStates>OFF</readExcludedStates>
+      <readExcludedStates>EXTRACT</readExcludedStates>
+      <readExcludedStates>OPEN</readExcludedStates>
+      <readExcludedStates>RUNNING</readExcludedStates>
+      <writeExcludedStates>OFF</writeExcludedStates>
+      <writeExcludedStates>EXTRACT</writeExcludedStates>
+      <writeExcludedStates>OPEN</writeExcludedStates>
+      <writeExcludedStates>RUNNING</writeExcludedStates>
+    </attributes>
+    <attributes name="Errors" attType="Spectrum" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="1000" maxY="" allocReadMember="true" isDynamic="false">
+      <dataType xsi:type="pogoDsl:StringType"/>
+      <changeEvent fire="false" libCheckCriteria="false"/>
+      <archiveEvent fire="false" libCheckCriteria="false"/>
+      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <properties description="list of errors" label="list of errors" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+    </attributes>
+    <states name="ON" description="NeXuS Data Server is switch on">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <states name="OFF" description="NeXuS Data Writer is switch off">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <states name="EXTRACT" description="H5 file is open">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <states name="OPEN" description="XML configuration is initialized">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <states name="RUNNING" description="NeXus Data Server is writing">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <states name="FAULT" description="Error state">
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+    </states>
+    <preferences docHome="./doc_html" makefileHome="/usr/share/pogo/preferences"/>
+  </classes>
+</pogoDsl:PogoSystem>

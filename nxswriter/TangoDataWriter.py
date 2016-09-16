@@ -234,6 +234,7 @@ class TangoDataWriter(object):
         if self.xmlsettings:
             # flag for INIT mode
             self.__datasources.counter = -1
+            self.__datasources.nxroot = self.__nxRoot
             errorHandler = sax.ErrorHandler()
             parser = sax.make_parser()
 

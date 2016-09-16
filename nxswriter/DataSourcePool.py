@@ -49,6 +49,8 @@ class DataSourcePool(object):
         self.common = {}
         #: (:obj:`int`) step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2;
         self.counter = 0
+        #: (:class:`pni.io.nx.h5.nxroot`) H5 file handle
+        self.nxroot = None
         #: (:class:`threading.Lock`) pool lock
         self.lock = threading.Lock()
 

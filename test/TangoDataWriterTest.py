@@ -82,6 +82,36 @@ class TangoDataWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        self._scanXml2 = """
+<definition>
+  <group type="NXentry" name="entry1">
+    <field units="m" type="NX_CHAR" name="nxrootstr">
+      <strategy mode="INIT"/>
+      <datasource type="PYEVAL">
+        <result name='res2'>ds.res2 = commonblock["__nxroot__"].filename</result>
+      </datasource>
+    </field>
+    <field units="m" type="NX_CHAR" name="nxrootpath">
+      <strategy mode="INIT"/>
+      <datasource type="PYEVAL">
+        <result name='res2'>ds.res2 = (commonblock["__nxroot__"]).path</result>
+      </datasource>
+    </field>
+    <field units="m" type="NX_CHAR" name="nxrootlink">
+      <strategy mode="FINAL"/>
+      <datasource type="PYEVAL">
+        <result name='res2'>
+import pni.io.nx.h5 as nx
+root = commonblock["__nxroot__"]
+en = root.open("entry1")
+nx.link("/entry1/nxrootpath", en, "mylink")
+ds.res2 = str(root.is_valid)
+        </result>
+      </datasource>
+    </field>
+  </group>
+</definition>
+"""
         self._counter =  [0.1, 0.2]
         self._mca1 = [e*0.1 for e in range(2048)]
         self._mca2 = [(float(e)/(100.+e)) for e in range(2048)]
@@ -399,8 +429,9 @@ class TangoDataWriterTest(unittest.TestCase):
     ## openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
+        fun = sys._getframe().f_code.co_name
         print "Run: TangoDataWriterTest.test_openEntry() "
-        fname = "test.h5"
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             tdw = TangoDataWriter()
@@ -868,6 +899,117 @@ class TangoDataWriterTest(unittest.TestCase):
 
             os.remove(fname)
 #            pass
+
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_nxrootlink(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        try:
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
+            tdw.openFile()
+            mfl = tdw.getFile()
+            rt = mfl.root()
+            print(id(rt))
+            tdw.xmlsettings = self._scanXml2 
+            tdw.openEntry()
+
+            
+
+            tdw.record()
+
+            tdw.record()
+
+            tdw.closeEntry()
+
+            tdw.closeFile()
+           
+
+
+
+             # check the created file
+            
+            f = open_file(fname,readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 2)
+            
+            en = f.open("entry1")
+            self.assertTrue(en.is_valid)
+            self.assertEqual(en.name,"entry1")
+            self.assertEqual(len(en.attributes),1)
+            self.assertEqual(en.size, 4)
+
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXentry")
+
+
+            cnt = en.open("nxrootstr")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"nxrootstr")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (1,))
+            self.assertEqual(cnt.dtype, "string")
+            self.assertEqual(cnt.size, 1)
+            value = cnt[:]
+            self.assertEqual(fname, value)
+
+
+            cnt = en.open("nxrootpath")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"nxrootpath")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (1,))
+            self.assertEqual(cnt.dtype, "string")
+            self.assertEqual(cnt.size, 1)
+            value = cnt[:]
+            self.assertEqual('/', value)
+
+            cnt = en.open("nxrootlink")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"nxrootlink")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (1,))
+            self.assertEqual(cnt.dtype, "string")
+            self.assertEqual(cnt.size, 1)
+            value = cnt[:]
+            self.assertEqual('True', value)
+
+            cnt = en.open("mylink")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"mylink")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (1,))
+            self.assertEqual(cnt.dtype, "string")
+            self.assertEqual(cnt.size, 1)
+            value = cnt[:]
+            self.assertEqual('/', value)
+            
+
+
+
+
+            f.close()
+
+        finally:
+            os.remove(fname)
+
 
 
 if __name__ == '__main__':
