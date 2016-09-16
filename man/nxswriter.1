@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "September 16, 2016" "2.2" "NXSDataWriter"
+.TH "NXSWRITER" "1" "September 16, 2016" "2.3" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -676,6 +676,11 @@ True if it the datasource is registered
 .TP
 .B lock = None
 (\fBthreading.Lock\fP) pool lock
+.UNINDENT
+.INDENT 7.0
+.TP
+.B nxroot = None
+(\fBpni.io.nx.h5.nxroot\fP) H5 file handle
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2112,7 +2117,7 @@ Device States Description:
 DevState.ON :       NeXuS Data Server is switch on
 DevState.OFF :      NeXuS Data Writer is switch off
 DevState.EXTRACT :  H5 file is open
-DevState.OPEN :     XML configuration is initialzed
+DevState.OPEN :     XML configuration is initialized
 DevState.RUNNING :  NeXus Data Server is writing
 DevState.FAULT :    Error state
 .UNINDENT
@@ -2135,7 +2140,7 @@ CloseEntry command
 .INDENT 7.0
 .TP
 .B Brief
-Closing the entry
+Closes the entry
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2145,7 +2150,7 @@ CloseEntryAsynch command
 .INDENT 7.0
 .TP
 .B Brief
-Closing the entry is asynchronous mode
+Closes the entry is asynchronous mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2165,7 +2170,7 @@ OpenEntry command
 .INDENT 7.0
 .TP
 .B Brief
-Creating the new entry
+Creates the new entry
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2175,7 +2180,7 @@ OpenEntryAsynch command
 .INDENT 7.0
 .TP
 .B Brief
-Creating the new entry in asynchronous mode
+Creates the new entry in asynchronous mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2185,7 +2190,7 @@ OpenFile command
 .INDENT 7.0
 .TP
 .B Brief
-Open the H5 file
+Opens the H5 file
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2195,7 +2200,7 @@ Record command
 .INDENT 7.0
 .TP
 .B Brief
-Record setting for one step
+Records data for one scan step
 .TP
 .B Parameters
 \fBargin\fP (\fI\%str\fP) \-\- JSON string with data
@@ -2208,7 +2213,7 @@ RecordAsynch command
 .INDENT 7.0
 .TP
 .B Brief
-Record setting for one step in asynchronous mode
+Records data for one scan step in asynchronous mode
 .TP
 .B Parameters
 \fBargin\fP (\fI\%str\fP) \-\- DevString    JSON string with data
