@@ -1,3 +1,7 @@
+2016-09-XX Jan Kotanski <jankotan@gmail.com>
+	* update man page
+	* tagged as 2.3.1
+
 2016-09-16 Jan Kotanski <jankotan@gmail.com>
 	* add __nxroot__ object into PYEVAL "commonblock"
 	* tagged as 2.3.0
