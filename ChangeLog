@@ -1,3 +1,7 @@
+2016-09-16 Jan Kotanski <jankotan@gmail.com>
+	* add __nxroot__ object into PYEVAL "commonblock"
+	* tagged as 2.3.0
+
 2016-09-06 Jan Kotanski <jankotan@gmail.com>
 	* add set_source to device proxies
 	* tagged as 2.2.6
