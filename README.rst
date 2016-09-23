@@ -181,7 +181,7 @@ comments related to the client code.
 
    # After scanning experiment data in 'STEP' mode we close the entry.
    # To this end we call the CloseEntry method which also stores data defined
-   # with strategy=FINAL. Since our HDF5 file can contains many entries we can again
+   # with strategy=FINAL. Since our HDF5 file can contain many entries we can again
    # open the entry and repeat our record procedure. If we define more than one entry
    # in one XML setting string the defined entries are recorded parallel
    # with the same steps.
