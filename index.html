@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to NXSDataWriter’s documentation! &mdash; NXSDataWriter 2.3.0 documentation</title>
+    <title>Welcome to NXSDataWriter’s documentation! &mdash; NXSDataWriter 2.3.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.3.0',
+        VERSION:     '2.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.3.0 documentation" href="#" />
+    <link rel="top" title="NXSDataWriter 2.3.1 documentation" href="#" />
     <link rel="next" title="nxswriter package" href="nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -189,7 +189,7 @@ various databases as well as passed by a user client via JSON strings.</p>
 <div class="line"><a class="reference external" href="https://github.com/nexdatas/writer">https://github.com/nexdatas/writer</a></div>
 </div>
 <p>Extract sources and run</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ python setup.py install
+<div class="code console highlight-python"><div class="highlight"><pre>$ python setup.py install
 </pre></div>
 </div>
 </div>
@@ -197,26 +197,26 @@ various databases as well as passed by a user client via JSON strings.</p>
 <h3>Debian packages<a class="headerlink" href="#debian-packages" title="Permalink to this headline">¶</a></h3>
 <p>Debian Jessie (and Wheezy) packages can be found in the HDRI repository.</p>
 <p>To install the debian packages, add the PGP repository key</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ sudo su
+<div class="code console highlight-python"><div class="highlight"><pre>$ sudo su
 $ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
 </pre></div>
 </div>
 <p>and then download the corresponding source list</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ cd /etc/apt/sources.list.d
+<div class="code console highlight-python"><div class="highlight"><pre>$ cd /etc/apt/sources.list.d
 $ wget http://repos.pni-hdri.de/jessie-pni-hdri.list
 </pre></div>
 </div>
 <p>Finally,</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get update
+<div class="code console highlight-python"><div class="highlight"><pre>$ apt-get update
 $ apt-get install python-nxswriter
 </pre></div>
 </div>
 <p>To instal other NexDaTaS packages</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
+<div class="code console highlight-python"><div class="highlight"><pre>$ apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
 </pre></div>
 </div>
 <p>and</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+<div class="code console highlight-python"><div class="highlight"><pre>$ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
 </pre></div>
 </div>
 <p>for Component Selector and Sardana related packages.</p>
@@ -224,7 +224,7 @@ $ apt-get install python-nxswriter
 <div class="section" id="setting-nexus-writer-server">
 <h3>Setting NeXus Writer Server<a class="headerlink" href="#setting-nexus-writer-server" title="Permalink to this headline">¶</a></h3>
 <p>To set up  NeXus Writer Server run</p>
-<div class="code bash highlight-python"><div class="highlight"><pre>$ nxsetup -x NXSDataWriter
+<div class="code console highlight-python"><div class="highlight"><pre>$ nxsetup -x NXSDataWriter
 </pre></div>
 </div>
 <p>The <em>nxsetup</em> command comes from the <strong>python-nxstools</strong> package.</p>
@@ -314,7 +314,7 @@ comments related to the client code.</p>
 
 <span class="c"># After scanning experiment data in &#39;STEP&#39; mode we close the entry.</span>
 <span class="c"># To this end we call the CloseEntry method which also stores data defined</span>
-<span class="c"># with strategy=FINAL. Since our HDF5 file can contains many entries we can again</span>
+<span class="c"># with strategy=FINAL. Since our HDF5 file can contain many entries we can again</span>
 <span class="c"># open the entry and repeat our record procedure. If we define more than one entry</span>
 <span class="c"># in one XML setting string the defined entries are recorded parallel</span>
 <span class="c"># with the same steps.</span>
