@@ -189,7 +189,7 @@ various databases as well as passed by a user client via JSON strings.</p>
 <div class="line"><a class="reference external" href="https://github.com/nexdatas/writer">https://github.com/nexdatas/writer</a></div>
 </div>
 <p>Extract sources and run</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ python setup.py install
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python setup.py install
 </pre></div>
 </div>
 </div>
@@ -197,26 +197,26 @@ various databases as well as passed by a user client via JSON strings.</p>
 <h3>Debian packages<a class="headerlink" href="#debian-packages" title="Permalink to this headline">¶</a></h3>
 <p>Debian Jessie (and Wheezy) packages can be found in the HDRI repository.</p>
 <p>To install the debian packages, add the PGP repository key</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ sudo su
-$ wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | apt-key add -
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> sudo su
+<span class="gp">$</span> wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg <span class="p">|</span> apt-key add -
 </pre></div>
 </div>
 <p>and then download the corresponding source list</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ cd /etc/apt/sources.list.d
-$ wget http://repos.pni-hdri.de/jessie-pni-hdri.list
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd</span> /etc/apt/sources.list.d
+<span class="gp">$</span> wget http://repos.pni-hdri.de/jessie-pni-hdri.list
 </pre></div>
 </div>
 <p>Finally,</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ apt-get update
-$ apt-get install python-nxswriter
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get update
+<span class="gp">$</span> apt-get install python-nxswriter
 </pre></div>
 </div>
 <p>To instal other NexDaTaS packages</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get install python-nxstools nxsconfigserver-db python-nxsconfigserver nxsconfigtool
 </pre></div>
 </div>
 <p>and</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> apt-get install python-nxsrecselector nxselector python-sardana-nxsrecorder
 </pre></div>
 </div>
 <p>for Component Selector and Sardana related packages.</p>
@@ -224,7 +224,7 @@ $ apt-get install python-nxswriter
 <div class="section" id="setting-nexus-writer-server">
 <h3>Setting NeXus Writer Server<a class="headerlink" href="#setting-nexus-writer-server" title="Permalink to this headline">¶</a></h3>
 <p>To set up  NeXus Writer Server run</p>
-<div class="code console highlight-python"><div class="highlight"><pre>$ nxsetup -x NXSDataWriter
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> nxsetup -x NXSDataWriter
 </pre></div>
 </div>
 <p>The <em>nxsetup</em> command comes from the <strong>python-nxstools</strong> package.</p>
