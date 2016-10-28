@@ -599,7 +599,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ScalarLong64", "int64", "NX_INT64",
             [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarULong64", "uint64", "NX_UINT",
             [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
