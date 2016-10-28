@@ -301,18 +301,18 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             [self._counter[i] if not i%2 else numpy.iinfo(getattr(numpy, 'int64')).max 
              for i in range(len(self._counter))], 
             attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ) 
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ) 
         self._sc.checkSingleScalarField(det, "init64", "int64", "NX_INT64", self._counter[0])
         self._sc.checkSingleScalarField(det, "final32", "uint32", "NX_UINT32", abs(self._counter[0]))
         self._sc.checkSingleScalarField(
             det, "final32_canfail", "int32", "NX_INT32", numpy.iinfo(getattr(numpy, 'int32')).max , 
             attrs = {"type":"NX_INT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleScalarField(
             det, "init64_canfail", "int64", "NX_INT64", 
             numpy.iinfo(getattr(numpy, 'int64')).max , 
             attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
         self._sc.checkPostScalarField(det, "postrun_counter32", "int32", "NX_INT32", 
                                       "https://haso.desy.de/counters/counter32.dat" )
        
@@ -559,17 +559,17 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             [self._fcounter[i] if not i%2 else numpy.finfo(getattr(numpy, 'float64')).max 
              for i in range(len(self._fcounter))], 
             attrs = {"type":"NX_NUMBER","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ) 
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ) 
         self._sc.checkSingleScalarField(
             det, "init_64_canfail", "float64", "NX_FLOAT64", 
             numpy.finfo(getattr(numpy, 'float64')).max , 
             attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleScalarField(
             det, "final_32_canfail", "float32", "NX_FLOAT32", 
             numpy.finfo(getattr(numpy, 'float32')).max , 
             attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
         f.close()
         os.remove(fname)
 
@@ -694,16 +694,16 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "string_time_canfail", "string", "NX_CHAR", 
             [dates[i] if not i%2 else ''for i in range(len(dates))], 
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ) 
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ) 
 
         self._sc.checkSingleScalarField(
             det, "final_string_canfail", "string", "NX_CHAR", '', 
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleScalarField(
             det, "init_flag_canfail", "bool", "NX_BOOLEAN", False, 
             attrs = {"type":"NX_BOOLEAN","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
 
 
         self._sc.checkSingleScalarField(det, "init_string", "string", "NX_CHAR", dates[0]) 
@@ -949,7 +949,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                       for i in range(len(self._mca1[j]))] for j in range(len(self._mca1))  ],
                                     grows = 1 ,attrs = {
                                         "type":"NX_INT16","units":"",
-                                        "nexdatas_strategy": None,"nexdatas_source":None,
+                                        "nexdatas_strategy": "STEP","nexdatas_source":None,
                                         "nexdatas_canfail":"FAILED"} )
 
 
@@ -958,19 +958,19 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                        numpy.iinfo(getattr(numpy, 'uint32')).max ) 
                                       for i in range(len(self._mca1[j]))] for j in range(len(self._mca1))  ],
                                     grows = 2 ,attrs = {
-                                        "type":"NX_UINT32","units":"", "nexdatas_strategy": None,
-                                        "nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
+                                        "type":"NX_UINT32","units":"", "nexdatas_strategy": "STEP",
+                                        "nexdatas_source": None, "nexdatas_canfail":"FAILED"} )
 
         self._sc.checkSingleSpectrumField(
             det, "final_mca_uint32_canfail", "uint32", "NX_UINT32",             
             [numpy.iinfo(getattr(numpy, 'uint32')).max]*256 , 
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleSpectrumField(
             det, "init_mca_int64_canfail", "int64", "NX_INT64",
             [numpy.iinfo(getattr(numpy, 'int64')).max]*256 , 
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
 
         
         f.close()
@@ -1157,12 +1157,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "init_mca_float32_canfail", "float32", "NX_FLOAT32",
             [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]), 
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleSpectrumField(
             det, "final_mca_float64_canfail", "float64", "NX_FLOAT64",
             [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[0]), 
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkSpectrumField(
             det, "mca_float32_canfail", "float32", "NX_FLOAT32", 
@@ -1171,7 +1171,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
               for i in range(len(self._fmca1[j]))] for j in range(len(self._fmca1))  ],
             grows = 2 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-6)
 
 
@@ -1182,7 +1182,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
               for i in range(len(self._fmca1[j]))] for j in range(len(self._fmca1))  ],
             grows = 1 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-6)
 
 
@@ -1411,12 +1411,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "init_string_time_canfail", 
             "string", "NX_CHAR", ['']*len(dates[0]),
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleSpectrumField(
             det, "final_flags_canfail", "bool", 
             "NX_BOOLEAN", [False]*len(logical[0]),
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
 
         self._sc.checkSingleSpectrumField(det, "final_string_time", "string", "NX_CHAR", dates[0])
         self._sc.checkSingleSpectrumField(det, "init_flags", "bool", "NX_BOOLEAN", logical[0])
@@ -1428,7 +1428,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
               for i in range(len(logical[j]))] for j in range(len(logical))  ],
             grows = 1 ,
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
 
         self._sc.checkSpectrumField(
@@ -1437,7 +1437,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
               for i in range(len(dates[j]))] for j in range(len(dates))  ],
             attrs = {
                 "type": "NX_CHAR","units":"","nexdatas_source":None,
-                "nexdatas_canfail":"FAILED", "nexdatas_strategy": None},
+                "nexdatas_canfail":"FAILED", "nexdatas_strategy": "STEP"},
             grows=2
         )
 
@@ -1865,13 +1865,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "init_pco_int64_canfail",  "int64", "NX_INT64", 
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco] for rpco in self._pco1[0]],
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
         
         self._sc.checkSingleImageField(
             det, "final_pco_uint_canfail",  "uint64", "NX_UINT", 
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco] for rpco in self._pco1[0]],
             attrs = {"type":"NX_UINT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
         
         self._sc.checkImageField(
             det, "pco_uint8_canfail", "uint8", "NX_UINT8", 
@@ -1880,7 +1880,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in self._pco1[j]] for j in range(len(self._pco1))  ],
             grows = 3 ,
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkImageField(
             det, "pco_uint16_canfail", "uint16", "NX_UINT16", 
@@ -1889,7 +1889,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in self._pco1[j]] for j in range(len(self._pco1))  ],
             grows = 1 ,
             attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
         self._sc.checkImageField(
             det, "pco_uint32_canfail", "uint32", "NX_UINT32", 
             [[[((el+100)/2 if not j%2 else 
@@ -1897,7 +1897,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in self._pco1[j]] for j in range(len(self._pco1))  ],
             grows = 2 ,
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
 
 
@@ -2083,13 +2083,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "init_pco_float32_canfail", "float32", "NX_FLOAT32", 
             [[numpy.finfo(getattr(numpy, 'float32')).max for el in rpco] for rpco in self._fpco1[0]],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-6)
         self._sc.checkSingleImageField(
             det, "final_pco_float64_canfail", "float64", "NX_FLOAT64", 
             [[numpy.finfo(getattr(numpy, 'float64')).max for el in rpco] for rpco in self._fpco1[0]],
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-14)
 
 
@@ -2100,7 +2100,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in self._fpco1[j]] for j in range(len(self._fpco1))  ],
             grows = 2 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-6)
         self._sc.checkImageField(
             det, "pco_float64_canfail", "float64", "NX_FLOAT64", 
@@ -2109,7 +2109,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in self._fpco1[j]] for j in range(len(self._fpco1))  ],
             grows = 3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-14)
         self._sc.checkImageField(
             det, "pco_number_canfail", "float64", "NX_NUMBER", 
@@ -2118,7 +2118,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in self._fpco1[j]] for j in range(len(self._fpco1))  ],
             grows = 1 ,
             attrs = {"type":"NX_NUMBER","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1.0e-14)
 
 
@@ -2380,12 +2380,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "final_string_time_canfail", "string", "NX_CHAR", 
             [['' for el in rpco] for rpco in dates[0]],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleImageField(
             det, "init_flags_canfail", "bool", "NX_BOOLEAN", 
             [[False for el in rpco] for rpco in logical[0]],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
 
         self._sc.checkImageField(
             det, "flags_canfail", "bool", "NX_BOOLEAN", 
@@ -2393,7 +2393,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in logical[j]] for j in range(len(logical))  ],
             grows = 3 ,
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
 
 
         self._sc.checkImageField(
@@ -2402,14 +2402,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                for el in rpco] for rpco in dates[j]] for j in range(len(dates))  ],
             attrs = {
             "type":"NX_CHAR","units":"","nexdatas_source":None,
-                "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=2)
         self._sc.checkImageField(
             det, "time_canfail", "string", "NX_DATE_TIME", 
             [[[(el if not j%2 else '' )
                for el in rpco] for rpco in dates[j]] for j in range(len(dates))  ],
             attrs = {"type":"NX_DATE_TIME","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
 
 
         

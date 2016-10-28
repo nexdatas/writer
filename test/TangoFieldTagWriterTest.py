@@ -569,32 +569,32 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ScalarBoolean", "bool", "NX_BOOLEAN",
             [(Types.Converters.toBool(self._bools[i]) if i%2 else False) for  i in range(steps)],
             attrs = {"type":"NX_BOOLEAN","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarUChar", "uint8", "NX_UINT8",
             [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint8')).max) for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarShort", "int16", "NX_INT16",
             [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int16')).max) for  i in range(steps)],
             attrs = {"type":"NX_INT16","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarUShort", "uint16", "NX_UINT16",
             [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint16')).max) for  i in range(steps)],
             attrs = {"type":"NX_UINT16","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarLong", "int64", "NX_INT",
             [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_INT","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarULong", "uint64", "NX_UINT",
             [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarLong64", "int64", "NX_INT64",
             [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
@@ -604,19 +604,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ScalarULong64", "uint64", "NX_UINT",
             [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkScalarField(
             det, "ScalarFloat", "float32", "NX_FLOAT32",
             [(self._fcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float32')).max) for  i in range(steps)],
             attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1e-6)
 
         self._sc.checkScalarField(
             det, "ScalarDouble", "float64", "NX_FLOAT64",
             [(self._dcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float64')).max) for  i in range(steps)],
             attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} ,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} ,
             error = 1e-14)
 
 
@@ -624,26 +624,26 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ScalarString", "string", "NX_CHAR",
             [(self._bools[i] if i%2 else '') for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkScalarField(
             det, "ScalarEncoded", "string", "NX_CHAR",
             [("Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" if i%2 else '') for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkScalarField(
             det, "ScalarEncoded_MUTF8", "string", "NX_CHAR",
             [("Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b" if i%2 else '') for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
 
         self._sc.checkScalarField(
             det, "ScalarState", "string", "NX_CHAR",
             [("ON" if i%2 else '') for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
 
 
@@ -653,12 +653,12 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "InitScalarULong", "uint32", "NX_UINT32",
             numpy.iinfo(getattr(numpy, 'uint32')).max,
             attrs = {"type":"NX_UINT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSingleScalarField(
             det, "FinalScalarDouble", "float64", "NX_FLOAT64",
             numpy.finfo(getattr(numpy, 'float64')).max,
             attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
 
 
 
@@ -904,27 +904,27 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "SpectrumBoolean", "bool", "NX_BOOLEAN",
             [(self._logical[i] if not i%2 else [False]*len(self._logical[i])) for  i in range(steps)],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
         self._sc.checkSpectrumField(
             det, "SpectrumUChar", "uint8", "NX_UINT8",
             [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._mca2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumShort", "int16", "NX_INT16",
             [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._mca1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=3)
         self._sc.checkSpectrumField(
             det, "SpectrumUShort", "uint16", "NX_UINT16",
             [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._mca2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=2)
 
 
@@ -933,13 +933,13 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
         self._sc.checkSpectrumField(
             det, "SpectrumULong", "uint32", "NX_UINT32",
             [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._mca2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=1)
 
 
@@ -949,14 +949,14 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumULong64", "uint64", "NX_UINT64",
             [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=2)
 
 
@@ -966,7 +966,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [(self._fmca1[i] if not i%2 else  [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=0, error = 1e-6)
 
         self._sc.checkSpectrumField(
@@ -974,7 +974,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [(self._fmca1[i] if not i%2 else  [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows=1, error = 1e-14)
 
 
@@ -985,7 +985,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [(self._dates[i] if not i%2 else  ['']*len(self._dates[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
         # writing encoded attributes not supported for PyTango 7.2.3
 
@@ -994,26 +994,26 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32",
             [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkSingleSpectrumField(
             det, "InitSpectrumLong64", "int64", "NX_INT64",
             [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[0]),
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
 
         self._sc.checkSingleSpectrumField(
             det, "FinalSpectrumFloat", "float32", "NX_FLOAT32",
             [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]),
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"},
             error =1.0e-06)
 
 
@@ -1760,7 +1760,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             det, "ImageBoolean", "bool", "NX_BOOLEAN",
             [(self._logical2[i] if not i%2 else [[False]*len(self._logical2[i][0])]*len(self._logical2[i])) for  i in range(steps)],
             attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"} )
 
 
         self._sc.checkImageField(
@@ -1769,7 +1769,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 2 )
 
         self._sc.checkImageField(
@@ -1778,7 +1778,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 3 )
         self._sc.checkImageField(
             det, "ImageUShort", "uint16", "NX_UINT16",
@@ -1786,7 +1786,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 1 )
 
 
@@ -1796,7 +1796,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 2 )
         self._sc.checkImageField(
             det, "ImageULong", "uint32", "NX_UINT32",
@@ -1804,7 +1804,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 3 )
 
 
@@ -1814,7 +1814,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 1 )
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64",
@@ -1822,7 +1822,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 2 )
 
 
@@ -1832,7 +1832,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 3, error = 1.0e-6 )
         self._sc.checkImageField(
             det, "ImageDouble", "float64", "NX_FLOAT64",
@@ -1840,7 +1840,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 1, error = 1.0e-14 )
 
 
@@ -1851,7 +1851,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [['']*len(self._dates2[i][0])]*len(self._dates2[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
 
 
         self._sc.checkImageField(
@@ -1860,7 +1860,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 3 )
 
 
@@ -1870,19 +1870,19 @@ class TangoFieldTagWriterTest(unittest.TestCase):
               [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
              for  i in range(steps)],
             attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
             grows = 3 )
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64",
              [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]) ,
             attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32",
             [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[0][0])]*len(self._fpco1[0]),
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
 
 
 
