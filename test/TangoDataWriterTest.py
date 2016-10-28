@@ -27,11 +27,11 @@ from pni.io.nx.h5 import open_file
 
 from  xml.sax import SAXParseException
 
-from nxswriter import TangoDataWriter 
-from nxswriter.TangoDataWriter  import TangoDataWriter 
+from nxswriter import TangoDataWriter
+from nxswriter.TangoDataWriter  import TangoDataWriter
 import struct
 
-    
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -48,7 +48,7 @@ class TangoDataWriterTest(unittest.TestCase):
 <definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
-      <attribute name ="short_name"> scan instrument </attribute> 
+      <attribute name ="short_name"> scan instrument </attribute>
       <group type="NXdetector" name="detector">
         <field units="m" type="NX_FLOAT" name="counter1">
           <strategy mode="STEP"/>
@@ -137,7 +137,7 @@ ds.res2 = str(root.is_valid)
 
     ## Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
@@ -164,12 +164,12 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
-            
+
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
             self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
-            
+
             tdw.closeFile()
             self.assertEqual(tdw.fileName, fname)
             self.assertEqual(tdw.xmlsettings, "")
@@ -178,7 +178,7 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             self.assertTrue(tdw.getFile() is None)
-            
+
 
             # check the created file
 
@@ -192,7 +192,7 @@ ds.res2 = str(root.is_valid)
 #                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
+#            print ""
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -225,7 +225,7 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
-            
+
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
             self.assertTrue(tdw.getFile().is_valid)
@@ -245,7 +245,7 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             self.assertTrue(tdw.getFile() is None)
-            
+
 
             # check the created file
 
@@ -259,7 +259,7 @@ ds.res2 = str(root.is_valid)
 #                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
+#            print ""
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -293,7 +293,7 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
-            
+
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
             self.assertTrue(tdw.getFile().is_valid)
@@ -313,7 +313,7 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             self.assertTrue(tdw.getFile() is None)
-            
+
 
             # check the created file
 
@@ -327,7 +327,7 @@ ds.res2 = str(root.is_valid)
 #                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
+#            print ""
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -351,8 +351,8 @@ ds.res2 = str(root.is_valid)
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        
-        directory = '#nexdatas_test_directoryS#' 
+
+        directory = '#nexdatas_test_directoryS#'
         dirCreated = False
         dirExists = False
         if not os.path.exists(directory):
@@ -364,13 +364,13 @@ ds.res2 = str(root.is_valid)
                 pass
         else:
              dirExists = True
-             
+
 
         if dirExists:
-            fname = '%s/%s/%s%s.h5' % (os.getcwd(), directory, self.__class__.__name__, fun )  
+            fname = '%s/%s/%s%s.h5' % (os.getcwd(), directory, self.__class__.__name__, fun )
         else:
-            fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-            
+            fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+
         try:
             tdw = TangoDataWriter()
             tdw.fileName = fname
@@ -380,12 +380,12 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.getFile() is None)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
-            
+
             tdw.openFile()
             self.assertTrue(tdw.getFile() is not None)
             self.assertTrue(tdw.getFile().is_valid)
             self.assertFalse(tdw.getFile().readonly)
-            
+
             tdw.closeFile()
             self.assertEqual(tdw.fileName, fname)
             self.assertEqual(tdw.xmlsettings, "")
@@ -394,7 +394,7 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(tdw.numberOfThreads > 0)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
             self.assertTrue(tdw.getFile() is None)
-            
+
 
             # check the created file
 
@@ -407,7 +407,7 @@ ds.res2 = str(root.is_valid)
 #                print at.name,"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
-#            print ""    
+#            print ""
 
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
@@ -453,9 +453,9 @@ ds.res2 = str(root.is_valid)
             self.assertTrue(isinstance(tdw.numberOfThreads,(int, long)))
 
             tdw.closeFile()
-           
+
              # check the created file
-            
+
             f = open_file(fname,readonly=True)
             f = f.root()
 
@@ -484,19 +484,19 @@ ds.res2 = str(root.is_valid)
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
-                        self.assertEqual(at[...],"NXentry")                
+                        self.assertEqual(at[...],"NXentry")
                 else:
                     self.assertEqual(ch.name,"NexusConfigurationLogs")
                     for c in ch:
                         if c.name == "Nexus__entry__1_XML":
                             self.assertEqual(
-                                c.read(), 
+                                c.read(),
                                 '<definition> <group type="NXentry" name="entry"/></definition>')
                             print c.read()
                         else:
                             self.assertEqual(c.name,"python_version")
                             self.assertEqual(c.read(),sys.version)
-                            
+
                     self.assertEqual(len(ch.attributes),1)
                     for at in ch.attributes:
                         self.assertTrue(at.is_valid)
@@ -506,10 +506,10 @@ ds.res2 = str(root.is_valid)
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
-                        self.assertEqual(at[...],"NXcollection")                
-                        
-                    
-                
+                        self.assertEqual(at[...],"NXcollection")
+
+
+
             self.assertEqual(cnt, f.size)
 
             f.close()
@@ -541,7 +541,7 @@ ds.res2 = str(root.is_valid)
                 error = False
             self.assertTrue(error is not None)
             self.assertEqual(error, True)
-                
+
 
 
             try:
@@ -553,14 +553,14 @@ ds.res2 = str(root.is_valid)
             except Exception, e:
                 error = False
             self.assertTrue(error is None)
-                                
+
             tdw.closeEntry()
 
             tdw.closeFile()
-            
+
 
             # check the created file
-            
+
             f = open_file(fname,readonly=True)
             f = f.root()
 
@@ -577,7 +577,7 @@ ds.res2 = str(root.is_valid)
             cnt = 0
             for ch in f:
                 cnt += 1
-                
+
             self.assertEqual(cnt, f.size)
 
             f.close()
@@ -598,7 +598,7 @@ ds.res2 = str(root.is_valid)
         try:
             tdw = TangoDataWriter()
             tdw.fileName = fname
-            
+
             tdw.openFile()
 
             tdw.xmlsettings = self._scanXml % fname
@@ -615,19 +615,19 @@ ds.res2 = str(root.is_valid)
             tdw.closeEntry()
 
             tdw.closeFile()
-           
+
 
 
 
              # check the created file
-            
+
             f = open_file(fname,readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 2)
-            
+
             en = f.open("entry1")
             self.assertTrue(en.is_valid)
             self.assertEqual(en.name,"entry1")
@@ -651,7 +651,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(len(ins.attributes),2)
             self.assertEqual(ins.size, 1)
 
-            
+
             at = ins.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
@@ -676,7 +676,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(det.name,"detector")
             self.assertEqual(len(det.attributes),1)
             self.assertEqual(det.size, 2)
-            
+
             at = det.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
@@ -685,7 +685,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXdetector")
-            
+
 #            cnt = det.open("counter")              # bad exception
             cnt = det.open("counter1")
             self.assertTrue(cnt.is_valid)
@@ -699,11 +699,19 @@ ds.res2 = str(root.is_valid)
 #            value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
-                
 
 
-            self.assertEqual(len(cnt.attributes),3)
-            
+
+            self.assertEqual(len(cnt.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
 
 
 
@@ -737,7 +745,7 @@ ds.res2 = str(root.is_valid)
             mca = det.open("mca")
             self.assertTrue(mca.is_valid)
             self.assertEqual(mca.name,"mca")
-            
+
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
@@ -750,7 +758,17 @@ ds.res2 = str(root.is_valid)
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(len(mca.attributes),3)
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -777,14 +795,14 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(len(at.shape),1)
             self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
-            
+
             dt = en.open("data")
             self.assertTrue(dt.is_valid)
             self.assertEqual(dt.name,"data")
             self.assertEqual(len(dt.attributes),1)
             self.assertEqual(dt.size, 2)
 
-            
+
             at = dt.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
@@ -804,7 +822,7 @@ ds.res2 = str(root.is_valid)
             #            ???
             #            self.assertEqual(cnt.name,"cnt1")
             self.assertEqual(cnt.name,"counter1")
-            
+
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
@@ -814,11 +832,21 @@ ds.res2 = str(root.is_valid)
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
-                
 
 
-            self.assertEqual(len(cnt.attributes),3)
-            
+
+            self.assertEqual(len(cnt.attributes),4)
+
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
 
 
 
@@ -852,7 +880,7 @@ ds.res2 = str(root.is_valid)
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
             self.assertEqual(mca.name,"data")
-            
+
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
@@ -865,7 +893,17 @@ ds.res2 = str(root.is_valid)
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(len(mca.attributes),3)
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -907,7 +945,7 @@ ds.res2 = str(root.is_valid)
     def test_nxrootlink(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         try:
             tdw = TangoDataWriter()
             tdw.fileName = fname
@@ -915,10 +953,10 @@ ds.res2 = str(root.is_valid)
             mfl = tdw.getFile()
             rt = mfl.root()
             print(id(rt))
-            tdw.xmlsettings = self._scanXml2 
+            tdw.xmlsettings = self._scanXml2
             tdw.openEntry()
 
-            
+
 
             tdw.record()
 
@@ -927,19 +965,19 @@ ds.res2 = str(root.is_valid)
             tdw.closeEntry()
 
             tdw.closeFile()
-           
+
 
 
 
              # check the created file
-            
+
             f = open_file(fname,readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 2)
-            
+
             en = f.open("entry1")
             self.assertTrue(en.is_valid)
             self.assertEqual(en.name,"entry1")
@@ -1000,7 +1038,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.size, 1)
             value = cnt[:]
             self.assertEqual('/', value)
-            
+
 
 
 

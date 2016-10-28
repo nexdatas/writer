@@ -191,26 +191,44 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 19)
-        self._sc.checkXMLScalarField(det, "counter", "int64", "NX_INT", mc)
-        self._sc.checkXMLScalarField(det, "counter8", "int8", "NX_INT8", mc)
-        self._sc.checkXMLScalarField(det, "counter16", "int16", "NX_INT16", mc)
-        self._sc.checkXMLScalarField(det, "counter32", "int32", "NX_INT32", mc)
-        self._sc.checkXMLScalarField(det, "counter64", "int64", "NX_INT64", mc)
-        self._sc.checkXMLScalarField(det, "ucounter",  "uint64", "NX_UINT", uc)
-        self._sc.checkXMLScalarField(det, "ucounter8", "uint8", "NX_UINT8", uc)
-        self._sc.checkXMLScalarField(det, "ucounter16", "uint16", "NX_UINT16", uc)
-        self._sc.checkXMLScalarField(det, "ucounter32", "uint32", "NX_UINT32", uc)
-        self._sc.checkXMLScalarField(det, "ucounter64", "uint64", "NX_UINT64",uc)
+        self._sc.checkXMLScalarField(det, "counter", "int64", "NX_INT", mc,
+                                     attrs={"type":"NX_INT", "units":"m"})
+        self._sc.checkXMLScalarField(det, "counter8", "int8", "NX_INT8", mc,
+                                     attrs={"type":"NX_INT8", "units":"m"})
+        self._sc.checkXMLScalarField(det, "counter16", "int16", "NX_INT16", mc,
+                                     attrs={"type":"NX_INT16", "units":"m"})
+        self._sc.checkXMLScalarField(det, "counter32", "int32", "NX_INT32", mc,
+                                     attrs={"type":"NX_INT32", "units":"m"})
+        self._sc.checkXMLScalarField(det, "counter64", "int64", "NX_INT64", mc,
+                                     attrs={"type":"NX_INT64", "units":"m"})
+        self._sc.checkXMLScalarField(det, "ucounter",  "uint64", "NX_UINT", uc,
+                                     attrs={"type":"NX_UINT", "units":"m"})
+        self._sc.checkXMLScalarField(det, "ucounter8", "uint8", "NX_UINT8", uc,
+                                     attrs={"type":"NX_UINT8", "units":"m"})
+        self._sc.checkXMLScalarField(det, "ucounter16", "uint16", "NX_UINT16", uc,
+                                     attrs={"type":"NX_UINT16", "units":"m"})
+        self._sc.checkXMLScalarField(det, "ucounter32", "uint32", "NX_UINT32", uc,
+                                     attrs={"type":"NX_UINT32", "units":"m"})
+        self._sc.checkXMLScalarField(det, "ucounter64", "uint64", "NX_UINT64",uc,
+                                     attrs={"type":"NX_UINT64", "units":"m"})
 
-        self._sc.checkXMLScalarField(det, "float", "float64", "NX_FLOAT", fc, 1.0e-14)
-        self._sc.checkXMLScalarField(det, "float64", "float64", "NX_FLOAT64", fc, 1.0e-14)
-        self._sc.checkXMLScalarField(det, "float32", "float32", "NX_FLOAT32", fc, 1.0e-06)
-        self._sc.checkXMLScalarField(det, "number", "float64", "NX_NUMBER", fc, 1.0e-14)
+        self._sc.checkXMLScalarField(det, "float", "float64", "NX_FLOAT", fc, 1.0e-14,
+                                     attrs={"type":"NX_FLOAT", "units":"m"})
+        self._sc.checkXMLScalarField(det, "float64", "float64", "NX_FLOAT64", fc, 1.0e-14,
+                                     attrs={"type":"NX_FLOAT64", "units":"m"})
+        self._sc.checkXMLScalarField(det, "float32", "float32", "NX_FLOAT32", fc, 1.0e-06,
+                                     attrs={"type":"NX_FLOAT32", "units":"m"})
+        self._sc.checkXMLScalarField(det, "number", "float64", "NX_NUMBER", fc, 1.0e-14,
+                                     attrs={"type":"NX_NUMBER", "units":"m"})
 
-        self._sc.checkXMLScalarField(det, "time", "string", "NX_DATE_TIME", string)
-        self._sc.checkXMLScalarField(det, "isotime", "string", "ISO8601",  string)
-        self._sc.checkXMLScalarField(det, "string_time", "string", "NX_CHAR",  string)
-        self._sc.checkXMLScalarField(det, "flags", "bool", "NX_BOOLEAN", True)
+        self._sc.checkXMLScalarField(det, "time", "string", "NX_DATE_TIME", string,
+                                     attrs={"type":"NX_DATE_TIME", "units":"m"})
+        self._sc.checkXMLScalarField(det, "isotime", "string", "ISO8601",  string,
+                                     attrs={"type":"ISO8601", "units":"m"})
+        self._sc.checkXMLScalarField(det, "string_time", "string", "NX_CHAR",  string,
+                                     attrs={"type":"NX_CHAR", "units":"m"})
+        self._sc.checkXMLScalarField(det, "flags", "bool", "NX_BOOLEAN", True,
+                                     attrs={"type":"NX_BOOLEAN", "units":"m"})
       
         f.close()
         os.remove(fname)
@@ -473,17 +491,25 @@ class XMLFieldTagWriterTest(unittest.TestCase):
         
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 22)
-        self._sc.checkXMLSpectrumField(det, "mca_int", "int64", "NX_INT", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int", "int64", "NX_INT", [1,2,3,4,5],
+                                     attrs={"type":"NX_INT", "units":""})
         self._sc.checkXMLSpectrumField(det, "mca_int8", "int8", "NX_INT8",  [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_int16", "int16", "NX_INT16", [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_int32", "int32", "NX_INT32", [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_int64", "int64", "NX_INT64", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int16", "int16", "NX_INT16", [1,2,3,4,5],
+                                     attrs={"type":"NX_INT16", "units":""})
+        self._sc.checkXMLSpectrumField(det, "mca_int32", "int32", "NX_INT32", [1,2,3,4,5],
+                                     attrs={"type":"NX_INT32", "units":""})
+        self._sc.checkXMLSpectrumField(det, "mca_int64", "int64", "NX_INT64", [1,2,3,4,5],
+                                     attrs={"type":"NX_INT64", "units":""})
         self._sc.checkXMLSpectrumField(det, "mca_uint",  "uint64", "NX_UINT",  [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8",  [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_uint8", "uint8", "NX_UINT8",  [1,2,3,4,5],
+                                     attrs={"type":"NX_UINT8", "units":""})
+        self._sc.checkXMLSpectrumField(det, "mca_uint16", "uint16", "NX_UINT16", [1,2,3,4,5],
+                                     attrs={"type":"NX_UINT16", "units":""})
+        self._sc.checkXMLSpectrumField(det, "mca_uint32", "uint32", "NX_UINT32", [1,2,3,4,5],
+                                     attrs={"type":"NX_UINT32", "units":""})
         self._sc.checkXMLSpectrumField(det, "mca_uint64", "uint64", "NX_UINT64", [1,2,3,4,5])
-        self._sc.checkXMLSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", [1,2,3,4,5])
+        self._sc.checkXMLSpectrumField(det, "mca_int64_dim", "int64", "NX_INT64", [1,2,3,4,5],
+                                     attrs={"type":"NX_INT64", "units":""})
 
 
         self._sc.checkXMLSpectrumField(det, "mca_float", "float64", "NX_FLOAT", spec,
@@ -498,7 +524,8 @@ class XMLFieldTagWriterTest(unittest.TestCase):
                                     error = 1.0e-14)
 
 
-        self._sc.checkXMLSpectrumField(det, "flags", "bool", "NX_BOOLEAN",[True,False,True,False] )
+        self._sc.checkXMLSpectrumField(det, "flags", "bool", "NX_BOOLEAN",
+                                       [True,False,True,False])
         self._sc.checkXMLSpectrumField(det, "time", "string", "NX_DATE_TIME", string)
         self._sc.checkXMLSpectrumField(det, "string_time", "string", "NX_CHAR", string)
         self._sc.checkXMLSpectrumField(det, "isotime", "string", "ISO8601", string)

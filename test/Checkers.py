@@ -340,7 +340,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
-        atts = {"type":nxtype,"units":"m","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"m","nexdatas_source":None, "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
         cnt = det.open(name)
@@ -398,7 +398,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkSingleScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
-        atts = {"type":nxtype,"units":"m","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"m","nexdatas_source":None,"nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
         cnt = det.open(name)
@@ -456,7 +456,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkPostScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
-        atts = {"type":nxtype,"units":"m","postrun":None}
+        atts = {"type":nxtype,"units":"m","postrun":None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -498,7 +498,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkXMLScalarField(self, det, name, dtype, nxtype, values, error = 0, attrs = None):
 
-        atts = {"type":nxtype,"units":"m"}
+        atts = {"type":nxtype,"units":"m", "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -558,7 +558,7 @@ class Checker(object):
     # \param grows growing dimension
     # \param attrs dictionary with string attributes    
     def checkSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
-        atts = {"type":nxtype,"units":"","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"","nexdatas_source":None, "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 
@@ -621,7 +621,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkSingleSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs=None):
 
-        atts = {"type":nxtype,"units":"", "nexdatas_source":None}
+        atts = {"type":nxtype,"units":"", "nexdatas_source":None, "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 
@@ -674,7 +674,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkXMLSpectrumField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
 
-        atts = {"type":nxtype,"units":""}
+        atts = {"type":nxtype,"units":"", "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -725,7 +725,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkStringSpectrumField(self, det, name, dtype, nxtype, values, attrs = None):
 
-        atts = {"type":nxtype,"units":"", "nexdatas_source":None}
+        atts = {"type":nxtype,"units":"", "nexdatas_source":None, "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 
@@ -777,7 +777,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkSingleStringSpectrumField(self, det, name, dtype, nxtype, values, attrs = None):
 
-        atts = {"type":nxtype,"units":"", "nexdatas_source":None}
+        atts = {"type":nxtype,"units":"", "nexdatas_source":None,  "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 
@@ -827,7 +827,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0 ,attrs = None):
 
-        atts = {"type":nxtype,"units":"","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"","nexdatas_source":None, "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 
@@ -890,7 +890,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkSingleImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0, attrs = None):
 
-        atts = {"type":nxtype,"units":"","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"","nexdatas_source":None, "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 
@@ -946,7 +946,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkXMLImageField(self, det, name, dtype, nxtype, values, error = 0, grows = 0 ,attrs = None):
 
-        atts = {"type":nxtype,"units":""}
+        atts = {"type":nxtype,"units":"", "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -997,7 +997,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkStringImageField(self, det, name, dtype, nxtype, values, attrs = None):
 
-        atts = {"type":nxtype,"units":"","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"","nexdatas_source":None,  "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
         
@@ -1048,7 +1048,7 @@ class Checker(object):
     # \param attrs dictionary with string attributes    
     def checkSingleStringImageField(self, det, name, dtype, nxtype, values, attrs= None):
 
-        atts = {"type":nxtype,"units":"","nexdatas_source":None}
+        atts = {"type":nxtype,"units":"","nexdatas_source":None,  "nexdatas_strategy":None}
         if attrs is not None:
             atts = attrs
 

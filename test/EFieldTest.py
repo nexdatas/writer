@@ -1849,7 +1849,8 @@ class EFieldTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                              attrs[k][1], attrs[k][0], 
-                                             attrs[k][3] if len(attrs[k])> 3 else 0)
+                                             attrs[k][3] if len(attrs[k])> 3 else 0,
+                                             attrs = {"type": attrs[k][1],"units":"m"})
             else:
                 self._sc.checkXMLScalarField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
                                              attrs[k][1], attrs[k][0], 
@@ -1952,7 +1953,8 @@ class EFieldTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][4] if len(attrs[k])> 4 else 0)
+                                               attrs[k][4] if len(attrs[k])> 4 else 0,
+                                               attrs = {"type": attrs[k][1],"units":""})
             else:
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
@@ -2054,7 +2056,8 @@ class EFieldTest(unittest.TestCase):
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
-                                               attrs[k][3] if len(attrs[k])> 3 else 0)
+                                               attrs[k][3] if len(attrs[k])> 3 else 0,
+                                               attrs = {"type": attrs[k][1],"units":""})
             else:
                 self._sc.checkXMLSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                                attrs[k][1], attrs[k][0], 
@@ -2173,15 +2176,16 @@ class EFieldTest(unittest.TestCase):
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0], 
-                                               attrs[k][4] if len(attrs[k])> 4 else 0)
+                                            attrs[k][1], attrs[k][0], 
+                                            attrs[k][4] if len(attrs[k])> 4 else 0,
+                                            attrs = {"type": attrs[k][1],"units":""})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0], 
-                                               attrs[k][4] if len(attrs[k])> 4 else 0, 
-                                               attrs = {"type":attrs[k][1],"units":"", "postrun":None}
-                                               )
+                                            attrs[k][1], attrs[k][0], 
+                                            attrs[k][4] if len(attrs[k])> 4 else 0, 
+                                            attrs = {"type":attrs[k][1],"units":"", "postrun":None}
+                                        )
             
             
         self._nxFile.close()
@@ -2287,8 +2291,9 @@ class EFieldTest(unittest.TestCase):
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0], 
-                                               attrs[k][4] if len(attrs[k])> 4 else 0)
+                                            attrs[k][1], attrs[k][0], 
+                                            attrs[k][4] if len(attrs[k])> 4 else 0,
+                                            attrs = {"type": attrs[k][1],"units":""})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkXMLImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',

@@ -598,7 +598,7 @@ class NXSDataWriterTest(unittest.TestCase):
                 
 
 
-            self.assertEqual(len(cnt.attributes),3)
+            self.assertEqual(len(cnt.attributes),4)
             
 
 
@@ -631,6 +631,15 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"nexdatas_source")
 
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
 
             mca = det.open("mca")
             self.assertTrue(mca.is_valid)
@@ -648,8 +657,17 @@ class NXSDataWriterTest(unittest.TestCase):
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(len(mca.attributes),3)
+            self.assertEqual(len(mca.attributes),4)
 
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+            
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
@@ -714,7 +732,16 @@ class NXSDataWriterTest(unittest.TestCase):
                 
 
 
-            self.assertEqual(len(cnt.attributes),3)
+            self.assertEqual(len(cnt.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
             
 
 
@@ -764,8 +791,18 @@ class NXSDataWriterTest(unittest.TestCase):
             for j in range(len(value[0])):
                 self.assertEqual(self._mca2[i], value[1][i])
 
-            self.assertEqual(len(mca.attributes),3)
+            self.assertEqual(len(mca.attributes),4)
 
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+            
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
