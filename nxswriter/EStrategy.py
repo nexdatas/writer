@@ -39,9 +39,15 @@ class EStrategy(Element):
 
         if "mode" in attrs.keys():
             self.last.strategy = attrs["mode"]
+            if hasattr(self.last, "tagAttributes"):
+                self.last.tagAttributes["nexdatas_strategy"] = (
+                    "NX_CHAR", attrs["mode"])
         if "trigger" in attrs.keys():
             self.last.trigger = attrs["trigger"]
             Streams.info("TRIGGER %s" % attrs["trigger"])
+            if hasattr(self.last, "tagAttributes"):
+                self.last.tagAttributes["nexdatas_strategy"] = (
+                    "NX_CHAR", attrs["trigger"])
         if "grows" in attrs.keys() and hasattr(self.last, "grows"):
             self.last.grows = int(attrs["grows"])
             if self.last.grows < 1:

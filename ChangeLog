@@ -1,6 +1,7 @@
-2016-09-XX Jan Kotanski <jankotan@gmail.com>
+2016-10-28 Jan Kotanski <jankotan@gmail.com>
+	* add nexus_strategy attribute
 	* update man page
-	* tagged as 2.3.1
+	* tagged as 2.4.0
 
 2016-09-16 Jan Kotanski <jankotan@gmail.com>
 	* add __nxroot__ object into PYEVAL "commonblock"

@@ -43,7 +43,7 @@ except:
 from  xml.sax import SAXParseException
 
 from nxswriter import TangoDataWriter, Types
-from nxswriter.TangoDataWriter  import TangoDataWriter 
+from nxswriter.TangoDataWriter  import TangoDataWriter
 from nxswriter.Errors  import ThreadError
 from Checkers import Checker
 
@@ -64,7 +64,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         except NotImplementedError:
             import time
             self.seed  = long(time.time() * 256) # use fractional seconds
-         
+
         self.__rnd = random.Random(self.seed)
 
 
@@ -86,7 +86,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
         self._largs = None
 
-        
+
 
     ## test starter
     # \brief Common set up
@@ -101,22 +101,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
         except:
             from os.path import expanduser
             home = expanduser("~")
-            args2 = {'host': u'localhost', 'db': u'tango', 
+            args2 = {'host': u'localhost', 'db': u'tango',
                      'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
             print "ARGS:", args2
 
-        print "SEED =", self.seed 
-        print "CHECKER SEED =", self._sc.seed 
+        print "SEED =", self.seed
+        print "CHECKER SEED =", self._sc.seed
 
     def setmycnf(self, xml):
         if not self._largs or 'read_default_file' not in self._largs.keys():
             return str(xml.replace("$mycnf", ""))
         else:
             return str(xml.replace("$mycnf", 'mycnf="%s"' % self._largs['read_default_file']))
-            
-            
+
+
 
     ## test closer
     # \brief Common tear down
@@ -127,7 +127,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
     ## Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
@@ -139,10 +139,10 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self.assertEqual(error, True)
 
     ## opens writer
-    # \param fname file name     
+    # \param fname file name
     # \param xml XML settings
     # \param json JSON Record with client settings
-    # \returns Tango Data Writer instance   
+    # \returns Tango Data Writer instance
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter()
         tdw.fileName = fname
@@ -173,7 +173,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbScalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -262,7 +262,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field  units="m" name="pid_scalar_float32" type="NX_FLOAT32">
-          <dimensions rank="0" /> 
+          <dimensions rank="0" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
@@ -390,7 +390,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
-        
+
         xml = self.setmycnf(xml)
 
         cursor = self._mydb.cursor()
@@ -405,9 +405,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
-        
+
         # check the created file
-        
+
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkSpectrumField(det, "pid_scalar_string", "string", "NX_CHAR", [[scalar]] *3,
@@ -418,30 +418,30 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarField(det, "pid_scalar4_string", "string", "NX_CHAR", [scalar] *3)
         self._sc.checkScalarField(det, "pid_scalar_uint", "uint64", "NX_UINT", [int(scalar)] *3)
         self._sc.checkScalarField(det, "pid_scalar_int64","int64", "NX_INT64", [int(scalar)] *3)
-        self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [float(scalar)] *3, 
+        self._sc.checkScalarField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", [float(scalar)] *3,
                                   error = 1e-14)
-        self._sc.checkScalarField(det, "pid_scalar_float32", "float32", "NX_FLOAT32", [float(scalar)] *3, 
+        self._sc.checkScalarField(det, "pid_scalar_float32", "float32", "NX_FLOAT32", [float(scalar)] *3,
                                   error = 1e-5)
-        self._sc.checkImageField(det, "pid2_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "pid2_image_string", "string", "NX_CHAR",
                                        [[[str(scalar)]]]*3,
                                     attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
-        self._sc.checkImageField(det, "pid3_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "pid3_image_string", "string", "NX_CHAR",
                                        [[[str(scalar)]]]*3,
                                     attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
-       
+
 
         self._sc.checkSingleScalarField(det, "init_pid_scalar_int32", "int32", "NX_INT32", int(scalar))
         self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", scalar)
-        self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
                                         float(scalar), error = 1e-6)
-        self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
                                         float(scalar), error = 1e-14)
-        self._sc.checkSingleImageField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleImageField(det, "final_pid_scalar_string", "string", "NX_CHAR",
                                           [[str(scalar)]],
                                     attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None})
-        self._sc.checkSingleScalarField(det, "final_pid2_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleScalarField(det, "final_pid2_scalar_string", "string", "NX_CHAR",
                                         str(scalar))
-        self._sc.checkSingleScalarField(det, "final_pid3_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleScalarField(det, "final_pid3_scalar_string", "string", "NX_CHAR",
                                         str(scalar))
 
 
@@ -462,7 +462,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -663,7 +663,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
-        
+
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
         scalar = str(cursor.fetchone()[0])
@@ -676,9 +676,9 @@ class DBFieldTagWriterTest(unittest.TestCase):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
-        
+
         # check the created file
-        
+
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkSpectrumField(
@@ -701,11 +701,11 @@ class DBFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkScalarField(
             det, "pid_scalar_float64", "float64", "NX_FLOAT64", [numpy.finfo(getattr(numpy, 'float64')).max] *3,
-            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
             error = 1e-14)
         self._sc.checkScalarField(
             det, "pid_scalar_float32", "float32", "NX_FLOAT32", [numpy.finfo(getattr(numpy, 'float32')).max] *3,
-            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
                                   error = 1e-5)
         self._sc.checkScalarField(
             det, "pid2_image_string", "string", "NX_CHAR", ['']*3,
@@ -720,13 +720,13 @@ class DBFieldTagWriterTest(unittest.TestCase):
             attrs = {"type":"NX_INT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
         self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", '',
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
+        self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
                                         numpy.finfo(getattr(numpy, 'float32')).max,
-            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
                                         error = 1e-6)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
                                         numpy.finfo(getattr(numpy, 'float64')).max,
-            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"}, 
+            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"},
                                          error = 1e-14)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_string", "string", "NX_CHAR",'',
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
@@ -752,7 +752,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbSpectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -952,7 +952,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
         xml = self.setmycnf(xml)
-        
+
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
         scalar = str(cursor.fetchone()[0])
@@ -967,48 +967,48 @@ class DBFieldTagWriterTest(unittest.TestCase):
         cursor.execute("SELECT name FROM device limit 6")
         name = cursor.fetchall()
         cursor.close()
-        
+
         tdw = self.openWriter(fname, xml)
 
         for c in range(3):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
-        
+
         # check the created file
-        
+
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 13)
-        self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR",
                                           [[str(sub[0]) for sub in spectrum ]]*3)
-        self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
+        self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32",
                                     [[sub[0] for sub in spectrum ]]*3, grows=2)
-        self._sc.checkSpectrumField(det, "pid_spectrum_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSpectrumField(det, "pid_spectrum_float64", "float64", "NX_FLOAT64",
                                     [[float(sub[0]) for sub in spectrum ]]*3)
-        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", 
+        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64",
                                     [[int(scalar)] ]*3)
-        self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64",
                                     [[float(scalar)] ]*3)
         print "IMAGE ", [[str(sub[0]) for sub in name]]*3
-        self._sc.checkImageField(det, "name_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_spectrum_string", "string", "NX_CHAR",
                                  [[[str(sub[0])] for sub in name]]*3)
-        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32",
                                           [sub[0] for sub in spectrum ])
-        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64",
                                           [sub[0] for sub in spectrum ])
-       
 
-        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
+
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR",
                                                 [str(sub[0]) for sub in spectrum ])
-        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR",
                                                 [scalar])
-        self._sc.checkSingleImageField(det, "final_pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkSingleImageField(det, "final_pid_image_string", "string", "NX_CHAR",
                                        [[str(sub[0])] for sub in spectrum])
-        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR",
                                     [str(sub[0]) for sub in spectrum])
 
 
-        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", 
+        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32",
                                   [[int(scalar)] ]*3)
 
 
@@ -1031,7 +1031,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1239,7 +1239,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
-        
+
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
         scalar = str(cursor.fetchone()[0])
@@ -1254,59 +1254,59 @@ class DBFieldTagWriterTest(unittest.TestCase):
         cursor.execute("SELECT name FROM device limit 6")
         name = cursor.fetchall()
         cursor.close()
-        
+
         tdw = self.openWriter(fname, xml)
 
         for c in range(3):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
-        
+
         # check the created file
-        
+
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 13)
-        self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR",
                                           [['']*len(spectrum) ]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32", 
+        self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32",
                                     [[numpy.iinfo(getattr(numpy, 'uint32')).max]*len(spectrum)]*3, grows=2 ,
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSpectrumField(det, "pid_spectrum_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSpectrumField(det, "pid_spectrum_float64", "float64", "NX_FLOAT64",
                                     [[numpy.finfo(getattr(numpy, 'float64')).max]*len(spectrum)]*3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64", 
+        self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64",
                                     [[numpy.iinfo(getattr(numpy, 'int64')).max] ]*3 ,
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64",
                                     [[numpy.finfo(getattr(numpy, 'float64')).max]]*3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR",
                                        [['']*len(name)]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32", 
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32",
                                           [numpy.iinfo(getattr(numpy, 'int32')).max]*len(spectrum),
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
-        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64",
                                           [numpy.finfo(getattr(numpy, 'float64')).max]*len(spectrum),
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"} )
-       
 
-        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR", 
+
+        self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR",
                                                 ['' for sub in spectrum ] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR",
                                                 [''] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleSpectrumField(det, "final_pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_image_string", "string", "NX_CHAR",
                                     ['' for sub in spectrum] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR", 
+        self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR",
                                     ['' for sub in spectrum] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
 
-        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32", 
+        self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32",
                                   [[numpy.iinfo(getattr(numpy, 'int32')).max] ]*3 ,
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
@@ -1327,7 +1327,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbSpectrum_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname= '%s/dbspectrum.h5' % os.getcwd()   
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1369,7 +1369,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 </definition>
 """
         xml = self.setmycnf(xml)
-        
+
         cursor = self._mydb.cursor()
         cursor.execute("SELECT pid FROM device limit 1")
         scalar = str(cursor.fetchone()[0])
@@ -1384,22 +1384,22 @@ class DBFieldTagWriterTest(unittest.TestCase):
         cursor.execute("SELECT name FROM device limit 6")
         name = cursor.fetchall()
         cursor.close()
-        
+
         if PNIIO:
             tdw = self.openWriter(fname, xml)
-            
+
             for c in range(3):
                 self.record(tdw,'{ }')
-                
+
             self.closeWriter(tdw)
-        
+
         # check the created file
-                
+
             f = open_file(fname,readonly=True)
             det = self._sc.checkFieldTree(f, fname , 2)
-            self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64", 
+            self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64",
                                               [int(scalar)] )
-            self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32", 
+            self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
                                               [float(scalar)] )
             f.close()
         else:
@@ -1421,7 +1421,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbImage(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1515,7 +1515,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field name="pid_image_float" type="NX_FLOAT" units="" >
-          <dimensions rank="2"> 
+          <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
@@ -1529,7 +1529,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
         <field name="pid_image_int32" type="NX_INT32" units="" >
-          <dimensions rank="2"> 
+          <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
@@ -1544,7 +1544,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field name="pid_image_int64" type="NX_INT64" units="" >
-          <dimensions rank="2"> 
+          <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
@@ -1743,56 +1743,56 @@ class DBFieldTagWriterTest(unittest.TestCase):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
-        
+
         # check the created file
-        
+
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 19)
-        self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR",
                                        [[[str(it) for it in sub] for sub in name_pid]]*3)
-        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR",
                                        [[[str(it) for it in sub] for sub in name]]*3)
-        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR",
                                        [[[str(it) for it in sub] for sub in pid]]*3)
-        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
+        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT",
                                        [[[float(it) for it in sub] for sub in pid]]*3)
-        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32", 
+        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32",
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=2)
-        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT", 
+        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT",
                                        [[[int(pid[0][0])]]]*3)
-        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64", 
+        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64",
                                        [[[int(it) for it in sub] for sub in pid]]*3, grows=3)
-        self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT", 
+        self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT",
                                     [pid_exported]*3)
-        self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32", 
+        self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32",
                                     [pid_exported]*3, grows=3)
-        self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32", 
+        self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32",
                                     [pid_exported]*3, grows=2, error=1e-6)
-        self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
+        self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR",
                                     [[str(it) for it in sub] for sub in pid_exported])
-        self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64", 
+        self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64",
                                     pid_exported, grows=3)
-        self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64",
                                     pid_exported, grows=2, error=1e-6)
-        self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64",
                                     [[float(sub[0])] for sub in pid])
-        self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT", 
+        self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT",
                                     [[float(pid[0][0])]])
 
 
 
-        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT", 
+        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT",
                                        [[[int(scalar)]]]*3)
-        self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT", 
+        self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT",
                                         [[float(scalar)]])
 
 
 
 
-        self._sc.checkSingleImageField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleImageField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64",
                                     [[float(sub[0])] for sub in spectrum])
 
-        self._sc.checkImageField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 
+        self._sc.checkImageField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32",
                                        [[[float(sub[0])] for sub in spectrum]]*3, grows=2)
 
         f.close()
@@ -1810,7 +1810,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
     def test_dbImage_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         xml= """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
@@ -1910,7 +1910,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field name="pid_image_float" type="NX_FLOAT" units="" >
-          <dimensions rank="2"> 
+          <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
@@ -1924,7 +1924,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         </field>
 
         <field name="pid_image_int32" type="NX_INT32" units="" >
-          <dimensions rank="2"> 
+          <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
@@ -1939,7 +1939,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
 
 
         <field name="pid_image_int64" type="NX_INT64" units="" >
-          <dimensions rank="2"> 
+          <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="1"/>
           </dimensions>
@@ -2150,75 +2150,75 @@ class DBFieldTagWriterTest(unittest.TestCase):
             self.record(tdw,'{ }')
 
         self.closeWriter(tdw)
-        
+
         # check the created file
-        
+
         f = open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 19)
-        self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR",
                                        [[['' for it in sub] for sub in name_pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR",
                                        [[['' for it in sub] for sub in name]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR", 
+        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR",
                                        [[['' for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT", 
+        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT",
                                  [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32", 
+        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32",
                                  [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for sub in pid]]*3, grows=2 ,
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT", 
+        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,
             attrs = {"type":"NX_INT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64", 
+        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max for it in sub] for sub in pid]]*3, grows=3 ,
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT", 
+        self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT",
                                     [[[numpy.iinfo(getattr(numpy, 'int64')).max]]*3 ]*3,
             attrs = {"type":"NX_INT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32", 
+        self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32",
                                     [[[numpy.iinfo(getattr(numpy, 'uint32')).max]*2]*6]*3, grows=3 ,
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32", 
+        self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32",
                                     [[[numpy.finfo(getattr(numpy, 'float32')).max]*6]*2]*3, grows=2, error=1e-6 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR", 
+        self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR",
                                     [['' ]*6 ]*2 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64", 
+        self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64",
                                     [[numpy.iinfo(getattr(numpy, 'int64')).max]*6]*2, grows=3 ,
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64",
                                    [[ numpy.finfo(getattr(numpy, 'float64')).max]*2]*6, grows=2, error=1e-6 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64",
                                     [[ numpy.finfo(getattr(numpy, 'float64')).max]]*6,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT", 
+        self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT",
                                     [[ numpy.finfo(getattr(numpy, 'float64')).max]] ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
 
 
-        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT", 
+        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,
             attrs = {"type":"NX_UINT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
-        self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT", 
+        self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT",
                                         [[numpy.finfo(getattr(numpy, 'float64')).max]] ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
 
 
 
-        self._sc.checkSingleImageField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64", 
+        self._sc.checkSingleImageField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64",
                                     [[numpy.finfo(getattr(numpy, 'float64')).max] for sub in spectrum] ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
-        self._sc.checkImageField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32", 
-                                       [[[numpy.finfo(getattr(numpy, 'float32')).max]*6]*2]*3, 
+        self._sc.checkImageField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32",
+                                       [[[numpy.finfo(getattr(numpy, 'float32')).max]*6]*2]*3,
                                  grows=2 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None, "nexdatas_canfail":"FAILED"})
 
