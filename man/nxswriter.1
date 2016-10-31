@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "September 16, 2016" "2.3" "NXSDataWriter"
+.TH "NXSWRITER" "1" "October 31, 2016" "2.4" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -38,6 +38,8 @@ NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.
 .sp
 The server provides storing data from other Tango devices,
 various databases as well as passed by a user client via JSON strings.
+.sp
+Tango Server API: \fI\%https://nexdatas.github.io/writer/doc_html\fP
 .nf
 Source code: \fI\%https://github.com/nexdatas/writer\fP
 Project Web page: \fI\%https://nexdatas.github.io/writer\fP
@@ -248,7 +250,7 @@ dpx.CloseEntry()
 
 # After scanning experiment data in \(aqSTEP\(aq mode we close the entry.
 # To this end we call the CloseEntry method which also stores data defined
-# with strategy=FINAL. Since our HDF5 file can contains many entries we can again
+# with strategy=FINAL. Since our HDF5 file can contain many entries we can again
 # open the entry and repeat our record procedure. If we define more than one entry
 # in one XML setting string the defined entries are recorded parallel
 # with the same steps.
