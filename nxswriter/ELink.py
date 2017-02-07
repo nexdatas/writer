@@ -141,6 +141,8 @@ class ELink(FElement):
         """
         if target is None and "target" in self._tagAttrs.keys():
             target = self._tagAttrs["target"].encode()
+        if target is None and ("".join(self.content)).strip():
+            target = ("".join(self.content)).strip().encode()
         if target is not None:
             if '://' not in str(target) \
                and self.__groupTypes is not None:

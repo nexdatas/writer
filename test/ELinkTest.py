@@ -166,6 +166,8 @@ class ELinkTest(unittest.TestCase):
         atts4 = {"name":"link4","target":"/testField"}
         atts5 = {"name":"link5","target":"/testGroup"}
         atts6 = {"name":"link5","target":"/testField"}
+        atts7 = {"name":"link7"}
+        ct7 = "testField"
         gT1 = TNObject()
         ch  = TNObject("testGroup","NXentry",gT1)
         gT2 = TNObject()
@@ -178,7 +180,9 @@ class ELinkTest(unittest.TestCase):
         li4 = ELink(atts4, eFile)
         li5 = ELink(atts5, eFile)
         li6 = ELink(atts6, eFile)
-
+        li7 = ELink(atts7, eFile)
+        li7.content.append(ct7)
+        
         fi2 = EField( self._fattrs, gr)
         fi2.content = ["2 "]
         fi2.store()
@@ -208,6 +212,7 @@ class ELinkTest(unittest.TestCase):
         li3.createLink(gT2)
         li4.createLink(TNObject())
         li5.createLink(TNObject())
+        li7.createLink(TNObject())
         self.myAssertRaise(XMLSettingSyntaxError, li5.createLink,TNObject())
         self.myAssertRaise(XMLSettingSyntaxError, li6.createLink,TNObject())
         self.assertEqual(li0.h5Object, None)
@@ -264,6 +269,14 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape )
 #        self.assertEqual(l5.name, gr.h5Object.name )
 
+        l7 = self._nxFile.open("link7")
+        self.assertEqual(l7.read(), fi.h5Object.read() )
+        self.assertEqual(l7.dtype, fi.h5Object.dtype )
+        self.assertEqual(l7.shape, fi.h5Object.shape )
+        self.assertEqual(len(l7.attributes), len(fi.h5Object.attributes) )
+        self.assertEqual(l7.attributes["units"][...], fi.h5Object.attributes["units"][...] )
+        self.assertEqual(l7.attributes["units"].dtype, fi.h5Object.attributes["units"].dtype )
+        self.assertEqual(l7.attributes["units"].shape, fi.h5Object.attributes["units"].shape )
 
 
         self._nxFile.close()
