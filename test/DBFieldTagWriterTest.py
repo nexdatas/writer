@@ -2209,7 +2209,7 @@ class DBFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32",
                                  [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for sub in pid]]*3, grows=2 ,
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
         self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,
             attrs = {"type":"NX_INT","units":"","nexdatas_source":None,
