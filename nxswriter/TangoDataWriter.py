@@ -22,8 +22,10 @@
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
+from . import FileWriter
+from . import PNIWriter
 
-import pni.io.nx.h5 as nx
+# import pni.io.nx.h5 as nx
 
 from xml import sax
 
@@ -65,6 +67,9 @@ class TangoDataWriter(object):
         self.numberOfThreads = 100
 #        self.numberOfThreads = 1
 
+        #: (__module__) maximal number of threads
+        self.writertype = "PNIWriter"        
+
         #: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements
         self.__initPool = None
         #: (:class:`ThreadPool.ThreadPool`) thread pool with STEP elements
@@ -82,6 +87,8 @@ class TangoDataWriter(object):
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
 
+        self.__setWriter("pni")
+        
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
 
@@ -114,6 +121,29 @@ class TangoDataWriter(object):
                 Streams.log_info = server.log_info
             if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
+
+    def __getWriter(self):
+        """ get method for writer module name
+
+        :returns: value of  writer module name
+        :rtype: :obj:`str`
+        """
+        return FileWriter.writer
+
+    def __setWriter(self, writer):
+        """ set method for  writer module name
+
+        :param jsonstring: value of  writer module name
+        :type jsonstring: :obj:`str`
+        """
+        if writer.lower() == "pni":
+            FileWriter.writer = PNIWriter
+            #        elif writer.lower() == "h5py":
+            #            FileWriter.writer = H5PYWriter
+
+    #: the  writer module name
+    writer = property(__getWriter, __setWriter,
+                      doc='(:obj:`str`) the  writer module name')
 
     def __getJSON(self):
         """ get method for jsonrecord attribute
@@ -194,10 +224,10 @@ class TangoDataWriter(object):
         self.__triggerPools = {}
 
         if os.path.isfile(self.fileName):
-            self.__nxFile = nx.open_file(self.fileName, False)
+            self.__nxFile = FileWriter.open_file(self.fileName, False)
             self.__fileCreated = False
         else:
-            self.__nxFile = nx.create_file(self.fileName)
+            self.__nxFile = FileWriter.create_file(self.fileName)
             self.__fileCreated = True
         self.__nxRoot = self.__nxFile.root()
 

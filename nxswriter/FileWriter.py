@@ -19,48 +19,42 @@
 
 """ Provides abstraction for file writer """
 
-class FileWriter(object):
-    """ File Writer abstraction
+#: writer module
+writer = None
+
+#: object class
+#nxobject = None
+#: attribute class
+#nxattribute = None
+#: field class
+#nxfield = None
+#: file class
+#nxfile = None
+#: group class
+#nxgroup = None
+#: link class
+#nxlink = None
+#: root class
+#nxroot = None
+#: nxsdeflate_filter class
+# nxdeflate = None
+
+
+def open_file(self, filename, overwrite=False):
+    """ open the new file
     """
+    return writer.open_file(filename, overwrite)
 
-    def __init__(self, writer):
-        """ constructor
-        """
-        self.writer = writer()
+def create_file(self, filename, overwrite=False):
+    """ create a new file
+    """
+    return writer.create_file(filename, overwrite)
 
-        #: object class
-        self.nxobject = None
-        #: attribute class
-        self.nxattribute = None
-        #: field class
-        self.nxfield = None
-        #: file class
-        self.nxfile = None
-        #: group class
-        self.nxgroup = None
-        #: link class
-        self.nxlink = None
-        #: root class
-        self.nxroot = None
-        #: nxsdeflate class
-        self.nxdeflate = None
+def link(self, target, parent, name):
+    """ create link
+    """
+    return writer.link(target, parent, name)
 
-
-    def open_file(self, filename, overwrite=False):
-        """ open the new file
-        """
-
-    def deflate_filter(self):
-        """ create deflate filter
-        """
-
-    def create_file(self, filename, overwrite=False):
-        """ create a new file
-        """
-
-    def link(self, target, parent, name):
-        """ create link
-        """
 
 class FTObject(object):
     """ file tree object
@@ -68,6 +62,10 @@ class FTObject(object):
 
 
 class FTAttribute(FTObject):
+    """ file tree attribute
+    """
+
+class FTAttributeManager(FTObject):
     """ file tree attribute
     """
 

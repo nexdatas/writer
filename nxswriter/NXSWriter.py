@@ -431,6 +431,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.get_device_properties(self.get_device_class())
             self.tdw.numberOfThreads = self.NumberOfThreads
+            self.tdw.writerType = self.WriterType
             self.tdw.openEntry()
             self.set_state(PyTango.DevState.EXTRACT)
         except (PyTango.DevFailed, BaseException):
@@ -670,6 +671,10 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         [PyTango.DevLong,
          "maximal number of threads",
          [100]],
+        'Writer':
+        [PyTango.DevString,
+         "writer module",
+         ["pni"]],
     }
 
     #: (:obj:`dict` <:obj:`str`, \
