@@ -56,7 +56,7 @@ class PNIObject(FileWriter.FTObject):
         self.name = None
         if hasattr(h5object, "path"):
             self.path = h5object.path
-        elif hasattr(h5object, "name"):
+        if hasattr(h5object, "name"):
             self.name = h5object.name
 
     @property
@@ -98,17 +98,17 @@ class PNIAttribute(PNIObject):
     def shape(self):
         return self._h5object.shape
 
-    @property
-    def size(self):
-        return self._h5object.size
+#    @property
+#    def size(self):
+#        return self._h5object.size
 
-    @property
-    def filename(self):
-        return self._h5object.filename
+#    @property
+#    def filename(self):
+#        return self._h5object.filename
 
-    @property
-    def parent(self):
-        return PNIGroup(self._h5object.parent)
+#    @property
+#    def parent(self):
+#        return PNIGroup(self._h5object.parent)
 
 
 class PNIGroup(PNIObject):
@@ -151,12 +151,12 @@ class PNIGroup(PNIObject):
     def close(self):
         return self._h5object.close()
 
-    def exists(self):
-        return self._h5object.exists()
+    def exists(self, name):
+        return self._h5object.exists(name)
 
-    @property
-    def filename(self):
-        return self._h5object.filename
+#    @property
+#    def filename(self):
+#        return self._h5object.filename
 
 
 class PNIField(PNIObject):
@@ -255,13 +255,13 @@ class PNILink(PNIObject):
     def target_path(self):
         return self._h5object.target_path
 
-    @property
-    def status(self):
-        return self._h5object.status
+#    @property
+#    def status(self):
+#        return self._h5object.status
 
-    @property
-    def type(self):
-        return self._h5object.type
+#    @property
+#    def type(self):
+#        return self._h5object.type
 
     @property
     def parent(self):

@@ -47,11 +47,19 @@ def create_file(filename, overwrite=False):
 def link(target, parent, name):
     """ create link
     """
-    return H5PYLink(nx.link(target, parent._h5object, name))
+    if ":/" in target:
+        filename, path = target.slit(":/")
+        parent._h5object[name] = h5py.ExternalLink(filename, path)
+        return H5PYLink(
+            parent._h5object.get(name, getlink=True))
+    else:
+        parent._h5object[name] = h5py.SoftLink(target) 
+        return H5PYLink(
+            parent._h5object.get(name, getlink=True))
 
 
 def deflate_filter():
-    return H5PYDeflate(nx.deflate_filter())
+    return H5PYDeflate(None)
 
 
 class H5PYObject(FileWriter.FTObject):
@@ -61,9 +69,10 @@ class H5PYObject(FileWriter.FTObject):
         self._h5object = h5object
         self.path = ''
         self.name = None
-        elif hasattr(h5object, "name"):
-            self.name = h5object.name
-
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
+            
     @property
     def gobject(self):
         return self._h5object
@@ -74,16 +83,17 @@ class H5PYAttribute(H5PYObject):
     """
 
     def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object)
-
+        H5PYObject.__init__(self, h5object[0])
+        self.name = h5object[1]
+        
     def close(self):
-        return self._h5object.close()
+        pass
 
     def read(self):
-        return self._h5object.read()
+        return self._h5object[self.name] 
 
     def write(self, o):
-        return self._h5object.write(o)
+        self._h5object[self.name] = o
 
     def __setitem__(self, t, o):
         return self._h5object.__setitem__(t, o)
@@ -93,27 +103,22 @@ class H5PYAttribute(H5PYObject):
 
     @property
     def is_valid(self):
-        return self._h5object.is_valid
+        return self.name in self._h5object
 
     @property
     def dtype(self):
-        return self._h5object.dtype
+        return  type(self._h5object[self._name]).__name__
 
     @property
     def shape(self):
-        return self._h5object.shape
+        if hasattr(self._h5object[self._name], "shape"):
+            return  list(self._h5object[self._name].shape)
+        else:
+            return []
 
-    @property
-    def size(self):
-        return self._h5object.size
-
-    @property
-    def filename(self):
-        return self._h5object.filename
-
-    @property
-    def parent(self):
-        return H5PYGroup(self._h5object.parent)
+#    @property
+#    def parent(self):
+#        return H5PYGroup(self._h5object.parent)
 
 
 class H5PYGroup(H5PYObject):
@@ -123,20 +128,26 @@ class H5PYGroup(H5PYObject):
         H5PYObject.__init__(self, h5object)
 
     def open(self, n):
-        itm = self._h5object.open(n)
-        if isinstance(itm, nx.nxfield):
+        try:
+            itm = self._h5object[n]
+        except:
+            _ = self._h5object.attrs[n]
+            return H5PYAttribute((self._h5object.attrs, n))
+            
+        if isinstance(itm, h5py._hl.dataset.Dataset):
             return H5PYField(itm)
-        elif isinstance(itm, nx.nxgroup):
+        elif isinstance(itm, h5py._hl.group.Group):
             return H5PYGroup(itm)
-        elif isinstance(itm, nx.nxattribute):
-            return H5PYAttribute(itm)
-        elif isinstance(itm, nx.nxlink):
+        elif isinstance(itm, h5py._hl.group.SoftLink) or \
+        isinstance(itm, h5py._hl.group.ExternalLink):
             return H5PYLink(itm)
         else:
             return H5PYObject(itm)
 
     def create_group(self, n, nxclass=""):
-        return H5PYGroup(self._h5object.create_group(n, nxclass))
+        grp = self._h5object.create_group(n)
+        grp.attrs["NX_class"] = nxclass
+        return H5PYGroup(grp)
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, filter=None):
@@ -151,17 +162,13 @@ class H5PYGroup(H5PYObject):
 
     @property
     def attributes(self):
-        return H5PYAttributeManager(self._h5object.attributes)
+        return H5PYAttributeManager(self._h5object.attrs)
 
     def close(self):
         return self._h5object.close()
 
-    def exists(self):
-        return self._h5object.exists()
-
-    @property
-    def filename(self):
-        return self._h5object.filename
+    def exists(self, name):
+        return name in self._h5object
 
 
 class H5PYField(H5PYObject):
@@ -172,7 +179,7 @@ class H5PYField(H5PYObject):
 
     @property
     def attributes(self):
-        return H5PYAttributeManager(self._h5object.attributes)
+        return H5PYAttributeManager(self._h5object.attrs)
 
     def close(self):
         return self._h5object.close()
@@ -251,23 +258,22 @@ class H5PYLink(H5PYObject):
 
     @property
     def is_valid(self):
-        return self._h5object.is_valid
+        try:
+            w = self._h5object
+            return True
+        except:
+            return False
 
     @property
     def filename(self):
-        return self._h5object.filename
+        if hasattr(self._h5object, "filename"):
+            return self._h5object.filename
+        else:
+            return ""
 
     @property
     def target_path(self):
-        return self._h5object.target_path
-
-    @property
-    def status(self):
-        return self._h5object.status
-
-    @property
-    def type(self):
-        return self._h5object.type
+        return self._h5object._path
 
     @property
     def parent(self):
@@ -279,22 +285,8 @@ class H5PYDeflate(H5PYObject):
     """
     def __init__(self, h5object):
         H5PYObject.__init__(self, h5object)
-
-    @property
-    def rate(self):
-        return self._h5object.rate
-
-    @rate.setter
-    def rate(self, value):
-        self._h5object.rate = value
-
-    @property
-    def shuffle(self):
-        return self._h5object.shuffle
-
-    @shuffle.setter
-    def shuffle(self, value):
-        self._h5object.shuffle = value
+        self.shuffle = False
+        self.rate = 2
 
 
 class H5PYAttributeManager(H5PYObject):
