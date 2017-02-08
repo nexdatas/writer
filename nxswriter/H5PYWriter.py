@@ -17,45 +17,50 @@
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-""" Provides pni file writer """
+""" Provides h5py file writer """
 
 from . import FileWriter
 
 
-import pni.io.nx.h5 as nx
+import h5py
 
 
 def open_file(filename, readonly=False):
     """ open the new file
     """
-    return PNIFile(nx.open_file(filename, readonly))
+    if readonly:
+        return H5PYFile(h5py.File(filename, "r"))
+    else:
+        return H5PYFile(h5py.File(filename, "r+"))
+        
 
 
 def create_file(filename, overwrite=False):
     """ create a new file
     """
-    return PNIFile(nx.create_file(filename, overwrite))
+    if overwrite:
+        return H5PYFile(h5py.File(filename, "a"))
+    else:
+        return H5PYFile(h5py.File(filename, "w"))
 
 
 def link(target, parent, name):
     """ create link
     """
-    return PNILink(nx.link(target, parent._h5object, name))
+    return H5PYLink(nx.link(target, parent._h5object, name))
 
 
 def deflate_filter():
-    return PNIDeflate(nx.deflate_filter())
+    return H5PYDeflate(nx.deflate_filter())
 
 
-class PNIObject(FileWriter.FTObject):
+class H5PYObject(FileWriter.FTObject):
     """ file tree object
     """
     def __init__(self, h5object):
         self._h5object = h5object
-        self.path = None
+        self.path = ''
         self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.path
         elif hasattr(h5object, "name"):
             self.name = h5object.name
 
@@ -64,12 +69,12 @@ class PNIObject(FileWriter.FTObject):
         return self._h5object
 
 
-class PNIAttribute(PNIObject):
+class H5PYAttribute(H5PYObject):
     """ file tree attribute
     """
 
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
 
     def close(self):
         return self._h5object.close()
@@ -108,45 +113,45 @@ class PNIAttribute(PNIObject):
 
     @property
     def parent(self):
-        return PNIGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent)
 
 
-class PNIGroup(PNIObject):
+class H5PYGroup(H5PYObject):
     """ file tree group
     """
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
 
     def open(self, n):
         itm = self._h5object.open(n)
         if isinstance(itm, nx.nxfield):
-            return PNIField(itm)
+            return H5PYField(itm)
         elif isinstance(itm, nx.nxgroup):
-            return PNIGroup(itm)
+            return H5PYGroup(itm)
         elif isinstance(itm, nx.nxattribute):
-            return PNIAttribute(itm)
+            return H5PYAttribute(itm)
         elif isinstance(itm, nx.nxlink):
-            return PNILink(itm)
+            return H5PYLink(itm)
         else:
-            return PNIObject(itm)
+            return H5PYObject(itm)
 
     def create_group(self, n, nxclass=""):
-        return PNIGroup(self._h5object.create_group(n, nxclass))
+        return H5PYGroup(self._h5object.create_group(n, nxclass))
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, filter=None):
-        return PNIField(
+        return H5PYField(
             self._h5object.create_field(
                 name, type_code, shape, chunk,
                 filter if not filter else filter._h5object))
 
     @property
     def parent(self):
-        return PNIGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent)
 
     @property
     def attributes(self):
-        return PNIAttributeManager(self._h5object.attributes)
+        return H5PYAttributeManager(self._h5object.attributes)
 
     def close(self):
         return self._h5object.close()
@@ -159,15 +164,15 @@ class PNIGroup(PNIObject):
         return self._h5object.filename
 
 
-class PNIField(PNIObject):
+class H5PYField(H5PYObject):
     """ file tree file
     """
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
 
     @property
     def attributes(self):
-        return PNIAttributeManager(self._h5object.attributes)
+        return H5PYAttributeManager(self._h5object.attributes)
 
     def close(self):
         return self._h5object.close()
@@ -209,18 +214,19 @@ class PNIField(PNIObject):
 
     @property
     def parent(self):
-        return PNIGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent)
 
 
-class PNIFile(PNIObject):
+class H5PYFile(H5PYObject):
     """ file tree file
     """
 
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
+        self.path = ''
 
     def root(self):
-        return PNIGroup(self._h5object.root())
+        return H5PYGroup(self._h5object)
 
     def flush(self):
         return self._h5object.flush()
@@ -237,11 +243,11 @@ class PNIFile(PNIObject):
         return self._h5object.readonly
 
 
-class PNILink(PNIObject):
+class H5PYLink(H5PYObject):
     """ file tree link
     """
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
 
     @property
     def is_valid(self):
@@ -265,14 +271,14 @@ class PNILink(PNIObject):
 
     @property
     def parent(self):
-        return PNIGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent)
 
 
-class PNIDeflate(PNIObject):
+class H5PYDeflate(H5PYObject):
     """ file tree deflate
     """
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
 
     @property
     def rate(self):
@@ -291,14 +297,14 @@ class PNIDeflate(PNIObject):
         self._h5object.shuffle = value
 
 
-class PNIAttributeManager(PNIObject):
+class H5PYAttributeManager(H5PYObject):
     """ file tree attribute
     """
     def __init__(self, h5object):
-        PNIObject.__init__(self, h5object)
+        H5PYObject.__init__(self, h5object)
 
     def create(self, name, type, shape=[], overwrite=False):
-        return PNIAttribute(
+        return H5PYAttribute(
             self._h5object.create(
                 name, type, shape, overwrite))
 
@@ -313,16 +319,16 @@ class PNIAttributeManager(PNIObject):
 
 
 #: attribute class
-nxobject = PNIObject
+nxobject = H5PYObject
 #: attribute class
-nxattribute = PNIAttribute
+nxattribute = H5PYAttribute
 #: field class
-nxfield = PNIField
+nxfield = H5PYField
 #: file class
-nxfile = PNIFile
+nxfile = H5PYFile
 #: group class
-nxgroup = PNIGroup
+nxgroup = H5PYGroup
 #: link class
-nxlink = PNILink
+nxlink = H5PYLink
 #: nxsdeflate class
-nxdeflate = PNIDeflate
+nxdeflate = H5PYDeflate

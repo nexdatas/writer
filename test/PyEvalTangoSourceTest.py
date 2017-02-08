@@ -42,6 +42,8 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
+import nxswriter.PNIWriter
+
 from pni.io.nx.h5 import create_file
 
 ## if 64-bit machione
@@ -821,14 +823,14 @@ ds.res = commonblock["myres"]
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        f = create_file(fname, False)
+        f = nxswriter.PNIWriter.PNIFile(create_file(fname, False))
 
         try:
             rt = f.root()
             script = 'ds.res2 = id(commonblock["__nxroot__"])'
             dp = DataSourcePool()
             dp.nxroot = rt
-            dspid = id(dp.nxroot)
+            dspid = id(dp.nxroot.gobject)
 
             ds = PyEvalSource()
             ds.setDataSources(dp)

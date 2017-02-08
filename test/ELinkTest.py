@@ -49,6 +49,11 @@ from nxswriter.FetchNameHandler import TNObject
 
 from Checkers import Checker
 
+import nxswriter.FileWriter
+import nxswriter.PNIWriter
+nxswriter.FileWriter.writer = nxswriter.PNIWriter
+
+
 #from  xml.sax import SAXParseException
 
 ## if 64-bit machione
@@ -119,7 +124,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         li = ELink({}, eFile)
         self.assertTrue(isinstance(li, Element))
@@ -148,7 +153,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -206,7 +211,7 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li2.h5Object, None)
         self.myAssertRaise(XMLSettingSyntaxError, li1.createLink,TNObject())
         li1.createLink(gT1)
-        self.assertEqual(li1.h5Object, None)
+        self.assertEqual(li1.h5Object._h5object, None)
         li2.createLink(TNObject())
         self.myAssertRaise(XMLSettingSyntaxError, li3.createLink,TNObject())
         li3.createLink(gT2)
@@ -216,11 +221,11 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(XMLSettingSyntaxError, li5.createLink,TNObject())
         self.myAssertRaise(XMLSettingSyntaxError, li6.createLink,TNObject())
         self.assertEqual(li0.h5Object, None)
-        self.assertEqual(li1.h5Object, None)
-        self.assertEqual(li2.h5Object, None)
-        self.assertEqual(li3.h5Object, None)
-        self.assertEqual(li4.h5Object, None)
-        self.assertEqual(li5.h5Object, None)
+        self.assertEqual(li1.h5Object._h5object, None)
+        self.assertEqual(li2.h5Object._h5object, None)
+        self.assertEqual(li3.h5Object._h5object, None)
+        self.assertEqual(li4.h5Object._h5object, None)
+        self.assertEqual(li5.h5Object._h5object, None)
 
         l1 = self._nxFile.open("link1")
         self.assertEqual(l1.read(), fi2.h5Object.read() )
@@ -290,7 +295,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -411,7 +416,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -608,7 +613,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -823,7 +828,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -1034,7 +1039,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -1205,7 +1210,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -1429,8 +1434,8 @@ class ELinkTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._fname2= '%s/%s%s_2.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
-        self._nxFile2 = nx.create_file(self._fname2, overwrite=True).root()
+        self._nxFile = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname, overwrite=True)).root()
+        self._nxFile2 = nxswriter.PNIWriter.PNIFile(nx.create_file(self._fname2, overwrite=True)).root()
         eFile = EFile( {}, None, self._nxFile)
         eFile2 = EFile( {}, None, self._nxFile2)
         fi = EField( self._fattrs, eFile)

@@ -29,7 +29,7 @@ from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
-import pni.io.nx.h5 as nx
+from . import FileWriter
 
 
 class EField(FElementWithAttr):
@@ -140,7 +140,7 @@ class EField(FElementWithAttr):
         # create Filter
 
         if self.compression:
-            deflate = nx.deflate_filter()
+            deflate = FileWriter.deflate_filter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
 

@@ -68,7 +68,7 @@ class TangoDataWriter(object):
 #        self.numberOfThreads = 1
 
         #: (__module__) maximal number of threads
-        self.writertype = "PNIWriter"        
+        self.writertype = "PNIWriter"
 
         #: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements
         self.__initPool = None
@@ -88,7 +88,7 @@ class TangoDataWriter(object):
         self.__eFile = None
 
         self.__setWriter("pni")
-        
+
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
 

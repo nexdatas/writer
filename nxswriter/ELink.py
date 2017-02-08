@@ -26,7 +26,7 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 from .DataHolder import DataHolder
 
-import pni.io.nx.h5 as nx
+from . import FileWriter
 
 
 class ELink(FElement):
@@ -114,7 +114,7 @@ class ELink(FElement):
             if self.__target:
                 name = self._tagAttrs["name"].encode()
                 try:
-                    self.h5Object = nx.link(
+                    self.h5Object = FileWriter.link(
                         self.__target,
                         self._lastObject(),
                         name)

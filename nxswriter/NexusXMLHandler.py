@@ -19,7 +19,7 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
-import pni.io.nx.h5 as nx
+from . import FileWriter
 from xml import sax
 
 import sys
@@ -309,7 +309,7 @@ if __name__ == "__main__":
             mparser = sax.make_parser()
 
             #: (:obj:`pni.io.nx.h5.nxfile`) file handle
-            nxFile = nx.create_file(fo, overwrite=True).root()
+            nxFile = FileWriter.create_file(fo, overwrite=True).root()
             #: (:class:`nxswriter.H5Elements.EFile`) element file objects
             mfileElement = EFile([], None, nxFile)
             #: (:class:`nxswriter.NexusXMLHandler.NexusXMLHandler`) \

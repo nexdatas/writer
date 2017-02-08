@@ -205,10 +205,11 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt, f.size)
 
             f.close()
-
         finally:
-            os.remove(fname)
-
+            try:
+                os.remove(fname)
+            except:
+                pass
 
 
     ## openFile test

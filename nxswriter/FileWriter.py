@@ -22,72 +22,29 @@
 #: writer module
 writer = None
 
-#: object class
-#nxobject = None
-#: attribute class
-#nxattribute = None
-#: field class
-#nxfield = None
-#: file class
-#nxfile = None
-#: group class
-#nxgroup = None
-#: link class
-#nxlink = None
-#: root class
-#nxroot = None
-#: nxsdeflate_filter class
-# nxdeflate = None
 
-
-def open_file(self, filename, overwrite=False):
+def open_file(filename, readonly=False):
     """ open the new file
     """
-    return writer.open_file(filename, overwrite)
+    return writer.open_file(filename, readonly)
 
-def create_file(self, filename, overwrite=False):
+
+def create_file(filename, overwrite=False):
     """ create a new file
     """
     return writer.create_file(filename, overwrite)
 
-def link(self, target, parent, name):
+
+def link(target, parent, name):
     """ create link
     """
     return writer.link(target, parent, name)
 
 
+def deflate_filter():
+    return writer.deflate_filter()
+
+
 class FTObject(object):
     """ file tree object
-    """
-
-
-class FTAttribute(FTObject):
-    """ file tree attribute
-    """
-
-class FTAttributeManager(FTObject):
-    """ file tree attribute
-    """
-
-
-class FTGroup(FTObject):
-    """ file tree group
-    """
-
-
-class FTFile(FTObject):
-    """ file tree file
-    """
-
-
-class FTLink(FTObject):
-    """ file tree link
-    """
-
-class FTRoot(FTObject):
-    """ file tree root
-    """
-
-class FTDeflate(FTObject):
-    """ file tree deflate
     """
