@@ -250,7 +250,7 @@ class PyEvalSource(DataSource):
                 self.__pool.common['PYEVAL']["common"] = {}
                 if self.__pool.nxroot is not None:
                     self.__pool.common['PYEVAL']["common"]["__nxroot__"] = \
-                        self.__pool.nxroot.gobject
+                        self.__pool.nxroot.getobject()
             self.__common = self.__pool.common['PYEVAL']["common"]
 
         finally:

@@ -73,7 +73,7 @@ class testwriter(object):
 
 
 ## test fixture
-class ElementTest(unittest.TestCase):
+class FileWriterTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -105,8 +105,10 @@ class ElementTest(unittest.TestCase):
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        el = FileWriter.FTObject()
-        # self.assertEqual(FileWriter.writer, None)
+        w = "weerew"
+        el = FileWriter.FTObject(w)
+        
+        self.assertEqual(el.getobject(), w)
 
     ## test
     # \brief It tests default settings
@@ -114,7 +116,7 @@ class ElementTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.writer = tw
+        FileWriter.setwriter(tw)
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -141,7 +143,7 @@ class ElementTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.writer = tw
+        FileWriter.setwriter(tw)
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -168,7 +170,7 @@ class ElementTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.writer = tw
+        FileWriter.setwriter(tw)
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -188,7 +190,7 @@ class ElementTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.writer = tw
+        FileWriter.setwriter(tw)
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res

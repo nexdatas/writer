@@ -51,7 +51,7 @@ from Checkers import Checker
 
 import nxswriter.FileWriter
 import nxswriter.PNIWriter
-nxswriter.FileWriter.writer = nxswriter.PNIWriter
+
 
 
 #from  xml.sax import SAXParseException
@@ -97,6 +97,7 @@ class ELinkTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
+        nxswriter.FileWriter.setwriter(nxswriter.PNIWriter)
         print "\nsetting up..."
         print "CHECKER SEED =", self._sc.seed
 
@@ -519,13 +520,9 @@ class ELinkTest(unittest.TestCase):
 
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        print "ST1"
         self.assertEqual(li1.store(), (None,None))
-        print "ST2"
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        print "rN1"
         li1.run()
-        print "rN2"
 
         self.myAssertRaise(Exception, self._nxFile.open, "link2")
         self.assertEqual(li2.store(), (None,None))
