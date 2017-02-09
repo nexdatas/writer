@@ -51,39 +51,29 @@ def link(target, parent, name):
         filename, path = target.slit(":/")
         parent._h5object[name] = h5py.ExternalLink(filename, path)
         return H5PYLink(
-            parent._h5object.get(name, getlink=True))
+            parent._h5object.get(name, getlink=True), parent)
     else:
         parent._h5object[name] = h5py.SoftLink(target) 
         return H5PYLink(
-            parent._h5object.get(name, getlink=True))
+            parent._h5object.get(name, getlink=True), parent)
 
 
 def deflate_filter():
     return H5PYDeflate(None)
 
 
-class H5PYObject(FileWriter.FTObject):
-    """ file tree object
-    """
-    def __init__(self, h5object):
-        self._h5object = h5object
-        self.path = ''
-        self.name = None
-        if hasattr(h5object, "name"):
-            self.path = h5object.name
-            self.name = self.path.split("/")[-1]
-            
-    @property
-    def gobject(self):
-        return self._h5object
-
 
 class H5PYAttribute(H5PYObject):
     """ file tree attribute
     """
 
-    def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object[0])
+    def __init__(self, h5object, tparent):
+        FileWriter.FTAttribute.__init__(self, h5object, tparent)
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
         self.name = h5object[1]
         
     def close(self):
@@ -124,45 +114,58 @@ class H5PYAttribute(H5PYObject):
 class H5PYGroup(H5PYObject):
     """ file tree group
     """
-    def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
+        H5PYObject.__init__(self, h5object, tparent)
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
 
     def open(self, n):
         try:
             itm = self._h5object[n]
         except:
             _ = self._h5object.attrs[n]
-            return H5PYAttribute((self._h5object.attrs, n))
+            return H5PYAttribute((self._h5object.attrs, n), self)
             
         if isinstance(itm, h5py._hl.dataset.Dataset):
-            return H5PYField(itm)
+            return H5PYField(itm, self)
         elif isinstance(itm, h5py._hl.group.Group):
-            return H5PYGroup(itm)
+            return H5PYGroup(itm, self)
         elif isinstance(itm, h5py._hl.group.SoftLink) or \
         isinstance(itm, h5py._hl.group.ExternalLink):
-            return H5PYLink(itm)
+            return H5PYLink(itm, self)
         else:
-            return H5PYObject(itm)
+            return H5PYObject(itm, self)
 
     def create_group(self, n, nxclass=""):
         grp = self._h5object.create_group(n)
         grp.attrs["NX_class"] = nxclass
-        return H5PYGroup(grp)
+        return H5PYGroup(grp, self)
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, filter=None):
         return H5PYField(
             self._h5object.create_field(
                 name, type_code, shape, chunk,
-                filter if not filter else filter._h5object))
+                filter if not filter else filter._h5object), self)
 
     @property
     def parent(self):
-        return H5PYGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent,
+                        self._tparent.getparent())
 
     @property
     def attributes(self):
-        return H5PYAttributeManager(self._h5object.attrs)
+        return H5PYAttributeManager(self._h5object.attrs, self)
 
     def close(self):
         return self._h5object.close()
@@ -174,12 +177,17 @@ class H5PYGroup(H5PYObject):
 class H5PYField(H5PYObject):
     """ file tree file
     """
-    def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent=None):
+        H5PYObject.__init__(self, h5object, tparent)
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
 
     @property
     def attributes(self):
-        return H5PYAttributeManager(self._h5object.attrs)
+        return H5PYAttributeManager(self._h5object.attrs, self)
 
     def close(self):
         return self._h5object.close()
@@ -221,19 +229,25 @@ class H5PYField(H5PYObject):
 
     @property
     def parent(self):
-        return H5PYGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent,
+                        self._tparent.getparent())
 
 
 class H5PYFile(H5PYObject):
     """ file tree file
     """
 
-    def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent=None):
+        H5PYObject.__init__(self, h5object, tparent)
         self.path = ''
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
 
     def root(self):
-        return H5PYGroup(self._h5object)
+        return H5PYGroup(self._h5object, self)
 
     def flush(self):
         return self._h5object.flush()
@@ -253,8 +267,13 @@ class H5PYFile(H5PYObject):
 class H5PYLink(H5PYObject):
     """ file tree link
     """
-    def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        H5PYObject.__init__(self, h5object, tparent)
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
 
     @property
     def is_valid(self):
@@ -277,16 +296,22 @@ class H5PYLink(H5PYObject):
 
     @property
     def parent(self):
-        return H5PYGroup(self._h5object.parent)
+        return H5PYGroup(self._h5object.parent,
+                        self._tparent.getparent())
 
 
 class H5PYDeflate(H5PYObject):
     """ file tree deflate
     """
-    def __init__(self, h5object):
-        H5PYObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        H5PYObject.__init__(self, h5object, tparent)
         self.shuffle = False
         self.rate = 2
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
 
 
 class H5PYAttributeManager(H5PYObject):
@@ -294,11 +319,16 @@ class H5PYAttributeManager(H5PYObject):
     """
     def __init__(self, h5object):
         H5PYObject.__init__(self, h5object)
+        self.path = ''
+        self.name = None
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+            self.name = self.path.split("/")[-1]
 
     def create(self, name, type, shape=[], overwrite=False):
         return H5PYAttribute(
             self._h5object.create(
-                name, type, shape, overwrite))
+                name, type, shape, overwrite), self)
 
     def __len__(self):
         return self._h5object.__len__()
@@ -310,17 +340,3 @@ class H5PYAttributeManager(H5PYObject):
         return self._h5object.__getitem__(t)
 
 
-#: attribute class
-nxobject = H5PYObject
-#: attribute class
-nxattribute = H5PYAttribute
-#: field class
-nxfield = H5PYField
-#: file class
-nxfile = H5PYFile
-#: group class
-nxgroup = H5PYGroup
-#: link class
-nxlink = H5PYLink
-#: nxsdeflate class
-nxdeflate = H5PYDeflate

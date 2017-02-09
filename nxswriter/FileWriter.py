@@ -81,13 +81,16 @@ def deflate_filter():
 class FTObject(object):
     """ virtual file tree object
     """
-    def __init__(self, h5object):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
         """
         self._h5object = h5object
+        self._tparent = tparent
 
 
     def getobject(self):
@@ -99,17 +102,26 @@ class FTObject(object):
 
         return self._h5object
 
+    def getparent(self):
+        """ get object treee parent
+
+        :returns: tree parent
+        :rtype: :obj:`FTObject`
+        """
+
+        return self._tparent
+
 class FTAttribute(FTObject):
     """ virtual file tree attribute
     """
 
-    def __init__(self, h5object):
+    def __init__(self, h5object, tparent):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
         """
-        FTObject.__init__(self, h5object)
+        FTObject.__init__(self, h5object, tparent)
 
 
     def close(self):
@@ -177,8 +189,8 @@ class FTGroup(FTObject):
     """ file tree group
     """
 
-    def __init__(self, h5object):
-        FTObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        FTObject.__init__(self, h5object, tparent)
 
     def open(self, n):
         """ open a file tree element
@@ -256,8 +268,8 @@ class FTGroup(FTObject):
 class FTField(FTObject):
     """ file tree file
     """
-    def __init__(self, h5object):
-        FTObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        FTObject.__init__(self, h5object, tparent)
 
     @property
     def attributes(self):
@@ -377,8 +389,8 @@ class FTFile(FTObject):
     """ file tree file
     """
 
-    def __init__(self, h5object):
-        FTObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent=None):
+        FTObject.__init__(self, h5object, tparent)
 
     def root(self):
         """ root object
@@ -420,8 +432,8 @@ class FTFile(FTObject):
 class FTLink(FTObject):
     """ file tree link
     """
-    def __init__(self, h5object):
-        FTObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        FTObject.__init__(self, h5object, tparent)
 
     @property
     def is_valid(self):
@@ -463,8 +475,8 @@ class FTLink(FTObject):
 class FTDeflate(FTObject):
     """ file tree deflate
     """
-    def __init__(self, h5object):
-        FTObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent=None):
+        FTObject.__init__(self, h5object, tparent)
 
     @property
     def rate(self):
@@ -506,8 +518,8 @@ class FTDeflate(FTObject):
 class FTAttributeManager(FTObject):
     """ file tree attribute
     """
-    def __init__(self, h5object):
-        FTObject.__init__(self, h5object)
+    def __init__(self, h5object, tparent):
+        FTObject.__init__(self, h5object, tparent)
 
     def create(self, name, type, shape=[], overwrite=False):
         """
