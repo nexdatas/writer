@@ -63,6 +63,7 @@ import InnerXMLParserTest
 import TNObjectTest
 import TgDeviceTest
 import StreamsTest
+import FileWriterTest
 
 try:
     import PyTango
@@ -191,6 +192,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(StreamsTest) )

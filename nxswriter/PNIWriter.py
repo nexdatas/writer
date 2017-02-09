@@ -27,32 +27,78 @@ import pni.io.nx.h5 as nx
 
 def open_file(filename, readonly=False):
     """ open the new file
+
+    :param filename: file name 
+    :type filename: :obj:`str`
+    :param readonly: readonly flag
+    :type readonly: :obj:`bool`
+    :returns: file object
+    :rtype : :class:`PNIFile`
     """
     return PNIFile(nx.open_file(filename, readonly))
 
 
 def create_file(filename, overwrite=False):
     """ create a new file
+
+    :param filename: file name 
+    :type filename: :obj:`str`
+    :param overwrite: overwrite flag
+    :type overwrite: :obj:`bool`
+    :returns: file object
+    :rtype : :class:`PNIFile`
     """
     return PNIFile(nx.create_file(filename, overwrite))
 
 
 def link(target, parent, name):
     """ create link
+
+    :param target: file name 
+    :type target: :obj:`str`
+    :param parent: parent object
+    :type parent: :class:`FTObject`
+    :param name: link name 
+    :type name: :obj:`str`
+    :returns: link object
+    :rtype : :class:`PNILink`
     """
     return PNILink(nx.link(target, parent._h5object, name))
 
 
 def deflate_filter():
+    """ create deflate filter
+
+    :returns: deflate filter object
+    :rtype : :class:`PNIDeflate`
+    """
     return PNIDeflate(nx.deflate_filter())
 
 
 class PNIObject(FileWriter.FTObject):
     """ file tree object
     """
+    
     def __init__(self, h5object):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :class:`pni.io.nx.h5.nxfield` or \
+                        :class:`pni.io.nx.h5.nxgroup` or \
+                        :class:`pni.io.nx.h5.nxlink` or \
+                        :class:`pni.io.nx.h5.nxattribute` or \
+                        :class:`pni.io.nx.h5.nxfile`
+        """
+
+        #: (:class:`pni.io.nx.h5.nxfield` or \
+        #  :class:`pni.io.nx.h5.nxgroup` or \
+        #  :class:`pni.io.nx.h5.nxlink` or \
+        #  :class:`pni.io.nx.h5.nxattribute` or \
+        #  :class:`pni.io.nx.h5.nxfile`) stored H5 file object
         self._h5object = h5object
+        #: (:obj:`str`) object nexus path
         self.path = None
+        #: (:obj:`str`) object name
         self.name = None
         if hasattr(h5object, "path"):
             self.path = h5object.path
@@ -61,6 +107,16 @@ class PNIObject(FileWriter.FTObject):
 
     @property
     def gobject(self):
+        """ get method for pni gobject property
+
+        :returns: pni object
+        :rtype h5object: :class:`pni.io.nx.h5.nxfield` or \
+                        :class:`pni.io.nx.h5.nxgroup` or \
+                        :class:`pni.io.nx.h5.nxlink` or \
+                        :class:`pni.io.nx.h5.nxattribute` or \
+                        :class:`pni.io.nx.h5.nxfile`
+        """
+        
         return self._h5object
 
 
@@ -72,16 +128,16 @@ class PNIAttribute(PNIObject):
         PNIObject.__init__(self, h5object)
 
     def close(self):
-        return self._h5object.close()
+        self._h5object.close()
 
     def read(self):
         return self._h5object.read()
 
     def write(self, o):
-        return self._h5object.write(o)
+        self._h5object.write(o)
 
     def __setitem__(self, t, o):
-        return self._h5object.__setitem__(t, o)
+        self._h5object.__setitem__(t, o)
 
     def __getitem__(self, t):
         return self._h5object.__getitem__(t)
@@ -97,18 +153,6 @@ class PNIAttribute(PNIObject):
     @property
     def shape(self):
         return self._h5object.shape
-
-#    @property
-#    def size(self):
-#        return self._h5object.size
-
-#    @property
-#    def filename(self):
-#        return self._h5object.filename
-
-#    @property
-#    def parent(self):
-#        return PNIGroup(self._h5object.parent)
 
 
 class PNIGroup(PNIObject):
@@ -149,14 +193,11 @@ class PNIGroup(PNIObject):
         return PNIAttributeManager(self._h5object.attributes)
 
     def close(self):
-        return self._h5object.close()
+        self._h5object.close()
 
     def exists(self, name):
         return self._h5object.exists(name)
 
-#    @property
-#    def filename(self):
-#        return self._h5object.filename
 
 
 class PNIField(PNIObject):
@@ -170,19 +211,19 @@ class PNIField(PNIObject):
         return PNIAttributeManager(self._h5object.attributes)
 
     def close(self):
-        return self._h5object.close()
+        self._h5object.close()
 
     def grow(self, dim=0, ext=1):
-        return self._h5object.grow(dim, ext)
+        self._h5object.grow(dim, ext)
 
     def read(self):
         return self._h5object.read()
 
     def write(self, o):
-        return self._h5object.write(o)
+        self._h5object.write(o)
 
     def __setitem__(self, t, o):
-        return self._h5object.__setitem__(t, o)
+        self._h5object.__setitem__(t, o)
 
     def __getitem__(self, t):
         return self._h5object.__getitem__(t)
@@ -223,10 +264,10 @@ class PNIFile(PNIObject):
         return PNIGroup(self._h5object.root())
 
     def flush(self):
-        return self._h5object.flush()
+        self._h5object.flush()
 
     def close(self):
-        return self._h5object.close()
+        self._h5object.close()
 
     @property
     def is_valid(self):
@@ -254,14 +295,6 @@ class PNILink(PNIObject):
     @property
     def target_path(self):
         return self._h5object.target_path
-
-#    @property
-#    def status(self):
-#        return self._h5object.status
-
-#    @property
-#    def type(self):
-#        return self._h5object.type
 
     @property
     def parent(self):
@@ -306,7 +339,7 @@ class PNIAttributeManager(PNIObject):
         return self._h5object.__len__()
 
     def __setitem__(self, t, o):
-        return self._h5object.__setitem__(t, o)
+        self._h5object.__setitem__(t, o)
 
     def __getitem__(self, t):
         return self._h5object.__getitem__(t)

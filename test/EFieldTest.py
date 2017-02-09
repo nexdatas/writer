@@ -24,9 +24,9 @@ import os
 import sys
 import subprocess
 import random
+import binascii
 import struct
 import numpy
-import binascii
 import time
 
 

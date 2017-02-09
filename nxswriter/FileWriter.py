@@ -25,23 +25,51 @@ writer = None
 
 def open_file(filename, readonly=False):
     """ open the new file
+
+    :param filename: file name 
+    :type filename: :obj:`str`
+    :param readonly: readonly flag
+    :type readonly: :obj:`bool`
+    :returns: file object
+    :rtype : :class:`FTObject`
     """
     return writer.open_file(filename, readonly)
 
 
 def create_file(filename, overwrite=False):
     """ create a new file
+
+    :param filename: file name 
+    :type filename: :obj:`str`
+    :param overwrite: overwrite flag
+    :type overwrite: :obj:`bool`
+    :returns: file object
+    :rtype : :class:`FTObject`
     """
     return writer.create_file(filename, overwrite)
 
 
 def link(target, parent, name):
     """ create link
+
+    :param target: file name 
+    :type target: :obj:`str`
+    :param parent: parent object
+    :type parent: :class:`FTObject`
+    :param name: link name 
+    :type name: :obj:`str`
+    :returns: link object
+    :rtype : :class:`FTObject`
     """
     return writer.link(target, parent, name)
 
 
 def deflate_filter():
+    """ create deflate filter
+
+    :returns: deflate filter object
+    :rtype : :class:`FTObject`
+    """
     return writer.deflate_filter()
 
 
