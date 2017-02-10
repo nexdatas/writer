@@ -116,7 +116,7 @@ class FileWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.setwriter(tw)
+        FileWriter.writer = tw
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -143,7 +143,7 @@ class FileWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.setwriter(tw)
+        FileWriter.writer = tw
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -170,7 +170,7 @@ class FileWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.setwriter(tw)
+        FileWriter.writer = tw
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -190,7 +190,7 @@ class FileWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.setwriter(tw)
+        FileWriter.writer = tw
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res

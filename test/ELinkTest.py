@@ -97,7 +97,7 @@ class ELinkTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        nxswriter.FileWriter.setwriter(nxswriter.PNIWriter)
+        nxswriter.FileWriter.writer = nxswriter.PNIWriter
         print "\nsetting up..."
         print "CHECKER SEED =", self._sc.seed
 

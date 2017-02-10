@@ -23,11 +23,6 @@
 writer = None
 
 
-def setwriter(newwriter):
-    print "SET WRITER", newwriter
-    global writer
-    writer = newwriter
-
 def open_file(filename, readonly=False):
     """ open the new file
 
@@ -36,7 +31,7 @@ def open_file(filename, readonly=False):
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
     :returns: file object
-    :rtype : :class:`FTObject`
+    :rtype : :class:`FTFile`
     """
     return writer.open_file(filename, readonly)
 
@@ -49,7 +44,7 @@ def create_file(filename, overwrite=False):
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
     :returns: file object
-    :rtype : :class:`FTObject`
+    :rtype : :class:`FTFile`
     """
     return writer.create_file(filename, overwrite)
 
@@ -64,7 +59,7 @@ def link(target, parent, name):
     :param name: link name
     :type name: :obj:`str`
     :returns: link object
-    :rtype : :class:`FTObject`
+    :rtype : :class:`FTLink`
     """
     return writer.link(target, parent, name)
 
@@ -73,7 +68,7 @@ def deflate_filter():
     """ create deflate filter
 
     :returns: deflate filter object
-    :rtype : :class:`FTObject`
+    :rtype : :class:`FTDeflate`
     """
     return writer.deflate_filter()
 
@@ -91,7 +86,6 @@ class FTObject(object):
         """
         self._h5object = h5object
         self._tparent = tparent
-
 
     def getobject(self):
         """ get object of native library
@@ -111,6 +105,7 @@ class FTObject(object):
 
         return self._tparent
 
+
 class FTAttribute(FTObject):
     """ virtual file tree attribute
     """
@@ -120,9 +115,10 @@ class FTAttribute(FTObject):
 
         :param h5object: pni object
         :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
         """
         FTObject.__init__(self, h5object, tparent)
-
 
     def close(self):
         """ close attribute
@@ -190,9 +186,16 @@ class FTGroup(FTObject):
     """
 
     def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
         FTObject.__init__(self, h5object, tparent)
 
-    def open(self, n):
+    def open(self, name):
         """ open a file tree element
 
         :param name: element name
@@ -200,7 +203,6 @@ class FTGroup(FTObject):
         :returns: file tree object
         :rtype : :class:`FTObject`
         """
-
 
     def create_group(self, n, nxclass=""):
         """ open a file tree element
@@ -212,7 +214,6 @@ class FTGroup(FTObject):
         :returns: file tree group
         :rtype : :class:`FTGroup`
         """
-
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, filter=None):
@@ -240,7 +241,6 @@ class FTGroup(FTObject):
         :rtype : :class:`FTGroup`
         """
 
-
     @property
     def attributes(self):
         """ return the attribute manager
@@ -249,11 +249,9 @@ class FTGroup(FTObject):
         :rtype : :class:`FTAttributeManager`
         """
 
-
     def close(self):
         """ close group
         """
-
 
     def exists(self, name):
         """ if child exists
@@ -269,6 +267,13 @@ class FTField(FTObject):
     """ file tree file
     """
     def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
         FTObject.__init__(self, h5object, tparent)
 
     @property
@@ -283,7 +288,6 @@ class FTField(FTObject):
         """ close field
         """
 
-
     def grow(self, dim=0, ext=1):
         """ grow the field
 
@@ -293,14 +297,12 @@ class FTField(FTObject):
         :type dim: :obj:`int`
         """
 
-
     def read(self):
         """ read the field value
 
         :returns: pni object
         :rtype: :obj:`any`
         """
-
 
     def write(self, o):
         """ write the field value
@@ -309,16 +311,14 @@ class FTField(FTObject):
         :type o: :obj:`any`
         """
 
-
     def __setitem__(self, t, o):
-        """ set value 
+        """ set value
 
         :param t: slice tuple
         :type t: :obj:`tuple`
         :param o: pni object
         :type o: :obj:`any`
         """
-
 
     def __getitem__(self, t):
         """ get value
@@ -329,7 +329,6 @@ class FTField(FTObject):
         :rtype: :obj:`any`
         """
 
-
     @property
     def is_valid(self):
         """ check if field is valid
@@ -337,7 +336,6 @@ class FTField(FTObject):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-
 
     @property
     def dtype(self):
@@ -347,24 +345,21 @@ class FTField(FTObject):
         :rtype: :obj:`str`
         """
 
-
     @property
     def shape(self):
         """ field shape
-        
+
         :returns: field shape
         :rtype: :obj:`list` < :obj:`int` >
         """
 
-
     @property
     def size(self):
         """ field size
-        
-        :returns: field size
-        :rtype: :obj:`int` 
-        """
 
+        :returns: field size
+        :rtype: :obj:`int`
+        """
 
     @property
     def filename(self):
@@ -373,7 +368,6 @@ class FTField(FTObject):
         :returns: file name
         :rtype: :obj:`str`
         """
-
 
     @property
     def parent(self):
@@ -384,12 +378,18 @@ class FTField(FTObject):
         """
 
 
-
 class FTFile(FTObject):
     """ file tree file
     """
 
     def __init__(self, h5object, tparent=None):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
         FTObject.__init__(self, h5object, tparent)
 
     def root(self):
@@ -399,16 +399,13 @@ class FTFile(FTObject):
         :rtype: :class:`FTGroup `
         """
 
-
     def flush(self):
         """ flash the data
         """
 
-
     def close(self):
         """ close file
         """
-
 
     @property
     def is_valid(self):
@@ -417,7 +414,6 @@ class FTFile(FTObject):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-
 
     @property
     def readonly(self):
@@ -428,11 +424,18 @@ class FTFile(FTObject):
         """
 
 
-
 class FTLink(FTObject):
     """ file tree link
     """
+
     def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
         FTObject.__init__(self, h5object, tparent)
 
     @property
@@ -443,7 +446,6 @@ class FTLink(FTObject):
         :rtype: :obj:`bool`
         """
 
-
     @property
     def filename(self):
         """ file name
@@ -452,7 +454,6 @@ class FTLink(FTObject):
         :rtype: :obj:`str`
         """
 
-
     @property
     def target_path(self):
         """ target path
@@ -460,7 +461,6 @@ class FTLink(FTObject):
         :returns: target path
         :rtype: :obj:`str`
         """
-
 
     @property
     def parent(self):
@@ -471,11 +471,17 @@ class FTLink(FTObject):
         """
 
 
-
 class FTDeflate(FTObject):
     """ file tree deflate
     """
     def __init__(self, h5object, tparent=None):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
         FTObject.__init__(self, h5object, tparent)
 
     @property
@@ -486,7 +492,6 @@ class FTDeflate(FTObject):
         :rtype: :obj:`int`
         """
 
-
     @rate.setter
     def rate(self, value):
         """ setter for compression rate
@@ -495,7 +500,6 @@ class FTDeflate(FTObject):
         :type value: :obj:`int`
         """
 
-
     @property
     def shuffle(self):
         """ getter for compression shuffle
@@ -503,7 +507,6 @@ class FTDeflate(FTObject):
         :returns: compression shuffle
         :rtype: :obj:`bool`
         """
-
 
     @shuffle.setter
     def shuffle(self, value):
@@ -514,31 +517,53 @@ class FTDeflate(FTObject):
         """
 
 
-
 class FTAttributeManager(FTObject):
     """ file tree attribute
     """
     def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
         FTObject.__init__(self, h5object, tparent)
 
     def create(self, name, type, shape=[], overwrite=False):
-        """
-        """
+        """ create a new attribute
 
+        :param name: attribute name
+        :type name: :obj:`str`
+        :param shape: attribute shape
+        :type shape: :obj:`list` < :obj:`int` >
+        :param overwrite: overwrite flag
+        :type overwrite: :obj:`bool`
+        :returns: attribute object
+        :rtype : :class:`FTAtribute`
+        """
 
     def __len__(self):
         """ number of attributes
 
-        :param value: number of attributes
-        :type value: :obj:`int`
+        :returns: number of attributes
+        :rtype: :obj:`int`
         """
 
+    def __setitem__(self, name, o):
+        """ set value
 
-    def __setitem__(self, t, o):
-        """
+        :param name: attribute name
+        :type name: :obj:`str`
+        :param o: pni object
+        :type o: :obj:`any`
         """
 
+    def __getitem__(self, name):
+        """ get value
 
-    def __getitem__(self, t):
-        """
+        :param name: attribute name
+        :type name: :obj:`str`
+        :returns: attribute object
+        :rtype : :class:`FTAtribute`
         """
