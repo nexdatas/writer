@@ -196,7 +196,7 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: file tree object
         :rtype : :class:`FTObject`
         """
-        itm = self._h5object.open(n)
+        itm = self._h5object.open(name)
         if isinstance(itm, nx.nxfield):
             return PNIField(itm, self)
         elif isinstance(itm, nx.nxgroup):

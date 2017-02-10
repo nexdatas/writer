@@ -64,6 +64,8 @@ import TNObjectTest
 import TgDeviceTest
 import StreamsTest
 import FileWriterTest
+import PNIWriterTest
+import H5PYWriterTest
 
 try:
     import PyTango
@@ -195,6 +197,12 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(PNIWriterTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(H5PYWriterTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(StreamsTest) )

@@ -89,7 +89,7 @@ def deflate_filter():
     return H5PYDeflate(None)
 
 
-class H5PYAttribute(H5PYObject):
+class H5PYAttribute(FileWriter.FTAttribute):
     """ file tree attribute
     """
 
@@ -180,7 +180,7 @@ class H5PYAttribute(H5PYObject):
             return []
 
 
-class H5PYGroup(H5PYObject):
+class H5PYGroup(FileWriter.FTGroup):
     """ file tree group
     """
     def __init__(self, h5object, tparent):
@@ -191,7 +191,7 @@ class H5PYGroup(H5PYObject):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        H5PYObject.__init__(self, h5object, tparent)
+        FileWriter.FTGroup.__init__(self, h5object, tparent)
         self.path = ''
         self.name = None
         if hasattr(h5object, "name"):
@@ -293,7 +293,7 @@ class H5PYGroup(H5PYObject):
         return name in self._h5object
 
 
-class H5PYField(H5PYObject):
+class H5PYField(FileWriter.FTField):
     """ file tree file
     """
     def __init__(self, h5object, tparent=None):
@@ -304,7 +304,7 @@ class H5PYField(H5PYObject):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        H5PYObject.__init__(self, h5object, tparent)
+        FileWriter.FTField.__init__(self, h5object, tparent)
         self.path = ''
         self.name = None
         if hasattr(h5object, "name"):
@@ -427,7 +427,7 @@ class H5PYField(H5PYObject):
                          self._tparent.getparent())
 
 
-class H5PYFile(H5PYObject):
+class H5PYFile(FileWriter.FTFile):
     """ file tree file
     """
 
@@ -439,7 +439,7 @@ class H5PYFile(H5PYObject):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        H5PYObject.__init__(self, h5object, tparent)
+        FileWriter.FTFile.__init__(self, h5object, tparent)
         self.path = ''
         self.path = ''
         self.name = None
@@ -484,7 +484,7 @@ class H5PYFile(H5PYObject):
         return self._h5object.readonly
 
 
-class H5PYLink(H5PYObject):
+class H5PYLink(FileWriter.FTLink):
     """ file tree link
     """
     def __init__(self, h5object, tparent):
@@ -495,7 +495,7 @@ class H5PYLink(H5PYObject):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        H5PYObject.__init__(self, h5object, tparent)
+        FileWriter.FTLink.__init__(self, h5object, tparent)
         self.path = ''
         self.name = None
         if hasattr(h5object, "name"):
@@ -547,7 +547,7 @@ class H5PYLink(H5PYObject):
                          self._tparent.getparent())
 
 
-class H5PYDeflate(H5PYObject):
+class H5PYDeflate(FileWriter.FTDeflate):
     """ file tree deflate
     """
     def __init__(self, h5object, tparent):
@@ -558,7 +558,7 @@ class H5PYDeflate(H5PYObject):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        H5PYObject.__init__(self, h5object, tparent)
+        FileWriter.FTDeflate.__init__(self, h5object, tparent)
         #: (:obj:`bool`) compression shuffle
         self.shuffle = False
         #: (:obj:`int`) compression rate
@@ -572,7 +572,7 @@ class H5PYDeflate(H5PYObject):
             self.name = self.path.split("/")[-1]
 
 
-class H5PYAttributeManager(H5PYObject):
+class H5PYAttributeManager(FileWriter.FTAttributeManager):
     """ file tree attribute
     """
     def __init__(self, h5object):
@@ -583,7 +583,7 @@ class H5PYAttributeManager(H5PYObject):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        H5PYObject.__init__(self, h5object)
+        FileWriter.FTAttributeManager.__init__(self, h5object)
         #: (:obj:`str`) object nexus path
         self.path = ''
         #: (:obj:`str`) object name
