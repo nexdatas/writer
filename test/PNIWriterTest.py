@@ -31,6 +31,11 @@ import string
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -72,7 +77,6 @@ class testwriter(object):
 
 
 
-
 ## test fixture
 class PNIWriterTest(unittest.TestCase):
 
@@ -101,6 +105,20 @@ class PNIWriterTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
+
+
     ## constructor test
     # \brief It tests default settings
     def test_constructor(self):
@@ -111,6 +129,41 @@ class PNIWriterTest(unittest.TestCase):
         
         self.assertEqual(el.getobject(), w)
 
+    ## default createfile test
+    # \brief It tests default settings
+    def test_default_createfile(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        try:
+            fl = PNIWriter.create_file(self._fname)
+            fl.close()
+        
+            f = nx.open_file(self._fname, readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            for at in f.attributes:
+                print at.name , at.read() , at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+
+            self.myAssertRaise(
+                Exception, PNIWriter.create_file, self._fname)
+
+            self.myAssertRaise(
+                Exception, PNIWriter.create_file, self._fname,
+                False)
+
+            # bug #18 in python-pni 
+            # fl2 = PNIWriter.create_file(self._fname, True)
+            # fl.close()
+            
+        finally:
+            os.remove(self._fname)
+            
             
 if __name__ == '__main__':
     unittest.main()

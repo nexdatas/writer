@@ -29,6 +29,13 @@ import binascii
 import string
 
 import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
+
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione
@@ -99,6 +106,19 @@ class FileWriterTest(unittest.TestCase):
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
+
+    ## Exception tester
+    # \param exception expected exception
+    # \param method called method
+    # \param args list with method arguments
+    # \param kwargs dictionary with method arguments
+    def myAssertRaise(self, exception, method, *args, **kwargs):
+        try:
+            error =  False
+            method(*args, **kwargs)
+        except exception, e:
+            error = True
+        self.assertEqual(error, True)
 
     ## constructor test
     # \brief It tests default settings
@@ -200,6 +220,73 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tw.params[-1], [])
             self.assertEqual(tres, res)
             
+    ## default createfile test
+    # \brief It tests default settings
+    def test_default_createfile_pni(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        try:
+            FileWriter.writer = PNIWriter
+            fl = FileWriter.create_file(self._fname)
+            fl.close()
+        
+            f = nx.open_file(self._fname, readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+
+            self.myAssertRaise(
+                Exception, FileWriter.create_file, self._fname)
+
+            self.myAssertRaise(
+                Exception, FileWriter.create_file, self._fname,
+                False)
+
+            # bug #18 in python-pni 
+            # fl2 = FileWriter.create_file(self._fname, True)
+            # fl.close()
+            
+        finally:
+            os.remove(self._fname)
+            
+    ## default createfile test
+    # \brief It tests default settings
+    def test_default_createfile_h5py(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        try:
+            FileWriter.writer = H5PYWriter
+            fl = FileWriter.create_file(self._fname)
+            fl.close()
+        
+            f = nx.open_file(self._fname, readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+
+            self.myAssertRaise(
+                Exception, FileWriter.create_file, self._fname)
+
+            self.myAssertRaise(
+                Exception, FileWriter.create_file, self._fname,
+                False)
+
+            # bug #18 in python-pni 
+            # fl2 = FileWriter.create_file(self._fname, True)
+            # fl.close()
+            
+        finally:
+            os.remove(self._fname)
             
 if __name__ == '__main__':
     unittest.main()

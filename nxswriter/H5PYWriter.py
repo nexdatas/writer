@@ -21,9 +21,10 @@
 
 from . import FileWriter
 
-
+import pytz
+import time
 import h5py
-
+import datetime
 
 def open_file(filename, readonly=False):
     """ open the new file
@@ -51,11 +52,21 @@ def create_file(filename, overwrite=False):
     :returns: file object
     :rtype : :class:`H5PYFile`
     """
-    if overwrite:
-        return H5PYFile(h5py.File(filename, "a"))
-    else:
-        return H5PYFile(h5py.File(filename, "w"))
+    fl = h5py.File(filename, "a" if overwrite else "w")
+    fl.attrs.create("file_time", currenttime()  + "\0")
+    fl.attrs.create("HDF5_version", "\0")
+    fl.attrs.create("NX_class", "NXroot" + "\0")
+    fl.attrs.create("NeXus_version", "4.3.0\0")
+    fl.attrs.create("file_name", filename + "\0")
+    fl.attrs.create("file_update_time", currenttime() + "\0")
+    return H5PYFile(fl)
 
+#HDF5_version 1.8.13 string
+#NX_class NXroot string
+#NeXus_version 4.3.0 string
+#file_name /home/jkotan/sources/writer/PNIWriterTesttest_default_c#reatefile.h5 string
+#file_time 2017-02-10T19:23:02.889425+0100 string
+#file_update_time
 
 def link(target, parent, name):
     """ create link
@@ -87,6 +98,13 @@ def deflate_filter():
     :rtype : :class:`H5PYDeflate`
     """
     return H5PYDeflate(None)
+
+def currenttime(tzone=None):
+    tzone = tzone or time.tzname[0]
+    tz = pytz.timezone(tzone)
+    fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+    starttime = tz.localize(datetime.datetime.now())
+    return str(starttime.strftime(fmt))
 
 
 class H5PYAttribute(FileWriter.FTAttribute):
@@ -458,11 +476,17 @@ class H5PYFile(FileWriter.FTFile):
     def flush(self):
         """ flash the data
         """
+        if self._h5object.mode in ["r+"]:
+            self._h5object.attrs.create(
+                "file_update_time", currenttime() + "\0")
         return self._h5object.flush()
 
     def close(self):
         """ close file
         """
+        if self._h5object.mode in ["r+"]:
+            self._h5object.attrs.create(
+                "file_update_time", currenttime() + "\0")
         return self._h5object.close()
 
     @property
