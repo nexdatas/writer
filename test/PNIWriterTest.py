@@ -135,12 +135,15 @@ class PNIWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+
         try:
             fl = PNIWriter.create_file(self._fname)
             fl.close()
-        
-            f = nx.open_file(self._fname, readonly=True)
-            f = f.root()
+            fl = PNIWriter.create_file(self._fname, True)
+            fl.close()
+
+            fl = nx.open_file(self._fname, readonly=True)
+            f = fl.root()
             self.assertEqual(6, len(f.attributes))
             for at in f.attributes:
                 print at.name , at.read() , at.dtype
@@ -149,6 +152,19 @@ class PNIWriterTest(unittest.TestCase):
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            fl.close()
+
+            fl = PNIWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            for at in f.attributes:
+                print at.name , at.read() , at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
 
             self.myAssertRaise(
                 Exception, PNIWriter.create_file, self._fname)
@@ -157,11 +173,10 @@ class PNIWriterTest(unittest.TestCase):
                 Exception, PNIWriter.create_file, self._fname,
                 False)
 
-            # bug #18 in python-pni 
-            # fl2 = PNIWriter.create_file(self._fname, True)
-            # fl.close()
-            
-        finally:
+            # bug 20: python-pni
+            # fl2 = PNIWriter.create_file(self._fname, overwrite=True)
+            # fl2.close()
+        finally:    
             os.remove(self._fname)
             
             

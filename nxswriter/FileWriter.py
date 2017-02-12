@@ -234,6 +234,14 @@ class FTGroup(FTObject):
         """
 
     @property
+    def size(self):
+        """ group size
+
+        :returns: group size
+        :rtype: :obj:`int`
+        """
+
+    @property
     def parent(self):
         """ return the parent object
 

@@ -301,6 +301,16 @@ class H5PYGroup(FileWriter.FTGroup):
         """
         return self._h5object.close()
 
+    @property
+    def size(self):
+        """ group size
+
+        :returns: group size
+        :rtype: :obj:`int`
+        """
+        return self._h5object.size()
+
+    
     def exists(self, name):
         """ if child exists
 
@@ -551,7 +561,7 @@ class H5PYLink(FileWriter.FTLink):
             return self._h5object.filename
         else:
             return ""
-
+ 
     @property
     def target_path(self):
         """ target path
@@ -600,7 +610,7 @@ class H5PYDeflate(FileWriter.FTDeflate):
 class H5PYAttributeManager(FileWriter.FTAttributeManager):
     """ file tree attribute
     """
-    def __init__(self, h5object):
+    def __init__(self, h5object, tparent):
         """ constructor
 
         :param h5object: pni object
@@ -608,7 +618,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :param tparent: treee parent
         :type tparent: :obj:`FTObject`
         """
-        FileWriter.FTAttributeManager.__init__(self, h5object)
+        FileWriter.FTAttributeManager.__init__(self, h5object, tparent)
         #: (:obj:`str`) object nexus path
         self.path = ''
         #: (:obj:`str`) object name

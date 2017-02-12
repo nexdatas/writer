@@ -46,7 +46,7 @@ class testwriter(object):
         self.commands = []
         self.params = []
         self.result = None
-    
+
     def open_file(self, filename, readonly=False):
         """ open the new file
         """
@@ -90,18 +90,18 @@ class FileWriterTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = long(time.time() * 256)
 #        self.__seed =241361343400098333007607831038323262554
-            
+
         self.__rnd = random.Random(self.__seed)
 
 
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
-        
+        print "\nsetting up..."
+        print "SEED =", self.__seed
+
     ## test closer
     # \brief Common tear down
     def tearDown(self):
@@ -127,7 +127,7 @@ class FileWriterTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         w = "weerew"
         el = FileWriter.FTObject(w)
-        
+
         self.assertEqual(el.getobject(), w)
 
     ## test
@@ -156,7 +156,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "open_file")
             self.assertEqual(tw.params[-1], [fn, rb])
-            
+
     ## test
     # \brief It tests default settings
     def test_createfile(self):
@@ -183,7 +183,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "create_file")
             self.assertEqual(tw.params[-1], [fn, rb])
-            
+
     ## test
     # \brief It tests default settings
     def test_link(self):
@@ -203,7 +203,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tw.commands[-1], "link")
             self.assertEqual(tw.params[-1], [fn, fn2, fn3])
             self.assertEqual(tres, res)
-            
+
     ## test
     # \brief It tests default settings
     def test_deflate_filter(self):
@@ -219,7 +219,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tw.commands[-1], "deflate_filter")
             self.assertEqual(tw.params[-1], [])
             self.assertEqual(tres, res)
-            
+
     ## default createfile test
     # \brief It tests default settings
     def test_default_createfile_pni(self):
@@ -230,7 +230,9 @@ class FileWriterTest(unittest.TestCase):
             FileWriter.writer = PNIWriter
             fl = FileWriter.create_file(self._fname)
             fl.close()
-        
+            fl = FileWriter.create_file(self._fname, True)
+            fl.close()
+
             f = nx.open_file(self._fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -239,6 +241,19 @@ class FileWriterTest(unittest.TestCase):
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            fl.close()
+
+            fl = FileWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            for at in f.attributes:
+                print at.name , at.read() , at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
 
             self.myAssertRaise(
                 Exception, FileWriter.create_file, self._fname)
@@ -247,13 +262,13 @@ class FileWriterTest(unittest.TestCase):
                 Exception, FileWriter.create_file, self._fname,
                 False)
 
-            # bug #18 in python-pni 
+            # bug #20 in python-pni
             # fl2 = FileWriter.create_file(self._fname, True)
             # fl.close()
-            
+
         finally:
             os.remove(self._fname)
-            
+
     ## default createfile test
     # \brief It tests default settings
     def test_default_createfile_h5py(self):
@@ -264,15 +279,28 @@ class FileWriterTest(unittest.TestCase):
             FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
             fl.close()
-        
-            f = nx.open_file(self._fname, readonly=True)
-            f = f.root()
+            fl = FileWriter.create_file(self._fname, True)
+            fl.close()
+
+            fl = nx.open_file(self._fname, readonly=True)
+            f = fl.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            fl.close()
+
+            fl = FileWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
 
             self.myAssertRaise(
                 Exception, FileWriter.create_file, self._fname)
@@ -281,12 +309,12 @@ class FileWriterTest(unittest.TestCase):
                 Exception, FileWriter.create_file, self._fname,
                 False)
 
-            # bug #18 in python-pni 
+            # bug #18 in python-pni
             # fl2 = FileWriter.create_file(self._fname, True)
             # fl.close()
-            
+
         finally:
             os.remove(self._fname)
-            
+
 if __name__ == '__main__':
     unittest.main()

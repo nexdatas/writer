@@ -139,9 +139,25 @@ class H5PYWriterTest(unittest.TestCase):
         try:
             fl = H5PYWriter.create_file(self._fname)
             fl.close()
+            fl = H5PYWriter.create_file(self._fname, True)
+            fl.close()
         
-            f = nx.open_file(self._fname, readonly=True)
-            f = f.root()
+            fl = nx.open_file(self._fname, readonly=True)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            for at in f.attributes:
+                print at.name , at.read() , at.dtype
+                at = None ## TODO ????????
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+            f = None ## TODO ??????
+            fl.close()
+            
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(
                 f.attributes["file_name"][...],
@@ -150,6 +166,7 @@ class H5PYWriterTest(unittest.TestCase):
                 print at.name , at.read() , at.dtype
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            fl.close()
 
             self.myAssertRaise(
                 Exception, H5PYWriter.create_file, self._fname)

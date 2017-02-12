@@ -243,6 +243,15 @@ class PNIGroup(FileWriter.FTGroup):
                 filter if not filter else filter._h5object), self)
 
     @property
+    def size(self):
+        """ group size
+
+        :returns: group size
+        :rtype: :obj:`int`
+        """
+        return self._h5object.size
+
+    @property
     def parent(self):
         """ return the parent object
 
