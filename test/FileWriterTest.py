@@ -241,6 +241,7 @@ class FileWriterTest(unittest.TestCase):
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            f.close()
             fl.close()
 
             fl = FileWriter.open_file(self._fname, readonly=True)
@@ -262,9 +263,8 @@ class FileWriterTest(unittest.TestCase):
                 Exception, FileWriter.create_file, self._fname,
                 False)
 
-            # bug #20 in python-pni
-            # fl2 = FileWriter.create_file(self._fname, True)
-            # fl.close()
+            fl2 = FileWriter.create_file(self._fname, True)
+            fl2.close()
 
         finally:
             os.remove(self._fname)
@@ -290,6 +290,7 @@ class FileWriterTest(unittest.TestCase):
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            f.close()
             fl.close()
 
             fl = FileWriter.open_file(self._fname, readonly=True)
@@ -309,9 +310,8 @@ class FileWriterTest(unittest.TestCase):
                 Exception, FileWriter.create_file, self._fname,
                 False)
 
-            # bug #18 in python-pni
-            # fl2 = FileWriter.create_file(self._fname, True)
-            # fl.close()
+            fl2 = FileWriter.create_file(self._fname, True)
+            fl2.close()
 
         finally:
             os.remove(self._fname)

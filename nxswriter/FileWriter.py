@@ -86,6 +86,7 @@ class FTObject(object):
         """
         self._h5object = h5object
         self._tparent = tparent
+        self.children = []
 
     def getobject(self):
         """ get object of native library
@@ -105,6 +106,22 @@ class FTObject(object):
 
         return self._tparent
 
+    def close(self):
+        """ close element
+        """
+        for ch in self.children:
+            if ch() is not None:
+                ch().close()
+
+    @property
+    def is_valid(self):
+        """ check if attribute is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return True
+
 
 class FTAttribute(FTObject):
     """ virtual file tree attribute
@@ -119,10 +136,6 @@ class FTAttribute(FTObject):
         :type tparent: :obj:`FTObject`
         """
         FTObject.__init__(self, h5object, tparent)
-
-    def close(self):
-        """ close attribute
-        """
 
     def read(self):
         """ read attribute value
@@ -154,14 +167,6 @@ class FTAttribute(FTObject):
         :type t: :obj:`tuple`
         :returns: python object
         :rtype: :obj:`any`
-        """
-
-    @property
-    def is_valid(self):
-        """ check if attribute is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
         """
 
     @property
@@ -257,10 +262,6 @@ class FTGroup(FTObject):
         :rtype : :class:`FTAttributeManager`
         """
 
-    def close(self):
-        """ close group
-        """
-
     def exists(self, name):
         """ if child exists
 
@@ -290,10 +291,6 @@ class FTField(FTObject):
 
         :returns: attribute manager
         :rtype : :class:`FTAttributeManager`
-        """
-
-    def close(self):
-        """ close field
         """
 
     def grow(self, dim=0, ext=1):
@@ -335,14 +332,6 @@ class FTField(FTObject):
         :type t: :obj:`tuple`
         :returns: pni object
         :rtype: :obj:`any`
-        """
-
-    @property
-    def is_valid(self):
-        """ check if field is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
         """
 
     @property
@@ -411,18 +400,6 @@ class FTFile(FTObject):
         """ flash the data
         """
 
-    def close(self):
-        """ close file
-        """
-
-    @property
-    def is_valid(self):
-        """ check if file is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
-        """
-
     @property
     def readonly(self):
         """ check if file is readonly
@@ -445,14 +422,6 @@ class FTLink(FTObject):
         :type tparent: :obj:`FTObject`
         """
         FTObject.__init__(self, h5object, tparent)
-
-    @property
-    def is_valid(self):
-        """ check if link is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
-        """
 
     @property
     def filename(self):

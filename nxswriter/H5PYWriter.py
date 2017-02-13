@@ -19,12 +19,13 @@
 
 """ Provides h5py file writer """
 
-from . import FileWriter
-
 import pytz
 import time
 import h5py
 import datetime
+import weakref
+
+from . import FileWriter
 
 
 def open_file(filename, readonly=False):
@@ -53,7 +54,7 @@ def create_file(filename, overwrite=False):
     :returns: file object
     :rtype : :class:`H5PYFile`
     """
-    fl = h5py.File(filename, "a" if overwrite else "w")
+    fl = h5py.File(filename, "a" if overwrite else "w-")
     fl.attrs.create("file_time", currenttime() + "\0")
     fl.attrs.create("HDF5_version", "\0")
     fl.attrs.create("NX_class", "NXroot" + "\0")
@@ -121,12 +122,8 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :type tparent: :obj:`FTObject`
         """
         FileWriter.FTAttribute.__init__(self, h5object, tparent)
-        self.path = ''
-        self.name = None
-        if hasattr(h5object, "name"):
-            self.path = h5object.name
-            self.name = self.path.split("/")[-1]
         self.name = h5object[1]
+        self.path = "%s/%s" % (tparent.path, self.name)
 
     def close(self):
         """ close attribute
@@ -138,7 +135,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :returns: python object
         :rtype: :obj:`any`
         """
-        return self._h5object[self.name]
+        return self._h5object[0][self.name]
 
     def write(self, o):
         """ write attribute value
@@ -146,7 +143,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
-        self._h5object[self.name] = o
+        self._h5object[0][self.name] = o
 
     def __setitem__(self, t, o):
         """ write attribute value
@@ -156,7 +153,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
-        return self._h5object.__setitem__(t, o)
+        return self._h5object[0].__setitem__(t, o)
 
     def __getitem__(self, t):
         """ read attribute value
@@ -166,16 +163,24 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :returns: python object
         :rtype: :obj:`any`
         """
-        return self._h5object.__getitem__(t)
+        if not isinstance(t, int):
+            if t is Ellipsis:
+                return self._h5object[0][self.name]
+            else:
+                return self._h5object[0][self.name][t]
+        return self._h5object[0][self.name].__getitem__(t)
 
     @property
     def is_valid(self):
-        """ check if attribute is valid
+        """ check if field is valid
 
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self.name in self._h5object
+        try:
+            return self.name in self._h5object.keys()
+        except:
+            return False
 
     @property
     def dtype(self):
@@ -184,7 +189,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :returns: attribute data type
         :rtype: :obj:`str`
         """
-        return type(self._h5object[self._name]).__name__
+        return type(self._h5object[0][self.name]).__name__
 
     @property
     def shape(self):
@@ -193,8 +198,8 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :returns: attribute shape
         :rtype: :obj:`list` < :obj:`int` >
         """
-        if hasattr(self._h5object[self._name], "shape"):
-            return list(self._h5object[self._name].shape)
+        if hasattr(self._h5object[0][self.name], "shape"):
+            return list(self._h5object[0][self.name].shape)
         else:
             return []
 
@@ -308,9 +313,8 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: group size
         :rtype: :obj:`int`
         """
-        return self._h5object.size()
+        return len(self._h5object.keys())
 
-    
     def exists(self, name):
         """ if child exists
 
@@ -320,6 +324,15 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype: :obj:`bool`
         """
         return name in self._h5object
+
+    @property
+    def is_valid(self):
+        """ check if group is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return self._h5object.name is not None
 
 
 class H5PYField(FileWriter.FTField):
@@ -402,12 +415,12 @@ class H5PYField(FileWriter.FTField):
 
     @property
     def is_valid(self):
-        """ check if field is valid
+        """ check if group is valid
 
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.is_valid
+        return self._h5object.name is not None
 
     @property
     def dtype(self):
@@ -470,7 +483,6 @@ class H5PYFile(FileWriter.FTFile):
         """
         FileWriter.FTFile.__init__(self, h5object, tparent)
         self.path = ''
-        self.path = ''
         self.name = None
         if hasattr(h5object, "name"):
             self.path = h5object.name
@@ -507,7 +519,7 @@ class H5PYFile(FileWriter.FTFile):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.is_valid
+        return self._h5object.name is not None
 
     @property
     def readonly(self):
@@ -561,7 +573,7 @@ class H5PYLink(FileWriter.FTLink):
             return self._h5object.filename
         else:
             return ""
- 
+
     @property
     def target_path(self):
         """ target path
@@ -569,7 +581,7 @@ class H5PYLink(FileWriter.FTLink):
         :returns: target path
         :rtype: :obj:`str`
         """
-        return self._h5object._path
+        return self._h5object.path
 
     @property
     def parent(self):
@@ -639,9 +651,9 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`H5PYAtribute`
         """
-        return H5PYAttribute(
-            self._h5object.create(
-                name, type, shape, overwrite), self)
+        self._h5object.create(
+            name, type, shape, overwrite)
+        return H5PYAttribute((self._h5object, name), self)
 
     def __len__(self):
         """ number of attributes
@@ -649,7 +661,49 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :returns: number of attributes
         :rtype: :obj:`int`
         """
-        return self._h5object.__len__()
+        return len(self._h5object.keys())
+
+    class H5PYAttrIter(object):
+
+        def __init__(self, manager):
+            """ constructor
+
+            :param manager: attribute manager
+            :type manager: :obj:`H5PYAttributeManager`
+            """
+
+            self.__manager = manager
+            self.__iter = self.__manager._h5object.__iter__()
+
+        def next(self):
+            """ the next attribute
+
+            :returns: attribute object
+            :rtype : :class:`FTAtribute`
+            """
+            name = self.__iter.next()
+            if name is None:
+                return None
+            at = H5PYAttribute((self.__manager._h5object, name),
+                               self.__manager.getparent())
+            self.__manager.getparent().children.append(weakref.ref(at))
+            return at
+
+        def __iter__(self):
+            """ attribute iterator
+
+            :returns: attribute iterator
+            :rtype : :class:`H5PYAttrIter`
+            """
+            return self
+
+    def __iter__(self):
+        """ attribute iterator
+
+        :returns: attribute iterator
+        :rtype : :class:`H5PYAttrIter`
+        """
+        return self.H5PYAttrIter(self)
 
     def __setitem__(self, t, o):
         """ set value
@@ -661,7 +715,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         """
         return self._h5object.__setitem__(t, o)
 
-    def __getitem__(self, t):
+    def __getitem__(self, name):
         """ get value
 
         :param name: attribute name
@@ -669,4 +723,6 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`FTAtribute`
         """
-        return self._h5object.__getitem__(t)
+        at = H5PYAttribute((self._h5object, name), self.getparent())
+        self.getparent().children.append(weakref.ref(at))
+        return at

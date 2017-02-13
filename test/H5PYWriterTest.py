@@ -150,10 +150,10 @@ class H5PYWriterTest(unittest.TestCase):
                 self._fname)
             for at in f.attributes:
                 print at.name , at.read() , at.dtype
-                at = None ## TODO ????????
+                at.close()
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
-            f = None ## TODO ??????
+            f.close()
             fl.close()
             
             fl = H5PYWriter.open_file(self._fname, readonly=True)
@@ -163,7 +163,7 @@ class H5PYWriterTest(unittest.TestCase):
                 f.attributes["file_name"][...],
                 self._fname)
             for at in f.attributes:
-                print at.name , at.read() , at.dtype
+                print at.name ,  at.dtype, at.read() 
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
@@ -175,9 +175,8 @@ class H5PYWriterTest(unittest.TestCase):
                 Exception, H5PYWriter.create_file, self._fname,
                 False)
 
-            # bug #18 in python-pni 
-            # fl2 = H5PYWriter.create_file(self._fname, True)
-            # fl.close()
+            fl2 = H5PYWriter.create_file(self._fname, True)
+            fl2.close()
             
         finally:
             os.remove(self._fname)

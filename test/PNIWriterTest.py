@@ -45,7 +45,7 @@ class testwriter(object):
         self.commands = []
         self.params = []
         self.result = None
-    
+
     def open_file(self, filename, readonly=False):
         """ open the new file
         """
@@ -88,18 +88,18 @@ class PNIWriterTest(unittest.TestCase):
         try:
             self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed  = long(time.time() * 256)
 #        self.__seed =241361343400098333007607831038323262554
-            
+
         self.__rnd = random.Random(self.__seed)
 
 
     ## test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
-        
+        print "\nsetting up..."
+        print "SEED =", self.__seed
+
     ## test closer
     # \brief Common tear down
     def tearDown(self):
@@ -126,7 +126,7 @@ class PNIWriterTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         w = "weerew"
         el = FileWriter.FTObject(w)
-        
+
         self.assertEqual(el.getobject(), w)
 
     ## default createfile test
@@ -147,17 +147,20 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             for at in f.attributes:
                 print at.name , at.read() , at.dtype
+                at.close()
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
+            f.close()
             fl.close()
 
             fl = PNIWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             for at in f.attributes:
+                print at
                 print at.name , at.read() , at.dtype
             self.assertEqual(
                 f.attributes["file_name"][...],
@@ -173,12 +176,11 @@ class PNIWriterTest(unittest.TestCase):
                 Exception, PNIWriter.create_file, self._fname,
                 False)
 
-            # bug 20: python-pni
-            # fl2 = PNIWriter.create_file(self._fname, overwrite=True)
-            # fl2.close()
-        finally:    
+            fl2 = PNIWriter.create_file(self._fname, overwrite=True)
+            fl2.close()
+        finally:
             os.remove(self._fname)
-            
-            
+
+
 if __name__ == '__main__':
     unittest.main()

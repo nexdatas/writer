@@ -19,10 +19,10 @@
 
 """ Provides pni file writer """
 
-from . import FileWriter
-
-
+import weakref
 import pni.io.nx.h5 as nx
+
+from . import FileWriter
 
 
 def open_file(filename, readonly=False):
@@ -100,6 +100,7 @@ class PNIAttribute(FileWriter.FTAttribute):
     def close(self):
         """ close attribute
         """
+        FileWriter.FTAttribute.close(self)
         self._h5object.close()
 
     def read(self):
@@ -198,15 +199,17 @@ class PNIGroup(FileWriter.FTGroup):
         """
         itm = self._h5object.open(name)
         if isinstance(itm, nx.nxfield):
-            return PNIField(itm, self)
+            el = PNIField(itm, self)
         elif isinstance(itm, nx.nxgroup):
-            return PNIGroup(itm, self)
+            el = PNIGroup(itm, self)
         elif isinstance(itm, nx.nxattribute):
-            return PNIAttribute(itm, self)
+            el = PNIAttribute(itm, self)
         elif isinstance(itm, nx.nxlink):
-            return PNILink(itm, self)
+            el = PNILink(itm, self)
         else:
             return PNIObject(itm, self)
+        self.children.append(weakref.ref(el))
+        return el
 
     def create_group(self, n, nxclass=""):
         """ open a file tree element
@@ -218,7 +221,9 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: file tree group
         :rtype : :class:`PNIGroup`
         """
-        return PNIGroup(self._h5object.create_group(n, nxclass), self)
+        g = PNIGroup(self._h5object.create_group(n, nxclass), self)
+        self.children.append(weakref.ref(g))
+        return g
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, filter=None):
@@ -237,10 +242,12 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype : :class:`PNIField`
         """
-        return PNIField(
+        f = PNIField(
             self._h5object.create_field(
                 name, type_code, shape, chunk,
                 filter if not filter else filter._h5object), self)
+        self.children.append(weakref.ref(f))
+        return f
 
     @property
     def size(self):
@@ -268,11 +275,14 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: attribute manager
         :rtype : :class:`PNIAttributeManager`
         """
-        return PNIAttributeManager(self._h5object.attributes, self)
+        am = PNIAttributeManager(self._h5object.attributes, self)
+        self.children.append(weakref.ref(am))
+        return am
 
     def close(self):
         """ close group
         """
+        FileWriter.FTGroup.close(self)
         self._h5object.close()
 
     def exists(self, name):
@@ -314,11 +324,14 @@ class PNIField(FileWriter.FTField):
         :returns: attribute manager
         :rtype : :class:`PNIAttributeManager`
         """
-        return PNIAttributeManager(self._h5object.attributes, self)
+        am = PNIAttributeManager(self._h5object.attributes, self)
+        self.children.append(weakref.ref(am))
+        return am
 
     def close(self):
         """ close field
         """
+        FileWriter.FTField.close(self)
         self._h5object.close()
 
     def grow(self, dim=0, ext=1):
@@ -450,7 +463,9 @@ class PNIFile(FileWriter.FTFile):
         :returns: parent object
         :rtype: :class:`PNIGroup `
         """
-        return PNIGroup(self._h5object.root(), self)
+        g = PNIGroup(self._h5object.root(), self)
+        self.children.append(weakref.ref(g))
+        return g
 
     def flush(self):
         """ flash the data
@@ -460,6 +475,7 @@ class PNIFile(FileWriter.FTFile):
     def close(self):
         """ close file
         """
+        FileWriter.FTFile.close(self)
         self._h5object.close()
 
     @property
@@ -630,9 +646,11 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`PNIAtribute`
         """
-        return PNIAttribute(
+        at = PNIAttribute(
             self._h5object.create(
                 name, type, shape, overwrite), self.getparent())
+        self.getparent().children.append(weakref.ref(at))
+        return at
 
     def __len__(self):
         """ number of attributes
@@ -660,5 +678,13 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`FTAtribute`
         """
-        return PNIAttribute(
+        at = PNIAttribute(
             self._h5object.__getitem__(name), self.getparent())
+        self.getparent().children.append(weakref.ref(at))
+        return at
+
+    def close(self):
+        """ close attribure manager
+        """
+        FileWriter.FTAttributeManager.close(self)
+        self._h5object.close()
