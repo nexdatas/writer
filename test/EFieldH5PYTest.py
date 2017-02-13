@@ -1131,6 +1131,7 @@ class EFieldH5PYTest(unittest.TestCase):
 
         for k in attrs: 
             h5 = el[k].h5Object
+            print "TYPE", h5, h5.dtype
             self.assertEqual(h5.dtype,attrs[k][2] if attrs[k][2] else 'string')
             if attrs[k][2] and attrs[k][2] != 'string_old':
                 if el[k].grows == 3:
@@ -2894,7 +2895,7 @@ class EFieldH5PYTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if H5PYIO or k in supp:
+            if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
                 if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
@@ -3025,7 +3026,7 @@ class EFieldH5PYTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if H5PYIO or k in supp:
+            if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
                 if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
@@ -4048,7 +4049,7 @@ class EFieldH5PYTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 
-            if H5PYIO or k in supp:
+            if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
                 if  attrs[k][2] == "string_old" or not  attrs[k][2]:
@@ -4172,7 +4173,7 @@ class EFieldH5PYTest(unittest.TestCase):
 #            self.assertEqual(el[k].run(), None)
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if H5PYIO or k in supp:
+            if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
                 if  attrs[k][2] == "string_old" or not  attrs[k][2]:

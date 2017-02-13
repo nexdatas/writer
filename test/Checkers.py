@@ -24,6 +24,7 @@ import random
 import unittest
 import binascii
 import time
+import numpy
 
 try:
     from pni.io.nx.h5 import open_file
@@ -218,9 +219,9 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if self._isNumeric(cnt[...]):
+        if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]):
             if not self._isNumeric(values):
-#                    print "BOOL: ", values[i] ,cnt[i]
+                print "BOOL: ", values ,cnt[...], type(values), type(cnt[...])
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt[...])
             else:
                 self._tc.assertTrue(abs(values - cnt[...]) <= error)
@@ -270,6 +271,7 @@ class Checker(object):
     def checkImageAttribute(self, det, name, dtype, values, error = 0):
 
         cnt = det.attributes[name]
+        print name, cnt
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))

@@ -224,10 +224,10 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype : :class:`FTObject`
         """
         try:
-            itm = self._h5object[n]
+            itm = self._h5object[name]
         except:
-            _ = self._h5object.attrs[n]
-            return H5PYAttribute((self._h5object.attrs, n), self)
+            _ = self._h5object.attrs[name]
+            return H5PYAttribute((self._h5object.attrs, name), self)
 
         if isinstance(itm, h5py._hl.dataset.Dataset):
             return H5PYField(itm, self)
@@ -270,21 +270,28 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype : :class:`H5PYField`
         """
+        shape = shape or []
+        mshape = [None for _ in shape] or (None,)
+        if type_code == "string":
+#            type_code = h5py.special_dtype(vlen=unicode)
+            type_code = h5py.special_dtype(vlen=bytes)
         if filter:
             return H5PYField(
                 self._h5object.create_dataset(
-                    name, shape or [], type_code, chunks=chunk,
+                    name, shape, type_code, chunks=chunk,
                     compression=("gzip" if filter.compression
                                  else None),
                 compression_opts=filter.rate,
-                    shuffle=filter.shuffle
+                    shuffle=filter.shuffle, maxshape=mshape
                 ),
                 self)
         else:
             return H5PYField(
                 self._h5object.create_dataset(
-                    name, shape or [], type_code,
-                    chunks=(tuple(chunk) if chunk is not None else None)
+                    name, shape, type_code,
+                    chunks=(tuple(chunk)
+                            if chunk is not None else None),
+                    maxshape=mshape
                 ),
                 self)
 
@@ -389,7 +396,9 @@ class H5PYField(FileWriter.FTField):
         :param dim: size of the grow
         :type dim: :obj:`int`
         """
-        return self._h5object.grow(dim, ext)
+        shape = list(self._h5object.shape)
+        shape[dim] += ext
+        return self._h5object.resize(shape)
 
     def read(self):
         """ read the field value
@@ -397,7 +406,7 @@ class H5PYField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        return self._h5object.read()
+        return self._h5object[...]
 
     def write(self, o):
         """ write the field value
@@ -443,7 +452,11 @@ class H5PYField(FileWriter.FTField):
         :returns: field data type
         :rtype: :obj:`str`
         """
-        return self._h5object.dtype
+
+        if self._h5object.dtype.kind == 'O':
+            return "string"
+
+        return str(self._h5object.dtype)
 
     @property
     def shape(self):
@@ -604,6 +617,8 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :rtype : :class:`H5PYAtribute`
         """
         if shape:
+            if type == 'string':
+                type = h5py.special_dtype(vlen=bytes)
             self._h5object.create(
                 name, np.zeros(shape, dtype=type), shape, type)
         else:
@@ -759,7 +774,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :rtype: :obj:`bool`
         """
         try:
-            return self.name in self._h5object.keys()
+            return self.name in self._h5object[0].keys()
         except:
             return False
 
@@ -775,6 +790,11 @@ class H5PYAttribute(FileWriter.FTAttribute):
             dt= str(self._h5object[0][self.name].dtype)
         if dt.endswith("_"):
             dt = dt[:-1] 
+        if dt == "object":
+            dt = "string"
+        if dt.startswith("|S"):
+            dt = "string"
+#        print "TTT", self.name, dt
         return dt 
 
     @property
