@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file FElementTest.py
+## \file FElementH5PYTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -30,6 +30,10 @@ import binascii
 import time
 
 
+try:
+    import pni.io.nx.h5 as nx
+except:
+    import pni.nx.h5 as nx
 
 from nxswriter.Element import Element
 from nxswriter.FElement import FElement
@@ -40,6 +44,7 @@ from nxswriter.Errors import XMLSettingSyntaxError
 from nxswriter.Types import NTP
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 from TestDataSource import TestDataSource 
 
@@ -53,7 +58,7 @@ from  xml.sax import SAXParseException
 
 
 ## test fixture
-class FElementTest(unittest.TestCase):
+class FElementH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -90,7 +95,7 @@ class FElementTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         ## element file objects
@@ -917,18 +922,34 @@ class FElementTest(unittest.TestCase):
         uds = "unknown datasource"
         ds = TestDataSource()
         el = FElement(self._tfname, self._fattrs, None)
-        self.assertEqual(el.setMessage(),(text % (uob, uds), None))
-        self.assertEqual(el.setMessage(message),(text % (uob, uds), message))
+        self.assertEqual(
+            el.setMessage(), (text % (uob, uds), None))
+        self.assertEqual(
+            el.setMessage(message), (text % (uob, uds), message))
         el.source = ds
-        self.assertEqual(el.setMessage(),(text % (uob, str(ds)), None))
-        self.assertEqual(el.setMessage(message),(text % (uob, str(ds)), message))
+        self.assertEqual(
+            el.setMessage(), (text % (uob, str(ds)), None))
+        self.assertEqual(
+            el.setMessage(message), (text % (uob, str(ds)), message))
 
         el2 = FElement(self._tfname, self._fattrs, el, self._group )
-        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name + ":NXentry", uds), None))
-        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name + ":NXentry", uds), message))
+        self.assertEqual(
+            el2.setMessage(),
+            (text % ("/" + self._group.name + ":NXentry", uds),
+             None))
+        self.assertEqual(
+            el2.setMessage(message),
+            (text % ("/"+self._group.name + ":NXentry", uds),
+             message))
         el2.source = ds
-        self.assertEqual(el2.setMessage(),(text % ("/"+self._group.name + ":NXentry", str(ds)), None))
-        self.assertEqual(el2.setMessage(message),(text % ("/"+self._group.name + ":NXentry", str(ds)), message))
+        self.assertEqual(
+            el2.setMessage(),
+            (text % ("/"+self._group.name + ":NXentry", str(ds)),
+             None))
+        self.assertEqual(
+            el2.setMessage(message),
+            (text % ("/"+self._group.name + ":NXentry", str(ds)),
+             message))
         
 
 

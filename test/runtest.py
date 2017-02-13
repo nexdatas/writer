@@ -29,7 +29,9 @@ import XMLFieldTagWriterTest
 import NexusXMLHandlerTest
 import ElementTest
 import FElementTest
+import FElementH5PYTest
 import FElementWithAttrTest
+import FElementWithAttrH5PYTest
 import EStrategyTest
 import EFieldTest
 import EFieldReshapeTest
@@ -214,7 +216,12 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(FElementTest) )
 
     suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FElementH5PYTest) )
+
+    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FElementWithAttrTest) )
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(FElementWithAttrH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EFieldTest) )

@@ -132,7 +132,6 @@ class DataHolder(object):
                     return NTP.convert[dtype](self.value)
 
         else:
-
             if dtype in NTP.npTt.keys() \
                     and NTP.npTt[dtype] == str(self.tangoDType) \
                     and dtype != "string":

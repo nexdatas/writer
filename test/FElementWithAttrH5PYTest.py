@@ -37,7 +37,7 @@ from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -50,7 +50,7 @@ from  xml.sax import SAXParseException
 
 
 ## test fixture
-class FElementWithAttrTest(unittest.TestCase):
+class FElementWithAttrH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -98,7 +98,7 @@ class FElementWithAttrTest(unittest.TestCase):
 
     def createTree(self):    
         ## file handle
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         ## element file objects

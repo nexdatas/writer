@@ -24,6 +24,7 @@ import time
 import h5py
 import datetime
 import weakref
+import numpy as np
 
 from . import FileWriter
 
@@ -202,8 +203,17 @@ class H5PYGroup(FileWriter.FTGroup):
         self.path = ''
         self.name = None
         if hasattr(h5object, "name"):
+                
             self.path = h5object.name
             self.name = self.path.split("/")[-1]
+            if ":" not in self.path.split("/")[-1]:
+                if "NX_class" in h5object.attrs:
+                    clss = h5object.attrs["NX_class"]
+                else:
+                    clss = ""
+                self.path = self.path + ":" + clss
+                
+                
 
     def open(self, name):
         """ open a file tree element
@@ -260,10 +270,22 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype : :class:`H5PYField`
         """
-        return H5PYField(
-            self._h5object.create_field(
-                name, type_code, shape, chunk,
-                filter if not filter else filter._h5object), self)
+        if filter:
+            return H5PYField(
+                self._h5object.create_dataset(
+                    name, shape or [], type_code, chunks=chunk,
+                    compression=("gzip" if filter.compression
+                                 else None),
+                compression_opts=filter.rate,
+                    shuffle=filter.shuffle
+                ),
+                self)
+        else:
+            return H5PYField(
+            self._h5object.create_dataset(
+                name, shape or [], type_code, chunks=chunk
+            ),
+                self)
 
     @property
     def parent(self):
@@ -580,8 +602,15 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`H5PYAtribute`
         """
-        self._h5object.create(
-            name, type, shape, overwrite)
+        if shape:
+            self._h5object.create(
+                name, np.zeros(shape, dtype=type), shape, type)
+        else:
+            if type == "string":
+                self._h5object.create(name, "a")
+            else:
+                self._h5object.create(
+                    name, np.array(0, dtype=type), (1,), type)
         return H5PYAttribute((self._h5object, name), self)
 
     def __len__(self):
@@ -701,7 +730,10 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
-        return self._h5object[0].__setitem__(t, o)
+        if t is Ellipsis:
+            self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
+        else:
+            self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
 
     def __getitem__(self, t):
         """ read attribute value
@@ -737,7 +769,12 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :returns: attribute data type
         :rtype: :obj:`str`
         """
-        return type(self._h5object[0][self.name]).__name__
+        dt = type(self._h5object[0][self.name]).__name__
+        if dt == "ndarray":
+            dt= str(self._h5object[0][self.name].dtype)
+        if dt.endswith("_"):
+            dt = dt[:-1] 
+        return dt 
 
     @property
     def shape(self):
