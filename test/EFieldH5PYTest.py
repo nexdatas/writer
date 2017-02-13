@@ -30,13 +30,7 @@ import numpy
 import time
 
 
-## True if pniio installed
-PNIIO = False
-try:
-    import pni.io.nx.h5 as nx
-    PNIIO = True
-except:
-    import pni.nx.h5 as nx
+PNIIO = True
 
 from TestDataSource import TestDataSource 
 
@@ -53,7 +47,7 @@ from nxswriter.Errors import XMLSettingSyntaxError
 
 from Checkers import Checker 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -67,7 +61,7 @@ from  xml.sax import SAXParseException
 
 
 ## test fixture
-class EFieldTest(unittest.TestCase):
+class EFieldH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -137,7 +131,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
 
         el = EField( self._fattrs, None)
@@ -166,7 +160,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -198,7 +192,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -234,7 +228,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         fattrs = {"name":"test","units":"m", "type":"NX_INT" }
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField(fattrs, eFile)
@@ -267,7 +261,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -289,7 +283,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), (None, None))
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIField)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYField)
 
         self.assertEqual(el.grows, None)
         self._nxFile.close()
@@ -302,7 +296,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -336,7 +330,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -371,7 +365,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -404,7 +398,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( self._fattrs, eFile)
@@ -438,7 +432,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField(self._fattrs, eFile)
@@ -474,7 +468,7 @@ class EFieldTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fattrs = {"name":"test","units":"m", "type":"NX_INT64" }
@@ -536,7 +530,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -611,7 +605,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -693,7 +687,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -774,7 +768,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -884,7 +878,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -982,7 +976,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1095,7 +1089,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1206,7 +1200,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1316,7 +1310,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1386,7 +1380,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -1408,7 +1402,7 @@ class EFieldTest(unittest.TestCase):
         
         el.store() 
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIField)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYField)
         self.assertEqual(el.h5Object.name, fattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 14)
         self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
@@ -1439,7 +1433,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -1461,8 +1455,8 @@ class EFieldTest(unittest.TestCase):
         
         el.store() 
 
-        FileWriter.writer = PNIWriter
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIField)
+        FileWriter.writer = H5PYWriter
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYField)
         self.assertEqual(el.h5Object.name, fattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 2)
         self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
@@ -1517,7 +1511,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool"]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -1602,7 +1596,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -1685,7 +1679,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],)
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -1764,7 +1758,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
             
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -1843,7 +1837,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1926,7 +1920,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2031,7 +2025,7 @@ class EFieldTest(unittest.TestCase):
             "bool4":["true","NX_BOOLEAN", "bool", (1,)]
             }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2153,7 +2147,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2276,7 +2270,7 @@ class EFieldTest(unittest.TestCase):
             attrs[k][3] =  (mlen[0],mlen[1])
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2352,7 +2346,7 @@ class EFieldTest(unittest.TestCase):
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EField( {"name":"myfield", "units":"m"}, eFile)
@@ -2421,7 +2415,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2522,7 +2516,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2619,7 +2613,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2727,7 +2721,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2835,7 +2829,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2900,7 +2894,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if PNIIO or k in supp:
+            if H5PYIO or k in supp:
                 self.assertEqual(el[k].error, None)
                 if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
@@ -2965,7 +2959,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3031,7 +3025,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if PNIIO or k in supp:
+            if H5PYIO or k in supp:
                 self.assertEqual(el[k].error, None)
                 if stt != 'POSTRUN':
                     self.assertEqual(el[k].grows, None)
@@ -3087,7 +3081,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3227,7 +3221,7 @@ class EFieldTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3354,7 +3348,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3481,7 +3475,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3609,7 +3603,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3732,7 +3726,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3866,7 +3860,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3988,7 +3982,7 @@ class EFieldTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4054,7 +4048,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 
-            if PNIIO or k in supp:
+            if H5PYIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
                 if  attrs[k][2] == "string_old" or not  attrs[k][2]:
@@ -4122,7 +4116,7 @@ class EFieldTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4178,7 +4172,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].run(), None)
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if PNIIO or k in supp:
+            if H5PYIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
                 if  attrs[k][2] == "string_old" or not  attrs[k][2]:
@@ -4251,7 +4245,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4377,7 +4371,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4497,7 +4491,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4630,7 +4624,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4747,7 +4741,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4871,7 +4865,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -4991,7 +4985,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5124,7 +5118,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5245,7 +5239,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5368,7 +5362,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5486,7 +5480,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5616,7 +5610,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5740,7 +5734,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -5859,7 +5853,7 @@ class EFieldTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 

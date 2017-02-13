@@ -38,7 +38,7 @@ from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -51,7 +51,7 @@ from  xml.sax import SAXParseException
 
 
 ## test fixture
-class EStrategyTest(unittest.TestCase):
+class EStrategyH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -79,7 +79,7 @@ class EStrategyTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._group = self._nxFile.create_group(self._gname, self._gtype)

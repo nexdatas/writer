@@ -282,9 +282,10 @@ class H5PYGroup(FileWriter.FTGroup):
                 self)
         else:
             return H5PYField(
-            self._h5object.create_dataset(
-                name, shape or [], type_code, chunks=chunk
-            ),
+                self._h5object.create_dataset(
+                    name, shape or [], type_code,
+                    chunks=(tuple(chunk) if chunk is not None else None)
+                ),
                 self)
 
     @property
@@ -784,6 +785,6 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :rtype: :obj:`list` < :obj:`int` >
         """
         if hasattr(self._h5object[0][self.name], "shape"):
-            return list(self._h5object[0][self.name].shape)
+            return self._h5object[0][self.name].shape or (1,)
         else:
-            return []
+            return (1,)

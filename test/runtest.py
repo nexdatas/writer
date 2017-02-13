@@ -33,6 +33,7 @@ import FElementH5PYTest
 import FElementWithAttrTest
 import FElementWithAttrH5PYTest
 import EStrategyTest
+import EStrategyH5PYTest
 import EFieldTest
 import EFieldReshapeTest
 import EGroupTest
@@ -211,6 +212,8 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest) )
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EStrategyH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(FElementTest) )

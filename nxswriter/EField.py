@@ -450,7 +450,7 @@ class EField(FElementWithAttr):
                     message = self.setMessage("Data without value")
                     self.error = message
                 elif not hasattr(self.h5Object, 'shape'):
-                    message = self.setMessage("PNI Object not created")
+                    message = self.setMessage("H5 Object not created")
                     self.error = message
                 else:
                     if not self.__extraD:
