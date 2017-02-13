@@ -159,6 +159,20 @@ class PNIWriterTest(unittest.TestCase):
             fl = PNIWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
+            atts = []
+            for at in f.attributes:
+                print at
+                print at.name , at.read() , at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
+            
+            fl.reopen()
+            self.assertEqual(6, len(f.attributes))
+            atts = []
             for at in f.attributes:
                 print at
                 print at.name , at.read() , at.dtype

@@ -28,7 +28,7 @@ import weakref
 from . import FileWriter
 
 
-def open_file(filename, readonly=False):
+def open_file(filename, readonly=False, libver='latest'):
     """ open the new file
 
     :param filename: file name
@@ -39,12 +39,12 @@ def open_file(filename, readonly=False):
     :rtype : :class:`H5PYFile`
     """
     if readonly:
-        return H5PYFile(h5py.File(filename, "r"))
+        return H5PYFile(h5py.File(filename, "r", libver=libver), filename)
     else:
-        return H5PYFile(h5py.File(filename, "r+"))
+        return H5PYFile(h5py.File(filename, "r+", libver=libver), filename)
 
 
-def create_file(filename, overwrite=False):
+def create_file(filename, overwrite=False, libver='latest'):
     """ create a new file
 
     :param filename: file name
@@ -54,14 +54,14 @@ def create_file(filename, overwrite=False):
     :returns: file object
     :rtype : :class:`H5PYFile`
     """
-    fl = h5py.File(filename, "a" if overwrite else "w-")
+    fl = h5py.File(filename, "a" if overwrite else "w-", libver=libver)
     fl.attrs.create("file_time", currenttime() + "\0")
     fl.attrs.create("HDF5_version", "\0")
     fl.attrs.create("NX_class", "NXroot" + "\0")
     fl.attrs.create("NeXus_version", "4.3.0\0")
     fl.attrs.create("file_name", filename + "\0")
     fl.attrs.create("file_update_time", currenttime() + "\0")
-    return H5PYFile(fl)
+    return H5PYFile(fl, filename)
 
 
 def link(target, parent, name):
@@ -109,99 +109,82 @@ def currenttime():
     return str(starttime.strftime(fmt))
 
 
-class H5PYAttribute(FileWriter.FTAttribute):
-    """ file tree attribute
+class H5PYFile(FileWriter.FTFile):
+    """ file tree file
     """
 
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, filename):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
+        :param filename:  file name
+        :type filename: :obj:`str`
         """
-        FileWriter.FTAttribute.__init__(self, h5object, tparent)
-        self.name = h5object[1]
-        self.path = "%s/%s" % (tparent.path, self.name)
+        FileWriter.FTFile.__init__(self, h5object, None)
+        #: (:obj:`str`) object nexus path
+        self.path = ''
+        #: (:obj:`str`) file name
+        self.name = filename
+        if hasattr(h5object, "name"):
+            self.path = h5object.name
+
+    def root(self):
+        """ root object
+
+        :returns: parent object
+        :rtype: :class:`H5PYGroup `
+        """
+        g = H5PYGroup(self._h5object, self)
+        self.children.append(weakref.ref(g))
+        return g
+
+    def flush(self):
+        """ flash the data
+        """
+        if self._h5object.mode in ["r+"]:
+            self._h5object.attrs.create(
+                "file_update_time", currenttime() + "\0")
+        return self._h5object.flush()
 
     def close(self):
-        """ close attribute
+        """ close file
         """
-
-    def read(self):
-        """ read attribute value
-
-        :returns: python object
-        :rtype: :obj:`any`
-        """
-        return self._h5object[0][self.name]
-
-    def write(self, o):
-        """ write attribute value
-
-        :param o: python object
-        :type o: :obj:`any`
-        """
-        self._h5object[0][self.name] = o
-
-    def __setitem__(self, t, o):
-        """ write attribute value
-
-        :param t: slice tuple
-        :type t: :obj:`tuple`
-        :param o: python object
-        :type o: :obj:`any`
-        """
-        return self._h5object[0].__setitem__(t, o)
-
-    def __getitem__(self, t):
-        """ read attribute value
-
-        :param t: slice tuple
-        :type t: :obj:`tuple`
-        :returns: python object
-        :rtype: :obj:`any`
-        """
-        if not isinstance(t, int):
-            if t is Ellipsis:
-                return self._h5object[0][self.name]
-            else:
-                return self._h5object[0][self.name][t]
-        return self._h5object[0][self.name].__getitem__(t)
+        if self._h5object.mode in ["r+"]:
+            self._h5object.attrs.create(
+                "file_update_time", currenttime() + "\0")
+        return self._h5object.close()
 
     @property
     def is_valid(self):
-        """ check if field is valid
+        """ check if file is valid
 
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        try:
-            return self.name in self._h5object.keys()
-        except:
-            return False
+        return self._h5object.name is not None
 
     @property
-    def dtype(self):
-        """ attribute data type
+    def readonly(self):
+        """ check if file is readonly
 
-        :returns: attribute data type
-        :rtype: :obj:`str`
+        :returns: readonly flag
+        :rtype: :obj:`bool`
         """
-        return type(self._h5object[0][self.name]).__name__
+        return self._h5object.readonly
 
-    @property
-    def shape(self):
-        """ attribute shape
-
-        :returns: attribute shape
-        :rtype: :obj:`list` < :obj:`int` >
+    def reopen(self, readonly=False, libver='latest', swmr=False):
+        """ reopen file
         """
-        if hasattr(self._h5object[0][self.name], "shape"):
-            return list(self._h5object[0][self.name].shape)
-        else:
-            return []
+        if (not self.is_valid or self._h5object.readonly != readonly
+            or self._h5object.libver != libver):
+            self._h5object = h5py.File(
+                self.name, "r" if readonly else "r+", libver=libver)
+            FileWriter.FTFile.reopen(self)
+        if hasattr(self._h5object, "swmr_mode"):
+            self._h5object.swmr_mode = swmr
+        if swmr:
+            raise Exception("SWMR not supported")
 
 
 class H5PYGroup(FileWriter.FTGroup):
@@ -334,6 +317,14 @@ class H5PYGroup(FileWriter.FTGroup):
         """
         return self._h5object.name is not None
 
+    def reopen(self):
+        """ reopen file
+        """
+        if isinstance(self._tparent, H5PYFile):
+            self._h5object = self._tparent.getobject()
+        else:
+            self._h5object = self._tparent.getobject().open(self.name)
+        FileWriter.FTGroup.reopen(self)
 
 class H5PYField(FileWriter.FTField):
     """ file tree file
@@ -467,68 +458,6 @@ class H5PYField(FileWriter.FTField):
         """
         return H5PYGroup(self._h5object.parent,
                          self._tparent.getparent())
-
-
-class H5PYFile(FileWriter.FTFile):
-    """ file tree file
-    """
-
-    def __init__(self, h5object, tparent=None):
-        """ constructor
-
-        :param h5object: pni object
-        :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
-        """
-        FileWriter.FTFile.__init__(self, h5object, tparent)
-        self.path = ''
-        self.name = None
-        if hasattr(h5object, "name"):
-            self.path = h5object.name
-            self.name = self.path.split("/")[-1]
-
-    def root(self):
-        """ root object
-
-        :returns: parent object
-        :rtype: :class:`H5PYGroup `
-        """
-        return H5PYGroup(self._h5object, self)
-
-    def flush(self):
-        """ flash the data
-        """
-        if self._h5object.mode in ["r+"]:
-            self._h5object.attrs.create(
-                "file_update_time", currenttime() + "\0")
-        return self._h5object.flush()
-
-    def close(self):
-        """ close file
-        """
-        if self._h5object.mode in ["r+"]:
-            self._h5object.attrs.create(
-                "file_update_time", currenttime() + "\0")
-        return self._h5object.close()
-
-    @property
-    def is_valid(self):
-        """ check if file is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
-        """
-        return self._h5object.name is not None
-
-    @property
-    def readonly(self):
-        """ check if file is readonly
-
-        :returns: readonly flag
-        :rtype: :obj:`bool`
-        """
-        return self._h5object.readonly
 
 
 class H5PYLink(FileWriter.FTLink):
@@ -726,3 +655,98 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         at = H5PYAttribute((self._h5object, name), self.getparent())
         self.getparent().children.append(weakref.ref(at))
         return at
+
+
+class H5PYAttribute(FileWriter.FTAttribute):
+    """ file tree attribute
+    """
+
+    def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
+        FileWriter.FTAttribute.__init__(self, h5object, tparent)
+        self.name = h5object[1]
+        self.path = "%s/%s" % (tparent.path, self.name)
+
+    def close(self):
+        """ close attribute
+        """
+
+    def read(self):
+        """ read attribute value
+
+        :returns: python object
+        :rtype: :obj:`any`
+        """
+        return self._h5object[0][self.name]
+
+    def write(self, o):
+        """ write attribute value
+
+        :param o: python object
+        :type o: :obj:`any`
+        """
+        self._h5object[0][self.name] = o
+
+    def __setitem__(self, t, o):
+        """ write attribute value
+
+        :param t: slice tuple
+        :type t: :obj:`tuple`
+        :param o: python object
+        :type o: :obj:`any`
+        """
+        return self._h5object[0].__setitem__(t, o)
+
+    def __getitem__(self, t):
+        """ read attribute value
+
+        :param t: slice tuple
+        :type t: :obj:`tuple`
+        :returns: python object
+        :rtype: :obj:`any`
+        """
+        if not isinstance(t, int):
+            if t is Ellipsis:
+                return self._h5object[0][self.name]
+            else:
+                return self._h5object[0][self.name][t]
+        return self._h5object[0][self.name].__getitem__(t)
+
+    @property
+    def is_valid(self):
+        """ check if field is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        try:
+            return self.name in self._h5object.keys()
+        except:
+            return False
+
+    @property
+    def dtype(self):
+        """ attribute data type
+
+        :returns: attribute data type
+        :rtype: :obj:`str`
+        """
+        return type(self._h5object[0][self.name]).__name__
+
+    @property
+    def shape(self):
+        """ attribute shape
+
+        :returns: attribute shape
+        :rtype: :obj:`list` < :obj:`int` >
+        """
+        if hasattr(self._h5object[0][self.name], "shape"):
+            return list(self._h5object[0][self.name].shape)
+        else:
+            return []

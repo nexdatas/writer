@@ -35,7 +35,7 @@ def open_file(filename, readonly=False):
     :returns: file object
     :rtype : :class:`PNIFile`
     """
-    return PNIFile(nx.open_file(filename, readonly))
+    return PNIFile(nx.open_file(filename, readonly), filename)
 
 
 def create_file(filename, overwrite=False):
@@ -48,7 +48,7 @@ def create_file(filename, overwrite=False):
     :returns: file object
     :rtype : :class:`PNIFile`
     """
-    return PNIFile(nx.create_file(filename, overwrite))
+    return PNIFile(nx.create_file(filename, overwrite), filename)
 
 
 def link(target, parent, name):
@@ -63,7 +63,10 @@ def link(target, parent, name):
     :returns: link object
     :rtype : :class:`PNILink`
     """
-    return PNILink(nx.link(target, parent._h5object, name), parent)
+    nx.link(target, parent._h5object, name)
+    lks = nx.get_links(parent._h5object)
+    lk =  [e for e in lks if e.name == name][0]
+    return PNILink(lk, parent)
 
 
 def deflate_filter():
@@ -75,73 +78,50 @@ def deflate_filter():
     return PNIDeflate(nx.deflate_filter())
 
 
-class PNIAttribute(FileWriter.FTAttribute):
-    """ file tree attribute
+class PNIFile(FileWriter.FTFile):
+    """ file tree file
     """
 
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, filename):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
+        :param filename:  file name
+        :type filename: :obj:`str`
         """
-        FileWriter.FTAttribute.__init__(self, h5object, tparent)
+        FileWriter.FTFile.__init__(self, h5object, None)
+        #: (:obj:`str`) file name
+        self.name = filename
         #: (:obj:`str`) object nexus path
         self.path = None
-        #: (:obj:`str`) object name
-        self.name = None
         if hasattr(h5object, "path"):
             self.path = h5object.path
-        if hasattr(h5object, "name"):
-            self.name = h5object.name
+
+    def root(self):
+        """ root object
+
+        :returns: parent object
+        :rtype: :class:`PNIGroup `
+        """
+        g = PNIGroup(self._h5object.root(), self)
+        self.children.append(weakref.ref(g))
+        return g
+
+    def flush(self):
+        """ flash the data
+        """
+        self._h5object.flush()
 
     def close(self):
-        """ close attribute
+        """ close file
         """
-        FileWriter.FTAttribute.close(self)
+        FileWriter.FTFile.close(self)
         self._h5object.close()
-
-    def read(self):
-        """ read attribute value
-
-        :returns: python object
-        :rtype: :obj:`any`
-        """
-        return self._h5object.read()
-
-    def write(self, o):
-        """ write attribute value
-
-        :param o: python object
-        :type o: :obj:`any`
-        """
-        self._h5object.write(o)
-
-    def __setitem__(self, t, o):
-        """ write attribute value
-
-        :param t: slice tuple
-        :type t: :obj:`tuple`
-        :param o: python object
-        :type o: :obj:`any`
-        """
-        self._h5object.__setitem__(t, o)
-
-    def __getitem__(self, t):
-        """ read attribute value
-
-        :param t: slice tuple
-        :type t: :obj:`tuple`
-        :returns: python object
-        :rtype: :obj:`any`
-        """
-        return self._h5object.__getitem__(t)
 
     @property
     def is_valid(self):
-        """ check if attribute is valid
+        """ check if file is valid
 
         :returns: valid flag
         :rtype: :obj:`bool`
@@ -149,22 +129,22 @@ class PNIAttribute(FileWriter.FTAttribute):
         return self._h5object.is_valid
 
     @property
-    def dtype(self):
-        """ attribute data type
+    def readonly(self):
+        """ check if file is readonly
 
-        :returns: attribute data type
-        :rtype: :obj:`str`
+        :returns: readonly flag
+        :rtype: :obj:`bool`
         """
-        return self._h5object.dtype
+        return self._h5object.readonly
 
-    @property
-    def shape(self):
-        """ attribute shape
-
-        :returns: attribute shape
-        :rtype: :obj:`list` < :obj:`int` >
+    def reopen(self, readonly=False, swmr=False):
+        """ reopen file
         """
-        return self._h5object.shape
+        
+        if swmr:
+            raise Exception("SWMR not supported")
+        self._h5object = nx.open_file(self.name, readonly)
+        FileWriter.FTFile.reopen(self)
 
 
 class PNIGroup(FileWriter.FTGroup):
@@ -285,6 +265,15 @@ class PNIGroup(FileWriter.FTGroup):
         FileWriter.FTGroup.close(self)
         self._h5object.close()
 
+    def reopen(self):
+        """ reopen group
+        """
+        if isinstance(self._tparent, PNIFile):
+            self._h5object = self._tparent.getobject().root()
+        else:
+            self._h5object = self._tparent.getobject().open(self.name)
+        FileWriter.FTGroup.reopen(self)
+
     def exists(self, name):
         """ if child exists
 
@@ -333,6 +322,12 @@ class PNIField(FileWriter.FTField):
         """
         FileWriter.FTField.close(self)
         self._h5object.close()
+
+    def reopen(self):
+        """ reopen field
+        """
+        self._h5object = self._tparent.getparent().open(self.name)
+        FileWriter.FTGroup.reopen(self)
 
     def grow(self, dim=0, ext=1):
         """ grow the field
@@ -435,68 +430,6 @@ class PNIField(FileWriter.FTField):
         return PNIGroup(self._h5object.parent, self._parent.getparent())
 
 
-class PNIFile(FileWriter.FTFile):
-    """ file tree file
-    """
-
-    def __init__(self, h5object, tparent=None):
-        """ constructor
-
-        :param h5object: pni object
-        :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
-        """
-        FileWriter.FTFile.__init__(self, h5object, tparent)
-        #: (:obj:`str`) object nexus path
-        self.path = None
-        #: (:obj:`str`) object name
-        self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.path
-        if hasattr(h5object, "name"):
-            self.name = h5object.name
-
-    def root(self):
-        """ root object
-
-        :returns: parent object
-        :rtype: :class:`PNIGroup `
-        """
-        g = PNIGroup(self._h5object.root(), self)
-        self.children.append(weakref.ref(g))
-        return g
-
-    def flush(self):
-        """ flash the data
-        """
-        self._h5object.flush()
-
-    def close(self):
-        """ close file
-        """
-        FileWriter.FTFile.close(self)
-        self._h5object.close()
-
-    @property
-    def is_valid(self):
-        """ check if file is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
-        """
-        return self._h5object.is_valid
-
-    @property
-    def readonly(self):
-        """ check if file is readonly
-
-        :returns: readonly flag
-        :rtype: :obj:`bool`
-        """
-        return self._h5object.readonly
-
-
 class PNILink(FileWriter.FTLink):
     """ file tree link
     """
@@ -554,6 +487,13 @@ class PNILink(FileWriter.FTLink):
         """
         return PNIGroup(self._h5object.parent)
 
+    def reopen(self):
+        """ reopen field
+        """
+        lks = nx.get_links(self._tparent.getparent())
+        lk =  [e for e in lks if e.name == self.name][0]
+        self._h5object = lk
+        FileWriter.FTGroup.reopen(self)
 
 class PNIDeflate(FileWriter.FTDeflate):
     """ file tree deflate
@@ -688,3 +628,98 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         """
         FileWriter.FTAttributeManager.close(self)
         self._h5object.close()
+
+
+class PNIAttribute(FileWriter.FTAttribute):
+    """ file tree attribute
+    """
+
+    def __init__(self, h5object, tparent):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
+        FileWriter.FTAttribute.__init__(self, h5object, tparent)
+        #: (:obj:`str`) object nexus path
+        self.path = None
+        #: (:obj:`str`) object name
+        self.name = None
+        if hasattr(h5object, "path"):
+            self.path = h5object.path
+        if hasattr(h5object, "name"):
+            self.name = h5object.name
+
+    def close(self):
+        """ close attribute
+        """
+        FileWriter.FTAttribute.close(self)
+        self._h5object.close()
+
+    def read(self):
+        """ read attribute value
+
+        :returns: python object
+        :rtype: :obj:`any`
+        """
+        return self._h5object.read()
+
+    def write(self, o):
+        """ write attribute value
+
+        :param o: python object
+        :type o: :obj:`any`
+        """
+        self._h5object.write(o)
+
+    def __setitem__(self, t, o):
+        """ write attribute value
+
+        :param t: slice tuple
+        :type t: :obj:`tuple`
+        :param o: python object
+        :type o: :obj:`any`
+        """
+        self._h5object.__setitem__(t, o)
+
+    def __getitem__(self, t):
+        """ read attribute value
+
+        :param t: slice tuple
+        :type t: :obj:`tuple`
+        :returns: python object
+        :rtype: :obj:`any`
+        """
+        return self._h5object.__getitem__(t)
+
+    @property
+    def is_valid(self):
+        """ check if attribute is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return self._h5object.is_valid
+
+    @property
+    def dtype(self):
+        """ attribute data type
+
+        :returns: attribute data type
+        :rtype: :obj:`str`
+        """
+        return self._h5object.dtype
+
+    @property
+    def shape(self):
+        """ attribute shape
+
+        :returns: attribute shape
+        :rtype: :obj:`list` < :obj:`int` >
+        """
+        return self._h5object.shape
+
+
+

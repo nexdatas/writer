@@ -113,6 +113,15 @@ class FTObject(object):
             if ch() is not None:
                 ch().close()
 
+    def reopen(self):
+        """ reopen elements and children
+        """
+        print "KIDS", self.children
+        self.children = [ch for ch in self.children if ch() is not None]
+        print "KIDS2", self.children
+        for ch in self.children:
+            ch().reopen()
+
     @property
     def is_valid(self):
         """ check if attribute is valid
@@ -379,15 +388,15 @@ class FTFile(FTObject):
     """ file tree file
     """
 
-    def __init__(self, h5object, tparent=None):
+    def __init__(self, h5object, filename):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
+        :param filename:  file name
+        :type filename: :obj:`str`
         """
-        FTObject.__init__(self, h5object, tparent)
+        FTObject.__init__(self, h5object, None)
 
     def root(self):
         """ root object
