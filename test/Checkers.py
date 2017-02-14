@@ -256,7 +256,6 @@ class Checker(object):
             elif dtype != "string" and self._isNumeric(cnt[i]) and not (
                 isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
                 if dtype == "bool":
-                    cnt[...].dtype
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
 #                    print "CMP",name, cnt[i] , values[i] ,cnt[i] - values[i] , error
