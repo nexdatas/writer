@@ -219,7 +219,6 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        print "CNT", cnt[...] , cnt[...].dtype        
         if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]) and not (
                 isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype).startswith("|S")):
             if not self._isNumeric(values):
