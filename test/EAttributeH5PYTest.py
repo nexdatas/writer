@@ -29,11 +29,6 @@ import numpy
 import binascii
 import time
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 
 from nxswriter.FElement import FElement
 from nxswriter.EAttribute import EAttribute
@@ -49,7 +44,7 @@ from TestDataSource import TestDataSource
 from Checkers import Checker 
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 #from  xml.sax import SAXParseException
 
@@ -58,7 +53,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class EAttributeTest(unittest.TestCase):
+class EAttributeH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -103,7 +98,7 @@ class EAttributeTest(unittest.TestCase):
         print "\nsetting up..."        
         print "SEED =", self.__seed 
         print "CHECKER SEED =", self._sc.seed 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
 
     ## test closer
     # \brief Common tear down
@@ -1083,7 +1078,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1172,7 +1167,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1259,7 +1254,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1347,7 +1342,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             
             self._sc.checkScalarAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -1434,7 +1429,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self.assertEqual(ea[k].h5Object.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string' :
@@ -1522,7 +1517,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             self.assertEqual(ea[k].markFailed(),None)
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 #            self.assertEqual(ea[k].h5Object.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string' :
@@ -1626,7 +1621,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][4] if len(attrs[k])>4 else 0)
@@ -1722,7 +1717,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][5] if len(attrs[k])>5 else 0)
@@ -1821,7 +1816,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][4] if len(attrs[k])>4 else 0)
@@ -1908,7 +1903,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
                                                 attrs[k][5] if len(attrs[k])>5 else 0)
@@ -2005,7 +2000,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 #            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -2098,7 +2093,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 #           if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -2209,7 +2204,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 #            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -2309,7 +2304,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 #            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(el[k].h5Object, k, attrs[k][2], attrs[k][0], 
@@ -2417,7 +2412,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 
 #            if ea[k].h5Object.dtype != 'string':
@@ -2512,7 +2507,7 @@ class EAttributeTest(unittest.TestCase):
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
-            self.assertEqual(type(ea[k].h5Object),PNIWriter.PNIAttribute)
+            self.assertEqual(type(ea[k].h5Object),H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name,k)
 
 #            if ea[k].h5Object.dtype != 'string':

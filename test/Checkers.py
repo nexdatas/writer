@@ -219,7 +219,9 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]):
+        print "CNT", cnt[...] , cnt[...].dtype        
+        if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype).startswith("|S")):
             if not self._isNumeric(values):
                 print "BOOL: ", values ,cnt[...], type(values), type(cnt[...])
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt[...])
@@ -252,8 +254,10 @@ class Checker(object):
             if isinstance(cnt[...], str):
                 dtype != "string"
                 self._tc.assertEqual(values[i], cnt[...])
-            elif dtype != "string" and self._isNumeric(cnt[i]):
+            elif dtype != "string" and self._isNumeric(cnt[i]) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
                 if dtype == "bool":
+                    cnt[...].dtype
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
 #                    print "CMP",name, cnt[i] , values[i] ,cnt[i] - values[i] , error

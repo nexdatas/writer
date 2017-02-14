@@ -42,6 +42,7 @@ import EGroupH5PYTest
 import ELinkTest
 import ELinkH5PYTest
 import EAttributeTest
+import EAttributeH5PYTest
 import EFileTest
 import EDocTest
 import ESymbolTest
@@ -256,6 +257,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EAttributeTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EAttributeH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EFileTest) )
