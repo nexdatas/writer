@@ -222,7 +222,7 @@ class Checker(object):
         if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]) and not (
                 isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype).startswith("|S")):
             if not self._isNumeric(values):
-                print "BOOL: ", values ,cnt[...], type(values), type(cnt[...])
+                # print "BOOL: ", values ,cnt[...], type(values), type(cnt[...])
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt[...])
             else:
                 self._tc.assertTrue(abs(values - cnt[...]) <= error)
@@ -275,27 +275,32 @@ class Checker(object):
     def checkImageAttribute(self, det, name, dtype, values, error = 0):
 
         cnt = det.attributes[name]
-        print name, cnt
+        # print name, cnt, cnt.dtype
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
-        self._tc.assertEqual(len(cnt.shape), 2)
-        self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
-        self._tc.assertEqual(cnt.dtype, dtype)
-        # pninx is not supporting reading string areas 
+        if str(cnt.dtype) == "string" and cnt.shape == (1,):
+            self._tc.assertEqual(values[0][0], cnt[...])
+            self._tc.assertEqual((1,1), (len(values),len(values[0])))
+            self._tc.assertEqual(cnt.dtype, dtype)
+        else:    
+            self._tc.assertEqual(len(cnt.shape), 2)
+            self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
+            self._tc.assertEqual(cnt.dtype, dtype)
+            # pninx is not supporting reading string areas 
 
 
-        
-        for i in range(len(values)):
-            for j in range(len(values[i])):
-#                print i, j, cnt[i,j], values[i][j]
-                if dtype != "string" and self._isNumeric(cnt[i,0]):
-                    if dtype == "bool":
-                        self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
+
+            for i in range(len(values)):
+                for j in range(len(values[i])):
+    #                print i, j, cnt[i,j], values[i][j]
+                    if dtype != "string" and self._isNumeric(cnt[i,0]):
+                        if dtype == "bool":
+                            self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
+                        else:
+                            self._tc.assertTrue(abs(cnt[i,j] -values[i][j]) <= error)
                     else:
-                        self._tc.assertTrue(abs(cnt[i,j] -values[i][j]) <= error)
-                else:
-                    self._tc.assertEqual(values[i][j], cnt[i,j])
+                        self._tc.assertEqual(values[i][j], cnt[i,j])
             
 
 
