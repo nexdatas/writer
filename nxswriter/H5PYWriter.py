@@ -270,7 +270,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype : :class:`H5PYField`
         """
-        shape = shape or []
+        shape = shape or [0]
         mshape = [None for _ in shape] or (None,)
         if type_code == "string":
 #            type_code = h5py.special_dtype(vlen=unicode)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -80,9 +80,10 @@ class EStrategyH5PYTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         FileWriter.writer = H5PYWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True)
+        self._nxroot = self._nxFile.root()
         ## element file objects
-        self._group = self._nxFile.create_group(self._gname, self._gtype)
+        self._group = self._nxroot.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
         print "\nsetting up..."        
 

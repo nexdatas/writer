@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -418,7 +418,8 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if self._isNumeric(cnt.read()):
+        if self._isNumeric(cnt.read()) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
 #                    print "BOOL: ", values[i] ,cnt[i]
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
@@ -534,9 +535,9 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if self._isNumeric(cnt.read()):
+        if self._isNumeric(cnt.read()) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
-#                    print "BOOL: ", values[i] ,cnt[i]
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
             else:
                 self._tc.assertTrue(abs(values - cnt.read()) <= error)

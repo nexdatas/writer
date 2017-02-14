@@ -116,9 +116,7 @@ class FTObject(object):
     def reopen(self):
         """ reopen elements and children
         """
-        print "KIDS", self.children
         self.children = [ch for ch in self.children if ch() is not None]
-        print "KIDS2", self.children
         for ch in self.children:
             ch().reopen()
 

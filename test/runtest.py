@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,10 +23,9 @@
 import os 
 import unittest
 
-import TangoDataWriterTest
-import ClientFieldTagWriterTest
-import XMLFieldTagWriterTest
-import NexusXMLHandlerTest
+import FileWriterTest
+import PNIWriterTest
+import H5PYWriterTest
 import ElementTest
 import FElementTest
 import FElementH5PYTest
@@ -35,6 +34,7 @@ import FElementWithAttrH5PYTest
 import EStrategyTest
 import EStrategyH5PYTest
 import EFieldTest
+import EFieldH5PYTest
 import EFieldReshapeTest
 import EGroupTest
 import ELinkTest
@@ -66,9 +66,10 @@ import InnerXMLParserTest
 import TNObjectTest
 import TgDeviceTest
 import StreamsTest
-import FileWriterTest
-import PNIWriterTest
-import H5PYWriterTest
+import TangoDataWriterTest
+import ClientFieldTagWriterTest
+import XMLFieldTagWriterTest
+import NexusXMLHandlerTest
 
 try:
     import PyTango
@@ -228,6 +229,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EFieldTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EFieldH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EFieldReshapeTest) )
