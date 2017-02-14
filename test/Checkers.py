@@ -249,8 +249,10 @@ class Checker(object):
 #        print "values", values
 #        print "cnt", cnt[...]
         for i in range(len(values)):
-#            print name, i, values[i],  cnt[i]
-            if dtype != "string" and self._isNumeric(cnt[i]):
+            if isinstance(cnt[...], str):
+                dtype != "string"
+                self._tc.assertEqual(values[i], cnt[...])
+            elif dtype != "string" and self._isNumeric(cnt[i]):
                 if dtype == "bool":
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:

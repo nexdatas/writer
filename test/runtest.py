@@ -36,8 +36,11 @@ import EStrategyH5PYTest
 import EFieldTest
 import EFieldH5PYTest
 import EFieldReshapeTest
+import EFieldReshapeH5PYTest
 import EGroupTest
+import EGroupH5PYTest
 import ELinkTest
+import ELinkH5PYTest
 import EAttributeTest
 import EFileTest
 import EDocTest
@@ -237,10 +240,19 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(EFieldReshapeTest) )
 
     suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EFieldReshapeH5PYTest) )
+
+    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EGroupTest) )
 
     suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EGroupH5PYTest) )
+
+    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ELinkTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ELinkH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EAttributeTest) )

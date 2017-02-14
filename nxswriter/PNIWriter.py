@@ -66,7 +66,10 @@ def link(target, parent, name):
     nx.link(target, parent._h5object, name)
     lks = nx.get_links(parent._h5object)
     lk =  [e for e in lks if e.name == name][0]
-    return PNILink(lk, parent)
+    el = PNILink(lk, parent)
+    el.name = name
+    parent.children.append(weakref.ref(el))
+    return el
 
 
 def deflate_filter():
@@ -326,8 +329,8 @@ class PNIField(FileWriter.FTField):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = self._tparent.getparent().open(self.name)
-        FileWriter.FTGroup.reopen(self)
+        self._h5object = self._tparent.getobject().open(self.name)
+        FileWriter.FTField.reopen(self)
 
     def grow(self, dim=0, ext=1):
         """ grow the field
@@ -490,10 +493,10 @@ class PNILink(FileWriter.FTLink):
     def reopen(self):
         """ reopen field
         """
-        lks = nx.get_links(self._tparent.getparent())
+        lks = nx.get_links(self._tparent.getobject())
         lk =  [e for e in lks if e.name == self.name][0]
         self._h5object = lk
-        FileWriter.FTGroup.reopen(self)
+        FileWriter.FTLink.reopen(self)
 
 class PNIDeflate(FileWriter.FTDeflate):
     """ file tree deflate
@@ -629,6 +632,12 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         FileWriter.FTAttributeManager.close(self)
         self._h5object.close()
 
+    def reopen(self):
+        """ reopen field
+        """
+        self._h5object = self._tparent.getobject().attributes
+        FileWriter.FTAttributeManager.reopen(self)
+
 
 class PNIAttribute(FileWriter.FTAttribute):
     """ file tree attribute
@@ -721,5 +730,8 @@ class PNIAttribute(FileWriter.FTAttribute):
         """
         return self._h5object.shape
 
-
-
+    def reopen(self):
+        """ reopen attribute
+        """
+        self._h5object = self._tparent.getobject().attributes[self.name]
+        FileWriter.FTAttribute.reopen(self)

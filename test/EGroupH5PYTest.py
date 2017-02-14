@@ -44,7 +44,7 @@ from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 from nxswriter.Errors import XMLSettingSyntaxError
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 from Checkers import Checker 
 
@@ -55,7 +55,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class EGroupTest(unittest.TestCase):
+class EGroupH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -119,7 +119,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -129,7 +129,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
@@ -148,7 +148,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -158,7 +158,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
@@ -179,7 +179,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "short_name":"shortname" }
@@ -190,7 +190,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 2)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
@@ -222,7 +222,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
 
@@ -240,7 +240,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
@@ -258,7 +258,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 14)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
@@ -282,7 +282,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
@@ -301,7 +301,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 2)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
@@ -326,7 +326,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -357,7 +357,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -444,7 +444,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -509,7 +509,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -584,7 +584,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -659,7 +659,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -741,7 +741,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -824,7 +824,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = EGroup( self._gattrs, eFile)
@@ -834,7 +834,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
@@ -859,7 +859,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry"}
@@ -870,7 +870,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 1)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
@@ -894,7 +894,7 @@ class EGroupTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         gattrs = {"type":"NXentry"}
@@ -905,7 +905,7 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(el.tagName, "group")
         self.assertEqual(el.content, [])
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 1)
         self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])

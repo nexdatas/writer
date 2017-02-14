@@ -51,7 +51,7 @@ from nxswriter.DataSources import DataSource
 
 from nxswriter.Errors import XMLSettingSyntaxError
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 from Checkers import Checker 
 
@@ -67,7 +67,7 @@ from  xml.sax import SAXParseException
 
 
 ## test fixture
-class EFieldReshapeTest(unittest.TestCase):
+class EFieldReshapeH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -166,7 +166,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -267,7 +267,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -364,7 +364,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -472,7 +472,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -580,7 +580,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -710,7 +710,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -832,7 +832,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -972,7 +972,7 @@ class EFieldReshapeTest(unittest.TestCase):
 
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1099,7 +1099,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1229,7 +1229,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1352,7 +1352,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1482,7 +1482,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1610,7 +1610,7 @@ class EFieldReshapeTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1744,7 +1744,7 @@ class EFieldReshapeTest(unittest.TestCase):
         supp = ["string", "datetime", "iso8601"]
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -1873,7 +1873,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2001,7 +2001,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2119,7 +2119,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2252,7 +2252,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2369,7 +2369,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2492,7 +2492,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2615,7 +2615,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2748,7 +2748,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2869,7 +2869,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -2986,7 +2986,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3107,7 +3107,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3237,7 +3237,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3365,7 +3365,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
@@ -3479,7 +3479,7 @@ class EFieldReshapeTest(unittest.TestCase):
             }
 
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         el = {} 
