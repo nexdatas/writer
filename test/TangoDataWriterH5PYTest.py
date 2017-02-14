@@ -521,8 +521,8 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-#            pass
-            os.remove(fname)
+            """ """
+#            os.remove(fname)
 
 
 
