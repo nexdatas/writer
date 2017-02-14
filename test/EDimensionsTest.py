@@ -27,6 +27,9 @@ import random
 import struct
 import numpy
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.H5PYWriter as H5PYWriter
+import nxswriter.PNIWriter as PNIWriter
 
 try:
     import pni.io.nx.h5 as nx
@@ -129,7 +132,7 @@ class EDimensionsTest(unittest.TestCase):
 
     ## last method test
     # \brief It tests executing _lastObject method
-    def test_last(self):
+    def test_last_pni(self):
         print "Run: %s.test_last() " % self.__class__.__name__
 
         fname = "test.h5"
@@ -143,7 +146,43 @@ class EDimensionsTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        FileWriter.writer = PNIWriter
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs3,  el )
+        el2 = EDimensions(self._fattrs3,  fi )
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs3)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "2")
+        
+        nxFile.close()
+        os.remove(fname)
+
+    ## last method test
+    # \brief It tests executing _lastObject method
+    def test_last_h5py(self):
+        print "Run: %s.test_last() " % self.__class__.__name__
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        FileWriter.writer = H5PYWriter
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -164,7 +203,7 @@ class EDimensionsTest(unittest.TestCase):
 
     ## last method test
     # \brief It tests executing _lastObject method
-    def test_last_norank(self):
+    def test_last_norank_pni(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -179,7 +218,9 @@ class EDimensionsTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        FileWriter.writer = PNIWriter
+        nxFile = FileWriter.create_file(
+            fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -197,6 +238,44 @@ class EDimensionsTest(unittest.TestCase):
         nxFile.close()
         os.remove(fname)
 
+
+
+    ## last method test
+    # \brief It tests executing _lastObject method
+    def test_last_norank_h5py(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        FileWriter.writer = H5PYWriter
+        nxFile = FileWriter.create_file(
+            fname, overwrite=True).root()
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        fi = EField(self._fattrs2,  el )
+        el2 = EDimensions(self._fattrs2,  fi )
+        self.assertEqual(fi.tagName, "field")
+        self.assertEqual(fi.content, [])
+        self.assertEqual(fi._tagAttrs, self._fattrs2)
+        self.assertEqual(fi.doc, "")
+        self.assertEqual(fi._lastObject(), None)
+        self.assertEqual(type(el2.last), EField)
+        self.assertEqual(el2.last.rank, "0")
+        
+        nxFile.close()
+        os.remove(fname)
 
 
 

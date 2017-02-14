@@ -38,6 +38,9 @@ from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import EDoc
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -72,6 +75,7 @@ class EDocTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        FileWriter.writer = PNIWriter
 
     ## test closer
     # \brief Common tear down
@@ -140,7 +144,8 @@ class EDocTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(
+            fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)

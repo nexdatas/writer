@@ -44,10 +44,13 @@ import ELinkH5PYTest
 import EAttributeTest
 import EAttributeH5PYTest
 import EFileTest
+import EFileH5PYTest
 import EDocTest
+import EDocH5PYTest
 import ESymbolTest
 import EDimensionsTest
 import EDimTest
+import EDimH5PYTest
 import ConvertersTest
 import NTPTest
 import ErrorsTest
@@ -70,10 +73,12 @@ import InnerXMLParserTest
 import TNObjectTest
 import TgDeviceTest
 import StreamsTest
+import NexusXMLHandlerTest
+import NexusXMLHandlerH5PYTest
+
 import TangoDataWriterTest
 import ClientFieldTagWriterTest
 import XMLFieldTagWriterTest
-import NexusXMLHandlerTest
 
 try:
     import PyTango
@@ -265,7 +270,13 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(EFileTest) )
 
     suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EFileH5PYTest) )
+
+    suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(EDocTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(EDocH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest) )
@@ -287,6 +298,9 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
+    
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerH5PYTest) )
     
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )

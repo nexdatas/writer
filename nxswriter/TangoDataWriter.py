@@ -23,7 +23,18 @@ from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
 from . import FileWriter
-from . import PNIWriter
+
+WRITERS = {}
+try:
+    from . import PNIWriter
+    WRITERS["pni"] = PNIWriter
+except:
+    pass
+try:
+    from . import H5PYWriter
+    WRITERS["h5py"] = H5PYWriter
+except:
+    pass    
 
 # import pni.io.nx.h5 as nx
 
@@ -66,9 +77,6 @@ class TangoDataWriter(object):
         #: (:obj:`int`) maximal number of threads
         self.numberOfThreads = 100
 #        self.numberOfThreads = 1
-
-        #: (__module__) maximal number of threads
-        self.writertype = "PNIWriter"
 
         #: (:class:`ThreadPool.ThreadPool`) thread pool with INIT elements
         self.__initPool = None
@@ -128,7 +136,12 @@ class TangoDataWriter(object):
         :returns: value of  writer module name
         :rtype: :obj:`str`
         """
-        return FileWriter.writer
+        res = ""
+        for key, module in WRITERS.items():
+            if FileWriter.writer == module:
+                res = key
+                break
+        return res
 
     def __setWriter(self, writer):
         """ set method for  writer module name
@@ -136,11 +149,8 @@ class TangoDataWriter(object):
         :param jsonstring: value of  writer module name
         :type jsonstring: :obj:`str`
         """
-        if writer.lower() == "pni":
-            FileWriter.writer = PNIWriter
-            #        elif writer.lower() == "h5py":
-            #            FileWriter.writer = H5PYWriter
-
+        FileWriter.writer = WRITERS[writer.lower()]
+        
     #: the  writer module name
     writer = property(__getWriter, __setWriter,
                       doc='(:obj:`str`) the  writer module name')

@@ -42,7 +42,7 @@ from nxswriter.Errors import UnsupportedTagError
 from nxswriter.FetchNameHandler import TNObject
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 
 from xml import sax
@@ -489,7 +489,7 @@ class TElementOF(object):
 
 
 ## test fixture
-class NexusXMLHandlerTest(unittest.TestCase):
+class NexusXMLHandlerH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -508,7 +508,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
 
     ## test closer
     # \brief Common tear down
@@ -986,7 +986,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"counter")
         self.assertEqual(len(en.attributes),1)
-        self.myAssertRaise(MemoryError, en.read)
+        self.assertEqual(len(en.read()), len([]))
+        #        self.myAssertRaise(MemoryError, en.read)
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)
         self.assertEqual(en.shape[0],0)
@@ -1045,7 +1046,8 @@ class NexusXMLHandlerTest(unittest.TestCase):
         self.assertTrue(en.is_valid)
         self.assertEqual(en.name,"counter")
         self.assertEqual(len(en.attributes),1)
-        self.myAssertRaise(MemoryError, en.read)
+        self.assertEqual(len(en.read()), len([]))
+#        self.myAssertRaise(MemoryError, en.read)
 #        self.assertEqual(en.read(), "")
         self.assertTrue(hasattr(en.shape,"__iter__"))
         self.assertEqual(len(en.shape),1)

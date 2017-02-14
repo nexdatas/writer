@@ -39,14 +39,14 @@ from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class EFileTest(unittest.TestCase):
+class EFileH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -73,7 +73,7 @@ class EFileTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
 
     ## test closer
     # \brief Common tear down
@@ -127,7 +127,7 @@ class EFileTest(unittest.TestCase):
         self.assertEqual(el.source, None)
         self.assertEqual(el.error, None)
         self.assertEqual(el._tagAttrs, {})
-        self.assertEqual(type(el.h5Object),PNIWriter.PNIGroup )
+        self.assertEqual(type(el.h5Object),H5PYWriter.H5PYGroup )
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -155,7 +155,7 @@ class EFileTest(unittest.TestCase):
             self.assertEqual(el._tagAttrs[k], self._fattrs[k])
         
         self.assertEqual(el._tagAttrs, self._fattrs)
-        self.assertEqual(type(el.h5Object),PNIWriter.PNIGroup )
+        self.assertEqual(type(el.h5Object),H5PYWriter.H5PYGroup )
 
         self._nxFile.close()
         os.remove(self._fname)

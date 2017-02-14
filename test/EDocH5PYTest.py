@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file ESymbolTest.py
+## \file EDocTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -27,11 +27,6 @@ import random
 import struct
 import numpy
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5PYWriter as H5PYWriter
-import nxswriter.PNIWriter as PNIWriter
-
-
 try:
     import pni.io.nx.h5 as nx
 except:
@@ -41,7 +36,10 @@ except:
 from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
-from nxswriter.H5Elements import ESymbol
+from nxswriter.H5Elements import EDoc
+
+import nxswriter.FileWriter as FileWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 
 ## if 64-bit machione
@@ -49,19 +47,18 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class ESymbolTest(unittest.TestCase):
+class EDocTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-        self._tfname = "symbol"
+        self._tfname = "doc"
         self._fname = "test.h5"
         self._nxDoc = None
         self._eDoc = None        
-        self._fattrs = {"name":"test","units":"m" }
-        self._fattrs2 = {"fname":"test","units":"m" }
+        self._fattrs = {"short_name":"test","units":"m" }
         self._gname = "testDoc"
         self._gtype = "NXentry"
 
@@ -78,6 +75,7 @@ class ESymbolTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        FileWriter.writer = H5PYWriter
 
     ## test closer
     # \brief Common tear down
@@ -103,12 +101,11 @@ class ESymbolTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        el = ESymbol({}, None)
+        el = EDoc({}, None)
         self.assertTrue(isinstance(el, Element))
-        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.tagName, 'doc')
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
-        self.assertEqual(el.symbols, {})
         self.assertEqual(el.last, None)
 
 
@@ -118,61 +115,21 @@ class ESymbolTest(unittest.TestCase):
     def test_store(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        el = Element(self._tfname, self._fattrs2 )
-        el2 = ESymbol(self._fattrs2,  el )
+        el = Element(self._tfname, self._fattrs )
+        el2 = EDoc(self._fattrs,  el )
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
-        self.assertEqual(el2._tagAttrs, self._fattrs2)
+        self.assertEqual(el2._tagAttrs, self._fattrs)
         self.assertEqual(el2.doc, "")
         self.assertEqual(el2.store(""), None)
         self.assertEqual(el2.last, el)
-        self.assertEqual(el2.symbols, {})
         self.assertEqual(el2.store("<tag/>"), None)
-        self.assertEqual(el2.symbols, {})
-
-
-
-    ## _lastObject method test
-    # \brief It tests executing _lastObject method
-    def test_lastObject_pni(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-        fname = "test.h5"
-        nxFile = None
-        eFile = None        
-
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
-
-
-        ## file handle
-        FileWriter.writer = PNIWriter
-        nxFile = FileWriter.create_file(fname, overwrite=True).root()
-        ## element file objects
-        eFile = EFile([], None, nxFile)
-        group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
-
-        el = Element(self._tfname, self._fattrs2, eFile )
-        el2 = ESymbol(self._fattrs2,  el )
-        self.assertEqual(el.tagName, self._tfname)
-        self.assertEqual(el.content, [])
-        self.assertEqual(el._tagAttrs, self._fattrs2)
-        self.assertEqual(el.doc, "")
-        self.assertEqual(el._lastObject(), nxFile)
-        self.assertEqual(el2._lastObject(), None)
-        self.assertEqual(el2.symbols, {})
         
-        nxFile.close()
-        os.remove(fname)
 
 
-    ## _lastObject method test
+    ## lastObject method test
     # \brief It tests executing _lastObject method
-    def test_lastObject_h5py(self):
+    def test_lastObject(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -187,7 +144,6 @@ class ESymbolTest(unittest.TestCase):
 
 
         ## file handle
-        FileWriter.writer = H5PYWriter
         nxFile = FileWriter.create_file(
             fname, overwrite=True).root()
         ## element file objects
@@ -195,15 +151,14 @@ class ESymbolTest(unittest.TestCase):
         group = nxFile.create_group(gname, gtype)
         field = group.create_field(fdname, fdtype)
 
-        el = Element(self._tfname, self._fattrs2, eFile )
-        el2 = ESymbol(self._fattrs2,  el )
+        el = Element(self._tfname, self._fattrs, eFile )
+        el2 = EDoc(self._fattrs,  el )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
-        self.assertEqual(el._tagAttrs, self._fattrs2)
+        self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
         self.assertEqual(el._lastObject(), nxFile)
         self.assertEqual(el2._lastObject(), None)
-        self.assertEqual(el2.symbols, {})
         
         nxFile.close()
         os.remove(fname)
@@ -221,7 +176,7 @@ class ESymbolTest(unittest.TestCase):
 
         el = Element(self._tfname, self._fattrs, None )
         el2 = Element(self._tfname, self._fattrs,  el )
-        el3 = ESymbol(self._fattrs,  el2 )
+        el3 = EDoc(self._fattrs,  el2 )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -230,7 +185,6 @@ class ESymbolTest(unittest.TestCase):
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el3.symbols, {})
 
 
     ## _beforeLast method test
@@ -243,7 +197,7 @@ class ESymbolTest(unittest.TestCase):
 
         el = Element(self._tfname, self._fattrs, None )
         el2 = Element(self._tfname, self._fattrs,  el )
-        el3 = ESymbol(self._fattrs,  el2 )
+        el3 = EDoc(self._fattrs,  el2 )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -252,14 +206,7 @@ class ESymbolTest(unittest.TestCase):
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
         self.assertEqual(el3.store([None,"<tag/>",None]), None)
-        self.assertEqual(el.doc, "")
-        self.assertEqual(el3.symbols, {"test":''})
-        el3.last.doc = "SYM"
-        self.assertEqual(el3.store(None), None)
-        self.assertEqual(el3.symbols, {"test":'SYM'})
-        el2.doc = "SYM2"
-        self.assertEqual(el3.store(None), None)
-        self.assertEqual(el3.symbols, {"test":'SYM2'})
+        self.assertEqual(el.doc, "<tag/>")
 
 if __name__ == '__main__':
     unittest.main()

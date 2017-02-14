@@ -192,7 +192,8 @@ class H5PYFile(FileWriter.FTFile):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.readonly
+        isvalid = self.is_valid
+        return self._h5object.mode in ["r"] if isvalid else None
 
     def reopen(self, readonly=False, libver='latest', swmr=False):
         """ reopen file
@@ -355,11 +356,6 @@ class H5PYGroup(FileWriter.FTGroup):
         self.children.append(weakref.ref(am))
         return am
 
-    def close(self):
-        """ close group
-        """
-        return self._h5object.close()
-
     @property
     def size(self):
         """ group size
@@ -426,11 +422,6 @@ class H5PYField(FileWriter.FTField):
         self.children.append(weakref.ref(am))
         return am
 
-    def close(self):
-        """ close field
-        """
-        return self._h5object.close()
-
     def reopen(self):
         """ reopen field
         """
@@ -463,7 +454,7 @@ class H5PYField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
-        return self._h5object.write(o)
+        self._h5object[...] = o
 
     def __setitem__(self, t, o):
         """ set value
@@ -792,10 +783,6 @@ class H5PYAttribute(FileWriter.FTAttribute):
         self.name = h5object[1]
         self.path = "%s/%s" % (tparent.path, self.name)
 
-    def close(self):
-        """ close attribute
-        """
-
     def read(self):
         """ read attribute value
 
@@ -810,6 +797,8 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
+        if isinstance(o, str) and not o.endswith("\0"):
+            o += "\0"
         self._h5object[0][self.name] = o
 
     def __setitem__(self, t, o):
@@ -820,6 +809,9 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
+        if isinstance(o, str) and not o.endswith("\0"):
+            o += "\0"
+            
         if t is Ellipsis:
             self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
         else:

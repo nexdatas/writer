@@ -35,7 +35,7 @@ except:
     import pni.nx.h5 as nx
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 
 from nxswriter.FElement import FElement
@@ -97,7 +97,7 @@ class EDimTest(unittest.TestCase):
         ## file handle
         print "\nsetting up..."        
         print "SEED =", self.__seed 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
 
     ## test closer
     # \brief Common tear down
