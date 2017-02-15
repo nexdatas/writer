@@ -20,9 +20,8 @@
 # the unittest runner
 #
 
-import os 
+import os
 import unittest
-
 import FileWriterTest
 import PNIWriterTest
 import H5PYWriterTest
@@ -77,9 +76,10 @@ import NexusXMLHandlerTest
 import NexusXMLHandlerH5PYTest
 import TangoDataWriterTest
 import TangoDataWriterH5PYTest
-
 import ClientFieldTagWriterTest
+import ClientFieldTagWriterH5PYTest
 import XMLFieldTagWriterTest
+import XMLFieldTagWriterH5PYTest
 
 try:
     import PyTango
@@ -88,12 +88,12 @@ try:
 except ImportError, e:
     PYTANGO_AVAILABLE = False
     print "PyTango is not available: %s" % e
-    
+
 ## list of available databases
 DB_AVAILABLE = []
-    
+
 try:
-    import MySQLdb    
+    import MySQLdb
     ## connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
@@ -105,17 +105,17 @@ try:
     DB_AVAILABLE.append("MYSQL")
 except:
     try:
-        import MySQLdb    
+        import MySQLdb
         from os.path import expanduser
         home = expanduser("~")
         ## connection arguments to MYSQL DB
-        args2 = {'host': u'localhost', 'db': u'tango', 
+        args2 = {'host': u'localhost', 'db': u'tango',
                 'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
         ## inscance of MySQLdb
         mydb = MySQLdb.connect(**args2)
         mydb.close()
         DB_AVAILABLE.append("MYSQL")
-        
+
     except ImportError, e:
         print "MYSQL not available: %s" % e
     except Exception, e:
@@ -162,10 +162,12 @@ except Exception,e:
     print "ORACLE not available: %s" % e
 except:
     print "ORACLE not available"
-    
+
+
 
 if "MYSQL" in DB_AVAILABLE:
     import DBFieldTagWriterTest
+    import DBFieldTagWriterH5PYTest
     import MYSQLSourceTest
 
 if "PGSQL" in DB_AVAILABLE:
@@ -176,6 +178,8 @@ if "ORACLE" in DB_AVAILABLE:
 
 if PYTANGO_AVAILABLE:
     import TangoFieldTagWriterTest
+    import TangoFieldTagWriterH5PYTest
+    
     import NXSDataWriterTest
     import ClientFieldTagServerTest
     import XMLFieldTagServerTest
@@ -200,9 +204,9 @@ def main():
 
 
 
-    ## test server    
-    ts = None    
-    
+    ## test server
+    ts = None
+
     ## test suit
     suite = unittest.TestSuite()
 
@@ -299,10 +303,10 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerTest) )
-    
+
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(NexusXMLHandlerH5PYTest) )
-    
+
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
 
@@ -311,9 +315,14 @@ def main():
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
@@ -373,6 +382,8 @@ def main():
     if "MYSQL" in DB_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagWriterH5PYTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(MYSQLSourceTest) )
@@ -417,6 +428,8 @@ def main():
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterH5PYTest) )
 
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
@@ -436,7 +449,7 @@ def main():
                 unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchTest) )
 
 
-    
+
     ## test runner
     runner = unittest.TextTestRunner()
     ## test result

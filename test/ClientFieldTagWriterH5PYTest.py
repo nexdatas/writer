@@ -43,6 +43,8 @@ from  xml.sax import SAXParseException
 from nxswriter import TangoDataWriter, Types
 from nxswriter.TangoDataWriter  import TangoDataWriter 
 from Checkers import Checker
+import nxswriter.FileWriter as FileWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 ## test fixture
 class ClientFieldTagWriterH5PYTest(unittest.TestCase):
@@ -281,8 +283,9 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         self.closeWriter(tdw, json = '{"data": { "cnt_u32":' + str(uc) + ' } }')
         
         # check the created file
-        
-        f = open_file(fname,readonly=True)
+
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkScalarField(det, "counter", "int64", "NX_INT", self._counter)
         self._sc.checkScalarField(det, "counter8", "int8", "NX_INT8", self._counter)
@@ -427,7 +430,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
 
         
         # check the created file
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 7,6)
         self._sc.checkScalarAttribute(det, "scalar_float", "float64", self._fcounter[steps-1],
                                       error = 1.e-14)
@@ -543,7 +547,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname, 9)
         self._sc.checkScalarField(det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
@@ -683,7 +688,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname, 10)
         self._sc.checkScalarField(det, "time", "string", "NX_DATE_TIME", dates)
         self._sc.checkScalarField(det, "isotime", "string", "ISO8601", dates)
@@ -926,7 +932,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 18)
         self._sc.checkSpectrumField(det, "mca_int",  "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(det, "mca_int8", "int8", "NX_INT8", self._mca1, grows = 2)
@@ -1132,7 +1139,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 12)
         self._sc.checkSpectrumField(det, "mca_float", "float64", "NX_FLOAT", self._fmca1, 
                                     error = 1.0e-14)
@@ -1396,7 +1404,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkSpectrumField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkSpectrumField(det, "time", "string", "NX_DATE_TIME", dates)
@@ -1594,7 +1603,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
 
         
         # check the created file
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 6, 6)
         self._sc.checkSpectrumAttribute(det, "spectrum_float", "float64", self._fmca1[steps-1],
                                       error = 1.e-14)
@@ -1844,7 +1854,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 17)
         self._sc.checkImageField(det, "pco_int",  "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(det, "pco_int8", "int8", "NX_INT8", self._pco1, grows = 2)
@@ -2062,7 +2073,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 11)
         self._sc.checkImageField(det, "pco_float", "float64", "NX_FLOAT", self._fpco1, 
                                     error = 1.0e-14)
@@ -2365,7 +2377,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         
         # check the created file
         
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det = self._sc.checkFieldTree(f, fname , 15)
         self._sc.checkImageField(det, "flags", "bool", "NX_BOOLEAN", logical)
         self._sc.checkImageField(det, "bool_flags", "bool", "NX_BOOLEAN", logical)
@@ -2622,7 +2635,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
 
         
         # check the created file
-        f = open_file(fname,readonly=True)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 7, 7)
         self._sc.checkImageAttribute(det, "image_float", "float64", self._fpco1[steps-1],
                                       error = 1.e-14)

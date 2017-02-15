@@ -467,6 +467,16 @@ class H5PYField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
+        if isinstance(o, np.ndarray):
+            hsh = self._h5object.shape
+            if t is Ellipsis:
+                tsz = [i for i in range(len(hsh))]
+            else:
+                tsz = [i for (i, s) in enumerate(t) if isinstance(s, slice)]
+            osz = len(o.shape)
+            if len(tsz) > osz and len(hsh) > max(tsz):
+                shape = tuple([hsh[e] for e in tsz])
+                o = o.reshape(shape)
         return self._h5object.__setitem__(t, o)
 
     def __getitem__(self, t):
