@@ -146,7 +146,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         tdw = TangoDataWriter()
         tdw.fileName = fname
 #        tdw.numberOfThreads = 1
-        tdw.writer = "h5py"
+        self.setProp(tdw, "writer", "h5py")
+
         tdw.openFile()
         tdw.xmlsettings = xml
         if json:
@@ -162,6 +163,9 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             tdw.jsonrecord = json
         tdw.closeEntry()
         tdw.closeFile()
+
+    def setProp(self, rc, name, value):
+        setattr(rc, name, value)
 
     ## performs one record step
     def record(self, tdw, string):
@@ -343,7 +347,6 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self.closeWriter(tdw)
 
         # check the created file
-
 
         FileWriter.writer = H5PYWriter
         f = FileWriter.open_file(fname,readonly=True)

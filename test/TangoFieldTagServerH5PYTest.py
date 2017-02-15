@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file TangoFieldTagServerTest.py
+## \file TangoFieldTagServerH5PYTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -34,22 +34,22 @@ from  xml.sax import SAXParseException
 
 from Checkers import Checker
 import ServerSetUp
-import TangoFieldTagWriterTest
+import TangoFieldTagWriterH5PYTest
 from ProxyHelper import ProxyHelper
 
 ## test fixture
-class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
+class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest):
     ## server counter
     serverCounter = 0
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        TangoFieldTagWriterTest.TangoFieldTagWriterTest.__init__(self, methodName)
+        TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest.__init__(self, methodName)
         unittest.TestCase.__init__(self, methodName)
 
-        TangoFieldTagServerTest.serverCounter += 1
-        sins = self.__class__.__name__+"%s" % TangoFieldTagServerTest.serverCounter
+        TangoFieldTagServerH5PYTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % TangoFieldTagServerH5PYTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
         self.__status = {
@@ -99,6 +99,7 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.setProp(tdw, "writer", "h5py")
         
         tdw.OpenFile()
         

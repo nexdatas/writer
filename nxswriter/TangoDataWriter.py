@@ -95,7 +95,8 @@ class TangoDataWriter(object):
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
 
-        self.__setWriter("pni")
+        #self.__setWriter("pni")
+        self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
 
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
@@ -130,20 +131,8 @@ class TangoDataWriter(object):
             if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
 
-    def __getWriter(self):
-        """ get method for writer module name
 
-        :returns: value of  writer module name
-        :rtype: :obj:`str`
-        """
-        res = ""
-        for key, module in WRITERS.items():
-            if FileWriter.writer == module:
-                res = key
-                break
-        return res
-
-    def __setWriter(self, writer):
+    def setWriter(self, writer):
         """ set method for  writer module name
 
         :param jsonstring: value of  writer module name
@@ -151,9 +140,6 @@ class TangoDataWriter(object):
         """
         FileWriter.writer = WRITERS[writer.lower()]
         
-    #: the  writer module name
-    writer = property(__getWriter, __setWriter,
-                      doc='(:obj:`str`) the  writer module name')
 
     def __getJSON(self):
         """ get method for jsonrecord attribute
@@ -224,8 +210,9 @@ class TangoDataWriter(object):
 
         :brief: It opens the H5 file
         """
-
+        
         self.closeFile()
+        self.setWriter(self.writer)
         self.__nxFile = None
         self.__eFile = None
         self.__initPool = None
