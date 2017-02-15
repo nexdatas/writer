@@ -101,7 +101,7 @@ def deflate_filter():
     :returns: deflate filter object
     :rtype : :class:`H5PYDeflate`
     """
-    return H5PYDeflate(None)
+    return H5PYDeflate(None, None)
 
 
 def currenttime():
@@ -312,11 +312,13 @@ class H5PYGroup(FileWriter.FTGroup):
         mshape = [None for _ in shape] or (None,)
         if type_code == "string":
             type_code = h5py.special_dtype(vlen=unicode)
-#            type_code = h5py.special_dtype(vlen=bytes)
+            # type_code = h5py.special_dtype(vlen=bytes)
         if filter:
             f =  H5PYField(
                 self._h5object.create_dataset(
-                    name, shape, type_code, chunks=chunk,
+                    name, shape, type_code,
+                    chunks=(tuple(chunk)
+                            if chunk is not None else None),
                     compression=("gzip" if filter.compression
                                  else None),
                 compression_opts=filter.rate,
@@ -629,6 +631,8 @@ class H5PYDeflate(FileWriter.FTDeflate):
         :type tparent: :obj:`FTObject`
         """
         FileWriter.FTDeflate.__init__(self, h5object, tparent)
+        #: (:obj:`bool`) compression flag
+        self.compression = True
         #: (:obj:`bool`) compression shuffle
         self.shuffle = False
         #: (:obj:`int`) compression rate
