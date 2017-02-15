@@ -251,6 +251,8 @@ class PyEvalSource(DataSource):
                 if self.__pool.nxroot is not None:
                     self.__pool.common['PYEVAL']["common"]["__nxroot__"] = \
                         self.__pool.nxroot.getobject()
+                    self.__pool.common['PYEVAL']["common"]["__root__"] = \
+                        self.__pool.nxroot
             self.__common = self.__pool.common['PYEVAL']["common"]
 
         finally:

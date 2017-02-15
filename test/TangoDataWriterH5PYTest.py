@@ -94,18 +94,18 @@ class TangoDataWriterH5PYTest(unittest.TestCase):
     <field units="m" type="NX_CHAR" name="nxrootpath">
       <strategy mode="INIT"/>
       <datasource type="PYEVAL">
-        <result name='res2'>ds.res2 = (commonblock["__nxroot__"]).path</result>
+        <result name='res2'>ds.res2 = (commonblock["__nxroot__"]).name</result>
       </datasource>
     </field>
     <field units="m" type="NX_CHAR" name="nxrootlink">
       <strategy mode="FINAL"/>
       <datasource type="PYEVAL">
         <result name='res2'>
-import pni.io.nx.h5 as nx
+import h5py
 root = commonblock["__nxroot__"]
-en = root.open("entry1")
-nx.link("/entry1/nxrootpath", en, "mylink")
-ds.res2 = str(root.is_valid)
+en = root.get("entry1")
+en["mylink"] = h5py.SoftLink("/entry1/nxrootpath")
+ds.res2 = str(True)
         </result>
       </datasource>
     </field>
@@ -486,8 +486,9 @@ ds.res2 = str(root.is_valid)
                     for at in ch.attributes:
                         self.assertTrue(at.is_valid)
                         self.assertTrue(hasattr(at.shape,"__iter__"))
-                        self.assertEqual(len(at.shape),1)
-                        self.assertEqual(at.shape,(1,))
+                        self.assertEqual(len(at.shape),0)
+                        #! PNI self.assertEqual(len(at.shape),1)
+                        #! PNI self.assertEqual(at.shape,(1,))
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
@@ -507,8 +508,9 @@ ds.res2 = str(root.is_valid)
                     for at in ch.attributes:
                         self.assertTrue(at.is_valid)
                         self.assertTrue(hasattr(at.shape,"__iter__"))
-                        self.assertEqual(len(at.shape),1)
-                        self.assertEqual(at.shape,(1,))
+                        #! PNI self.assertEqual(len(at.shape),1)
+                        self.assertEqual(len(at.shape),0 )
+                        #! PNI self.assertEqual(at.shape,(1,))
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
@@ -521,8 +523,7 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-            """ """
-#            os.remove(fname)
+            os.remove(fname)
 
 
 
@@ -1016,8 +1017,9 @@ ds.res2 = str(root.is_valid)
             at = en.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXentry")

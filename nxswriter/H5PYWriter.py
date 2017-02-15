@@ -308,7 +308,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype : :class:`H5PYField`
         """
-        shape = shape or [0]
+        shape = shape or [1]
         mshape = [None for _ in shape] or (None,)
         if type_code == "string":
             type_code = h5py.special_dtype(vlen=unicode)
@@ -324,7 +324,6 @@ class H5PYGroup(FileWriter.FTGroup):
                 ),
                 self)
         else:
-            print "FIELD", name, shape, type_code, chunk, mshape
             f = H5PYField(
                 self._h5object.create_dataset(
                     name, shape, type_code,
@@ -456,11 +455,7 @@ class H5PYField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
-        print "OBJ", o, self.name, type(o)
-        print "OBJN", self._h5object.name, self._h5object
-        import numpy
         self._h5object[...] = o
-        print self._h5object[...]
         
     def __setitem__(self, t, o):
         """ set value
@@ -470,7 +465,6 @@ class H5PYField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
-        print "SOBJ", o, self.name
         return self._h5object.__setitem__(t, o)
 
     def __getitem__(self, t):

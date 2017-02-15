@@ -75,8 +75,9 @@ import TgDeviceTest
 import StreamsTest
 import NexusXMLHandlerTest
 import NexusXMLHandlerH5PYTest
-
 import TangoDataWriterTest
+import TangoDataWriterH5PYTest
+
 import ClientFieldTagWriterTest
 import XMLFieldTagWriterTest
 
@@ -304,6 +305,9 @@ def main():
     
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
+
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterH5PYTest) )
 
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
