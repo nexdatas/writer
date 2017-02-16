@@ -56,6 +56,10 @@ def create_file(filename, overwrite=False, libver='latest'):
     :returns: file object
     :rtype : :class:`H5PYFile`
     """
+    import os
+    f = open("ww.log", "w")
+    f.write("WWW: %s %s %s" % ( filename, overwrite, libver))
+    f.close()
     fl = h5py.File(filename, "a" if overwrite else "w-", libver=libver)
     fl.attrs.create("file_time", currenttime() + "\0")
     fl.attrs.create("HDF5_version", "\0")
@@ -200,7 +204,7 @@ class H5PYFile(FileWriter.FTFile):
         """
         isvalid = self.is_valid
         lreadonly = self._h5object.mode in ["r"] if isvalid else None
-            
+
         if (not isvalid or lreadonly != readonly
             or self._h5object.libver != libver):
             if isvalid:
@@ -275,6 +279,45 @@ class H5PYGroup(FileWriter.FTGroup):
         self.children.append(weakref.ref(el))
         return el
 
+    class H5PYGroupIter(object):
+
+        def __init__(self, group):
+            """ constructor
+
+            :param group: group object
+            :type manager: :obj:`H5PYGroup`
+            """
+
+            self.__group = group
+            self.__names = self.__group._h5object.keys() or []
+
+        def next(self):
+            """ the next attribute
+
+            :returns: attribute object
+            :rtype : :class:`FTAtribute`
+            """
+            if self.__names:
+                return self.__group.open(self.__names.pop(0))
+            else:
+                raise StopIteration()
+
+        def __iter__(self):
+            """ attribute iterator
+
+            :returns: attribute iterator
+            :rtype : :class:`H5PYAttrIter`
+            """
+            return self
+
+    def __iter__(self):
+        """ attribute iterator
+
+        :returns: attribute iterator
+        :rtype : :class:`H5PYAttrIter`
+        """
+        return self.H5PYGroupIter(self)
+
     def create_group(self, n, nxclass=""):
         """ open a file tree element
 
@@ -290,7 +333,7 @@ class H5PYGroup(FileWriter.FTGroup):
         g = H5PYGroup(grp, self)
         self.children.append(weakref.ref(g))
         return g
-        
+
     def create_field(self, name, type_code,
                      shape=None, chunk=None, filter=None):
         """ open a file tree element
@@ -458,7 +501,7 @@ class H5PYField(FileWriter.FTField):
         :type o: :obj:`any`
         """
         self._h5object[...] = o
-        
+
     def __setitem__(self, t, o):
         """ set value
 
@@ -588,7 +631,7 @@ class H5PYLink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         return self.getparent().getobject()[self.name][...]
-            
+
     @property
     def filename(self):
         """ file name
@@ -781,7 +824,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         self._h5object = self._tparent.getobject().attrs
         FileWriter.FTAttributeManager.reopen(self)
 
-        
+
 class H5PYAttribute(FileWriter.FTAttribute):
     """ file tree attribute
     """
@@ -826,7 +869,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         if isinstance(o, str) and not o.endswith("\0"):
             o += "\0"
-            
+
         if t is Ellipsis:
             self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
         else:

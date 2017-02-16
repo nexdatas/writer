@@ -42,9 +42,8 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
-import nxswriter.PNIWriter
+import nxswriter.H5PYWriter
 
-from pni.io.nx.h5 import create_file
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -823,7 +822,7 @@ ds.res = commonblock["myres"]
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        f = nxswriter.PNIWriter.create_file(fname, False)
+        f = nxswriter.H5PYWriter.create_file(fname, False)
 
         try:
             rt = f.root()

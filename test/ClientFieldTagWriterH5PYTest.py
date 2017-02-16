@@ -94,6 +94,8 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
         print "tearing down ..."
 
 
+    def setProp(self, rc, name, value):
+        setattr(rc, name, value)
 
     ## opens writer
     # \param fname file name     
@@ -102,7 +104,7 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
     # \returns Tango Data Writer instance   
     def openWriter(self, fname, xml, json = None):
         tdw = TangoDataWriter()
-        tdw.writer = "h5py"
+        self.setProp(tdw, "writer", "h5py")
         tdw.fileName = fname
         tdw.openFile()
         tdw.xmlsettings = xml

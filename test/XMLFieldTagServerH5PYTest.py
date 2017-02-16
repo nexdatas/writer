@@ -16,42 +16,35 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 ## \package test nexdatas
-## \file TangoFieldTagServerH5PYTest.py
+## \file XMLFieldTagServerTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
 import os
 import sys
-import subprocess
-import random
+
 import PyTango
-import binascii
-import time
 
-from  xml.sax import SAXParseException
- 
-
-
-from Checkers import Checker
 import ServerSetUp
-import TangoFieldTagWriterH5PYTest
+import XMLFieldTagWriterH5PYTest
 from ProxyHelper import ProxyHelper
 
 ## test fixture
-class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest):
+class XMLFieldTagServerH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest):
     ## server counter
     serverCounter = 0
 
     ## constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest.__init__(self, methodName)
-        unittest.TestCase.__init__(self, methodName)
+        XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest.__init__(self, methodName)
 
-        TangoFieldTagServerH5PYTest.serverCounter += 1
-        sins = self.__class__.__name__+"%s" % TangoFieldTagServerH5PYTest.serverCounter
+        XMLFieldTagServerH5PYTest.serverCounter += 1
+        sins = self.__class__.__name__+"%s" % XMLFieldTagServerH5PYTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
 
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self.__status = {
             PyTango.DevState.OFF:"Not Initialized",
             PyTango.DevState.ON:"Ready",
@@ -61,23 +54,17 @@ class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
             PyTango.DevState.FAULT:"Error",
             }
 
-        self._dbhost = None
-        self._dbport = None
+
 
     ## test starter
-    # \brief Common set up
+    # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        self._simps.setUp()
-        self._dbhost = self._simps.dp.get_db_host()
-        self._dbport = self._simps.dp.get_db_port()
-        print "SEED =", self.seed 
         print "CHECKER SEED =", self._sc.seed 
-        
+
     ## test closer
-    # \brief Common tear down
-    def tearDown(self):
-        self._simps.tearDown()
+    # \brief Common tear down oif Tango Server
+    def tearDown(self): 
         self._sv.tearDown()
 
     def setProp(self, rc, name, value):
@@ -88,6 +75,7 @@ class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
             {name: value})
         rc.Init()
 
+        
     ## opens writer
     # \param fname file name     
     # \param xml XML settings
@@ -120,8 +108,9 @@ class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
     ## closes writer
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
-    def closeWriter(self, tdw, json= None):
+    def closeWriter(self, tdw, json = None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         if json:
             tdw.JSONRecord = json
@@ -142,3 +131,4 @@ class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
 
 if __name__ == '__main__':
     unittest.main()
+

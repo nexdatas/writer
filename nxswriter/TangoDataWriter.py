@@ -132,12 +132,13 @@ class TangoDataWriter(object):
                 Streams.log_debug = server.log_debug
 
 
-    def setWriter(self, writer):
+    def __setWriter(self, writer):
         """ set method for  writer module name
 
         :param jsonstring: value of  writer module name
         :type jsonstring: :obj:`str`
         """
+        self.writer = writer.lower()
         FileWriter.writer = WRITERS[writer.lower()]
         
 
@@ -212,7 +213,7 @@ class TangoDataWriter(object):
         """
         
         self.closeFile()
-        self.setWriter(self.writer)
+        self.__setWriter(self.writer)
         self.__nxFile = None
         self.__eFile = None
         self.__initPool = None

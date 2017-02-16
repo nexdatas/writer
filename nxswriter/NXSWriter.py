@@ -395,6 +395,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         with self.lock:
             self.errors = []
         try:
+            self.tdw.writer = self.Writer
             self.tdw.openFile()
             self.set_state(PyTango.DevState.OPEN)
         except (PyTango.DevFailed, BaseException):
@@ -431,7 +432,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
         try:
             self.get_device_properties(self.get_device_class())
             self.tdw.numberOfThreads = self.NumberOfThreads
-            self.tdw.writer = self.Writer
             self.tdw.openEntry()
             self.set_state(PyTango.DevState.EXTRACT)
         except (PyTango.DevFailed, BaseException):
