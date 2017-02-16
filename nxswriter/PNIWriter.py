@@ -63,9 +63,9 @@ def link(target, parent, name):
     :returns: link object
     :rtype : :class:`PNILink`
     """
-    nx.link(target, parent._h5object, name)
-    lks = nx.get_links(parent._h5object)
-    lk =  [e for e in lks if e.name == name][0]
+    nx.link(target, parent.getobject(), name)
+    lks = nx.get_links(parent.getobject())
+    lk = [e for e in lks if e.name == name][0]
     el = PNILink(lk, parent)
     el.name = name
     parent.children.append(weakref.ref(el))
@@ -140,10 +140,17 @@ class PNIFile(FileWriter.FTFile):
         """
         return self._h5object.readonly
 
-    def reopen(self, readonly=False, swmr=False):
+    def reopen(self, readonly=False, swmr=False, _=None):
         """ reopen file
+
+        :param readonly: readonly flag
+        :type readonly: :obj:`bool`
+        :param swmr: swmr flag
+        :type swmr: :obj:`bool`
+        :param libver:  library version, default: 'latest'
+        :type libver: :obj:`str`
         """
-        
+
         if swmr:
             raise Exception("SWMR not supported")
         self._h5object = nx.open_file(self.name, readonly)
@@ -153,12 +160,12 @@ class PNIFile(FileWriter.FTFile):
 class PNIGroup(FileWriter.FTGroup):
     """ file tree group
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
-        :param tparent: treee parent
+        :param tparent: tree parent
         :type tparent: :obj:`FTObject`
         """
 
@@ -190,7 +197,7 @@ class PNIGroup(FileWriter.FTGroup):
         elif isinstance(itm, nx.nxlink):
             el = PNILink(itm, self)
         else:
-            return PNIObject(itm, self)
+            return FileWriter.FTObject(itm, self)
         self.children.append(weakref.ref(el))
         return el
 
@@ -209,7 +216,7 @@ class PNIGroup(FileWriter.FTGroup):
         return g
 
     def create_field(self, name, type_code,
-                     shape=None, chunk=None, filter=None):
+                     shape=None, chunk=None, dfilter=None):
         """ open a file tree element
 
         :param n: group name
@@ -220,15 +227,15 @@ class PNIGroup(FileWriter.FTGroup):
         :type shape: :obj:`list` < :obj:`int` >
         :param chunk: chunk
         :type chunk: :obj:`list` < :obj:`int` >
-        :param filter: filter deflater
-        :type filter: :class:`PNIDeflate`
+        :param dfilter: filter deflater
+        :type dfilter: :class:`PNIDeflate`
         :returns: file tree field
         :rtype : :class:`PNIField`
         """
         f = PNIField(
             self._h5object.create_field(
                 name, type_code, shape, chunk,
-                filter if not filter else filter._h5object), self)
+                dfilter if not dfilter else dfilter.getobject()), self)
         self.children.append(weakref.ref(f))
         return f
 
@@ -291,7 +298,7 @@ class PNIGroup(FileWriter.FTGroup):
 class PNIField(FileWriter.FTField):
     """ file tree file
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -430,13 +437,13 @@ class PNIField(FileWriter.FTField):
         :returns: parent object
         :rtype: :class:`FTObject`
         """
-        return PNIGroup(self._h5object.parent, self._parent.getparent())
+        return PNIGroup(self._h5object.parent, self._tparent.getparent())
 
 
 class PNILink(FileWriter.FTLink):
     """ file tree link
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -494,9 +501,10 @@ class PNILink(FileWriter.FTLink):
         """ reopen field
         """
         lks = nx.get_links(self._tparent.getobject())
-        lk =  [e for e in lks if e.name == self.name][0]
+        lk = [e for e in lks if e.name == self.name][0]
         self._h5object = lk
         FileWriter.FTLink.reopen(self)
+
 
 class PNIDeflate(FileWriter.FTDeflate):
     """ file tree deflate
@@ -519,8 +527,7 @@ class PNIDeflate(FileWriter.FTDeflate):
         if hasattr(h5object, "name"):
             self.name = h5object.name
 
-    @property
-    def rate(self):
+    def __setrate(self):
         """ getter for compression rate
 
         :returns: compression rate
@@ -528,8 +535,7 @@ class PNIDeflate(FileWriter.FTDeflate):
         """
         return self._h5object.rate
 
-    @rate.setter
-    def rate(self, value):
+    def __getrate(self, value):
         """ setter for compression rate
 
         :param value: compression rate
@@ -537,8 +543,10 @@ class PNIDeflate(FileWriter.FTDeflate):
         """
         self._h5object.rate = value
 
-    @property
-    def shuffle(self):
+    #: (:obj:`int`) compression rate
+    rate = property(__getrate, __setrate)
+
+    def __setshuffle(self):
         """ getter for compression shuffle
 
         :returns: compression shuffle
@@ -546,8 +554,7 @@ class PNIDeflate(FileWriter.FTDeflate):
         """
         return self._h5object.shuffle
 
-    @shuffle.setter
-    def shuffle(self, value):
+    def __getshuffle(self, value):
         """ setter for compression shuffle
 
         :param value: compression shuffle
@@ -555,11 +562,14 @@ class PNIDeflate(FileWriter.FTDeflate):
         """
         self._h5object.shuffle = value
 
+    #: (:obj:`bool`) compression shuffle
+    shuffle = property(__getshuffle, __setshuffle)
+
 
 class PNIAttributeManager(FileWriter.FTAttributeManager):
     """ file tree attribute
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -577,11 +587,13 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         if hasattr(h5object, "name"):
             self.name = h5object.name
 
-    def create(self, name, type, shape=[], overwrite=False):
+    def create(self, name, dtype, shape=None, overwrite=False):
         """ create a new attribute
 
         :param name: attribute name
         :type name: :obj:`str`
+        :param dtype: attribute type
+        :type dtype: :obj:`str`
         :param shape: attribute shape
         :type shape: :obj:`list` < :obj:`int` >
         :param overwrite: overwrite flag
@@ -589,9 +601,10 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`PNIAtribute`
         """
+        shape = shape or []
         at = PNIAttribute(
             self._h5object.create(
-                name, type, shape, overwrite), self.getparent())
+                name, dtype, shape, overwrite), self.getparent())
         self.getparent().children.append(weakref.ref(at))
         return at
 
@@ -643,7 +656,7 @@ class PNIAttribute(FileWriter.FTAttribute):
     """ file tree attribute
     """
 
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object

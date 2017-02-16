@@ -34,7 +34,7 @@ try:
     from . import H5PYWriter
     WRITERS["h5py"] = H5PYWriter
 except:
-    pass    
+    pass
 
 # import pni.io.nx.h5 as nx
 
@@ -95,7 +95,7 @@ class TangoDataWriter(object):
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
 
-        #self.__setWriter("pni")
+        #: (:obj:`str`) writer type
         self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
 
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
@@ -131,7 +131,6 @@ class TangoDataWriter(object):
             if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
 
-
     def __setWriter(self, writer):
         """ set method for  writer module name
 
@@ -140,7 +139,6 @@ class TangoDataWriter(object):
         """
         self.writer = writer.lower()
         FileWriter.writer = WRITERS[writer.lower()]
-        
 
     def __getJSON(self):
         """ get method for jsonrecord attribute
@@ -211,7 +209,7 @@ class TangoDataWriter(object):
 
         :brief: It opens the H5 file
         """
-        
+
         self.closeFile()
         self.__setWriter(self.writer)
         self.__nxFile = None

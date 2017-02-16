@@ -56,17 +56,13 @@ def create_file(filename, overwrite=False, libver='latest'):
     :returns: file object
     :rtype : :class:`H5PYFile`
     """
-    import os
-    f = open("ww.log", "w")
-    f.write("WWW: %s %s %s" % ( filename, overwrite, libver))
-    f.close()
     fl = h5py.File(filename, "a" if overwrite else "w-", libver=libver)
-    fl.attrs.create("file_time", currenttime() + "\0")
+    fl.attrs.create("file_time", H5PYFile.currenttime() + "\0")
     fl.attrs.create("HDF5_version", "\0")
     fl.attrs.create("NX_class", "NXroot" + "\0")
     fl.attrs.create("NeXus_version", "4.3.0\0")
     fl.attrs.create("file_name", filename + "\0")
-    fl.attrs.create("file_update_time", currenttime() + "\0")
+    fl.attrs.create("file_update_time", H5PYFile.currenttime() + "\0")
     return H5PYFile(fl, filename)
 
 
@@ -82,7 +78,7 @@ def link(target, parent, name):
     :returns: link object
     :rtype : :class:`H5PYLink`
     """
-    localfname = getfilename(parent)
+    localfname = H5PYLink.getfilename(parent)
     if ":/" in target:
         filename, path = target.split(":/")
 
@@ -99,6 +95,7 @@ def link(target, parent, name):
     parent.children.append(weakref.ref(lk))
     return lk
 
+
 def deflate_filter():
     """ create deflate filter
 
@@ -106,32 +103,6 @@ def deflate_filter():
     :rtype : :class:`H5PYDeflate`
     """
     return H5PYDeflate(None, None)
-
-
-def currenttime():
-    """ returns current time string
-
-    :returns: current time
-    :rtype: :obj:`str`
-    """
-    tzone = time.tzname[0]
-    tz = pytz.timezone(tzone)
-    fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
-    starttime = tz.localize(datetime.datetime.now())
-    return str(starttime.strftime(fmt))
-
-def getfilename(obj):
-    filename = ""
-    while not filename:
-        par = obj.getparent()
-        if par is None:
-            break
-        if isinstance(par, H5PYFile):
-            filename = par.name
-            break
-        else:
-            obj = par
-    return filename
 
 
 class H5PYFile(FileWriter.FTFile):
@@ -169,7 +140,7 @@ class H5PYFile(FileWriter.FTFile):
         """
         if self._h5object.mode in ["r+"]:
             self._h5object.attrs.create(
-                "file_update_time", currenttime() + "\0")
+                "file_update_time", self.currenttime() + "\0")
         return self._h5object.flush()
 
     def close(self):
@@ -177,8 +148,21 @@ class H5PYFile(FileWriter.FTFile):
         """
         if self._h5object.mode in ["r+"]:
             self._h5object.attrs.create(
-                "file_update_time", currenttime() + "\0")
+                "file_update_time", self.currenttime() + "\0")
         return self._h5object.close()
+
+    @classmethod
+    def currenttime(cls):
+        """ returns current time string
+
+        :returns: current time
+        :rtype: :obj:`str`
+        """
+        tzone = time.tzname[0]
+        tz = pytz.timezone(tzone)
+        fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+        starttime = tz.localize(datetime.datetime.now())
+        return str(starttime.strftime(fmt))
 
     @property
     def is_valid(self):
@@ -199,14 +183,22 @@ class H5PYFile(FileWriter.FTFile):
         isvalid = self.is_valid
         return self._h5object.mode in ["r"] if isvalid else None
 
-    def reopen(self, readonly=False, libver='latest', swmr=False):
+    def reopen(self, readonly=False, swmr=False, libver=None):
         """ reopen file
+
+        :param readonly: readonly flag
+        :type readonly: :obj:`bool`
+        :param swmr: swmr flag
+        :type swmr: :obj:`bool`
+        :param libver:  library version, default: 'latest'
+        :type libver: :obj:`str`
         """
+        libver = libver or 'latest'
         isvalid = self.is_valid
         lreadonly = self._h5object.mode in ["r"] if isvalid else None
 
-        if (not isvalid or lreadonly != readonly
-            or self._h5object.libver != libver):
+        if (not isvalid or lreadonly != readonly or
+           self._h5object.libver != libver):
             if isvalid:
                 self.close()
             self._h5object = h5py.File(
@@ -221,7 +213,7 @@ class H5PYFile(FileWriter.FTFile):
 class H5PYGroup(FileWriter.FTGroup):
     """ file tree group
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -269,7 +261,7 @@ class H5PYGroup(FileWriter.FTGroup):
         if isinstance(itm, h5py._hl.dataset.Dataset):
             el = H5PYField(itm, self)
         elif isinstance(itm, h5py._hl.group.Group):
-            el =  H5PYGroup(itm, self)
+            el = H5PYGroup(itm, self)
         elif (isinstance(itm, h5py._hl.group.SoftLink)
               or isinstance(itm, h5py._hl.group.ExternalLink)):
             el = H5PYLink(itm, self)
@@ -335,7 +327,7 @@ class H5PYGroup(FileWriter.FTGroup):
         return g
 
     def create_field(self, name, type_code,
-                     shape=None, chunk=None, filter=None):
+                     shape=None, chunk=None, dfilter=None):
         """ open a file tree element
 
         :param n: group name
@@ -346,8 +338,8 @@ class H5PYGroup(FileWriter.FTGroup):
         :type shape: :obj:`list` < :obj:`int` >
         :param chunk: chunk
         :type chunk: :obj:`list` < :obj:`int` >
-        :param filter: filter deflater
-        :type filter: :class:`H5PYDeflate`
+        :param dfilter: filter deflater
+        :type dfilter: :class:`H5PYDeflate`
         :returns: file tree field
         :rtype : :class:`H5PYField`
         """
@@ -356,16 +348,16 @@ class H5PYGroup(FileWriter.FTGroup):
         if type_code == "string":
             type_code = h5py.special_dtype(vlen=unicode)
             # type_code = h5py.special_dtype(vlen=bytes)
-        if filter:
-            f =  H5PYField(
+        if dfilter:
+            f = H5PYField(
                 self._h5object.create_dataset(
                     name, shape, type_code,
                     chunks=(tuple(chunk)
                             if chunk is not None else None),
-                    compression=("gzip" if filter.compression
+                    compression=("gzip" if dfilter.compression
                                  else None),
-                compression_opts=filter.rate,
-                    shuffle=filter.shuffle, maxshape=mshape
+                    compression_opts=dfilter.rate,
+                    shuffle=dfilter.shuffle, maxshape=mshape
                 ),
                 self)
         else:
@@ -595,7 +587,7 @@ class H5PYField(FileWriter.FTField):
 class H5PYLink(FileWriter.FTLink):
     """ file tree link
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -632,6 +624,20 @@ class H5PYLink(FileWriter.FTLink):
         """
         return self.getparent().getobject()[self.name][...]
 
+    @classmethod
+    def getfilename(cls, obj):
+        filename = ""
+        while not filename:
+            par = obj.getparent()
+            if par is None:
+                break
+            if isinstance(par, H5PYFile):
+                filename = par.name
+                break
+            else:
+                obj = par
+        return filename
+
     @property
     def filename(self):
         """ file name
@@ -642,7 +648,7 @@ class H5PYLink(FileWriter.FTLink):
         if hasattr(self._h5object, "filename"):
             return self._h5object.filename
         else:
-            return getfilename(self)
+            return self.getfilename(self)
 
     @property
     def target_path(self):
@@ -652,7 +658,8 @@ class H5PYLink(FileWriter.FTLink):
         :rtype: :obj:`str`
         """
         if self.filename and ":" not in self._h5object.path:
-            return self.filename + ":/" + "/".join(self._h5object.path.split("/"))
+            return self.filename + ":/" + "/".join(
+                self._h5object.path.split("/"))
         return self._h5object.path
 
     @property
@@ -675,7 +682,7 @@ class H5PYLink(FileWriter.FTLink):
 class H5PYDeflate(FileWriter.FTDeflate):
     """ file tree deflate
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -702,7 +709,7 @@ class H5PYDeflate(FileWriter.FTDeflate):
 class H5PYAttributeManager(FileWriter.FTAttributeManager):
     """ file tree attribute
     """
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -719,11 +726,13 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             self.path = h5object.name
             self.name = self.path.split("/")[-1]
 
-    def create(self, name, type, shape=[], overwrite=False):
+    def create(self, name, dtype, shape=[], overwrite=False):
         """ create a new attribute
 
         :param name: attribute name
         :type name: :obj:`str`
+        :param dtype: attribute type
+        :type dtype: :obj:`str`
         :param shape: attribute shape
         :type shape: :obj:`list` < :obj:`int` >
         :param overwrite: overwrite flag
@@ -732,16 +741,16 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :rtype : :class:`H5PYAtribute`
         """
         if shape:
-            if type == 'string':
-                type = h5py.special_dtype(vlen=bytes)
+            if dtype == 'string':
+                dtype = h5py.special_dtype(vlen=bytes)
             self._h5object.create(
-                name, np.zeros(shape, dtype=type), shape, type)
+                name, np.zeros(shape, dtype=dtype), shape, dtype)
         else:
             if type == "string":
                 self._h5object.create(name, "a")
             else:
                 self._h5object.create(
-                    name, np.array(0, dtype=type), (1,), type)
+                    name, np.array(0, dtype=dtype), (1,), dtype)
         at = H5PYAttribute((self._h5object, name), self)
         self.getparent().children.append(weakref.ref(at))
         return at
@@ -829,7 +838,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
     """ file tree attribute
     """
 
-    def __init__(self, h5object, tparent):
+    def __init__(self, h5object, tparent=None):
         """ constructor
 
         :param h5object: pni object
@@ -911,7 +920,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         dt = type(self._h5object[0][self.name]).__name__
         if dt == "ndarray":
-            dt= str(self._h5object[0][self.name].dtype)
+            dt = str(self._h5object[0][self.name].dtype)
         if dt.endswith("_"):
             dt = dt[:-1]
         if dt == "str":
