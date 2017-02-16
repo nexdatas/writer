@@ -27,12 +27,6 @@ import random
 import struct
 import numpy
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
-
 
 from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element

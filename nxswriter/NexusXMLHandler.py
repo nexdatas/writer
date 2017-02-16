@@ -308,7 +308,7 @@ if __name__ == "__main__":
             #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
             mparser = sax.make_parser()
 
-            #: (:obj:`pni.io.nx.h5.nxfile`) file handle
+            #: (:obj:`nxswriter.FileWriter.FTFile`) file handle
             nxFile = FileWriter.create_file(fo, overwrite=True).root()
             #: (:class:`nxswriter.H5Elements.EFile`) element file objects
             mfileElement = EFile([], None, nxFile)

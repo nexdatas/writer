@@ -32,14 +32,6 @@ import numpy
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-## True if pniio installed
-PNIIO = False
-try:
-    from pni.io.nx.h5 import open_file
-    PNIIO = True
-except:
-    from pni.nx.h5 import open_file
-
 from  xml.sax import SAXParseException
 
 from nxswriter import TangoDataWriter, Types
@@ -1427,30 +1419,23 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         name = cursor.fetchall()
         cursor.close()
 
-        if PNIIO:
-            tdw = self.openWriter(fname, xml)
+        tdw = self.openWriter(fname, xml)
 
-            for c in range(3):
-                self.record(tdw,'{ }')
+        for c in range(3):
+            self.record(tdw,'{ }')
 
-            self.closeWriter(tdw)
+        self.closeWriter(tdw)
 
-        # check the created file
+    # check the created file
 
-            FileWriter.writer = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
-            det = self._sc.checkFieldTree(f, fname , 2)
-            self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64",
-                                              [int(scalar)] )
-            self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
-                                              [float(scalar)] )
-            f.close()
-        else:
-            if self.__class__.__name__ == "DBFieldTagWriterTest":
-                self.myAssertRaise(ThreadError,self.openWriter,fname, xml)
-            else:
-                import PyTango
-                self.myAssertRaise(PyTango.DevFailed,self.openWriter,fname, xml)
+        FileWriter.writer = H5PYWriter
+        f = FileWriter.open_file(fname,readonly=True)
+        det = self._sc.checkFieldTree(f, fname , 2)
+        self._sc.checkSingleSpectrumField(det, "init_pid_scalar_int64", "int64", "NX_INT64",
+                                          [int(scalar)] )
+        self._sc.checkSingleSpectrumField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
+                                          [float(scalar)] )
+        f.close()
         os.remove(fname)
 
 

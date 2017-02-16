@@ -28,11 +28,6 @@ import PyTango
 import time
 from ProxyHelper import ProxyHelper
 
-try:
-    from pni.io.nx.h5 import open_file
-except:
-    from pni.nx.h5 import open_file
-
 
 from  xml.sax import SAXParseException
 import struct

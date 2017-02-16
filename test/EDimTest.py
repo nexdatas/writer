@@ -29,11 +29,6 @@ import binascii
 import numpy
 
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 

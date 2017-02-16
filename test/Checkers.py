@@ -26,12 +26,6 @@ import binascii
 import time
 import numpy
 
-try:
-    from pni.io.nx.h5 import open_file
-except:
-    from pni.nx.h5 import open_file
-
-
 from nxswriter import Types
 
 from math import exp

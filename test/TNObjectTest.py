@@ -29,11 +29,6 @@ import binascii
 
 from nxswriter.FetchNameHandler import TNObject
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

@@ -29,12 +29,6 @@ import numpy
 import binascii
 import time
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
-
 
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement

@@ -31,11 +31,6 @@ import string
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -142,7 +137,7 @@ class H5PYWriterTest(unittest.TestCase):
             fl = H5PYWriter.create_file(self._fname, True)
             fl.close()
         
-            fl = nx.open_file(self._fname, readonly=True)
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(

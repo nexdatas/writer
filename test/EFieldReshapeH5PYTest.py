@@ -30,14 +30,6 @@ import binascii
 import time
 
 
-## True if pniio installed
-PNIIO = False
-try:
-    import pni.io.nx.h5 as nx
-    PNIIO = True
-except:
-    import pni.nx.h5 as nx
-
 from TestDataSource import TestDataSource 
 
 from nxswriter.FElement import FElementWithAttr
@@ -57,8 +49,6 @@ from Checkers import Checker
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
-
 
 from  xml.sax import SAXParseException
 
@@ -645,24 +635,21 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if PNIIO or k in supp:
-                self.assertEqual(el[k].error, None)
-                if stt != 'POSTRUN':
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0],
-                                                      attrs[k][4] if len(attrs[k])> 4 else 0,
-                                                      attrs = {"type":attrs[k][1],"units":"m"})
-                else:
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0], 
-                                                      attrs[k][4] if len(attrs[k])> 4 else 0, 
-                                                      attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-                                                      )
-            
+            self.assertEqual(el[k].error, None)
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                  attrs[k][1], attrs[k][0],
+                                                  attrs[k][4] if len(attrs[k])> 4 else 0,
+                                                  attrs = {"type":attrs[k][1],"units":"m"})
             else:
-                self.assertEqual(el[k].error[0], 'Data for %s on Test DataSource not found' % k)
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                  attrs[k][1], attrs[k][0], 
+                                                  attrs[k][4] if len(attrs[k])> 4 else 0, 
+                                                  attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                                  )
+
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -776,24 +763,21 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if PNIIO or k in supp:
-                self.assertEqual(el[k].error, None)
-                if stt != 'POSTRUN':
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0],
-                                                      attrs[k][4] if len(attrs[k])> 4 else 0,
-                                                      attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                else:
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                      attrs[k][1], attrs[k][0], 
-                                                      attrs[k][4] if len(attrs[k])> 4 else 0, 
-                                                      attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"}
-                                                      )
-            
+            self.assertEqual(el[k].error, None)
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                  attrs[k][1], attrs[k][0],
+                                                  attrs[k][4] if len(attrs[k])> 4 else 0,
+                                                  attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             else:
-                self.assertEqual(el[k].error[0], 'Data for %s on Test DataSource not found' % k)
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleSpectrumField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                                  attrs[k][1], attrs[k][0], 
+                                                  attrs[k][4] if len(attrs[k])> 4 else 0, 
+                                                  attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"}
+                                                  )
+
             
         self._nxFile.close()
         os.remove(self._fname)
@@ -1676,8 +1660,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 
-            if PNIIO or k in supp:
-                self.assertEqual(el[k].error, None)
+            self.assertEqual(el[k].error, None)
 
 #               if  attrs[k][2] == "string" or not  attrs[k][2]:
 #                   self.assertEqual(el[k].grows, None)
@@ -1686,21 +1669,19 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #                                                   attrs[k][1], attrs[k][0][0][0],0 ,
 #                                                   attrs = {"type":attrs[k][1],"units":"m"})
 #                   
-                if stt != 'POSTRUN':
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                   attrs[k][1], attrs[k][0],
-                                                   attrs[k][4] if len(attrs[k])> 4 else 0,
-                                                   attrs = {"type":attrs[k][1],"units":"m"})
-                else:
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                   attrs[k][1], attrs[k][0], 
-                                                   attrs[k][4] if len(attrs[k])> 4 else 0, 
-                                                   attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
-                                                   )
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                               attrs[k][1], attrs[k][0],
+                                               attrs[k][4] if len(attrs[k])> 4 else 0,
+                                               attrs = {"type":attrs[k][1],"units":"m"})
             else:
-                self.assertEqual(el[k].error[0], "Data for %s on Test DataSource not found" % k)
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                               attrs[k][1], attrs[k][0], 
+                                               attrs[k][4] if len(attrs[k])> 4 else 0, 
+                                               attrs = {"type":attrs[k][1],"units":"m", "postrun":None}
+                                               )
             
             
         self._nxFile.close()
@@ -1800,8 +1781,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #            self.assertEqual(el[k].run(), None)
             self.assertEqual(el[k].markFailed(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-            if PNIIO or k in supp:
-                self.assertEqual(el[k].error, None)
+            self.assertEqual(el[k].error, None)
 
 #             if  attrs[k][2] == "string" or not  attrs[k][2]:
 #                   self.assertEqual(el[k].grows, None)
@@ -1815,22 +1795,20 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #                                                       attrs[k][2] if attrs[k][2] else 'string', 
 #                                                       attrs[k][1], attrs[k][0][0][0],0 ,
 #                                                       attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"})
-                    
-                if stt != 'POSTRUN':
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                   attrs[k][1], attrs[k][0],
-                                                   attrs[k][5] if len(attrs[k])> 5 else 0,
-                                                   attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
-                else:
-                    self.assertEqual(el[k].grows, None)
-                    self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
-                                                   attrs[k][1], attrs[k][0], 
-                                                   attrs[k][5] if len(attrs[k])> 5 else 0, 
-                                                   attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"}
-                                                   )
+
+            if stt != 'POSTRUN':
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                               attrs[k][1], attrs[k][0],
+                                               attrs[k][5] if len(attrs[k])> 5 else 0,
+                                               attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
             else:
-                self.assertEqual(el[k].error[0], "Data for %s on Test DataSource not found" % k)
+                self.assertEqual(el[k].grows, None)
+                self._sc.checkSingleImageField(self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string', 
+                                               attrs[k][1], attrs[k][0], 
+                                               attrs[k][5] if len(attrs[k])> 5 else 0, 
+                                               attrs = {"type":attrs[k][1],"units":"m", "postrun":None, "nexdatas_canfail":"FAILED"}
+                                               )
             
             
         self._nxFile.close()

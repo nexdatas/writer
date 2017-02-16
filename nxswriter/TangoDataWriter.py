@@ -36,7 +36,6 @@ try:
 except:
     pass
 
-# import pni.io.nx.h5 as nx
 
 from xml import sax
 
@@ -88,9 +87,9 @@ class TangoDataWriter(object):
         #:  :class:`nxswriter.ThreadPool.ThreadPool` >) \
         #:     collection of thread pool with triggered STEP elements
         self.__triggerPools = {}
-        #: (:class:`pni.io.nx.h5.nxroot`) H5 file handle
+        #: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle
         self.__nxRoot = None
-        #: (:class:`pni.io.nx.h5.nxfile`) H5 file handle
+        #: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle
         self.__nxFile = None
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
@@ -113,7 +112,7 @@ class TangoDataWriter(object):
         self.addingLogs = True
         #: (:obj:`int`) counter for open entries
         self.__entryCounter = 0
-        #: (:class:`pni.io.nx.h5.nxgroup`) group with Nexus log Info
+        #: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info
         self.__logGroup = None
 
         #: (:obj:`bool`) open file flag
@@ -200,7 +199,7 @@ class TangoDataWriter(object):
         """ the H5 file handle
 
         :returns: the H5 file handle
-        :rtype: :class:`pni.io.nx.h5.nxfile`
+        :rtype: :class:`nxswriter.FileWriter.FTFile`
         """
         return self.__nxFile
 

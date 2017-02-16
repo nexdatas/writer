@@ -53,12 +53,6 @@ except ImportError:
     from StringIO import StringIO
 
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
-
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
