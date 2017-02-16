@@ -746,7 +746,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             self._h5object.create(
                 name, np.zeros(shape, dtype=dtype), shape, dtype)
         else:
-            if type == "string":
+            if dtype == "string":
                 self._h5object.create(name, "a")
             else:
                 self._h5object.create(
