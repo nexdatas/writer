@@ -527,7 +527,7 @@ class PNIDeflate(FileWriter.FTDeflate):
         if hasattr(h5object, "name"):
             self.name = h5object.name
 
-    def __setrate(self):
+    def __getrate(self):
         """ getter for compression rate
 
         :returns: compression rate
@@ -535,7 +535,7 @@ class PNIDeflate(FileWriter.FTDeflate):
         """
         return self._h5object.rate
 
-    def __getrate(self, value):
+    def __setrate(self, value):
         """ setter for compression rate
 
         :param value: compression rate
@@ -546,7 +546,7 @@ class PNIDeflate(FileWriter.FTDeflate):
     #: (:obj:`int`) compression rate
     rate = property(__getrate, __setrate)
 
-    def __setshuffle(self):
+    def __getshuffle(self):
         """ getter for compression shuffle
 
         :returns: compression shuffle
@@ -554,7 +554,7 @@ class PNIDeflate(FileWriter.FTDeflate):
         """
         return self._h5object.shuffle
 
-    def __getshuffle(self, value):
+    def __setshuffle(self, value):
         """ setter for compression shuffle
 
         :param value: compression shuffle
