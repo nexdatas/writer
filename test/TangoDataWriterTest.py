@@ -27,11 +27,12 @@ from pni.io.nx.h5 import open_file
 
 from  xml.sax import SAXParseException
 
+import nxswriter
 from nxswriter import TangoDataWriter
 from nxswriter.TangoDataWriter  import TangoDataWriter
 import struct
 
-
+from nxswriter import PNIWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -212,6 +213,15 @@ ds.res2 = str(root.is_valid)
                 pass
 
 
+    ## openFile test
+    # \brief It tests validation of opening and closing H5 files.
+    def test_writer(self):
+        print "Run: %s.test_writer() " % self.__class__.__name__
+        self.assertTrue("pni" in nxswriter.TangoDataWriter.WRITERS.keys())
+        self.assertEqual(nxswriter.TangoDataWriter.WRITERS["pni"], PNIWriter)
+
+
+            # check the created file
     ## openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_valueerror(self):

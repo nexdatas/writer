@@ -93,9 +93,7 @@ class PNIFile(FileWriter.FTFile):
         :param filename:  file name
         :type filename: :obj:`str`
         """
-        FileWriter.FTFile.__init__(self, h5object, None)
-        #: (:obj:`str`) file name
-        self.name = filename
+        FileWriter.FTFile.__init__(self, h5object, filename)
         #: (:obj:`str`) object nexus path
         self.path = None
         if hasattr(h5object, "path"):

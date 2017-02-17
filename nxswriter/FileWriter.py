@@ -130,70 +130,50 @@ class FTObject(object):
         return True
 
 
-class FTAttribute(FTObject):
-    """ virtual file tree attribute
+class FTFile(FTObject):
+    """ file tree file
     """
 
-    def __init__(self, h5object, tparent=None):
+    def __init__(self, h5object, filename):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
+        :param filename:  file name
+        :type filename: :obj:`str`
         """
-        FTObject.__init__(self, h5object, tparent)
+        FTObject.__init__(self, h5object, None)
+        #: (:obj:`str`) file name
+        self.name = filename
 
-    def read(self):
-        """ read attribute value
+    def root(self):
+        """ root object
 
-        :returns: python object
-        :rtype: :obj:`any`
-        """
-
-    def write(self, o):
-        """ write attribute value
-
-        :param o: python object
-        :type o: :obj:`any`
+        :returns: parent object
+        :rtype: :class:`FTGroup `
         """
 
-    def __setitem__(self, t, o):
-        """ write attribute value
-
-        :param t: slice tuple
-        :type t: :obj:`tuple`
-        :param o: python object
-        :type o: :obj:`any`
-        """
-
-    def __getitem__(self, t):
-        """ read attribute value
-
-        :param t: slice tuple
-        :type t: :obj:`tuple`
-        :returns: python object
-        :rtype: :obj:`any`
+    def flush(self):
+        """ flash the data
         """
 
     @property
-    def dtype(self):
-        """ attribute data type
+    def readonly(self):
+        """ check if file is readonly
 
-        :returns: attribute data type
-        :rtype: :obj:`str`
+        :returns: readonly flag
+        :rtype: :obj:`bool`
         """
 
-    @property
-    def shape(self):
-        """ attribute shape
-
-        :returns: attribute shape
-        :rtype: :obj:`list` < :obj:`int` >
-        """
-
-    def reopen(self):
+    def reopen(self, readonly=False, swmr=False, libver=None):
         """ reopen attribute
+
+        :param readonly: readonly flag
+        :type readonly: :obj:`bool`
+        :param swmr: swmr flag
+        :type swmr: :obj:`bool`
+        :param libver:  library version, default: 'latest'
+        :type libver: :obj:`str`
         """
         FTObject._reopen(self)
 
@@ -397,52 +377,6 @@ class FTField(FTObject):
         FTObject._reopen(self)
 
 
-class FTFile(FTObject):
-    """ file tree file
-    """
-
-    def __init__(self, h5object, filename):
-        """ constructor
-
-        :param h5object: pni object
-        :type h5object: :obj:`any`
-        :param filename:  file name
-        :type filename: :obj:`str`
-        """
-        FTObject.__init__(self, h5object, None)
-
-    def root(self):
-        """ root object
-
-        :returns: parent object
-        :rtype: :class:`FTGroup `
-        """
-
-    def flush(self):
-        """ flash the data
-        """
-
-    @property
-    def readonly(self):
-        """ check if file is readonly
-
-        :returns: readonly flag
-        :rtype: :obj:`bool`
-        """
-
-    def reopen(self, readonly=False, swmr=False, libver=None):
-        """ reopen attribute
-
-        :param readonly: readonly flag
-        :type readonly: :obj:`bool`
-        :param swmr: swmr flag
-        :type swmr: :obj:`bool`
-        :param libver:  library version, default: 'latest'
-        :type libver: :obj:`str`
-        """
-        FTObject._reopen(self)
-
-
 class FTLink(FTObject):
     """ file tree link
     """
@@ -589,6 +523,74 @@ class FTAttributeManager(FTObject):
         :type name: :obj:`str`
         :returns: attribute object
         :rtype : :class:`FTAtribute`
+        """
+
+    def reopen(self):
+        """ reopen attribute
+        """
+        FTObject._reopen(self)
+
+
+class FTAttribute(FTObject):
+    """ virtual file tree attribute
+    """
+
+    def __init__(self, h5object, tparent=None):
+        """ constructor
+
+        :param h5object: pni object
+        :type h5object: :obj:`any`
+        :param tparent: treee parent
+        :type tparent: :obj:`FTObject`
+        """
+        FTObject.__init__(self, h5object, tparent)
+
+    def read(self):
+        """ read attribute value
+
+        :returns: python object
+        :rtype: :obj:`any`
+        """
+
+    def write(self, o):
+        """ write attribute value
+
+        :param o: python object
+        :type o: :obj:`any`
+        """
+
+    def __setitem__(self, t, o):
+        """ write attribute value
+
+        :param t: slice tuple
+        :type t: :obj:`tuple`
+        :param o: python object
+        :type o: :obj:`any`
+        """
+
+    def __getitem__(self, t):
+        """ read attribute value
+
+        :param t: slice tuple
+        :type t: :obj:`tuple`
+        :returns: python object
+        :rtype: :obj:`any`
+        """
+
+    @property
+    def dtype(self):
+        """ attribute data type
+
+        :returns: attribute data type
+        :rtype: :obj:`str`
+        """
+
+    @property
+    def shape(self):
+        """ attribute shape
+
+        :returns: attribute shape
+        :rtype: :obj:`list` < :obj:`int` >
         """
 
     def reopen(self):

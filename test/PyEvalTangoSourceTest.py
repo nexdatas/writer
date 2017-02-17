@@ -846,6 +846,36 @@ ds.res = commonblock["myres"]
             f.close()
             os.remove(fname)
 
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_common_h5(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+
+        f = nxswriter.PNIWriter.create_file(fname, False)
+
+        try:
+            rt = f.root()
+            script = 'ds.res2 = id(commonblock["__root__"])'
+            dp = DataSourcePool()
+            dp.nxroot = rt
+            dspid = id(dp.nxroot)
+
+            ds = PyEvalSource()
+            ds.setDataSources(dp)
+            self.assertTrue(isinstance(ds, DataSource))
+            self.myAssertRaise(DataSourceSetupError, ds.getData)
+            self.assertEqual(ds.setup("""
+<datasource>
+ <result name='res2'>%s</result>
+</datasource>""" % script ), None)
+            dt = ds.getData()
+            self.checkData(dt, "SCALAR", dspid,"DevLong64",[])
+        finally:
+            f.close()
+            os.remove(fname)
+
     ## setup test
     # \brief It tests default settings
     def test_getData_common_global_scalar(self):

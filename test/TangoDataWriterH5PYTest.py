@@ -27,9 +27,12 @@ from pni.io.nx.h5 import open_file
 
 from  xml.sax import SAXParseException
 
+import nxswriter
 from nxswriter import TangoDataWriter
 from nxswriter.TangoDataWriter  import TangoDataWriter
 import struct
+
+from nxswriter import H5PYWriter
 
 
 
@@ -348,6 +351,12 @@ ds.res2 = str(True)
         finally:
             os.remove(fname)
 
+    ## openFile test
+    # \brief It tests validation of opening and closing H5 files.
+    def test_writer(self):
+        print "Run: %s.test_writer() " % self.__class__.__name__
+        self.assertTrue("h5py" in nxswriter.TangoDataWriter.WRITERS.keys())
+        self.assertEqual(nxswriter.TangoDataWriter.WRITERS["h5py"], H5PYWriter)
 
 
     ## openFile test

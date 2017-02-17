@@ -117,11 +117,9 @@ class H5PYFile(FileWriter.FTFile):
         :param filename:  file name
         :type filename: :obj:`str`
         """
-        FileWriter.FTFile.__init__(self, h5object, None)
+        FileWriter.FTFile.__init__(self, h5object, filename)
         #: (:obj:`str`) object nexus path
         self.path = ''
-        #: (:obj:`str`) file name
-        self.name = filename
         if hasattr(h5object, "name"):
             self.path = h5object.name
 
