@@ -420,15 +420,6 @@ class PNIField(FileWriter.FTField):
         return self._h5object.size
 
     @property
-    def filename(self):
-        """ file name
-
-        :returns: file name
-        :rtype: :obj:`str`
-        """
-        return self._h5object.filename
-
-    @property
     def parent(self):
         """ parent object
 
@@ -467,15 +458,6 @@ class PNILink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         return self._h5object.is_valid
-
-    @property
-    def filename(self):
-        """ file name
-
-        :returns: file name
-        :rtype: :obj:`str`
-        """
-        return self._h5object.filename
 
     @property
     def target_path(self):

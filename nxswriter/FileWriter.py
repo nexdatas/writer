@@ -356,14 +356,6 @@ class FTField(FTObject):
         """
 
     @property
-    def filename(self):
-        """ file name
-
-        :returns: file name
-        :rtype: :obj:`str`
-        """
-
-    @property
     def parent(self):
         """ parent object
 
@@ -390,14 +382,6 @@ class FTLink(FTObject):
         :type tparent: :obj:`FTObject`
         """
         FTObject.__init__(self, h5object, tparent)
-
-    @property
-    def filename(self):
-        """ file name
-
-        :returns: file name
-        :rtype: :obj:`str`
-        """
 
     @property
     def target_path(self):

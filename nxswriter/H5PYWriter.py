@@ -563,15 +563,6 @@ class H5PYField(FileWriter.FTField):
         return self._h5object.size
 
     @property
-    def filename(self):
-        """ file name
-
-        :returns: file name
-        :rtype: :obj:`str`
-        """
-        return self._h5object.filename
-
-    @property
     def parent(self):
         """ parent object
 
@@ -637,26 +628,15 @@ class H5PYLink(FileWriter.FTLink):
         return filename
 
     @property
-    def filename(self):
-        """ file name
-
-        :returns: file name
-        :rtype: :obj:`str`
-        """
-        if hasattr(self._h5object, "filename"):
-            return self._h5object.filename
-        else:
-            return self.getfilename(self)
-
-    @property
     def target_path(self):
         """ target path
 
         :returns: target path
         :rtype: :obj:`str`
         """
-        if self.filename and ":" not in self._h5object.path:
-            return self.filename + ":/" + "/".join(
+        filename = self.getfilename(self)
+        if filename and ":" not in self._h5object.path:
+            return filename + ":/" + "/".join(
                 self._h5object.path.split("/"))
         return self._h5object.path
 
