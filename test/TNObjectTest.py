@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -28,11 +28,6 @@ import struct
 import binascii
 
 from nxswriter.FetchNameHandler import TNObject
-
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione

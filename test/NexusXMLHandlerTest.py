@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,6 +41,9 @@ from nxswriter.DataSourceFactory import DataSourceFactory
 from nxswriter.Errors import UnsupportedTagError
 from nxswriter.FetchNameHandler import TNObject
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+
 
 from xml import sax
 
@@ -49,11 +52,6 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione
@@ -505,6 +503,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."        
+        FileWriter.writer = PNIWriter
 
     ## test closer
     # \brief Common tear down
@@ -536,7 +535,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -567,7 +566,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -615,7 +614,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
         el = NexusXMLHandler(self._eFile)
@@ -677,7 +676,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -746,7 +745,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -835,7 +834,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -906,7 +905,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -959,7 +958,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1011,7 +1010,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1071,7 +1070,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1102,7 +1101,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1139,7 +1138,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1213,7 +1212,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1299,7 +1298,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1378,7 +1377,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1446,7 +1445,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1531,7 +1530,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1602,7 +1601,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1661,7 +1660,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1716,7 +1715,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1769,7 +1768,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1826,7 +1825,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -1915,7 +1914,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
         groupTypes = TNObject()
@@ -2008,7 +2007,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2083,7 +2082,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2155,7 +2154,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2230,7 +2229,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2309,7 +2308,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2400,7 +2399,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2490,7 +2489,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2581,7 +2580,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2674,7 +2673,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2730,7 +2729,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2789,7 +2788,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -2907,7 +2906,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -3030,7 +3029,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -3154,7 +3153,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 
@@ -3276,7 +3275,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         ## element file objects
         self._eFile = EFile([], None, self._nxFile)
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,11 +29,9 @@ import struct
 from nxswriter.H5Elements import EFile
 from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
-
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 
 ## if 64-bit machione
@@ -102,11 +100,13 @@ class ElementTest(unittest.TestCase):
 
     ## lastObject method test
     # \brief It tests executing _lastObject method
-    def test_lastObject(self):
+    def test_lastObject_pni(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
-        fname = "test.h5"
+        FileWriter.writer = PNIWriter
+        fname = self._fname
         nxFile = None
         eFile = None        
 
@@ -117,7 +117,47 @@ class ElementTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+        group = nxFile.create_group(gname, gtype)
+        field = group.create_field(fdname, fdtype)
+
+        el = Element(self._tfname, self._fattrs, eFile )
+        el2 = Element(self._tfname, self._fattrs,  el )
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el._tagAttrs, self._fattrs)
+        self.assertEqual(el.doc, "")
+        self.assertEqual(el._lastObject(), nxFile)
+        self.assertEqual(el2._lastObject(), None)
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+
+
+    ## lastObject method test
+    # \brief It tests executing _lastObject method
+    def test_lastObject_hp5y(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+
+        FileWriter.writer = H5PYWriter
+        fname = self._fname
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)

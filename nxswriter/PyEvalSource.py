@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -250,6 +250,8 @@ class PyEvalSource(DataSource):
                 self.__pool.common['PYEVAL']["common"] = {}
                 if self.__pool.nxroot is not None:
                     self.__pool.common['PYEVAL']["common"]["__nxroot__"] = \
+                        self.__pool.nxroot.getobject()
+                    self.__pool.common['PYEVAL']["common"]["__root__"] = \
                         self.__pool.nxroot
             self.__common = self.__pool.common['PYEVAL']["common"]
 

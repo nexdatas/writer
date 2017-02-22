@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ class EGroup(FElementWithAttr):
 
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
-                #: (:class:`pni.io.nx.h5.nxgroup`) \
+                #: (:class:`nxswriter.FileWriter.FTGroup`) \
                 #:      stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())

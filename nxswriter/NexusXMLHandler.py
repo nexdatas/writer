@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
-import pni.io.nx.h5 as nx
+from . import FileWriter
 from xml import sax
 
 import sys
@@ -308,8 +308,8 @@ if __name__ == "__main__":
             #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
             mparser = sax.make_parser()
 
-            #: (:obj:`pni.io.nx.h5.nxfile`) file handle
-            nxFile = nx.create_file(fo, overwrite=True).root()
+            #: (:obj:`nxswriter.FileWriter.FTFile`) file handle
+            nxFile = FileWriter.create_file(fo, overwrite=True).root()
             #: (:class:`nxswriter.H5Elements.EFile`) element file objects
             mfileElement = EFile([], None, nxFile)
             #: (:class:`nxswriter.NexusXMLHandler.NexusXMLHandler`) \

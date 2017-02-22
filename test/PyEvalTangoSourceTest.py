@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,6 +41,8 @@ from nxswriter.PyEvalSource import PyEvalSource
 from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
+
+import nxswriter.PNIWriter
 
 from pni.io.nx.h5 import create_file
 
@@ -821,11 +823,41 @@ ds.res = commonblock["myres"]
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
 
-        f = create_file(fname, False)
+        f = nxswriter.PNIWriter.create_file(fname, False)
 
         try:
             rt = f.root()
             script = 'ds.res2 = id(commonblock["__nxroot__"])'
+            dp = DataSourcePool()
+            dp.nxroot = rt
+            dspid = id(dp.nxroot.getobject())
+
+            ds = PyEvalSource()
+            ds.setDataSources(dp)
+            self.assertTrue(isinstance(ds, DataSource))
+            self.myAssertRaise(DataSourceSetupError, ds.getData)
+            self.assertEqual(ds.setup("""
+<datasource>
+ <result name='res2'>%s</result>
+</datasource>""" % script ), None)
+            dt = ds.getData()
+            self.checkData(dt, "SCALAR", dspid,"DevLong64",[])
+        finally:
+            f.close()
+            os.remove(fname)
+
+    ## getData test
+    # \brief It tests default settings
+    def test_getData_common_h5(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+
+        f = nxswriter.PNIWriter.create_file(fname, False)
+
+        try:
+            rt = f.root()
+            script = 'ds.res2 = id(commonblock["__root__"])'
             dp = DataSourcePool()
             dp.nxroot = rt
             dspid = id(dp.nxroot)

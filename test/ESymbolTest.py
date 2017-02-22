@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,11 +27,10 @@ import random
 import struct
 import numpy
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.H5PYWriter as H5PYWriter
+import nxswriter.PNIWriter as PNIWriter
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
 
 
 from nxswriter.H5Elements import FElement
@@ -130,7 +129,7 @@ class ESymbolTest(unittest.TestCase):
 
     ## _lastObject method test
     # \brief It tests executing _lastObject method
-    def test_lastObject(self):
+    def test_lastObject_pni(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -145,7 +144,47 @@ class ESymbolTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        FileWriter.writer = PNIWriter
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+        group = nxFile.create_group(gname, gtype)
+        field = group.create_field(fdname, fdtype)
+
+        el = Element(self._tfname, self._fattrs2, eFile )
+        el2 = ESymbol(self._fattrs2,  el )
+        self.assertEqual(el.tagName, self._tfname)
+        self.assertEqual(el.content, [])
+        self.assertEqual(el._tagAttrs, self._fattrs2)
+        self.assertEqual(el.doc, "")
+        self.assertEqual(el._lastObject(), nxFile)
+        self.assertEqual(el2._lastObject(), None)
+        self.assertEqual(el2.symbols, {})
+        
+        nxFile.close()
+        os.remove(fname)
+
+
+    ## _lastObject method test
+    # \brief It tests executing _lastObject method
+    def test_lastObject_h5py(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+
+        fname = "test.h5"
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
+
+
+        ## file handle
+        FileWriter.writer = H5PYWriter
+        nxFile = FileWriter.create_file(
+            fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)

@@ -220,6 +220,30 @@ nxswriter.Types module
     :undoc-members:
     :show-inheritance:
 
+nxswriter.FileWriter module
+----------------------
+
+.. automodule:: nxswriter.FileWriter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+nxswriter.PNIWriter module
+----------------------
+
+.. automodule:: nxswriter.PNIWriter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+nxswriter.H5PYWriter module
+----------------------
+
+.. automodule:: nxswriter.H5PYFileWriter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

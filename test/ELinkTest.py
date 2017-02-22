@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -49,6 +49,11 @@ from nxswriter.FetchNameHandler import TNObject
 
 from Checkers import Checker
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+
+
+
 #from  xml.sax import SAXParseException
 
 ## if 64-bit machione
@@ -92,6 +97,7 @@ class ELinkTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
+        FileWriter.writer = PNIWriter
         print "\nsetting up..."
         print "CHECKER SEED =", self._sc.seed
 
@@ -119,7 +125,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         li = ELink({}, eFile)
         self.assertTrue(isinstance(li, Element))
@@ -148,7 +154,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -160,13 +166,19 @@ class ELinkTest(unittest.TestCase):
         gr3 = EGroup({"type":"NXentry", "name":"entry3"}, eFile)
         gr3.store()
 
-        atts1 = {"name":"link1","target":"/NXentry/testField"}
-        atts2 = {"name":"link2","target":"/entry:NXentry/testField"}
-        atts3 = {"name":"link3","target":"entry3/testField"}
-        atts4 = {"name":"link4","target":"/testField"}
-        atts5 = {"name":"link5","target":"/testGroup"}
+        atts1 = {"name":"link1","target":"/NXentry/testField",
+                 "path":"ELinkTesttest_createLink_default.h5://testGroup/testField"}
+        atts2 = {"name":"link2","target":"/entry:NXentry/testField",
+                 "path":"ELinkTesttest_createLink_default.h5://entry/testField"}
+        atts3 = {"name":"link3","target":"entry3/testField",
+                 "path":"ELinkTesttest_createLink_default.h5://entry3/testField"}
+        atts4 = {"name":"link4","target":"/testField",
+                 "path":"ELinkTesttest_createLink_default.h5://testField"}
+        atts5 = {"name":"link5","target":"/testGroup",
+                 "path":"ELinkTesttest_createLink_default.h5://testGroup"}
         atts6 = {"name":"link5","target":"/testField"}
-        atts7 = {"name":"link7"}
+        atts7 = {"name":"link7",
+                 "path":"ELinkTesttest_createLink_default.h5://testField"}
         ct7 = "testField"
         gT1 = TNObject()
         ch  = TNObject("testGroup","NXentry",gT1)
@@ -206,7 +218,12 @@ class ELinkTest(unittest.TestCase):
         self.assertEqual(li2.h5Object, None)
         self.myAssertRaise(XMLSettingSyntaxError, li1.createLink,TNObject())
         li1.createLink(gT1)
-        self.assertEqual(li1.h5Object, None)
+        self.assertTrue(isinstance(li1.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li1.h5Object._h5object, nx.nxlink))
+        self.assertTrue(li1.h5Object._h5object.name, atts1["name"])
+        self.assertTrue(li1.h5Object._h5object.path, atts1["target"])
+        
+        #self.assertEqual(li1.h5Object._h5object, None)
         li2.createLink(TNObject())
         self.myAssertRaise(XMLSettingSyntaxError, li3.createLink,TNObject())
         li3.createLink(gT2)
@@ -216,11 +233,36 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(XMLSettingSyntaxError, li5.createLink,TNObject())
         self.myAssertRaise(XMLSettingSyntaxError, li6.createLink,TNObject())
         self.assertEqual(li0.h5Object, None)
-        self.assertEqual(li1.h5Object, None)
-        self.assertEqual(li2.h5Object, None)
-        self.assertEqual(li3.h5Object, None)
-        self.assertEqual(li4.h5Object, None)
-        self.assertEqual(li5.h5Object, None)
+        self.assertTrue(isinstance(li1.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li1.h5Object._h5object, nx.nxlink))
+        self.assertEqual(li1.h5Object._h5object.name, atts1["name"])
+        self.assertTrue(str(li1.h5Object._h5object.target_path).endswith(atts1["path"]))
+        self.assertTrue(isinstance(li2.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li2.h5Object._h5object, nx.nxlink))
+        self.assertEqual(li2.h5Object._h5object.name, atts2["name"])
+        self.assertTrue(str(li2.h5Object._h5object.target_path).endswith(atts2["path"]))
+        self.assertTrue(isinstance(li3.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li3.h5Object._h5object, nx.nxlink))
+        self.assertEqual(li3.h5Object._h5object.name, atts3["name"])
+        self.assertTrue(str(li3.h5Object._h5object.target_path).endswith(atts3["path"]))
+        self.assertTrue(isinstance(li4.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li4.h5Object._h5object, nx.nxlink))
+        self.assertEqual(li4.h5Object._h5object.name, atts4["name"])
+        self.assertTrue(str(li4.h5Object._h5object.target_path).endswith(atts4["path"]))
+        self.assertTrue(isinstance(li5.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li5.h5Object._h5object, nx.nxlink))
+        self.assertEqual(li5.h5Object._h5object.name, atts5["name"])
+        self.assertTrue(str(li5.h5Object._h5object.target_path).endswith(atts5["path"]))
+#        self.assertEqual(li1.h5Object._h5object, None)
+#        self.assertEqual(li2.h5Object._h5object, None)
+#        self.assertEqual(li3.h5Object._h5object, None)
+#        self.assertEqual(li4.h5Object._h5object, None)
+#        self.assertEqual(li5.h5Object._h5object, None)
+        self.assertEqual(li6.h5Object, None)
+        self.assertTrue(isinstance(li7.h5Object, PNIWriter.PNILink))
+        self.assertTrue(isinstance(li7.h5Object._h5object, nx.nxlink))
+        self.assertEqual(li7.h5Object._h5object.name, atts7["name"])
+        self.assertTrue(str(li7.h5Object._h5object.target_path).endswith(atts7["path"]))
 
         l1 = self._nxFile.open("link1")
         self.assertEqual(l1.read(), fi2.h5Object.read() )
@@ -290,7 +332,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -411,7 +453,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -514,13 +556,9 @@ class ELinkTest(unittest.TestCase):
 
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        print "ST1"
         self.assertEqual(li1.store(), (None,None))
-        print "ST2"
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
-        print "rN1"
         li1.run()
-        print "rN2"
 
         self.myAssertRaise(Exception, self._nxFile.open, "link2")
         self.assertEqual(li2.store(), (None,None))
@@ -608,7 +646,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -823,7 +861,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -1034,7 +1072,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -1205,7 +1243,7 @@ class ELinkTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         fi = EField( self._fattrs, eFile)
         fi.content = ["1 "]
@@ -1429,8 +1467,8 @@ class ELinkTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         self._fname2= '%s/%s%s_2.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
-        self._nxFile2 = nx.create_file(self._fname2, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
+        self._nxFile2 = FileWriter.create_file(self._fname2, overwrite=True).root()
         eFile = EFile( {}, None, self._nxFile)
         eFile2 = EFile( {}, None, self._nxFile2)
         fi = EField( self._fattrs, eFile)

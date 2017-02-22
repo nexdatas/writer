@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,17 +27,14 @@ import random
 import struct
 import numpy
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 
 
 from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -71,6 +68,7 @@ class EFileTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        FileWriter.writer = PNIWriter
 
     ## test closer
     # \brief Common tear down
@@ -114,7 +112,7 @@ class EFileTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         el = EFile( {}, None, self._nxFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -124,7 +122,7 @@ class EFileTest(unittest.TestCase):
         self.assertEqual(el.source, None)
         self.assertEqual(el.error, None)
         self.assertEqual(el._tagAttrs, {})
-        self.assertEqual(type(el.h5Object),nx._nxh5.nxgroup )
+        self.assertEqual(type(el.h5Object),PNIWriter.PNIGroup )
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -138,7 +136,7 @@ class EFileTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
         el = EFile(self._fattrs, None, self._nxFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -152,7 +150,7 @@ class EFileTest(unittest.TestCase):
             self.assertEqual(el._tagAttrs[k], self._fattrs[k])
         
         self.assertEqual(el._tagAttrs, self._fattrs)
-        self.assertEqual(type(el.h5Object),nx._nxh5.nxgroup )
+        self.assertEqual(type(el.h5Object),PNIWriter.PNIGroup )
 
         self._nxFile.close()
         os.remove(self._fname)

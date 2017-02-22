@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -73,13 +73,20 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         self._dbport = self._simps.dp.get_db_port()
         print "SEED =", self.seed 
         print "CHECKER SEED =", self._sc.seed 
-
+        
     ## test closer
     # \brief Common tear down
     def tearDown(self):
         self._simps.tearDown()
         self._sv.tearDown()
 
+    def setProp(self, rc, name, value):
+        db = PyTango.Database()
+        name = "" + name[0].upper() + name[1:]
+        db.put_device_property(
+            self._sv.new_device_info_writer.name,
+            {name: value})
+        rc.Init()
 
     ## opens writer
     # \param fname file name     

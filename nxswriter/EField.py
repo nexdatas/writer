@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 
-import pni.io.nx.h5 as nx
+from . import FileWriter
 
 
 class EField(FElementWithAttr):
@@ -132,7 +132,7 @@ class EField(FElementWithAttr):
         :param shape: object shape
         :type shape: :obj:`list` <:obj:`int` >
         :returns: H5 object
-        :rtype: :class:`pni.io.nx.h5.nxfield`
+        :rtype: :class:`nxswriter.FileWriter.FTField`
         """
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]
@@ -140,7 +140,7 @@ class EField(FElementWithAttr):
         # create Filter
 
         if self.compression:
-            deflate = nx.deflate_filter()
+            deflate = FileWriter.deflate_filter()
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
 
@@ -450,7 +450,7 @@ class EField(FElementWithAttr):
                     message = self.setMessage("Data without value")
                     self.error = message
                 elif not hasattr(self.h5Object, 'shape'):
-                    message = self.setMessage("PNI Object not created")
+                    message = self.setMessage("H5 Object not created")
                     self.error = message
                 else:
                     if not self.__extraD:

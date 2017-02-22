@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -29,10 +29,8 @@ import binascii
 import numpy
 
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
 
 
 from nxswriter.FElement import FElement
@@ -94,6 +92,7 @@ class EDimTest(unittest.TestCase):
         ## file handle
         print "\nsetting up..."        
         print "SEED =", self.__seed 
+        FileWriter.writer = PNIWriter
 
     ## test closer
     # \brief Common tear down
@@ -162,7 +161,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -198,7 +197,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -240,7 +239,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -283,7 +282,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -325,7 +324,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -367,7 +366,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -414,7 +413,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -467,7 +466,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -518,7 +517,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 
@@ -566,7 +565,7 @@ class EDimTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
 

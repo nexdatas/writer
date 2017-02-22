@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,12 +24,7 @@ import random
 import unittest
 import binascii
 import time
-
-try:
-    from pni.io.nx.h5 import open_file
-except:
-    from pni.nx.h5 import open_file
-
+import numpy
 
 from nxswriter import Types
 
@@ -78,8 +73,12 @@ class Checker(object):
         at = en.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),1)
-        self._tc.assertEqual(at.shape,(1,))
+        try:
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
+        except:
+            self._tc.assertEqual(len(at.shape),0)
+            
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXentry")
@@ -94,8 +93,11 @@ class Checker(object):
         at = ins.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),1)
-        self._tc.assertEqual(at.shape,(1,))
+        try:
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
+        except:
+            self._tc.assertEqual(len(at.shape),0)            
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXinstrument")
@@ -109,8 +111,11 @@ class Checker(object):
         at = det.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape), 1)
-        self._tc.assertEqual(at.shape, (1,))
+        try:
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
+        except:
+            self._tc.assertEqual(len(at.shape),0)            
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXdetector")
@@ -141,8 +146,11 @@ class Checker(object):
         at = en.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),1)
-        self._tc.assertEqual(at.shape,(1,))
+        try:
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
+        except:
+            self._tc.assertEqual(len(at.shape),0)            
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXentry")
@@ -157,8 +165,11 @@ class Checker(object):
         at = ins.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),1)
-        self._tc.assertEqual(at.shape,(1,))
+        try:
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
+        except:
+            self._tc.assertEqual(len(at.shape),0)            
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXinstrument")
@@ -184,8 +195,11 @@ class Checker(object):
         at = det.attributes["NX_class"]
         self._tc.assertTrue(at.is_valid)
         self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-        self._tc.assertEqual(len(at.shape),1)
-        self._tc.assertEqual(at.shape,(1,))
+        try:
+            self._tc.assertEqual(len(at.shape),1)
+            self._tc.assertEqual(at.shape,(1,))
+        except:
+            self._tc.assertEqual(len(at.shape),0)            
         self._tc.assertEqual(at.dtype,"string")
         self._tc.assertEqual(at.name,"NX_class")
         self._tc.assertEqual(at[...],"NXdetector")
@@ -207,8 +221,11 @@ class Checker(object):
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
 #        print name, "SHAPE", cnt.shape,len(cnt.shape)
-        self._tc.assertEqual(len(cnt.shape), 1)
-        self._tc.assertEqual(cnt.shape, (1,))
+        try:
+            self._tc.assertEqual(len(cnt.shape),1)
+            self._tc.assertEqual(cnt.shape,(1,))
+        except:
+            self._tc.assertEqual(len(cnt.shape),0)            
         self._tc.assertEqual(cnt.dtype, dtype)
         # pninx is not supporting reading string areas 
         if not isinstance(values, str):
@@ -218,9 +235,10 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if self._isNumeric(cnt[...]):
+        if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype).startswith("|S")):
             if not self._isNumeric(values):
-#                    print "BOOL: ", values[i] ,cnt[i]
+                # print "BOOL: ", values ,cnt[...], type(values), type(cnt[...])
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt[...])
             else:
                 self._tc.assertTrue(abs(values - cnt[...]) <= error)
@@ -248,8 +266,11 @@ class Checker(object):
 #        print "values", values
 #        print "cnt", cnt[...]
         for i in range(len(values)):
-#            print name, i, values[i],  cnt[i]
-            if dtype != "string" and self._isNumeric(cnt[i]):
+            if isinstance(cnt[...], str):
+                dtype != "string"
+                self._tc.assertEqual(values[i], cnt[...])
+            elif dtype != "string" and self._isNumeric(cnt[i]) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
                 if dtype == "bool":
                     self._tc.assertEqual(Types.Converters.toBool(values[i]),cnt[i])
                 else:
@@ -270,26 +291,32 @@ class Checker(object):
     def checkImageAttribute(self, det, name, dtype, values, error = 0):
 
         cnt = det.attributes[name]
+        # print name, cnt, cnt.dtype
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name,name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
-        self._tc.assertEqual(len(cnt.shape), 2)
-        self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
-        self._tc.assertEqual(cnt.dtype, dtype)
-        # pninx is not supporting reading string areas 
+        if str(cnt.dtype) == "string" and cnt.shape == (1,):
+            self._tc.assertEqual(values[0][0], cnt[...])
+            self._tc.assertEqual((1,1), (len(values),len(values[0])))
+            self._tc.assertEqual(cnt.dtype, dtype)
+        else:    
+            self._tc.assertEqual(len(cnt.shape), 2)
+            self._tc.assertEqual(cnt.shape, (len(values),len(values[0])))
+            self._tc.assertEqual(cnt.dtype, dtype)
+            # pninx is not supporting reading string areas 
 
 
-        
-        for i in range(len(values)):
-            for j in range(len(values[i])):
-#                print i, j, cnt[i,j], values[i][j]
-                if dtype != "string" and self._isNumeric(cnt[i,0]):
-                    if dtype == "bool":
-                        self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
+
+            for i in range(len(values)):
+                for j in range(len(values[i])):
+    #                print i, j, cnt[i,j], values[i][j]
+                    if dtype != "string" and self._isNumeric(cnt[i,0]):
+                        if dtype == "bool":
+                            self._tc.assertEqual(Types.Converters.toBool(values[i][j]),cnt[i,j])
+                        else:
+                            self._tc.assertTrue(abs(cnt[i,j] -values[i][j]) <= error)
                     else:
-                        self._tc.assertTrue(abs(cnt[i,j] -values[i][j]) <= error)
-                else:
-                    self._tc.assertEqual(values[i][j], cnt[i,j])
+                        self._tc.assertEqual(values[i][j], cnt[i,j])
             
 
 
@@ -377,8 +404,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape), 1)
-            self._tc.assertEqual(at.shape, (1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name,a)
             if atts[a] is not None:
@@ -416,7 +446,8 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if self._isNumeric(cnt.read()):
+        if self._isNumeric(cnt.read()) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
 #                    print "BOOL: ", values[i] ,cnt[i]
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
@@ -432,8 +463,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape), 1)
-            self._tc.assertEqual(at.shape, (1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -477,8 +511,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),1)
-            self._tc.assertEqual(at.shape,(1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -532,9 +569,9 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values,value)
-        if self._isNumeric(cnt.read()):
+        if self._isNumeric(cnt.read()) and not (
+                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
-#                    print "BOOL: ", values[i] ,cnt[i]
                 self._tc.assertEqual(Types.Converters.toBool(values),cnt.read())
             else:
                 self._tc.assertTrue(abs(values - cnt.read()) <= error)
@@ -599,8 +636,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape), 1)
-            self._tc.assertEqual(at.shape, (1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype, "string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -655,8 +695,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape), 1)
-            self._tc.assertEqual(at.shape, (1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -869,8 +912,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape),1)
-            self._tc.assertEqual(at.shape,(1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:
@@ -926,8 +972,11 @@ class Checker(object):
             at = cnt.attributes[a]
             self._tc.assertTrue(at.is_valid)
             self._tc.assertTrue(hasattr(at.shape,"__iter__"))
-            self._tc.assertEqual(len(at.shape), 1)
-            self._tc.assertEqual(at.shape, (1,))
+            try:
+                self._tc.assertEqual(len(at.shape),1)
+                self._tc.assertEqual(at.shape,(1,))
+            except:
+                self._tc.assertEqual(len(at.shape),0)            
             self._tc.assertEqual(at.dtype,"string")
             self._tc.assertEqual(at.name, a)
             if atts[a] is not None:

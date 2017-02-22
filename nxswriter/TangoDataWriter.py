@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,8 +22,20 @@
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
+from . import FileWriter
 
-import pni.io.nx.h5 as nx
+WRITERS = {}
+try:
+    from . import PNIWriter
+    WRITERS["pni"] = PNIWriter
+except:
+    pass
+try:
+    from . import H5PYWriter
+    WRITERS["h5py"] = H5PYWriter
+except:
+    pass
+
 
 from xml import sax
 
@@ -75,12 +87,15 @@ class TangoDataWriter(object):
         #:  :class:`nxswriter.ThreadPool.ThreadPool` >) \
         #:     collection of thread pool with triggered STEP elements
         self.__triggerPools = {}
-        #: (:class:`pni.io.nx.h5.nxroot`) H5 file handle
+        #: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle
         self.__nxRoot = None
-        #: (:class:`pni.io.nx.h5.nxfile`) H5 file handle
+        #: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle
         self.__nxFile = None
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
+
+        #: (:obj:`str`) writer type
+        self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
 
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
@@ -97,7 +112,7 @@ class TangoDataWriter(object):
         self.addingLogs = True
         #: (:obj:`int`) counter for open entries
         self.__entryCounter = 0
-        #: (:class:`pni.io.nx.h5.nxgroup`) group with Nexus log Info
+        #: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info
         self.__logGroup = None
 
         #: (:obj:`bool`) open file flag
@@ -114,6 +129,15 @@ class TangoDataWriter(object):
                 Streams.log_info = server.log_info
             if hasattr(self.__server, "log_debug"):
                 Streams.log_debug = server.log_debug
+
+    def __setWriter(self, writer):
+        """ set method for  writer module name
+
+        :param jsonstring: value of  writer module name
+        :type jsonstring: :obj:`str`
+        """
+        self.writer = writer.lower()
+        FileWriter.writer = WRITERS[writer.lower()]
 
     def __getJSON(self):
         """ get method for jsonrecord attribute
@@ -175,7 +199,7 @@ class TangoDataWriter(object):
         """ the H5 file handle
 
         :returns: the H5 file handle
-        :rtype: :class:`pni.io.nx.h5.nxfile`
+        :rtype: :class:`nxswriter.FileWriter.FTFile`
         """
         return self.__nxFile
 
@@ -186,6 +210,7 @@ class TangoDataWriter(object):
         """
 
         self.closeFile()
+        self.__setWriter(self.writer)
         self.__nxFile = None
         self.__eFile = None
         self.__initPool = None
@@ -194,10 +219,10 @@ class TangoDataWriter(object):
         self.__triggerPools = {}
 
         if os.path.isfile(self.fileName):
-            self.__nxFile = nx.open_file(self.fileName, False)
+            self.__nxFile = FileWriter.open_file(self.fileName, False)
             self.__fileCreated = False
         else:
-            self.__nxFile = nx.create_file(self.fileName)
+            self.__nxFile = FileWriter.create_file(self.fileName)
             self.__fileCreated = True
         self.__nxRoot = self.__nxFile.root()
 

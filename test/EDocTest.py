@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,16 +27,14 @@ import random
 import struct
 import numpy
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 
 from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import EDoc
+
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
 
 
 ## if 64-bit machione
@@ -72,6 +70,7 @@ class EDocTest(unittest.TestCase):
     def setUp(self):
         ## file handle
         print "\nsetting up..."        
+        FileWriter.writer = PNIWriter
 
     ## test closer
     # \brief Common tear down
@@ -140,7 +139,8 @@ class EDocTest(unittest.TestCase):
 
 
         ## file handle
-        nxFile = nx.create_file(fname, overwrite=True).root()
+        nxFile = FileWriter.create_file(
+            fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)

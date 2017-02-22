@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class DataSourcePool(object):
         self.common = {}
         #: (:obj:`int`) step counter: INIT: -1; STEP: 1,2,3...; FINAL: -2;
         self.counter = 0
-        #: (:class:`pni.io.nx.h5.nxroot`) H5 file handle
+        #: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle
         self.nxroot = None
         #: (:class:`threading.Lock`) pool lock
         self.lock = threading.Lock()

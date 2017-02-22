@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 from .DataHolder import DataHolder
 
-import pni.io.nx.h5 as nx
+from . import FileWriter
 
 
 class ELink(FElement):
@@ -43,7 +43,7 @@ class ELink(FElement):
 
         """
         FElement.__init__(self, "link", attrs, last)
-        #: (:class:`pni.io.nx.h5.nxlink`) \
+        #: (:class:`nxswriter.FileWriter.FTLink`) \
         #:     stored H5 file object (defined in base class)
         self.h5Object = None
         #: (:obj:`str`) strategy, i.e. INIT, STEP, FINAL
@@ -114,7 +114,7 @@ class ELink(FElement):
             if self.__target:
                 name = self._tagAttrs["name"].encode()
                 try:
-                    self.h5Object = nx.link(
+                    self.h5Object = FileWriter.link(
                         self.__target,
                         self._lastObject(),
                         name)

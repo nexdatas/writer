@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,10 +30,6 @@ import binascii
 import time
 
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
 
 from nxswriter.Element import Element
 from nxswriter.FElement import FElement
@@ -42,6 +38,8 @@ from nxswriter.ThreadPool import ThreadPool
 from nxswriter.DataSources import DataSource
 from nxswriter.Errors import XMLSettingSyntaxError
 from nxswriter.Types import NTP
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
 
 from TestDataSource import TestDataSource 
 
@@ -92,7 +90,9 @@ class FElementTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        FileWriter.writer = PNIWriter
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
         ## element file objects
         self._group = self._nxFile.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)

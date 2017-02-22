@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2015 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,17 +30,14 @@ import binascii
 import time
 
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
-
 
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
 
 ## if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -101,10 +98,14 @@ class FElementWithAttrTest(unittest.TestCase):
 
     def createTree(self):    
         ## file handle
-        self._nxFile = nx.create_file(self._fname, overwrite=True).root()
+        FileWriter.writer = PNIWriter
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
         ## element file objects
-        self._group = self._nxFile.create_group(self._gname, self._gtype)
-        self._field = self._group.create_field(self._fdname, self._fdtype)
+        self._group = self._nxFile.create_group(
+            self._gname, self._gtype)
+        self._field = self._group.create_field(
+            self._fdname, self._fdtype)
 
     ## Exception tester
     # \param exception expected exception
