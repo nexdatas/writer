@@ -169,7 +169,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
-            
+
             fl.reopen()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -192,6 +192,100 @@ class PNIWriterTest(unittest.TestCase):
 
             fl2 = PNIWriter.create_file(self._fname, overwrite=True)
             fl2.close()
+        finally:
+            os.remove(self._fname)
+
+    ## default createfile test
+    # \brief It tests default settings
+    def test_default_pnifile(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+
+        try:
+            overwrite = False
+            nxfl = nx.create_file(self._fname, overwrite)
+            fl = PNIWriter.PNIFile(nxfl, self._fname)
+            self.assertTrue(
+                isinstance(fl, FileWriter.FTFile))
+
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.getobject(), nx._nxh5.nxfile))
+            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(fl.children, [])
+
+            rt = fl.root()
+            fl.flush()
+            self.assertEqual(
+                fl.getobject().root().filename,
+                rt.getobject().filename)
+            self.assertEqual(
+                fl.getobject().root().name,
+                rt.getobject().name)
+            self.assertEqual(
+                fl.getobject().root().path,
+                rt.getobject().path)
+            self.assertEqual(
+                len(fl.getobject().root().attributes),
+                len(rt.getobject().attributes))
+            self.assertEqual(len(fl.children), 1)
+            self.assertEqual(fl.children[0](), rt)
+            self.assertEqual(fl.is_valid, True)
+            self.assertEqual(fl.getobject().is_valid, True)
+            self.assertEqual(fl.readonly, False)
+            self.assertEqual(fl.getobject().readonly, False)
+            fl.close()
+            self.assertEqual(fl.is_valid, False)
+            self.assertEqual(fl.getobject().is_valid, False)
+
+            fl.reopen()
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.getobject(), nx._nxh5.nxfile))
+            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(len(fl.children), 1)
+            self.assertEqual(fl.children[0](), rt)
+            self.assertEqual(fl.readonly, False)
+            self.assertEqual(fl.getobject().readonly, False)
+
+            fl.close()
+
+            fl.reopen(True)
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.getobject(), nx._nxh5.nxfile))
+            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(len(fl.children), 1)
+            self.assertEqual(fl.children[0](), rt)
+            self.assertEqual(fl.readonly, True)
+            self.assertEqual(fl.getobject().readonly, True)
+
+            fl.close()
+            
+            self.myAssertRaise(
+                Exception, fl.reopen, True, True)
+            self.myAssertRaise(
+                Exception, fl.reopen, False, True)
+
+            
+            fl = PNIWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            atts = []
+            for at in f.attributes:
+                print at.name, at.read(), at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(
+                f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
+
         finally:
             os.remove(self._fname)
 
