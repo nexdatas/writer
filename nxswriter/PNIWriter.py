@@ -557,8 +557,8 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         shape = shape or []
         at = PNIAttribute(
             self._h5object.create(
-                name, dtype, shape, overwrite), self.getparent())
-        self.getparent().children.append(weakref.ref(at))
+                name, dtype, shape, overwrite), self.parent)
+        self.parent.children.append(weakref.ref(at))
         return at
 
     def __len__(self):
@@ -588,8 +588,8 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :rtype : :class:`FTAtribute`
         """
         at = PNIAttribute(
-            self._h5object.__getitem__(name), self.getparent())
-        self.getparent().children.append(weakref.ref(at))
+            self._h5object.__getitem__(name), self.parent)
+        self.parent.children.append(weakref.ref(at))
         return at
 
     def close(self):

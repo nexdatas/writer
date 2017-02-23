@@ -589,7 +589,7 @@ class H5PYLink(FileWriter.FTLink):
         """
         try:
             w = self._h5object
-            self.getparent().getobject()[self.name]
+            self.parent.getobject()[self.name]
             return True
         except:
             return False
@@ -600,13 +600,13 @@ class H5PYLink(FileWriter.FTLink):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self.getparent().getobject()[self.name][...]
+        return self.parent.getobject()[self.name][...]
 
     @classmethod
     def getfilename(cls, obj):
         filename = ""
         while not filename:
-            par = obj.getparent()
+            par = obj.parent
             if par is None:
                 break
             if isinstance(par, H5PYFile):
@@ -709,7 +709,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
                 self._h5object.create(
                     name, np.array(0, dtype=dtype), (1,), dtype)
         at = H5PYAttribute((self._h5object, name), self)
-        self.getparent().children.append(weakref.ref(at))
+        self.parent.children.append(weakref.ref(at))
         return at
 
     def __len__(self):
@@ -742,8 +742,8 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             if name is None:
                 return None
             at = H5PYAttribute((self.__manager._h5object, name),
-                               self.__manager.getparent())
-            self.__manager.getparent().children.append(weakref.ref(at))
+                               self.__manager.parent)
+            self.__manager.parent.children.append(weakref.ref(at))
             return at
 
         def __iter__(self):
@@ -780,8 +780,8 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`FTAtribute`
         """
-        at = H5PYAttribute((self._h5object, name), self.getparent())
-        self.getparent().children.append(weakref.ref(at))
+        at = H5PYAttribute((self._h5object, name), self.parent)
+        self.parent.children.append(weakref.ref(at))
         return at
 
     def reopen(self):

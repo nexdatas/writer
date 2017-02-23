@@ -121,6 +121,15 @@ class FTObject(object):
             ch().reopen()
 
     @property
+    def parent(self):
+        """ return the parent object
+
+        :returns: file tree group
+        :rtype : :class:`FTGroup`
+        """
+        return self._tparent
+    
+    @property
     def is_valid(self):
         """ check if attribute is valid
 
@@ -239,15 +248,6 @@ class FTGroup(FTObject):
         """
 
     @property
-    def parent(self):
-        """ return the parent object
-
-        :returns: file tree group
-        :rtype : :class:`FTGroup`
-        """
-        return self.getparent()
-
-    @property
     def attributes(self):
         """ return the attribute manager
 
@@ -356,15 +356,6 @@ class FTField(FTObject):
         :rtype: :obj:`int`
         """
 
-    @property
-    def parent(self):
-        """ parent object
-
-        :returns: parent object
-        :rtype: :class:`FTObject`
-        """
-        return self.getparent()
-
     def reopen(self):
         """ reopen attribute
         """
@@ -392,15 +383,6 @@ class FTLink(FTObject):
         :returns: target path
         :rtype: :obj:`str`
         """
-
-    @property
-    def parent(self):
-        """ parent object
-
-        :returns: parent object
-        :rtype: :class:`FTObject`
-        """
-        return self.getparent()
 
     def reopen(self):
         """ reopen attribute
