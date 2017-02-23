@@ -255,8 +255,6 @@ class PNIGroup(FileWriter.FTGroup):
         :rtype : :class:`PNIGroup`
         """
         return self.getparent()
-#        return PNIGroup(self._h5object.parent,
-#                        self._tparent.getparent())
 
     @property
     def attributes(self):
@@ -429,7 +427,6 @@ class PNIField(FileWriter.FTField):
         :rtype: :class:`FTObject`
         """
         return self.getparent()
-#        return PNIGroup(self._h5object.parent, self._tparent.getparent())
 
 
 class PNILink(FileWriter.FTLink):
@@ -479,7 +476,6 @@ class PNILink(FileWriter.FTLink):
         :rtype: :class:`FTObject`
         """
         return self.getparent()
-#        return PNIGroup(self._h5object.parent)
 
     def reopen(self):
         """ reopen field
