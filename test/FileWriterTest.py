@@ -105,7 +105,7 @@ class FTCloser(FileWriter.FTObject):
     def create(self):
         self.commands.append("create")
         g = FTCloser(self.commands, self)
-        self.children.append(weakref.ref(g))
+        self.append(g)
         return g
 
     @property
@@ -143,7 +143,7 @@ def createClass(classname, basecls=FileWriter.FTObject):
     def create(self, objectclass):
         self.commands.append("create")
         g = objectclass(self.commands, self)
-        self.children.append(weakref.ref(g))
+        self.append(g)
         return g
 
     @property
@@ -431,20 +431,17 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(fto._tparent, None)
         self.assertEqual(fto.parent, None)
         self.assertEqual(fto.is_valid, True)
-        self.assertEqual(fto.children, [])
         fto2 = FileWriter.FTObject(fto)
         self.assertEqual(fto2._h5object, fto)
         self.assertEqual(fto2.h5object, fto)
         self.assertEqual(fto2._tparent, None)
         self.assertEqual(fto2.parent, None)
-        self.assertEqual(fto2.children, [])
         self.assertEqual(fto.is_valid, True)
         fto3 = FileWriter.FTObject(fto2, fto)
         self.assertEqual(fto3._h5object, fto2)
         self.assertEqual(fto3.h5object, fto2)
         self.assertEqual(fto3._tparent, fto)
         self.assertEqual(fto3.parent, fto)
-        self.assertEqual(fto3.children, [])
         self.assertEqual(fto.is_valid, True)
 
     ## default createfile test
@@ -458,37 +455,26 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(fto.h5object, None)
         self.assertEqual(fto._tparent, None)
         self.assertEqual(fto.parent, None)
-        self.assertEqual(fto.children, [])
         self.assertEqual(fto.is_valid, True)
         fto2 = fto.create()
         self.assertEqual(fto2._h5object, fto.commands)
         self.assertEqual(fto2.h5object, fto.commands)
         self.assertEqual(fto2._tparent, fto)
         self.assertEqual(fto2.parent, fto)
-        self.assertEqual(fto2.children, [])
         self.assertEqual(fto.is_valid, True)
         fto3 = fto2.create()
         self.assertEqual(fto3._h5object, fto2.commands)
         self.assertEqual(fto3.h5object, fto2.commands)
         self.assertEqual(fto3._tparent, fto2)
         self.assertEqual(fto3.parent, fto2)
-        self.assertEqual(fto3.children, [])
         self.assertEqual(fto.is_valid, True)
         fto4 = fto2.create()
         self.assertEqual(fto4._h5object, fto2.commands)
         self.assertEqual(fto4.h5object, fto2.commands)
         self.assertEqual(fto4._tparent, fto2)
         self.assertEqual(fto4.parent, fto2)
-        self.assertEqual(fto4.children, [])
         self.assertEqual(fto.is_valid, True)
 
-        self.assertEqual(len(fto.children), 1)
-        self.assertEqual(fto.children[0](), fto2)
-        self.assertEqual(len(fto2.children), 2)
-        self.assertEqual(fto2.children[0](), fto3)
-        self.assertEqual(fto2.children[1](), fto4)
-        self.assertEqual(len(fto3.children), 0)
-        self.assertEqual(len(fto4.children), 0)
         self.assertEqual(fto.commands, ['create'])
         self.assertEqual(fto2.commands, ['create','create'])
         self.assertEqual(fto3.commands, [])
@@ -526,14 +512,12 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(fto.is_valid, True)
         self.assertEqual(fto.h5object, None)
         self.assertEqual(fto.parent, None)
-        self.assertEqual(fto.children, [])
         self.assertEqual(fto.is_valid, True)
 
         tf = TFile(fto, "myfile.txt")
         self.assertEqual(tf.is_valid, True)
         self.assertEqual(tf.h5object, fto)
         self.assertEqual(tf.parent, None)
-        self.assertEqual(tf.children, [])
         self.assertEqual(tf.is_valid, True)
         self.assertEqual(tf.name, "myfile.txt")
         self.assertTrue(hasattr(tf.root, "__call__"))
@@ -546,7 +530,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta.h5object, tf.commands)
         self.assertEqual(ta._tparent, tf)
         self.assertEqual(ta.parent, tf)
-        self.assertEqual(ta.children, [])
         self.assertEqual(ta.is_valid, True)
         self.assertTrue(hasattr(ta.read, "__call__"))
         self.assertTrue(hasattr(ta.write, "__call__"))
@@ -561,7 +544,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tg.h5object, tf.commands)
         self.assertEqual(tg._tparent, tf)
         self.assertEqual(tg.parent, tf)
-        self.assertEqual(tg.children, [])
         self.assertEqual(tg.is_valid, True)
         self.assertTrue(hasattr(tg.open, "__call__"))
         self.assertTrue(hasattr(tg.create_group, "__call__"))
@@ -578,7 +560,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td.h5object, tf.commands)
         self.assertEqual(td._tparent, tf)
         self.assertEqual(td.parent, tf)
-        self.assertEqual(td.children, [])
         self.assertEqual(td.is_valid, True)
         self.assertTrue(hasattr(td, "attributes"))
         self.assertTrue(hasattr(td.grow, "__call__"))
@@ -597,7 +578,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td2.h5object, tg.commands)
         self.assertEqual(td2._tparent, tg)
         self.assertEqual(td2.parent, tg)
-        self.assertEqual(td2.children, [])
         self.assertEqual(td2.is_valid, True)
 
         tl = tf.create(TLink)
@@ -605,7 +585,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tl.h5object, tf.commands)
         self.assertEqual(tl._tparent, tf)
         self.assertEqual(tl.parent, tf)
-        self.assertEqual(tl.children, [])
         self.assertEqual(tl.is_valid, True)
 
         tm = tg.create(TAttributeManager)
@@ -613,7 +592,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tm.h5object, tg.commands)
         self.assertEqual(tm._tparent, tg)
         self.assertEqual(tm.parent, tg)
-        self.assertEqual(tm.children, [])
         self.assertEqual(tm.is_valid, True)
 
         ta2 = tg.create(TAttribute)
@@ -621,7 +599,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta2.h5object, tg.commands)
         self.assertEqual(ta2._tparent, tg)
         self.assertEqual(ta2.parent, tg)
-        self.assertEqual(ta2.children, [])
         self.assertEqual(ta2.is_valid, True)
 
         self.assertTrue(isinstance(tf, FileWriter.FTObject))
@@ -629,11 +606,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tf.is_valid, True)
         self.assertEqual(tf.h5object, fto)
         self.assertEqual(tf.parent, None)
-        self.assertEqual(len(tf.children), 4)
-        self.assertEqual(tf.children[0](), ta)
-        self.assertEqual(tf.children[1](), tg)
-        self.assertEqual(tf.children[2](), td)
-        self.assertEqual(tf.children[3](), tl)
         self.assertEqual(tf.commands, ['create','create','create','create'])
 
         self.assertTrue(isinstance(ta, FileWriter.FTObject))
@@ -641,7 +613,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta.is_valid, True)
         self.assertEqual(ta.h5object, tf.commands)
         self.assertEqual(ta.parent, tf)
-        self.assertEqual(len(ta.children), 0)
         self.assertEqual(ta.commands, [])
 
         self.assertTrue(isinstance(td, FileWriter.FTObject))
@@ -649,7 +620,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td.is_valid, True)
         self.assertEqual(td.h5object, tf.commands)
         self.assertEqual(td.parent, tf)
-        self.assertEqual(len(td.children), 0)
         self.assertEqual(td.commands, [])
 
         self.assertTrue(isinstance(tl, FileWriter.FTObject))
@@ -657,7 +627,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tl.is_valid, True)
         self.assertEqual(tl.h5object, tf.commands)
         self.assertEqual(tl.parent, tf)
-        self.assertEqual(len(tl.children), 0)
         self.assertEqual(tl.commands, [])
 
         self.assertTrue(isinstance(tg, FileWriter.FTObject))
@@ -665,10 +634,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tg.is_valid, True)
         self.assertEqual(tg.h5object, tf.commands)
         self.assertEqual(tg.parent, tf)
-        self.assertEqual(len(tg.children), 3)
-        self.assertEqual(tg.children[0](), td2)
-        self.assertEqual(tg.children[1](), tm)
-        self.assertEqual(tg.children[2](), ta2)
         self.assertEqual(tg.commands, ['create','create','create'])
 
         self.assertTrue(isinstance(td2, FileWriter.FTObject))
@@ -676,7 +641,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td2.is_valid, True)
         self.assertEqual(td2.h5object, tg.commands)
         self.assertEqual(td2.parent, tg)
-        self.assertEqual(len(td2.children), 0)
         self.assertEqual(td2.commands, [])
 
         self.assertTrue(isinstance(tm, FileWriter.FTObject))
@@ -684,7 +648,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tm.is_valid, True)
         self.assertEqual(tm.h5object, tg.commands)
         self.assertEqual(tm.parent, tg)
-        self.assertEqual(len(tm.children), 0)
         self.assertEqual(tm.commands, [])
 
         self.assertTrue(isinstance(ta2, FileWriter.FTObject))
@@ -692,7 +655,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta2.is_valid, True)
         self.assertEqual(ta2.h5object, tg.commands)
         self.assertEqual(ta2.parent, tg)
-        self.assertEqual(len(ta2.children), 0)
         self.assertEqual(ta2.commands, [])
 
         tf.close()
@@ -702,11 +664,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tf.is_valid, False)
         self.assertEqual(tf.h5object, fto)
         self.assertEqual(tf.parent, None)
-        self.assertEqual(len(tf.children), 4)
-        self.assertEqual(tf.children[0](), ta)
-        self.assertEqual(tf.children[1](), tg)
-        self.assertEqual(tf.children[2](), td)
-        self.assertEqual(tf.children[3](), tl)
         self.assertEqual(
             tf.commands,
             ['create','create','create','create', 'close'])
@@ -716,7 +673,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta.is_valid, False)
         self.assertEqual(ta.h5object, tf.commands)
         self.assertEqual(ta.parent, tf)
-        self.assertEqual(len(ta.children), 0)
         self.assertEqual(ta.commands, ['close'])
 
         self.assertTrue(isinstance(td, FileWriter.FTObject))
@@ -724,7 +680,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td.is_valid, False)
         self.assertEqual(td.h5object, tf.commands)
         self.assertEqual(td.parent, tf)
-        self.assertEqual(len(td.children), 0)
         self.assertEqual(td.commands, ['close'])
 
         self.assertTrue(isinstance(tl, FileWriter.FTObject))
@@ -732,7 +687,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tl.is_valid, False)
         self.assertEqual(tl.h5object, tf.commands)
         self.assertEqual(tl.parent, tf)
-        self.assertEqual(len(tl.children), 0)
         self.assertEqual(tl.commands, ['close'])
 
         self.assertTrue(isinstance(tg, FileWriter.FTObject))
@@ -740,10 +694,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tg.is_valid, False)
         self.assertEqual(tg.h5object, tf.commands)
         self.assertEqual(tg.parent, tf)
-        self.assertEqual(len(tg.children), 3)
-        self.assertEqual(tg.children[0](), td2)
-        self.assertEqual(tg.children[1](), tm)
-        self.assertEqual(tg.children[2](), ta2)
         self.assertEqual(
             tg.commands, ['create','create','create', 'close'])
 
@@ -752,7 +702,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td2.is_valid, False)
         self.assertEqual(td2.h5object, tg.commands)
         self.assertEqual(td2.parent, tg)
-        self.assertEqual(len(td2.children), 0)
         self.assertEqual(td2.commands, ['close'])
 
         self.assertTrue(isinstance(tm, FileWriter.FTObject))
@@ -760,7 +709,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tm.is_valid, False)
         self.assertEqual(tm.h5object, tg.commands)
         self.assertEqual(tm.parent, tg)
-        self.assertEqual(len(tm.children), 0)
         self.assertEqual(tm.commands, ['close'])
 
         self.assertTrue(isinstance(ta2, FileWriter.FTObject))
@@ -768,7 +716,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta2.is_valid, False)
         self.assertEqual(ta2.h5object, tg.commands)
         self.assertEqual(ta2.parent, tg)
-        self.assertEqual(len(ta2.children), 0)
         self.assertEqual(ta2.commands, ['close'])
 
         tf.reopen()
@@ -778,11 +725,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tf.is_valid, True)
         self.assertEqual(tf.h5object, fto)
         self.assertEqual(tf.parent, None)
-        self.assertEqual(len(tf.children), 4)
-        self.assertEqual(tf.children[0](), ta)
-        self.assertEqual(tf.children[1](), tg)
-        self.assertEqual(tf.children[2](), td)
-        self.assertEqual(tf.children[3](), tl)
         self.assertEqual(
             tf.commands,
             ['create','create','create','create', 'close', 'reopen'])
@@ -792,7 +734,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta.is_valid, True)
         self.assertEqual(ta.h5object, tf.commands)
         self.assertEqual(ta.parent, tf)
-        self.assertEqual(len(ta.children), 0)
         self.assertEqual(ta.commands, ['close', 'reopen'])
 
         self.assertTrue(isinstance(td, FileWriter.FTObject))
@@ -800,7 +741,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td.is_valid, True)
         self.assertEqual(td.h5object, tf.commands)
         self.assertEqual(td.parent, tf)
-        self.assertEqual(len(td.children), 0)
         self.assertEqual(td.commands, ['close', 'reopen'])
 
         self.assertTrue(isinstance(tl, FileWriter.FTObject))
@@ -808,7 +748,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tl.is_valid, True)
         self.assertEqual(tl.h5object, tf.commands)
         self.assertEqual(tl.parent, tf)
-        self.assertEqual(len(tl.children), 0)
         self.assertEqual(tl.commands, ['close', 'reopen'])
 
         self.assertTrue(isinstance(tg, FileWriter.FTObject))
@@ -816,10 +755,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tg.is_valid, True)
         self.assertEqual(tg.h5object, tf.commands)
         self.assertEqual(tg.parent, tf)
-        self.assertEqual(len(tg.children), 3)
-        self.assertEqual(tg.children[0](), td2)
-        self.assertEqual(tg.children[1](), tm)
-        self.assertEqual(tg.children[2](), ta2)
         self.assertEqual(
             tg.commands, ['create','create','create', 'close', 'reopen'])
 
@@ -828,7 +763,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(td2.is_valid, True)
         self.assertEqual(td2.h5object, tg.commands)
         self.assertEqual(td2.parent, tg)
-        self.assertEqual(len(td2.children), 0)
         self.assertEqual(td2.commands, ['close', 'reopen'])
 
         self.assertTrue(isinstance(tm, FileWriter.FTObject))
@@ -836,7 +770,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(tm.is_valid, True)
         self.assertEqual(tm.h5object, tg.commands)
         self.assertEqual(tm.parent, tg)
-        self.assertEqual(len(tm.children), 0)
         self.assertEqual(tm.commands, ['close', 'reopen'])
 
         self.assertTrue(isinstance(ta2, FileWriter.FTObject))
@@ -844,7 +777,6 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta2.is_valid, True)
         self.assertEqual(ta2.h5object, tg.commands)
         self.assertEqual(ta2.parent, tg)
-        self.assertEqual(len(ta2.children), 0)
         self.assertEqual(ta2.commands, ['close', 'reopen'])
 
     ## default createfile test
@@ -867,13 +799,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(fl.children, [])
 
             rt = fl.root()
             fl.flush()
             self.assertEqual(fl.h5object, rt.h5object)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)
             self.assertEqual(fl.h5object.name is not None, True)
             self.assertEqual(fl.readonly, False)
@@ -888,8 +817,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
             self.assertEqual(fl.h5object.mode in ["r"], False)
 
@@ -901,8 +828,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
             self.assertEqual(fl.h5object.mode in ["r"], True)
 
@@ -949,7 +874,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(fl.children, [])
 
             rt = fl.root()
             fl.flush()
@@ -965,8 +889,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(
                 len(fl.h5object.root().attributes),
                 len(rt.h5object.attributes))
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)
             self.assertEqual(fl.h5object.is_valid, True)
             self.assertEqual(fl.readonly, False)
@@ -981,8 +903,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
             self.assertEqual(fl.h5object.readonly, False)
 
@@ -994,8 +914,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
             self.assertEqual(fl.h5object.readonly, True)
 

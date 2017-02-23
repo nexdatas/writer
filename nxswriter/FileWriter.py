@@ -19,6 +19,8 @@
 
 """ Provides abstraction for file writer """
 
+import weakref
+
 #: writer module
 writer = None
 
@@ -79,27 +81,50 @@ class FTObject(object):
     def __init__(self, h5object, tparent=None):
         """ constructor
 
-        :param h5object: pni object
+        :param h5object: h5 object
         :type h5object: :obj:`any`
         :param tparent: tree parent
         :type tparent: :obj:`FTObject`
         """
+        #: (:obj:`any`) h5 object
         self._h5object = h5object
+        #: (:obj:`FTObject`) tree parent
         self._tparent = tparent
-        self.children = []
+        #: (:obj:`list` < :obj:`FTObject` > ) weak references of children
+        self.__tchildren = []
+
+    def append(self, child):
+        """ append child weakref
+
+        :param tparent: tree parent
+        :type tparent: :obj:`FTObject`
+        """
+        self.__tchildren.append(weakref.ref(child))
+
+    def __del__(self):
+        """ removes weakref in parent object
+        """
+        if self._tparent:
+            self._tparent.refresh()
+
+    def refresh(self):
+        """ refresh a list of valid children
+        """
+        if self.__tchildren:
+            self.__tchildren = [kd for kd in self.__tchildren if kd() is not None]
 
     def close(self):
         """ close element
         """
-        for ch in self.children:
+        for ch in self.__tchildren:
             if ch() is not None:
                 ch().close()
 
     def _reopen(self):
         """ reopen elements and children
         """
-        self.children = [ch for ch in self.children if ch() is not None]
-        for ch in self.children:
+        self.__tchildren = [ch for ch in self.__tchildren if ch() is not None]
+        for ch in self.__tchildren:
             ch().reopen()
 
     @property

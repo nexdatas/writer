@@ -23,7 +23,6 @@ import pytz
 import time
 import h5py
 import datetime
-import weakref
 import numpy as np
 import os
 
@@ -92,7 +91,7 @@ def link(target, parent, name):
     lk = H5PYLink(
         parent._h5object.get(name, getlink=True), parent)
     lk.name = name
-    parent.children.append(weakref.ref(lk))
+    parent.append(lk)
     return lk
 
 
@@ -120,8 +119,6 @@ class H5PYFile(FileWriter.FTFile):
         FileWriter.FTFile.__init__(self, h5object, filename)
         #: (:obj:`str`) object nexus path
         self.path = None
-#        if hasattr(h5object, "name"):
-#            self.path = h5object.name
 
     @property
     def is_valid(self):
@@ -139,7 +136,7 @@ class H5PYFile(FileWriter.FTFile):
         :rtype: :class:`H5PYGroup `
         """
         g = H5PYGroup(self._h5object, self)
-        self.children.append(weakref.ref(g))
+        self.append(g)
         return g
 
     def flush(self):
@@ -257,12 +254,12 @@ class H5PYGroup(FileWriter.FTGroup):
                 itm = self._h5object.get(name, getlink=True)
                 lk = H5PYLink(itm, self)
                 lk.name = name
-                self.children.append(weakref.ref(lk))
+                self.append(lk)
                 return lk
         else:
             _ = self._h5object.attrs[name]
             el = H5PYAttribute((self._h5object.attrs, name), self)
-            self.children.append(weakref.ref(el))
+            self.append(el)
             return el
 
         if isinstance(itm, h5py._hl.dataset.Dataset):
@@ -275,7 +272,7 @@ class H5PYGroup(FileWriter.FTGroup):
             el.name = name
         else:
             el = H5PYObject(itm, self)
-        self.children.append(weakref.ref(el))
+        self.append(el)
         return el
 
     class H5PYGroupIter(object):
@@ -330,7 +327,7 @@ class H5PYGroup(FileWriter.FTGroup):
         grp = self._h5object.create_group(n)
         grp.attrs["NX_class"] = nxclass
         g = H5PYGroup(grp, self)
-        self.children.append(weakref.ref(g))
+        self.append(g)
         return g
 
     def create_field(self, name, type_code,
@@ -376,7 +373,7 @@ class H5PYGroup(FileWriter.FTGroup):
                     maxshape=mshape
                 ),
                 self)
-        self.children.append(weakref.ref(f))
+        self.append(f)
         return f
 
     @property
@@ -387,7 +384,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype : :class:`H5PYAttributeManager`
         """
         am = H5PYAttributeManager(self._h5object.attrs, self)
-        self.children.append(weakref.ref(am))
+        self.append(am)
         return am
 
     @property
@@ -454,7 +451,7 @@ class H5PYField(FileWriter.FTField):
         :rtype : :class:`H5PYAttributeManager`
         """
         am = H5PYAttributeManager(self._h5object.attrs, self)
-        self.children.append(weakref.ref(am))
+        self.append(am)
         return am
 
     def reopen(self):
@@ -709,7 +706,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
                 self._h5object.create(
                     name, np.array(0, dtype=dtype), (1,), dtype)
         at = H5PYAttribute((self._h5object, name), self)
-        self.parent.children.append(weakref.ref(at))
+        self.parent.append(at)
         return at
 
     def __len__(self):
@@ -743,7 +740,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
                 return None
             at = H5PYAttribute((self.__manager._h5object, name),
                                self.__manager.parent)
-            self.__manager.parent.children.append(weakref.ref(at))
+            self.__manager.parent.append(at)
             return at
 
         def __iter__(self):
@@ -781,7 +778,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :rtype : :class:`FTAtribute`
         """
         at = H5PYAttribute((self._h5object, name), self.parent)
-        self.parent.children.append(weakref.ref(at))
+        self.parent.append(at)
         return at
 
     def reopen(self):

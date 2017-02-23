@@ -214,7 +214,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(fl.children, [])
 
             rt = fl.root()
             fl.flush()
@@ -230,8 +229,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(
                 len(fl.h5object.root().attributes),
                 len(rt.h5object.attributes))
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)
             self.assertEqual(fl.h5object.is_valid, True)
             self.assertEqual(fl.readonly, False)
@@ -246,8 +243,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
             self.assertEqual(fl.h5object.readonly, False)
 
@@ -259,8 +254,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
             self.assertEqual(fl.h5object.readonly, True)
 
@@ -291,7 +284,7 @@ class PNIWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def twest_pniroot(self):
+    def test_pnigroup(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -317,18 +310,12 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(
                 len(fl.h5object.root().attributes),
                 len(rt.h5object.attributes))
-            self.assertEqual(len(rt.children), 2)
             attr = rt.attributes
             self.assertTrue(
                 isinstance(attr, PNIWriter.PNIAttributeManager))
             self.assertEqual(
                 fl.h5object.root().path,
                 rt.h5object.path)
-            print rt.children
-            self.assertEqual(len(rt.children), 3)
-            self.assertEqual(rt.children[0](), nt)
-            self.assertEqual(rt.children[1](), entry)
-            self.assertEqual(rt.children[2](), attr)
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(rt.parent, fl)
@@ -345,8 +332,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(
                 fl.h5object.root().path,
                 rt.h5object.path)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)
             self.assertEqual(fl.h5object.is_valid, True)
             self.assertEqual(fl.readonly, False)
@@ -361,8 +346,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
             self.assertEqual(fl.h5object.readonly, False)
 
@@ -374,8 +357,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
-            self.assertEqual(len(fl.children), 1)
-            self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
             self.assertEqual(fl.h5object.readonly, True)
 
@@ -398,7 +379,7 @@ class PNIWriterTest(unittest.TestCase):
                 self._fname)
             self.assertTrue(
                 f.attributes["NX_class"][...], "NXroot")
-            self.assertEqual(f.size, 0)
+            self.assertEqual(f.size, 2)
             fl.close()
 
         finally:

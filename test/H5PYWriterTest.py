@@ -207,13 +207,10 @@ class H5PYWriterTest(unittest.TestCase):
         self.assertTrue(
             isinstance(fl.h5object, h5py.File))
         self.assertEqual(fl.parent, None)
-        self.assertEqual(fl.children, [])
 
         rt = fl.root()
         fl.flush()
         self.assertEqual(fl.h5object, rt.h5object)
-        self.assertEqual(len(fl.children), 1)
-        self.assertEqual(fl.children[0](), rt)
         self.assertEqual(fl.is_valid, True)
         self.assertEqual(fl.h5object.name is not None, True)
         self.assertEqual(fl.readonly, False)
@@ -228,8 +225,6 @@ class H5PYWriterTest(unittest.TestCase):
         self.assertTrue(
             isinstance(fl.h5object, h5py.File))
         self.assertEqual(fl.parent, None)
-        self.assertEqual(len(fl.children), 1)
-        self.assertEqual(fl.children[0](), rt)
         self.assertEqual(fl.readonly, False)
         self.assertEqual(fl.h5object.mode in ["r"], False)
 
@@ -241,8 +236,6 @@ class H5PYWriterTest(unittest.TestCase):
         self.assertTrue(
             isinstance(fl.h5object, h5py.File))
         self.assertEqual(fl.parent, None)
-        self.assertEqual(len(fl.children), 1)
-        self.assertEqual(fl.children[0](), rt)
         self.assertEqual(fl.readonly, True)
         self.assertEqual(fl.h5object.mode in ["r"], True)
 
