@@ -124,7 +124,7 @@ class H5PYWriterTest(unittest.TestCase):
         w = "weerew"
         el = FileWriter.FTObject(w)
         
-        self.assertEqual(el.getobject(), w)
+        self.assertEqual(el.h5object, w)
 
     ## default createfile test
     # \brief It tests default settings
@@ -205,19 +205,19 @@ class H5PYWriterTest(unittest.TestCase):
         self.assertEqual(fl.name, self._fname)
         self.assertEqual(fl.path, None)
         self.assertTrue(
-            isinstance(fl.getobject(), h5py.File))
+            isinstance(fl.h5object, h5py.File))
         self.assertEqual(fl.parent, None)
         self.assertEqual(fl.children, [])
 
         rt = fl.root()
         fl.flush()
-        self.assertEqual(fl.getobject(), rt.getobject())
+        self.assertEqual(fl.h5object, rt.h5object)
         self.assertEqual(len(fl.children), 1)
         self.assertEqual(fl.children[0](), rt)
         self.assertEqual(fl.is_valid, True)
-        self.assertEqual(fl.getobject().name is not None, True)
+        self.assertEqual(fl.h5object.name is not None, True)
         self.assertEqual(fl.readonly, False)
-        self.assertEqual(fl.getobject().mode in ["r"], False)
+        self.assertEqual(fl.h5object.mode in ["r"], False)
         fl.close()
         self.assertEqual(fl.is_valid, False)
         self.assertEqual(fl.readonly, None)
@@ -226,12 +226,12 @@ class H5PYWriterTest(unittest.TestCase):
         self.assertEqual(fl.name, self._fname)
         self.assertEqual(fl.path, None)
         self.assertTrue(
-            isinstance(fl.getobject(), h5py.File))
+            isinstance(fl.h5object, h5py.File))
         self.assertEqual(fl.parent, None)
         self.assertEqual(len(fl.children), 1)
         self.assertEqual(fl.children[0](), rt)
         self.assertEqual(fl.readonly, False)
-        self.assertEqual(fl.getobject().mode in ["r"], False)
+        self.assertEqual(fl.h5object.mode in ["r"], False)
 
         fl.close()
 
@@ -239,12 +239,12 @@ class H5PYWriterTest(unittest.TestCase):
         self.assertEqual(fl.name, self._fname)
         self.assertEqual(fl.path, None)
         self.assertTrue(
-            isinstance(fl.getobject(), h5py.File))
+            isinstance(fl.h5object, h5py.File))
         self.assertEqual(fl.parent, None)
         self.assertEqual(len(fl.children), 1)
         self.assertEqual(fl.children[0](), rt)
         self.assertEqual(fl.readonly, True)
-        self.assertEqual(fl.getobject().mode in ["r"], True)
+        self.assertEqual(fl.h5object.mode in ["r"], True)
 
         fl.close()
 

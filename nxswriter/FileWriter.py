@@ -88,15 +88,6 @@ class FTObject(object):
         self._tparent = tparent
         self.children = []
 
-    def getobject(self):
-        """ get object of native library
-
-        :returns: pni object
-        :rtype: :obj:`any`
-        """
-
-        return self._h5object
-
     def close(self):
         """ close element
         """

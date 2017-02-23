@@ -127,7 +127,7 @@ class PNIWriterTest(unittest.TestCase):
         w = "weerew"
         el = FileWriter.FTObject(w)
 
-        self.assertEqual(el.getobject(), w)
+        self.assertEqual(el.h5object, w)
 
     ## default createfile test
     # \brief It tests default settings
@@ -212,44 +212,44 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.getobject(), nx._nxh5.nxfile))
+                isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.children, [])
 
             rt = fl.root()
             fl.flush()
             self.assertEqual(
-                fl.getobject().root().filename,
-                rt.getobject().filename)
+                fl.h5object.root().filename,
+                rt.h5object.filename)
             self.assertEqual(
-                fl.getobject().root().name,
-                rt.getobject().name)
+                fl.h5object.root().name,
+                rt.h5object.name)
             self.assertEqual(
-                fl.getobject().root().path,
-                rt.getobject().path)
+                fl.h5object.root().path,
+                rt.h5object.path)
             self.assertEqual(
-                len(fl.getobject().root().attributes),
-                len(rt.getobject().attributes))
+                len(fl.h5object.root().attributes),
+                len(rt.h5object.attributes))
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)
-            self.assertEqual(fl.getobject().is_valid, True)
+            self.assertEqual(fl.h5object.is_valid, True)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.getobject().readonly, False)
+            self.assertEqual(fl.h5object.readonly, False)
             fl.close()
             self.assertEqual(fl.is_valid, False)
-            self.assertEqual(fl.getobject().is_valid, False)
+            self.assertEqual(fl.h5object.is_valid, False)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.getobject(), nx._nxh5.nxfile))
+                isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.getobject().readonly, False)
+            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -257,12 +257,12 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.getobject(), nx._nxh5.nxfile))
+                isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.getobject().readonly, True)
+            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
             
@@ -315,56 +315,56 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(rt.name, "/")
             self.assertEqual(rt.path, "/")
             self.assertEqual(
-                len(fl.getobject().root().attributes),
-                len(rt.getobject().attributes))
+                len(fl.h5object.root().attributes),
+                len(rt.h5object.attributes))
             self.assertEqual(len(rt.children), 2)
             attr = rt.attributes
             self.assertTrue(
                 isinstance(attr, PNIWriter.PNIAttributeManager))
             self.assertEqual(
-                fl.getobject().root().path,
-                rt.getobject().path)
+                fl.h5object.root().path,
+                rt.h5object.path)
             print rt.children
             self.assertEqual(len(rt.children), 3)
             self.assertEqual(rt.children[0](), nt)
             self.assertEqual(rt.children[1](), entry)
             self.assertEqual(rt.children[2](), attr)
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.getobject().is_valid, True)
+            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(rt.parent, fl)
             self.assertEqual(rt.exists("entry12345"), True)
             self.assertEqual(rt.exists("strument"), False)
             
             fl.flush()
             self.assertEqual(
-                fl.getobject().root().filename,
-                rt.getobject().filename)
+                fl.h5object.root().filename,
+                rt.h5object.filename)
             self.assertEqual(
-                fl.getobject().root().name,
-                rt.getobject().name)
+                fl.h5object.root().name,
+                rt.h5object.name)
             self.assertEqual(
-                fl.getobject().root().path,
-                rt.getobject().path)
+                fl.h5object.root().path,
+                rt.h5object.path)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)
-            self.assertEqual(fl.getobject().is_valid, True)
+            self.assertEqual(fl.h5object.is_valid, True)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.getobject().readonly, False)
+            self.assertEqual(fl.h5object.readonly, False)
             fl.close()
             self.assertEqual(fl.is_valid, False)
-            self.assertEqual(fl.getobject().is_valid, False)
+            self.assertEqual(fl.h5object.is_valid, False)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.getobject(), nx._nxh5.nxfile))
+                isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.getobject().readonly, False)
+            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -372,12 +372,12 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.getobject(), nx._nxh5.nxfile))
+                isinstance(fl.h5object, nx._nxh5.nxfile))
             self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.getobject().readonly, True)
+            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
             

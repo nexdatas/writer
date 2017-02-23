@@ -830,7 +830,7 @@ ds.res = commonblock["myres"]
             script = 'ds.res2 = id(commonblock["__nxroot__"])'
             dp = DataSourcePool()
             dp.nxroot = rt
-            dspid = id(dp.nxroot.getobject())
+            dspid = id(dp.nxroot.h5object)
 
             ds = PyEvalSource()
             ds.setDataSources(dp)
