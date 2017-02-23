@@ -213,7 +213,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.path, None)
             self.assertTrue(
                 isinstance(fl.getobject(), nx._nxh5.nxfile))
-            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(fl.parent, None)
             self.assertEqual(fl.children, [])
 
             rt = fl.root()
@@ -245,7 +245,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.path, None)
             self.assertTrue(
                 isinstance(fl.getobject(), nx._nxh5.nxfile))
-            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
@@ -258,7 +258,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.path, None)
             self.assertTrue(
                 isinstance(fl.getobject(), nx._nxh5.nxfile))
-            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
@@ -331,7 +331,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(rt.children[2](), attr)
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.getobject().is_valid, True)
-            self.assertEqual(rt.getparent(), fl)
+            self.assertEqual(rt.parent, fl)
             self.assertEqual(rt.exists("entry12345"), True)
             self.assertEqual(rt.exists("strument"), False)
             
@@ -360,7 +360,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.path, None)
             self.assertTrue(
                 isinstance(fl.getobject(), nx._nxh5.nxfile))
-            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, False)
@@ -373,7 +373,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(fl.path, None)
             self.assertTrue(
                 isinstance(fl.getobject(), nx._nxh5.nxfile))
-            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(fl.parent, None)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.readonly, True)
