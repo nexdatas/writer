@@ -111,7 +111,8 @@ class FTObject(object):
         """ refresh a list of valid children
         """
         if self.__tchildren:
-            self.__tchildren = [kd for kd in self.__tchildren if kd() is not None]
+            self.__tchildren = [
+                kd for kd in self.__tchildren if kd() is not None]
 
     def close(self):
         """ close element

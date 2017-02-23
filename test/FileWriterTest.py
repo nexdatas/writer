@@ -118,7 +118,6 @@ class FTCloser(FileWriter.FTObject):
         return self._is_valid
 
 
-
 def createClass(classname, basecls=FileWriter.FTObject):
 
     def __init__(self, h5object, tparent=None):
