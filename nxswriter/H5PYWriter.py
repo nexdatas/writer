@@ -422,9 +422,9 @@ class H5PYGroup(FileWriter.FTGroup):
         """ reopen file
         """
         if isinstance(self._tparent, H5PYFile):
-            self._h5object = self._tparent.getobject()
+            self._h5object = self._tparent.h5object
         else:
-            self._h5object = self._tparent.getobject().get(self.name)
+            self._h5object = self._tparent.h5object.get(self.name)
         FileWriter.FTGroup.reopen(self)
 
 
@@ -460,7 +460,7 @@ class H5PYField(FileWriter.FTField):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = self._tparent.getobject().get(self.name)
+        self._h5object = self._tparent.h5object.get(self.name)
         FileWriter.FTField.reopen(self)
 
     def grow(self, dim=0, ext=1):
@@ -589,7 +589,7 @@ class H5PYLink(FileWriter.FTLink):
         """
         try:
             w = self._h5object
-            self.parent.getobject()[self.name]
+            self.parent.h5object[self.name]
             return True
         except:
             return False
@@ -600,7 +600,7 @@ class H5PYLink(FileWriter.FTLink):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self.parent.getobject()[self.name][...]
+        return self.parent.h5object[self.name][...]
 
     @classmethod
     def getfilename(cls, obj):
@@ -632,7 +632,7 @@ class H5PYLink(FileWriter.FTLink):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = self._tparent.getobject().get(self.name, getlink=True)
+        self._h5object = self._tparent.h5object.get(self.name, getlink=True)
         FileWriter.FTLink.reopen(self)
 
 
@@ -787,7 +787,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = self._tparent.getobject().attrs
+        self._h5object = self._tparent.h5object.attrs
         FileWriter.FTAttributeManager.reopen(self)
 
 
@@ -903,5 +903,5 @@ class H5PYAttribute(FileWriter.FTAttribute):
     def reopen(self):
         """ reopen attribute
         """
-        self._h5object = (self._tparent.getobject().attrs, self.name)
+        self._h5object = (self._tparent.h5object.attrs, self.name)
         FileWriter.FTAttribute.reopen(self)

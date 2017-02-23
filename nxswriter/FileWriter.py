@@ -119,7 +119,16 @@ class FTObject(object):
         :rtype : :class:`FTGroup`
         """
         return self._tparent
-    
+
+    @property
+    def h5object(self):
+        """ provide object of native library
+
+        :returns: pni object
+        :rtype: :obj:`any`
+        """
+        return self._h5object
+
     @property
     def is_valid(self):
         """ check if attribute is valid

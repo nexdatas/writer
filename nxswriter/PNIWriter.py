@@ -63,8 +63,8 @@ def link(target, parent, name):
     :returns: link object
     :rtype : :class:`PNILink`
     """
-    nx.link(target, parent.getobject(), name)
-    lks = nx.get_links(parent.getobject())
+    nx.link(target, parent.h5object, name)
+    lks = nx.get_links(parent.h5object)
     lk = [e for e in lks if e.name == name][0]
     el = PNILink(lk, parent)
     el.name = name
@@ -234,7 +234,7 @@ class PNIGroup(FileWriter.FTGroup):
         f = PNIField(
             self._h5object.create_field(
                 name, type_code, shape, chunk,
-                dfilter if not dfilter else dfilter.getobject()), self)
+                dfilter if not dfilter else dfilter.h5object), self)
         self.children.append(weakref.ref(f))
         return f
 
@@ -268,9 +268,9 @@ class PNIGroup(FileWriter.FTGroup):
         """ reopen group
         """
         if isinstance(self._tparent, PNIFile):
-            self._h5object = self._tparent.getobject().root()
+            self._h5object = self._tparent.h5object.root()
         else:
-            self._h5object = self._tparent.getobject().open(self.name)
+            self._h5object = self._tparent.h5object.open(self.name)
         FileWriter.FTGroup.reopen(self)
 
     def exists(self, name):
@@ -325,7 +325,7 @@ class PNIField(FileWriter.FTField):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = self._tparent.getobject().open(self.name)
+        self._h5object = self._tparent.h5object.open(self.name)
         FileWriter.FTField.reopen(self)
 
     def grow(self, dim=0, ext=1):
@@ -453,7 +453,7 @@ class PNILink(FileWriter.FTLink):
     def reopen(self):
         """ reopen field
         """
-        lks = nx.get_links(self._tparent.getobject())
+        lks = nx.get_links(self._tparent.h5object)
         lk = [e for e in lks if e.name == self.name][0]
         self._h5object = lk
         FileWriter.FTLink.reopen(self)
@@ -600,7 +600,7 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = self._tparent.getobject().attributes
+        self._h5object = self._tparent.h5object.attributes
         FileWriter.FTAttributeManager.reopen(self)
 
 
@@ -698,5 +698,5 @@ class PNIAttribute(FileWriter.FTAttribute):
     def reopen(self):
         """ reopen attribute
         """
-        self._h5object = self._tparent.getobject().attributes[self.name]
+        self._h5object = self._tparent.h5object.attributes[self.name]
         FileWriter.FTAttribute.reopen(self)

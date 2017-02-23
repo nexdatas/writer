@@ -772,7 +772,7 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta2.commands, ['close'])
 
         tf.reopen()
-        
+
         self.assertTrue(isinstance(tf, FileWriter.FTObject))
         self.assertTrue(isinstance(tf, FileWriter.FTFile))
         self.assertEqual(tf.is_valid, True)
@@ -927,7 +927,7 @@ class FileWriterTest(unittest.TestCase):
                 f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
-        finally:        
+        finally:
             os.remove(self._fname)
 
     ## default createfile test
@@ -1000,13 +1000,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.getobject().readonly, True)
 
             fl.close()
-            
+
             self.myAssertRaise(
                 Exception, fl.reopen, True, True)
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-            
+
             fl = PNIWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
