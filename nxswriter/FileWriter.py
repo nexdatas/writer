@@ -245,6 +245,7 @@ class FTGroup(FTObject):
         :returns: file tree group
         :rtype : :class:`FTGroup`
         """
+        return self.getparent()
 
     @property
     def attributes(self):
@@ -362,6 +363,7 @@ class FTField(FTObject):
         :returns: parent object
         :rtype: :class:`FTObject`
         """
+        return self.getparent()
 
     def reopen(self):
         """ reopen attribute
@@ -398,6 +400,7 @@ class FTLink(FTObject):
         :returns: parent object
         :rtype: :class:`FTObject`
         """
+        return self.getparent()
 
     def reopen(self):
         """ reopen attribute

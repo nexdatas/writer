@@ -380,15 +380,6 @@ class H5PYGroup(FileWriter.FTGroup):
         return f
 
     @property
-    def parent(self):
-        """ return the parent object
-
-        :returns: file tree group
-        :rtype : :class:`H5PYGroup`
-        """
-        return self.getparent()
-
-    @property
     def attributes(self):
         """ return the attribute manager
 
@@ -570,15 +561,6 @@ class H5PYField(FileWriter.FTField):
         """
         return self._h5object.size
 
-    @property
-    def parent(self):
-        """ parent object
-
-        :returns: parent object
-        :rtype: :class:`FTObject`
-        """
-        return self.getparent()
-
 
 class H5PYLink(FileWriter.FTLink):
     """ file tree link
@@ -646,15 +628,6 @@ class H5PYLink(FileWriter.FTLink):
             return filename + ":/" + "/".join(
                 self._h5object.path.split("/"))
         return self._h5object.path
-
-    @property
-    def parent(self):
-        """ parent object
-
-        :returns: parent object
-        :rtype: :class:`FTObject`
-        """
-        return self.getparent()
 
     def reopen(self):
         """ reopen field

@@ -248,15 +248,6 @@ class PNIGroup(FileWriter.FTGroup):
         return self._h5object.size
 
     @property
-    def parent(self):
-        """ return the parent object
-
-        :returns: file tree group
-        :rtype : :class:`PNIGroup`
-        """
-        return self.getparent()
-
-    @property
     def attributes(self):
         """ return the attribute manager
 
@@ -419,15 +410,6 @@ class PNIField(FileWriter.FTField):
         """
         return self._h5object.size
 
-    @property
-    def parent(self):
-        """ parent object
-
-        :returns: parent object
-        :rtype: :class:`FTObject`
-        """
-        return self.getparent()
-
 
 class PNILink(FileWriter.FTLink):
     """ file tree link
@@ -467,15 +449,6 @@ class PNILink(FileWriter.FTLink):
         :rtype: :obj:`str`
         """
         return self._h5object.target_path
-
-    @property
-    def parent(self):
-        """ parent object
-
-        :returns: parent object
-        :rtype: :class:`FTObject`
-        """
-        return self.getparent()
 
     def reopen(self):
         """ reopen field
