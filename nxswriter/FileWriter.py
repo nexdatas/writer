@@ -97,15 +97,6 @@ class FTObject(object):
 
         return self._h5object
 
-    # def getparent(self):
-    #     """ get object treee parent
-
-    #     :returns: tree parent
-    #     :rtype: :obj:`FTObject`
-    #     """
-
-    #     return self._tparent
-
     def close(self):
         """ close element
         """
