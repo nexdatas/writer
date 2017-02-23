@@ -119,9 +119,18 @@ class H5PYFile(FileWriter.FTFile):
         """
         FileWriter.FTFile.__init__(self, h5object, filename)
         #: (:obj:`str`) object nexus path
-        self.path = ''
-        if hasattr(h5object, "name"):
-            self.path = h5object.name
+        self.path = None
+#        if hasattr(h5object, "name"):
+#            self.path = h5object.name
+
+    @property
+    def is_valid(self):
+        """ check if group is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return self._h5object.name is not None
 
     def root(self):
         """ root object

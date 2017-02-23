@@ -158,6 +158,7 @@ class PNIFile(FileWriter.FTFile):
 class PNIGroup(FileWriter.FTGroup):
     """ file tree group
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -253,8 +254,9 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: file tree group
         :rtype : :class:`PNIGroup`
         """
-        return PNIGroup(self._h5object.parent,
-                        self._tparent.getparent())
+        return self.getparent()
+#        return PNIGroup(self._h5object.parent,
+#                        self._tparent.getparent())
 
     @property
     def attributes(self):
@@ -426,7 +428,8 @@ class PNIField(FileWriter.FTField):
         :returns: parent object
         :rtype: :class:`FTObject`
         """
-        return PNIGroup(self._h5object.parent, self._tparent.getparent())
+        return self.getparent()
+#        return PNIGroup(self._h5object.parent, self._tparent.getparent())
 
 
 class PNILink(FileWriter.FTLink):
@@ -475,7 +478,8 @@ class PNILink(FileWriter.FTLink):
         :returns: parent object
         :rtype: :class:`FTObject`
         """
-        return PNIGroup(self._h5object.parent)
+        return self.getparent()
+#        return PNIGroup(self._h5object.parent)
 
     def reopen(self):
         """ reopen field
@@ -623,7 +627,6 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         """ close attribure manager
         """
         FileWriter.FTAttributeManager.close(self)
-        self._h5object.close()
 
     def reopen(self):
         """ reopen field

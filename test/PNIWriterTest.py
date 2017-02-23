@@ -197,7 +197,7 @@ class PNIWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_default_pnifile(self):
+    def test_pnifile(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
@@ -230,6 +230,121 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(
                 len(fl.getobject().root().attributes),
                 len(rt.getobject().attributes))
+            self.assertEqual(len(fl.children), 1)
+            self.assertEqual(fl.children[0](), rt)
+            self.assertEqual(fl.is_valid, True)
+            self.assertEqual(fl.getobject().is_valid, True)
+            self.assertEqual(fl.readonly, False)
+            self.assertEqual(fl.getobject().readonly, False)
+            fl.close()
+            self.assertEqual(fl.is_valid, False)
+            self.assertEqual(fl.getobject().is_valid, False)
+
+            fl.reopen()
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.getobject(), nx._nxh5.nxfile))
+            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(len(fl.children), 1)
+            self.assertEqual(fl.children[0](), rt)
+            self.assertEqual(fl.readonly, False)
+            self.assertEqual(fl.getobject().readonly, False)
+
+            fl.close()
+
+            fl.reopen(True)
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.getobject(), nx._nxh5.nxfile))
+            self.assertEqual(fl.getparent(), None)
+            self.assertEqual(len(fl.children), 1)
+            self.assertEqual(fl.children[0](), rt)
+            self.assertEqual(fl.readonly, True)
+            self.assertEqual(fl.getobject().readonly, True)
+
+            fl.close()
+            
+            self.myAssertRaise(
+                Exception, fl.reopen, True, True)
+            self.myAssertRaise(
+                Exception, fl.reopen, False, True)
+
+            
+            fl = PNIWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            atts = []
+            for at in f.attributes:
+                print at.name, at.read(), at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(
+                f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
+
+        finally:
+            os.remove(self._fname)
+
+    ## default createfile test
+    # \brief It tests default settings
+    def twest_pniroot(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+
+        try:
+            overwrite = False
+            FileWriter.writer = PNIWriter
+            fl = FileWriter.create_file(self._fname)
+
+            rt = fl.root()
+            nt = rt.create_group("notype")
+            entry = rt.create_group("entry12345", "NXentry")
+            ins = entry.create_group("instrument", "NXinstrument")
+            ins = entry.create_group("detector", "NXdetector")
+            dt = entry.create_group("data", "NXdata")
+
+            print dir(rt)
+
+            self.assertTrue(
+                isinstance(rt, PNIWriter.PNIGroup))
+            self.assertEqual(rt.name, "/")
+            self.assertEqual(rt.path, "/")
+            self.assertEqual(
+                len(fl.getobject().root().attributes),
+                len(rt.getobject().attributes))
+            self.assertEqual(len(rt.children), 2)
+            attr = rt.attributes
+            self.assertTrue(
+                isinstance(attr, PNIWriter.PNIAttributeManager))
+            self.assertEqual(
+                fl.getobject().root().path,
+                rt.getobject().path)
+            print rt.children
+            self.assertEqual(len(rt.children), 3)
+            self.assertEqual(rt.children[0](), nt)
+            self.assertEqual(rt.children[1](), entry)
+            self.assertEqual(rt.children[2](), attr)
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(rt.getobject().is_valid, True)
+            self.assertEqual(rt.getparent(), fl)
+            self.assertEqual(rt.exists("entry12345"), True)
+            self.assertEqual(rt.exists("strument"), False)
+            
+            fl.flush()
+            self.assertEqual(
+                fl.getobject().root().filename,
+                rt.getobject().filename)
+            self.assertEqual(
+                fl.getobject().root().name,
+                rt.getobject().name)
+            self.assertEqual(
+                fl.getobject().root().path,
+                rt.getobject().path)
             self.assertEqual(len(fl.children), 1)
             self.assertEqual(fl.children[0](), rt)
             self.assertEqual(fl.is_valid, True)

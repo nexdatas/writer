@@ -27,6 +27,7 @@ import struct
 import random
 import binascii
 import string
+import h5py
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
@@ -186,6 +187,90 @@ class H5PYWriterTest(unittest.TestCase):
             
         finally:
             os.remove(self._fname)
+
+
+    ## default createfile test
+    # \brief It tests default settings
+    def test_h5pyfile(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+
+        overwrite = False
+        nxfl = h5py.File(self._fname, "a", libver='latest')
+        fl = H5PYWriter.H5PYFile(nxfl, self._fname)
+        self.assertTrue(
+            isinstance(fl, FileWriter.FTFile))
+
+        self.assertEqual(fl.name, self._fname)
+        self.assertEqual(fl.path, None)
+        self.assertTrue(
+            isinstance(fl.getobject(), h5py.File))
+        self.assertEqual(fl.getparent(), None)
+        self.assertEqual(fl.children, [])
+
+        rt = fl.root()
+        fl.flush()
+        self.assertEqual(fl.getobject(), rt.getobject())
+        self.assertEqual(len(fl.children), 1)
+        self.assertEqual(fl.children[0](), rt)
+        self.assertEqual(fl.is_valid, True)
+        self.assertEqual(fl.getobject().name is not None, True)
+        self.assertEqual(fl.readonly, False)
+        self.assertEqual(fl.getobject().mode in ["r"], False)
+        fl.close()
+        self.assertEqual(fl.is_valid, False)
+        self.assertEqual(fl.readonly, None)
+
+        fl.reopen()
+        self.assertEqual(fl.name, self._fname)
+        self.assertEqual(fl.path, None)
+        self.assertTrue(
+            isinstance(fl.getobject(), h5py.File))
+        self.assertEqual(fl.getparent(), None)
+        self.assertEqual(len(fl.children), 1)
+        self.assertEqual(fl.children[0](), rt)
+        self.assertEqual(fl.readonly, False)
+        self.assertEqual(fl.getobject().mode in ["r"], False)
+
+        fl.close()
+
+        fl.reopen(True)
+        self.assertEqual(fl.name, self._fname)
+        self.assertEqual(fl.path, None)
+        self.assertTrue(
+            isinstance(fl.getobject(), h5py.File))
+        self.assertEqual(fl.getparent(), None)
+        self.assertEqual(len(fl.children), 1)
+        self.assertEqual(fl.children[0](), rt)
+        self.assertEqual(fl.readonly, True)
+        self.assertEqual(fl.getobject().mode in ["r"], True)
+
+        fl.close()
+
+        self.myAssertRaise(
+            Exception, fl.reopen, True, True)
+        self.myAssertRaise(
+            Exception, fl.reopen, False, True)
+
+
+        fl = H5PYWriter.open_file(self._fname, readonly=True)
+        f = fl.root()
+        self.assertEqual(1, len(f.attributes))
+        atts = []
+        for at in f.attributes:
+            print at.name, at.read(), at.dtype
+#        self.assertEqual(
+#            f.attributes["file_name"][...],
+#            self._fname)
+#        self.assertTrue(
+#            f.attributes["NX_class"][...], "NXroot")
+        self.assertEqual(f.size, 0)
+        fl.close()
+
+        os.remove(self._fname)
+
+
             
 if __name__ == '__main__':
     unittest.main()
