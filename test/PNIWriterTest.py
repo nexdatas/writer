@@ -300,7 +300,20 @@ class PNIWriterTest(unittest.TestCase):
             ins = entry.create_group("instrument", "NXinstrument")
             ins = entry.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
-
+            strscalar = entry.create_field("strscalar", "string")
+            floatscalar = entry.create_field("floatscalar", "float64")
+            intscalar = entry.create_field("intscalar", "uint64")
+            strspec = ins.create_field("strspec", "string", [10], [6])
+            floatspec = ins.create_field("floatspec", "float32", [20], [16])
+            intspec = ins.create_field("intspec", "int64", [30], [5])
+            strimage = dt.create_field("strimage", "string", [2,2], [2,1])
+            floatimage = dt.create_field("floatimage", "float64", [20,10], [10, 10])
+            intimage = dt.create_field("intimage", "uint32", [0, 30], [1, 30])
+            strvec = dt.create_field("strvec", "string", [0,2,2], [1,2,2])
+            floatvec = dt.create_field("floatvec", "float64", [1, 20,10], [1, 10, 10])
+            intvec = dt.create_field("intvec", "uint32", [0, 2, 30], [1, 2, 30])
+            ## add links, attributes and filters, no chunk
+            
             print dir(rt)
 
             self.assertTrue(
