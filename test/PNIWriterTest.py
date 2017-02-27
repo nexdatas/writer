@@ -291,8 +291,7 @@ class PNIWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
-            fl = FileWriter.create_file(self._fname)
+            fl = PNIWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -301,10 +300,10 @@ class PNIWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = FileWriter.deflate_filter()
-            df1 = FileWriter.deflate_filter()
+            df0 = PNIWriter.deflate_filter()
+            df1 = PNIWriter.deflate_filter()
             df1.rate = 2
-            df2 = FileWriter.deflate_filter()
+            df2 = PNIWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -325,15 +324,15 @@ class PNIWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            lkintimage = FileWriter.link(
+            lkintimage = PNIWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = FileWriter.link(
+            lkfloatvec = PNIWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = FileWriter.link(
+            lkintspec = PNIWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = FileWriter.link(
+            lkdet = PNIWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = FileWriter.link(
+            lkno = PNIWriter.link(
                 "/notype/unknown", dt, "lkno")
 
 
@@ -411,7 +410,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(nt.size, 0)
             self.assertEqual(nt.exists("strument"), False)
 
-            
+
             self.assertTrue(
                 isinstance(ins, PNIWriter.PNIGroup))
             self.assertEqual(ins.name, "instrument")
@@ -498,7 +497,7 @@ class PNIWriterTest(unittest.TestCase):
             for en in det:
                 kids.add(en.name)
             print kids
-                
+
             self.assertEqual(
                 kids,
                 set(['strimage', 'intvec', 'floatimage',
@@ -512,7 +511,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
             self.assertEqual(strscalar.shape, (1,))
-            
+
             self.assertTrue(isinstance(floatscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatscalar.name, 'floatscalar')
@@ -533,7 +532,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec.dtype, 'string')
             self.assertEqual(strspec.shape, (10,))
-            
+
             self.assertTrue(isinstance(floatspec, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatspec.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatspec.name, 'floatspec')
@@ -555,7 +554,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
             self.assertEqual(strimage.shape, (2, 2))
-            
+
             self.assertTrue(isinstance(floatimage, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatimage.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatimage.name, 'floatimage')
@@ -580,7 +579,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
             self.assertEqual(strvec.shape, (0, 2, 2))
-            
+
             self.assertTrue(isinstance(floatvec, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatvec.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatvec.name, 'floatvec')
@@ -594,7 +593,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec.dtype, 'uint32')
             self.assertEqual(intvec.shape, (0, 2, 30))
-            
+
 
             strscalar_op= entry.open("strscalar")
             floatscalar_op = entry.open("floatscalar")
@@ -609,14 +608,14 @@ class PNIWriterTest(unittest.TestCase):
             floatvec_op = det.open("floatvec")
             intvec_op = det.open("intvec")
 
-            
+
             self.assertTrue(isinstance(strscalar_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(strscalar_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(strscalar_op.name, 'strscalar')
             self.assertEqual(strscalar_op.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar_op.dtype, 'string')
             self.assertEqual(strscalar_op.shape, (1,))
-            
+
             self.assertTrue(isinstance(floatscalar_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatscalar_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatscalar_op.name, 'floatscalar')
@@ -637,7 +636,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec_op.dtype, 'string')
             self.assertEqual(strspec_op.shape, (10,))
-            
+
             self.assertTrue(isinstance(floatspec_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatspec_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatspec_op.name, 'floatspec')
@@ -659,7 +658,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage_op.dtype, 'string')
             self.assertEqual(strimage_op.shape, (2, 2))
-            
+
             self.assertTrue(isinstance(floatimage_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatimage_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatimage_op.name, 'floatimage')
@@ -682,7 +681,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec_op.dtype, 'string')
             self.assertEqual(strvec_op.shape, (0, 2, 2))
-            
+
             self.assertTrue(isinstance(floatvec_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatvec_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatvec_op.name, 'floatvec')
@@ -691,13 +690,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatvec_op.shape, (1, 20, 10))
 
             self.assertTrue(isinstance(intvec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intvec_op.h5object, nx._nxh5.nxfield)) 
+            self.assertTrue(isinstance(intvec_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(intvec_op.name, 'intvec')
             self.assertEqual(intvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec_op.dtype, 'uint32')
             self.assertEqual(intvec_op.shape, (0, 2, 30))
             self.assertEqual(intvec_op.parent, det)
-            
+
 
 
             self.assertTrue(isinstance(lkintimage, PNIWriter.PNILink))
@@ -739,8 +738,8 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(
                 lkno.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
-            
-            
+
+
 
             lkintimage_op = dt.open("lkintimage")
             lkfloatvec_op = dt.open("lkfloatvec")
@@ -758,7 +757,7 @@ class PNIWriterTest(unittest.TestCase):
                 '/entry12345:NXentry/data:NXdata/lkintimage')
             self.assertEqual(lkintimage_op.dtype, 'uint32')
             self.assertEqual(lkintimage_op.shape, (0, 30))
-            
+
 
             self.assertTrue(isinstance(lkfloatvec_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxfield))
@@ -767,12 +766,15 @@ class PNIWriterTest(unittest.TestCase):
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
             self.assertEqual(lkfloatvec_op.dtype, 'float64')
             self.assertEqual(lkfloatvec_op.shape, (1, 20, 10))
-            
 
-            self.assertTrue(isinstance(lkintspec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(lkintspec_op.h5object, nx._nxh5.nxfield))
+
+            self.assertTrue(
+                isinstance(lkintspec_op, PNIWriter.PNIField))
+            self.assertTrue(
+                isinstance(lkintspec_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(lkintspec_op.name, 'lkintspec')
-            self.assertEqual(lkintspec_op.path, '/entry12345:NXentry/data:NXdata/lkintspec')
+            self.assertEqual(lkintspec_op.path,
+                             '/entry12345:NXentry/data:NXdata/lkintspec')
             self.assertEqual(lkintspec_op.dtype, 'int64')
             self.assertEqual(lkintspec_op.shape, (30,))
 
@@ -784,7 +786,7 @@ class PNIWriterTest(unittest.TestCase):
                 lkno_op.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-            
+
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -845,7 +847,6 @@ class PNIWriterTest(unittest.TestCase):
             fl.close()
 
         finally:
-#            pass
             os.remove(self._fname)
 
 

@@ -90,7 +90,7 @@ def link(target, parent, name):
         parent._h5object[name] = h5py.SoftLink(target)
     lk = H5PYLink(
         parent._h5object.get(name, getlink=True), parent)
-    lk.name = name
+    lk.setname(name)
     parent.append(lk)
     return lk
 
@@ -136,6 +136,8 @@ class H5PYFile(FileWriter.FTFile):
         :rtype: :class:`H5PYGroup `
         """
         g = H5PYGroup(self._h5object, self)
+        g.name = "/"
+        g.path = "/"
         self.append(g)
         return g
 
@@ -150,6 +152,7 @@ class H5PYFile(FileWriter.FTFile):
     def close(self):
         """ close file
         """
+        FileWriter.FTFile.close(self)
         if self._h5object.mode in ["r+"]:
             self._h5object.attrs.create(
                 "file_update_time", self.currenttime() + "\0")
@@ -226,18 +229,23 @@ class H5PYGroup(FileWriter.FTGroup):
         :type tparent: :obj:`FTObject`
         """
         FileWriter.FTGroup.__init__(self, h5object, tparent)
-        self.path = ''
+        self.path = ""
         self.name = None
         if hasattr(h5object, "name"):
-
-            self.path = h5object.name
-            self.name = self.path.split("/")[-1]
-            if ":" not in self.path.split("/")[-1]:
+            name = h5object.name
+            self.name = name.split("/")[-1]
+            if tparent and tparent.path:
+                if tparent.path == "/":
+                    self.path = "/" + self.name
+                else:
+                    self.path = tparent.path + "/" + self.name
+            if ":" not in self.name:
                 if "NX_class" in h5object.attrs:
                     clss = h5object.attrs["NX_class"]
                 else:
                     clss = ""
-                self.path = self.path + ":" + clss
+                if clss:
+                    self.path += ":" + clss
 
     def open(self, name):
         """ open a file tree element
@@ -247,22 +255,20 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: file tree object
         :rtype : :class:`FTObject`
         """
-        if name in self._h5object:
-                itm = self._h5object.get(name)
-        else:
+        if name not in self._h5object:
             _ = self._h5object.attrs[name]
             el = H5PYAttribute((self._h5object.attrs, name), self)
             self.append(el)
             return el
 
+        itm = self._h5object.get(name)
         if isinstance(itm, h5py._hl.dataset.Dataset):
             el = H5PYField(itm, self)
         elif isinstance(itm, h5py._hl.group.Group):
             el = H5PYGroup(itm, self)
         else:
             itm = self._h5object.get(name, getlink=True)
-            el = H5PYLink(itm, self)
-            el.name = name
+            el = H5PYLink(itm, self).setname(name)
         self.append(el)
         return el
 
@@ -305,6 +311,12 @@ class H5PYGroup(FileWriter.FTGroup):
         """
         return self.H5PYGroupIter(self)
 
+    def close(self):
+        """ close group
+        """
+        FileWriter.FTGroup.close(self)
+        self._h5object = None
+
     def create_group(self, n, nxclass=""):
         """ open a file tree element
 
@@ -316,7 +328,8 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype : :class:`H5PYGroup`
         """
         grp = self._h5object.create_group(n)
-        grp.attrs["NX_class"] = nxclass
+        if nxclass:
+            grp.attrs["NX_class"] = nxclass
         g = H5PYGroup(grp, self)
         self.append(g)
         return g
@@ -404,7 +417,10 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.name is not None
+        try:
+            return self._h5object.name is not None
+        except:
+            return False
 
     def reopen(self):
         """ reopen file
@@ -431,8 +447,13 @@ class H5PYField(FileWriter.FTField):
         self.path = ''
         self.name = None
         if hasattr(h5object, "name"):
-            self.path = h5object.name
-            self.name = self.path.split("/")[-1]
+            name = h5object.name
+            self.name = name.split("/")[-1]
+            if tparent and tparent.path:
+                if tparent.path == "/":
+                    self.path = "/" + self.name
+                else:
+                    self.path = tparent.path + "/" + self.name
 
     @property
     def attributes(self):
@@ -516,7 +537,16 @@ class H5PYField(FileWriter.FTField):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.name is not None
+        try:
+            return self._h5object.name is not None
+        except:
+            return False
+
+    def close(self):
+        """ close field
+        """
+        FileWriter.FTField.close(self)
+        self._h5object = None
 
     @property
     def dtype(self):
@@ -564,9 +594,15 @@ class H5PYLink(FileWriter.FTLink):
         FileWriter.FTLink.__init__(self, h5object, tparent)
         self.path = ''
         self.name = None
-        if hasattr(h5object, "name"):
-            self.path = h5object.name
-            self.name = self.path.split("/")[-1]
+        if tparent and tparent.path:
+            self.path = tparent.path
+        if not self.path.endswith("/"):
+            self.path += "/"
+
+    def setname(self, name):
+        self.name = name
+        self.path += self.name
+        return self
 
     @property
     def is_valid(self):
@@ -623,6 +659,11 @@ class H5PYLink(FileWriter.FTLink):
         self._h5object = self._tparent.h5object.get(self.name, getlink=True)
         FileWriter.FTLink.reopen(self)
 
+    def close(self):
+        """ close group
+        """
+        FileWriter.FTLink.close(self)
+        self._h5object = None
 
 class H5PYDeflate(FileWriter.FTDeflate):
     """ file tree deflate
@@ -778,6 +819,11 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         self._h5object = self._tparent.h5object.attrs
         FileWriter.FTAttributeManager.reopen(self)
 
+    def close(self):
+        """ close attribure manager
+        """
+        FileWriter.FTAttributeManager.close(self)
+
 
 class H5PYAttribute(FileWriter.FTAttribute):
     """ file tree attribute
@@ -893,3 +939,9 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         self._h5object = (self._tparent.h5object.attrs, self.name)
         FileWriter.FTAttribute.reopen(self)
+
+    def close(self):
+        """ close attribute
+        """
+        FileWriter.FTAttribute.close(self)
+        self._h5object = None
