@@ -248,14 +248,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype : :class:`FTObject`
         """
         if name in self._h5object:
-            try:
-                itm = self._h5object[name]
-            except:
-                itm = self._h5object.get(name, getlink=True)
-                lk = H5PYLink(itm, self)
-                lk.name = name
-                self.append(lk)
-                return lk
+                itm = self._h5object.get(name)
         else:
             _ = self._h5object.attrs[name]
             el = H5PYAttribute((self._h5object.attrs, name), self)
@@ -266,12 +259,10 @@ class H5PYGroup(FileWriter.FTGroup):
             el = H5PYField(itm, self)
         elif isinstance(itm, h5py._hl.group.Group):
             el = H5PYGroup(itm, self)
-        elif (isinstance(itm, h5py._hl.group.SoftLink)
-              or isinstance(itm, h5py._hl.group.ExternalLink)):
+        else:
+            itm = self._h5object.get(name, getlink=True)
             el = H5PYLink(itm, self)
             el.name = name
-        else:
-            el = H5PYObject(itm, self)
         self.append(el)
         return el
 

@@ -333,6 +333,8 @@ class PNIWriterTest(unittest.TestCase):
                 "/entry12345/instrument/intspec", dt, "lkintspec")
             lkdet = FileWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
+            lkno = FileWriter.link(
+                "/notype/unknown", dt, "lkno")
 
 
             attr0 = rt.attributes
@@ -730,49 +732,59 @@ class PNIWriterTest(unittest.TestCase):
                 lkdet.path,
                 "/entry12345:NXentry/data:NXdata/lkdet")
 
+            self.assertTrue(isinstance(lkno, PNIWriter.PNILink))
+            self.assertTrue(isinstance(lkno.h5object, nx._nxh5.nxlink))
+            self.assertTrue(lkno.target_path.endswith(
+                "%s://notype/unknown" % self._fname))
+            self.assertEqual(
+                lkno.path,
+                "/entry12345:NXentry/data:NXdata/lkno")
+            
             
 
             lkintimage_op = dt.open("lkintimage")
             lkfloatvec_op = dt.open("lkfloatvec")
             lkintspec_op = dt.open("lkintspec")
             lkdet_op = dt.open("lkdet")
+            lkno_op = dt.open("lkno")
 
-            print dir(lkintimage_op.h5object)
-            print lkintimage_op
-            self.assertTrue(isinstance(lkintimage_op, PNIWriter.PNILink))
-            # self.assertTrue(isinstance(lkintimage_op.h5object, nx._nxh5.nxlink))
-            # self.assertTrue(lkintimage_op.target_path.endswith(
-            #     "%s://entry12345/instrument/detector/intimage" % self._fname))
-            # self.assertEqual(
-            #     lkintimage_op.path,
-            #     "/entry12345:NXentry/data:NXdata/lkintimage")
 
-            # self.assertTrue(isinstance(lkfloatvec_op, PNIWriter.PNILink))
-            # self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxlink))
-            # self.assertTrue(lkfloatvec_op.target_path.endswith(
-            #     "%s://entry12345/instrument/detector/floatvec" % self._fname))
-            # self.assertEqual(
-            #     lkfloatvec_op.path,
-            #     "/entry12345:NXentry/data:NXdata/lkfloatvec")
 
-            # self.assertTrue(isinstance(lkintspec_op, PNIWriter.PNILink))
-            # self.assertTrue(isinstance(lkintspec_op.h5object, nx._nxh5.nxlink))
-            # self.assertTrue(lkintspec_op.target_path.endswith(
-            #     "%s://entry12345/instrument/intspec" % self._fname))
-            # self.assertEqual(
-            #     lkintspec_op.path,
-            #     "/entry12345:NXentry/data:NXdata/lkintspec")
-
-            # self.assertTrue(isinstance(lkdet_op, PNIWriter.PNILink))
-            # self.assertTrue(isinstance(lkdet_op.h5object, nx._nxh5.nxlink))
-            # self.assertTrue(lkdet_op.target_path.endswith(
-            #     "%s://entry12345/instrument/detector" % self._fname))
-            # self.assertEqual(
-            #     lkdet_op.path,
-            #     "/entry12345:NXentry/data:NXdata/lkdet")
-
+            self.assertTrue(isinstance(lkintimage_op, PNIWriter.PNIField))
+            self.assertTrue(isinstance(lkintimage_op.h5object, nx._nxh5.nxfield))
+            self.assertEqual(lkintimage_op.name, 'lkintimage')
+            self.assertEqual(
+                lkintimage_op.path,
+                '/entry12345:NXentry/data:NXdata/lkintimage')
+            self.assertEqual(lkintimage_op.dtype, 'uint32')
+            self.assertEqual(lkintimage_op.shape, (0, 30))
             
 
+            self.assertTrue(isinstance(lkfloatvec_op, PNIWriter.PNIField))
+            self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxfield))
+            self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
+            self.assertEqual(lkfloatvec_op.path,
+                             '/entry12345:NXentry/data:NXdata/lkfloatvec')
+            self.assertEqual(lkfloatvec_op.dtype, 'float64')
+            self.assertEqual(lkfloatvec_op.shape, (1, 20, 10))
+            
+
+            self.assertTrue(isinstance(lkintspec_op, PNIWriter.PNIField))
+            self.assertTrue(isinstance(lkintspec_op.h5object, nx._nxh5.nxfield))
+            self.assertEqual(lkintspec_op.name, 'lkintspec')
+            self.assertEqual(lkintspec_op.path, '/entry12345:NXentry/data:NXdata/lkintspec')
+            self.assertEqual(lkintspec_op.dtype, 'int64')
+            self.assertEqual(lkintspec_op.shape, (30,))
+
+            self.assertTrue(isinstance(lkno_op, PNIWriter.PNILink))
+            self.assertTrue(isinstance(lkno_op.h5object, nx._nxh5.nxlink))
+            self.assertTrue(lkno_op.target_path.endswith(
+                "%s://notype/unknown" % self._fname))
+            self.assertEqual(
+                lkno_op.path,
+                "/entry12345:NXentry/data:NXdata/lkno")
+
+            
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
