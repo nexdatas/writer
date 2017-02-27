@@ -282,6 +282,54 @@ class PNIGroup(FileWriter.FTGroup):
         """
         return self._h5object.exists(name)
 
+    class PNIGroupIter(object):
+
+        def __init__(self, group):
+            """ constructor
+
+            :param group: group object
+            :type manager: :obj:`H5PYGroup`
+            """
+
+            self.__group = group
+            self.__names = [kid.name for kid in self.__group._h5object]
+
+        def next(self):
+            """ the next attribute
+
+            :returns: attribute object
+            :rtype : :class:`FTAtribute`
+            """
+            if self.__names:
+                return self.__group.open(self.__names.pop(0))
+            else:
+                raise StopIteration()
+
+        def __iter__(self):
+            """ attribute iterator
+
+            :returns: attribute iterator
+            :rtype : :class:`H5PYAttrIter`
+            """
+            return self
+
+    def __iter__(self):
+        """ attribute iterator
+
+        :returns: attribute iterator
+        :rtype : :class:`H5PYAttrIter`
+        """
+        return self.PNIGroupIter(self)
+
+    @property
+    def is_valid(self):
+        """ check if field is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return self._h5object.is_valid
+
 
 class PNIField(FileWriter.FTField):
     """ file tree file
@@ -438,7 +486,7 @@ class PNILink(FileWriter.FTLink):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.is_valid
+        return self._h5object is not None and self._h5object.is_valid
 
     @property
     def target_path(self):
@@ -447,7 +495,7 @@ class PNILink(FileWriter.FTLink):
         :returns: target path
         :rtype: :obj:`str`
         """
-        return self._h5object.target_path
+        return str(self._h5object.target_path)
 
     def reopen(self):
         """ reopen field
@@ -456,6 +504,12 @@ class PNILink(FileWriter.FTLink):
         lk = [e for e in lks if e.name == self.name][0]
         self._h5object = lk
         FileWriter.FTLink.reopen(self)
+
+    def close(self):
+        """ close group
+        """
+        FileWriter.FTLink.close(self)
+        self._h5object = None
 
 
 class PNIDeflate(FileWriter.FTDeflate):
