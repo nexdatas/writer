@@ -665,6 +665,7 @@ class H5PYLink(FileWriter.FTLink):
         FileWriter.FTLink.close(self)
         self._h5object = None
 
+
 class H5PYDeflate(FileWriter.FTDeflate):
     """ file tree deflate
     """
@@ -823,6 +824,15 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         """ close attribure manager
         """
         FileWriter.FTAttributeManager.close(self)
+
+    @property
+    def is_valid(self):
+        """ check if link is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return self.parent.is_valid
 
 
 class H5PYAttribute(FileWriter.FTAttribute):

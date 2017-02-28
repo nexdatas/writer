@@ -656,6 +656,15 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         self._h5object = self._tparent.h5object.attributes
         FileWriter.FTAttributeManager.reopen(self)
 
+    @property
+    def is_valid(self):
+        """ check if link is valid
+
+        :returns: valid flag
+        :rtype: :obj:`bool`
+        """
+        return self.parent.is_valid
+
 
 class PNIAttribute(FileWriter.FTAttribute):
     """ file tree attribute
