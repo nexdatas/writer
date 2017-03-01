@@ -281,7 +281,7 @@ class PNIGroup(FileWriter.FTGroup):
             """
 
             self.__group = group
-            self.__names = [kid.name for kid in self.__group._h5object]
+            self.__names = [kid.name for kid in self.__group.h5object]
 
         def next(self):
             """ the next attribute
@@ -465,7 +465,7 @@ class PNILink(FileWriter.FTLink):
             self.path = h5object.path
         if hasattr(h5object, "name"):
             self.name = h5object.name
-            
+
     @property
     def is_valid(self):
         """ check if link is valid

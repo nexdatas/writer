@@ -21,9 +21,6 @@
 
 from xml import sax
 
-import sys
-import os
-
 
 class InnerXMLHandler(sax.ContentHandler):
     """ Inner SAX2 parser
@@ -135,24 +132,3 @@ class InnerXMLHandler(sax.ContentHandler):
             self.__xmlReader.setContentHandler(self.__contentHandler)
         else:
             self.__contentXML += "</%s>" % name
-
-
-if __name__ == "__main__":
-
-    if len(sys.argv) < 2:
-        print("usage: InnerXMLParser.py  <XMLinput>")
-
-    else:
-        #: (:obj:`str`) input XML file
-        fi = sys.argv[1]
-        if os.path.exists(fi):
-
-            #: (:class:`xml.sax.xmlreader.XMLReader`) parser object
-            parser = sax.make_parser()
-
-            #: (:class:`nxswriter.InnerXMLHandler`) SAX2 handler object
-            handler = InnerXMLHandler()
-            parser.setContentHandler(handler)
-
-            parser.parse(open(fi))
-            print("GT: %s" % handler.xml)

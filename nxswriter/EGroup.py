@@ -19,10 +19,7 @@
 
 """ Definitions of group tag evaluation classes """
 
-import numpy
-
 from .FElement import FElementWithAttr
-from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
 from . import Streams
 

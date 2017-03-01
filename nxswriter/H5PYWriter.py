@@ -117,15 +117,6 @@ class H5PYFile(FileWriter.FTFile):
         #: (:obj:`str`) object nexus path
         self.path = None
 
-    @property
-    def is_valid(self):
-        """ check if group is valid
-
-        :returns: valid flag
-        :rtype: :obj:`bool`
-        """
-        return self._h5object.name is not None
-
     def root(self):
         """ root object
 
@@ -169,7 +160,7 @@ class H5PYFile(FileWriter.FTFile):
 
     @property
     def is_valid(self):
-        """ check if file is valid
+        """ check if group is valid
 
         :returns: valid flag
         :rtype: :obj:`bool`
@@ -597,7 +588,7 @@ class H5PYLink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         try:
-            w = self._h5object
+            _ = self._h5object
             self.parent.h5object[self.name]
             return True
         except:
@@ -737,10 +728,10 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`H5PYAtribute`
         """
-        
-        if not overwrite  and name in self.h5object.keys():
+
+        if not overwrite and name in self.h5object.keys():
             raise Exception("Attribute %s exists" % name)
-                    
+
         if shape:
             if isinstance(shape, list):
                 shape = tuple(shape)
@@ -790,7 +781,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             if name is None:
                 return None
             return H5PYAttribute((self.__manager._h5object, name),
-                               self.__manager.parent)
+                                 self.__manager.parent)
 
         def __iter__(self):
             """ attribute iterator
@@ -853,10 +844,9 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         FileWriter.FTAttribute.__init__(self, h5object, tparent)
         self.name = h5object[1]
-        
+
         self.path = tparent.path
         self.path += "@%s" % self.name
-        
 
     def read(self):
         """ read attribute value
