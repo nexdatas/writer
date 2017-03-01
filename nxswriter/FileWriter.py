@@ -92,6 +92,8 @@ class FTObject(object):
         self._tparent = tparent
         #: (:obj:`list` < :obj:`FTObject` > ) weak references of children
         self.__tchildren = []
+        if tparent:
+            tparent.append(self)
 
     def append(self, child):
         """ append child weakref
@@ -491,15 +493,6 @@ class FTAttributeManager(FTObject):
 
         :returns: number of attributes
         :rtype: :obj:`int`
-        """
-
-    def __setitem__(self, name, o):
-        """ set value
-
-        :param name: attribute name
-        :type name: :obj:`str`
-        :param o: pni object
-        :type o: :obj:`any`
         """
 
     def __getitem__(self, name):

@@ -66,8 +66,6 @@ def link(target, parent, name):
     lks = nx.get_links(parent.h5object)
     lk = [e for e in lks if e.name == name][0]
     el = PNILink(lk, parent)
-    el.name = name
-    parent.append(el)
     return el
 
 
@@ -104,9 +102,7 @@ class PNIFile(FileWriter.FTFile):
         :returns: parent object
         :rtype: :class:`PNIGroup `
         """
-        g = PNIGroup(self._h5object.root(), self)
-        self.append(g)
-        return g
+        return PNIGroup(self._h5object.root(), self)
 
     def flush(self):
         """ flash the data
@@ -196,7 +192,6 @@ class PNIGroup(FileWriter.FTGroup):
             el = PNILink(itm, self)
         else:
             return FileWriter.FTObject(itm, self)
-        self.append(el)
         return el
 
     def create_group(self, n, nxclass=""):
@@ -209,9 +204,7 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: file tree group
         :rtype : :class:`PNIGroup`
         """
-        g = PNIGroup(self._h5object.create_group(n, nxclass), self)
-        self.append(g)
-        return g
+        return PNIGroup(self._h5object.create_group(n, nxclass), self)
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, dfilter=None):
@@ -230,12 +223,10 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype : :class:`PNIField`
         """
-        f = PNIField(
+        return PNIField(
             self._h5object.create_field(
                 name, type_code, shape, chunk,
                 dfilter if not dfilter else dfilter.h5object), self)
-        self.append(f)
-        return f
 
     @property
     def size(self):
@@ -253,9 +244,7 @@ class PNIGroup(FileWriter.FTGroup):
         :returns: attribute manager
         :rtype : :class:`PNIAttributeManager`
         """
-        am = PNIAttributeManager(self._h5object.attributes, self)
-        self.append(am)
-        return am
+        return PNIAttributeManager(self._h5object.attributes, self)
 
     def close(self):
         """ close group
@@ -359,9 +348,7 @@ class PNIField(FileWriter.FTField):
         :returns: attribute manager
         :rtype : :class:`PNIAttributeManager`
         """
-        am = PNIAttributeManager(self._h5object.attributes, self)
-        self.append(am)
-        return am
+        return PNIAttributeManager(self._h5object.attributes, self)
 
     def close(self):
         """ close field
@@ -478,7 +465,7 @@ class PNILink(FileWriter.FTLink):
             self.path = h5object.path
         if hasattr(h5object, "name"):
             self.name = h5object.name
-
+            
     @property
     def is_valid(self):
         """ check if link is valid
@@ -515,23 +502,13 @@ class PNILink(FileWriter.FTLink):
 class PNIDeflate(FileWriter.FTDeflate):
     """ file tree deflate
     """
-    def __init__(self, h5object, tparent=None):
+    def __init__(self, h5object):
         """ constructor
 
         :param h5object: pni object
         :type h5object: :obj:`any`
-        :param tparent: treee parent
-        :type tparent: :obj:`FTObject`
         """
-        FileWriter.FTDeflate.__init__(self, h5object, tparent)
-        #: (:obj:`str`) object nexus path
-        self.path = None
-        #: (:obj:`str`) object name
-        self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.path
-        if hasattr(h5object, "name"):
-            self.name = h5object.name
+        FileWriter.FTDeflate.__init__(self, h5object)
 
     def __getrate(self):
         """ getter for compression rate
@@ -608,11 +585,9 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :rtype : :class:`PNIAtribute`
         """
         shape = shape or []
-        at = PNIAttribute(
+        return PNIAttribute(
             self._h5object.create(
                 name, dtype, shape, overwrite), self.parent)
-        self.parent.append(at)
-        return at
 
     def __len__(self):
         """ number of attributes
@@ -622,16 +597,6 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         """
         return self._h5object.__len__()
 
-    def __setitem__(self, name, o):
-        """ set value
-
-        :param name: attribute name
-        :type name: :obj:`str`
-        :param o: pni object
-        :type o: :obj:`any`
-        """
-        self._h5object.__setitem__(name, o)
-
     def __getitem__(self, name):
         """ get value
 
@@ -640,10 +605,8 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype : :class:`FTAtribute`
         """
-        at = PNIAttribute(
+        return PNIAttribute(
             self._h5object.__getitem__(name), self.parent)
-        self.parent.append(at)
-        return at
 
     def close(self):
         """ close attribure manager
