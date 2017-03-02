@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.TangoDataWriter &mdash; NXSDataWriter 2.5.0 documentation</title>
+    <title>nxswriter.TangoDataWriter &mdash; NXSDataWriter 2.6.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.5.0',
+        VERSION:     '2.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.5.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.6.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -95,6 +95,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.Types">nxswriter.Types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.FileWriter">nxswriter.FileWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.PNIWriter">nxswriter.PNIWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.H5PYWriter">nxswriter.H5PYWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter">Module contents</a></li>
 </ul>
 </li>
@@ -146,7 +149,7 @@
 <span class="c">#!/usr/bin/env python</span>
 <span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
 <span class="c">#</span>
-<span class="c">#    Copyright (C) 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
 <span class="c">#</span>
 <span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
 <span class="c">#    it under the terms of the GNU General Public License as published by</span>
@@ -167,8 +170,20 @@
 <span class="kn">from</span> <span class="nn">.NexusXMLHandler</span> <span class="kn">import</span> <span class="n">NexusXMLHandler</span>
 <span class="kn">from</span> <span class="nn">.FetchNameHandler</span> <span class="kn">import</span> <span class="n">FetchNameHandler</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Streams</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">FileWriter</span>
 
-<span class="kn">import</span> <span class="nn">pni.io.nx.h5</span> <span class="kn">as</span> <span class="nn">nx</span>
+<span class="n">WRITERS</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">PNIWriter</span>
+    <span class="n">WRITERS</span><span class="p">[</span><span class="s">&quot;pni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PNIWriter</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">H5PYWriter</span>
+    <span class="n">WRITERS</span><span class="p">[</span><span class="s">&quot;h5py&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">H5PYWriter</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+
 
 <span class="kn">from</span> <span class="nn">xml</span> <span class="kn">import</span> <span class="n">sax</span>
 
@@ -220,12 +235,15 @@
         <span class="c">#:  :class:`nxswriter.ThreadPool.ThreadPool` &gt;) \</span>
         <span class="c">#:     collection of thread pool with triggered STEP elements</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c">#: (:class:`pni.io.nx.h5.nxroot`) H5 file handle</span>
+        <span class="c">#: (:class:`nxswriter.FileWriter.FTGroup`) H5 file handle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c">#: (:class:`pni.io.nx.h5.nxfile`) H5 file handle</span>
+        <span class="c">#: (:class:`nxswriter.FileWriter.FTFile`) H5 file handle</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c">#: (:class:`nxswriter.H5Elements.EFile`) element file objects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c">#: (:obj:`str`) writer type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="s">&quot;pni&quot;</span> <span class="k">if</span> <span class="s">&quot;pni&quot;</span> <span class="ow">in</span> <span class="n">WRITERS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="s">&quot;h5py&quot;</span>
 
         <span class="c">#: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__decoders</span> <span class="o">=</span> <span class="n">DecoderPool</span><span class="p">()</span>
@@ -242,7 +260,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">addingLogs</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="c">#: (:obj:`int`) counter for open entries</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__entryCounter</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c">#: (:class:`pni.io.nx.h5.nxgroup`) group with Nexus log Info</span>
+        <span class="c">#: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__logGroup</span> <span class="o">=</span> <span class="bp">None</span>
 
         <span class="c">#: (:obj:`bool`) open file flag</span>
@@ -259,6 +277,15 @@
                 <span class="n">Streams</span><span class="o">.</span><span class="n">log_info</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">log_info</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__server</span><span class="p">,</span> <span class="s">&quot;log_debug&quot;</span><span class="p">):</span>
                 <span class="n">Streams</span><span class="o">.</span><span class="n">log_debug</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">log_debug</span>
+
+    <span class="k">def</span> <span class="nf">__setWriter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; set method for  writer module name</span>
+
+<span class="sd">        :param jsonstring: value of  writer module name</span>
+<span class="sd">        :type jsonstring: :obj:`str`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">FileWriter</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">WRITERS</span><span class="p">[</span><span class="n">writer</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
 
     <span class="k">def</span> <span class="nf">__getJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; get method for jsonrecord attribute</span>
@@ -320,7 +347,7 @@
         <span class="sd">&quot;&quot;&quot; the H5 file handle</span>
 
 <span class="sd">        :returns: the H5 file handle</span>
-<span class="sd">        :rtype: :class:`pni.io.nx.h5.nxfile`</span>
+<span class="sd">        :rtype: :class:`nxswriter.FileWriter.FTFile`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span>
 </div>
@@ -331,6 +358,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">closeFile</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__setWriter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__eFile</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__initPool</span> <span class="o">=</span> <span class="bp">None</span>
@@ -339,10 +367,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__triggerPools</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__fileCreated</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileName</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__fileCreated</span> <span class="o">=</span> <span class="bp">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__nxRoot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nxFile</span><span class="o">.</span><span class="n">root</span><span class="p">()</span>
 
@@ -614,7 +642,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+        &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>

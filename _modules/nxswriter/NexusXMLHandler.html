@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.NexusXMLHandler &mdash; NXSDataWriter 2.5.0 documentation</title>
+    <title>nxswriter.NexusXMLHandler &mdash; NXSDataWriter 2.6.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.5.0',
+        VERSION:     '2.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.5.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.6.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -95,6 +95,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.Types">nxswriter.Types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.FileWriter">nxswriter.FileWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.PNIWriter">nxswriter.PNIWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.H5PYWriter">nxswriter.H5PYWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter">Module contents</a></li>
 </ul>
 </li>
@@ -146,7 +149,7 @@
 <span class="c">#!/usr/bin/env python</span>
 <span class="c">#   This file is part of nexdatas - Tango Server for NeXus data writer</span>
 <span class="c">#</span>
-<span class="c">#    Copyright (C) 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
+<span class="c">#    Copyright (C) 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;</span>
 <span class="c">#</span>
 <span class="c">#    nexdatas is free software: you can redistribute it and/or modify</span>
 <span class="c">#    it under the terms of the GNU General Public License as published by</span>
@@ -164,7 +167,7 @@
 
 <span class="sd">&quot;&quot;&quot; SAX parser for interpreting content of  XML configuration string &quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">pni.io.nx.h5</span> <span class="kn">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">FileWriter</span>
 <span class="kn">from</span> <span class="nn">xml</span> <span class="kn">import</span> <span class="n">sax</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -453,8 +456,8 @@
             <span class="c">#: (:obj:`xml.sax.xmlreader.XMLReader`) parser object</span>
             <span class="n">mparser</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">make_parser</span><span class="p">()</span>
 
-            <span class="c">#: (:obj:`pni.io.nx.h5.nxfile`) file handle</span>
-            <span class="n">nxFile</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">root</span><span class="p">()</span>
+            <span class="c">#: (:obj:`nxswriter.FileWriter.FTFile`) file handle</span>
+            <span class="n">nxFile</span> <span class="o">=</span> <span class="n">FileWriter</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">fo</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">root</span><span class="p">()</span>
             <span class="c">#: (:class:`nxswriter.H5Elements.EFile`) element file objects</span>
             <span class="n">mfileElement</span> <span class="o">=</span> <span class="n">EFile</span><span class="p">([],</span> <span class="bp">None</span><span class="p">,</span> <span class="n">nxFile</span><span class="p">)</span>
             <span class="c">#: (:class:`nxswriter.NexusXMLHandler.NexusXMLHandler`) \</span>
@@ -478,7 +481,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+        &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>

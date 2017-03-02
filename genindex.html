@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; NXSDataWriter 2.5.0 documentation</title>
+    <title>Index &mdash; NXSDataWriter 2.6.0 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.5.0',
+        VERSION:     '2.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.5.0 documentation" href="index.html" />
+    <link rel="top" title="NXSDataWriter 2.6.0 documentation" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.6</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -95,6 +95,9 @@
 <li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.Types">nxswriter.Types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.FileWriter">nxswriter.FileWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.PNIWriter">nxswriter.PNIWriter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter.H5PYWriter">nxswriter.H5PYWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nxswriter.html#module-nxswriter">Module contents</a></li>
 </ul>
 </li>
@@ -191,6 +194,10 @@
   </dt>
 
         
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject.append">(nxswriter.FileWriter.FTObject method)</a>
+  </dt>
+
+        
   <dt><a href="nxswriter.html#nxswriter.ThreadPool.ThreadPool.append">(nxswriter.ThreadPool.ThreadPool method)</a>
   </dt>
 
@@ -234,9 +241,35 @@
   </dt>
 
       
-  <dt><a href="nxswriter.html#nxswriter.TangoSource.TgDevice.attributes">attributes (nxswriter.TangoSource.TgDevice attribute)</a>
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.attributes">attributes (nxswriter.FileWriter.FTField attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.attributes">(nxswriter.FileWriter.FTGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.attributes">(nxswriter.H5PYWriter.H5PYField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.attributes">(nxswriter.H5PYWriter.H5PYGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.attributes">(nxswriter.PNIWriter.PNIField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.attributes">(nxswriter.PNIWriter.PNIGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.TangoSource.TgDevice.attributes">(nxswriter.TangoSource.TgDevice attribute)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -290,10 +323,62 @@
   </dt>
 
       
-  <dt><a href="nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler.close">close() (nxswriter.NexusXMLHandler.NexusXMLHandler method)</a>
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject.close">close() (nxswriter.FileWriter.FTObject method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.close">(nxswriter.H5PYWriter.H5PYAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.close">(nxswriter.H5PYWriter.H5PYAttributeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.close">(nxswriter.H5PYWriter.H5PYField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.close">(nxswriter.H5PYWriter.H5PYFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.close">(nxswriter.H5PYWriter.H5PYGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.close">(nxswriter.H5PYWriter.H5PYLink method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler.close">(nxswriter.NexusXMLHandler.NexusXMLHandler method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.close">(nxswriter.PNIWriter.PNIAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.close">(nxswriter.PNIWriter.PNIAttributeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.close">(nxswriter.PNIWriter.PNIField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.close">(nxswriter.PNIWriter.PNIFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.close">(nxswriter.PNIWriter.PNIGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink.close">(nxswriter.PNIWriter.PNILink method)</a>
+  </dt>
+
         
   <dt><a href="nxswriter.html#nxswriter.ThreadPool.ThreadPool.close">(nxswriter.ThreadPool.ThreadPool method)</a>
   </dt>
@@ -319,8 +404,6 @@
   <dt><a href="nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.closeFile">closeFile() (nxswriter.TangoDataWriter.TangoDataWriter method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriterClass.cmd_list">cmd_list (nxswriter.NXSWriter.NXSDataWriterClass attribute)</a>
   </dt>
@@ -329,6 +412,8 @@
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.CommandThread.command">command (nxswriter.NXSWriter.CommandThread attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.TangoSource.TgDevice.commands">commands (nxswriter.TangoSource.TgDevice attribute)</a>
   </dt>
@@ -378,6 +463,62 @@
 
       </dl></dd>
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttributeManager.create">create() (nxswriter.FileWriter.FTAttributeManager method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.create">(nxswriter.H5PYWriter.H5PYAttributeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.create">(nxswriter.PNIWriter.PNIAttributeManager method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.create_field">create_field() (nxswriter.FileWriter.FTGroup method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.create_field">(nxswriter.H5PYWriter.H5PYGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.create_field">(nxswriter.PNIWriter.PNIGroup method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.create_file">create_file() (in module nxswriter.FileWriter)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.create_file">(in module nxswriter.H5PYWriter)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.create_file">(in module nxswriter.PNIWriter)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.create_group">create_group() (nxswriter.FileWriter.FTGroup method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.create_group">(nxswriter.H5PYWriter.H5PYGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.create_group">(nxswriter.PNIWriter.PNIGroup method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.Types.NTP.createArray">createArray() (nxswriter.Types.NTP method)</a>
   </dt>
 
@@ -387,6 +528,10 @@
 
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.cthread">cthread (nxswriter.NXSWriter.NXSDataWriter attribute)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.currenttime">currenttime() (nxswriter.H5PYWriter.H5PYFile class method)</a>
   </dt>
 
   </dl></td>
@@ -464,6 +609,20 @@
   </dt>
 
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.deflate_filter">deflate_filter() (in module nxswriter.FileWriter)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.deflate_filter">(in module nxswriter.H5PYWriter)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.deflate_filter">(in module nxswriter.PNIWriter)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.delete_device">delete_device() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
@@ -512,6 +671,30 @@
 
         
   <dt><a href="nxswriter.html#nxswriter.DecoderPool.VDEOdecoder.dtype">(nxswriter.DecoderPool.VDEOdecoder attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttribute.dtype">(nxswriter.FileWriter.FTAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.dtype">(nxswriter.FileWriter.FTField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.dtype">(nxswriter.H5PYWriter.H5PYAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.dtype">(nxswriter.H5PYWriter.H5PYField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.dtype">(nxswriter.PNIWriter.PNIAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.dtype">(nxswriter.PNIWriter.PNIField attribute)</a>
   </dt>
 
       </dl></dd>
@@ -615,6 +798,20 @@
   <dt><a href="nxswriter.html#nxswriter.H5Elements.ESymbol">ESymbol (class in nxswriter.H5Elements)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.exists">exists() (nxswriter.FileWriter.FTGroup method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.exists">(nxswriter.H5PYWriter.H5PYGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.exists">(nxswriter.PNIWriter.PNIGroup method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -637,8 +834,6 @@
   <dt><a href="nxswriter.html#nxswriter.FetchNameHandler.FetchNameHandler">FetchNameHandler (class in nxswriter.FetchNameHandler)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.fileName">fileName (nxswriter.TangoDataWriter.TangoDataWriter attribute)</a>
   </dt>
@@ -647,6 +842,20 @@
   <dt><a href="nxswriter.html#nxswriter.NexusXMLHandler.NexusXMLHandler.finalPool">finalPool (nxswriter.NexusXMLHandler.NexusXMLHandler attribute)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTFile.flush">flush() (nxswriter.FileWriter.FTFile method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.flush">(nxswriter.H5PYWriter.H5PYFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.flush">(nxswriter.PNIWriter.PNIFile method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.DataHolder.DataHolder.format">format (nxswriter.DataHolder.DataHolder attribute)</a>
   </dt>
@@ -671,6 +880,40 @@
       </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.CommandThread.fstate">fstate (nxswriter.NXSWriter.CommandThread attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttribute">FTAttribute (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttributeManager">FTAttributeManager (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTDeflate">FTDeflate (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField">FTField (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTFile">FTFile (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup">FTGroup (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTLink">FTLink (class in nxswriter.FileWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject">FTObject (class in nxswriter.FileWriter)</a>
   </dt>
 
   </dl></td>
@@ -727,6 +970,10 @@
   <dt><a href="nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.getFile">getFile() (nxswriter.TangoDataWriter.TangoDataWriter method)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.getfilename">getfilename() (nxswriter.H5PYWriter.H5PYLink class method)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -741,6 +988,20 @@
   <dt><a href="nxswriter.html#nxswriter.FetchNameHandler.FetchNameHandler.groupTypes">groupTypes (nxswriter.FetchNameHandler.FetchNameHandler attribute)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.grow">grow() (nxswriter.FileWriter.FTField method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.grow">(nxswriter.H5PYWriter.H5PYField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.grow">(nxswriter.PNIWriter.PNIField method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.EField.EField.grows">grows (nxswriter.EField.EField attribute)</a>
   </dt>
@@ -770,11 +1031,51 @@
 
       </dl></dd>
       
-  <dt><a href="nxswriter.html#nxswriter.DataSourcePool.DataSourcePool.hasDataSource">hasDataSource() (nxswriter.DataSourcePool.DataSourcePool method)</a>
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject.h5object">h5object (nxswriter.FileWriter.FTObject attribute)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute">H5PYAttribute (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager">H5PYAttributeManager (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.H5PYAttrIter">H5PYAttributeManager.H5PYAttrIter (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYDeflate">H5PYDeflate (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField">H5PYField (class in nxswriter.H5PYWriter)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile">H5PYFile (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup">H5PYGroup (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.H5PYGroupIter">H5PYGroup.H5PYGroupIter (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink">H5PYLink (class in nxswriter.H5PYWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.DataSourcePool.DataSourcePool.hasDataSource">hasDataSource() (nxswriter.DataSourcePool.DataSourcePool method)</a>
+  </dt>
+
       
   <dt><a href="nxswriter.html#nxswriter.DecoderPool.DecoderPool.hasDecoder">hasDecoder() (nxswriter.DecoderPool.DecoderPool method)</a>
   </dt>
@@ -829,12 +1130,12 @@
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_FileName_write_allowed">is_FileName_write_allowed() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_JSONRecord_allowed">is_JSONRecord_allowed() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_OpenEntry_allowed">is_OpenEntry_allowed() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
@@ -855,6 +1156,60 @@
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_RecordAsynch_allowed">is_RecordAsynch_allowed() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject.is_valid">is_valid (nxswriter.FileWriter.FTObject attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.is_valid">(nxswriter.H5PYWriter.H5PYAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.is_valid">(nxswriter.H5PYWriter.H5PYAttributeManager attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.is_valid">(nxswriter.H5PYWriter.H5PYField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.is_valid">(nxswriter.H5PYWriter.H5PYFile attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.is_valid">(nxswriter.H5PYWriter.H5PYGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.is_valid">(nxswriter.H5PYWriter.H5PYLink attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.is_valid">(nxswriter.PNIWriter.PNIAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.is_valid">(nxswriter.PNIWriter.PNIAttributeManager attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.is_valid">(nxswriter.PNIWriter.PNIField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.is_valid">(nxswriter.PNIWriter.PNIFile attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.is_valid">(nxswriter.PNIWriter.PNIGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink.is_valid">(nxswriter.PNIWriter.PNILink attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_XMLSettings_allowed">is_XMLSettings_allowed() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
@@ -908,6 +1263,20 @@
 
       </dl></dd>
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.link">link() (in module nxswriter.FileWriter)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.link">(in module nxswriter.H5PYWriter)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.link">(in module nxswriter.PNIWriter)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.DecoderPool.UINT32decoder.load">load() (nxswriter.DecoderPool.UINT32decoder method)</a>
   </dt>
 
@@ -935,12 +1304,12 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.Streams.log_debug">log_debug (in module nxswriter.Streams)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.Streams.log_error">log_error (in module nxswriter.Streams)</a>
   </dt>
@@ -1027,7 +1396,49 @@
   </dt>
 
         
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTFile.name">(nxswriter.FileWriter.FTFile attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.name">(nxswriter.H5PYWriter.H5PYAttributeManager attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.name">(nxswriter.PNIWriter.PNIAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.name">(nxswriter.PNIWriter.PNIAttributeManager attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.name">(nxswriter.PNIWriter.PNIField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.name">(nxswriter.PNIWriter.PNIGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink.name">(nxswriter.PNIWriter.PNILink attribute)</a>
+  </dt>
+
+        
   <dt><a href="nxswriter.html#nxswriter.TangoSource.TgMember.name">(nxswriter.TangoSource.TgMember attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.H5PYAttrIter.next">next() (nxswriter.H5PYWriter.H5PYAttributeManager.H5PYAttrIter method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.H5PYGroupIter.next">(nxswriter.H5PYWriter.H5PYGroup.H5PYGroupIter method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.PNIGroupIter.next">(nxswriter.PNIWriter.PNIGroup.PNIGroupIter method)</a>
   </dt>
 
       </dl></dd>
@@ -1109,12 +1520,12 @@
   <dt><a href="nxswriter.html#module-nxswriter.EField">nxswriter.EField (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#module-nxswriter.EGroup">nxswriter.EGroup (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#module-nxswriter.Element">nxswriter.Element (module)</a>
   </dt>
@@ -1144,7 +1555,15 @@
   </dt>
 
       
+  <dt><a href="nxswriter.html#module-nxswriter.FileWriter">nxswriter.FileWriter (module)</a>
+  </dt>
+
+      
   <dt><a href="nxswriter.html#module-nxswriter.H5Elements">nxswriter.H5Elements (module)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#module-nxswriter.H5PYWriter">nxswriter.H5PYWriter (module)</a>
   </dt>
 
       
@@ -1157,6 +1576,10 @@
 
       
   <dt><a href="nxswriter.html#module-nxswriter.NXSWriter">nxswriter.NXSWriter (module)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#module-nxswriter.PNIWriter">nxswriter.PNIWriter (module)</a>
   </dt>
 
       
@@ -1194,6 +1617,34 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.open">open() (nxswriter.FileWriter.FTGroup method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.open">(nxswriter.H5PYWriter.H5PYGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.open">(nxswriter.PNIWriter.PNIGroup method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.open_file">open_file() (in module nxswriter.FileWriter)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.open_file">(in module nxswriter.H5PYWriter)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.open_file">(in module nxswriter.PNIWriter)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.OpenEntry">OpenEntry() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
@@ -1201,12 +1652,12 @@
   <dt><a href="nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.openEntry">openEntry() (nxswriter.TangoDataWriter.TangoDataWriter method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.OpenEntryAsynch">OpenEntryAsynch() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.OpenFile">OpenFile() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
@@ -1233,8 +1684,82 @@
   <dt><a href="nxswriter.html#nxswriter.FetchNameHandler.TNObject.parent">parent (nxswriter.FetchNameHandler.TNObject attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject.parent">(nxswriter.FileWriter.FTObject attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.DBaseSource.DBaseSource.passwd">passwd (nxswriter.DBaseSource.DBaseSource attribute)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.path">path (nxswriter.H5PYWriter.H5PYAttributeManager attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.path">(nxswriter.H5PYWriter.H5PYFile attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.path">(nxswriter.PNIWriter.PNIAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.path">(nxswriter.PNIWriter.PNIAttributeManager attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.path">(nxswriter.PNIWriter.PNIField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.path">(nxswriter.PNIWriter.PNIFile attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.path">(nxswriter.PNIWriter.PNIGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink.path">(nxswriter.PNIWriter.PNILink attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute">PNIAttribute (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager">PNIAttributeManager (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIDeflate">PNIDeflate (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField">PNIField (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile">PNIFile (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup">PNIGroup (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.PNIGroupIter">PNIGroup.PNIGroupIter (class in nxswriter.PNIWriter)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink">PNILink (class in nxswriter.PNIWriter)</a>
   </dt>
 
       
@@ -1259,8 +1784,6 @@
   <dt><a href="nxswriter.html#nxswriter.TangoSource.TgDevice.properties">properties (nxswriter.TangoSource.TgDevice attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.TangoSource.TgDevice.proxy">proxy (nxswriter.TangoSource.TgDevice attribute)</a>
   </dt>
@@ -1319,6 +1842,50 @@
   <dt><a href="nxswriter.html#nxswriter.EField.EField.rate">rate (nxswriter.EField.EField attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTDeflate.rate">(nxswriter.FileWriter.FTDeflate attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYDeflate.rate">(nxswriter.H5PYWriter.H5PYDeflate attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIDeflate.rate">(nxswriter.PNIWriter.PNIDeflate attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttribute.read">read() (nxswriter.FileWriter.FTAttribute method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.read">(nxswriter.FileWriter.FTField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.read">(nxswriter.H5PYWriter.H5PYAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.read">(nxswriter.H5PYWriter.H5PYField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.read">(nxswriter.H5PYWriter.H5PYLink method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.read">(nxswriter.PNIWriter.PNIAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.read">(nxswriter.PNIWriter.PNIField method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.read_attr_hardware">read_attr_hardware() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
@@ -1339,12 +1906,26 @@
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.read_XMLSettings">read_XMLSettings() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTFile.readonly">readonly (nxswriter.FileWriter.FTFile attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.readonly">(nxswriter.H5PYWriter.H5PYFile attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.readonly">(nxswriter.PNIWriter.PNIFile attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.Record">Record() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.record">record() (nxswriter.TangoDataWriter.TangoDataWriter method)</a>
   </dt>
@@ -1354,9 +1935,105 @@
   </dt>
 
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTObject.refresh">refresh() (nxswriter.FileWriter.FTObject method)</a>
+  </dt>
+
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttribute.reopen">reopen() (nxswriter.FileWriter.FTAttribute method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttributeManager.reopen">(nxswriter.FileWriter.FTAttributeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTDeflate.reopen">(nxswriter.FileWriter.FTDeflate method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.reopen">(nxswriter.FileWriter.FTField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTFile.reopen">(nxswriter.FileWriter.FTFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.reopen">(nxswriter.FileWriter.FTGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTLink.reopen">(nxswriter.FileWriter.FTLink method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.reopen">(nxswriter.H5PYWriter.H5PYAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttributeManager.reopen">(nxswriter.H5PYWriter.H5PYAttributeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.reopen">(nxswriter.H5PYWriter.H5PYField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.reopen">(nxswriter.H5PYWriter.H5PYFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.reopen">(nxswriter.H5PYWriter.H5PYGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.reopen">(nxswriter.H5PYWriter.H5PYLink method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.reopen">(nxswriter.PNIWriter.PNIAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttributeManager.reopen">(nxswriter.PNIWriter.PNIAttributeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.reopen">(nxswriter.PNIWriter.PNIField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.reopen">(nxswriter.PNIWriter.PNIFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.reopen">(nxswriter.PNIWriter.PNIGroup method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink.reopen">(nxswriter.PNIWriter.PNILink method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.TangoSource.TgMember.reset">reset() (nxswriter.TangoSource.TgMember method)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTFile.root">root() (nxswriter.FileWriter.FTFile method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYFile.root">(nxswriter.H5PYWriter.H5PYFile method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIFile.root">(nxswriter.PNIWriter.PNIFile method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.Types.NTP.rTf">rTf (nxswriter.Types.NTP attribute)</a>
   </dt>
@@ -1476,6 +2153,10 @@
   </dt>
 
       
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.setname">setname() (nxswriter.H5PYWriter.H5PYLink method)</a>
+  </dt>
+
+      
   <dt><a href="nxswriter.html#nxswriter.ClientSource.ClientSource.setup">setup() (nxswriter.ClientSource.ClientSource method)</a>
   </dt>
 
@@ -1501,6 +2182,32 @@
   <dt><a href="nxswriter.html#nxswriter.DataHolder.DataHolder.shape">shape (nxswriter.DataHolder.DataHolder attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttribute.shape">(nxswriter.FileWriter.FTAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.shape">(nxswriter.FileWriter.FTField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.shape">(nxswriter.H5PYWriter.H5PYAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.shape">(nxswriter.H5PYWriter.H5PYField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.shape">(nxswriter.PNIWriter.PNIAttribute attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.shape">(nxswriter.PNIWriter.PNIField attribute)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -1521,6 +2228,46 @@
   <dt><a href="nxswriter.html#nxswriter.EField.EField.shuffle">shuffle (nxswriter.EField.EField attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTDeflate.shuffle">(nxswriter.FileWriter.FTDeflate attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYDeflate.shuffle">(nxswriter.H5PYWriter.H5PYDeflate attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIDeflate.shuffle">(nxswriter.PNIWriter.PNIDeflate attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.size">size (nxswriter.FileWriter.FTField attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTGroup.size">(nxswriter.FileWriter.FTGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.size">(nxswriter.H5PYWriter.H5PYField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.size">(nxswriter.H5PYWriter.H5PYGroup attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.size">(nxswriter.PNIWriter.PNIField attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIGroup.size">(nxswriter.PNIWriter.PNIGroup attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="nxswriter.html#nxswriter.FElement.FElement.source">source (nxswriter.FElement.FElement attribute)</a>
   </dt>
@@ -1640,6 +2387,20 @@
   </dt>
 
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTLink.target_path">target_path (nxswriter.FileWriter.FTLink attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYLink.target_path">(nxswriter.H5PYWriter.H5PYLink attribute)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNILink.target_path">(nxswriter.PNIWriter.PNILink attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.tdw">tdw (nxswriter.NXSWriter.NXSDataWriter attribute)</a>
   </dt>
 
@@ -1754,6 +2515,32 @@
   </dt>
 
       
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTAttribute.write">write() (nxswriter.FileWriter.FTAttribute method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.FTField.write">(nxswriter.FileWriter.FTField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYAttribute.write">(nxswriter.H5PYWriter.H5PYAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.H5PYWriter.H5PYField.write">(nxswriter.H5PYWriter.H5PYField method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIAttribute.write">(nxswriter.PNIWriter.PNIAttribute method)</a>
+  </dt>
+
+        
+  <dt><a href="nxswriter.html#nxswriter.PNIWriter.PNIField.write">(nxswriter.PNIWriter.PNIField method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.write_FileName">write_FileName() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
@@ -1767,6 +2554,16 @@
   <dt><a href="nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.write_XMLSettings">write_XMLSettings() (nxswriter.NXSWriter.NXSDataWriter method)</a>
   </dt>
 
+      
+  <dt><a href="nxswriter.html#nxswriter.FileWriter.writer">writer (in module nxswriter.FileWriter)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="nxswriter.html#nxswriter.TangoDataWriter.TangoDataWriter.writer">(nxswriter.TangoDataWriter.TangoDataWriter attribute)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -1807,7 +2604,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2012-2016 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
+        &copy; Copyright 2012-2017 DESY, Jan Kotanski &lt;jkotan@mail.desy.de&gt;
 
 GNU GENERAL PUBLIC LICENSE, version 3.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.<br/>
