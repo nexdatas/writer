@@ -103,19 +103,19 @@ class H5PYWriterTest(unittest.TestCase):
         except exception, e:
             error = True
         self.assertEqual(error, True)
-        
+
     ## float list tester
     def myAssertFloatList(self, list1, list2, error=0.0):
-        
+
         self.assertEqual(len(list1), len(list2))
         for i, el in enumerate(list1):
             if abs(el-list2[i]) >= error:
                 print "EL", el, list2[i], error
             self.assertTrue(abs(el-list2[i]) < error)
-            
+
     ## float image tester
     def myAssertImage(self, image1, image2, error=None):
-        
+
         self.assertEqual(len(image1), len(image2))
         for i in range(len(image1)):
             self.assertEqual(len(image1[i]), len(image2[i]))
@@ -129,7 +129,7 @@ class H5PYWriterTest(unittest.TestCase):
 
     ## float image tester
     def myAssertVector(self, image1, image2, error=None):
-        
+
         self.assertEqual(len(image1), len(image2))
         for i in range(len(image1)):
             self.assertEqual(len(image1[i]), len(image2[i]))
@@ -142,7 +142,7 @@ class H5PYWriterTest(unittest.TestCase):
                         self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
-            
+
 
     ## test starter
     # \brief Common set up
@@ -924,31 +924,31 @@ class H5PYWriterTest(unittest.TestCase):
 
             self.assertEqual(strscalar[0], vl[0])
             strscalar[1] =  vl[3]
-            self.assertEqual(list(strscalar[...]), [vl[0], vl[3]])            
+            self.assertEqual(list(strscalar[...]), [vl[0], vl[3]])
 
             strscalar.grow(ext=2)
             self.assertEqual(strscalar.shape, (4,))
             self.assertEqual(strscalar.h5object.shape, (4,))
             strscalar[1:4] =  vl[1:4]
-            self.assertEqual(list(strscalar.read()), vl[0:4])            
-            self.assertEqual(list(strscalar[0:2]), vl[0:2])            
+            self.assertEqual(list(strscalar.read()), vl[0:4])
+            self.assertEqual(list(strscalar[0:2]), vl[0:2])
 
             strscalar.grow(0, 3)
             self.assertEqual(strscalar.shape, (7,))
             self.assertEqual(strscalar.h5object.shape, (7,))
             strscalar.write(vl[0:7])
-            self.assertEqual(list(strscalar.read()), vl[0:7])            
-            self.assertEqual(list(strscalar[...]), vl[0:7])            
+            self.assertEqual(list(strscalar.read()), vl[0:7])
+            self.assertEqual(list(strscalar[...]), vl[0:7])
 
             attrs = strscalar.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             print type(attrs.h5object)
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strscalar)
-            self.assertEqual(len(attrs), 0)            
-            
-            
-            
+            self.assertEqual(len(attrs), 0)
+
+
+
             self.assertTrue(isinstance(floatscalar, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatscalar.h5object, h5py.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
@@ -975,30 +975,30 @@ class H5PYWriterTest(unittest.TestCase):
 
             self.assertEqual(floatscalar[0], vl[0])
             floatscalar[1] =  vl[3]
-            self.assertEqual(list(floatscalar[...]), [vl[0], vl[3]])            
+            self.assertEqual(list(floatscalar[...]), [vl[0], vl[3]])
 
             floatscalar.grow(ext=2)
             self.assertEqual(floatscalar.shape, (4,))
             self.assertEqual(floatscalar.h5object.shape, (4,))
             floatscalar[1:4] =  vl[1:4]
-            self.assertEqual(list(floatscalar.read()), vl[0:4])            
-            self.assertEqual(list(floatscalar[0:2]), vl[0:2])            
+            self.assertEqual(list(floatscalar.read()), vl[0:4])
+            self.assertEqual(list(floatscalar[0:2]), vl[0:2])
 
             floatscalar.grow(0, 3)
             self.assertEqual(floatscalar.shape, (7,))
             self.assertEqual(floatscalar.h5object.shape, (7,))
             floatscalar.write(vl[0:7])
-            self.assertEqual(list(floatscalar.read()), vl[0:7])            
-            self.assertEqual(list(floatscalar[...]), vl[0:7])            
+            self.assertEqual(list(floatscalar.read()), vl[0:7])
+            self.assertEqual(list(floatscalar[...]), vl[0:7])
 
             attrs = floatscalar.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatscalar)
-            self.assertEqual(len(attrs), 0)            
-            
+            self.assertEqual(len(attrs), 0)
 
-            
+
+
             self.assertTrue(isinstance(intscalar, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intscalar.h5object, h5py.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
@@ -1027,28 +1027,28 @@ class H5PYWriterTest(unittest.TestCase):
 
             self.assertEqual(intscalar[0], vl[0])
             intscalar[1] =  vl[3]
-            self.assertEqual(list(intscalar[...]), [vl[0], vl[3]])            
+            self.assertEqual(list(intscalar[...]), [vl[0], vl[3]])
 
             intscalar.grow(ext=2)
             self.assertEqual(intscalar.shape, (4,))
             self.assertEqual(intscalar.h5object.shape, (4,))
             intscalar[1:4] =  vl[1:4]
-            self.assertEqual(list(intscalar.read()), vl[0:4])            
-            self.assertEqual(list(intscalar[0:2]), vl[0:2])            
+            self.assertEqual(list(intscalar.read()), vl[0:4])
+            self.assertEqual(list(intscalar[0:2]), vl[0:2])
 
             intscalar.grow(0, 3)
             self.assertEqual(intscalar.shape, (7,))
             self.assertEqual(intscalar.h5object.shape, (7,))
             intscalar.write(vl[0:7])
-            self.assertEqual(list(intscalar.read()), vl[0:7])            
-            self.assertEqual(list(intscalar[...]), vl[0:7])            
+            self.assertEqual(list(intscalar.read()), vl[0:7])
+            self.assertEqual(list(intscalar[...]), vl[0:7])
 
             attrs = intscalar.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, intscalar)
             self.assertEqual(len(attrs), 0)
-            
+
             intscalar.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, True)
@@ -1064,7 +1064,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(det.is_valid, True)
             self.assertEqual(intscalar.is_valid, True)
             self.assertEqual(attrs.is_valid, True)
-            
+
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
@@ -1150,7 +1150,7 @@ class H5PYWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            
+
             self.assertTrue(isinstance(strspec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strspec.h5object, h5py.Dataset))
             self.assertEqual(strspec.name, 'strspec')
@@ -1165,7 +1165,7 @@ class H5PYWriterTest(unittest.TestCase):
             vl = [
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(40)]
-            
+
 
             strspec[...] = vl[0:10]
             self.assertEqual(list(strspec.read()), vl[0:10])
@@ -1179,30 +1179,30 @@ class H5PYWriterTest(unittest.TestCase):
 
             self.assertEqual(list(strspec[0:10]), vl[0:10])
             strspec[10] =  vl[10]
-            self.assertEqual(list(strspec[...]), vl[0:11])            
+            self.assertEqual(list(strspec[...]), vl[0:11])
 
             strspec.grow(ext=2)
             self.assertEqual(strspec.shape, (13,))
             self.assertEqual(strspec.h5object.shape, (13,))
             strspec[1:13] =  vl[1:13]
-            self.assertEqual(list(strspec.read()), vl[0:13])            
-            self.assertEqual(list(strspec[0:2]), vl[0:2])            
+            self.assertEqual(list(strspec.read()), vl[0:13])
+            self.assertEqual(list(strspec[0:2]), vl[0:2])
 
             strspec.grow(0, 3)
             self.assertEqual(strspec.shape, (16,))
             self.assertEqual(strspec.h5object.shape, (16,))
             strspec.write(vl[0:16])
-            self.assertEqual(list(strspec.read()), vl[0:16])            
-            self.assertEqual(list(strspec[...]), vl[0:16])            
+            self.assertEqual(list(strspec.read()), vl[0:16])
+            self.assertEqual(list(strspec[...]), vl[0:16])
 
             attrs = strspec.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strspec)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
 
-            
+
             self.assertTrue(isinstance(floatspec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatspec.h5object, h5py.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
@@ -1228,30 +1228,30 @@ class H5PYWriterTest(unittest.TestCase):
 
             self.myAssertFloatList(list(floatspec[0:20]), vl[0:20], 1e-4)
             floatspec[20] =  vl[20]
-            self.myAssertFloatList(list(floatspec[...]), vl[0:21], 1e-4)            
+            self.myAssertFloatList(list(floatspec[...]), vl[0:21], 1e-4)
 
             floatspec.grow(ext=2)
             self.assertEqual(floatspec.shape, (23,))
             self.assertEqual(floatspec.h5object.shape, (23,))
             floatspec[1:23] =  vl[1:23]
-            self.myAssertFloatList(list(floatspec.read()), vl[0:23], 1e-4)            
-            self.myAssertFloatList(list(floatspec[0:2]), vl[0:2], 1e-4)            
+            self.myAssertFloatList(list(floatspec.read()), vl[0:23], 1e-4)
+            self.myAssertFloatList(list(floatspec[0:2]), vl[0:2], 1e-4)
 
             floatspec.grow(0, 3)
             self.assertEqual(floatspec.shape, (26,))
             self.assertEqual(floatspec.h5object.shape, (26,))
             floatspec.write(vl[0:26])
-            self.myAssertFloatList(list(floatspec.read()), vl[0:26], 1e-4)            
-            self.myAssertFloatList(list(floatspec[...]), vl[0:26], 1e-4)            
+            self.myAssertFloatList(list(floatspec.read()), vl[0:26], 1e-4)
+            self.myAssertFloatList(list(floatspec[...]), vl[0:26], 1e-4)
 
             attrs = floatspec.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatspec)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
 
-            
+
             self.assertTrue(isinstance(intspec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intspec.h5object, h5py.Dataset))
             self.assertEqual(intspec.name, 'intspec')
@@ -1265,7 +1265,7 @@ class H5PYWriterTest(unittest.TestCase):
 
 
             vl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
-            
+
 
             intspec[...] = vl[0:30]
             self.assertEqual(list(intspec.read()), vl[0:30])
@@ -1279,30 +1279,30 @@ class H5PYWriterTest(unittest.TestCase):
 
             self.assertEqual(list(intspec[0:10]), vl[0:10])
             intspec[30] =  vl[30]
-            self.assertEqual(list(intspec[...]), vl[0:31])            
+            self.assertEqual(list(intspec[...]), vl[0:31])
 
             intspec.grow(ext=2)
             self.assertEqual(intspec.shape, (33,))
             self.assertEqual(intspec.h5object.shape, (33,))
             intspec[1:33] =  vl[1:33]
-            self.assertEqual(list(intspec.read()), vl[0:33])            
-            self.assertEqual(list(intspec[0:2]), vl[0:2])            
+            self.assertEqual(list(intspec.read()), vl[0:33])
+            self.assertEqual(list(intspec[0:2]), vl[0:2])
 
             intspec.grow(0, 3)
             self.assertEqual(intspec.shape, (36,))
             self.assertEqual(intspec.h5object.shape, (36,))
             intspec.write(vl[0:36])
-            self.assertEqual(list(intspec.read()), vl[0:36])            
-            self.assertEqual(list(intspec[...]), vl[0:36])            
+            self.assertEqual(list(intspec.read()), vl[0:36])
+            self.assertEqual(list(intspec[...]), vl[0:36])
 
             attrs = intspec.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, intspec)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
 
-            
+
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, False)
@@ -1416,7 +1416,7 @@ class H5PYWriterTest(unittest.TestCase):
                          for _ in range(self.__rnd.randint(1, 10)))
                  for _ in range(10)]
                 for _ in range(30)]
-            
+
 
             vv = [[vl[j][i] for i in range(2)] for j in range(2)]
             strimage[...] = vv
@@ -1458,9 +1458,9 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strimage)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
-            
+
 
             self.assertTrue(isinstance(floatimage, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatimage.h5object, h5py.Dataset))
@@ -1476,7 +1476,7 @@ class H5PYWriterTest(unittest.TestCase):
             vl = [
                 [self.__rnd.uniform(-20000.0, 20000) for _ in range(50)]
                 for _ in range(50)]
-            
+
 
             vv = [[vl[j][i] for i in range(10)] for j in range(20)]
             floatimage[...] = vv
@@ -1515,7 +1515,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.myAssertImage(floatimage.read(), vv6)
 
 
-            
+
             self.assertTrue(isinstance(intimage, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intimage.h5object, h5py.Dataset))
             self.assertEqual(intimage.name, 'intimage')
@@ -1530,7 +1530,7 @@ class H5PYWriterTest(unittest.TestCase):
             vl = [
                 [self.__rnd.randint(1, 1600) for _ in range(80)]
                 for _ in range(80)]
-            
+
             intimage.grow(0, 20)
             vv = [[vl[j][i] for i in range(30)] for j in range(20)]
             intimage[...] = vv
@@ -1569,7 +1569,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.myAssertImage(intimage.read(), vv6)
 
 
-            
+
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, False)
@@ -1684,7 +1684,7 @@ class H5PYWriterTest(unittest.TestCase):
                     for _ in range(10)]
                    for _ in range(20)]
                   for _ in range(30)]
-            
+
             strvec.grow(ext=3)
             vv = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec[...] = vv
@@ -1709,7 +1709,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(strvec.h5object.shape, (4,2,5))
             vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
-            
+
             strvec[:,:,2:5] =  vv4
             self.myAssertVector(strvec[...], vv5)
             self.myAssertVector(strvec[:,:,0:2], vv3)
@@ -1727,9 +1727,9 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strvec)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
-            
+
             self.assertTrue(isinstance(floatvec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatvec.h5object, h5py.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
@@ -1746,14 +1746,14 @@ class H5PYWriterTest(unittest.TestCase):
                     for _ in range(70)]
                    for _ in range(80)]
                   for _ in range(80)]
-            
+
             vv = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec[...] = vv
             self.myAssertVector(floatvec.read(), vv)
             vv2 = [[[vl[k][j+2][i+2] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
-            
+
             ##!!! PNI self.myAssertVector([floatvec[...]], vv2)
             self.myAssertVector(floatvec[...], vv2)
             floatvec[...] = vv
@@ -1773,7 +1773,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(floatvec.h5object.shape, (2,20,13))
             vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
-            
+
             floatvec[:,:,10:13] =  vv4
             self.myAssertVector(floatvec[...], vv5)
             self.myAssertVector(floatvec[:,:,0:10], vv3)
@@ -1791,10 +1791,10 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatvec)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
 
-            
+
             self.assertTrue(isinstance(intvec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intvec.h5object, h5py.Dataset))
             self.assertEqual(intvec.name, 'intvec')
@@ -1810,10 +1810,10 @@ class H5PYWriterTest(unittest.TestCase):
                     for _ in range(70)]
                    for _ in range(18)]
                   for _ in range(8)]
-            
+
             intvec.grow()
             vv = [[[vl[k][j][i] for i in range(30)] for j in range(2)] for k in range(1)]
-            
+
             intvec[...] = vv
             self.myAssertVector(intvec.read(), vv)
             vv2 = [[[vl[k][j+2][i+2] for i in range(30)] for j in range(2)] for k in range(1)]
@@ -1838,7 +1838,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(intvec.h5object.shape, (2,2,33))
             vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
-            
+
             intvec[:,:,30:33] =  vv4
             self.myAssertVector(intvec[...], vv5)
             self.myAssertVector(intvec[:,:,0:30], vv3)
@@ -1856,7 +1856,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, intvec)
-            self.assertEqual(len(attrs), 0)            
+            self.assertEqual(len(attrs), 0)
 
 
 
@@ -1971,7 +1971,7 @@ class H5PYWriterTest(unittest.TestCase):
         finally:
             os.remove(self._fname)
 
-            
+
     ## default createfile test
     # \brief It tests default settings
     def test_h5pydeflate_const(self):
@@ -2619,7 +2619,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
-            
+
             attr2.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, True)
@@ -2691,7 +2691,947 @@ class H5PYWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-            
+
+    ## default createfile test
+    # \brief It tests default settings
+    def test_h5pyattribute_scalar(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+
+        try:
+            overwrite = False
+            fl = H5PYWriter.create_file(self._fname)
+
+            rt = fl.root()
+            nt = rt.create_group("notype")
+            entry = rt.create_group("entry12345", "NXentry")
+            ins = entry.create_group("instrument", "NXinstrument")
+            det = ins.create_group("detector", "NXdetector")
+            dt = entry.create_group("data", "NXdata")
+
+            df0 = H5PYWriter.deflate_filter()
+            df1 = H5PYWriter.deflate_filter()
+            df1.rate = 2
+            df2 = H5PYWriter.deflate_filter()
+            df2.rate = 4
+            df2.shuffle = 6
+
+            strscalar = entry.create_field("strscalar", "string")
+            floatscalar = entry.create_field("floatscalar", "float64")
+            intscalar = entry.create_field("intscalar", "uint64")
+            strspec = ins.create_field("strspec", "string", [10], [6])
+            floatspec = ins.create_field("floatspec", "float32", [20], [16])
+            intspec = ins.create_field("intspec", "int64", [30], [5])
+            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            floatimage = det.create_field(
+                "floatimage", "float64", [20,10], dfilter=df0)
+            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            floatvec = det.create_field(
+                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+            intvec = det.create_field(
+                "intvec", "uint32", [0, 2, 30], dfilter=df2)
+
+
+            lkintimage = H5PYWriter.link(
+                "/entry12345/instrument/detector/intimage", dt, "lkintimage")
+            lkfloatvec = H5PYWriter.link(
+                "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
+            lkintspec = H5PYWriter.link(
+                "/entry12345/instrument/intspec", dt, "lkintspec")
+            lkdet = H5PYWriter.link(
+                "/entry12345/instrument/detector", dt, "lkdet")
+            lkno = H5PYWriter.link(
+                "/notype/unknown", dt, "lkno")
+
+
+            attr0 = rt.attributes
+            attr1 = entry.attributes
+            attr2 = intscalar.attributes
+
+            print attr0.h5object
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr2.h5object, h5py.AttributeManager))
+
+            self.assertEqual(len(attr0), 6)
+            self.assertEqual(len(attr1), 1)
+            self.assertEqual(len(attr2), 0)
+
+
+            atintscalar = attr0.create("atintscalar","int64")
+            atfloatspec = attr0.create("atfloatspec","float32", [12])
+            atstrimage = attr0.create("atstrimage","string", [2,3])
+            atstrscalar = attr1.create("atstrscalar","string")
+            atintspec = attr1.create("atintspec","uint32", [2])
+            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
+            atfloatscalar = attr2.create("atfloatscalar","float64")
+            atstrspec = attr2.create("atstrspec","string", [4])
+            atintimage = attr2.create("atintimage","int32", [3,2])
+
+            self.assertEqual(len(attr0), 9)
+            self.assertEqual(len(attr1), 4)
+            self.assertEqual(len(attr2), 3)
+
+            print dir(atintscalar)
+            print dir(atintscalar.h5object)
+
+
+            chars = string.ascii_uppercase + string.digits
+            stvl = [
+                ''.join(self.__rnd.choice(chars)
+                        for _ in range(self.__rnd.randint(1, 10))) for _ in range(10)]
+            itvl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
+
+            flvl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
+
+            atintscalar.write(itvl[0])
+
+            self.assertTrue(isinstance(atintscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintscalar.h5object, tuple))
+            self.assertEqual(atintscalar.parent, rt)
+            self.assertEqual(atintscalar.name, 'atintscalar')
+            self.assertEqual(atintscalar.path, '/@atintscalar')
+            self.assertEqual(atintscalar.dtype, 'int64')
+            self.assertEqual(atintscalar.shape, (1,))
+            self.assertEqual(atintscalar.is_valid, True)
+            self.assertEqual(atintscalar.read(), itvl[0])
+            self.assertEqual(atintscalar[...], itvl[0])
+            self.assertEqual(atintscalar.parent.h5object, rt.h5object)
+            self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar'))
+
+
+            atintscalar[...] = itvl[1]
+
+            self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[1])
+            self.assertEqual(atintscalar.read(), itvl[1])
+            self.assertEqual(atintscalar[...], itvl[1])
+
+            atintscalar[:] = itvl[2]
+
+            self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[2])
+            self.assertEqual(atintscalar.read(), itvl[2])
+            self.assertEqual(atintscalar[...], itvl[2])
+
+            atintscalar[0] = itvl[3]
+
+            self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[3])
+            self.assertEqual(atintscalar.read(), itvl[3])
+            self.assertEqual(atintscalar[...], itvl[3])
+
+            print stvl[0], type(stvl[0])
+
+            atstrscalar.write(stvl[0])
+
+            self.assertTrue(isinstance(atstrscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, tuple))
+            self.assertEqual(atstrscalar.parent, entry)
+            self.assertEqual(atstrscalar.name, 'atstrscalar')
+            self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
+            self.assertEqual(atstrscalar.dtype, 'string')
+            self.assertEqual(atstrscalar.shape, (1,))
+            self.assertEqual(atstrscalar.is_valid, True)
+            self.assertEqual(atstrscalar.read(), stvl[0])
+            self.assertEqual(atstrscalar[...], stvl[0])
+            self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
+
+
+
+            atstrscalar[...] = stvl[1]
+
+            self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[1])
+            self.assertEqual(atstrscalar.read(), stvl[1])
+            self.assertEqual(atstrscalar[...], stvl[1])
+
+            atstrscalar[:] = stvl[2]
+
+            self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[2])
+            self.assertEqual(atstrscalar.read(), stvl[2])
+            self.assertEqual(atstrscalar[...], stvl[2])
+
+            atstrscalar[0] = stvl[3]
+
+            self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[3])
+            self.assertEqual(atstrscalar.read(), stvl[3])
+            self.assertEqual(atstrscalar[...], stvl[3])
+
+
+            atfloatscalar.write(flvl[0])
+
+            self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, tuple))
+            self.assertEqual(atfloatscalar.parent, intscalar)
+            self.assertEqual(atfloatscalar.name, 'atfloatscalar')
+            self.assertEqual(atfloatscalar.path,
+                             '/entry12345:NXentry/intscalar@atfloatscalar')
+            self.assertEqual(atfloatscalar.dtype, 'float64')
+            self.assertEqual(atfloatscalar.shape, (1,))
+            self.assertEqual(atfloatscalar.is_valid, True)
+            self.assertEqual(atfloatscalar.read(), flvl[0])
+            self.assertEqual(atfloatscalar[...], flvl[0])
+            self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
+
+
+
+            atfloatscalar[...] = flvl[1]
+
+            self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[1])
+            self.assertEqual(atfloatscalar.read(), flvl[1])
+            self.assertEqual(atfloatscalar[...], flvl[1])
+
+            atfloatscalar[:] = flvl[2]
+
+            self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[2])
+            self.assertEqual(atfloatscalar.read(), flvl[2])
+            self.assertEqual(atfloatscalar[...], flvl[2])
+
+            atfloatscalar[0] = flvl[3]
+
+            self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[3])
+            self.assertEqual(atfloatscalar.read(), flvl[3])
+            self.assertEqual(atfloatscalar[...], flvl[3])
+
+
+            atfloatscalar.close()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atfloatscalar.is_valid, False)
+
+            atfloatscalar.reopen()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atfloatscalar.is_valid, True)
+
+            intscalar.close()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, False)
+            self.assertEqual(atintimage.is_valid, False)
+            self.assertEqual(atfloatscalar.is_valid, False)
+
+
+            intscalar.reopen()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, True)
+            self.assertEqual(atfloatscalar.is_valid, True)
+
+            fl.reopen()
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.h5object, h5py.File))
+            self.assertEqual(fl.parent, None)
+            self.assertEqual(fl.readonly, False)
+
+            fl.close()
+
+            fl.reopen(True)
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.h5object, h5py.File))
+            self.assertEqual(fl.parent, None)
+            self.assertEqual(fl.readonly, True)
+
+            fl.close()
+
+            self.myAssertRaise(
+                Exception, fl.reopen, True, True)
+            self.myAssertRaise(
+                Exception, fl.reopen, False, True)
+
+
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+#            self.assertEqual(6, len(f.attributes))
+            atts = []
+            for at in f.attributes:
+                print at.name, at.read(), at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(
+                f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 2)
+            fl.close()
+
+        finally:
+            os.remove(self._fname)
+
+
+    ## default createfile test
+    # \brief It tests default settings
+    def test_h5pyattribute_spectrum(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+
+        try:
+            overwrite = False
+            fl = H5PYWriter.create_file(self._fname)
+
+            rt = fl.root()
+            nt = rt.create_group("notype")
+            entry = rt.create_group("entry12345", "NXentry")
+            ins = entry.create_group("instrument", "NXinstrument")
+            det = ins.create_group("detector", "NXdetector")
+            dt = entry.create_group("data", "NXdata")
+
+            df0 = H5PYWriter.deflate_filter()
+            df1 = H5PYWriter.deflate_filter()
+            df1.rate = 2
+            df2 = H5PYWriter.deflate_filter()
+            df2.rate = 4
+            df2.shuffle = 6
+
+            strscalar = entry.create_field("strscalar", "string")
+            floatscalar = entry.create_field("floatscalar", "float64")
+            intscalar = entry.create_field("intscalar", "uint64")
+            strspec = ins.create_field("strspec", "string", [10], [6])
+            floatspec = ins.create_field("floatspec", "float32", [20], [16])
+            intspec = ins.create_field("intspec", "int64", [30], [5])
+            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            floatimage = det.create_field(
+                "floatimage", "float64", [20,10], dfilter=df0)
+            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            floatvec = det.create_field(
+                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+            intvec = det.create_field(
+                "intvec", "uint32", [0, 2, 30], dfilter=df2)
+
+
+            lkintimage = H5PYWriter.link(
+                "/entry12345/instrument/detector/intimage", dt, "lkintimage")
+            lkfloatvec = H5PYWriter.link(
+                "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
+            lkintspec = H5PYWriter.link(
+                "/entry12345/instrument/intspec", dt, "lkintspec")
+            lkdet = H5PYWriter.link(
+                "/entry12345/instrument/detector", dt, "lkdet")
+            lkno = H5PYWriter.link(
+                "/notype/unknown", dt, "lkno")
+
+
+            attr0 = rt.attributes
+            attr1 = entry.attributes
+            attr2 = intscalar.attributes
+
+            print attr0.h5object
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr2.h5object, h5py.AttributeManager))
+
+            self.assertEqual(len(attr0), 6)
+            self.assertEqual(len(attr1), 1)
+            self.assertEqual(len(attr2), 0)
+
+
+            atintscalar = attr0.create("atintscalar","int64")
+            atfloatspec = attr0.create("atfloatspec","float32", [12])
+            atstrimage = attr0.create("atstrimage","string", [2,3])
+            atstrscalar = attr1.create("atstrscalar","string")
+            atintspec = attr1.create("atintspec","uint32", [2])
+            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
+            atfloatscalar = attr2.create("atfloatscalar","float64")
+            atstrspec = attr2.create("atstrspec","string", [4])
+            atintimage = attr2.create("atintimage","int32", [3,2])
+
+            self.assertEqual(len(attr0), 9)
+            self.assertEqual(len(attr1), 4)
+            self.assertEqual(len(attr2), 3)
+
+            print dir(atintscalar)
+            print dir(atintscalar.h5object)
+
+            chars = string.ascii_uppercase + string.digits
+            stvl = [[
+                ''.join(self.__rnd.choice(chars)
+                        for _ in range(self.__rnd.randint(1, 10))) for _ in range(4)]
+                    for _ in range(10)]
+
+            itvl = [[self.__rnd.randint(1, 16000)  for _ in range(2)] for _ in range(10)]
+
+            flvl = [[self.__rnd.uniform(-200.0, 200) for _ in range(12)] for _ in range(10)]
+
+            atfloatspec.write(flvl[0])
+
+
+            self.assertTrue(isinstance(atfloatspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, tuple))
+            self.assertEqual(atfloatspec.parent, rt)
+            self.assertEqual(atfloatspec.name, 'atfloatspec')
+            self.assertEqual(atfloatspec.path, '/@atfloatspec')
+            self.assertEqual(atfloatspec.dtype, 'float32')
+            self.assertEqual(atfloatspec.shape, (12,))
+            self.assertEqual(atfloatspec.is_valid, True)
+            self.myAssertFloatList(list(atfloatspec.read()), flvl[0], 1e-3)
+            self.myAssertFloatList(list(atfloatspec[...]), flvl[0], 1e-3)
+            self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
+
+
+
+            atfloatspec[...] = flvl[1]
+
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[1], 1e-3)
+            self.myAssertFloatList(list(atfloatspec.read()), flvl[1], 1e-3)
+            self.myAssertFloatList(list(atfloatspec[...]), flvl[1], 1e-3)
+
+            atfloatspec[:] = flvl[2]
+
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[2], 1e-3)
+            self.myAssertFloatList(list(atfloatspec.read()), flvl[2], 1e-3)
+            self.myAssertFloatList(list(atfloatspec[...]), flvl[2], 1e-3)
+
+            atfloatspec[0:12] = flvl[3]
+
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[3], 1e-3)
+            self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
+            self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
+
+            atfloatspec[1:10] = flvl[4][1:10]
+
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec'][1:10]),
+                                   flvl[4][1:10], 1e-3)
+            self.myAssertFloatList(list(atfloatspec.read()[1:10]), flvl[4][1:10], 1e-3)
+            self.myAssertFloatList(list(atfloatspec[1:10]), flvl[4][1:10], 1e-3)
+
+            atfloatspec[1:10] = flvl[3][1:10]
+
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[3], 1e-3)
+            self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
+            self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
+
+
+            atintspec.write(itvl[0])
+
+
+            self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintspec.h5object, tuple))
+            self.assertEqual(atintspec.parent, entry)
+            self.assertEqual(atintspec.name, 'atintspec')
+            self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
+            self.assertEqual(atintspec.dtype, 'uint32')
+            self.assertEqual(atintspec.shape, (2,))
+            self.assertEqual(atintspec.is_valid, True)
+            self.assertEqual(list(atintspec.read()), itvl[0])
+            self.assertEqual(list(atintspec[...]), itvl[0])
+            self.assertEqual(atintspec.parent.h5object, entry.h5object)
+
+
+            atintspec[...] = itvl[1]
+
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[1])
+            self.assertEqual(list(atintspec.read()), itvl[1])
+            self.assertEqual(list(atintspec[...]), itvl[1])
+
+            atintspec[:] = itvl[2]
+
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[2])
+            self.assertEqual(list(atintspec.read()), itvl[2])
+            self.assertEqual(list(atintspec[...]), itvl[2])
+
+            atintspec[0:2] = itvl[3]
+
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[3])
+            self.assertEqual(list(atintspec.read()), itvl[3])
+            self.assertEqual(list(atintspec[...]), itvl[3])
+
+            atintspec[1:] = itvl[4][1:]
+
+            self.assertEqual(list(atintspec.h5object[0]['atintspec'][1:]), itvl[4][1:])
+            self.assertEqual([atintspec.read()[1:]], itvl[4][1:])
+            self.assertEqual([atintspec[1:]], itvl[4][1:])
+
+            atintspec[1:] = itvl[3][1:]
+
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[3])
+            self.assertEqual(list(atintspec.read()), itvl[3])
+            self.assertEqual(list(atintspec[...]), itvl[3])
+
+
+            atstrspec.write(stvl[0])
+
+
+            self.assertTrue(isinstance(atstrspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrspec.h5object, tuple))
+            self.assertEqual(atstrspec.parent, intscalar)
+            self.assertEqual(atstrspec.name, 'atstrspec')
+            self.assertEqual(atstrspec.path,
+                             '/entry12345:NXentry/intscalar@atstrspec')
+            self.assertEqual(atstrspec.dtype, 'string')
+            self.assertEqual(atstrspec.shape, (4,))
+            self.assertEqual(atstrspec.is_valid, True)
+            self.assertEqual(list(atstrspec.read()), stvl[0])
+            self.assertEqual(list(atstrspec[...]), stvl[0])
+            self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
+
+
+            atstrspec[...] = stvl[1]
+
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[1])
+            self.assertEqual(list(atstrspec.read()), stvl[1])
+            self.assertEqual(list(atstrspec[...]), stvl[1])
+
+            atstrspec[:] = stvl[2]
+
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[2])
+            self.assertEqual(list(atstrspec.read()), stvl[2])
+            self.assertEqual(list(atstrspec[...]), stvl[2])
+
+            atstrspec[0:4] = stvl[3]
+
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[3])
+            self.assertEqual(list(atstrspec.read()), stvl[3])
+            self.assertEqual(list(atstrspec[...]), stvl[3])
+
+            atstrspec[:3] = stvl[4][:3]
+
+
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec'][:3]), stvl[4][:3])
+            self.assertEqual(list(atstrspec.read())[:3], stvl[4][:3])
+            self.assertEqual(list(atstrspec[:3]), stvl[4][:3])
+
+            atstrspec[:3] = stvl[3][:3]
+
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[3])
+            self.assertEqual(list(atstrspec.read()), stvl[3])
+            self.assertEqual(list(atstrspec[...]), stvl[3])
+
+
+
+
+
+            atfloatspec.close()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, True)
+            self.assertEqual(atfloatspec.is_valid, False)
+
+            atfloatspec.reopen()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, True)
+            self.assertEqual(atfloatspec.is_valid, True)
+
+            intscalar.close()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, False)
+            self.assertEqual(atintimage.is_valid, False)
+            self.assertEqual(atfloatspec.is_valid, True)
+
+
+            intscalar.reopen()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, True)
+            self.assertEqual(atfloatspec.is_valid, True)
+
+            fl.reopen()
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.h5object, h5py.File))
+            self.assertEqual(fl.parent, None)
+            self.assertEqual(fl.readonly, False)
+
+            fl.close()
+
+            fl.reopen(True)
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.h5object, h5py.File))
+            self.assertEqual(fl.parent, None)
+            self.assertEqual(fl.readonly, True)
+
+            fl.close()
+
+            self.myAssertRaise(
+                Exception, fl.reopen, True, True)
+            self.myAssertRaise(
+                Exception, fl.reopen, False, True)
+
+
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+#            self.assertEqual(6, len(f.attributes))
+            atts = []
+            for at in f.attributes:
+                print at.name, at.read(), at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(
+                f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 2)
+            fl.close()
+
+        finally:
+            os.remove(self._fname)
+
+
+    ## default createfile test
+    # \brief It tests default settings
+    def test_h5pyattribute_image(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+
+        try:
+            overwrite = False
+            fl = H5PYWriter.create_file(self._fname)
+
+            rt = fl.root()
+            nt = rt.create_group("notype")
+            entry = rt.create_group("entry12345", "NXentry")
+            ins = entry.create_group("instrument", "NXinstrument")
+            det = ins.create_group("detector", "NXdetector")
+            dt = entry.create_group("data", "NXdata")
+
+            df0 = H5PYWriter.deflate_filter()
+            df1 = H5PYWriter.deflate_filter()
+            df1.rate = 2
+            df2 = H5PYWriter.deflate_filter()
+            df2.rate = 4
+            df2.shuffle = 6
+
+            strscalar = entry.create_field("strscalar", "string")
+            floatscalar = entry.create_field("floatscalar", "float64")
+            intscalar = entry.create_field("intscalar", "uint64")
+            strspec = ins.create_field("strspec", "string", [10], [6])
+            floatspec = ins.create_field("floatspec", "float32", [20], [16])
+            intspec = ins.create_field("intspec", "int64", [30], [5])
+            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            floatimage = det.create_field(
+                "floatimage", "float64", [20,10], dfilter=df0)
+            intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
+            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            floatvec = det.create_field(
+                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+            intvec = det.create_field(
+                "intvec", "uint32", [0, 2, 30], dfilter=df2)
+
+
+            lkintimage = H5PYWriter.link(
+                "/entry12345/instrument/detector/intimage", dt, "lkintimage")
+            lkfloatvec = H5PYWriter.link(
+                "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
+            lkintspec = H5PYWriter.link(
+                "/entry12345/instrument/intspec", dt, "lkintspec")
+            lkdet = H5PYWriter.link(
+                "/entry12345/instrument/detector", dt, "lkdet")
+            lkno = H5PYWriter.link(
+                "/notype/unknown", dt, "lkno")
+
+
+            attr0 = rt.attributes
+            attr1 = entry.attributes
+            attr2 = intscalar.attributes
+
+            print attr0.h5object
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(
+                isinstance(attr2.h5object, h5py.AttributeManager))
+
+            self.assertEqual(len(attr0), 6)
+            self.assertEqual(len(attr1), 1)
+            self.assertEqual(len(attr2), 0)
+
+
+            atintscalar = attr0.create("atintscalar","int64")
+            atfloatspec = attr0.create("atfloatspec","float32", [12])
+            atstrimage = attr0.create("atstrimage","string", [2,3])
+            atstrscalar = attr1.create("atstrscalar","string")
+            atintspec = attr1.create("atintspec","uint32", [2])
+            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
+            atfloatscalar = attr2.create("atfloatscalar","float64")
+            atstrspec = attr2.create("atstrspec","string", [4])
+            atintimage = attr2.create("atintimage","int32", [3,2])
+
+            self.assertEqual(len(attr0), 9)
+            self.assertEqual(len(attr1), 4)
+            self.assertEqual(len(attr2), 3)
+
+            print dir(atintscalar)
+            print dir(atintscalar.h5object)
+
+            chars = string.ascii_uppercase + string.digits
+            stvl = [[[
+                ''.join(self.__rnd.choice(chars)
+                        for _ in range(self.__rnd.randint(1, 10))) for _ in range(3)]
+                    for _ in range(2)] for _ in range(10)]
+
+            itvl = [[[self.__rnd.randint(1, 16000)  for _ in range(2)]
+                     for _ in range(3)] for _ in range(10)]
+
+            flvl = [[[self.__rnd.uniform(-200.0, 200) for _ in range(2)]
+                     for _ in range(3)]
+                    for _ in range(10)]
+
+            atstrimage.write(stvl[0])
+
+            self.assertTrue(isinstance(atstrimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrimage.h5object, tuple))
+            self.assertEqual(atstrimage.parent, rt)
+            self.assertEqual(atstrimage.name, 'atstrimage')
+            self.assertEqual(atstrimage.path, '/@atstrimage')
+            self.assertEqual(atstrimage.dtype, 'string')
+            self.assertEqual(atstrimage.shape, (2,3))
+            self.assertEqual(atstrimage.is_valid, True)
+            self.myAssertImage(atstrimage.read(), stvl[0])
+            self.myAssertImage(atstrimage[...], stvl[0])
+            self.assertEqual(atstrimage.parent.h5object, rt.h5object)
+
+            atstrimage[...] = stvl[1]
+
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[1])
+            self.myAssertImage(atstrimage.read(), stvl[1])
+            self.myAssertImage(atstrimage[:,:], stvl[1])
+
+            atstrimage[:,:] = stvl[2]
+
+            self.myAssertImage(atstrimage.read(), stvl[2])
+            self.myAssertImage(atstrimage[...], stvl[2])
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[2])
+
+            atstrimage[0:2,:] = stvl[3]
+
+            self.myAssertImage(atstrimage.read(), stvl[3])
+            self.myAssertImage(atstrimage[...], stvl[3])
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[3])
+
+            vv1 = [[stvl[4][j][i] for i in range(2)] for j in range(2)]
+
+            print "TR", atstrimage.read()
+
+            print "TRct", atstrimage[:,1:]
+
+            atstrimage[:,1:] = vv1
+
+            print "VV1", vv1
+            print "TR1 ", atstrimage[:,:]
+            print "TR2 ", atstrimage[:,1:]
+            self.myAssertImage(atstrimage.read()[:,1:], vv1)
+            self.myAssertImage(atstrimage[:,1:], vv1)
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'][:,1:], vv1)
+
+
+            vv2 = [[stvl[3][j][i+1] for i in range(2)] for j in range(2)]
+            atstrimage[:,1:] = vv2
+
+            self.myAssertImage(atstrimage.read(), stvl[3])
+            self.myAssertImage(atstrimage[...], stvl[3])
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[3])
+
+
+            atfloatimage.write(flvl[0])
+
+
+
+            self.assertTrue(isinstance(atfloatimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, tuple))
+            self.assertEqual(atfloatimage.parent, entry)
+            self.assertEqual(atfloatimage.name, 'atfloatimage')
+            self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
+            self.assertEqual(atfloatimage.dtype, 'float64')
+            self.assertEqual(atfloatimage.shape, (3,2))
+            self.assertEqual(atfloatimage.is_valid, True)
+            self.myAssertImage(atfloatimage.read(), flvl[0])
+            self.myAssertImage(atfloatimage[...], flvl[0])
+            self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
+
+            atfloatimage[...] = flvl[1]
+
+            self.myAssertImage(atfloatimage.read(), flvl[1])
+            self.myAssertImage(atfloatimage[:,:], flvl[1])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[1])
+
+            atfloatimage[:,:] = flvl[2]
+
+            self.myAssertImage(atfloatimage.read(), flvl[2])
+            self.myAssertImage(atfloatimage[...], flvl[2])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[2])
+
+            atfloatimage[0:3,:] = flvl[3]
+
+            self.myAssertImage(atfloatimage.read(), flvl[3])
+            self.myAssertImage(atfloatimage[...], flvl[3])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[3])
+
+            vv1 = [[flvl[4][j][i] for i in range(2)] for j in range(2)]
+            atfloatimage[1:,:] = vv1
+
+            self.myAssertImage(atfloatimage.read()[1:,:], vv1)
+            self.myAssertImage(atfloatimage[1:,:], vv1)
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'][1:,:], vv1)
+
+
+            vv2 = [[flvl[3][j+1][i] for i in range(2)] for j in range(2)]
+            atfloatimage[1:,:] = vv2
+
+            self.myAssertImage(atfloatimage.read(), flvl[3])
+            self.myAssertImage(atfloatimage[...], flvl[3])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[3])
+
+
+            atintimage.write(itvl[0])
+
+
+            self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintimage.h5object, tuple))
+            self.assertEqual(atintimage.parent, intscalar)
+            self.assertEqual(atintimage.name, 'atintimage')
+            self.assertEqual(atintimage.path,
+                             '/entry12345:NXentry/intscalar@atintimage')
+            self.assertEqual(atintimage.dtype, 'int32')
+            self.assertEqual(atintimage.shape, (3,2))
+            self.assertEqual(atintimage.is_valid, True)
+            self.myAssertImage(atintimage.read(), itvl[0])
+            self.myAssertImage(atintimage[...], itvl[0])
+            self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
+
+            atintimage[...] = itvl[1]
+
+            self.myAssertImage(atintimage.read(), itvl[1])
+            self.myAssertImage(atintimage[:,:], itvl[1])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[1])
+
+            atintimage[:,:] = itvl[2]
+
+            self.myAssertImage(atintimage.read(), itvl[2])
+            self.myAssertImage(atintimage[...], itvl[2])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[2])
+
+            atintimage[0:3,:] = itvl[3]
+
+            self.myAssertImage(atintimage.read(), itvl[3])
+            self.myAssertImage(atintimage[...], itvl[3])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[3])
+
+            vv1 = [[itvl[4][j][i] for i in range(2)] for j in range(2)]
+            atintimage[1:,:] = vv1
+
+            self.myAssertImage(atintimage.read()[1:,:], vv1)
+            self.myAssertImage(atintimage[1:,:], vv1)
+            self.myAssertImage(atintimage.h5object[0]['atintimage'][1:,:], vv1)
+
+
+            vv2 = [[itvl[3][j+1][i] for i in range(2)] for j in range(2)]
+            atintimage[1:,:] = vv2
+
+            self.myAssertImage(atintimage.read(), itvl[3])
+            self.myAssertImage(atintimage[...], itvl[3])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[3])
+
+
+            atintimage.close()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, False)
+
+            atintimage.reopen()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, True)
+
+            intscalar.close()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, False)
+            self.assertEqual(atintimage.is_valid, False)
+
+
+            intscalar.reopen()
+            self.assertEqual(rt.is_valid, True)
+            self.assertEqual(entry.is_valid, True)
+            self.assertEqual(dt.is_valid, True)
+            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(atintimage.is_valid, True)
+
+            fl.reopen()
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.h5object, h5py.File))
+            self.assertEqual(fl.parent, None)
+            self.assertEqual(fl.readonly, False)
+
+            fl.close()
+
+            fl.reopen(True)
+            self.assertEqual(fl.name, self._fname)
+            self.assertEqual(fl.path, None)
+            self.assertTrue(
+                isinstance(fl.h5object, h5py.File))
+            self.assertEqual(fl.parent, None)
+            self.assertEqual(fl.readonly, True)
+
+            fl.close()
+
+            self.myAssertRaise(
+                Exception, fl.reopen, True, True)
+            self.myAssertRaise(
+                Exception, fl.reopen, False, True)
+
+
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
+#            self.assertEqual(6, len(f.attributes))
+            atts = []
+            for at in f.attributes:
+                print at.name, at.read(), at.dtype
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(
+                f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 2)
+            fl.close()
+
+        finally:
+            os.remove(self._fname)
+
 
 if __name__ == '__main__':
     unittest.main()

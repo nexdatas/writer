@@ -864,7 +864,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         if isinstance(o, str) and not o.endswith("\0"):
             o += "\0"
-        self._h5object[0][self.name] = o
+        self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
 
     def __setitem__(self, t, o):
         """ write attribute value
@@ -877,8 +877,36 @@ class H5PYAttribute(FileWriter.FTAttribute):
         if isinstance(o, str) and not o.endswith("\0"):
             o += "\0"
 
-        if t is Ellipsis:
+        if t is Ellipsis or t == slice(None, None, None) or \
+           t == (slice(None, None, None), slice(None, None, None)) or \
+           (hasattr(o, "__len__") and t == slice(0, len(o), None)):
             self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
+        elif isinstance(t, slice):
+            var = self._h5object[0][self.name]
+            if self.dtype is not 'string':
+                var[t] = np.array(o, dtype=self.dtype)
+            else:
+                if hasattr(var, "tolist"):
+                    var = var.tolist()
+                var[t] = np.array(o, dtype=self.dtype).tolist()
+            self._h5object[0][self.name] = var
+        elif isinstance(t, tuple):
+            var = self._h5object[0][self.name]
+            if self.dtype is not 'string':
+                var[t] = np.array(o, dtype=self.dtype)
+            else:
+                if hasattr(var, "flatten"):
+                    vv = var.flatten().tolist() + \
+                        np.array(o, dtype=self.dtype).flatten().tolist()
+                    nt = np.array(vv, dtype=self.dtype)
+                    var = np.array(var, dtype=nt.dtype)
+                    var[t] = np.array(o, dtype=self.dtype)
+                elif hasattr(var, "tolist"):
+                    var = var.tolist()
+                    var[t] = np.array(o, dtype=self.dtype).tolist()
+                else:
+                    var[t] = np.array(o, dtype=self.dtype).tolist()
+            self._h5object[0][self.name] = var
         else:
             self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
 
