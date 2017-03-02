@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "November 25, 2016" "2.5" "NXSDataWriter"
+.TH "NXSWRITER" "1" "March 02, 2017" "2.6" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -682,7 +682,7 @@ True if it the datasource is registered
 .INDENT 7.0
 .TP
 .B nxroot = None
-(\fBpni.io.nx.h5.nxroot\fP) H5 file handle
+(\fBnxswriter.FileWriter.FTGroup\fP) H5 file handle
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1263,7 +1263,7 @@ constructor
 .B h5Object = None
 .INDENT 7.0
 .TP
-.B (\fI\%pni.io.nx.h5.nxgroup\fP) 
+.B (\fBnxswriter.FileWriter.FTGroup\fP) 
 stored H5 file object (defined in base class)
 .UNINDENT
 .UNINDENT
@@ -1324,7 +1324,7 @@ creates the link the H5 file
 .B h5Object = None
 .INDENT 7.0
 .TP
-.B (\fI\%pni.io.nx.h5.nxlink\fP) 
+.B (\fBnxswriter.FileWriter.FTLink\fP) 
 stored H5 file object (defined in base class)
 .UNINDENT
 .UNINDENT
@@ -1591,7 +1591,7 @@ constructor
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
-\fBh5object\fP (\fI\%pni.io.nx.h5.nxfield\fP or                         \fI\%pni.io.nx.h5.nxgroup\fP or                         \fI\%pni.io.nx.h5.nxlink\fP or                         \fI\%pni.io.nx.h5.nxattribute\fP or                         \fI\%pni.io.nx.h5.nxfile\fP) \-\- H5 file object
+\fBh5object\fP (\fBnxswriter.FileWriter.FTObject\fP) \-\- H5 file object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1607,7 +1607,7 @@ constructor
 .INDENT 7.0
 .TP
 .B h5Object = None
-(\fI\%pni.io.nx.h5.nxfield\fP or 
+(\fBnxswriter.FileWriter.FTObject\fP) stored H5 file object
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1661,7 +1661,7 @@ constructor
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
-\fBh5object\fP (\fI\%pni.io.nx.h5.nxfield\fP         :               \fI\%pni.io.nx.h5.nxgroup\fP         :               \fI\%pni.io.nx.h5.nxlink\fP         :               \fI\%pni.io.nx.h5.nxattribute\fP         :               \fI\%pni.io.nx.h5.nxfile\fP) \-\- H5 file object
+\fBh5object\fP (\fBnxswriter.FileWriter.FTObject\fP) \-\- H5 file object
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1677,7 +1677,7 @@ provides attribute h5 object
 instance of the attribute object if created
 .TP
 .B Return type
-\fI\%pni.io.nx.h5.nxfield\fP         :       \fI\%pni.io.nx.h5.nxgroup\fP         :       \fI\%pni.io.nx.h5.nxlink\fP         :       \fI\%pni.io.nx.h5.nxattribute\fP         :       \fI\%pni.io.nx.h5.nxfile\fP
+\fBnxswriter.FileWriter.FTObject\fP
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1934,7 +1934,7 @@ constructor
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
-\fBh5fileObject\fP (\fI\%pni.io.nx.h5.nxfile\fP) \-\- H5 file object
+\fBh5fileObject\fP (\fBnxswriter.FileWriter.FTfile\fP) \-\- H5 file object
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -2109,7 +2109,7 @@ runs the given command on the server and changes the state on exit
 .INDENT 0.0
 .TP
 .B class nxswriter.NXSWriter.NXSDataWriter(cl, name)
-Bases: \fBPyTango._PyTango.Device_4Impl\fP
+Bases: \fBtango._tango.Device_4Impl\fP
 .sp
 Tango Server to store data in H5 files
 .INDENT 7.0
@@ -2551,14 +2551,14 @@ Write XMLSettings attribute
 .INDENT 0.0
 .TP
 .B class nxswriter.NXSWriter.NXSDataWriterClass(name)
-Bases: \fBPyTango._PyTango.DeviceClass\fP
+Bases: \fBtango._tango.DeviceClass\fP
 .sp
 NXSDataWriterClass class definition
 .sp
 NXSDataWriterClass Constructor
 .INDENT 7.0
 .TP
-.B attr_list = {\(aqErrors\(aq: [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SPECTRUM, PyTango._PyTango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqlist of errors\(aq}], \(aqJSONRecord\(aq: [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SCALAR, PyTango._PyTango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: PyTango._PyTango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqFileName\(aq: [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SCALAR, PyTango._PyTango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqXMLSettings\(aq: [[PyTango._PyTango.CmdArgType.DevString, PyTango._PyTango.AttrDataFormat.SCALAR, PyTango._PyTango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: PyTango._PyTango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}]}
+.B attr_list = {\(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqlist of errors\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -2576,7 +2576,7 @@ NXSDataWriterClass Constructor
 .UNINDENT
 .INDENT 7.0
 .TP
-.B cmd_list = {\(aqRecord\(aq: [[PyTango._PyTango.CmdArgType.DevString, \(aqJSON string with data\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenFile\(aq: [[PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntryAsynch\(aq: [[PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntry\(aq: [[PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntryAsynch\(aq: [[PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqRecordAsynch\(aq: [[PyTango._PyTango.CmdArgType.DevString, \(aqJSON string with data\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntry\(aq: [[PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseFile\(aq: [[PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq], [PyTango._PyTango.CmdArgType.DevVoid, \(aq\(aq]]}
+.B cmd_list = {\(aqRecord\(aq: [[tango._tango.CmdArgType.DevString, \(aqJSON string with data\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenFile\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntryAsynch\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseEntry\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntryAsynch\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqRecordAsynch\(aq: [[tango._tango.CmdArgType.DevString, \(aqJSON string with data\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqOpenEntry\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]], \(aqCloseFile\(aq: [[tango._tango.CmdArgType.DevVoid, \(aq\(aq], [tango._tango.CmdArgType.DevVoid, \(aq\(aq]]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -2586,7 +2586,7 @@ Command definitions
 .UNINDENT
 .INDENT 7.0
 .TP
-.B device_property_list = {\(aqNumberOfThreads\(aq: [PyTango._PyTango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]]}
+.B device_property_list = {\(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aqpni\(aq]]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -2989,7 +2989,7 @@ the H5 file handle
 the H5 file handle
 .TP
 .B Return type
-\fI\%pni.io.nx.h5.nxfile\fP
+\fBnxswriter.FileWriter.FTFile\fP
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3035,6 +3035,11 @@ It runs threads from the STEP pool
 .B Parameters
 \fBjsonstring\fP (\fI\%str\fP) \-\- local JSON string with data records
 .UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B writer = None
+(\fI\%str\fP) writer type
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3675,6 +3680,2235 @@ created array
 (\fI\%dict\fP <\fI\%int\fP , \fI\%str\fP >) map of rank :  data format
 .UNINDENT
 .UNINDENT
+.SS nxswriter.FileWriter module
+.sp
+Provides abstraction for file writer
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTAttribute(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+virtual file tree attribute
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B dtype
+attribute data type
+.INDENT 7.0
+.TP
+.B Returns
+attribute data type
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read attribute value
+.INDENT 7.0
+.TP
+.B Returns
+python object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shape
+attribute shape
+.INDENT 7.0
+.TP
+.B Returns
+attribute shape
+.TP
+.B Return type
+\fI\%list\fP < \fI\%int\fP >
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B write(o)
+write attribute value
+.INDENT 7.0
+.TP
+.B Parameters
+\fBo\fP (\fI\%any\fP) \-\- python object
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTAttributeManager(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+file tree attribute
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B create(name, dtype, shape=None, overwrite=False)
+create a new attribute
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBname\fP (\fI\%str\fP) \-\- attribute name
+.IP \(bu 2
+\fBdtype\fP (\fI\%str\fP) \-\- attribute type
+.IP \(bu 2
+\fBshape\fP (\fBlist\(ga< :obj:\(gaint\fP>) \-\- attribute shape
+.IP \(bu 2
+\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.UNINDENT
+.TP
+.B Returns
+attribute object
+.TP
+.B Return type
+\fBFTAtribute\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTDeflate(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+file tree deflate
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B rate
+getter for compression rate
+.INDENT 7.0
+.TP
+.B Returns
+compression rate
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shuffle
+getter for compression shuffle
+.INDENT 7.0
+.TP
+.B Returns
+compression shuffle
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTField(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+file tree file
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B attributes
+return the attribute manager
+.INDENT 7.0
+.TP
+.B Returns
+attribute manager
+.TP
+.B Return type
+\fBFTAttributeManager\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B dtype
+field data type
+.INDENT 7.0
+.TP
+.B Returns
+field data type
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B grow(dim=0, ext=1)
+grow the field
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdim\fP (\fI\%int\fP) \-\- growing dimension
+.IP \(bu 2
+\fBdim\fP \-\- size of the grow
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read the field value
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shape
+field shape
+.INDENT 7.0
+.TP
+.B Returns
+field shape
+.TP
+.B Return type
+\fI\%list\fP < \fI\%int\fP >
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B size
+field size
+.INDENT 7.0
+.TP
+.B Returns
+field size
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B write(o)
+write the field value
+.INDENT 7.0
+.TP
+.B Parameters
+\fBo\fP (\fI\%any\fP) \-\- pni object
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTFile(h5object, filename)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+file tree file
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B flush()
+flash the data
+.UNINDENT
+.INDENT 7.0
+.TP
+.B name = None
+(\fI\%str\fP) file name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B readonly
+check if file is readonly
+.INDENT 7.0
+.TP
+.B Returns
+readonly flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen(readonly=False, swmr=False, libver=None)
+reopen attribute
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.IP \(bu 2
+\fBswmr\fP (\fI\%bool\fP) \-\- swmr flag
+.IP \(bu 2
+\fBlibver\fP (\fI\%str\fP) \-\- library version, default: \(aqlatest\(aq
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B root()
+root object
+.INDENT 7.0
+.TP
+.B Returns
+parent object
+.TP
+.B Return type
+\fBFTGroup\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTGroup(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+file tree group
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B attributes
+return the attribute manager
+.INDENT 7.0
+.TP
+.B Returns
+attribute manager
+.TP
+.B Return type
+\fBFTAttributeManager\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B create_field(name, type_code, shape=None, chunk=None, dfilter=None)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP (\fI\%str\fP) \-\- group name
+.IP \(bu 2
+\fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
+.IP \(bu 2
+\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- shape
+.IP \(bu 2
+\fBchunk\fP (\fI\%list\fP < \fI\%int\fP >) \-\- chunk
+.IP \(bu 2
+\fBdfilter\fP (\fBFTDeflate\fP) \-\- filter deflater
+.UNINDENT
+.TP
+.B Returns
+file tree field
+.TP
+.B Return type
+\fBFTField\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B create_group(n, nxclass=\(aq\(aq)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP (\fI\%str\fP) \-\- group name
+.IP \(bu 2
+\fBnxclass\fP (\fI\%str\fP) \-\- group type
+.UNINDENT
+.TP
+.B Returns
+file tree group
+.TP
+.B Return type
+\fBFTGroup\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B exists(name)
+if child exists
+.INDENT 7.0
+.TP
+.B Parameters
+\fBname\fP (\fI\%str\fP) \-\- child name
+.TP
+.B Returns
+existing flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B open(name)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+\fBname\fP (\fI\%str\fP) \-\- element name
+.TP
+.B Returns
+file tree object
+.TP
+.B Return type
+\fBFTObject\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B size
+group size
+.INDENT 7.0
+.TP
+.B Returns
+group size
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTLink(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTObject\fP
+.sp
+file tree link
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B target_path
+target path
+.INDENT 7.0
+.TP
+.B Returns
+target path
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.FileWriter.FTObject(h5object, tparent=None)
+Bases: \fI\%object\fP
+.sp
+virtual file tree object
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- h5 object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- tree parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B append(child)
+append child weakref
+.INDENT 7.0
+.TP
+.B Parameters
+\fBtparent\fP (\fBFTObject\fP) \-\- tree parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close element
+.UNINDENT
+.INDENT 7.0
+.TP
+.B h5object
+provide object of native library
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if attribute is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B parent
+return the parent object
+.INDENT 7.0
+.TP
+.B Returns
+file tree group
+.TP
+.B Return type
+\fBFTGroup\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B refresh()
+refresh a list of valid children
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.create_file(filename, overwrite=False)
+create a new file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.UNINDENT
+.TP
+.B Returns
+file object
+.TP
+.B Return type
+\fBFTFile\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.deflate_filter()
+create deflate filter
+.INDENT 7.0
+.TP
+.B Returns
+deflate filter object
+.TP
+.B Return type
+\fBFTDeflate\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.link(target, parent, name)
+create link
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtarget\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
+.IP \(bu 2
+\fBname\fP (\fI\%str\fP) \-\- link name
+.UNINDENT
+.TP
+.B Returns
+link object
+.TP
+.B Return type
+\fBFTLink\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.open_file(filename, readonly=False)
+open the new file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.UNINDENT
+.TP
+.B Returns
+file object
+.TP
+.B Return type
+\fBFTFile\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.writer = None
+writer module
+.UNINDENT
+.SS nxswriter.PNIWriter module
+.sp
+Provides pni file writer
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNIAttribute(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTAttribute\fP
+.sp
+file tree attribute
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B dtype
+attribute data type
+.INDENT 7.0
+.TP
+.B Returns
+attribute data type
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if attribute is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B name = None
+(\fI\%str\fP) object name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read attribute value
+.INDENT 7.0
+.TP
+.B Returns
+python object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shape
+attribute shape
+.INDENT 7.0
+.TP
+.B Returns
+attribute shape
+.TP
+.B Return type
+\fI\%list\fP < \fI\%int\fP >
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B write(o)
+write attribute value
+.INDENT 7.0
+.TP
+.B Parameters
+\fBo\fP (\fI\%any\fP) \-\- python object
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNIAttributeManager(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTAttributeManager\fP
+.sp
+file tree attribute
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close attribure manager
+.UNINDENT
+.INDENT 7.0
+.TP
+.B create(name, dtype, shape=None, overwrite=False)
+create a new attribute
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBname\fP (\fI\%str\fP) \-\- attribute name
+.IP \(bu 2
+\fBdtype\fP (\fI\%str\fP) \-\- attribute type
+.IP \(bu 2
+\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- attribute shape
+.IP \(bu 2
+\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.UNINDENT
+.TP
+.B Returns
+attribute object
+.TP
+.B Return type
+\fBPNIAtribute\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if link is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B name = None
+(\fI\%str\fP) object name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen field
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNIDeflate(h5object)
+Bases: \fBnxswriter.FileWriter.FTDeflate\fP
+.sp
+file tree deflate
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.UNINDENT
+.INDENT 7.0
+.TP
+.B rate
+(\fI\%int\fP) compression rate
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shuffle
+(\fI\%bool\fP) compression shuffle
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNIField(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTField\fP
+.sp
+file tree file
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B attributes
+return the attribute manager
+.INDENT 7.0
+.TP
+.B Returns
+attribute manager
+.TP
+.B Return type
+\fBPNIAttributeManager\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close field
+.UNINDENT
+.INDENT 7.0
+.TP
+.B dtype
+field data type
+.INDENT 7.0
+.TP
+.B Returns
+field data type
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B grow(dim=0, ext=1)
+grow the field
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdim\fP (\fI\%int\fP) \-\- growing dimension
+.IP \(bu 2
+\fBdim\fP \-\- size of the grow
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if field is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B name = None
+(\fI\%str\fP) object name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read the field value
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen field
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shape
+field shape
+.INDENT 7.0
+.TP
+.B Returns
+field shape
+.TP
+.B Return type
+\fI\%list\fP < \fI\%int\fP >
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B size
+field size
+.INDENT 7.0
+.TP
+.B Returns
+field size
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B write(o)
+write the field value
+.INDENT 7.0
+.TP
+.B Parameters
+\fBo\fP (\fI\%any\fP) \-\- pni object
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNIFile(h5object, filename)
+Bases: \fBnxswriter.FileWriter.FTFile\fP
+.sp
+file tree file
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close file
+.UNINDENT
+.INDENT 7.0
+.TP
+.B flush()
+flash the data
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if file is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B readonly
+check if file is readonly
+.INDENT 7.0
+.TP
+.B Returns
+readonly flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen(readonly=False, swmr=False, _=None)
+reopen file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.IP \(bu 2
+\fBswmr\fP (\fI\%bool\fP) \-\- swmr flag
+.IP \(bu 2
+\fBlibver\fP (\fI\%str\fP) \-\- library version, default: \(aqlatest\(aq
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B root()
+root object
+.INDENT 7.0
+.TP
+.B Returns
+parent object
+.TP
+.B Return type
+\fBPNIGroup\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNIGroup(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTGroup\fP
+.sp
+file tree group
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- tree parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class PNIGroupIter(group)
+Bases: \fI\%object\fP
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+\fBgroup\fP \-\- group object
+.UNINDENT
+.INDENT 7.0
+.TP
+.B next()
+the next attribute
+.INDENT 7.0
+.TP
+.B Returns
+attribute object
+.TP
+.B Return type
+\fBFTAtribute\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.attributes
+return the attribute manager
+.INDENT 7.0
+.TP
+.B Returns
+attribute manager
+.TP
+.B Return type
+\fBPNIAttributeManager\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.close()
+close group
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.create_field(name, type_code, shape=None, chunk=None, dfilter=None)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP (\fI\%str\fP) \-\- group name
+.IP \(bu 2
+\fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
+.IP \(bu 2
+\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- shape
+.IP \(bu 2
+\fBchunk\fP (\fI\%list\fP < \fI\%int\fP >) \-\- chunk
+.IP \(bu 2
+\fBdfilter\fP (\fBPNIDeflate\fP) \-\- filter deflater
+.UNINDENT
+.TP
+.B Returns
+file tree field
+.TP
+.B Return type
+\fBPNIField\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.create_group(n, nxclass=\(aq\(aq)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP (\fI\%str\fP) \-\- group name
+.IP \(bu 2
+\fBnxclass\fP (\fI\%str\fP) \-\- group type
+.UNINDENT
+.TP
+.B Returns
+file tree group
+.TP
+.B Return type
+\fBPNIGroup\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.exists(name)
+if child exists
+.INDENT 7.0
+.TP
+.B Parameters
+\fBname\fP (\fI\%str\fP) \-\- child name
+.TP
+.B Returns
+existing flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.is_valid
+check if field is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.name = None
+(\fI\%str\fP) object name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.open(name)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+\fBname\fP (\fI\%str\fP) \-\- element name
+.TP
+.B Returns
+file tree object
+.TP
+.B Return type
+\fBFTObject\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.reopen()
+reopen group
+.UNINDENT
+.INDENT 7.0
+.TP
+.B PNIGroup.size
+group size
+.INDENT 7.0
+.TP
+.B Returns
+group size
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.PNIWriter.PNILink(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTLink\fP
+.sp
+file tree link
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close group
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if link is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B name = None
+(\fI\%str\fP) object name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen field
+.UNINDENT
+.INDENT 7.0
+.TP
+.B target_path
+target path
+.INDENT 7.0
+.TP
+.B Returns
+target path
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.PNIWriter.create_file(filename, overwrite=False)
+create a new file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.UNINDENT
+.TP
+.B Returns
+file object
+.TP
+.B Return type
+\fBPNIFile\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.PNIWriter.deflate_filter()
+create deflate filter
+.INDENT 7.0
+.TP
+.B Returns
+deflate filter object
+.TP
+.B Return type
+\fBPNIDeflate\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.PNIWriter.link(target, parent, name)
+create link
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtarget\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
+.IP \(bu 2
+\fBname\fP (\fI\%str\fP) \-\- link name
+.UNINDENT
+.TP
+.B Returns
+link object
+.TP
+.B Return type
+\fBPNILink\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.PNIWriter.open_file(filename, readonly=False)
+open the new file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.UNINDENT
+.TP
+.B Returns
+file object
+.TP
+.B Return type
+\fBPNIFile\fP
+.UNINDENT
+.UNINDENT
+.SS nxswriter.H5PYWriter module
+.sp
+Provides h5py file writer
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYAttribute(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTAttribute\fP
+.sp
+file tree attribute
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B dtype
+attribute data type
+.INDENT 7.0
+.TP
+.B Returns
+attribute data type
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if field is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read attribute value
+.INDENT 7.0
+.TP
+.B Returns
+python object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen attribute
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shape
+attribute shape
+.INDENT 7.0
+.TP
+.B Returns
+attribute shape
+.TP
+.B Return type
+\fI\%list\fP < \fI\%int\fP >
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B write(o)
+write attribute value
+.INDENT 7.0
+.TP
+.B Parameters
+\fBo\fP (\fI\%any\fP) \-\- python object
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYAttributeManager(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTAttributeManager\fP
+.sp
+file tree attribute
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class H5PYAttrIter(manager)
+Bases: \fI\%object\fP
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+\fBmanager\fP (\fBH5PYAttributeManager\fP) \-\- attribute manager
+.UNINDENT
+.INDENT 7.0
+.TP
+.B next()
+the next attribute
+.INDENT 7.0
+.TP
+.B Returns
+attribute object
+.TP
+.B Return type
+\fBFTAtribute\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYAttributeManager.close()
+close attribure manager
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYAttributeManager.create(name, dtype, shape=[], overwrite=False)
+create a new attribute
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBname\fP (\fI\%str\fP) \-\- attribute name
+.IP \(bu 2
+\fBdtype\fP (\fI\%str\fP) \-\- attribute type
+.IP \(bu 2
+\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- attribute shape
+.IP \(bu 2
+\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.UNINDENT
+.TP
+.B Returns
+attribute object
+.TP
+.B Return type
+\fBH5PYAtribute\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYAttributeManager.is_valid
+check if link is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYAttributeManager.name = None
+(\fI\%str\fP) object name
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYAttributeManager.path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYAttributeManager.reopen()
+reopen field
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYDeflate
+Bases: \fBnxswriter.FileWriter.FTDeflate\fP
+.sp
+file tree deflate
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B rate
+(\fI\%int\fP) compression rate
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shuffle
+(\fI\%bool\fP) compression shuffle
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYField(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTField\fP
+.sp
+file tree file
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B attributes
+return the attribute manager
+.INDENT 7.0
+.TP
+.B Returns
+attribute manager
+.TP
+.B Return type
+\fBH5PYAttributeManager\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close field
+.UNINDENT
+.INDENT 7.0
+.TP
+.B dtype
+field data type
+.INDENT 7.0
+.TP
+.B Returns
+field data type
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B grow(dim=0, ext=1)
+grow the field
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdim\fP (\fI\%int\fP) \-\- growing dimension
+.IP \(bu 2
+\fBdim\fP \-\- size of the grow
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if group is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read the field value
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fI\%any\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen field
+.UNINDENT
+.INDENT 7.0
+.TP
+.B shape
+field shape
+.INDENT 7.0
+.TP
+.B Returns
+field shape
+.TP
+.B Return type
+\fI\%list\fP < \fI\%int\fP >
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B size
+field size
+.INDENT 7.0
+.TP
+.B Returns
+field size
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B write(o)
+write the field value
+.INDENT 7.0
+.TP
+.B Parameters
+\fBo\fP (\fI\%any\fP) \-\- pni object
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYFile(h5object, filename)
+Bases: \fBnxswriter.FileWriter.FTFile\fP
+.sp
+file tree file
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close file
+.UNINDENT
+.INDENT 7.0
+.TP
+.B classmethod currenttime()
+returns current time string
+.INDENT 7.0
+.TP
+.B Returns
+current time
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B flush()
+flash the data
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if group is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B path = None
+(\fI\%str\fP) object nexus path
+.UNINDENT
+.INDENT 7.0
+.TP
+.B readonly
+check if file is readonly
+.INDENT 7.0
+.TP
+.B Returns
+readonly flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen(readonly=False, swmr=False, libver=None)
+reopen file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.IP \(bu 2
+\fBswmr\fP (\fI\%bool\fP) \-\- swmr flag
+.IP \(bu 2
+\fBlibver\fP (\fI\%str\fP) \-\- library version, default: \(aqlatest\(aq
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B root()
+root object
+.INDENT 7.0
+.TP
+.B Returns
+parent object
+.TP
+.B Return type
+\fBH5PYGroup\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYGroup(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTGroup\fP
+.sp
+file tree group
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class H5PYGroupIter(group)
+Bases: \fI\%object\fP
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+\fBgroup\fP \-\- group object
+.UNINDENT
+.INDENT 7.0
+.TP
+.B next()
+the next attribute
+.INDENT 7.0
+.TP
+.B Returns
+attribute object
+.TP
+.B Return type
+\fBFTAtribute\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.attributes
+return the attribute manager
+.INDENT 7.0
+.TP
+.B Returns
+attribute manager
+.TP
+.B Return type
+\fBH5PYAttributeManager\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.close()
+close group
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.create_field(name, type_code, shape=None, chunk=None, dfilter=None)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP (\fI\%str\fP) \-\- group name
+.IP \(bu 2
+\fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
+.IP \(bu 2
+\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- shape
+.IP \(bu 2
+\fBchunk\fP (\fI\%list\fP < \fI\%int\fP >) \-\- chunk
+.IP \(bu 2
+\fBdfilter\fP (\fBH5PYDeflate\fP) \-\- filter deflater
+.UNINDENT
+.TP
+.B Returns
+file tree field
+.TP
+.B Return type
+\fBH5PYField\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.create_group(n, nxclass=\(aq\(aq)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP (\fI\%str\fP) \-\- group name
+.IP \(bu 2
+\fBnxclass\fP (\fI\%str\fP) \-\- group type
+.UNINDENT
+.TP
+.B Returns
+file tree group
+.TP
+.B Return type
+\fBH5PYGroup\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.exists(name)
+if child exists
+.INDENT 7.0
+.TP
+.B Parameters
+\fBname\fP (\fI\%str\fP) \-\- child name
+.TP
+.B Returns
+existing flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.is_valid
+check if group is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.open(name)
+open a file tree element
+.INDENT 7.0
+.TP
+.B Parameters
+\fBname\fP (\fI\%str\fP) \-\- element name
+.TP
+.B Returns
+file tree object
+.TP
+.B Return type
+\fBFTObject\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.reopen()
+reopen file
+.UNINDENT
+.INDENT 7.0
+.TP
+.B H5PYGroup.size
+group size
+.INDENT 7.0
+.TP
+.B Returns
+group size
+.TP
+.B Return type
+\fI\%int\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class nxswriter.H5PYWriter.H5PYLink(h5object, tparent=None)
+Bases: \fBnxswriter.FileWriter.FTLink\fP
+.sp
+file tree link
+.sp
+constructor
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBh5object\fP (\fI\%any\fP) \-\- pni object
+.IP \(bu 2
+\fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B close()
+close group
+.UNINDENT
+.INDENT 7.0
+.TP
+.B classmethod getfilename(obj)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_valid
+check if link is valid
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read()
+read object value
+.INDENT 7.0
+.TP
+.B Returns
+valid flag
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B reopen()
+reopen field
+.UNINDENT
+.INDENT 7.0
+.TP
+.B setname(name)
+.UNINDENT
+.INDENT 7.0
+.TP
+.B target_path
+target path
+.INDENT 7.0
+.TP
+.B Returns
+target path
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.H5PYWriter.create_file(filename, overwrite=False, libver=\(aqlatest\(aq)
+create a new file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.UNINDENT
+.TP
+.B Returns
+file object
+.TP
+.B Return type
+\fBH5PYFile\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.H5PYWriter.deflate_filter()
+create deflate filter
+.INDENT 7.0
+.TP
+.B Returns
+deflate filter object
+.TP
+.B Return type
+\fBH5PYDeflate\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.H5PYWriter.link(target, parent, name)
+create link
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtarget\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
+.IP \(bu 2
+\fBname\fP (\fI\%str\fP) \-\- link name
+.UNINDENT
+.TP
+.B Returns
+link object
+.TP
+.B Return type
+\fBH5PYLink\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.H5PYWriter.open_file(filename, readonly=False, libver=\(aqlatest\(aq)
+open the new file
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.UNINDENT
+.TP
+.B Returns
+file object
+.TP
+.B Return type
+\fBH5PYFile\fP
+.UNINDENT
+.UNINDENT
 .SS Module contents
 .sp
 Tango Data Writer
@@ -3699,7 +5933,7 @@ launches the TANGO server
 .SH AUTHOR
 Author
 .SH COPYRIGHT
-2012-2016 DESY, Jan Kotanski <jkotan@mail.desy.de>
+2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
 
 GNU GENERAL PUBLIC LICENSE, version 3
 .\" Generated by docutils manpage writer.
