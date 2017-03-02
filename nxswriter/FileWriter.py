@@ -33,7 +33,7 @@ def open_file(filename, readonly=False):
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
     :returns: file object
-    :rtype : :class:`FTFile`
+    :rtype: :class:`FTFile`
     """
     return writer.open_file(filename, readonly)
 
@@ -46,7 +46,7 @@ def create_file(filename, overwrite=False):
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
     :returns: file object
-    :rtype : :class:`FTFile`
+    :rtype: :class:`FTFile`
     """
     return writer.create_file(filename, overwrite)
 
@@ -61,7 +61,7 @@ def link(target, parent, name):
     :param name: link name
     :type name: :obj:`str`
     :returns: link object
-    :rtype : :class:`FTLink`
+    :rtype: :class:`FTLink`
     """
     return writer.link(target, parent, name)
 
@@ -70,7 +70,7 @@ def deflate_filter():
     """ create deflate filter
 
     :returns: deflate filter object
-    :rtype : :class:`FTDeflate`
+    :rtype: :class:`FTDeflate`
     """
     return writer.deflate_filter()
 
@@ -135,7 +135,7 @@ class FTObject(object):
         """ return the parent object
 
         :returns: file tree group
-        :rtype : :class:`FTGroup`
+        :rtype: :class:`FTGroup`
         """
         return self._tparent
 
@@ -178,7 +178,7 @@ class FTFile(FTObject):
         """ root object
 
         :returns: parent object
-        :rtype: :class:`FTGroup `
+        :rtype: :class:`FTGroup`
         """
 
     def flush(self):
@@ -226,7 +226,7 @@ class FTGroup(FTObject):
         :param name: element name
         :type name: :obj:`str`
         :returns: file tree object
-        :rtype : :class:`FTObject`
+        :rtype: :class:`FTObject`
         """
 
     def create_group(self, n, nxclass=""):
@@ -237,7 +237,7 @@ class FTGroup(FTObject):
         :param nxclass: group type
         :type nxclass: :obj:`str`
         :returns: file tree group
-        :rtype : :class:`FTGroup`
+        :rtype: :class:`FTGroup`
         """
 
     def create_field(self, name, type_code,
@@ -255,7 +255,7 @@ class FTGroup(FTObject):
         :param dfilter: filter deflater
         :type dfilter: :class:`FTDeflate`
         :returns: file tree field
-        :rtype : :class:`FTField`
+        :rtype: :class:`FTField`
         """
 
     @property
@@ -271,7 +271,7 @@ class FTGroup(FTObject):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype : :class:`FTAttributeManager`
+        :rtype: :class:`FTAttributeManager`
         """
 
     def exists(self, name):
@@ -307,7 +307,7 @@ class FTField(FTObject):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype : :class:`FTAttributeManager`
+        :rtype: :class:`FTAttributeManager`
         """
 
     def grow(self, dim=0, ext=1):
@@ -481,11 +481,11 @@ class FTAttributeManager(FTObject):
         :param dtype: attribute type
         :type dtype: :obj:`str`
         :param shape: attribute shape
-        :type shape: :obj:`list` < :obj:`int` >
+        :type shape: :obj:`list`< :obj:`int`>
         :param overwrite: overwrite flag
         :type overwrite: :obj:`bool`
         :returns: attribute object
-        :rtype : :class:`FTAtribute`
+        :rtype: :class:`FTAtribute`
         """
 
     def __len__(self):
@@ -501,7 +501,7 @@ class FTAttributeManager(FTObject):
         :param name: attribute name
         :type name: :obj:`str`
         :returns: attribute object
-        :rtype : :class:`FTAtribute`
+        :rtype: :class:`FTAtribute`
         """
 
     def reopen(self):

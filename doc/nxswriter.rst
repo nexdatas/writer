@@ -221,7 +221,7 @@ nxswriter.Types module
     :show-inheritance:
 
 nxswriter.FileWriter module
-----------------------
+---------------------------
 
 .. automodule:: nxswriter.FileWriter
     :members:
@@ -229,7 +229,7 @@ nxswriter.FileWriter module
     :show-inheritance:
 
 nxswriter.PNIWriter module
-----------------------
+--------------------------
 
 .. automodule:: nxswriter.PNIWriter
     :members:
@@ -237,9 +237,9 @@ nxswriter.PNIWriter module
     :show-inheritance:
 
 nxswriter.H5PYWriter module
-----------------------
+---------------------------
 
-.. automodule:: nxswriter.H5PYFileWriter
+.. automodule:: nxswriter.H5PYWriter
     :members:
     :undoc-members:
     :show-inheritance:

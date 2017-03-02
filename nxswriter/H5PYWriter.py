@@ -37,7 +37,7 @@ def open_file(filename, readonly=False, libver='latest'):
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
     :returns: file object
-    :rtype : :class:`H5PYFile`
+    :rtype: :class:`H5PYFile`
     """
     if readonly:
         return H5PYFile(h5py.File(filename, "r", libver=libver), filename)
@@ -53,7 +53,7 @@ def create_file(filename, overwrite=False, libver='latest'):
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
     :returns: file object
-    :rtype : :class:`H5PYFile`
+    :rtype: :class:`H5PYFile`
     """
     fl = h5py.File(filename, "a" if overwrite else "w-", libver=libver)
     fl.attrs.create("file_time", H5PYFile.currenttime() + "\0")
@@ -75,7 +75,7 @@ def link(target, parent, name):
     :param name: link name
     :type name: :obj:`str`
     :returns: link object
-    :rtype : :class:`H5PYLink`
+    :rtype: :class:`H5PYLink`
     """
     localfname = H5PYLink.getfilename(parent)
     if ":/" in target:
@@ -96,7 +96,7 @@ def deflate_filter():
     """ create deflate filter
 
     :returns: deflate filter object
-    :rtype : :class:`H5PYDeflate`
+    :rtype: :class:`H5PYDeflate`
     """
     return H5PYDeflate()
 
@@ -121,7 +121,7 @@ class H5PYFile(FileWriter.FTFile):
         """ root object
 
         :returns: parent object
-        :rtype: :class:`H5PYGroup `
+        :rtype: :class:`H5PYGroup`
         """
         g = H5PYGroup(self._h5object, self)
         g.name = "/"
@@ -240,7 +240,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :param name: element name
         :type name: :obj:`str`
         :returns: file tree object
-        :rtype : :class:`FTObject`
+        :rtype: :class:`FTObject`
         """
         if name not in self._h5object:
             _ = self._h5object.attrs[name]
@@ -272,7 +272,7 @@ class H5PYGroup(FileWriter.FTGroup):
             """ the next attribute
 
             :returns: attribute object
-            :rtype : :class:`FTAtribute`
+            :rtype: :class:`FTAtribute`
             """
             if self.__names:
                 return self.__group.open(self.__names.pop(0))
@@ -283,7 +283,7 @@ class H5PYGroup(FileWriter.FTGroup):
             """ attribute iterator
 
             :returns: attribute iterator
-            :rtype : :class:`H5PYAttrIter`
+            :rtype: :class:`H5PYAttrIter`
             """
             return self
 
@@ -291,7 +291,7 @@ class H5PYGroup(FileWriter.FTGroup):
         """ attribute iterator
 
         :returns: attribute iterator
-        :rtype : :class:`H5PYAttrIter`
+        :rtype: :class:`H5PYAttrIter`
         """
         return self.H5PYGroupIter(self)
 
@@ -309,7 +309,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :param nxclass: group type
         :type nxclass: :obj:`str`
         :returns: file tree group
-        :rtype : :class:`H5PYGroup`
+        :rtype: :class:`H5PYGroup`
         """
         grp = self._h5object.create_group(n)
         if nxclass:
@@ -331,7 +331,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :param dfilter: filter deflater
         :type dfilter: :class:`H5PYDeflate`
         :returns: file tree field
-        :rtype : :class:`H5PYField`
+        :rtype: :class:`H5PYField`
         """
         shape = shape or [1]
         mshape = [None for _ in shape] or (None,)
@@ -365,7 +365,7 @@ class H5PYGroup(FileWriter.FTGroup):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype : :class:`H5PYAttributeManager`
+        :rtype: :class:`H5PYAttributeManager`
         """
         return H5PYAttributeManager(self._h5object.attrs, self)
 
@@ -438,7 +438,7 @@ class H5PYField(FileWriter.FTField):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype : :class:`H5PYAttributeManager`
+        :rtype: :class:`H5PYAttributeManager`
         """
         return H5PYAttributeManager(self._h5object.attrs, self)
 
@@ -726,7 +726,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :param overwrite: overwrite flag
         :type overwrite: :obj:`bool`
         :returns: attribute object
-        :rtype : :class:`H5PYAtribute`
+        :rtype: :class:`H5PYAtribute`
         """
 
         if not overwrite and name in self.h5object.keys():
@@ -775,7 +775,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             """ the next attribute
 
             :returns: attribute object
-            :rtype : :class:`FTAtribute`
+            :rtype: :class:`FTAtribute`
             """
             name = self.__iter.next()
             if name is None:
@@ -787,7 +787,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             """ attribute iterator
 
             :returns: attribute iterator
-            :rtype : :class:`H5PYAttrIter`
+            :rtype: :class:`H5PYAttrIter`
             """
             return self
 
@@ -795,7 +795,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         """ attribute iterator
 
         :returns: attribute iterator
-        :rtype : :class:`H5PYAttrIter`
+        :rtype: :class:`H5PYAttrIter`
         """
         return self.H5PYAttrIter(self)
 
@@ -805,7 +805,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         :param name: attribute name
         :type name: :obj:`str`
         :returns: attribute object
-        :rtype : :class:`FTAtribute`
+        :rtype: :class:`FTAtribute`
         """
         return H5PYAttribute((self._h5object, name), self.parent)
 

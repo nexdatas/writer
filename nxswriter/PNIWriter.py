@@ -32,7 +32,7 @@ def open_file(filename, readonly=False):
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
     :returns: file object
-    :rtype : :class:`PNIFile`
+    :rtype: :class:`PNIFile`
     """
     return PNIFile(nx.open_file(filename, readonly), filename)
 
@@ -45,7 +45,7 @@ def create_file(filename, overwrite=False):
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
     :returns: file object
-    :rtype : :class:`PNIFile`
+    :rtype: :class:`PNIFile`
     """
     return PNIFile(nx.create_file(filename, overwrite), filename)
 
@@ -60,7 +60,7 @@ def link(target, parent, name):
     :param name: link name
     :type name: :obj:`str`
     :returns: link object
-    :rtype : :class:`PNILink`
+    :rtype: :class:`PNILink`
     """
     nx.link(target, parent.h5object, name)
     lks = nx.get_links(parent.h5object)
@@ -73,7 +73,7 @@ def deflate_filter():
     """ create deflate filter
 
     :returns: deflate filter object
-    :rtype : :class:`PNIDeflate`
+    :rtype: :class:`PNIDeflate`
     """
     return PNIDeflate(nx.deflate_filter())
 
@@ -100,7 +100,7 @@ class PNIFile(FileWriter.FTFile):
         """ root object
 
         :returns: parent object
-        :rtype: :class:`PNIGroup `
+        :rtype: :class:`PNIGroup`
         """
         return PNIGroup(self._h5object.root(), self)
 
@@ -179,7 +179,7 @@ class PNIGroup(FileWriter.FTGroup):
         :param name: element name
         :type name: :obj:`str`
         :returns: file tree object
-        :rtype : :class:`FTObject`
+        :rtype: :class:`FTObject`
         """
         itm = self._h5object.open(name)
         if isinstance(itm, nx.nxfield):
@@ -202,7 +202,7 @@ class PNIGroup(FileWriter.FTGroup):
         :param nxclass: group type
         :type nxclass: :obj:`str`
         :returns: file tree group
-        :rtype : :class:`PNIGroup`
+        :rtype: :class:`PNIGroup`
         """
         return PNIGroup(self._h5object.create_group(n, nxclass), self)
 
@@ -221,7 +221,7 @@ class PNIGroup(FileWriter.FTGroup):
         :param dfilter: filter deflater
         :type dfilter: :class:`PNIDeflate`
         :returns: file tree field
-        :rtype : :class:`PNIField`
+        :rtype: :class:`PNIField`
         """
         return PNIField(
             self._h5object.create_field(
@@ -242,7 +242,7 @@ class PNIGroup(FileWriter.FTGroup):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype : :class:`PNIAttributeManager`
+        :rtype: :class:`PNIAttributeManager`
         """
         return PNIAttributeManager(self._h5object.attributes, self)
 
@@ -287,7 +287,7 @@ class PNIGroup(FileWriter.FTGroup):
             """ the next attribute
 
             :returns: attribute object
-            :rtype : :class:`FTAtribute`
+            :rtype: :class:`FTAtribute`
             """
             if self.__names:
                 return self.__group.open(self.__names.pop(0))
@@ -298,7 +298,7 @@ class PNIGroup(FileWriter.FTGroup):
             """ attribute iterator
 
             :returns: attribute iterator
-            :rtype : :class:`H5PYAttrIter`
+            :rtype: :class:`H5PYAttrIter`
             """
             return self
 
@@ -306,7 +306,7 @@ class PNIGroup(FileWriter.FTGroup):
         """ attribute iterator
 
         :returns: attribute iterator
-        :rtype : :class:`H5PYAttrIter`
+        :rtype: :class:`H5PYAttrIter`
         """
         return self.PNIGroupIter(self)
 
@@ -346,7 +346,7 @@ class PNIField(FileWriter.FTField):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype : :class:`PNIAttributeManager`
+        :rtype: :class:`PNIAttributeManager`
         """
         return PNIAttributeManager(self._h5object.attributes, self)
 
@@ -582,7 +582,7 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :param overwrite: overwrite flag
         :type overwrite: :obj:`bool`
         :returns: attribute object
-        :rtype : :class:`PNIAtribute`
+        :rtype: :class:`PNIAtribute`
         """
         shape = shape or []
         return PNIAttribute(
@@ -603,7 +603,7 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
         :param name: attribute name
         :type name: :obj:`str`
         :returns: attribute object
-        :rtype : :class:`FTAtribute`
+        :rtype: :class:`FTAtribute`
         """
         return PNIAttribute(
             self._h5object.__getitem__(name), self.parent)
