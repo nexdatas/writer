@@ -29,13 +29,15 @@ import os
 from . import FileWriter
 
 
-def open_file(filename, readonly=False, libver='latest'):
+def open_file(filename, readonly=False, libver=None):
     """ open the new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
+    :param libver: library version: 'lastest' or 'earliest'
+    :type libver: :obj:`str`
     :returns: file object
     :rtype: :class:`H5PYFile`
     """
@@ -45,13 +47,15 @@ def open_file(filename, readonly=False, libver='latest'):
         return H5PYFile(h5py.File(filename, "r+", libver=libver), filename)
 
 
-def create_file(filename, overwrite=False, libver='latest'):
+def create_file(filename, overwrite=False, libver=None):
     """ create a new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
+    :param libver: library version: 'lastest' or 'earliest'
+    :type libver: :obj:`str`
     :returns: file object
     :rtype: :class:`H5PYFile`
     """

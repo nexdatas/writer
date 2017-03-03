@@ -24,26 +24,30 @@ import pni.io.nx.h5 as nx
 from . import FileWriter
 
 
-def open_file(filename, readonly=False):
+def open_file(filename, readonly=False, libver=None):
     """ open the new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
+    :param libver: library version: 'lastest' or 'earliest'
+    :type libver: :obj:`str`
     :returns: file object
     :rtype: :class:`PNIFile`
     """
     return PNIFile(nx.open_file(filename, readonly), filename)
 
 
-def create_file(filename, overwrite=False):
+def create_file(filename, overwrite=False, libver=None):
     """ create a new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
+    :param libver: library version: 'lastest' or 'earliest'
+    :type libver: :obj:`str`
     :returns: file object
     :rtype: :class:`PNIFile`
     """

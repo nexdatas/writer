@@ -49,19 +49,19 @@ class testwriter(object):
         self.params = []
         self.result = None
 
-    def open_file(self, filename, readonly=False):
+    def open_file(self, filename, readonly=False, libver=None):
         """ open the new file
         """
         self.commands.append("open_file")
-        self.params.append([filename, readonly])
+        self.params.append([filename, readonly, libver])
         return self.result
 
 
-    def create_file(self,filename, overwrite=False):
+    def create_file(self,filename, overwrite=False, libver=None):
         """ create a new file
         """
         self.commands.append("create_file")
-        self.params.append([filename, overwrite])
+        self.params.append([filename, overwrite, libver])
         return self.result
 
 
@@ -270,7 +270,7 @@ class FileWriterTest(unittest.TestCase):
             tres = FileWriter.open_file(fn)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "open_file")
-            self.assertEqual(tw.params[-1], [fn, False])
+            self.assertEqual(tw.params[-1], [fn, False, None])
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -280,7 +280,7 @@ class FileWriterTest(unittest.TestCase):
             tres = FileWriter.open_file(fn, rb)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "open_file")
-            self.assertEqual(tw.params[-1], [fn, rb])
+            self.assertEqual(tw.params[-1], [fn, rb, None])
 
     ## test
     # \brief It tests default settings
@@ -297,7 +297,7 @@ class FileWriterTest(unittest.TestCase):
             tres = FileWriter.create_file(fn)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "create_file")
-            self.assertEqual(tw.params[-1], [fn, False])
+            self.assertEqual(tw.params[-1], [fn, False, None])
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -307,7 +307,7 @@ class FileWriterTest(unittest.TestCase):
             tres = FileWriter.create_file(fn, rb)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "create_file")
-            self.assertEqual(tw.params[-1], [fn, rb])
+            self.assertEqual(tw.params[-1], [fn, rb, None])
 
     ## test
     # \brief It tests default settings

@@ -136,6 +136,8 @@ class TangoDataWriter(object):
         :param jsonstring: value of  writer module name
         :type jsonstring: :obj:`str`
         """
+        if '@' in writer:
+            writer, libver = writer.split('@')
         if not writer:
             writer = "pni" if "pni" in WRITERS.keys() else "h5py"
         self.writer = writer.lower()
@@ -224,7 +226,11 @@ class TangoDataWriter(object):
             self.__nxFile = FileWriter.open_file(self.fileName, False)
             self.__fileCreated = False
         else:
-            self.__nxFile = FileWriter.create_file(self.fileName)
+            libver = None
+            if '@' in self.writer:
+                _, libver = self.writer.split('@')
+            self.__nxFile = FileWriter.create_file(
+                self.fileName, libver=libver)
             self.__fileCreated = True
         self.__nxRoot = self.__nxFile.root()
 
