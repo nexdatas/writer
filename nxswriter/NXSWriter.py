@@ -675,7 +675,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         'Writer':
         [PyTango.DevString,
          "writer module",
-         ["pni"]],
+         [""]],
     }
 
     #: (:obj:`dict` <:obj:`str`, \

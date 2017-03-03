@@ -136,6 +136,8 @@ class TangoDataWriter(object):
         :param jsonstring: value of  writer module name
         :type jsonstring: :obj:`str`
         """
+        if not writer:
+            writer = "pni" if "pni" in WRITERS.keys() else "h5py"
         self.writer = writer.lower()
         FileWriter.writer = WRITERS[writer.lower()]
 
