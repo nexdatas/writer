@@ -266,11 +266,10 @@ class TangoDataWriter(object):
         :rtype: :obj:`dict` < :obj:`str`,  :obj:`str`>
         """
         pars = {}
-        pars["libver"] = None
-        if '?' in self.writer:
-            _, params = self.writer.split('?')
+        if '?' in url.writer:
+            _, params = url.writer.split('?')
             if params:
-                parlist = self.writer.split('&')
+                parlist = params.split('&')
                 for par in parlist:
                     if "=" in par:
                         ky, vl = par.split('=')
