@@ -222,13 +222,14 @@ class TangoDataWriter(object):
         self.__finalPool = None
         self.__triggerPools = {}
 
+        pars = self.__getParams(self.writer)
         if os.path.isfile(self.fileName):
-            self.__nxFile = FileWriter.open_file(self.fileName, False)
+            self.__nxFile = FileWriter.open_file(
+                self.fileName, False, **pars)
             self.__fileCreated = False
         else:
-            pars = self.__getParams(self.writer)
             self.__nxFile = FileWriter.create_file(
-                self.fileName, libver=pars["libver"])
+                self.fileName, **pars)
             self.__fileCreated = True
         self.__nxRoot = self.__nxFile.root()
 

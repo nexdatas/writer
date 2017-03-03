@@ -25,34 +25,34 @@ import weakref
 writer = None
 
 
-def open_file(filename, readonly=False, libver=None):
+def open_file(filename, readonly=False, **pars):
     """ open the new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
-    :param libver: library version: 'lastest' or 'earliest'
-    :type libver: :obj:`str`
+    :param pars: parameters
+    :type pars: :obj:`dict` < :obj:`str`, :obj:`str`>
     :returns: file object
     :rtype: :class:`FTFile`
     """
-    return writer.open_file(filename, readonly, libver)
+    return writer.open_file(filename, readonly, **pars)
 
 
-def create_file(filename, overwrite=False, libver=None):
+def create_file(filename, overwrite=False, **pars):
     """ create a new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
-    :param libver: library version: 'lastest' or 'earliest'
-    :type libver: :obj:`str`
+    :param pars: parameters
+    :type pars: :obj:`dict` < :obj:`str`, :obj:`str`>
     :returns: file object
     :rtype: :class:`FTFile`
     """
-    return writer.create_file(filename, overwrite, libver)
+    return writer.create_file(filename, overwrite, **pars)
 
 
 def link(target, parent, name):

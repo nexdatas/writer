@@ -29,37 +29,37 @@ import os
 from . import FileWriter
 
 
-def open_file(filename, readonly=False, libver=None):
+def open_file(filename, readonly=False, **pars):
     """ open the new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param readonly: readonly flag
     :type readonly: :obj:`bool`
-    :param libver: library version: 'lastest' or 'earliest'
-    :type libver: :obj:`str`
+    :param pars: parameters
+    :type pars: :obj:`dict` < :obj:`str`, :obj:`str`>
     :returns: file object
     :rtype: :class:`H5PYFile`
     """
     if readonly:
-        return H5PYFile(h5py.File(filename, "r", libver=libver), filename)
+        return H5PYFile(h5py.File(filename, "r", **pars), filename)
     else:
-        return H5PYFile(h5py.File(filename, "r+", libver=libver), filename)
+        return H5PYFile(h5py.File(filename, "r+", **pars), filename)
 
 
-def create_file(filename, overwrite=False, libver=None):
+def create_file(filename, overwrite=False, **pars):
     """ create a new file
 
     :param filename: file name
     :type filename: :obj:`str`
     :param overwrite: overwrite flag
     :type overwrite: :obj:`bool`
-    :param libver: library version: 'lastest' or 'earliest'
-    :type libver: :obj:`str`
+    :param pars: parameters
+    :type pars: :obj:`dict` < :obj:`str`, :obj:`str`>
     :returns: file object
     :rtype: :class:`H5PYFile`
     """
-    fl = h5py.File(filename, "a" if overwrite else "w-", libver=libver)
+    fl = h5py.File(filename, "a" if overwrite else "w-", **pars)
     fl.attrs.create("file_time", H5PYFile.currenttime() + "\0")
     fl.attrs.create("HDF5_version", "\0")
     fl.attrs.create("NX_class", "NXroot" + "\0")
