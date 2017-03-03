@@ -136,8 +136,8 @@ class TangoDataWriter(object):
         :param jsonstring: value of  writer module name
         :type jsonstring: :obj:`str`
         """
-        if '@' in writer:
-            writer, libver = writer.split('@')
+        if '?' in writer:
+            writer, params = writer.split('?')
         if not writer:
             writer = "pni" if "pni" in WRITERS.keys() else "h5py"
         self.writer = writer.lower()
@@ -226,11 +226,9 @@ class TangoDataWriter(object):
             self.__nxFile = FileWriter.open_file(self.fileName, False)
             self.__fileCreated = False
         else:
-            libver = None
-            if '@' in self.writer:
-                _, libver = self.writer.split('@')
+            pars = self.__getParams(self.writer)
             self.__nxFile = FileWriter.create_file(
-                self.fileName, libver=libver)
+                self.fileName, libver=pars["libver"])
             self.__fileCreated = True
         self.__nxRoot = self.__nxFile.root()
 
@@ -257,6 +255,27 @@ class TangoDataWriter(object):
                 "python_version", "string")
             vfield.write(str(sys.version))
             vfield.close()
+
+    def __getParams(self, url):
+        """ fetch parameters from url
+
+        :param url: url string, i.e. something?key1=value1&key2=value2&...
+        :type url: :obj:`str`
+        :returns: dictionary of parameters
+        :rtype: :obj:`dict` < :obj:`str`,  :obj:`str`>
+        """
+        pars = {}
+        pars["libver"] = None
+        if '?' in self.writer:
+            _, params = self.writer.split('?')
+            if params:
+                parlist = self.writer.split('&')
+                for par in parlist:
+                    if "=" in par:
+                        ky, vl = par.split('=')
+                        if ky:
+                            pars[ky] = vl
+        return pars
 
     def openEntry(self):
         """ opens the data entry corresponding to a new XML settings
