@@ -266,8 +266,8 @@ class TangoDataWriter(object):
         :rtype: :obj:`dict` < :obj:`str`,  :obj:`str`>
         """
         pars = {}
-        if '?' in url.writer:
-            _, params = url.writer.split('?')
+        if '?' in url:
+            _, params = url.split('?')
             if params:
                 parlist = params.split('&')
                 for par in parlist:
