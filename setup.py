@@ -30,7 +30,6 @@ INDTS = __import__(NDTS)
 
 from sphinx.setup_command import BuildDoc
 
-# __requires__ = 'nextdata ==%s' % INDTS.__version__
 
 
 def read(fname):
