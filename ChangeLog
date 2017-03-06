@@ -1,3 +1,8 @@
+2017-03-06 Jan Kotanski <jankotan@gmail.com>
+	* add fixes for H5PYWriter
+	* add tests
+	* tagged as 2.6.1
+
 2017-03-02 Jan Kotanski <jankotan@gmail.com>
 	* add FileWriter class
 	* add support for h5py
