@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "March 02, 2017" "2.6" "NXSDataWriter"
+.TH "NXSWRITER" "1" "March 06, 2017" "2.6" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -2586,7 +2586,7 @@ Command definitions
 .UNINDENT
 .INDENT 7.0
 .TP
-.B device_property_list = {\(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aqpni\(aq]]}
+.B device_property_list = {\(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aq\(aq]]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -4288,7 +4288,7 @@ refresh a list of valid children
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.FileWriter.create_file(filename, overwrite=False)
+.B nxswriter.FileWriter.create_file(filename, overwrite=False, **pars)
 create a new file
 .INDENT 7.0
 .TP
@@ -4298,6 +4298,8 @@ create a new file
 \fBfilename\fP (\fI\%str\fP) \-\- file name
 .IP \(bu 2
 \fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.IP \(bu 2
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
 .UNINDENT
 .TP
 .B Returns
@@ -4345,7 +4347,7 @@ link object
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.FileWriter.open_file(filename, readonly=False)
+.B nxswriter.FileWriter.open_file(filename, readonly=False, **pars)
 open the new file
 .INDENT 7.0
 .TP
@@ -4355,6 +4357,8 @@ open the new file
 \fBfilename\fP (\fI\%str\fP) \-\- file name
 .IP \(bu 2
 \fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.IP \(bu 2
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
 .UNINDENT
 .TP
 .B Returns
@@ -5056,7 +5060,7 @@ target path
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.PNIWriter.create_file(filename, overwrite=False)
+.B nxswriter.PNIWriter.create_file(filename, overwrite=False, libver=None)
 create a new file
 .INDENT 7.0
 .TP
@@ -5066,6 +5070,8 @@ create a new file
 \fBfilename\fP (\fI\%str\fP) \-\- file name
 .IP \(bu 2
 \fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.IP \(bu 2
+\fBlibver\fP (\fI\%str\fP) \-\- library version: \(aqlastest\(aq or \(aqearliest\(aq
 .UNINDENT
 .TP
 .B Returns
@@ -5113,7 +5119,7 @@ link object
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.PNIWriter.open_file(filename, readonly=False)
+.B nxswriter.PNIWriter.open_file(filename, readonly=False, libver=None)
 open the new file
 .INDENT 7.0
 .TP
@@ -5123,6 +5129,8 @@ open the new file
 \fBfilename\fP (\fI\%str\fP) \-\- file name
 .IP \(bu 2
 \fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.IP \(bu 2
+\fBlibver\fP (\fI\%str\fP) \-\- library version: \(aqlastest\(aq or \(aqearliest\(aq
 .UNINDENT
 .TP
 .B Returns
@@ -5833,7 +5841,7 @@ target path
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.H5PYWriter.create_file(filename, overwrite=False, libver=\(aqlatest\(aq)
+.B nxswriter.H5PYWriter.create_file(filename, overwrite=False, **pars)
 create a new file
 .INDENT 7.0
 .TP
@@ -5843,6 +5851,8 @@ create a new file
 \fBfilename\fP (\fI\%str\fP) \-\- file name
 .IP \(bu 2
 \fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
+.IP \(bu 2
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
 .UNINDENT
 .TP
 .B Returns
@@ -5890,7 +5900,7 @@ link object
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.H5PYWriter.open_file(filename, readonly=False, libver=\(aqlatest\(aq)
+.B nxswriter.H5PYWriter.open_file(filename, readonly=False, **pars)
 open the new file
 .INDENT 7.0
 .TP
@@ -5900,6 +5910,8 @@ open the new file
 \fBfilename\fP (\fI\%str\fP) \-\- file name
 .IP \(bu 2
 \fBreadonly\fP (\fI\%bool\fP) \-\- readonly flag
+.IP \(bu 2
+\fBpars\fP (\fI\%dict\fP < \fI\%str\fP, \fI\%str\fP>) \-\- parameters
 .UNINDENT
 .TP
 .B Returns
