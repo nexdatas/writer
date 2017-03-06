@@ -23,6 +23,8 @@ import unittest
 import os
 import sys
 
+from pni.io.nx.h5 import open_file
+
 from  xml.sax import SAXParseException
 
 import nxswriter
@@ -38,7 +40,7 @@ from nxswriter import H5PYWriter
 IS64BIT = (struct.calcsize("P") == 8)
 
 ## test fixture
-class TangoDataWriterH5PYTest(unittest.TestCase):
+class TangoDataWriterPNIH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -184,9 +186,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
 
 #            print "\nFile attributes:"
@@ -255,9 +255,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
 
 #            print "\nFile attributes:"
@@ -326,9 +324,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
 
 #            print "\nFile attributes:"
@@ -416,9 +412,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
 #            print "\nFile attributes:"
             cnt = 0
@@ -478,9 +472,7 @@ ds.res2 = str(True)
 
              # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
 
             cnt = 0
@@ -502,10 +494,10 @@ ds.res2 = str(True)
                     self.assertEqual(len(ch.attributes),1)
                     for at in ch.attributes:
                         self.assertTrue(at.is_valid)
-                        # self.assertTrue(hasattr(at.shape,"__iter__"))
-                        # self.assertEqual(len(at.shape),0)
-                        self.assertEqual(len(at.shape),1)
-                        self.assertEqual(at.shape,(1,))
+                        self.assertTrue(hasattr(at.shape,"__iter__"))
+                        self.assertEqual(len(at.shape),0)
+                        #! PNI self.assertEqual(len(at.shape),1)
+                        #! PNI self.assertEqual(at.shape,(1,))
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
@@ -525,8 +517,9 @@ ds.res2 = str(True)
                     for at in ch.attributes:
                         self.assertTrue(at.is_valid)
                         self.assertTrue(hasattr(at.shape,"__iter__"))
-                        self.assertEqual(len(at.shape),1)
-                        self.assertEqual(at.shape,(1,))
+                        #! PNI self.assertEqual(len(at.shape),1)
+                        self.assertEqual(len(at.shape),0 )
+                        #! PNI self.assertEqual(at.shape,(1,))
                         self.assertEqual(at.dtype,"string")
                     #                    self.assertEqual(at.dtype,"string")
                         self.assertEqual(at.name,"NX_class")
@@ -586,9 +579,7 @@ ds.res2 = str(True)
 
             # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
 
             cnt = 0
@@ -649,9 +640,7 @@ ds.res2 = str(True)
 
              # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(f.attributes["file_name"][...], fname)
@@ -667,8 +656,10 @@ ds.res2 = str(True)
             at = en.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            #! PNI self.assertEqual(len(at.shape),1)
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.shape, tuple())
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXentry")
@@ -685,8 +676,8 @@ ds.res2 = str(True)
             at = ins.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape,(1,))
+            #! PNI self.assertEqual(len(at.shape), 1)
+            self.assertEqual(len(at.shape), 0)
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXinstrument")
@@ -695,8 +686,9 @@ ds.res2 = str(True)
             at = ins.attributes["short_name"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            #! PNI self.assertEqual(len(at.shape),1)
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"short_name")
             self.assertEqual(at[...],"scan instrument")
@@ -711,8 +703,9 @@ ds.res2 = str(True)
             at = det.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXdetector")
@@ -738,8 +731,9 @@ ds.res2 = str(True)
             at = cnt.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"nexdatas_strategy")
             self.assertEqual(at[...],"STEP")
@@ -749,8 +743,9 @@ ds.res2 = str(True)
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
             self.assertEqual(at[...],"NX_FLOAT")
@@ -759,8 +754,9 @@ ds.res2 = str(True)
             at = cnt.attributes["units"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
             self.assertEqual(at[...],"m")
@@ -768,8 +764,9 @@ ds.res2 = str(True)
             at = cnt.attributes["nexdatas_source"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
 
 
@@ -794,8 +791,9 @@ ds.res2 = str(True)
             at = cnt.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"nexdatas_strategy")
             self.assertEqual(at[...],"STEP")
@@ -804,8 +802,9 @@ ds.res2 = str(True)
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
             self.assertEqual(at[...],"NX_FLOAT")
@@ -814,8 +813,9 @@ ds.res2 = str(True)
             at = mca.attributes["units"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0 )
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
             self.assertEqual(at[...],"")
@@ -823,8 +823,9 @@ ds.res2 = str(True)
             at = mca.attributes["nexdatas_source"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
 
             dt = en.open("data")
@@ -837,8 +838,9 @@ ds.res2 = str(True)
             at = dt.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXdata")
@@ -869,8 +871,9 @@ ds.res2 = str(True)
             at = cnt.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"nexdatas_strategy")
             self.assertEqual(at[...],"STEP")
@@ -881,8 +884,9 @@ ds.res2 = str(True)
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape, (1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
             self.assertEqual(at[...],"NX_FLOAT")
@@ -891,8 +895,9 @@ ds.res2 = str(True)
             at = cnt.attributes["units"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape, (1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
             self.assertEqual(at[...],"m")
@@ -900,8 +905,9 @@ ds.res2 = str(True)
             at = cnt.attributes["nexdatas_source"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape, (1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
 
 
@@ -926,8 +932,9 @@ ds.res2 = str(True)
             at = cnt.attributes["nexdatas_strategy"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"nexdatas_strategy")
             self.assertEqual(at[...],"STEP")
@@ -936,8 +943,9 @@ ds.res2 = str(True)
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape, (1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"type")
             self.assertEqual(at[...],"NX_FLOAT")
@@ -946,8 +954,9 @@ ds.res2 = str(True)
             at = mca.attributes["units"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape, (1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"units")
             self.assertEqual(at[...],"")
@@ -955,8 +964,9 @@ ds.res2 = str(True)
             at = mca.attributes["nexdatas_source"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape), 1)
-            self.assertEqual(at.shape, (1,))
+            self.assertEqual(len(at.shape), 0)
+            #! PNI self.assertEqual(len(at.shape), 1)
+            #! PNI self.assertEqual(at.shape, (1,))
             self.assertEqual(at.dtype,"string")
 
             f.close()
@@ -1000,9 +1010,7 @@ ds.res2 = str(True)
 
              # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
-            f = FileWriter.open_file(fname,readonly=True)
+            f = open_file(fname,readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(f.attributes["file_name"][...], fname)
@@ -1018,8 +1026,9 @@ ds.res2 = str(True)
             at = en.attributes["NX_class"]
             self.assertTrue(at.is_valid)
             self.assertTrue(hasattr(at.shape,"__iter__"))
-            self.assertEqual(len(at.shape),1)
-            self.assertEqual(at.shape,(1,))
+            self.assertEqual(len(at.shape),0)
+            #! PNI self.assertEqual(len(at.shape),1)
+            #! PNI self.assertEqual(at.shape,(1,))
             self.assertEqual(at.dtype,"string")
             self.assertEqual(at.name,"NX_class")
             self.assertEqual(at[...],"NXentry")

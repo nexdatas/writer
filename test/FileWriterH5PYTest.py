@@ -30,13 +30,9 @@ import string
 import weakref
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 import h5py
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
 
 
 ## if 64-bit machione
@@ -165,7 +161,7 @@ TAttributeManager = createClass("TAttributeManager", FileWriter.FTAttributeManag
 TLink = createClass("TLink", FileWriter.FTLink)
 
 ## test fixture
-class FileWriterTest(unittest.TestCase):
+class FileWriterH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -344,21 +340,22 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tw.params[-1], [])
             self.assertEqual(tres, res)
 
+
     ## default createfile test
     # \brief It tests default settings
-    def test_default_createfile_pni(self):
+    def test_default_createfile_h5py(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         try:
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
             fl.close()
             fl = FileWriter.create_file(self._fname, True)
             fl.close()
 
-            f = nx.open_file(self._fname, readonly=True)
-            f = f.root()
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
+            f = fl.root()
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(
                 f.attributes["file_name"][...],
@@ -371,6 +368,15 @@ class FileWriterTest(unittest.TestCase):
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 0)
+            fl.close()
+            fl.reopen()
+            self.assertEqual(6, len(f.attributes))
+            atts = []
             for at in f.attributes:
                 print at.name , at.read() , at.dtype
             self.assertEqual(
@@ -379,6 +385,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(f.attributes["NX_class"][...],"NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
+
 
             self.myAssertRaise(
                 Exception, FileWriter.create_file, self._fname)
@@ -392,7 +399,6 @@ class FileWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     ## default createfile test
     # \brief It tests default settings
@@ -754,17 +760,17 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(ta2.parent, tg)
         self.assertEqual(ta2.commands, ['close', 'reopen'])
 
-
     ## default createfile test
     # \brief It tests default settings
-    def test_pnifile(self):
+    def test_h5pyfile(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
+        overwrite = False
+
         try:
-            overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
             self.assertTrue(
                 isinstance(fl, FileWriter.FTFile))
@@ -772,39 +778,28 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
 
             rt = fl.root()
             fl.flush()
-            self.assertEqual(
-                fl.h5object.root().filename,
-                rt.h5object.filename)
-            self.assertEqual(
-                fl.h5object.root().name,
-                rt.h5object.name)
-            self.assertEqual(
-                fl.h5object.root().path,
-                rt.h5object.path)
-            self.assertEqual(
-                len(fl.h5object.root().attributes),
-                len(rt.h5object.attributes))
+            self.assertEqual(fl.h5object, rt.h5object)
             self.assertEqual(fl.is_valid, True)
-            self.assertEqual(fl.h5object.is_valid, True)
+            self.assertEqual(fl.h5object.name is not None, True)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
+            self.assertEqual(fl.h5object.mode in ["r"], False)
             fl.close()
             self.assertEqual(fl.is_valid, False)
-            self.assertEqual(fl.h5object.is_valid, False)
+            self.assertEqual(fl.readonly, None)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
+            self.assertEqual(fl.h5object.mode in ["r"], False)
 
             fl.close()
 
@@ -812,10 +807,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
+            self.assertEqual(fl.h5object.mode in ["r"], True)
 
             fl.close()
 
@@ -825,7 +820,7 @@ class FileWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNIWriter.open_file(self._fname, readonly=True)
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -838,20 +833,20 @@ class FileWriterTest(unittest.TestCase):
                 f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
-
         finally:
             os.remove(self._fname)
 
+
     ## default createfile test
     # \brief It tests default settings
-    def test_pnigroup(self):
+    def test_h5pygroup(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -901,30 +896,24 @@ class FileWriterTest(unittest.TestCase):
             attr1 = entry.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
+            print dir(attr0.h5object)
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr1, PNIWriter.PNIAttributeManager))
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr1.h5object, h5py.AttributeManager))
 
             print dir(rt)
             self.assertTrue(
-                isinstance(rt, PNIWriter.PNIGroup))
+                isinstance(rt, H5PYWriter.H5PYGroup))
             self.assertEqual(rt.name, "/")
             self.assertEqual(rt.path, "/")
-            self.assertEqual(
-                len(fl.h5object.root().attributes),
-                len(rt.h5object.attributes))
             attr = rt.attributes
             self.assertEqual(attr["NX_class"][...], "NXroot")
             self.assertTrue(
-                isinstance(attr, PNIWriter.PNIAttributeManager))
-            self.assertEqual(
-                fl.h5object.root().path,
-                rt.h5object.path)
+                isinstance(attr, H5PYWriter.H5PYAttributeManager))
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(rt.parent, fl)
             self.assertEqual(rt.size, 2)
             self.assertEqual(rt.exists("entry12345"), True)
@@ -935,17 +924,16 @@ class FileWriterTest(unittest.TestCase):
                 print rr.name
 
             self.assertTrue(
-                isinstance(entry, PNIWriter.PNIGroup))
+                isinstance(entry, H5PYWriter.H5PYGroup))
             self.assertEqual(entry.name, "entry12345")
             self.assertEqual(entry.path, "/entry12345:NXentry")
             self.assertEqual(
-                len(entry.h5object.attributes), 1)
+                len(entry.h5object.attrs), 1)
             attr = entry.attributes
             self.assertEqual(attr["NX_class"][...], "NXentry")
             self.assertTrue(
-                isinstance(attr, PNIWriter.PNIAttributeManager))
+                isinstance(attr, H5PYWriter.H5PYAttributeManager))
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(entry.parent, rt)
             self.assertEqual(entry.size, 5)
             self.assertEqual(entry.exists("instrument"), True)
@@ -957,34 +945,33 @@ class FileWriterTest(unittest.TestCase):
 
 
             self.assertTrue(
-                isinstance(nt, PNIWriter.PNIGroup))
+                isinstance(nt, H5PYWriter.H5PYGroup))
             self.assertEqual(nt.name, "notype")
             self.assertEqual(nt.path, "/notype")
+            print nt.h5object.attrs.keys()
             self.assertEqual(
-                len(nt.h5object.attributes), 0)
+                len(nt.h5object.attrs), 0)
             attr = nt.attributes
             self.assertTrue(
-                isinstance(attr, PNIWriter.PNIAttributeManager))
+                isinstance(attr, H5PYWriter.H5PYAttributeManager))
             self.assertEqual(nt.is_valid, True)
-            self.assertEqual(nt.h5object.is_valid, True)
             self.assertEqual(nt.parent, rt)
             self.assertEqual(nt.size, 0)
             self.assertEqual(nt.exists("strument"), False)
 
 
             self.assertTrue(
-                isinstance(ins, PNIWriter.PNIGroup))
+                isinstance(ins, H5PYWriter.H5PYGroup))
             self.assertEqual(ins.name, "instrument")
             self.assertEqual(
                 ins.path, "/entry12345:NXentry/instrument:NXinstrument")
             self.assertEqual(
-                len(ins.h5object.attributes), 1)
+                len(ins.h5object.attrs), 1)
             attr = ins.attributes
             self.assertEqual(attr["NX_class"][...], "NXinstrument")
             self.assertTrue(
-                isinstance(attr, PNIWriter.PNIAttributeManager))
+                isinstance(attr, H5PYWriter.H5PYAttributeManager))
             self.assertEqual(ins.is_valid, True)
-            self.assertEqual(ins.h5object.is_valid, True)
             self.assertEqual(ins.parent, entry)
             self.assertEqual(ins.size, 4)
             self.assertEqual(ins.exists("detector"), True)
@@ -1002,18 +989,17 @@ class FileWriterTest(unittest.TestCase):
 
             ins_op = entry.open("instrument")
             self.assertTrue(
-                isinstance(ins_op, PNIWriter.PNIGroup))
+                isinstance(ins_op, H5PYWriter.H5PYGroup))
             self.assertEqual(ins_op.name, "instrument")
             self.assertEqual(
                 ins_op.path, "/entry12345:NXentry/instrument:NXinstrument")
             self.assertEqual(
-                len(ins_op.h5object.attributes), 1)
+                len(ins_op.h5object.attrs), 1)
             attr = ins_op.attributes
             self.assertEqual(attr["NX_class"][...], "NXinstrument")
             self.assertTrue(
-                isinstance(attr, PNIWriter.PNIAttributeManager))
+                isinstance(attr, H5PYWriter.H5PYAttributeManager))
             self.assertEqual(ins_op.is_valid, True)
-            self.assertEqual(ins_op.h5object.is_valid, True)
             self.assertEqual(ins_op.parent, entry)
             self.assertEqual(ins_op.size, 4)
             self.assertEqual(ins_op.exists("detector"), True)
@@ -1030,20 +1016,19 @@ class FileWriterTest(unittest.TestCase):
                                         "intspec", "strspec"]))
 
             self.assertTrue(
-                isinstance(det, PNIWriter.PNIGroup))
+                isinstance(det, H5PYWriter.H5PYGroup))
             self.assertEqual(det.name, "detector")
             self.assertEqual(
                 det.path,
                 "/entry12345:NXentry/instrument:NXinstrument/"
                 "detector:NXdetector")
             self.assertEqual(
-                len(det.h5object.attributes), 1)
+                len(det.h5object.attrs), 1)
             attr = det.attributes
             self.assertEqual(attr["NX_class"][...], "NXdetector")
             self.assertTrue(
-                isinstance(attr, PNIWriter.PNIAttributeManager))
+                isinstance(attr, H5PYWriter.H5PYAttributeManager))
             self.assertEqual(det.is_valid, True)
-            self.assertEqual(det.h5object.is_valid, True)
             self.assertEqual(det.parent, ins)
             self.assertEqual(det.size, 6)
             self.assertEqual(det.exists("strimage"), True)
@@ -1066,65 +1051,65 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strscalar, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strscalar, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strscalar.h5object, h5py.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
             self.assertEqual(strscalar.shape, (1,))
 
-            self.assertTrue(isinstance(floatscalar, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatscalar, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatscalar.h5object, h5py.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
             self.assertEqual(floatscalar.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar.dtype, 'float64')
             self.assertEqual(floatscalar.shape, (1,))
 
-            self.assertTrue(isinstance(intscalar, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intscalar, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intscalar.h5object, h5py.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
             self.assertEqual(intscalar.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar.dtype, 'uint64')
             self.assertEqual(intscalar.shape, (1,))
 
-            self.assertTrue(isinstance(strspec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strspec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strspec.h5object, h5py.Dataset))
             self.assertEqual(strspec.name, 'strspec')
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec.dtype, 'string')
             self.assertEqual(strspec.shape, (10,))
 
-            self.assertTrue(isinstance(floatspec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatspec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatspec.h5object, h5py.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
             self.assertEqual(floatspec.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
 
-            self.assertTrue(isinstance(intspec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intspec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intspec.h5object, h5py.Dataset))
             self.assertEqual(intspec.name, 'intspec')
             self.assertEqual(intspec.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec.dtype, 'int64')
             self.assertEqual(intspec.shape, (30,))
 
 
-            self.assertTrue(isinstance(strimage, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strimage, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strimage.h5object, h5py.Dataset))
             self.assertEqual(strimage.name, 'strimage')
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
             self.assertEqual(strimage.shape, (2, 2))
 
-            self.assertTrue(isinstance(floatimage, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatimage, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatimage.h5object, h5py.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.dtype, 'float64')
             self.assertEqual(floatimage.shape, (20, 10))
 
-            self.assertTrue(isinstance(intimage, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intimage, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intimage.h5object, h5py.Dataset))
             self.assertEqual(intimage.name, 'intimage')
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.dtype, 'uint32')
@@ -1134,22 +1119,22 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strvec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strvec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strvec.h5object, h5py.Dataset))
             self.assertEqual(strvec.name, 'strvec')
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
             self.assertEqual(strvec.shape, (0, 2, 2))
 
-            self.assertTrue(isinstance(floatvec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatvec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatvec.h5object, h5py.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
             self.assertEqual(floatvec.shape, (1, 20, 10))
 
-            self.assertTrue(isinstance(intvec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intvec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intvec.h5object, h5py.Dataset))
             self.assertEqual(intvec.name, 'intvec')
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec.dtype, 'uint32')
@@ -1170,65 +1155,65 @@ class FileWriterTest(unittest.TestCase):
             intvec_op = det.open("intvec")
 
 
-            self.assertTrue(isinstance(strscalar_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strscalar_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strscalar_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strscalar_op.h5object, h5py.Dataset))
             self.assertEqual(strscalar_op.name, 'strscalar')
             self.assertEqual(strscalar_op.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar_op.dtype, 'string')
             self.assertEqual(strscalar_op.shape, (1,))
 
-            self.assertTrue(isinstance(floatscalar_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatscalar_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatscalar_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatscalar_op.h5object, h5py.Dataset))
             self.assertEqual(floatscalar_op.name, 'floatscalar')
             self.assertEqual(floatscalar_op.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar_op.dtype, 'float64')
             self.assertEqual(floatscalar_op.shape, (1,))
 
-            self.assertTrue(isinstance(intscalar_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intscalar_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intscalar_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intscalar_op.h5object, h5py.Dataset))
             self.assertEqual(intscalar_op.name, 'intscalar')
             self.assertEqual(intscalar_op.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar_op.dtype, 'uint64')
             self.assertEqual(intscalar_op.shape, (1,))
 
-            self.assertTrue(isinstance(strspec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strspec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strspec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strspec_op.h5object, h5py.Dataset))
             self.assertEqual(strspec_op.name, 'strspec')
             self.assertEqual(strspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec_op.dtype, 'string')
             self.assertEqual(strspec_op.shape, (10,))
 
-            self.assertTrue(isinstance(floatspec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatspec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatspec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatspec_op.h5object, h5py.Dataset))
             self.assertEqual(floatspec_op.name, 'floatspec')
             self.assertEqual(floatspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec_op.dtype, 'float32')
             self.assertEqual(floatspec_op.shape, (20,))
 
-            self.assertTrue(isinstance(intspec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intspec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intspec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intspec_op.h5object, h5py.Dataset))
             self.assertEqual(intspec_op.name, 'intspec')
             self.assertEqual(intspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec_op.dtype, 'int64')
             self.assertEqual(intspec_op.shape, (30,))
 
 
-            self.assertTrue(isinstance(strimage_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strimage_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strimage_op.h5object, h5py.Dataset))
             self.assertEqual(strimage_op.name, 'strimage')
             self.assertEqual(strimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage_op.dtype, 'string')
             self.assertEqual(strimage_op.shape, (2, 2))
 
-            self.assertTrue(isinstance(floatimage_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatimage_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatimage_op.h5object, h5py.Dataset))
             self.assertEqual(floatimage_op.name, 'floatimage')
             self.assertEqual(floatimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage_op.dtype, 'float64')
             self.assertEqual(floatimage_op.shape, (20, 10))
 
-            self.assertTrue(isinstance(intimage_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intimage_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intimage_op.h5object, h5py.Dataset))
             self.assertEqual(intimage_op.name, 'intimage')
             self.assertEqual(intimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage_op.dtype, 'uint32')
@@ -1236,22 +1221,22 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strvec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strvec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strvec_op.h5object, h5py.Dataset))
             self.assertEqual(strvec_op.name, 'strvec')
             self.assertEqual(strvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec_op.dtype, 'string')
             self.assertEqual(strvec_op.shape, (0, 2, 2))
 
-            self.assertTrue(isinstance(floatvec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatvec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatvec_op.h5object, h5py.Dataset))
             self.assertEqual(floatvec_op.name, 'floatvec')
             self.assertEqual(floatvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec_op.dtype, 'float64')
             self.assertEqual(floatvec_op.shape, (1, 20, 10))
 
-            self.assertTrue(isinstance(intvec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intvec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intvec_op.h5object, h5py.Dataset))
             self.assertEqual(intvec_op.name, 'intvec')
             self.assertEqual(intvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec_op.dtype, 'uint32')
@@ -1260,40 +1245,40 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(lkintimage, PNIWriter.PNILink))
-            self.assertTrue(isinstance(lkintimage.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkintimage, H5PYWriter.H5PYLink))
+            self.assertTrue(isinstance(lkintimage.h5object, h5py.SoftLink))
             self.assertTrue(lkintimage.target_path.endswith(
                 "%s://entry12345/instrument/detector/intimage" % self._fname))
             self.assertEqual(
                 lkintimage.path,
                 "/entry12345:NXentry/data:NXdata/lkintimage")
 
-            self.assertTrue(isinstance(lkfloatvec, PNIWriter.PNILink))
-            self.assertTrue(isinstance(lkfloatvec.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkfloatvec, H5PYWriter.H5PYLink))
+            self.assertTrue(isinstance(lkfloatvec.h5object, h5py.SoftLink))
             self.assertTrue(lkfloatvec.target_path.endswith(
                 "%s://entry12345/instrument/detector/floatvec" % self._fname))
             self.assertEqual(
                 lkfloatvec.path,
                 "/entry12345:NXentry/data:NXdata/lkfloatvec")
 
-            self.assertTrue(isinstance(lkintspec, PNIWriter.PNILink))
-            self.assertTrue(isinstance(lkintspec.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkintspec, H5PYWriter.H5PYLink))
+            self.assertTrue(isinstance(lkintspec.h5object, h5py.SoftLink))
             self.assertTrue(lkintspec.target_path.endswith(
                 "%s://entry12345/instrument/intspec" % self._fname))
             self.assertEqual(
                 lkintspec.path,
                 "/entry12345:NXentry/data:NXdata/lkintspec")
 
-            self.assertTrue(isinstance(lkdet, PNIWriter.PNILink))
-            self.assertTrue(isinstance(lkdet.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkdet, H5PYWriter.H5PYLink))
+            self.assertTrue(isinstance(lkdet.h5object, h5py.SoftLink))
             self.assertTrue(lkdet.target_path.endswith(
                 "%s://entry12345/instrument/detector" % self._fname))
             self.assertEqual(
                 lkdet.path,
                 "/entry12345:NXentry/data:NXdata/lkdet")
 
-            self.assertTrue(isinstance(lkno, PNIWriter.PNILink))
-            self.assertTrue(isinstance(lkno.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkno, H5PYWriter.H5PYLink))
+            self.assertTrue(isinstance(lkno.h5object, h5py.SoftLink))
             self.assertTrue(lkno.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
             self.assertEqual(
@@ -1310,8 +1295,8 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(lkintimage_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(lkintimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(lkintimage_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(lkintimage_op.h5object, h5py.Dataset))
             self.assertEqual(lkintimage_op.name, 'lkintimage')
             self.assertEqual(
                 lkintimage_op.path,
@@ -1320,8 +1305,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
 
-            self.assertTrue(isinstance(lkfloatvec_op, PNIWriter.PNIField))
-            self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(lkfloatvec_op, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(lkfloatvec_op.h5object, h5py.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
             self.assertEqual(lkfloatvec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
@@ -1330,17 +1315,17 @@ class FileWriterTest(unittest.TestCase):
 
 
             self.assertTrue(
-                isinstance(lkintspec_op, PNIWriter.PNIField))
+                isinstance(lkintspec_op, H5PYWriter.H5PYField))
             self.assertTrue(
-                isinstance(lkintspec_op.h5object, nx._nxh5.nxfield))
+                isinstance(lkintspec_op.h5object, h5py.Dataset))
             self.assertEqual(lkintspec_op.name, 'lkintspec')
             self.assertEqual(lkintspec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkintspec')
             self.assertEqual(lkintspec_op.dtype, 'int64')
             self.assertEqual(lkintspec_op.shape, (30,))
 
-            self.assertTrue(isinstance(lkno_op, PNIWriter.PNILink))
-            self.assertTrue(isinstance(lkno_op.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkno_op, H5PYWriter.H5PYLink))
+            self.assertTrue(isinstance(lkno_op.h5object, h5py.SoftLink))
             self.assertTrue(lkno_op.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
             self.assertEqual(
@@ -1350,29 +1335,22 @@ class FileWriterTest(unittest.TestCase):
 
             entry.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, False)
-            self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-            self.assertEqual(dt.h5object.is_valid, False)
 
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -1380,10 +1358,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -1393,7 +1370,7 @@ class FileWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNIWriter.open_file(self._fname, readonly=True)
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -1411,16 +1388,17 @@ class FileWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
+
     ## default createfile test
     # \brief It tests default settings
-    def test_pnifield_scalar(self):
+    def test_h5pyfield_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -1455,18 +1433,16 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strscalar, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strscalar, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strscalar.h5object, h5py.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
-            self.assertEqual(strscalar.h5object.name, 'strscalar')
+            self.assertEqual(strscalar.h5object.name, '/entry12345/strscalar')
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
-            self.assertEqual(strscalar.h5object.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
-            self.assertEqual(strscalar.h5object.dtype, 'string')
+            self.assertEqual(strscalar.h5object.dtype.name, 'object')
             self.assertEqual(strscalar.shape, (1,))
             self.assertEqual(strscalar.h5object.shape, (1,))
             self.assertEqual(strscalar.is_valid, True)
-            self.assertEqual(strscalar.h5object.is_valid, True)
             self.assertEqual(strscalar.shape, (1,))
             self.assertEqual(strscalar.h5object.shape, (1,))
 
@@ -1503,19 +1479,19 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(strscalar[...]), vl[0:7])
 
             attrs = strscalar.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            print type(attrs.h5object)
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(floatscalar, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatscalar, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatscalar.h5object, h5py.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
-            self.assertEqual(floatscalar.h5object.name, 'floatscalar')
+            self.assertEqual(floatscalar.h5object.name, '/entry12345/floatscalar')
             self.assertEqual(floatscalar.path, '/entry12345:NXentry/floatscalar')
-            self.assertEqual(floatscalar.h5object.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar.dtype, 'float64')
             self.assertEqual(floatscalar.h5object.dtype, 'float64')
             self.assertEqual(floatscalar.shape, (1,))
@@ -1554,19 +1530,18 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(floatscalar[...]), vl[0:7])
 
             attrs = floatscalar.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(intscalar, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intscalar, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intscalar.h5object, h5py.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
-            self.assertEqual(intscalar.h5object.name, 'intscalar')
+            self.assertEqual(intscalar.h5object.name, '/entry12345/intscalar')
             self.assertEqual(intscalar.path, '/entry12345:NXentry/intscalar')
-            self.assertEqual(intscalar.h5object.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar.dtype, 'uint64')
             self.assertEqual(intscalar.h5object.dtype, 'uint64')
             self.assertEqual(intscalar.shape, (1,))
@@ -1607,44 +1582,34 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(intscalar[...]), vl[0:7])
 
             attrs = intscalar.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, intscalar)
             self.assertEqual(len(attrs), 0)
 
             intscalar.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(det.is_valid, True)
-            self.assertEqual(det.h5object.is_valid, True)
             self.assertEqual(intscalar.is_valid, False)
-            self.assertEqual(intscalar.h5object.is_valid, False)
             self.assertEqual(attrs.is_valid, False)
 
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(det.is_valid, True)
-            self.assertEqual(det.h5object.is_valid, True)
             self.assertEqual(intscalar.is_valid, True)
-            self.assertEqual(intscalar.h5object.is_valid, True)
             self.assertEqual(attrs.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -1652,10 +1617,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -1685,14 +1649,14 @@ class FileWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_pnifield_spectrum(self):
+    def test_h5pyfield_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -1726,14 +1690,13 @@ class FileWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            self.assertTrue(isinstance(strspec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strspec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strspec.h5object, h5py.Dataset))
             self.assertEqual(strspec.name, 'strspec')
-            self.assertEqual(strspec.h5object.name, 'strspec')
+            self.assertEqual(strspec.h5object.name, '/entry12345/instrument/strspec')
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
-            self.assertEqual(strspec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec.dtype, 'string')
-            self.assertEqual(strspec.h5object.dtype, 'string')
+            self.assertEqual(strspec.h5object.dtype.name, 'object')
             self.assertEqual(strspec.shape, (10,))
             self.assertEqual(strspec.h5object.shape, (10,))
 
@@ -1772,19 +1735,18 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(strspec[...]), vl[0:16])
 
             attrs = strspec.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strspec)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(floatspec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatspec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatspec.h5object, h5py.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
-            self.assertEqual(floatspec.h5object.name, 'floatspec')
+            self.assertEqual(floatspec.h5object.name, '/entry12345/instrument/floatspec')
             self.assertEqual(floatspec.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
-            self.assertEqual(floatspec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec.dtype, 'float32')
             self.assertEqual(floatspec.h5object.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
@@ -1822,21 +1784,20 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertFloatList(list(floatspec[...]), vl[0:26], 1e-4)
 
             attrs = floatspec.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatspec)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(intspec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intspec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intspec.h5object, h5py.Dataset))
             self.assertEqual(intspec.name, 'intspec')
             self.assertEqual(intspec.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec.dtype, 'int64')
             self.assertEqual(intspec.shape, (30,))
-            self.assertEqual(intspec.h5object.name, 'intspec')
-            self.assertEqual(intspec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
+            self.assertEqual(intspec.h5object.name, '/entry12345/instrument/intspec')
             self.assertEqual(intspec.h5object.dtype, 'int64')
             self.assertEqual(intspec.h5object.shape, (30,))
 
@@ -1874,8 +1835,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(intspec[...]), vl[0:36])
 
             attrs = intspec.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, intspec)
             self.assertEqual(len(attrs), 0)
 
@@ -1883,29 +1844,22 @@ class FileWriterTest(unittest.TestCase):
 
             entry.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, False)
-            self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-            self.assertEqual(dt.h5object.is_valid, False)
 
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -1913,10 +1867,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -1946,14 +1899,14 @@ class FileWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_pnifield_image(self):
+    def test_h5pyfield_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -1986,15 +1939,14 @@ class FileWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            self.assertTrue(isinstance(strimage, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strimage, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strimage.h5object, h5py.Dataset))
             self.assertEqual(strimage.name, 'strimage')
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
             self.assertEqual(strimage.shape, (2, 2))
-            self.assertEqual(strimage.h5object.name, 'strimage')
-            self.assertEqual(strimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
-            self.assertEqual(strimage.h5object.dtype, 'string')
+            self.assertEqual(strimage.h5object.name, '/entry12345/instrument/detector/strimage')
+            self.assertEqual(strimage.h5object.dtype.name, 'object')
             self.assertEqual(strimage.h5object.shape, (2, 2))
 
 
@@ -2043,21 +1995,20 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(strimage.read(), vv6)
 
             attrs = strimage.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strimage)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(floatimage, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatimage, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatimage.h5object, h5py.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.dtype, 'float64')
             self.assertEqual(floatimage.shape, (20, 10))
-            self.assertEqual(floatimage.h5object.name, 'floatimage')
-            self.assertEqual(floatimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
+            self.assertEqual(floatimage.h5object.name, '/entry12345/instrument/detector/floatimage')
             self.assertEqual(floatimage.h5object.dtype, 'float64')
             self.assertEqual(floatimage.h5object.shape, (20, 10))
 
@@ -2105,14 +2056,13 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(intimage, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intimage, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intimage.h5object, h5py.Dataset))
             self.assertEqual(intimage.name, 'intimage')
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.dtype, 'uint32')
             self.assertEqual(intimage.shape, (0, 30))
-            self.assertEqual(intimage.h5object.name, 'intimage')
-            self.assertEqual(intimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
+            self.assertEqual(intimage.h5object.name, '/entry12345/instrument/detector/intimage')
             self.assertEqual(intimage.h5object.dtype, 'uint32')
             self.assertEqual(intimage.h5object.shape, (0, 30))
 
@@ -2162,29 +2112,22 @@ class FileWriterTest(unittest.TestCase):
 
             entry.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, False)
-            self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-            self.assertEqual(dt.h5object.is_valid, False)
 
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -2192,10 +2135,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -2205,7 +2147,7 @@ class FileWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = FileWriter.open_file(self._fname, readonly=True)
+            fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -2226,14 +2168,14 @@ class FileWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_pnifield_vec(self):
+    def test_h5pyfield_vec(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -2243,10 +2185,10 @@ class FileWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNIWriter.deflate_filter()
-            df1 = PNIWriter.deflate_filter()
+            df0 = FileWriter.deflate_filter()
+            df1 = FileWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNIWriter.deflate_filter()
+            df2 = FileWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -2267,15 +2209,14 @@ class FileWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            self.assertTrue(isinstance(strvec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(strvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strvec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(strvec.h5object, h5py.Dataset))
             self.assertEqual(strvec.name, 'strvec')
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
             self.assertEqual(strvec.shape, (0, 2, 2))
-            self.assertEqual(strvec.h5object.name, 'strvec')
-            self.assertEqual(strvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
-            self.assertEqual(strvec.h5object.dtype, 'string')
+            self.assertEqual(strvec.h5object.name, '/entry12345/instrument/detector/strvec')
+            self.assertEqual(strvec.h5object.dtype.name, 'object')
             self.assertEqual(strvec.h5object.shape, (0, 2, 2))
 
             chars = string.ascii_uppercase + string.digits
@@ -2324,20 +2265,19 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertVector(strvec.read(), vv6)
 
             attrs = strvec.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strvec)
             self.assertEqual(len(attrs), 0)
 
 
-            self.assertTrue(isinstance(floatvec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(floatvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatvec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(floatvec.h5object, h5py.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
             self.assertEqual(floatvec.shape, (1, 20, 10))
-            self.assertEqual(floatvec.h5object.name, 'floatvec')
-            self.assertEqual(floatvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
+            self.assertEqual(floatvec.h5object.name, '/entry12345/instrument/detector/floatvec')
             self.assertEqual(floatvec.h5object.dtype, 'float64')
             self.assertEqual(floatvec.h5object.shape, (1, 20, 10))
 
@@ -2354,7 +2294,9 @@ class FileWriterTest(unittest.TestCase):
             vv2 = [[[vl[k][j+2][i+2] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
-            self.myAssertVector([floatvec[...]], vv2)
+
+            ##!!! PNI self.myAssertVector([floatvec[...]], vv2)
+            self.myAssertVector(floatvec[...], vv2)
             floatvec[...] = vv
 
             floatvec.grow()
@@ -2387,21 +2329,20 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertVector(floatvec.read(), vv6)
 
             attrs = floatvec.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatvec)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(intvec, PNIWriter.PNIField))
-            self.assertTrue(isinstance(intvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intvec, H5PYWriter.H5PYField))
+            self.assertTrue(isinstance(intvec.h5object, h5py.Dataset))
             self.assertEqual(intvec.name, 'intvec')
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec.dtype, 'uint32')
             self.assertEqual(intvec.shape, (0, 2, 30))
-            self.assertEqual(intvec.h5object.name, 'intvec')
-            self.assertEqual(intvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
+            self.assertEqual(intvec.h5object.name, '/entry12345/instrument/detector/intvec')
             self.assertEqual(intvec.h5object.dtype, 'uint32')
             self.assertEqual(intvec.h5object.shape, (0, 2, 30))
 
@@ -2419,7 +2360,8 @@ class FileWriterTest(unittest.TestCase):
             vv2 = [[[vl[k][j+2][i+2] for i in range(30)] for j in range(2)] for k in range(1)]
             intvec.write(vv2)
             self.myAssertVector(intvec.read(), vv2)
-            self.myAssertVector([intvec[...]], vv2)
+            ## !!! PNI self.myAssertVector([intvec[...]], vv2)
+            self.myAssertVector(intvec[...], vv2)
             intvec[...] = vv
 
             intvec.grow()
@@ -2452,8 +2394,8 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertVector(intvec.read(), vv6)
 
             attrs = intvec.attributes
-            self.assertTrue(isinstance(attrs, PNIWriter.PNIAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
+            self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, intvec)
             self.assertEqual(len(attrs), 0)
 
@@ -2461,29 +2403,22 @@ class FileWriterTest(unittest.TestCase):
 
             entry.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, False)
-            self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-            self.assertEqual(dt.h5object.is_valid, False)
 
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -2491,10 +2426,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -2522,16 +2456,17 @@ class FileWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
+
     ## default createfile test
     # \brief It tests default settings
-    def test_pnideflate(self):
+    def test_h5pydeflate(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -2568,16 +2503,15 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
-            print df0.h5object
-            self.assertTrue(isinstance(df0.h5object, nx._nxh5.deflate_filter))
+            self.assertEqual(df0.h5object, None)
             self.assertEqual(df1.rate, 2)
             self.assertEqual(df1.shuffle, False)
             self.assertEqual(df1.parent, None)
-            self.assertTrue(isinstance(df1.h5object, nx._nxh5.deflate_filter))
+            self.assertEqual(df1.h5object, None)
             self.assertEqual(df2.rate, 4)
             self.assertEqual(df2.shuffle, True)
             self.assertEqual(df2.parent, None)
-            self.assertTrue(isinstance(df2.h5object, nx._nxh5.deflate_filter))
+            self.assertEqual(df2.h5object, None)
         finally:
             os.remove(self._fname)
 
@@ -2585,14 +2519,14 @@ class FileWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_pniattributemanager(self):
+    def test_h5pyattributemanager(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -2643,15 +2577,15 @@ class FileWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr1, PNIWriter.PNIAttributeManager))
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr2, PNIWriter.PNIAttributeManager))
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5py.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -2675,8 +2609,8 @@ class FileWriterTest(unittest.TestCase):
             print dir(atintscalar)
             print dir(atintscalar.h5object)
 
-            self.assertTrue(isinstance(atintscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintscalar.h5object, tuple))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2686,16 +2620,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), 0)
             self.assertEqual(atintscalar[...], 0)
             self.assertEqual(atintscalar.parent.h5object, rt.h5object)
-            self.assertEqual(atintscalar.h5object.name, 'atintscalar')
-            self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
-            self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            self.assertEqual(atintscalar.h5object.shape, (1,))
-            self.assertEqual(atintscalar.h5object.is_valid, True)
-            self.assertEqual(atintscalar.h5object.read(), 0)
-            self.assertEqual(atintscalar.h5object[...], 0)
+            self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar'))
 
-            self.assertTrue(isinstance(atfloatspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, tuple))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -2705,16 +2633,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atfloatspec.read()), [0.]*12)
             self.assertEqual(list(atfloatspec[...]), [0.]*12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
-            self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
-            self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
-            self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.shape, (12,))
-            self.assertEqual(atfloatspec.h5object.is_valid, True)
-            self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
+            self.assertEqual(atfloatspec.h5object, (attr0.h5object, 'atfloatspec'))
 
-            self.assertTrue(isinstance(atstrimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrimage.h5object, tuple))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -2724,18 +2646,12 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.read(), [['']*3]*2)
             self.myAssertImage(atstrimage[...], [['']*3]*2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
-            self.assertEqual(atstrimage.h5object.name, 'atstrimage')
-            self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
-            self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.shape, (2,3))
-            self.assertEqual(atstrimage.h5object.is_valid, True)
-            self.myAssertImage(atstrimage.h5object.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
+            self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
 
 
-            self.assertTrue(isinstance(atstrscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, tuple))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
             self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
@@ -2745,19 +2661,12 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.read(), '')
             self.assertEqual(atstrscalar[...], '')
             self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
-            self.assertEqual(atstrscalar.h5object.name, 'atstrscalar')
-            self.assertEqual(atstrscalar.h5object.path,
-                             '/entry12345:NXentry@atstrscalar')
-            self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            self.assertEqual(atstrscalar.h5object.shape, (1,))
-            self.assertEqual(atstrscalar.h5object.is_valid, True)
-            self.assertEqual(atstrscalar.h5object.read(), '')
-            self.assertEqual(atstrscalar.h5object[...], '')
+            self.assertEqual(atstrscalar.h5object, (attr1.h5object, 'atstrscalar'))
 
 
 
-            self.assertTrue(isinstance(atintspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintspec.h5object, tuple))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -2767,18 +2676,12 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec.read()), [0]*2)
             self.assertEqual(list(atintspec[...]), [0]*2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
-            self.assertEqual(atintspec.h5object.name, 'atintspec')
-            self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
-            self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.shape, (2,))
-            self.assertEqual(atintspec.h5object.is_valid, True)
-            self.assertEqual(list(atintspec.h5object.read()), [0]*2)
-            self.assertEqual(list(atintspec.h5object[...]), [0]*2)
+            self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
 
 
-            self.assertTrue(isinstance(atfloatimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, tuple))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
@@ -2788,19 +2691,12 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
             self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
-            self.assertEqual(atfloatimage.h5object.name, 'atfloatimage')
-            self.assertEqual(atfloatimage.h5object.path,
-                             '/entry12345:NXentry@atfloatimage')
-            self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.shape, (3,2))
-            self.assertEqual(atfloatimage.h5object.is_valid, True)
-            self.myAssertImage(atfloatimage.h5object.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
+            self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
 
 
 
-            self.assertTrue(isinstance(atfloatscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, tuple))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -2811,18 +2707,11 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), 0)
             self.assertEqual(atfloatscalar[...], 0)
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
-            self.assertEqual(atfloatscalar.h5object.name, 'atfloatscalar')
-            self.assertEqual(atfloatscalar.h5object.path,
-                             '/entry12345:NXentry/intscalar@atfloatscalar')
-            self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            self.assertEqual(atfloatscalar.h5object.shape, (1,))
-            self.assertEqual(atfloatscalar.h5object.is_valid, True)
-            self.assertEqual(atfloatscalar.h5object.read(), 0)
-            self.assertEqual(atfloatscalar.h5object[...], 0)
+            self.assertEqual(atfloatscalar.h5object, (attr2.h5object, 'atfloatscalar'))
 
 
-            self.assertTrue(isinstance(atstrspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrspec.h5object, tuple))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -2833,18 +2722,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec.read()), ['']*4)
             self.assertEqual(list(atstrspec[...]), ['']*4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
-            self.assertEqual(atstrspec.h5object.name, 'atstrspec')
-            self.assertEqual(atstrspec.h5object.path,
-                             '/entry12345:NXentry/intscalar@atstrspec')
-            self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.shape, (4,))
-            self.assertEqual(atstrspec.h5object.is_valid, True)
-            self.assertEqual(list(atstrspec.h5object.read()), ['']*4)
-            self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
+            self.assertEqual(atstrspec.h5object, (attr2.h5object, 'atstrspec'))
 
-
-            self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintimage.h5object, tuple))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2854,6 +2735,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.is_valid, True)
             self.myAssertImage(atintimage.read(), [[0]*2]*3)
             self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
+            self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
             print "WW", attr1["NX_class"].name
 
@@ -2866,7 +2749,6 @@ class FileWriterTest(unittest.TestCase):
 
             at = None
 
-
             atintscalar = attr0["atintscalar"]
             atfloatspec = attr0["atfloatspec"]
             atstrimage = attr0["atstrimage"]
@@ -2877,8 +2759,8 @@ class FileWriterTest(unittest.TestCase):
             atstrspec = attr2["atstrspec"]
             atintimage = attr2["atintimage"]
 
-            self.assertTrue(isinstance(atintscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintscalar.h5object, tuple))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2888,16 +2770,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), 0)
             self.assertEqual(atintscalar[...], 0)
             self.assertEqual(atintscalar.parent.h5object, rt.h5object)
-            self.assertEqual(atintscalar.h5object.name, 'atintscalar')
-            self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
-            self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            self.assertEqual(atintscalar.h5object.shape, (1,))
-            self.assertEqual(atintscalar.h5object.is_valid, True)
-            self.assertEqual(atintscalar.h5object.read(), 0)
-            self.assertEqual(atintscalar.h5object[...], 0)
+            self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar'))
 
-            self.assertTrue(isinstance(atfloatspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, tuple))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -2907,16 +2783,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atfloatspec.read()), [0.]*12)
             self.assertEqual(list(atfloatspec[...]), [0.]*12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
-            self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
-            self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
-            self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.shape, (12,))
-            self.assertEqual(atfloatspec.h5object.is_valid, True)
-            self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
+            self.assertEqual(atfloatspec.h5object, (attr0.h5object, 'atfloatspec'))
 
-            self.assertTrue(isinstance(atstrimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrimage.h5object, tuple))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -2926,18 +2796,12 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.read(), [['']*3]*2)
             self.myAssertImage(atstrimage[...], [['']*3]*2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
-            self.assertEqual(atstrimage.h5object.name, 'atstrimage')
-            self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
-            self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.shape, (2,3))
-            self.assertEqual(atstrimage.h5object.is_valid, True)
-            self.myAssertImage(atstrimage.h5object.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
+            self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
 
 
-            self.assertTrue(isinstance(atstrscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, tuple))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
             self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
@@ -2947,19 +2811,12 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.read(), '')
             self.assertEqual(atstrscalar[...], '')
             self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
-            self.assertEqual(atstrscalar.h5object.name, 'atstrscalar')
-            self.assertEqual(atstrscalar.h5object.path,
-                             '/entry12345:NXentry@atstrscalar')
-            self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            self.assertEqual(atstrscalar.h5object.shape, (1,))
-            self.assertEqual(atstrscalar.h5object.is_valid, True)
-            self.assertEqual(atstrscalar.h5object.read(), '')
-            self.assertEqual(atstrscalar.h5object[...], '')
+            self.assertEqual(atstrscalar.h5object, (attr1.h5object, 'atstrscalar'))
 
 
 
-            self.assertTrue(isinstance(atintspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintspec.h5object, tuple))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -2969,18 +2826,12 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec.read()), [0]*2)
             self.assertEqual(list(atintspec[...]), [0]*2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
-            self.assertEqual(atintspec.h5object.name, 'atintspec')
-            self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
-            self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.shape, (2,))
-            self.assertEqual(atintspec.h5object.is_valid, True)
-            self.assertEqual(list(atintspec.h5object.read()), [0]*2)
-            self.assertEqual(list(atintspec.h5object[...]), [0]*2)
+            self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
 
 
-            self.assertTrue(isinstance(atfloatimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, tuple))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
@@ -2990,18 +2841,12 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
             self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
-            self.assertEqual(atfloatimage.h5object.name, 'atfloatimage')
-            self.assertEqual(atfloatimage.h5object.path,
-                             '/entry12345:NXentry@atfloatimage')
-            self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.shape, (3,2))
-            self.assertEqual(atfloatimage.h5object.is_valid, True)
-            self.myAssertImage(atfloatimage.h5object.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
+            self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
 
 
-            self.assertTrue(isinstance(atfloatscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, nx._nxh5.nxattribute))
+
+            self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, tuple))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -3012,18 +2857,11 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), 0)
             self.assertEqual(atfloatscalar[...], 0)
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
-            self.assertEqual(atfloatscalar.h5object.name, 'atfloatscalar')
-            self.assertEqual(atfloatscalar.h5object.path,
-                             '/entry12345:NXentry/intscalar@atfloatscalar')
-            self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            self.assertEqual(atfloatscalar.h5object.shape, (1,))
-            self.assertEqual(atfloatscalar.h5object.is_valid, True)
-            self.assertEqual(atfloatscalar.h5object.read(), 0)
-            self.assertEqual(atfloatscalar.h5object[...], 0)
+            self.assertEqual(atfloatscalar.h5object, (attr2.h5object, 'atfloatscalar'))
 
 
-            self.assertTrue(isinstance(atstrspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrspec.h5object, tuple))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -3034,18 +2872,10 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec.read()), ['']*4)
             self.assertEqual(list(atstrspec[...]), ['']*4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
-            self.assertEqual(atstrspec.h5object.name, 'atstrspec')
-            self.assertEqual(atstrspec.h5object.path,
-                             '/entry12345:NXentry/intscalar@atstrspec')
-            self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.shape, (4,))
-            self.assertEqual(atstrspec.h5object.is_valid, True)
-            self.assertEqual(list(atstrspec.h5object.read()), ['']*4)
-            self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
+            self.assertEqual(atstrspec.h5object, (attr2.h5object, 'atstrspec'))
 
-
-            self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintimage.h5object, tuple))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -3056,20 +2886,14 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.read(), [[0]*2]*3)
             self.myAssertImage(atintimage[...], [[0]*2]*3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
-            self.assertEqual(atintimage.h5object.name, 'atintimage')
-            self.assertEqual(atintimage.h5object.path,
-                             '/entry12345:NXentry/intscalar@atintimage')
-            self.assertEqual(atintimage.h5object.dtype, 'int32')
-            self.assertEqual(atintimage.h5object.shape, (3,2))
-            self.assertEqual(atintimage.h5object.is_valid, True)
-            self.myAssertImage(atintimage.h5object.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage.h5object[...], [[0]*2]*3)
+            self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
+
 
             self.myAssertRaise(Exception, attr2.create, "atintimage","uint64", [4])
             atintimage = attr2.create("atintimage","uint64", [4], True)
 
-            self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintimage.h5object, tuple))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -3080,69 +2904,45 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atintimage.read()), [0]*4)
             self.assertEqual(list(atintimage[...]), [0]*4)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
-            self.assertEqual(atintimage.h5object.name, 'atintimage')
-            self.assertEqual(atintimage.h5object.path,
-                             '/entry12345:NXentry/intscalar@atintimage')
-            self.assertEqual(atintimage.h5object.dtype, 'uint64')
-            self.assertEqual(atintimage.h5object.shape, (4,))
-            self.assertEqual(atintimage.h5object.is_valid, True)
-            self.assertEqual(list(atintimage.h5object.read()), [0]*4)
-            self.assertEqual(list(atintimage.h5object[...]), [0]*4)
+            self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
 
             attr2.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
 
             attr2.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
 
             intscalar.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
-            self.assertEqual(atintimage.h5object.is_valid, False)
 
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -3150,10 +2950,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -3182,16 +2981,18 @@ class FileWriterTest(unittest.TestCase):
 
 
 
+
+
     ## default createfile test
     # \brief It tests default settings
-    def test_pniattribute_scalar(self):
+    def test_h5pyattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -3242,15 +3043,15 @@ class FileWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr1, PNIWriter.PNIAttributeManager))
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr2, PNIWriter.PNIAttributeManager))
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5py.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -3285,8 +3086,8 @@ class FileWriterTest(unittest.TestCase):
 
             atintscalar.write(itvl[0])
 
-            self.assertTrue(isinstance(atintscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintscalar.h5object, tuple))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -3296,41 +3097,33 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), itvl[0])
             self.assertEqual(atintscalar[...], itvl[0])
             self.assertEqual(atintscalar.parent.h5object, rt.h5object)
-            self.assertEqual(atintscalar.h5object.name, 'atintscalar')
-            self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
-            self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            self.assertEqual(atintscalar.h5object.shape, (1,))
-            self.assertEqual(atintscalar.h5object.is_valid, True)
-            self.assertEqual(atintscalar.h5object.read(), itvl[0])
-            self.assertEqual(atintscalar.h5object[...], itvl[0])
+            self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar'))
 
 
             atintscalar[...] = itvl[1]
 
-            self.assertEqual(atintscalar.h5object.read(), itvl[1])
-            self.assertEqual(atintscalar.h5object[...], itvl[1])
+            self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[1])
             self.assertEqual(atintscalar.read(), itvl[1])
             self.assertEqual(atintscalar[...], itvl[1])
 
             atintscalar[:] = itvl[2]
 
-            self.assertEqual(atintscalar.h5object.read(), itvl[2])
-            self.assertEqual(atintscalar.h5object[...], itvl[2])
+            self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[2])
             self.assertEqual(atintscalar.read(), itvl[2])
             self.assertEqual(atintscalar[...], itvl[2])
 
             atintscalar[0] = itvl[3]
 
-            self.assertEqual(atintscalar.h5object.read(), itvl[3])
-            self.assertEqual(atintscalar.h5object[...], itvl[3])
+            self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[3])
             self.assertEqual(atintscalar.read(), itvl[3])
             self.assertEqual(atintscalar[...], itvl[3])
 
+            print stvl[0], type(stvl[0])
 
             atstrscalar.write(stvl[0])
 
-            self.assertTrue(isinstance(atstrscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, tuple))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
             self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
@@ -3340,43 +3133,32 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.read(), stvl[0])
             self.assertEqual(atstrscalar[...], stvl[0])
             self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
-            self.assertEqual(atstrscalar.h5object.name, 'atstrscalar')
-            self.assertEqual(atstrscalar.h5object.path,
-                             '/entry12345:NXentry@atstrscalar')
-            self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            self.assertEqual(atstrscalar.h5object.shape, (1,))
-            self.assertEqual(atstrscalar.h5object.is_valid, True)
-            self.assertEqual(atstrscalar.h5object.read(), stvl[0])
-            self.assertEqual(atstrscalar.h5object[...], stvl[0])
 
 
 
             atstrscalar[...] = stvl[1]
 
-            self.assertEqual(atstrscalar.h5object.read(), stvl[1])
-            self.assertEqual(atstrscalar.h5object[...], stvl[1])
+            self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[1])
             self.assertEqual(atstrscalar.read(), stvl[1])
             self.assertEqual(atstrscalar[...], stvl[1])
 
             atstrscalar[:] = stvl[2]
 
-            self.assertEqual(atstrscalar.h5object.read(), stvl[2])
-            self.assertEqual(atstrscalar.h5object[...], stvl[2])
+            self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[2])
             self.assertEqual(atstrscalar.read(), stvl[2])
             self.assertEqual(atstrscalar[...], stvl[2])
 
             atstrscalar[0] = stvl[3]
 
-            self.assertEqual(atstrscalar.h5object.read(), stvl[3])
-            self.assertEqual(atstrscalar.h5object[...], stvl[3])
+            self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[3])
             self.assertEqual(atstrscalar.read(), stvl[3])
             self.assertEqual(atstrscalar[...], stvl[3])
 
 
             atfloatscalar.write(flvl[0])
 
-            self.assertTrue(isinstance(atfloatscalar, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, tuple))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -3387,96 +3169,66 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), flvl[0])
             self.assertEqual(atfloatscalar[...], flvl[0])
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
-            self.assertEqual(atfloatscalar.h5object.name, 'atfloatscalar')
-            self.assertEqual(atfloatscalar.h5object.path,
-                             '/entry12345:NXentry/intscalar@atfloatscalar')
-            self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            self.assertEqual(atfloatscalar.h5object.shape, (1,))
-            self.assertEqual(atfloatscalar.h5object.is_valid, True)
-            self.assertEqual(atfloatscalar.h5object.read(), flvl[0])
-            self.assertEqual(atfloatscalar.h5object[...], flvl[0])
 
 
 
             atfloatscalar[...] = flvl[1]
 
-            self.assertEqual(atfloatscalar.h5object.read(), flvl[1])
-            self.assertEqual(atfloatscalar.h5object[...], flvl[1])
+            self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[1])
             self.assertEqual(atfloatscalar.read(), flvl[1])
             self.assertEqual(atfloatscalar[...], flvl[1])
 
             atfloatscalar[:] = flvl[2]
 
-            self.assertEqual(atfloatscalar.h5object.read(), flvl[2])
-            self.assertEqual(atfloatscalar.h5object[...], flvl[2])
+            self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[2])
             self.assertEqual(atfloatscalar.read(), flvl[2])
             self.assertEqual(atfloatscalar[...], flvl[2])
 
             atfloatscalar[0] = flvl[3]
 
-            self.assertEqual(atfloatscalar.h5object.read(), flvl[3])
-            self.assertEqual(atfloatscalar.h5object[...], flvl[3])
+            self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[3])
             self.assertEqual(atfloatscalar.read(), flvl[3])
             self.assertEqual(atfloatscalar[...], flvl[3])
 
 
             atfloatscalar.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atfloatscalar.is_valid, False)
-            self.assertEqual(atfloatscalar.h5object.is_valid, False)
 
             atfloatscalar.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atfloatscalar.is_valid, True)
-            self.assertEqual(atfloatscalar.h5object.is_valid, True)
 
             intscalar.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
-            self.assertEqual(atintimage.h5object.is_valid, False)
             self.assertEqual(atfloatscalar.is_valid, False)
-            self.assertEqual(atfloatscalar.h5object.is_valid, False)
 
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.is_valid, True)
-            self.assertEqual(atfloatscalar.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -3484,10 +3236,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -3517,14 +3268,14 @@ class FileWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_pniattribute_spectrum(self):
+    def test_h5pyattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -3575,15 +3326,15 @@ class FileWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr1, PNIWriter.PNIAttributeManager))
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr2, PNIWriter.PNIAttributeManager))
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5py.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -3620,8 +3371,8 @@ class FileWriterTest(unittest.TestCase):
             atfloatspec.write(flvl[0])
 
 
-            self.assertTrue(isinstance(atfloatspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, tuple))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -3631,57 +3382,46 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertFloatList(list(atfloatspec.read()), flvl[0], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[0], 1e-3)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
-            self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
-            self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
-            self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.shape, (12,))
-            self.assertEqual(atfloatspec.h5object.is_valid, True)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[0], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[0], 1e-3)
 
 
 
             atfloatspec[...] = flvl[1]
 
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[1], 1e-3)
             self.myAssertFloatList(list(atfloatspec.read()), flvl[1], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[1], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[1], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[1], 1e-3)
 
             atfloatspec[:] = flvl[2]
 
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[2], 1e-3)
             self.myAssertFloatList(list(atfloatspec.read()), flvl[2], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[2], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[2], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[2], 1e-3)
 
             atfloatspec[0:12] = flvl[3]
 
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
 
             atfloatspec[1:10] = flvl[4][1:10]
 
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec'][1:10]),
+                                   flvl[4][1:10], 1e-3)
             self.myAssertFloatList(list(atfloatspec.read()[1:10]), flvl[4][1:10], 1e-3)
             self.myAssertFloatList(list(atfloatspec[1:10]), flvl[4][1:10], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()[1:10]), flvl[4][1:10], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[1:10]), flvl[4][1:10], 1e-3)
 
             atfloatspec[1:10] = flvl[3][1:10]
 
+            self.myAssertFloatList(list(atfloatspec.h5object[0]['atfloatspec']), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
-            self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
 
 
             atintspec.write(itvl[0])
 
 
-            self.assertTrue(isinstance(atintspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintspec.h5object, tuple))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -3691,56 +3431,44 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec.read()), itvl[0])
             self.assertEqual(list(atintspec[...]), itvl[0])
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
-            self.assertEqual(atintspec.h5object.name, 'atintspec')
-            self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
-            self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.shape, (2,))
-            self.assertEqual(atintspec.h5object.is_valid, True)
-            self.assertEqual(list(atintspec.h5object.read()), itvl[0])
-            self.assertEqual(list(atintspec.h5object[...]), itvl[0])
 
 
             atintspec[...] = itvl[1]
 
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[1])
             self.assertEqual(list(atintspec.read()), itvl[1])
             self.assertEqual(list(atintspec[...]), itvl[1])
-            self.assertEqual(list(atintspec.h5object.read()), itvl[1])
-            self.assertEqual(list(atintspec.h5object[...]), itvl[1])
 
             atintspec[:] = itvl[2]
 
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[2])
             self.assertEqual(list(atintspec.read()), itvl[2])
             self.assertEqual(list(atintspec[...]), itvl[2])
-            self.assertEqual(list(atintspec.h5object.read()), itvl[2])
-            self.assertEqual(list(atintspec.h5object[...]), itvl[2])
 
             atintspec[0:2] = itvl[3]
 
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[3])
             self.assertEqual(list(atintspec.read()), itvl[3])
             self.assertEqual(list(atintspec[...]), itvl[3])
-            self.assertEqual(list(atintspec.h5object.read()), itvl[3])
-            self.assertEqual(list(atintspec.h5object[...]), itvl[3])
 
             atintspec[1:] = itvl[4][1:]
 
+            self.assertEqual(list(atintspec.h5object[0]['atintspec'][1:]), itvl[4][1:])
             self.assertEqual([atintspec.read()[1:]], itvl[4][1:])
             self.assertEqual([atintspec[1:]], itvl[4][1:])
-            self.assertEqual([atintspec.h5object.read()[1:]], itvl[4][1:])
-            self.assertEqual([atintspec.h5object[1:]], itvl[4][1:])
 
             atintspec[1:] = itvl[3][1:]
 
+            self.assertEqual(list(atintspec.h5object[0]['atintspec']), itvl[3])
             self.assertEqual(list(atintspec.read()), itvl[3])
             self.assertEqual(list(atintspec[...]), itvl[3])
-            self.assertEqual(list(atintspec.h5object.read()), itvl[3])
-            self.assertEqual(list(atintspec.h5object[...]), itvl[3])
 
 
             atstrspec.write(stvl[0])
 
 
-            self.assertTrue(isinstance(atstrspec, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrspec, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrspec.h5object, tuple))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -3751,50 +3479,38 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec.read()), stvl[0])
             self.assertEqual(list(atstrspec[...]), stvl[0])
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
-            self.assertEqual(atstrspec.h5object.name, 'atstrspec')
-            self.assertEqual(atstrspec.h5object.path,
-                             '/entry12345:NXentry/intscalar@atstrspec')
-            self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.shape, (4,))
-            self.assertEqual(atstrspec.h5object.is_valid, True)
-            self.assertEqual(list(atstrspec.h5object.read()), stvl[0])
-            self.assertEqual(list(atstrspec.h5object[...]), stvl[0])
 
 
             atstrspec[...] = stvl[1]
 
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[1])
             self.assertEqual(list(atstrspec.read()), stvl[1])
             self.assertEqual(list(atstrspec[...]), stvl[1])
-            self.assertEqual(list(atstrspec.h5object.read()), stvl[1])
-            self.assertEqual(list(atstrspec.h5object[...]), stvl[1])
 
             atstrspec[:] = stvl[2]
 
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[2])
             self.assertEqual(list(atstrspec.read()), stvl[2])
             self.assertEqual(list(atstrspec[...]), stvl[2])
-            self.assertEqual(list(atstrspec.h5object.read()), stvl[2])
-            self.assertEqual(list(atstrspec.h5object[...]), stvl[2])
 
             atstrspec[0:4] = stvl[3]
 
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[3])
             self.assertEqual(list(atstrspec.read()), stvl[3])
             self.assertEqual(list(atstrspec[...]), stvl[3])
-            self.assertEqual(list(atstrspec.h5object.read()), stvl[3])
-            self.assertEqual(list(atstrspec.h5object[...]), stvl[3])
 
             atstrspec[:3] = stvl[4][:3]
 
+
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec'][:3]), stvl[4][:3])
             self.assertEqual(list(atstrspec.read())[:3], stvl[4][:3])
             self.assertEqual(list(atstrspec[:3]), stvl[4][:3])
-            self.assertEqual(list(atstrspec.h5object.read()[:3]), stvl[4][:3])
-            self.assertEqual(list(atstrspec.h5object[:3]), stvl[4][:3])
 
             atstrspec[:3] = stvl[3][:3]
 
+            self.assertEqual(list(atstrspec.h5object[0]['atstrspec']), stvl[3])
             self.assertEqual(list(atstrspec.read()), stvl[3])
             self.assertEqual(list(atstrspec[...]), stvl[3])
-            self.assertEqual(list(atstrspec.h5object.read()), stvl[3])
-            self.assertEqual(list(atstrspec.h5object[...]), stvl[3])
 
 
 
@@ -3802,65 +3518,44 @@ class FileWriterTest(unittest.TestCase):
 
             atfloatspec.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
             self.assertEqual(atfloatspec.is_valid, False)
-            self.assertEqual(atfloatspec.h5object.is_valid, False)
 
             atfloatspec.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(atfloatspec.h5object.is_valid, True)
 
             intscalar.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
-            self.assertEqual(atintimage.h5object.is_valid, False)
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(atfloatspec.h5object.is_valid, True)
 
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(atfloatspec.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -3868,10 +3563,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -3901,14 +3595,14 @@ class FileWriterTest(unittest.TestCase):
 
     ## default createfile test
     # \brief It tests default settings
-    def test_pniattribute_image(self):
+    def test_h5pyattribute_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5PYWriter 
             fl = FileWriter.create_file(self._fname)
 
             rt = fl.root()
@@ -3959,15 +3653,15 @@ class FileWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
+            self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr1, PNIWriter.PNIAttributeManager))
+                isinstance(attr0.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
-            self.assertTrue(isinstance(attr2, PNIWriter.PNIAttributeManager))
+                isinstance(attr1.h5object, h5py.AttributeManager))
+            self.assertTrue(isinstance(attr2, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5py.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -4006,8 +3700,8 @@ class FileWriterTest(unittest.TestCase):
 
             atstrimage.write(stvl[0])
 
-            self.assertTrue(isinstance(atstrimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atstrimage.h5object, tuple))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -4017,42 +3711,39 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.read(), stvl[0])
             self.myAssertImage(atstrimage[...], stvl[0])
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
-            self.assertEqual(atstrimage.h5object.name, 'atstrimage')
-            self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
-            self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.shape, (2,3))
-            self.assertEqual(atstrimage.h5object.is_valid, True)
-            self.myAssertImage(atstrimage.h5object.read(), stvl[0])
-            self.myAssertImage(atstrimage.h5object[...], stvl[0])
 
             atstrimage[...] = stvl[1]
 
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[1])
             self.myAssertImage(atstrimage.read(), stvl[1])
             self.myAssertImage(atstrimage[:,:], stvl[1])
-            self.myAssertImage(atstrimage.h5object.read(), stvl[1])
-            self.myAssertImage(atstrimage.h5object[:,:], stvl[1])
 
             atstrimage[:,:] = stvl[2]
 
             self.myAssertImage(atstrimage.read(), stvl[2])
             self.myAssertImage(atstrimage[...], stvl[2])
-            self.myAssertImage(atstrimage.h5object.read(), stvl[2])
-            self.myAssertImage(atstrimage.h5object[...], stvl[2])
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[2])
 
             atstrimage[0:2,:] = stvl[3]
 
             self.myAssertImage(atstrimage.read(), stvl[3])
             self.myAssertImage(atstrimage[...], stvl[3])
-            self.myAssertImage(atstrimage.h5object.read(), stvl[3])
-            self.myAssertImage(atstrimage.h5object[...], stvl[3])
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[3])
 
             vv1 = [[stvl[4][j][i] for i in range(2)] for j in range(2)]
+
+            print "TR", atstrimage.read()
+
+            print "TRct", atstrimage[:,1:]
+
             atstrimage[:,1:] = vv1
 
+            print "VV1", vv1
+            print "TR1 ", atstrimage[:,:]
+            print "TR2 ", atstrimage[:,1:]
             self.myAssertImage(atstrimage.read()[:,1:], vv1)
             self.myAssertImage(atstrimage[:,1:], vv1)
-            self.myAssertImage(atstrimage.h5object.read()[:,1:], vv1)
-            self.myAssertImage(atstrimage.h5object[:,1:], vv1)
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'][:,1:], vv1)
 
 
             vv2 = [[stvl[3][j][i+1] for i in range(2)] for j in range(2)]
@@ -4060,16 +3751,15 @@ class FileWriterTest(unittest.TestCase):
 
             self.myAssertImage(atstrimage.read(), stvl[3])
             self.myAssertImage(atstrimage[...], stvl[3])
-            self.myAssertImage(atstrimage.h5object.read(), stvl[3])
-            self.myAssertImage(atstrimage.h5object[...], stvl[3])
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'], stvl[3])
 
 
             atfloatimage.write(flvl[0])
 
 
 
-            self.assertTrue(isinstance(atfloatimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, tuple))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
@@ -4079,45 +3769,31 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.read(), flvl[0])
             self.myAssertImage(atfloatimage[...], flvl[0])
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
-            self.assertEqual(atfloatimage.h5object.name, 'atfloatimage')
-            self.assertEqual(atfloatimage.h5object.path,
-                             '/entry12345:NXentry@atfloatimage')
-            self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.shape, (3,2))
-            self.assertEqual(atfloatimage.h5object.is_valid, True)
-            self.myAssertImage(atfloatimage.h5object.read(), flvl[0])
-            self.myAssertImage(atfloatimage.h5object[...], flvl[0])
-
-
 
             atfloatimage[...] = flvl[1]
 
             self.myAssertImage(atfloatimage.read(), flvl[1])
             self.myAssertImage(atfloatimage[:,:], flvl[1])
-            self.myAssertImage(atfloatimage.h5object.read(), flvl[1])
-            self.myAssertImage(atfloatimage.h5object[:,:], flvl[1])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[1])
 
             atfloatimage[:,:] = flvl[2]
 
             self.myAssertImage(atfloatimage.read(), flvl[2])
             self.myAssertImage(atfloatimage[...], flvl[2])
-            self.myAssertImage(atfloatimage.h5object.read(), flvl[2])
-            self.myAssertImage(atfloatimage.h5object[...], flvl[2])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[2])
 
             atfloatimage[0:3,:] = flvl[3]
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
-            self.myAssertImage(atfloatimage.h5object.read(), flvl[3])
-            self.myAssertImage(atfloatimage.h5object[...], flvl[3])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[3])
 
             vv1 = [[flvl[4][j][i] for i in range(2)] for j in range(2)]
             atfloatimage[1:,:] = vv1
 
             self.myAssertImage(atfloatimage.read()[1:,:], vv1)
             self.myAssertImage(atfloatimage[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object.read()[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object[1:,:], vv1)
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'][1:,:], vv1)
 
 
             vv2 = [[flvl[3][j+1][i] for i in range(2)] for j in range(2)]
@@ -4125,15 +3801,14 @@ class FileWriterTest(unittest.TestCase):
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
-            self.myAssertImage(atfloatimage.h5object.read(), flvl[3])
-            self.myAssertImage(atfloatimage.h5object[...], flvl[3])
+            self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[3])
 
 
             atintimage.write(itvl[0])
 
 
-            self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
+            self.assertTrue(isinstance(atintimage.h5object, tuple))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -4144,43 +3819,31 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.read(), itvl[0])
             self.myAssertImage(atintimage[...], itvl[0])
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
-            self.assertEqual(atintimage.h5object.name, 'atintimage')
-            self.assertEqual(atintimage.h5object.path,
-                             '/entry12345:NXentry/intscalar@atintimage')
-            self.assertEqual(atintimage.h5object.dtype, 'int32')
-            self.assertEqual(atintimage.h5object.shape, (3,2))
-            self.assertEqual(atintimage.h5object.is_valid, True)
-            self.myAssertImage(atintimage.h5object.read(), itvl[0])
-            self.myAssertImage(atintimage.h5object[...], itvl[0])
 
             atintimage[...] = itvl[1]
 
             self.myAssertImage(atintimage.read(), itvl[1])
             self.myAssertImage(atintimage[:,:], itvl[1])
-            self.myAssertImage(atintimage.h5object.read(), itvl[1])
-            self.myAssertImage(atintimage.h5object[:,:], itvl[1])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[1])
 
             atintimage[:,:] = itvl[2]
 
             self.myAssertImage(atintimage.read(), itvl[2])
             self.myAssertImage(atintimage[...], itvl[2])
-            self.myAssertImage(atintimage.h5object.read(), itvl[2])
-            self.myAssertImage(atintimage.h5object[...], itvl[2])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[2])
 
             atintimage[0:3,:] = itvl[3]
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
-            self.myAssertImage(atintimage.h5object.read(), itvl[3])
-            self.myAssertImage(atintimage.h5object[...], itvl[3])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[3])
 
             vv1 = [[itvl[4][j][i] for i in range(2)] for j in range(2)]
             atintimage[1:,:] = vv1
 
             self.myAssertImage(atintimage.read()[1:,:], vv1)
             self.myAssertImage(atintimage[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object.read()[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object[1:,:], vv1)
+            self.myAssertImage(atintimage.h5object[0]['atintimage'][1:,:], vv1)
 
 
             vv2 = [[itvl[3][j+1][i] for i in range(2)] for j in range(2)]
@@ -4188,63 +3851,45 @@ class FileWriterTest(unittest.TestCase):
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
-            self.myAssertImage(atintimage.h5object.read(), itvl[3])
-            self.myAssertImage(atintimage.h5object[...], itvl[3])
+            self.myAssertImage(atintimage.h5object[0]['atintimage'], itvl[3])
 
 
             atintimage.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, False)
-            self.assertEqual(atintimage.h5object.is_valid, False)
 
             atintimage.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
 
             intscalar.close()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
-            self.assertEqual(atintimage.h5object.is_valid, False)
 
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
-            self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(entry.is_valid, True)
-            self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(dt.is_valid, True)
-            self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(attr2.is_valid, True)
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(atintimage.h5object.is_valid, True)
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
@@ -4252,10 +3897,9 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, None)
             self.assertTrue(
-                isinstance(fl.h5object, nx._nxh5.nxfile))
+                isinstance(fl.h5object, h5py.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, True)
-            self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
 
@@ -4281,8 +3925,6 @@ class FileWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
 
 
 

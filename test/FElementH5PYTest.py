@@ -39,7 +39,6 @@ from nxswriter.DataSources import DataSource
 from nxswriter.Errors import XMLSettingSyntaxError
 from nxswriter.Types import NTP
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 from TestDataSource import TestDataSource 

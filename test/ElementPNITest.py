@@ -30,6 +30,7 @@ from nxswriter.H5Elements import EFile
 from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
 import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
 
 
 ## if 64-bit machione
@@ -66,55 +67,43 @@ class ElementTest(unittest.TestCase):
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
-    # \brief It tests default settings
-    def test_constructor(self):
+    ## lastObject method test
+    # \brief It tests executing _lastObject method
+    def test_lastObject_pni(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        el = Element(self._tfname, self._fattrs)
-        self.assertEqual(el.tagName, self._tfname)
-        self.assertEqual(el._tagAttrs, self._fattrs)
-        self.assertEqual(el.content, [])
-        self.assertEqual(el.doc, "")
-        self.assertEqual(el.last, None)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+
+        FileWriter.writer = PNIWriter
+        fname = self._fname
+        nxFile = None
+        eFile = None        
+
+        gname = "testGroup"
+        gtype = "NXentry"
+        fdname = "testField"
+        fdtype = "int64"
 
 
-    ## store method test
-    # \brief It tests executing store method
-    def test_store(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        el = Element(self._tfname, self._fattrs )
+        ## file handle
+        nxFile = FileWriter.create_file(fname, overwrite=True).root()
+        ## element file objects
+        eFile = EFile([], None, nxFile)
+        group = nxFile.create_group(gname, gtype)
+        field = group.create_field(fdname, fdtype)
+
+        el = Element(self._tfname, self._fattrs, eFile )
         el2 = Element(self._tfname, self._fattrs,  el )
-        self.assertEqual(el2.tagName, self._tfname)
-        self.assertEqual(el2.content, [])
-        self.assertEqual(el2._tagAttrs, self._fattrs)
-        self.assertEqual(el2.doc, "")
-        self.assertEqual(el2.store(), None)
-        self.assertEqual(el2.last, el)
-        self.assertEqual(el2.store("<tag/>"), None)
-        
-
-
-    ## _beforeLast method test
-    # \brief It tests executing _beforeLast method
-    def test_beforeLast(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-
-
-        el = Element(self._tfname, self._fattrs, None )
-        el2 = Element(self._tfname, self._fattrs,  el )
-        el3 = Element(self._tfname, self._fattrs,  el2 )
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
-        self.assertEqual(el2.last, el)
-        self.assertEqual(el2._beforeLast(), None)
-        self.assertEqual(el3._beforeLast(), el)
+        self.assertEqual(el._lastObject(), nxFile)
+        self.assertEqual(el2._lastObject(), None)
         
+        nxFile.close()
+        os.remove(fname)
+
 
 
 

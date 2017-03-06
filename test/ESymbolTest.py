@@ -28,7 +28,6 @@ import struct
 import numpy
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.H5PYWriter as H5PYWriter
 import nxswriter.PNIWriter as PNIWriter
 
 
@@ -146,45 +145,6 @@ class ESymbolTest(unittest.TestCase):
         ## file handle
         FileWriter.writer = PNIWriter
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
-        ## element file objects
-        eFile = EFile([], None, nxFile)
-        group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
-
-        el = Element(self._tfname, self._fattrs2, eFile )
-        el2 = ESymbol(self._fattrs2,  el )
-        self.assertEqual(el.tagName, self._tfname)
-        self.assertEqual(el.content, [])
-        self.assertEqual(el._tagAttrs, self._fattrs2)
-        self.assertEqual(el.doc, "")
-        self.assertEqual(el._lastObject(), nxFile)
-        self.assertEqual(el2._lastObject(), None)
-        self.assertEqual(el2.symbols, {})
-        
-        nxFile.close()
-        os.remove(fname)
-
-
-    ## _lastObject method test
-    # \brief It tests executing _lastObject method
-    def test_lastObject_h5py(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
-        fname = "test.h5"
-        nxFile = None
-        eFile = None        
-
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
-
-
-        ## file handle
-        FileWriter.writer = H5PYWriter
-        nxFile = FileWriter.create_file(
-            fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)

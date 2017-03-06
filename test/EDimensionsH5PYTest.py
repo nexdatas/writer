@@ -28,7 +28,7 @@ import struct
 import numpy
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5PYWriter as H5PYWriter
 
 
 from nxswriter.FElement import FElement
@@ -43,7 +43,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 
 ## test fixture
-class EDimensionsTest(unittest.TestCase):
+class EDimensionsH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -126,7 +126,7 @@ class EDimensionsTest(unittest.TestCase):
 
     ## last method test
     # \brief It tests executing _lastObject method
-    def test_last_pni(self):
+    def test_last_h5py(self):
         print "Run: %s.test_last() " % self.__class__.__name__
 
         fname = "test.h5"
@@ -140,7 +140,7 @@ class EDimensionsTest(unittest.TestCase):
 
 
         ## file handle
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
         ## element file objects
         eFile = EFile([], None, nxFile)
@@ -160,9 +160,11 @@ class EDimensionsTest(unittest.TestCase):
         os.remove(fname)
 
 
+
+
     ## last method test
     # \brief It tests executing _lastObject method
-    def test_last_norank_pni(self):
+    def test_last_norank_h5py(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
@@ -177,7 +179,7 @@ class EDimensionsTest(unittest.TestCase):
 
 
         ## file handle
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5PYWriter
         nxFile = FileWriter.create_file(
             fname, overwrite=True).root()
         ## element file objects
@@ -196,7 +198,6 @@ class EDimensionsTest(unittest.TestCase):
         
         nxFile.close()
         os.remove(fname)
-
 
 
 

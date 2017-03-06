@@ -72,11 +72,14 @@ import InnerXMLParserTest
 import TNObjectTest
 import TgDeviceTest
 import StreamsTest
+import ElementTest
 
 if not PNI_AVAILABLE and not H5PY_AVAILABLE:
     raise Exception("Please install h5py or pni")
 
 if PNI_AVAILABLE:
+    import ElementPNITest
+    import EDimensionsTest
     import PNIWriterTest
     import FElementTest
     import EStrategyTest
@@ -93,7 +96,11 @@ if PNI_AVAILABLE:
     import ClientFieldTagWriterTest
     import XMLFieldTagWriterTest
     import EDimTest
+    import ESymbolTest
+    import FileWriterTest
 if H5PY_AVAILABLE:
+    import EDimensionsH5PYTest
+    import ElementH5PYTest
     import H5PYWriterTest
     import FElementWithAttrH5PYTest
     import EStrategyH5PYTest
@@ -108,13 +115,13 @@ if H5PY_AVAILABLE:
     import ClientFieldTagWriterH5PYTest
     import XMLFieldTagWriterH5PYTest
     import EDimH5PYTest
-if PNI_AVAILABLE and H5PY_AVAILABLE:
-    import ElementTest
-    import EDimensionsTest
-    import ESymbolTest
-    import FileWriterTest
+    import ESymbolH5PYTest
     import FElementH5PYTest
     import TangoDataWriterH5PYTest
+    import FileWriterH5PYTest
+if PNI_AVAILABLE and H5PY_AVAILABLE:
+    import FileWriterPNIH5PYTest
+    import TangoDataWriterPNIH5PYTest
 
 
     
@@ -246,14 +253,14 @@ if PYTANGO_AVAILABLE:
 def main():
 
 
-
-
     ## test server
     ts = None
 
     ## test suit
     suite = unittest.TestSuite()
 
+    suite.addTests(
+        unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(StreamsTest) )
     suite.addTests(
@@ -302,6 +309,8 @@ def main():
 
     if PNI_AVAILABLE:
         suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ElementPNITest) )
+        suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(PNIWriterTest) )
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest) )
@@ -335,8 +344,16 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest) )
 
     if H5PY_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ElementH5PYTest) )
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(H5PYWriterTest) )
         suite.addTests(
@@ -368,21 +385,24 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
                 XMLFieldTagWriterH5PYTest) )
-
-    if PNI_AVAILABLE and H5PY_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsH5PYTest) )
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ESymbolH5PYTest) )
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(FElementH5PYTest) )
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsTest) )
-        suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
                 TangoDataWriterH5PYTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(FileWriterH5PYTest) )
+
+    if PNI_AVAILABLE and H5PY_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(FileWriterPNIH5PYTest) )
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(
+                TangoDataWriterPNIH5PYTest) )
 
     if "MYSQL" in DB_AVAILABLE:
         if PNI_AVAILABLE:
