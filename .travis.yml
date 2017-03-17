@@ -13,14 +13,18 @@ before_install:
   - sudo add-apt-repository "deb http://repos.pni-hdri.de/apt/debian jessie main" -y
   #  - sudo add-apt-repository "deb http://security.debian.org/ jessie/updates main" -y
   #  - sudo add-apt-repository "deb http://ftp.de.debian.org/debian/ jessie main" -y
+  - wget -q -O - http://repos.pni-hdri.de/debian_repo.pub.gpg | sudo apt-key add -
   - sudo apt-get -qq update
-  # - sudo apt-get install -y  mysql-server mysql-client mysql-client-5.5  mysql-server-5.5 
-  - sudo apt-get install -y  --force-yes tango-db tango-common 
+  # - sudo apt-get install -y  mysql-server mysql-client mysql-client-5.5  mysql-server-5.5
+   - sudo apt-get install -y  --force-yes tango-db tango-common 
   - sleep 10
   - sudo apt-get install -y  --force-yes  tango-starter tango-test python-sardana liblog4j1.2-java 
   - sleep 10
-#  - sudo apt-get install -y   --forse-yes python-pni
-  - sudo apt-get install -y  python-h5py python-pytango python-nxstools python-nxsconfigserver 
+# - sudo apt-get install -y   --force-yes python-pni
+#  - sudo apt-get install -y   --force-yes nxsconfigserver-db
+  - sleep 10
+  - sudo apt-get install -y    python-sphinx
+  - sudo apt-get install -y   --force-yes python-pytango python-nxstools
   - sleep 10
 
 install:
