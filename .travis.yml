@@ -20,7 +20,7 @@ before_install:
   - sudo apt-get install -y  --force-yes  tango-starter tango-test python-sardana liblog4j1.2-java 
   - sleep 10
 #  - sudo apt-get install -y   --forse-yes python-pni
-  - sudo apt-get install -y   --forse-yes python-h5py python-pytango python-nxstools python-nxsconfigserver 
+  - sudo apt-get install -y  python-h5py python-pytango python-nxstools python-nxsconfigserver 
   - sleep 10
 
 install:
