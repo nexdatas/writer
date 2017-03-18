@@ -494,9 +494,12 @@ def main():
 
     ## test runner
     runner = unittest.TextTestRunner()
-    ## test result
-    result = runner.run(suite)
 
+    ## test result
+    result = runner.run(suite).wasSuccessful()
+    sys.exit(result)
+
+         
  #   if ts:
  #       ts.tearDown()
 
