@@ -49,6 +49,7 @@ except ImportError, e:
 
 
 import os
+import sys
 import unittest
 import ConvertersTest
 import NTPTest
