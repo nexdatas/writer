@@ -1,4 +1,8 @@
 2017-03-19 Jan Kotanski <jankotan@gmail.com>
+	* fix manpage
+	* tagged as 2.7.1
+
+2017-03-19 Jan Kotanski <jankotan@gmail.com>
 	* change log name to nexus_configuation_logs
 	* tagged as 2.7.0
 
