@@ -337,7 +337,7 @@ class NXSDataWriterTest(unittest.TestCase):
                         self.assertEqual(at.name,"NX_class")
                         self.assertEqual(at[...],"NXentry")
                 else:
-                    self.assertEqual(ch.name,"nexus_configuraton_logs")
+                    self.assertEqual(ch.name,"nexus_configuration_logs")
                     for c in ch:
                         if c.name == "Nexus__entry__1_XML":
                             self.assertEqual(
