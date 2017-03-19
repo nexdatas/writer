@@ -236,7 +236,7 @@ class TangoDataWriter(object):
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
 
-        name = "NexusConfigurationLogs"
+        name = "nexus_configuration_logs"
         if self.addingLogs:
             if self.__fileCreated is False:
                 error = True

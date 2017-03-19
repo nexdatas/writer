@@ -1,3 +1,7 @@
+2017-03-XX Jan Kotanski <jankotan@gmail.com>
+	* change log name to nexus_configuation_logs
+	* tagged as 2.7.0
+
 2017-03-06 Jan Kotanski <jankotan@gmail.com>
 	* add fixes for H5PYWriter
 	* add tests
