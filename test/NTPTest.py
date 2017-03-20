@@ -157,8 +157,8 @@ class NTPTest(unittest.TestCase):
 
 
         for it in self._npTt:
-            self.assertEqual(el.npTt[it], self._npTt[it])
-            self.assertEqual(NTP.npTt[it], self._npTt[it])
+            self.assertEqual(el.pTt[it], self._npTt[it])
+            self.assertEqual(NTP.pTt[it], self._npTt[it])
 
 
         for it in self._nTnp:

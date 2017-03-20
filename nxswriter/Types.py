@@ -59,15 +59,6 @@ class NTP(object):
            "float32": "DevFloat", "float16": "DevFloat",
            "string": "DevString", "bool": "DevBoolean"}
 
-    #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of Numpy:Tango types
-    npTt = {"int": "DevLong64", "int64": "DevLong64", "int32": "DevLong",
-            "int16": "DevShort", "int8": "DevUChar", "uint": "DevULong64",
-            "uint64": "DevULong64", "uint32": "DevULong",
-            "uint16": "DevUShort",
-            "uint8": "DevUChar", "float": "DevDouble", "float64": "DevDouble",
-            "float32": "DevFloat", "float16": "DevFloat",
-            "string": "DevString", "bool": "DevBoolean"}
-
     #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of NEXUS :  numpy types
     nTnp = {"NX_FLOAT32": "float32", "NX_FLOAT64": "float64",
             "NX_FLOAT": "float64", "NX_NUMBER": "float64",

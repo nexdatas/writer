@@ -2445,7 +2445,7 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2546,7 +2546,7 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2655,7 +2655,7 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0][0], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2676,7 +2676,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0][i], 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 #            self.assertEqual(el[k].grows, (grow if grow else 1))
@@ -2759,7 +2759,7 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0][0], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].grows = grow
 
@@ -2780,7 +2780,7 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0][i], 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
                 else:
@@ -2878,7 +2878,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0])]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3008,7 +3008,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0])]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3129,7 +3129,7 @@ class EFieldTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(attrs[k][0][0][0])]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
 
             el[k].rank = "1"
@@ -3156,7 +3156,7 @@ class EFieldTest(unittest.TestCase):
                 ds.value = {"rank":NTP.rTf[1], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool"\
                                          else [Converters.toBool(attrs[k][0][i][0]) ]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
                 self.assertEqual(el[k].run(), None)
 
@@ -3261,7 +3261,7 @@ class EFieldTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[1], 
                         "value":attrs[k][0][0], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
 
             el[k].rank = "1"
@@ -3287,7 +3287,7 @@ class EFieldTest(unittest.TestCase):
                 ds.value = {"rank":NTP.rTf[1], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool"\
                                          else [Converters.toBool(attrs[k][0][i][0]) ]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
@@ -3395,7 +3395,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3541,7 +3541,7 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].error, None)
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
@@ -3650,7 +3650,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3779,7 +3779,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3803,7 +3803,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[1], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0][i]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
                 self.assertEqual(el[k].run(), None)
 
@@ -3900,7 +3900,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[1], 
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [Converters.toBool(c) for c in attrs[k][0][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             el[k].source = ds
             el[k].rank = "1"
@@ -3924,7 +3924,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[1], 
                             "value":attrs[k][0][i], 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
@@ -4029,7 +4029,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [[Converters.toBool(attrs[k][0][0][0])]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4153,7 +4153,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [[Converters.toBool(attrs[k][0][0][0])]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4294,7 +4294,7 @@ class EFieldTest(unittest.TestCase):
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" \
                                      else [[Converters.toBool(attrs[k][0][0][0][0])]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4319,7 +4319,7 @@ class EFieldTest(unittest.TestCase):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(attrs[k][0][i][0][0])]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
                 self.assertEqual(el[k].run(), None)
 
@@ -4409,7 +4409,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4434,7 +4434,7 @@ class EFieldTest(unittest.TestCase):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(attrs[k][0][i][0][0])]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],0]}
                 if i%2:
                     self.assertEqual(el[k].run(), None)
@@ -4538,7 +4538,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in attrs[k][0][0]]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4659,7 +4659,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4788,7 +4788,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in attrs[k][0][0][0]]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4814,7 +4814,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in attrs[k][0][i][0]]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[1,attrs[k][3][1]]}
                 self.assertEqual(el[k].run(), None)
 
@@ -4903,7 +4903,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -4929,7 +4929,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[1,attrs[k][3][1]]}
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
@@ -5032,7 +5032,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5154,7 +5154,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5286,7 +5286,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5312,7 +5312,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0][i]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],1]}
                 self.assertEqual(el[k].run(), None)
 
@@ -5400,7 +5400,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],1]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5426,7 +5426,7 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],1]}
                 if not i%2:
                     self.assertEqual(el[k].run(), None)
@@ -5526,7 +5526,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in row] for row in attrs[k][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5647,7 +5647,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5781,7 +5781,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0][0] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in row] for row in attrs[k][0][0]]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5806,7 +5806,7 @@ class EFieldTest(unittest.TestCase):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(c) for c in row ] for row  in attrs[k][0][i]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],attrs[k][3][1]]}
                 self.assertEqual(el[k].run(), None)
 
@@ -5892,7 +5892,7 @@ class EFieldTest(unittest.TestCase):
             ds = TestDataSource()
             ds.value = {"rank":NTP.rTf[2], 
                         "value":(attrs[k][0][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             el[k].source = ds
             el[k].rank = "2"
@@ -5917,7 +5917,7 @@ class EFieldTest(unittest.TestCase):
                 ds.value = {"rank":NTP.rTf[2], 
                             "value":(attrs[k][0][i] if attrs[k][2] != "bool" \
                                          else [[Converters.toBool(c) for c in row ] for row  in attrs[k][0][i]]), 
-                            "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                            "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                             "shape":[attrs[k][3][0],attrs[k][3][1]]}
                 if not i%2:
                     self.assertEqual(el[k].run(), None)

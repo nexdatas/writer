@@ -967,7 +967,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds = TestDataSource()
             ds.valid = True
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape":[0,0]}
             el[k].source = ds
             el[k].strategy = 'STEP'
 
@@ -1056,7 +1056,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else Converters.toBool(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[0,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1146,7 +1146,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else Converters.toBool(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[0,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1232,7 +1232,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else Converters.toBool(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1320,7 +1320,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
             ds.value = {"rank":NTP.rTf[0], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else Converters.toBool(attrs[k][0]), 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1415,7 +1415,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
             ds.value = {"rank":NTP.rTf[1], "value":[attrs[k][0]] if attrs[k][2] != "bool"\
                             else [Converters.toBool(attrs[k][0])], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1503,7 +1503,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
             ds.value = {"rank":NTP.rTf[1], "value":[attrs[k][0]] if attrs[k][2] != "bool"\
                             else [Converters.toBool(attrs[k][0])], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[1,0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
@@ -1608,7 +1608,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[1], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [Converters.toBool(c ) for c in attrs[k][0]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1704,7 +1704,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[1], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [Converters.toBool(c ) for c in attrs[k][0]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],0]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1803,7 +1803,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1890,7 +1890,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -1987,7 +1987,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2080,7 +2080,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c ) for c in attrs[k][0][0]]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2191,7 +2191,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c[0])] for c in attrs[k][0]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2291,7 +2291,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c[0])] for c in attrs[k][0]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2399,7 +2399,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c) for c in row] for row in attrs[k][0]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2494,7 +2494,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             print 
             ds.value = {"rank":NTP.rTf[2], "value":attrs[k][0] if attrs[k][2] != "bool"\
                             else [[Converters.toBool(c) for c in row] for row in attrs[k][0]], 
-                        "tangoDType":NTP.npTt[(attrs[k][2]) if attrs[k][2] else "string"], 
+                        "tangoDType":NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], 
                         "shape":[attrs[k][3][0],attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
