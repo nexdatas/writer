@@ -47,11 +47,21 @@ class Converters(object):
 class NTP(object):
     """ type converter
     """
-
     #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types
     pTt = {"int": "DevLong64", "long": "DevLong64",
            "float": "DevDouble", "str": "DevString",
            "unicode": "DevString", "bool": "DevBoolean"}
+
+    #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types
+    aTt = { "long": "DevLong64", "str": "DevString",
+           "unicode": "DevString", "bool": "DevBoolean",
+           "int": "DevLong64", "int64": "DevLong64", "int32": "DevLong",
+           "int16": "DevShort", "int8": "DevUChar", "uint": "DevULong64",
+           "uint64": "DevULong64", "uint32": "DevULong",
+           "uint16": "DevUShort",
+           "uint8": "DevUChar", "float": "DevDouble", "float64": "DevDouble",
+           "float32": "DevFloat", "float16": "DevFloat",
+           "string": "DevString", "bool": "DevBoolean"}
 
     #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of Numpy:Tango types
     npTt = {"int": "DevLong64", "int64": "DevLong64", "int32": "DevLong",
@@ -139,12 +149,17 @@ class NTP(object):
             except IndexError:
                 if hasattr(array, "shape") and len(array.shape) == 0:
                     rank = 0
-                    pythonDType = type(array.tolist())
+                    if hasattr(array, "dtype"):
+                        pythonDType = array.dtype
+                    else:
+                        pythonDType = type(array.tolist()).__name__
                 else:
                     rank = 1
                     shape.append(len(array))
 
         else:
+            if hasattr(array, "dtype"):
+                pythonDType = array.dtype
             if hasattr(array, "tolist"):
                 pythonDType = type(array.tolist())
             else:

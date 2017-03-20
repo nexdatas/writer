@@ -112,12 +112,12 @@ class DataSource(object):
         else:
             return
         ntp = NTP()
-        rank, shape, pythonDType = ntp.arrayRankShape(rec)
+        rank, shape, dtype = ntp.arrayRankShape(rec)
 
         if rank in NTP.rTf:
             if shape is None:
                 shape = [1, 0]
             return {"rank": NTP.rTf[rank],
+                    "tangoDType": NTP.aTt[dtype],
                     "value": rec,
-                    "tangoDType": NTP.pTt[pythonDType.__name__],
                     "shape": shape}

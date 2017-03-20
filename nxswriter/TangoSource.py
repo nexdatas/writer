@@ -666,7 +666,7 @@ class TgMember(object):
         elif self.memberType == "property":
 
             ntp = NTP()
-            rank, shape, pythonDType = ntp.arrayRankShape(self.__da)
+            rank, shape, dtype = ntp.arrayRankShape(self.__da)
 
             if rank in NTP.rTf:
                 if not shape or shape == [1] or shape == [1, 0]:
@@ -677,7 +677,7 @@ class TgMember(object):
                     value = self.__da
                 self.__value = {
                     "rank": NTP.rTf[rank], "value": value,
-                    "tangoDType": NTP.pTt[pythonDType.__name__],
+                    "tangoDType": NTP.aTt[dtype],
                     "shape": shape}
         elif self.memberType == "command":
             if self.__cd is None:

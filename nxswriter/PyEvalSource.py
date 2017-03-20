@@ -210,15 +210,21 @@ class PyEvalSource(DataSource):
                 exec(self.__script.strip(), {}, {
                     "ds": ds, "commonblock": self.__common})
                 rec = copy.deepcopy(getattr(ds, self.__name))
+        if isinstance(rec,list):
+            print "RES", (rec[0].dtype if hasattr(rec[0], "dtype") else type(rec[0]))
+            if hasattr(rec[0], "tolist"):
+                print "RES1", type(rec[0].tolist()),type(rec[0].tolist()[0]) 
         ntp = NTP()
-        rank, shape, pythonDType = ntp.arrayRankShape(rec)
+        rank, shape, dtype = ntp.arrayRankShape(rec)
+        if isinstance(rec,list):
+            print "RE2", rank, shape, pythonDType        
         if rank in NTP.rTf:
             if shape is None:
                 shape = [1, 0]
 
             return {"rank": NTP.rTf[rank],
                     "value": rec,
-                    "tangoDType": NTP.pTt[pythonDType.__name__],
+                    "tangoDType": NTP.aTt[dtype],
                     "shape": shape}
 
     def setDecoders(self, decoders):
