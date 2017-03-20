@@ -677,7 +677,7 @@ class TgMember(object):
                     value = self.__da
                 self.__value = {
                     "rank": NTP.rTf[rank], "value": value,
-                    "tangoDType": NTP.aTt[dtype],
+                    "tangoDType": NTP.pTt[dtype],
                     "shape": shape}
         elif self.memberType == "command":
             if self.__cd is None:

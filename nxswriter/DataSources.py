@@ -118,6 +118,6 @@ class DataSource(object):
             if shape is None:
                 shape = [1, 0]
             return {"rank": NTP.rTf[rank],
-                    "tangoDType": NTP.aTt[dtype],
+                    "tangoDType": NTP.pTt[dtype],
                     "value": rec,
                     "shape": shape}

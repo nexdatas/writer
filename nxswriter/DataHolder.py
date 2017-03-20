@@ -86,9 +86,9 @@ class DataHolder(object):
                                "IMAGE", "VERTEX"][rank]
 
             tp = decoder.dtype
-            if tp in NTP.npTt.keys():
+            if tp in NTP.pTt.keys():
 
-                self.tangoDType = NTP.npTt[tp]
+                self.tangoDType = NTP.pTt[tp]
 
         if self.value is None:
             Streams.error(
@@ -118,8 +118,8 @@ class DataHolder(object):
 
         """
         if str(self.format).split('.')[-1] == "SCALAR":
-            if dtype in NTP.npTt.keys() \
-                    and NTP.npTt[dtype] == str(self.tangoDType):
+            if dtype in NTP.pTt.keys() \
+                    and NTP.pTt[dtype] == str(self.tangoDType):
                 # workaround for bug python-pni #8
                 if isinstance(self.value, unicode):
                     return str(self.value)
@@ -132,8 +132,8 @@ class DataHolder(object):
                     return NTP.convert[dtype](self.value)
 
         else:
-            if dtype in NTP.npTt.keys() \
-                    and NTP.npTt[dtype] == str(self.tangoDType) \
+            if dtype in NTP.pTt.keys() \
+                    and NTP.pTt[dtype] == str(self.tangoDType) \
                     and dtype != "string":
                 if type(self.value).__name__ == 'ndarray' and \
                         self.value.dtype.name == dtype:

@@ -338,7 +338,6 @@ class EField(FElementWithAttr):
         :param holder: data holder
         :type holder: :class:`nxswriter.DataHolder.DataHolder`
         """
-
         arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
             if len(self.h5Object.shape) == 3:
@@ -529,7 +528,7 @@ class EField(FElementWithAttr):
         else:
             arr = value
 
-        dh = DataHolder(dformat, arr, NTP.npTt[self.h5Object.dtype], shape)
+        dh = DataHolder(dformat, arr, NTP.pTt[self.h5Object.dtype], shape)
 
         if not self.__extraD:
             self.__writeData(dh)

@@ -49,8 +49,8 @@ import nxswriter.H5PYWriter
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
-class PyEvalTangoSourceTest(unittest.TestCase):
+## test fix
+class PyEvalTangoSourceH5PYTest(unittest.TestCase):
 
     ## constructor
     # \param methodName name of the test method
@@ -410,10 +410,7 @@ except:
                             vv = v2
 
                 if  type(vv).__name__ == 'ndarray':
-                    if type(vv[0]).__name__ in NTP.convert.keys():
-                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(NTP.convert[type(vv[0]).__name__]()).__name__], [len(vv)])
-                    else:
-                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
+                    self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
                 else:
                     self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
 
@@ -1036,9 +1033,6 @@ commonblock["myres"] = ds.res
                             vv = v2
 
                 if  type(vv).__name__ == 'ndarray':
-                    if type(vv[0]).__name__ in NTP.convert.keys():
-                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(NTP.convert[type(vv[0]).__name__]()).__name__], [len(vv)])
-                    else:
                         self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
                 else:
                     self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
@@ -1055,10 +1049,7 @@ commonblock["myres"] = ds.res
                 self.assertEqual(ds2.setDataSources(dsp),None)
                 dt = ds2.getData()
                 if  type(vv).__name__ == 'ndarray':
-                    if type(vv[0]).__name__ in NTP.convert.keys():
-                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(NTP.convert[type(vv[0]).__name__]()).__name__], [len(vv)])
-                    else:
-                        self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
+                    self.checkData(dt, 'SPECTRUM', vv, NTP.pTt[type(vv[0]).__name__], [len(vv)])
                 else:
                     self.checkData(dt, carr[a][1], vv, NTP.pTt[type(vv).__name__], carr[a][3])
 

@@ -19,6 +19,7 @@
 
 """ Types converters  """
 
+import numpy
 
 class Converters(object):
     """ set of converters
@@ -48,12 +49,7 @@ class NTP(object):
     """ type converter
     """
     #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types
-    pTt = {"int": "DevLong64", "long": "DevLong64",
-           "float": "DevDouble", "str": "DevString",
-           "unicode": "DevString", "bool": "DevBoolean"}
-
-    #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types
-    aTt = { "long": "DevLong64", "str": "DevString",
+    pTt = { "long": "DevLong64", "str": "DevString",
            "unicode": "DevString", "bool": "DevBoolean",
            "int": "DevLong64", "int64": "DevLong64", "int32": "DevLong",
            "int16": "DevShort", "int8": "DevUChar", "uint": "DevULong64",
@@ -149,8 +145,10 @@ class NTP(object):
             except IndexError:
                 if hasattr(array, "shape") and len(array.shape) == 0:
                     rank = 0
-                    if hasattr(array, "dtype"):
-                        pythonDType = array.dtype
+                    if type(array) ==  numpy.string_:
+                        pythonDType = "str"
+                    elif hasattr(array, "dtype"):
+                        pythonDType = str(array.dtype)
                     else:
                         pythonDType = type(array.tolist()).__name__
                 else:
@@ -158,12 +156,14 @@ class NTP(object):
                     shape.append(len(array))
 
         else:
-            if hasattr(array, "dtype"):
-                pythonDType = array.dtype
-            if hasattr(array, "tolist"):
-                pythonDType = type(array.tolist())
+            if  type(array) ==  numpy.string_:
+                pythonDType = "str"
+            elif hasattr(array, "dtype"):
+                pythonDType = str(array.dtype)
+            elif hasattr(array, "tolist"):
+                pythonDType = type(array.tolist()).__name__
             else:
-                pythonDType = type(array)
+                pythonDType = type(array).__name__
         return (rank, shape, pythonDType)
 
     def arrayRankShape(self, array):
