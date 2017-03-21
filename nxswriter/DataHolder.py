@@ -140,11 +140,14 @@ class DataHolder(object):
                     return self.value
                 else:
                     return numpy.array(self.value, dtype=dtype)
+            elif dtype == "bool":
+                return numpy.array(
+                    NTP().createArray(self.value, NTP.convert[dtype]),
+                    dtype=dtype)
             else:
-                if dtype == "string":
+                try:
                     return numpy.array(self.value, dtype=dtype)
-#                    return NTP().createArray(self.value, NTP.convert[dtype])
-                else:
+                except:
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]),
                         dtype=dtype)
