@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.Types &mdash; NXSDataWriter 2.6.1 documentation</title>
+    <title>nxswriter.Types &mdash; NXSDataWriter 2.8.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.6.1',
+        VERSION:     '2.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.6.1 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.8.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.6</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.8</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -167,6 +167,8 @@
 
 <span class="sd">&quot;&quot;&quot; Types converters  &quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span>
+
 
 <div class="viewcode-block" id="Converters"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.Types.Converters">[docs]</a><span class="k">class</span> <span class="nc">Converters</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; set of converters</span>
@@ -195,20 +197,16 @@
 <div class="viewcode-block" id="NTP"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.Types.NTP">[docs]</a><span class="k">class</span> <span class="nc">NTP</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; type converter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c">#: (:obj:`dict` &lt;:obj:`str` ,:obj:`str` &gt;) map of Python:Tango types</span>
-    <span class="n">pTt</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;int&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span> <span class="s">&quot;long&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span>
-           <span class="s">&quot;float&quot;</span><span class="p">:</span> <span class="s">&quot;DevDouble&quot;</span><span class="p">,</span> <span class="s">&quot;str&quot;</span><span class="p">:</span> <span class="s">&quot;DevString&quot;</span><span class="p">,</span>
-           <span class="s">&quot;unicode&quot;</span><span class="p">:</span> <span class="s">&quot;DevString&quot;</span><span class="p">,</span> <span class="s">&quot;bool&quot;</span><span class="p">:</span> <span class="s">&quot;DevBoolean&quot;</span><span class="p">}</span>
-
-    <span class="c">#: (:obj:`dict` &lt;:obj:`str` , :obj:`str` &gt;) map of Numpy:Tango types</span>
-    <span class="n">npTt</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;int&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span> <span class="s">&quot;int64&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span> <span class="s">&quot;int32&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong&quot;</span><span class="p">,</span>
-            <span class="s">&quot;int16&quot;</span><span class="p">:</span> <span class="s">&quot;DevShort&quot;</span><span class="p">,</span> <span class="s">&quot;int8&quot;</span><span class="p">:</span> <span class="s">&quot;DevUChar&quot;</span><span class="p">,</span> <span class="s">&quot;uint&quot;</span><span class="p">:</span> <span class="s">&quot;DevULong64&quot;</span><span class="p">,</span>
-            <span class="s">&quot;uint64&quot;</span><span class="p">:</span> <span class="s">&quot;DevULong64&quot;</span><span class="p">,</span> <span class="s">&quot;uint32&quot;</span><span class="p">:</span> <span class="s">&quot;DevULong&quot;</span><span class="p">,</span>
-            <span class="s">&quot;uint16&quot;</span><span class="p">:</span> <span class="s">&quot;DevUShort&quot;</span><span class="p">,</span>
-            <span class="s">&quot;uint8&quot;</span><span class="p">:</span> <span class="s">&quot;DevUChar&quot;</span><span class="p">,</span> <span class="s">&quot;float&quot;</span><span class="p">:</span> <span class="s">&quot;DevDouble&quot;</span><span class="p">,</span> <span class="s">&quot;float64&quot;</span><span class="p">:</span> <span class="s">&quot;DevDouble&quot;</span><span class="p">,</span>
-            <span class="s">&quot;float32&quot;</span><span class="p">:</span> <span class="s">&quot;DevFloat&quot;</span><span class="p">,</span> <span class="s">&quot;float16&quot;</span><span class="p">:</span> <span class="s">&quot;DevFloat&quot;</span><span class="p">,</span>
-            <span class="s">&quot;string&quot;</span><span class="p">:</span> <span class="s">&quot;DevString&quot;</span><span class="p">,</span> <span class="s">&quot;bool&quot;</span><span class="p">:</span> <span class="s">&quot;DevBoolean&quot;</span><span class="p">}</span>
+    <span class="n">pTt</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;long&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span> <span class="s">&quot;str&quot;</span><span class="p">:</span> <span class="s">&quot;DevString&quot;</span><span class="p">,</span>
+           <span class="s">&quot;unicode&quot;</span><span class="p">:</span> <span class="s">&quot;DevString&quot;</span><span class="p">,</span> <span class="s">&quot;bool&quot;</span><span class="p">:</span> <span class="s">&quot;DevBoolean&quot;</span><span class="p">,</span>
+           <span class="s">&quot;int&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span> <span class="s">&quot;int64&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong64&quot;</span><span class="p">,</span> <span class="s">&quot;int32&quot;</span><span class="p">:</span> <span class="s">&quot;DevLong&quot;</span><span class="p">,</span>
+           <span class="s">&quot;int16&quot;</span><span class="p">:</span> <span class="s">&quot;DevShort&quot;</span><span class="p">,</span> <span class="s">&quot;int8&quot;</span><span class="p">:</span> <span class="s">&quot;DevUChar&quot;</span><span class="p">,</span> <span class="s">&quot;uint&quot;</span><span class="p">:</span> <span class="s">&quot;DevULong64&quot;</span><span class="p">,</span>
+           <span class="s">&quot;uint64&quot;</span><span class="p">:</span> <span class="s">&quot;DevULong64&quot;</span><span class="p">,</span> <span class="s">&quot;uint32&quot;</span><span class="p">:</span> <span class="s">&quot;DevULong&quot;</span><span class="p">,</span>
+           <span class="s">&quot;uint16&quot;</span><span class="p">:</span> <span class="s">&quot;DevUShort&quot;</span><span class="p">,</span>
+           <span class="s">&quot;uint8&quot;</span><span class="p">:</span> <span class="s">&quot;DevUChar&quot;</span><span class="p">,</span> <span class="s">&quot;float&quot;</span><span class="p">:</span> <span class="s">&quot;DevDouble&quot;</span><span class="p">,</span> <span class="s">&quot;float64&quot;</span><span class="p">:</span> <span class="s">&quot;DevDouble&quot;</span><span class="p">,</span>
+           <span class="s">&quot;float32&quot;</span><span class="p">:</span> <span class="s">&quot;DevFloat&quot;</span><span class="p">,</span> <span class="s">&quot;float16&quot;</span><span class="p">:</span> <span class="s">&quot;DevFloat&quot;</span><span class="p">,</span>
+           <span class="s">&quot;string&quot;</span><span class="p">:</span> <span class="s">&quot;DevString&quot;</span><span class="p">,</span> <span class="s">&quot;bool&quot;</span><span class="p">:</span> <span class="s">&quot;DevBoolean&quot;</span><span class="p">}</span>
 
     <span class="c">#: (:obj:`dict` &lt;:obj:`str` , :obj:`str` &gt;) map of NEXUS :  numpy types</span>
     <span class="n">nTnp</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;NX_FLOAT32&quot;</span><span class="p">:</span> <span class="s">&quot;float32&quot;</span><span class="p">,</span> <span class="s">&quot;NX_FLOAT64&quot;</span><span class="p">:</span> <span class="s">&quot;float64&quot;</span><span class="p">,</span>
@@ -287,16 +285,25 @@
             <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="s">&quot;shape&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">rank</span> <span class="o">=</span> <span class="mi">0</span>
-                    <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">string_</span><span class="p">:</span>
+                        <span class="n">pythonDType</span> <span class="o">=</span> <span class="s">&quot;str&quot;</span>
+                    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="s">&quot;dtype&quot;</span><span class="p">):</span>
+                        <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">__name__</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rank</span> <span class="o">=</span> <span class="mi">1</span>
                     <span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="s">&quot;tolist&quot;</span><span class="p">):</span>
-                <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">string_</span><span class="p">:</span>
+                <span class="n">pythonDType</span> <span class="o">=</span> <span class="s">&quot;str&quot;</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="s">&quot;dtype&quot;</span><span class="p">):</span>
+                <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="s">&quot;tolist&quot;</span><span class="p">):</span>
+                <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="o">.</span><span class="n">__name__</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+                <span class="n">pythonDType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">pythonDType</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="NTP.arrayRankShape"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.Types.NTP.arrayRankShape">[docs]</a>    <span class="k">def</span> <span class="nf">arrayRankShape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
