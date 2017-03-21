@@ -21,6 +21,7 @@
 
 import numpy
 
+
 class Converters(object):
     """ set of converters
     """
@@ -49,7 +50,7 @@ class NTP(object):
     """ type converter
     """
     #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types
-    pTt = { "long": "DevLong64", "str": "DevString",
+    pTt = {"long": "DevLong64", "str": "DevString",
            "unicode": "DevString", "bool": "DevBoolean",
            "int": "DevLong64", "int64": "DevLong64", "int32": "DevLong",
            "int16": "DevShort", "int8": "DevUChar", "uint": "DevULong64",
@@ -136,7 +137,7 @@ class NTP(object):
             except IndexError:
                 if hasattr(array, "shape") and len(array.shape) == 0:
                     rank = 0
-                    if type(array) ==  numpy.string_:
+                    if type(array) == numpy.string_:
                         pythonDType = "str"
                     elif hasattr(array, "dtype"):
                         pythonDType = str(array.dtype)
@@ -147,7 +148,7 @@ class NTP(object):
                     shape.append(len(array))
 
         else:
-            if  type(array) ==  numpy.string_:
+            if type(array) == numpy.string_:
                 pythonDType = "str"
             elif hasattr(array, "dtype"):
                 pythonDType = str(array.dtype)
