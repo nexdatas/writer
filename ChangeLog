@@ -1,4 +1,8 @@
 2017-03-22 Jan Kotanski <jankotan@gmail.com>
+	* change Nexus__entry__%s_XML to nexus__entry__%s_xml
+	* tagged as 2.9.0
+
+2017-03-22 Jan Kotanski <jankotan@gmail.com>
 	* speed up type convetion
 	* tagged as 2.8.1
 

@@ -499,7 +499,7 @@ ds.res2 = str(root.is_valid)
                 else:
                     self.assertEqual(ch.name,"nexus_configuration_logs")
                     for c in ch:
-                        if c.name == "Nexus__entry__1_XML":
+                        if c.name == "nexus__entry__1_xml":
                             self.assertEqual(
                                 c.read(),
                                 '<definition> <group type="NXentry" name="entry"/></definition>')

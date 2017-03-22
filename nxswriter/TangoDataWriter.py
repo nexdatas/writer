@@ -321,7 +321,7 @@ class TangoDataWriter(object):
             if self.addingLogs:
                 self.__entryCounter += 1
                 lfield = self.__logGroup.create_field(
-                    "Nexus__entry__%s_XML" % str(self.__entryCounter),
+                    "nexus__entry__%s_xml" % str(self.__entryCounter),
                     "string")
                 lfield.write(self.xmlsettings)
                 lfield.close()

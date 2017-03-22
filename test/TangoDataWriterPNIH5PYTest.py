@@ -504,7 +504,7 @@ ds.res2 = str(True)
                         self.assertEqual(at[...],"NXentry")
                 else:
                     self.assertEqual(ch.name,"nexus_configuration_logs")
-                    c = ch.open("Nexus__entry__1_XML")
+                    c = ch.open("nexus__entry__1_xml")
                     self.assertEqual(
                         c.read(),
                         '<definition> <group type="NXentry" name="entry"/></definition>')
