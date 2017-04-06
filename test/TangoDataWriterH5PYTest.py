@@ -511,13 +511,14 @@ ds.res2 = str(True)
                         self.assertEqual(at.name,"NX_class")
                         self.assertEqual(at[...],"NXentry")
                 else:
-                    self.assertEqual(ch.name,"nexus_configuration_logs")
-                    c = ch.open("nexus__entry__1_xml")
+                    self.assertEqual(ch.name,"nexus_logs")
+                    ch2 = ch.open("configuration")
+                    c = ch2.open("nexus__entry__1_xml")
                     self.assertEqual(
                         c.read(),
                         '<definition> <group type="NXentry" name="entry"/></definition>')
                     print c.read()
-                    c = ch.open("python_version")
+                    c = ch2.open("python_version")
                     self.assertEqual(c.name,"python_version")
                     self.assertEqual(c.read(), sys.version)
 

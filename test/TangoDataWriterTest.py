@@ -22,6 +22,7 @@
 import unittest
 import os
 import sys
+import json
 
 from pni.io.nx.h5 import open_file
 
@@ -497,8 +498,9 @@ ds.res2 = str(root.is_valid)
                         self.assertEqual(at.name,"NX_class")
                         self.assertEqual(at[...],"NXentry")
                 else:
-                    self.assertEqual(ch.name,"nexus_configuration_logs")
-                    for c in ch:
+                    self.assertEqual(ch.name,"nexus_logs")
+                    ch2 = ch.open("configuration")
+                    for c in ch2:
                         if c.name == "nexus__entry__1_xml":
                             self.assertEqual(
                                 c.read(),
@@ -622,6 +624,8 @@ ds.res2 = str(root.is_valid)
 
             tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
                            + str(self._mca2)+ '  } }')
+
+            
 
             tdw.closeEntry()
 
@@ -946,8 +950,39 @@ ds.res2 = str(root.is_valid)
 
         finally:
 
-            os.remove(fname)
-#            pass
+#            os.remove(fname)
+            pass
+
+
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_scanRecordGrow(self):
+        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        fname = "scantestgrow.h5"
+        try:
+            tdw = TangoDataWriter()
+            tdw.fileName = fname
+
+            tdw.openFile()
+
+            tdw.xmlsettings = self._scanXml % fname
+            tdw.openEntry()
+
+
+
+
+            cntg = [self._counter[0], self._counter[1]]
+            mcag = [self._mca1, self._mca2]
+            rec = {"data": {"exp_c01": cntg, "p09/mca/exp.02": mcag}}
+            tdw.record(json.dumps(rec))
+
+            tdw.closeEntry()
+
+            tdw.closeFile()
+        except:
+            
+#            os.remove(fname)
+            pass
 
 
 

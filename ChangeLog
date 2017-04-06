@@ -1,3 +1,7 @@
+2017-04-XX Jan Kotanski <jankotan@gmail.com>
+	* nexus_configuration_logs to nexus_logs and configuration
+	* tagged as 2.10.0
+
 2017-03-22 Jan Kotanski <jankotan@gmail.com>
 	* change Nexus__entry__%s_XML to nexus__entry__%s_xml
 	* tagged as 2.9.0

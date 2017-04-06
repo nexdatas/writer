@@ -345,8 +345,9 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
                         self.assertEqual(at.name,"NX_class")
                         self.assertEqual(at[...],"NXentry")
                 else:
-                    self.assertEqual(ch.name,"nexus_configuration_logs")
-                    for c in ch:
+                    self.assertEqual(ch.name,"nexus_logs")
+                    ch2 = ch.open("configuration")
+                    for c in ch2:
                         if c.name == "nexus__entry__1_xml":
                             self.assertEqual(
                                 c.read(), 

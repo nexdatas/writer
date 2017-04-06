@@ -236,7 +236,13 @@ class TangoDataWriter(object):
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
 
-        name = "nexus_configuration_logs"
+        name = "nexus_logs"
+        if not self.__nxRoot.exists(name):
+            ngroup = self.__nxRoot.create_group(
+                name, "NXcollection")
+        else:
+            ngroup = self.__nxRoot.open(name)
+        name = "configuration"    
         if self.addingLogs:
             if self.__fileCreated is False:
                 error = True
@@ -250,7 +256,7 @@ class TangoDataWriter(object):
                         counter += 1
             else:
                 cname = name
-            self.__logGroup = self.__nxRoot.create_group(
+            self.__logGroup = ngroup.create_group(
                 cname, "NXcollection")
             vfield = self.__logGroup.create_field(
                 "python_version", "string")
