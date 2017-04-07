@@ -303,8 +303,11 @@ class EField(FElementWithAttr):
                 if len(self.h5Object.shape) == 2 \
                         and self.h5Object.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
-                if len(self.h5Object.shape) == 2:
+                elif len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
+                elif len(arr) > 1:
+                    self.h5Object.grow(self.grows - 1, len(arr)-1)
+                    self.h5Object[self.h5Object.shape[0]-len(arr):(self.h5Object.shape[0] )] = arr
                 else:
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
             else:
@@ -315,6 +318,10 @@ class EField(FElementWithAttr):
                 elif hasattr(arr, "__iter__") and type(arr).__name__ != 'str' \
                         and len(arr) == 1:
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
+                elif hasattr(arr, "__iter__") and type(arr).__name__ != 'str' \
+                        and len(arr) > 1:
+                    self.h5Object.grow(self.grows - 1, len(arr)-1)
+                    self.h5Object[self.h5Object.shape[0]-len(arr):self.h5Object.shape[0]] = arr
                 else:
                     Streams.error("Rank mismatch", std=False)
                     raise XMLSettingSyntaxError("Rank mismatch")
@@ -333,7 +340,7 @@ class EField(FElementWithAttr):
                     self.h5Object[0:len(arr), self.h5Object.shape[1] - 1] = arr
 
     def __writeImageGrowingData(self, holder):
-        """ writes growing spectrum data
+        """ writes growing image data
 
         :param holder: data holder
         :type holder: :class:`nxswriter.DataHolder.DataHolder`
@@ -351,8 +358,11 @@ class EField(FElementWithAttr):
                         = [c[0] for c in arr]
                 elif len(holder.shape) > 1 and holder.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0] - 1, :] = arr[:, 0]
-            elif len(self.h5Object.shape) == 2:
-                self.h5Object[self.h5Object.shape[0] - 1, :] = arr[0]
+                elif len(holder.shape) > 1 and holder.shape[0] > 1:
+                    self.h5Object.grow(self.grows - 1, holder.shape[0]-1)
+                    self.h5Object[self.h5Object.shape[0] - holder.shape[0]:self.h5Object.shape[0], :] = arr
+                else:
+                    self.h5Object[self.h5Object.shape[0] - 1, :] = arr[0]
             elif len(self.h5Object.shape) == 1:
                 self.h5Object[self.h5Object.shape[0] - 1] = arr[0][0]
             else:
@@ -373,6 +383,37 @@ class EField(FElementWithAttr):
             self.h5Object[0: len(arr), 0: len(arr[0]),
                           self.h5Object.shape[2] - 1] = arr
 
+    def __writeVertexGrowingData(self, holder):
+        """ writes growing vertex data
+
+        :param holder: data holder
+        :type holder: :class:`nxswriter.DataHolder.DataHolder`
+        """
+        arr = holder.cast(self.h5Object.dtype)
+        if self.grows == 1:
+            if len(self.h5Object.shape) == 3 and len(holder.shape)==3:
+                if len(holder.shape) > 1 and holder.shape[0] > 1:
+                    self.h5Object.grow(self.grows - 1, holder.shape[0]-1)
+                    self.h5Object[
+                        self.h5Object.shape[0]
+                        - holder.shape[0]:self.h5Object.shape[0],
+                        :, :] = arr
+                else:
+                    self.h5Object[self.h5Object.shape[0] - 1, :, :] = arr[0]
+            elif len(self.h5Object.shape) == 2:
+                self.h5Object[self.h5Object.shape[0] - 1, :] = arr[0][0]
+            elif len(self.h5Object.shape) == 1:
+                self.h5Object[self.h5Object.shape[0] - 1, :] = arr[0][0][0]
+            else:
+                Streams.error("Rank mismatch", std=False)
+                raise XMLSettingSyntaxError("Rank mismatch")
+
+        else:
+            Streams.error(
+                "Vertex growing data with grows>1 not supported", std=False)
+            raise XMLSettingSyntaxError(
+                "Vertex growing data with grows>1 not supported")
+
     def __writeGrowingData(self, holder):
         """ writes growing data
 
@@ -385,6 +426,8 @@ class EField(FElementWithAttr):
             self.__writeSpectrumGrowingData(holder)
         elif str(holder.format).split('.')[-1] == "IMAGE":
             self.__writeImageGrowingData(holder)
+        elif str(holder.format).split('.')[-1] == "VERTEX":
+            self.__writeVertexGrowingData(holder)
         else:
             Streams.error(
                 "Case with %s format not supported " %
@@ -428,7 +471,8 @@ class EField(FElementWithAttr):
                         self.h5Object.grow(i, shape[j] - h5shape[i])
                     elif not h5shape[i]:
                         self.h5Object.grow(i, 1)
-
+                    j += 1
+                elif self.__extraD and len(shape) > j and shape[j] > 1 and len(shape) == len(h5shape) and shape[-1] != 0:
                     j += 1
 
     def run(self):

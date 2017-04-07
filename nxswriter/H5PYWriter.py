@@ -390,7 +390,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: existing flag
         :rtype: :obj:`bool`
         """
-        return name in self._h5object
+        return name in self._h5object.keys()
 
     @property
     def is_valid(self):
@@ -491,6 +491,8 @@ class H5PYField(FileWriter.FTField):
         if isinstance(o, np.ndarray):
             hsh = self._h5object.shape
             if t is Ellipsis:
+                tsz = [i for i in range(len(hsh))]
+            elif isinstance(t, slice):
                 tsz = [i for i in range(len(hsh))]
             else:
                 tsz = [i for (i, s) in enumerate(t) if isinstance(s, slice)]

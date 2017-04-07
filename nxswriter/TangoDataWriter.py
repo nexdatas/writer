@@ -244,18 +244,16 @@ class TangoDataWriter(object):
             ngroup = self.__nxRoot.open(name)
         name = "configuration"    
         if self.addingLogs:
-            if self.__fileCreated is False:
-                error = True
-                counter = 1
-                while error:
-                    cname = name if counter == 1 else \
+            error = True
+            counter = 1
+            cname = name
+            while error:
+                cname = name if counter == 1 else \
                         ("%s_%s" % (name, counter))
-                    if not self.__nxRoot.exists(cname):
-                        error = False
-                    else:
-                        counter += 1
-            else:
-                cname = name
+                if not ngroup.exists(cname):
+                    error = False
+                else:
+                    counter += 1
             self.__logGroup = ngroup.create_group(
                 cname, "NXcollection")
             vfield = self.__logGroup.create_field(
