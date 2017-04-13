@@ -213,7 +213,11 @@ class TangoDataWriter(object):
         :brief: It opens the H5 file
         """
 
-        self.closeFile()
+        try:
+            self.closeFile()
+        except Exception as e:
+            Streams.warning("TangoDataWriter::openFile() - File cannot be closed")
+
         self.__setWriter(self.writer)
         self.__nxFile = None
         self.__eFile = None

@@ -1,4 +1,4 @@
-#    "$Name:  $";
+2;rgb:0000/0000/0000#    "$Name:  $";
 #    "$Header:  $";
 # =============================================================================
 #
@@ -390,7 +390,10 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
         state = self.get_state()
         if state in [PyTango.DevState.OPEN]:
-            self.CloseFile()
+            try:
+                self.CloseFile()
+            except:
+                pass
         self.set_state(PyTango.DevState.RUNNING)
         with self.lock:
             self.errors = []
