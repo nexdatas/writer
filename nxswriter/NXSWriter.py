@@ -168,13 +168,15 @@ class NXSDataWriter(PyTango.Device_4Impl):
         if not hasattr(self, "lock"):
             self.lock = Lock()
         try:
+            oldstate = self.get_state()
             self.set_state(PyTango.DevState.RUNNING)
             with self.lock:
                 self.errors = []
             if hasattr(self, 'tdw') and self.tdw:
                 if hasattr(self.tdw, 'closeFile'):
                     try:
-                        self.tdw.closeFile()
+                        if oldstate not in [PyTango.DevState.ON]:
+                            self.tdw.closeFile()
                         del self.tdw
                     except:
                         pass
