@@ -1,3 +1,7 @@
+2017-04-22 Jan Kotanski <jankotan@gmail.com>
+	* avoid closing file when state is ON or OFF
+	* tagged as 2.10.2
+
 2017-04-13 Jan Kotanski <jankotan@gmail.com>
 	* fix for file cannot be closed
 	* tagged as 2.10.1

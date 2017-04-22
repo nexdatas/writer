@@ -175,7 +175,10 @@ class NXSDataWriter(PyTango.Device_4Impl):
             if hasattr(self, 'tdw') and self.tdw:
                 if hasattr(self.tdw, 'closeFile'):
                     try:
-                        if oldstate not in [PyTango.DevState.ON]:
+                        if oldstate not in [
+                                PyTango.DevState.ON,
+                                PyTango.DevState.OFF
+                        ]:
                             self.tdw.closeFile()
                         del self.tdw
                     except:
