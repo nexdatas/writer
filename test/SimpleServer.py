@@ -63,14 +63,15 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Device destructor
 #------------------------------------------------------------------
 	def delete_device(self):
-		print "[Device delete_device method] for device",self.get_name()
+                """ """
+		# print "[Device delete_device method] for device",self.get_name()
 
 
 #------------------------------------------------------------------
 #	Device initialization
 #------------------------------------------------------------------
 	def init_device(self):
-		print "In ", self.get_name(), "::init_device()"
+		# print "In ", self.get_name(), "::init_device()"
 		self.set_state(PyTango.DevState.ON)
 		self.get_device_properties(self.get_device_class())
 
@@ -119,7 +120,8 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Always excuted hook method
 #------------------------------------------------------------------
 	def always_executed_hook(self):
-		print "In ", self.get_name(), "::always_excuted_hook()"
+                """ """
+		# print "In ", self.get_name(), "::always_excuted_hook()"
 
 
 	def encodeSpectrum(self):
@@ -161,7 +163,8 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Read Attribute Hardware
 #------------------------------------------------------------------
 	def read_attr_hardware(self,data):
-		print "In ", self.get_name(), "::read_attr_hardware()"
+                """ """
+		# print "In ", self.get_name(), "::read_attr_hardware()"
 
 
 
@@ -169,7 +172,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Read ScalarLong attribute
 #------------------------------------------------------------------
 	def read_ScalarLong(self, attr):
-		print "In ", self.get_name(), "::read_ScalarLong()"
+		# print "In ", self.get_name(), "::read_ScalarLong()"
 		
 		#	Add your own code here		
 		attr.set_value(self.attr_ScalarLong)
@@ -179,20 +182,20 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarLong attribute
 #------------------------------------------------------------------
 	def write_ScalarLong(self, attr):
-		print "In ", self.get_name(), "::write_ScalarLong()"
+		# print "In ", self.get_name(), "::write_ScalarLong()"
 
 		#	Add your own code here
 #		self.attr_ScalarLong = []
 #		attr.get_write_value(self.attr_ScalarLong)
 		self.attr_ScalarLong = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarLong
+		# print "Attribute value = ", self.attr_ScalarLong
 
 
 #------------------------------------------------------------------
 #	Read ScalarBoolean attribute
 #------------------------------------------------------------------
 	def read_ScalarBoolean(self, attr):
-		print "In ", self.get_name(), "::read_ScalarBoolean()"
+		# print "In ", self.get_name(), "::read_ScalarBoolean()"
 		
 		#	Add your own code here
 		
@@ -203,18 +206,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarBoolean attribute
 #------------------------------------------------------------------
 	def write_ScalarBoolean(self, attr):
-		print "In ", self.get_name(), "::write_ScalarBoolean()"
+		# print "In ", self.get_name(), "::write_ScalarBoolean()"
 
 		#	Add your own code here
 		self.attr_ScalarBoolean = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarBoolean
+		# print "Attribute value = ", self.attr_ScalarBoolean
 
 
 #------------------------------------------------------------------
 #	Read ScalarShort attribute
 #------------------------------------------------------------------
 	def read_ScalarShort(self, attr):
-		print "In ", self.get_name(), "::read_ScalarShort()"
+		# print "In ", self.get_name(), "::read_ScalarShort()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ScalarShort)
@@ -224,18 +227,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarShort attribute
 #------------------------------------------------------------------
 	def write_ScalarShort(self, attr):
-		print "In ", self.get_name(), "::write_ScalarShort()"
+		# print "In ", self.get_name(), "::write_ScalarShort()"
 
 		#	Add your own code here
 		self.attr_ScalarShort = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarShort
+		# print "Attribute value = ", self.attr_ScalarShort
 
 
 #------------------------------------------------------------------
 #	Read ScalarUShort attribute
 #------------------------------------------------------------------
 	def read_ScalarUShort(self, attr):
-		print "In ", self.get_name(), "::read_ScalarUShort()"
+		# print "In ", self.get_name(), "::read_ScalarUShort()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ScalarUShort)
@@ -245,18 +248,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarUShort attribute
 #------------------------------------------------------------------
 	def write_ScalarUShort(self, attr):
-		print "In ", self.get_name(), "::write_ScalarUShort()"
+		# print "In ", self.get_name(), "::write_ScalarUShort()"
 
 		#	Add your own code here
 		self.attr_ScalarUShort = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarUShort
+		# print "Attribute value = ", self.attr_ScalarUShort
 
 
 #------------------------------------------------------------------
 #	Read ScalarULong attribute
 #------------------------------------------------------------------
 	def read_ScalarULong(self, attr):
-		print "In ", self.get_name(), "::read_ScalarULong()"
+		# print "In ", self.get_name(), "::read_ScalarULong()"
 		
 		#	Add your own code here
 		
@@ -267,18 +270,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarULong attribute
 #------------------------------------------------------------------
 	def write_ScalarULong(self, attr):
-		print "In ", self.get_name(), "::write_ScalarULong()"
+		# print "In ", self.get_name(), "::write_ScalarULong()"
 
 		#	Add your own code here
 		self.attr_ScalarULong = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarULong
+		# print "Attribute value = ", self.attr_ScalarULong
 
 
 #------------------------------------------------------------------
 #	Read ScalarLong64 attribute
 #------------------------------------------------------------------
 	def read_ScalarLong64(self, attr):
-		print "In ", self.get_name(), "::read_ScalarLong64()"
+		# print "In ", self.get_name(), "::read_ScalarLong64()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ScalarLong64)
@@ -288,18 +291,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarLong64 attribute
 #------------------------------------------------------------------
 	def write_ScalarLong64(self, attr):
-		print "In ", self.get_name(), "::write_ScalarLong64()"
+		# print "In ", self.get_name(), "::write_ScalarLong64()"
 
 		#	Add your own code here
 		self.attr_ScalarLong64 = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarLong64
+		# print "Attribute value = ", self.attr_ScalarLong64
 
 
 #------------------------------------------------------------------
 #	Read ScalarULong64 attribute
 #------------------------------------------------------------------
 	def read_ScalarULong64(self, attr):
-		print "In ", self.get_name(), "::read_ScalarULong64()"
+		# print "In ", self.get_name(), "::read_ScalarULong64()"
 		
 		#	Add your own code here
 		attr.set_value(long(self.attr_ScalarULong64))
@@ -310,18 +313,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarULong64 attribute
 #------------------------------------------------------------------
 	def write_ScalarULong64(self, attr):
-		print "In ", self.get_name(), "::write_ScalarULong64()"
+		# print "In ", self.get_name(), "::write_ScalarULong64()"
 
 		#	Add your own code here
 		self.attr_ScalarULong64 = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarULong64
+		# print "Attribute value = ", self.attr_ScalarULong64
 
 
 #------------------------------------------------------------------
 #	Read ScalarFloat attribute
 #------------------------------------------------------------------
 	def read_ScalarFloat(self, attr):
-		print "In ", self.get_name(), "::read_ScalarFloat()"
+		# print "In ", self.get_name(), "::read_ScalarFloat()"
 		
 		#	Add your own code here
 		
@@ -332,18 +335,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarFloat attribute
 #------------------------------------------------------------------
 	def write_ScalarFloat(self, attr):
-		print "In ", self.get_name(), "::write_ScalarFloat()"
+		# print "In ", self.get_name(), "::write_ScalarFloat()"
 
 		#	Add your own code here
 		self.attr_ScalarFloat = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarFloat
+		# print "Attribute value = ", self.attr_ScalarFloat
 
 
 #------------------------------------------------------------------
 #	Read ScalarDouble attribute
 #------------------------------------------------------------------
 	def read_ScalarDouble(self, attr):
-		print "In ", self.get_name(), "::read_ScalarDouble()"
+		# print "In ", self.get_name(), "::read_ScalarDouble()"
 		
 		#	Add your own code here
 		
@@ -354,18 +357,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarDouble attribute
 #------------------------------------------------------------------
 	def write_ScalarDouble(self, attr):
-		print "In ", self.get_name(), "::write_ScalarDouble()"
+		# print "In ", self.get_name(), "::write_ScalarDouble()"
 
 		#	Add your own code here
 		self.attr_ScalarDouble = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarDouble
+		# print "Attribute value = ", self.attr_ScalarDouble
 
 
 #------------------------------------------------------------------
 #	Read ScalarString attribute
 #------------------------------------------------------------------
 	def read_ScalarString(self, attr):
-		print "In ", self.get_name(), "::read_ScalarString()"
+		# print "In ", self.get_name(), "::read_ScalarString()"
 		
 		#	Add your own code here
 		
@@ -376,18 +379,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarString attribute
 #------------------------------------------------------------------
 	def write_ScalarString(self, attr):
-		print "In ", self.get_name(), "::write_ScalarString()"
+		# print "In ", self.get_name(), "::write_ScalarString()"
 
 		#	Add your own code here
 		self.attr_ScalarString = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarString
+		# print "Attribute value = ", self.attr_ScalarString
 
 
 #------------------------------------------------------------------
 #	Read ScalarEncoded attribute
 #------------------------------------------------------------------
 	def read_ScalarEncoded(self, attr):
-		print "In ", self.get_name(), "::read_ScalarEncoded()"
+		# print "In ", self.get_name(), "::read_ScalarEncoded()"
 		
 		#	Add your own code here
 		
@@ -398,19 +401,19 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarEncoded attribute
 #------------------------------------------------------------------
 	def write_ScalarEncoded(self, attr):
-		print "In ", self.get_name(), "::write_ScalarEncoded()"
+		# print "In ", self.get_name(), "::write_ScalarEncoded()"
 
 		#	Add your own code here
 
 		self.attr_ScalarEncoded = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarEncoded
+		# print "Attribute value = ", self.attr_ScalarEncoded
 
 
 #------------------------------------------------------------------
 #	Read ScalarUChar attribute
 #------------------------------------------------------------------
 	def read_ScalarUChar(self, attr):
-		print "In ", self.get_name(), "::read_ScalarUChar()"
+		# print "In ", self.get_name(), "::read_ScalarUChar()"
 		
 		#	Add your own code here
 		
@@ -421,17 +424,17 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ScalarUChar attribute
 #------------------------------------------------------------------
 	def write_ScalarUChar(self, attr):
-		print "In ", self.get_name(), "::write_ScalarUChar()"
+		# print "In ", self.get_name(), "::write_ScalarUChar()"
 		#	Add your own code here
 		self.attr_ScalarUChar = attr.get_write_value()
-		print "Attribute value = ", self.attr_ScalarUChar
+		# print "Attribute value = ", self.attr_ScalarUChar
 
 
 #------------------------------------------------------------------
 #	Read SpectrumEncoded attribute
 #------------------------------------------------------------------
 	def read_SpectrumEncoded(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumEncoded()"
+		# print "In ", self.get_name(), "::read_SpectrumEncoded()"
 		
 		#	Add your own code here
 		self.attr_SpectrumEncoded = self.encodeSpectrum() 
@@ -442,18 +445,18 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write SpectrumEncoded attribute
 #------------------------------------------------------------------
 	def write_SpectrumEncoded(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumEncoded()"
+		# print "In ", self.get_name(), "::write_SpectrumEncoded()"
 
 		#	Add your own code here
 		self.attr_SpectrumEncoded = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumEncoded
+		# print "Attribute value = ", self.attr_SpectrumEncoded
 
 
 #------------------------------------------------------------------
 #	Read ImageEncoded attribute
 #------------------------------------------------------------------
 	def read_ImageEncoded(self, attr):
-		print "In ", self.get_name(), "::read_ImageEncoded()"
+		# print "In ", self.get_name(), "::read_ImageEncoded()"
 		
 		#	Add your own code here
 		self.attr_ImageEncoded=self.encodeImage()
@@ -464,306 +467,306 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Write ImageEncoded attribute
 #------------------------------------------------------------------
 	def write_ImageEncoded(self, attr):
-		print "In ", self.get_name(), "::write_ImageEncoded()"
+		# print "In ", self.get_name(), "::write_ImageEncoded()"
 
 		#	Add your own code here
 		self.attr_ImageEncoded = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageEncoded
+		# print "Attribute value = ", self.attr_ImageEncoded
 
 
 #------------------------------------------------------------------
 #	Read SpectrumBoolean attribute
 #------------------------------------------------------------------
 	def read_SpectrumBoolean(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumBoolean()"
+		# print "In ", self.get_name(), "::read_SpectrumBoolean()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumBoolean)
-		print self.attr_SpectrumBoolean
+		# print self.attr_SpectrumBoolean
 
 
 #------------------------------------------------------------------
 #	Write SpectrumBoolean attribute
 #------------------------------------------------------------------
 	def write_SpectrumBoolean(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumBoolean()"
+		# print "In ", self.get_name(), "::write_SpectrumBoolean()"
 
 		#	Add your own code here
 		self.attr_SpectrumBoolean = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumBoolean
+		# print "Attribute value = ", self.attr_SpectrumBoolean
 
 
 #------------------------------------------------------------------
 #	Read SpectrumUChar attribute
 #------------------------------------------------------------------
 	def read_SpectrumUChar(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumUChar()"
+		# print "In ", self.get_name(), "::read_SpectrumUChar()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumUChar)
-		print self.attr_SpectrumUChar
+		# print self.attr_SpectrumUChar
 
 
 #------------------------------------------------------------------
 #	Write SpectrumUChar attribute
 #------------------------------------------------------------------
 	def write_SpectrumUChar(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumUChar()"
+		# print "In ", self.get_name(), "::write_SpectrumUChar()"
 
 		#	Add your own code here
 		self.attr_SpectrumUChar = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumUChar
+		# print "Attribute value = ", self.attr_SpectrumUChar
 
 
 #------------------------------------------------------------------
 #	Read SpectrumShort attribute
 #------------------------------------------------------------------
 	def read_SpectrumShort(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumShort()"
+		# print "In ", self.get_name(), "::read_SpectrumShort()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumShort)
-		print self.attr_SpectrumShort
+		# print self.attr_SpectrumShort
 
 
 #------------------------------------------------------------------
 #	Write SpectrumShort attribute
 #------------------------------------------------------------------
 	def write_SpectrumShort(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumShort()"
+		# print "In ", self.get_name(), "::write_SpectrumShort()"
 
 		#	Add your own code here
 		self.attr_SpectrumShort = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumShort
+		# print "Attribute value = ", self.attr_SpectrumShort
 
 
 #------------------------------------------------------------------
 #	Read SpectrumUShort attribute
 #------------------------------------------------------------------
 	def read_SpectrumUShort(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumUShort()"
+		# print "In ", self.get_name(), "::read_SpectrumUShort()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumUShort)
-		print self.attr_SpectrumUShort
+		# print self.attr_SpectrumUShort
 
 
 #------------------------------------------------------------------
 #	Write SpectrumUShort attribute
 #------------------------------------------------------------------
 	def write_SpectrumUShort(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumUShort()"
+		# print "In ", self.get_name(), "::write_SpectrumUShort()"
 
 		#	Add your own code here
 		self.attr_SpectrumUShort = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumUShort
+		# print "Attribute value = ", self.attr_SpectrumUShort
 
 
 #------------------------------------------------------------------
 #	Read SpectrumLong attribute
 #------------------------------------------------------------------
 	def read_SpectrumLong(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumLong()"
+		# print "In ", self.get_name(), "::read_SpectrumLong()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_SpectrumLong)
-		print self.attr_SpectrumLong
+		# print self.attr_SpectrumLong
 
 
 #------------------------------------------------------------------
 #	Write SpectrumLong attribute
 #------------------------------------------------------------------
 	def write_SpectrumLong(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumLong()"
+		# print "In ", self.get_name(), "::write_SpectrumLong()"
 
 		#	Add your own code here
 		self.attr_SpectrumLong = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumLong
+		# print "Attribute value = ", self.attr_SpectrumLong
 
 
 #------------------------------------------------------------------
 #	Read SpectrumULong attribute
 #------------------------------------------------------------------
 	def read_SpectrumULong(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumULong()"
+		# print "In ", self.get_name(), "::read_SpectrumULong()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumULong)
-		print self.attr_SpectrumULong
+		# print self.attr_SpectrumULong
 
 
 #------------------------------------------------------------------
 #	Write SpectrumULong attribute
 #------------------------------------------------------------------
 	def write_SpectrumULong(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumULong()"
+		# print "In ", self.get_name(), "::write_SpectrumULong()"
 
 		#	Add your own code here
 		self.attr_SpectrumULong = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumULong
+		# print "Attribute value = ", self.attr_SpectrumULong
 
 
 #------------------------------------------------------------------
 #	Read SpectrumLong64 attribute
 #------------------------------------------------------------------
 	def read_SpectrumLong64(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumLong64()"
+		# print "In ", self.get_name(), "::read_SpectrumLong64()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumLong64)
-		print self.attr_SpectrumLong64
+		# print self.attr_SpectrumLong64
 
 
 #------------------------------------------------------------------
 #	Write SpectrumLong64 attribute
 #------------------------------------------------------------------
 	def write_SpectrumLong64(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumLong64()"
+		# print "In ", self.get_name(), "::write_SpectrumLong64()"
 
 		#	Add your own code here
 		self.attr_SpectrumLong64 = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumLong64
+		# print "Attribute value = ", self.attr_SpectrumLong64
 
 
 #------------------------------------------------------------------
 #	Read SpectrumULong64 attribute
 #------------------------------------------------------------------
 	def read_SpectrumULong64(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumULong64()"
+		# print "In ", self.get_name(), "::read_SpectrumULong64()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumULong64)
-		print self.attr_SpectrumULong64
+		# print self.attr_SpectrumULong64
 
 
 #------------------------------------------------------------------
 #	Write SpectrumULong64 attribute
 #------------------------------------------------------------------
 	def write_SpectrumULong64(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumULong64()"
+		# print "In ", self.get_name(), "::write_SpectrumULong64()"
 
 		#	Add your own code here
 		self.attr_SpectrumULong64 = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumULong64
+		# print "Attribute value = ", self.attr_SpectrumULong64
 
 
 #------------------------------------------------------------------
 #	Read SpectrumFloat attribute
 #------------------------------------------------------------------
 	def read_SpectrumFloat(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumFloat()"
+		# print "In ", self.get_name(), "::read_SpectrumFloat()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumFloat)
-		print self.attr_SpectrumFloat
+		# print self.attr_SpectrumFloat
 
 
 #------------------------------------------------------------------
 #	Write SpectrumFloat attribute
 #------------------------------------------------------------------
 	def write_SpectrumFloat(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumFloat()"
+		# print "In ", self.get_name(), "::write_SpectrumFloat()"
 
 		#	Add your own code here
 		self.attr_SpectrumFloat = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumFloat
+		# print "Attribute value = ", self.attr_SpectrumFloat
 
 
 #------------------------------------------------------------------
 #	Read SpectrumDouble attribute
 #------------------------------------------------------------------
 	def read_SpectrumDouble(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumDouble()"
+		# print "In ", self.get_name(), "::read_SpectrumDouble()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumDouble)
-		print self.attr_SpectrumDouble
+		# print self.attr_SpectrumDouble
 
 
 #------------------------------------------------------------------
 #	Write SpectrumDouble attribute
 #------------------------------------------------------------------
 	def write_SpectrumDouble(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumDouble()"
+		# print "In ", self.get_name(), "::write_SpectrumDouble()"
 
 		#	Add your own code here
 		self.attr_SpectrumDouble = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumDouble
+		# print "Attribute value = ", self.attr_SpectrumDouble
 
 
 #------------------------------------------------------------------
 #	Read SpectrumString attribute
 #------------------------------------------------------------------
 	def read_SpectrumString(self, attr):
-		print "In ", self.get_name(), "::read_SpectrumString()"
+		# print "In ", self.get_name(), "::read_SpectrumString()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_SpectrumString)
-		print self.attr_SpectrumString
+		# print self.attr_SpectrumString
 
 
 #------------------------------------------------------------------
 #	Write SpectrumString attribute
 #------------------------------------------------------------------
 	def write_SpectrumString(self, attr):
-		print "In ", self.get_name(), "::write_SpectrumString()"
+		# print "In ", self.get_name(), "::write_SpectrumString()"
 
 		#	Add your own code here
 		self.attr_SpectrumString = attr.get_write_value()
-		print "Attribute value = ", self.attr_SpectrumString
+		# print "Attribute value = ", self.attr_SpectrumString
 
 
 #------------------------------------------------------------------
 #	Read ImageBoolean attribute
 #------------------------------------------------------------------
 	def read_ImageBoolean(self, attr):
-		print "In ", self.get_name(), "::read_ImageBoolean()"
+		# print "In ", self.get_name(), "::read_ImageBoolean()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_ImageBoolean) 
-		print self.attr_ImageBoolean
+		# print self.attr_ImageBoolean
 
 
 #------------------------------------------------------------------
 #	Write ImageBoolean attribute
 #------------------------------------------------------------------
 	def write_ImageBoolean(self, attr):
-		print "In ", self.get_name(), "::write_ImageBoolean()"
+		# print "In ", self.get_name(), "::write_ImageBoolean()"
 		#	Add your own code here
 		self.attr_ImageBoolean = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageBoolean
+		# print "Attribute value = ", self.attr_ImageBoolean
 
 
 #------------------------------------------------------------------
 #	Read ImageUChar attribute
 #------------------------------------------------------------------
 	def read_ImageUChar(self, attr):
-		print "In ", self.get_name(), "::read_ImageUChar()"
+		# print "In ", self.get_name(), "::read_ImageUChar()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_ImageUChar) 
-		print self.attr_ImageUChar
+		# print self.attr_ImageUChar
 
 
 #------------------------------------------------------------------
 #	Write ImageUChar attribute
 #------------------------------------------------------------------
 	def write_ImageUChar(self, attr):
-		print "In ", self.get_name(), "::write_ImageUChar()"
+		# print "In ", self.get_name(), "::write_ImageUChar()"
 		self.attr_ImageUChar = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageUChar
+		# print "Attribute value = ", self.attr_ImageUChar
 
 		#	Add your own code here
 
@@ -772,199 +775,199 @@ class SimpleServer(PyTango.Device_4Impl):
 #	Read ImageShort attribute
 #------------------------------------------------------------------
 	def read_ImageShort(self, attr):
-		print "In ", self.get_name(), "::read_ImageShort()"
+		# print "In ", self.get_name(), "::read_ImageShort()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ImageShort) 
-		print self.attr_ImageShort
+		# print self.attr_ImageShort
 
 
 #------------------------------------------------------------------
 #	Write ImageShort attribute
 #------------------------------------------------------------------
 	def write_ImageShort(self, attr):
-		print "In ", self.get_name(), "::write_ImageShort()"
+		# print "In ", self.get_name(), "::write_ImageShort()"
 		#	Add your own code here
 		self.attr_ImageShort = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageShort
+		# print "Attribute value = ", self.attr_ImageShort
 
 
 #------------------------------------------------------------------
 #	Read ImageUShort attribute
 #------------------------------------------------------------------
 	def read_ImageUShort(self, attr):
-		print "In ", self.get_name(), "::read_ImageUShort()"
+		# print "In ", self.get_name(), "::read_ImageUShort()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_ImageUShort) 
-		print self.attr_ImageUShort
+		# print self.attr_ImageUShort
 
 
 #------------------------------------------------------------------
 #	Write ImageUShort attribute
 #------------------------------------------------------------------
 	def write_ImageUShort(self, attr):
-		print "In ", self.get_name(), "::write_ImageUShort()"
+		# print "In ", self.get_name(), "::write_ImageUShort()"
 
 		#	Add your own code here
 		self.attr_ImageUShort = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageUShort
+		# print "Attribute value = ", self.attr_ImageUShort
 
 
 #------------------------------------------------------------------
 #	Read ImageLong attribute
 #------------------------------------------------------------------
 	def read_ImageLong(self, attr):
-		print "In ", self.get_name(), "::read_ImageLong()"
+		# print "In ", self.get_name(), "::read_ImageLong()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_ImageLong) 
-		print self.attr_ImageLong
+		# print self.attr_ImageLong
 
 
 #------------------------------------------------------------------
 #	Write ImageLong attribute
 #------------------------------------------------------------------
 	def write_ImageLong(self, attr):
-		print "In ", self.get_name(), "::write_ImageLong()"
+		# print "In ", self.get_name(), "::write_ImageLong()"
 
 		#	Add your own code here
 		self.attr_ImageLong = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageLong
+		# print "Attribute value = ", self.attr_ImageLong
 
 
 #------------------------------------------------------------------
 #	Read ImageULong attribute
 #------------------------------------------------------------------
 	def read_ImageULong(self, attr):
-		print "In ", self.get_name(), "::read_ImageULong()"
+		# print "In ", self.get_name(), "::read_ImageULong()"
 		
 		#	Add your own code here
 		
 		attr.set_value(self.attr_ImageULong) 
-		print self.attr_ImageULong
+		# print self.attr_ImageULong
 
 
 #------------------------------------------------------------------
 #	Write ImageULong attribute
 #------------------------------------------------------------------
 	def write_ImageULong(self, attr):
-		print "In ", self.get_name(), "::write_ImageULong()"
+		# print "In ", self.get_name(), "::write_ImageULong()"
 
 		#	Add your own code here
 		self.attr_ImageULong = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageULong
+		# print "Attribute value = ", self.attr_ImageULong
 
 
 #------------------------------------------------------------------
 #	Read ImageLong64 attribute
 #------------------------------------------------------------------
 	def read_ImageLong64(self, attr):
-		print "In ", self.get_name(), "::read_ImageLong64()"
+		# print "In ", self.get_name(), "::read_ImageLong64()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ImageLong64) 
-		print self.attr_ImageLong64
+		# print self.attr_ImageLong64
 
 
 #------------------------------------------------------------------
 #	Write ImageLong64 attribute
 #------------------------------------------------------------------
 	def write_ImageLong64(self, attr):
-		print "In ", self.get_name(), "::write_ImageLong64()"
+		# print "In ", self.get_name(), "::write_ImageLong64()"
 		#	Add your own code here
 		self.attr_ImageLong64 = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageLong64
+		# print "Attribute value = ", self.attr_ImageLong64
 
 
 #------------------------------------------------------------------
 #	Read ImageULong64 attribute
 #------------------------------------------------------------------
 	def read_ImageULong64(self, attr):
-		print "In ", self.get_name(), "::read_ImageULong64()"
+		# print "In ", self.get_name(), "::read_ImageULong64()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ImageULong64)
-		print self.attr_ImageULong64
+		# print self.attr_ImageULong64
 
 
 #------------------------------------------------------------------
 #	Write ImageULong64 attribute
 #------------------------------------------------------------------
 	def write_ImageULong64(self, attr):
-		print "In ", self.get_name(), "::write_ImageULong64()"
+		# print "In ", self.get_name(), "::write_ImageULong64()"
 
 		#	Add your own code here
 		self.attr_ImageULong64 = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageULong64
+		# print "Attribute value = ", self.attr_ImageULong64
 
 
 #------------------------------------------------------------------
 #	Read ImageFloat attribute
 #------------------------------------------------------------------
 	def read_ImageFloat(self, attr):
-		print "In ", self.get_name(), "::read_ImageFloat()"
+		# print "In ", self.get_name(), "::read_ImageFloat()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ImageFloat)
-		print self.attr_ImageFloat
+		# print self.attr_ImageFloat
 
 
 #------------------------------------------------------------------
 #	Write ImageFloat attribute
 #------------------------------------------------------------------
 	def write_ImageFloat(self, attr):
-		print "In ", self.get_name(), "::write_ImageFloat()"
+		# print "In ", self.get_name(), "::write_ImageFloat()"
 
 		#	Add your own code here
 		self.attr_ImageFloat = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageFloat
+		# print "Attribute value = ", self.attr_ImageFloat
 
 
 #------------------------------------------------------------------
 #	Read ImageDouble attribute
 #------------------------------------------------------------------
 	def read_ImageDouble(self, attr):
-		print "In ", self.get_name(), "::read_ImageDouble()"
+		# print "In ", self.get_name(), "::read_ImageDouble()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ImageDouble)
-		print self.attr_ImageDouble
+		# print self.attr_ImageDouble
 
 
 #------------------------------------------------------------------
 #	Write ImageDouble attribute
 #------------------------------------------------------------------
 	def write_ImageDouble(self, attr):
-		print "In ", self.get_name(), "::write_ImageDouble()"
+		# print "In ", self.get_name(), "::write_ImageDouble()"
 
 		#	Add your own code here
 		self.attr_ImageDouble = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageDouble
+		# print "Attribute value = ", self.attr_ImageDouble
 
 
 #------------------------------------------------------------------
 #	Read ImageString attribute
 #------------------------------------------------------------------
 	def read_ImageString(self, attr):
-		print "In ", self.get_name(), "::read_ImageString()"
+		# print "In ", self.get_name(), "::read_ImageString()"
 		
 		#	Add your own code here
 		attr.set_value(self.attr_ImageString)
-		print self.attr_ImageString
+		# print self.attr_ImageString
 
 
 #------------------------------------------------------------------
 #	Write ImageString attribute
 #------------------------------------------------------------------
 	def write_ImageString(self, attr):
-		print "In ", self.get_name(), "::write_ImageString()"
+		# print "In ", self.get_name(), "::write_ImageString()"
 
 		#	Add your own code here
 		self.attr_ImageString = attr.get_write_value()
-		print "Attribute value = ", self.attr_ImageString
+		# print "Attribute value = ", self.attr_ImageString
 
 
 
@@ -982,7 +985,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevBoolean	ScalarBoolean
 #------------------------------------------------------------------
 	def GetBoolean(self):
-		print "In ", self.get_name(), "::GetBoolean()"
+		# print "In ", self.get_name(), "::GetBoolean()"
 		#	Add your own code here
 		
 		return self.attr_ScalarBoolean
@@ -996,7 +999,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevShort	ScalarShort
 #------------------------------------------------------------------
 	def GetShort(self):
-		print "In ", self.get_name(), "::GetShort()"
+		# print "In ", self.get_name(), "::GetShort()"
 		#	Add your own code here
 		
 		return self.attr_ScalarShort
@@ -1010,7 +1013,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevLong	ScalarLong
 #------------------------------------------------------------------
 	def GetLong(self):
-		print "In ", self.get_name(), "::GetLong()"
+		# print "In ", self.get_name(), "::GetLong()"
 		#	Add your own code here
 		
 		return self.attr_ScalarLong
@@ -1024,7 +1027,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevLong64	ScalarLong64
 #------------------------------------------------------------------
 	def GetLong64(self):
-		print "In ", self.get_name(), "::GetLong64()"
+		# print "In ", self.get_name(), "::GetLong64()"
 		#	Add your own code here
 		
 		return self.attr_ScalarLong64
@@ -1038,7 +1041,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevFloat	ScalarFloat
 #------------------------------------------------------------------
 	def GetFloat(self):
-		print "In ", self.get_name(), "::GetFloat()"
+		# print "In ", self.get_name(), "::GetFloat()"
 		#	Add your own code here
 		
 		return self.attr_ScalarFloat
@@ -1052,7 +1055,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevDouble	ScalarDouble
 #------------------------------------------------------------------
 	def GetDouble(self):
-		print "In ", self.get_name(), "::GetDouble()"
+		# print "In ", self.get_name(), "::GetDouble()"
 		#	Add your own code here
 		
 		return self.attr_ScalarDouble
@@ -1066,7 +1069,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevUShort	ScalarUShort
 #------------------------------------------------------------------
 	def GetUShort(self):
-		print "In ", self.get_name(), "::GetUShort()"
+		# print "In ", self.get_name(), "::GetUShort()"
 		#	Add your own code here
 		
 		return self.attr_ScalarUShort
@@ -1080,7 +1083,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevULong	ScalarULong
 #------------------------------------------------------------------
 	def GetULong(self):
-		print "In ", self.get_name(), "::GetULong()"
+		# print "In ", self.get_name(), "::GetULong()"
 		#	Add your own code here
 		
 		return self.attr_ScalarULong
@@ -1094,7 +1097,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevULong64	ScalarULong64
 #------------------------------------------------------------------
 	def GetULong64(self):
-		print "In ", self.get_name(), "::GetULong64()"
+		# print "In ", self.get_name(), "::GetULong64()"
 		#	Add your own code here
 		
 		return self.attr_ScalarULong64
@@ -1108,7 +1111,7 @@ class SimpleServer(PyTango.Device_4Impl):
 #	argout: DevString	ScalarString
 #------------------------------------------------------------------
 	def GetString(self):
-		print "In ", self.get_name(), "::GetString()"
+		# print "In ", self.get_name(), "::GetString()"
 		#	Add your own code here
 		
 		return self.attr_ScalarString
@@ -1493,7 +1496,7 @@ class SimpleServerClass(PyTango.DeviceClass):
 	def __init__(self, name):
 		PyTango.DeviceClass.__init__(self, name)
 		self.set_type(name);
-		print "In SimpleServerClass  constructor"
+		# print "In SimpleServerClass  constructor"
 
 #==================================================================
 #
