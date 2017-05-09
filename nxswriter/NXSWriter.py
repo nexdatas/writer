@@ -245,6 +245,15 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.errors.append(
                 str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
 
+    def read_CurrentFileId(self, attr):
+        """ Read CurrentFileId
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In read_CurrentFileId()")
+        attr.set_value(self.tdw.currentfileid)
+
     def read_XMLSettings(self, attr):
         """ Read XMLSettings attribute
 
@@ -404,6 +413,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.errors = []
         try:
             self.tdw.writer = self.Writer
+            self.tdw.stepsPerFile = self.StepsPerFile
             self.tdw.openFile()
             self.set_state(PyTango.DevState.OPEN)
         except (PyTango.DevFailed, BaseException):
@@ -680,6 +690,10 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         [PyTango.DevLong,
          "maximal number of threads",
          [100]],
+        'StepsPerFile':
+        [PyTango.DevLong,
+         "maximal number of steps per file",
+         [0]],
         'Writer':
         [PyTango.DevString,
          "writer module",
@@ -754,6 +768,14 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "list of errors",
              'description': "list of errors",
+        }],
+        'CurrentFileId':
+        [[PyTango.DevLong,
+          PyTango.SCALAR,
+          PyTango.READ],
+         {
+             'label': "current file id",
+             'description': "current file id",
         }],
     }
 

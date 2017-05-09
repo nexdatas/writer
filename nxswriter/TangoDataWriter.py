@@ -23,6 +23,8 @@ from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
 from . import FileWriter
+import os
+import shutil
 
 WRITERS = {}
 try:
@@ -67,6 +69,12 @@ class TangoDataWriter(object):
         """
         #: (:obj:`str`) output file name
         self.fileName = ""
+        #: (:obj:`str`) output file name prefix
+        self.__fileprefix = ""
+        #: (:obj:`str`) output file name extension
+        self.__fileext = ""
+        #: (:obj:`dict` <:obj:`str` , :obj:`any`>) open file parameters
+        self.__pars = {}
         #: (:class:`PyTango.Device_4Impl`) Tango server
         self.__server = server
         #: (:obj:`str`) XML string with file settings
@@ -97,6 +105,11 @@ class TangoDataWriter(object):
         #: (:obj:`str`) writer type
         self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
 
+        #: (:obj:`int`) steps per file
+        self.stepsPerFile = 0
+
+        #: (:obj:`int`) steps per file
+        self.__currentfileid = 0
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
 
@@ -114,10 +127,10 @@ class TangoDataWriter(object):
         self.__entryCounter = 0
         #: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info
         self.__logGroup = None
-
-        #: (:obj:`bool`) open file flag
-        self.__fileCreated = None
-
+        
+        #: (:obj:`list` < :obj:`str`>) adding logs
+        self.__filenames = []
+        
         if server:
             if hasattr(self.__server, "log_fatal"):
                 Streams.log_fatal = server.log_fatal
@@ -172,6 +185,19 @@ class TangoDataWriter(object):
     jsonrecord = property(__getJSON, __setJSON, __delJSON,
                           doc='(:obj:`str`) the json data string')
 
+    def __getCurrentFileID(self):
+        """ get method for jsonrecord attribute
+
+        :returns: value of jsonrecord
+        :rtype: :obj:`str`
+        """
+        return self.__currentfileid
+
+
+    #: the json data string
+    currentfileid = property(__getCurrentFileID,
+                          doc='(:obj:`str`) the current file id')
+
     def __getXML(self):
         """ get method for xmlsettings attribute
 
@@ -225,16 +251,17 @@ class TangoDataWriter(object):
         self.__stepPool = None
         self.__finalPool = None
         self.__triggerPools = {}
-
-        pars = self.__getParams(self.writer)
+        self.__currentfileid = 0
+        
+        self.__pars = self.__getParams(self.writer)
         if os.path.isfile(self.fileName):
             self.__nxFile = FileWriter.open_file(
-                self.fileName, False, **pars)
-            self.__fileCreated = False
+                self.fileName, False, **self.__pars)
         else:
             self.__nxFile = FileWriter.create_file(
-                self.fileName, **pars)
-            self.__fileCreated = True
+                self.fileName, **self.__pars)
+        self.__fileprefix, self.__fileext = os.path.splitext(
+            str(self.fileName))
         self.__nxRoot = self.__nxFile.root()
 
         #: element file objects
@@ -335,7 +362,38 @@ class TangoDataWriter(object):
                 lfield.close()
             if self.__nxFile and hasattr(self.__nxFile, "flush"):
                 self.__nxFile.flush()
+            if self.stepsPerFile > 0:
+                self.__filenames = []
+                self.__nextfile()
+                
+    def __nextfile(self):
+        self.__nxFile.close()
+        self.__currentfileid += 1
+        self.__filenames.append("%s_%05d%s" % (
+            self.__fileprefix,
+            self.__currentfileid,
+            self.__fileext)
+        )
+        shutil.copy2(self.fileName, self.__filenames[-1])
+        self.__nxFile.name = self.__filenames[-1]
+        self.__nxFile.reopen(readonly=False, **self.__pars)
 
+    def __previousfile(self):
+        self.__nxFile.close()
+        self.__currentfileid -= 1
+        _ = self.__filenames.pop()
+        self.__nxFile.name = self.__filenames[-1]
+        self.__nxFile.reopen(readonly=False, **self.__pars)
+                
+    def __removefile(self):
+        if self.__filenames:
+            filename = self.__filenames.pop()
+            self.__nxFile.close()
+            self.__currentfileid -= 1
+            os.remove(filename)
+            self.__nxFile.name = self.__filenames[-1]
+            self.__nxFile.reopen(readonly=False, **self.__pars)
+                
     def record(self, jsonstring=None):
         """ runs threads form the STEP pool
 
@@ -348,7 +406,8 @@ class TangoDataWriter(object):
         if self.__datasources.counter > 0:
             self.__datasources.counter += 1
         else:
-            self.__datasources.counter = 1
+            self.__datasources.counter = 1                
+                
         localJSON = None
         if jsonstring:
             localJSON = json.loads(jsonstring)
@@ -375,6 +434,11 @@ class TangoDataWriter(object):
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
+        if self.stepsPerFile > 0:
+            if (self.__datasources.counter) % self.stepsPerFile == 0:
+                self.__nextfile()
+                
+                
 
     def closeEntry(self):
         """ closes the data entry
@@ -383,6 +447,11 @@ class TangoDataWriter(object):
                 removes the thread pools
         """
         # flag for FINAL mode
+        if self.stepsPerFile > 0:
+            os.remove(self.fileName)
+            if (self.__datasources.counter) % self.stepsPerFile == 0:
+                self.__removefile()
+                
         self.__datasources.counter = -2
 
         if self.addingLogs and self.__logGroup:
@@ -392,6 +461,10 @@ class TangoDataWriter(object):
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.jsonrecord))
             self.__finalPool.runAndWait()
+            if self.stepsPerFile > 0:
+                while len(self.__filenames) > 1:
+                    self.__previousfile()
+                    self.__finalPool.runAndWait()
             self.__finalPool.checkErrors()
 
         if self.__initPool:
