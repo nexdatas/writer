@@ -511,6 +511,7 @@ class TangoDataWriter(object):
 
         :brief: It closes the H5 file
         """
+        self.__currentfileid = 0
 
         if self.__initPool:
             self.__initPool.close()
