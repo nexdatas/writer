@@ -127,10 +127,12 @@ class TangoDataWriter(object):
         self.__entryCounter = 0
         #: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info
         self.__logGroup = None
-        
-        #: (:obj:`list` < :obj:`str`>) adding logs
+
+        #: (:obj:`list` < :obj:`str`>) file names
         self.__filenames = []
-        
+        #: (:obj:`dict` < :obj:`str`, :obj:`str`>) file time stamps
+        self.__filetimes = {}
+
         if server:
             if hasattr(self.__server, "log_fatal"):
                 Streams.log_fatal = server.log_fatal
@@ -252,7 +254,7 @@ class TangoDataWriter(object):
         self.__finalPool = None
         self.__triggerPools = {}
         self.__currentfileid = 0
-        
+
         self.__pars = self.__getParams(self.writer)
         if os.path.isfile(self.fileName):
             self.__nxFile = FileWriter.open_file(
@@ -273,7 +275,7 @@ class TangoDataWriter(object):
                 name, "NXcollection")
         else:
             ngroup = self.__nxRoot.open(name)
-        name = "configuration"    
+        name = "configuration"
         if self.addingLogs:
             error = True
             counter = 1
@@ -364,8 +366,9 @@ class TangoDataWriter(object):
                 self.__nxFile.flush()
             if self.stepsPerFile > 0:
                 self.__filenames = []
+                self.__filetimes = {}
                 self.__nextfile()
-                
+
     def __nextfile(self):
         self.__nxFile.close()
         self.__currentfileid += 1
@@ -375,6 +378,7 @@ class TangoDataWriter(object):
             self.__fileext)
         )
         shutil.copy2(self.fileName, self.__filenames[-1])
+        self.__filetimes[self.__filenames[-1]] = self.__nxFile.currenttime()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
 
@@ -384,7 +388,7 @@ class TangoDataWriter(object):
         _ = self.__filenames.pop()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
-                
+
     def __removefile(self):
         if self.__filenames:
             filename = self.__filenames.pop()
@@ -393,7 +397,7 @@ class TangoDataWriter(object):
             os.remove(filename)
             self.__nxFile.name = self.__filenames[-1]
             self.__nxFile.reopen(readonly=False, **self.__pars)
-                
+
     def record(self, jsonstring=None):
         """ runs threads form the STEP pool
 
@@ -406,8 +410,8 @@ class TangoDataWriter(object):
         if self.__datasources.counter > 0:
             self.__datasources.counter += 1
         else:
-            self.__datasources.counter = 1                
-                
+            self.__datasources.counter = 1
+
         localJSON = None
         if jsonstring:
             localJSON = json.loads(jsonstring)
@@ -437,8 +441,16 @@ class TangoDataWriter(object):
         if self.stepsPerFile > 0:
             if (self.__datasources.counter) % self.stepsPerFile == 0:
                 self.__nextfile()
-                
-                
+
+    def __updateNXRoot(self):
+        fname = self.__filenames[-1]
+        self.__nxRoot.attributes.create(
+            "file_name", "string",
+            overwrite=True)[...] = fname
+        if fname in self.__filetimes and len(self.__filenames) > 1:
+            self.__nxRoot.attributes.create(
+                "file_time", "string",
+                overwrite=True)[...] = str(self.__filetimes[fname])
 
     def closeEntry(self):
         """ closes the data entry
@@ -451,7 +463,7 @@ class TangoDataWriter(object):
             os.remove(self.fileName)
             if (self.__datasources.counter) % self.stepsPerFile == 0:
                 self.__removefile()
-                
+
         self.__datasources.counter = -2
 
         if self.addingLogs and self.__logGroup:
@@ -462,9 +474,11 @@ class TangoDataWriter(object):
             self.__finalPool.setJSON(json.loads(self.jsonrecord))
             self.__finalPool.runAndWait()
             if self.stepsPerFile > 0:
+                self.__updateNXRoot()
                 while len(self.__filenames) > 1:
                     self.__previousfile()
                     self.__finalPool.runAndWait()
+                    self.__updateNXRoot()
             self.__finalPool.checkErrors()
 
         if self.__initPool:

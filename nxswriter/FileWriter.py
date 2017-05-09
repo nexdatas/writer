@@ -20,6 +20,9 @@
 """ Provides abstraction for file writer """
 
 import weakref
+import time
+import pytz
+import datetime
 
 #: writer module
 writer = None
@@ -208,6 +211,19 @@ class FTFile(FTObject):
         :type libver: :obj:`str`
         """
         FTObject._reopen(self)
+
+    @classmethod
+    def currenttime(cls):
+        """ returns current time string
+
+        :returns: current time
+        :rtype: :obj:`str`
+        """
+        tzone = time.tzname[0]
+        tz = pytz.timezone(tzone)
+        fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+        starttime = tz.localize(datetime.datetime.now())
+        return str(starttime.strftime(fmt))
 
 
 class FTGroup(FTObject):
