@@ -239,6 +239,10 @@ class FTGroup(FTObject):
         :type tparent: :obj:`FTObject`
         """
         FTObject.__init__(self, h5object, tparent)
+        # : (:obj:`int`) current file id
+        self.currentfileid = 0 
+        #: (:obj:`int`) steps per file
+        self.stepsperfile = 0
 
     def open(self, name):
         """ open a file tree element

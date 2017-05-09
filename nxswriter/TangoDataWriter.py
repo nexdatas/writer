@@ -108,7 +108,7 @@ class TangoDataWriter(object):
         #: (:obj:`int`) steps per file
         self.stepsPerFile = 0
 
-        #: (:obj:`int`) steps per file
+        #: (:obj:`int`) current file id
         self.__currentfileid = 0
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
@@ -265,6 +265,8 @@ class TangoDataWriter(object):
         self.__fileprefix, self.__fileext = os.path.splitext(
             str(self.fileName))
         self.__nxRoot = self.__nxFile.root()
+        self.__nxRoot.stepsperfile = self.stepsPerFile
+        self.__nxRoot.currentfileid = self.__currentfileid
 
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
@@ -372,6 +374,7 @@ class TangoDataWriter(object):
     def __nextfile(self):
         self.__nxFile.close()
         self.__currentfileid += 1
+        self.__nxRoot.currentfileid = self.__currentfileid
         self.__filenames.append("%s_%05d%s" % (
             self.__fileprefix,
             self.__currentfileid,
@@ -385,6 +388,7 @@ class TangoDataWriter(object):
     def __previousfile(self):
         self.__nxFile.close()
         self.__currentfileid -= 1
+        self.__nxRoot.currentfileid = self.__currentfileid
         _ = self.__filenames.pop()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
@@ -394,6 +398,7 @@ class TangoDataWriter(object):
             filename = self.__filenames.pop()
             self.__nxFile.close()
             self.__currentfileid -= 1
+            self.__nxRoot.currentfileid = self.__currentfileid
             os.remove(filename)
             self.__nxFile.name = self.__filenames[-1]
             self.__nxFile.reopen(readonly=False, **self.__pars)
@@ -512,6 +517,7 @@ class TangoDataWriter(object):
         :brief: It closes the H5 file
         """
         self.__currentfileid = 0
+        self.__nxRoot.currentfileid = self.__currentfileid
 
         if self.__initPool:
             self.__initPool.close()
