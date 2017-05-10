@@ -492,8 +492,11 @@ class PNILink(FileWriter.FTLink):
         """ reopen field
         """
         lks = nx.get_links(self._tparent.h5object)
-        lk = [e for e in lks if e.name == self.name][0]
-        self._h5object = lk
+        try:
+            lk = [e for e in lks if e.name == self.name][0]
+            self._h5object = lk
+        except:
+            self._h5object = None
         FileWriter.FTLink.reopen(self)
 
     def close(self):

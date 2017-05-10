@@ -244,7 +244,10 @@ class TangoDataWriter(object):
         try:
             self.closeFile()
         except Exception as e:
-            Streams.warning("TangoDataWriter::openFile() - File cannot be closed")
+            try:
+                Streams.warning("TangoDataWriter::openFile() - File cannot be closed")
+            except:
+                print(str(e))
 
         self.__setWriter(self.writer)
         self.__nxFile = None
@@ -517,7 +520,8 @@ class TangoDataWriter(object):
         :brief: It closes the H5 file
         """
         self.__currentfileid = 0
-        self.__nxRoot.currentfileid = self.__currentfileid
+        if self.__nxRoot:
+            self.__nxRoot.currentfileid = self.__currentfileid
 
         if self.__initPool:
             self.__initPool.close()
