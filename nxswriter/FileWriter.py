@@ -240,7 +240,7 @@ class FTGroup(FTObject):
         """
         FTObject.__init__(self, h5object, tparent)
         # : (:obj:`int`) current file id
-        self.currentfileid = 0 
+        self.currentfileid = 0
         #: (:obj:`int`) steps per file
         self.stepsperfile = 0
 

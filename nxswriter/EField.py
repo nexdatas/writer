@@ -307,7 +307,8 @@ class EField(FElementWithAttr):
                     self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
                 elif len(arr) > 1:
                     self.h5Object.grow(self.grows - 1, len(arr)-1)
-                    self.h5Object[self.h5Object.shape[0]-len(arr):(self.h5Object.shape[0] )] = arr
+                    self.h5Object[self.h5Object.shape[0] - len(arr):
+                                  (self.h5Object.shape[0])] = arr
                 else:
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
             else:
@@ -321,7 +322,8 @@ class EField(FElementWithAttr):
                 elif hasattr(arr, "__iter__") and type(arr).__name__ != 'str' \
                         and len(arr) > 1:
                     self.h5Object.grow(self.grows - 1, len(arr)-1)
-                    self.h5Object[self.h5Object.shape[0]-len(arr):self.h5Object.shape[0]] = arr
+                    self.h5Object[self.h5Object.shape[0]-len(arr):
+                                  self.h5Object.shape[0]] = arr
                 else:
                     Streams.error("Rank mismatch", std=False)
                     raise XMLSettingSyntaxError("Rank mismatch")
@@ -360,7 +362,8 @@ class EField(FElementWithAttr):
                     self.h5Object[self.h5Object.shape[0] - 1, :] = arr[:, 0]
                 elif len(holder.shape) > 1 and holder.shape[0] > 1:
                     self.h5Object.grow(self.grows - 1, holder.shape[0]-1)
-                    self.h5Object[self.h5Object.shape[0] - holder.shape[0]:self.h5Object.shape[0], :] = arr
+                    self.h5Object[self.h5Object.shape[0] - holder.shape[0]:
+                                  self.h5Object.shape[0], :] = arr
                 else:
                     self.h5Object[self.h5Object.shape[0] - 1, :] = arr[0]
             elif len(self.h5Object.shape) == 1:
@@ -391,9 +394,9 @@ class EField(FElementWithAttr):
         """
         arr = holder.cast(self.h5Object.dtype)
         if self.grows == 1:
-            if len(self.h5Object.shape) == 3 and len(holder.shape)==3:
+            if len(self.h5Object.shape) == 3 and len(holder.shape) == 3:
                 if len(holder.shape) > 1 and holder.shape[0] > 1:
-                    self.h5Object.grow(self.grows - 1, holder.shape[0]-1)
+                    self.h5Object.grow(self.grows - 1, holder.shape[0] - 1)
                     self.h5Object[
                         self.h5Object.shape[0]
                         - holder.shape[0]:self.h5Object.shape[0],
@@ -472,8 +475,9 @@ class EField(FElementWithAttr):
                     elif not h5shape[i]:
                         self.h5Object.grow(i, 1)
                     j += 1
-                elif self.__extraD and len(shape) > j and shape[j] > 1 and len(shape) == len(h5shape) and shape[-1] != 0:
-                    j += 1
+                elif self.__extraD and len(shape) > j and shape[j] > 1:
+                    if len(shape) == len(h5shape) and shape[-1] != 0:
+                        j += 1
 
     def run(self):
         """ runner

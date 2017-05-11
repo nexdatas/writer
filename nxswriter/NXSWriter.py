@@ -361,6 +361,53 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
+    def read_StepsPerFile(self, attr):
+        """ Read StepsPerFile attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In read_StepsPerFile()")
+
+        attr.set_value(self.tdw.stepsPerFile)
+
+    def write_StepsPerFile(self, attr):
+        """ Write StepsPerFile attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In write_StepsPerFile()")
+        if self.is_StepsPerFile_write_allowed():
+            self.tdw.stepsPerFile = attr.get_write_value()
+        else:
+            self.warn_stream("To change the file name please close the file.")
+            raise Exception(
+                "To change the file name please close the file.")
+
+    def is_StepsPerFile_write_allowed(self):
+        """ StepsPerFile attribute Write State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF,
+                                PyTango.DevState.EXTRACT,
+                                PyTango.DevState.OPEN,
+                                PyTango.DevState.RUNNING]:
+            return False
+        return True
+
+    def is_StepsPerFile_allowed(self, _):
+        """StepsPerFile attribute State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF]:
+            return False
+        return True
+
     def read_Errors(self, attr):
         """ Read Errors attribute
 
@@ -413,7 +460,6 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.errors = []
         try:
             self.tdw.writer = self.Writer
-            self.tdw.stepsPerFile = self.StepsPerFile
             self.tdw.openFile()
             self.set_state(PyTango.DevState.OPEN)
         except (PyTango.DevFailed, BaseException):
@@ -690,10 +736,6 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         [PyTango.DevLong,
          "maximal number of threads",
          [100]],
-        'StepsPerFile':
-        [PyTango.DevLong,
-         "maximal number of steps per file",
-         [0]],
         'Writer':
         [PyTango.DevString,
          "writer module",
@@ -766,7 +808,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
           PyTango.SPECTRUM,
           PyTango.READ, 1000],
          {
-             'label': "list of errors",
+             'label': "List of errors",
              'description': "list of errors",
         }],
         'CurrentFileId':
@@ -774,8 +816,17 @@ class NXSDataWriterClass(PyTango.DeviceClass):
           PyTango.SCALAR,
           PyTango.READ],
          {
-             'label': "current file id",
+             'label': "Current file id",
              'description': "current file id",
+        }],
+        'StepsPerFile':
+        [[PyTango.DevLong,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'label': "Steps per file",
+             'description': "Number of steps per file",
+             'Memorized': "true"
         }],
     }
 

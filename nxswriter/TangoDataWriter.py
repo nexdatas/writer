@@ -195,10 +195,9 @@ class TangoDataWriter(object):
         """
         return self.__currentfileid
 
-
     #: the json data string
     currentfileid = property(__getCurrentFileID,
-                          doc='(:obj:`str`) the current file id')
+                             doc='(:obj:`str`) the current file id')
 
     def __getXML(self):
         """ get method for xmlsettings attribute
@@ -245,7 +244,8 @@ class TangoDataWriter(object):
             self.closeFile()
         except Exception as e:
             try:
-                Streams.warning("TangoDataWriter::openFile() - File cannot be closed")
+                Streams.warning(
+                    "TangoDataWriter::openFile() - File cannot be closed")
             except:
                 print(str(e))
 
@@ -287,7 +287,7 @@ class TangoDataWriter(object):
             cname = name
             while error:
                 cname = name if counter == 1 else \
-                        ("%s_%s" % (name, counter))
+                    ("%s_%s" % (name, counter))
                 if not ngroup.exists(cname):
                     error = False
                 else:
