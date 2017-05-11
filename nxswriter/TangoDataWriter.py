@@ -23,6 +23,8 @@ from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from . import Streams
 from . import FileWriter
+import os
+import shutil
 
 WRITERS = {}
 try:
@@ -67,6 +69,12 @@ class TangoDataWriter(object):
         """
         #: (:obj:`str`) output file name
         self.fileName = ""
+        #: (:obj:`str`) output file name prefix
+        self.__fileprefix = ""
+        #: (:obj:`str`) output file name extension
+        self.__fileext = ""
+        #: (:obj:`dict` <:obj:`str` , :obj:`any`>) open file parameters
+        self.__pars = {}
         #: (:class:`PyTango.Device_4Impl`) Tango server
         self.__server = server
         #: (:obj:`str`) XML string with file settings
@@ -97,6 +105,11 @@ class TangoDataWriter(object):
         #: (:obj:`str`) writer type
         self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
 
+        #: (:obj:`int`) steps per file
+        self.stepsperfile = 0
+
+        #: (:obj:`int`) current file id
+        self.__currentfileid = 0
         #: (:class:`nxswriter.DecoderPool.DecoderPool`) pool with decoders
         self.__decoders = DecoderPool()
 
@@ -115,8 +128,10 @@ class TangoDataWriter(object):
         #: (:class:`nxswriter.FileWriter.FTGroup`) group with Nexus log Info
         self.__logGroup = None
 
-        #: (:obj:`bool`) open file flag
-        self.__fileCreated = None
+        #: (:obj:`list` < :obj:`str`>) file names
+        self.__filenames = []
+        #: (:obj:`dict` < :obj:`str`, :obj:`str`>) file time stamps
+        self.__filetimes = {}
 
         if server:
             if hasattr(self.__server, "log_fatal"):
@@ -172,6 +187,18 @@ class TangoDataWriter(object):
     jsonrecord = property(__getJSON, __setJSON, __delJSON,
                           doc='(:obj:`str`) the json data string')
 
+    def __getCurrentFileID(self):
+        """ get method for jsonrecord attribute
+
+        :returns: value of jsonrecord
+        :rtype: :obj:`str`
+        """
+        return self.__currentfileid
+
+    #: the json data string
+    currentfileid = property(__getCurrentFileID,
+                             doc='(:obj:`str`) the current file id')
+
     def __getXML(self):
         """ get method for xmlsettings attribute
 
@@ -216,7 +243,11 @@ class TangoDataWriter(object):
         try:
             self.closeFile()
         except Exception as e:
-            Streams.warning("TangoDataWriter::openFile() - File cannot be closed")
+            try:
+                Streams.warning(
+                    "TangoDataWriter::openFile() - File cannot be closed")
+            except:
+                print(str(e))
 
         self.__setWriter(self.writer)
         self.__nxFile = None
@@ -225,17 +256,20 @@ class TangoDataWriter(object):
         self.__stepPool = None
         self.__finalPool = None
         self.__triggerPools = {}
+        self.__currentfileid = 0
 
-        pars = self.__getParams(self.writer)
+        self.__pars = self.__getParams(self.writer)
         if os.path.isfile(self.fileName):
             self.__nxFile = FileWriter.open_file(
-                self.fileName, False, **pars)
-            self.__fileCreated = False
+                self.fileName, False, **self.__pars)
         else:
             self.__nxFile = FileWriter.create_file(
-                self.fileName, **pars)
-            self.__fileCreated = True
+                self.fileName, **self.__pars)
+        self.__fileprefix, self.__fileext = os.path.splitext(
+            str(self.fileName))
         self.__nxRoot = self.__nxFile.root()
+        self.__nxRoot.stepsperfile = self.stepsperfile
+        self.__nxRoot.currentfileid = self.__currentfileid
 
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
@@ -246,14 +280,14 @@ class TangoDataWriter(object):
                 name, "NXcollection")
         else:
             ngroup = self.__nxRoot.open(name)
-        name = "configuration"    
+        name = "configuration"
         if self.addingLogs:
             error = True
             counter = 1
             cname = name
             while error:
                 cname = name if counter == 1 else \
-                        ("%s_%s" % (name, counter))
+                    ("%s_%s" % (name, counter))
                 if not ngroup.exists(cname):
                     error = False
                 else:
@@ -335,6 +369,42 @@ class TangoDataWriter(object):
                 lfield.close()
             if self.__nxFile and hasattr(self.__nxFile, "flush"):
                 self.__nxFile.flush()
+            if self.stepsperfile > 0:
+                self.__filenames = []
+                self.__filetimes = {}
+                self.__nextfile()
+
+    def __nextfile(self):
+        self.__nxFile.close()
+        self.__currentfileid += 1
+        self.__nxRoot.currentfileid = self.__currentfileid
+        self.__filenames.append("%s_%05d%s" % (
+            self.__fileprefix,
+            self.__currentfileid,
+            self.__fileext)
+        )
+        shutil.copy2(self.fileName, self.__filenames[-1])
+        self.__filetimes[self.__filenames[-1]] = self.__nxFile.currenttime()
+        self.__nxFile.name = self.__filenames[-1]
+        self.__nxFile.reopen(readonly=False, **self.__pars)
+
+    def __previousfile(self):
+        self.__nxFile.close()
+        self.__currentfileid -= 1
+        self.__nxRoot.currentfileid = self.__currentfileid
+        _ = self.__filenames.pop()
+        self.__nxFile.name = self.__filenames[-1]
+        self.__nxFile.reopen(readonly=False, **self.__pars)
+
+    def __removefile(self):
+        if self.__filenames:
+            filename = self.__filenames.pop()
+            self.__nxFile.close()
+            self.__currentfileid -= 1
+            self.__nxRoot.currentfileid = self.__currentfileid
+            os.remove(filename)
+            self.__nxFile.name = self.__filenames[-1]
+            self.__nxFile.reopen(readonly=False, **self.__pars)
 
     def record(self, jsonstring=None):
         """ runs threads form the STEP pool
@@ -349,6 +419,7 @@ class TangoDataWriter(object):
             self.__datasources.counter += 1
         else:
             self.__datasources.counter = 1
+
         localJSON = None
         if jsonstring:
             localJSON = json.loads(jsonstring)
@@ -375,6 +446,19 @@ class TangoDataWriter(object):
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
+        if self.stepsperfile > 0:
+            if (self.__datasources.counter) % self.stepsperfile == 0:
+                self.__nextfile()
+
+    def __updateNXRoot(self):
+        fname = self.__filenames[-1]
+        self.__nxRoot.attributes.create(
+            "file_name", "string",
+            overwrite=True)[...] = fname
+        if fname in self.__filetimes and len(self.__filenames) > 1:
+            self.__nxRoot.attributes.create(
+                "file_time", "string",
+                overwrite=True)[...] = str(self.__filetimes[fname])
 
     def closeEntry(self):
         """ closes the data entry
@@ -383,6 +467,11 @@ class TangoDataWriter(object):
                 removes the thread pools
         """
         # flag for FINAL mode
+        if self.stepsperfile > 0:
+            os.remove(self.fileName)
+            if (self.__datasources.counter) % self.stepsperfile == 0:
+                self.__removefile()
+
         self.__datasources.counter = -2
 
         if self.addingLogs and self.__logGroup:
@@ -392,6 +481,12 @@ class TangoDataWriter(object):
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.jsonrecord))
             self.__finalPool.runAndWait()
+            if self.stepsperfile > 0:
+                self.__updateNXRoot()
+                while len(self.__filenames) > 1:
+                    self.__previousfile()
+                    self.__finalPool.runAndWait()
+                    self.__updateNXRoot()
             self.__finalPool.checkErrors()
 
         if self.__initPool:
@@ -424,6 +519,9 @@ class TangoDataWriter(object):
 
         :brief: It closes the H5 file
         """
+        self.__currentfileid = 0
+        if self.__nxRoot:
+            self.__nxRoot.currentfileid = self.__currentfileid
 
         if self.__initPool:
             self.__initPool.close()

@@ -19,10 +19,7 @@
 
 """ Provides h5py file writer """
 
-import pytz
-import time
 import h5py
-import datetime
 import numpy as np
 import os
 
@@ -148,19 +145,6 @@ class H5PYFile(FileWriter.FTFile):
             self._h5object.attrs.create(
                 "file_update_time", self.currenttime() + "\0")
         return self._h5object.close()
-
-    @classmethod
-    def currenttime(cls):
-        """ returns current time string
-
-        :returns: current time
-        :rtype: :obj:`str`
-        """
-        tzone = time.tzname[0]
-        tz = pytz.timezone(tzone)
-        fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
-        starttime = tz.localize(datetime.datetime.now())
-        return str(starttime.strftime(fmt))
 
     @property
     def is_valid(self):

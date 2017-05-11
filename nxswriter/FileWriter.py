@@ -20,6 +20,9 @@
 """ Provides abstraction for file writer """
 
 import weakref
+import time
+import pytz
+import datetime
 
 #: writer module
 writer = None
@@ -209,6 +212,19 @@ class FTFile(FTObject):
         """
         FTObject._reopen(self)
 
+    @classmethod
+    def currenttime(cls):
+        """ returns current time string
+
+        :returns: current time
+        :rtype: :obj:`str`
+        """
+        tzone = time.tzname[0]
+        tz = pytz.timezone(tzone)
+        fmt = '%Y-%m-%dT%H:%M:%S.%f%z'
+        starttime = tz.localize(datetime.datetime.now())
+        return str(starttime.strftime(fmt))
+
 
 class FTGroup(FTObject):
     """ file tree group
@@ -223,6 +239,10 @@ class FTGroup(FTObject):
         :type tparent: :obj:`FTObject`
         """
         FTObject.__init__(self, h5object, tparent)
+        # : (:obj:`int`) current file id
+        self.currentfileid = 0
+        #: (:obj:`int`) steps per file
+        self.stepsperfile = 0
 
     def open(self, name):
         """ open a file tree element

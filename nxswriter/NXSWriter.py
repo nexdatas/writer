@@ -245,6 +245,15 @@ class NXSDataWriter(PyTango.Device_4Impl):
             self.errors.append(
                 str(datetime.now()) + ":\n" + str(sys.exc_info()[1]))
 
+    def read_CurrentFileId(self, attr):
+        """ Read CurrentFileId
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In read_CurrentFileId()")
+        attr.set_value(self.tdw.currentfileid)
+
     def read_XMLSettings(self, attr):
         """ Read XMLSettings attribute
 
@@ -344,6 +353,53 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
     def is_FileName_allowed(self, _):
         """FileName attribute State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF]:
+            return False
+        return True
+
+    def read_StepsPerFile(self, attr):
+        """ Read StepsPerFile attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In read_StepsPerFile()")
+
+        attr.set_value(self.tdw.stepsperfile)
+
+    def write_StepsPerFile(self, attr):
+        """ Write StepsPerFile attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In write_StepsPerFile()")
+        if self.is_StepsPerFile_write_allowed():
+            self.tdw.stepsperfile = attr.get_write_value()
+        else:
+            self.warn_stream("To change the file name please close the file.")
+            raise Exception(
+                "To change the file name please close the file.")
+
+    def is_StepsPerFile_write_allowed(self):
+        """ StepsPerFile attribute Write State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF,
+                                PyTango.DevState.EXTRACT,
+                                PyTango.DevState.OPEN,
+                                PyTango.DevState.RUNNING]:
+            return False
+        return True
+
+    def is_StepsPerFile_allowed(self, _):
+        """StepsPerFile attribute State Machine
 
         :returns: True if the operation allowed
         :rtype: :obj:`bool`
@@ -752,8 +808,25 @@ class NXSDataWriterClass(PyTango.DeviceClass):
           PyTango.SPECTRUM,
           PyTango.READ, 1000],
          {
-             'label': "list of errors",
+             'label': "List of errors",
              'description': "list of errors",
+        }],
+        'CurrentFileId':
+        [[PyTango.DevLong,
+          PyTango.SCALAR,
+          PyTango.READ],
+         {
+             'label': "Current file id",
+             'description': "current file id",
+        }],
+        'StepsPerFile':
+        [[PyTango.DevLong,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'label': "Steps per file",
+             'description': "Number of steps per file",
+             'Memorized': "true"
         }],
     }
 

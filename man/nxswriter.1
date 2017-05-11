@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "April 22, 2017" "2.10" "NXSDataWriter"
+.TH "NXSWRITER" "1" "May 11, 2017" "2.11" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -2422,6 +2422,32 @@ True if the operation allowed
 .UNINDENT
 .INDENT 7.0
 .TP
+.B is_StepsPerFile_allowed(_)
+StepsPerFile attribute State Machine
+.INDENT 7.0
+.TP
+.B Returns
+True if the operation allowed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_StepsPerFile_write_allowed()
+StepsPerFile attribute Write State Machine
+.INDENT 7.0
+.TP
+.B Returns
+True if the operation allowed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B is_XMLSettings_allowed(_)
 XMLSettings attribute State Machine
 .INDENT 7.0
@@ -2442,6 +2468,16 @@ True if the operation allowed
 .TP
 .B othread = None
 (\fBCommandThread\fP) openentry thread
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read_CurrentFileId(attr)
+Read CurrentFileId
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2467,6 +2503,16 @@ Read FileName attribute
 .TP
 .B read_JSONRecord(attr)
 Read JSONRecord attribute
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B read_StepsPerFile(attr)
+Read StepsPerFile attribute
 .INDENT 7.0
 .TP
 .B Parameters
@@ -2539,6 +2585,16 @@ Write JSONRecord attribute
 .UNINDENT
 .INDENT 7.0
 .TP
+.B write_StepsPerFile(attr)
+Write StepsPerFile attribute
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B write_XMLSettings(attr)
 Write XMLSettings attribute
 .INDENT 7.0
@@ -2558,7 +2614,7 @@ NXSDataWriterClass class definition
 NXSDataWriterClass Constructor
 .INDENT 7.0
 .TP
-.B attr_list = {\(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqlist of errors\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}]}
+.B attr_list = {\(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -2976,6 +3032,11 @@ It closes the H5 file
 .UNINDENT
 .INDENT 7.0
 .TP
+.B currentfileid
+the json data string
+.UNINDENT
+.INDENT 7.0
+.TP
 .B fileName = None
 (\fI\%str\fP) output file name
 .UNINDENT
@@ -3035,6 +3096,11 @@ It runs threads from the STEP pool
 .B Parameters
 \fBjsonstring\fP (\fI\%str\fP) \-\- local JSON string with data records
 .UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B stepsperfile = None
+(\fI\%int\fP) steps per file
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3984,6 +4050,19 @@ constructor
 .UNINDENT
 .INDENT 7.0
 .TP
+.B classmethod currenttime()
+returns current time string
+.INDENT 7.0
+.TP
+.B Returns
+current time
+.TP
+.B Return type
+\fI\%str\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B flush()
 flash the data
 .UNINDENT
@@ -4164,6 +4243,11 @@ group size
 .B Return type
 \fI\%int\fP
 .UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B stepsperfile = None
+(\fI\%int\fP) steps per file
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -5504,19 +5588,6 @@ constructor
 .TP
 .B close()
 close file
-.UNINDENT
-.INDENT 7.0
-.TP
-.B classmethod currenttime()
-returns current time string
-.INDENT 7.0
-.TP
-.B Returns
-current time
-.TP
-.B Return type
-\fI\%str\fP
-.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP

@@ -1,3 +1,7 @@
+2017-05-11 Jan Kotanski <jankotan@gmail.com>
+	* add file split with stepsPerFile
+	* tagged as 2.11.0
+
 2017-04-22 Jan Kotanski <jankotan@gmail.com>
 	* avoid closing file when state is ON or OFF
 	* tagged as 2.10.2
