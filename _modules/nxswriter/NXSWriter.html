@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.NXSWriter &mdash; NXSDataWriter 2.8.0 documentation</title>
+    <title>nxswriter.NXSWriter &mdash; NXSDataWriter 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.8.0',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.8.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.8</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -316,13 +316,18 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;lock&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="n">oldstate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;tdw&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="p">,</span> <span class="s">&#39;closeFile&#39;</span><span class="p">):</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">closeFile</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">oldstate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                                <span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span>
+                                <span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">OFF</span>
+                        <span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">closeFile</span><span class="p">()</span>
                         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span>
                     <span class="k">except</span><span class="p">:</span>
                         <span class="k">pass</span>
@@ -388,6 +393,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span> <span class="o">+</span> <span class="s">&quot;:</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span>
 
+<div class="viewcode-block" id="NXSDataWriter.read_CurrentFileId"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.read_CurrentFileId">[docs]</a>    <span class="k">def</span> <span class="nf">read_CurrentFileId</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Read CurrentFileId</span>
+
+<span class="sd">        :param attr: attribute object</span>
+<span class="sd">        :type attr: :class:`PyTango.Attribute`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In read_CurrentFileId()&quot;</span><span class="p">)</span>
+        <span class="n">attr</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">currentfileid</span><span class="p">)</span>
+</div>
 <div class="viewcode-block" id="NXSDataWriter.read_XMLSettings"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.read_XMLSettings">[docs]</a>    <span class="k">def</span> <span class="nf">read_XMLSettings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Read XMLSettings attribute</span>
 
@@ -495,6 +509,53 @@
             <span class="k">return</span> <span class="bp">False</span>
         <span class="k">return</span> <span class="bp">True</span>
 </div>
+<div class="viewcode-block" id="NXSDataWriter.read_StepsPerFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.read_StepsPerFile">[docs]</a>    <span class="k">def</span> <span class="nf">read_StepsPerFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Read StepsPerFile attribute</span>
+
+<span class="sd">        :param attr: attribute object</span>
+<span class="sd">        :type attr: :class:`PyTango.Attribute`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In read_StepsPerFile()&quot;</span><span class="p">)</span>
+
+        <span class="n">attr</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">stepsperfile</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="NXSDataWriter.write_StepsPerFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.write_StepsPerFile">[docs]</a>    <span class="k">def</span> <span class="nf">write_StepsPerFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Write StepsPerFile attribute</span>
+
+<span class="sd">        :param attr: attribute object</span>
+<span class="sd">        :type attr: :class:`PyTango.Attribute`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug_stream</span><span class="p">(</span><span class="s">&quot;In write_StepsPerFile()&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_StepsPerFile_write_allowed</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tdw</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">get_write_value</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warn_stream</span><span class="p">(</span><span class="s">&quot;To change the file name please close the file.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s">&quot;To change the file name please close the file.&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="NXSDataWriter.is_StepsPerFile_write_allowed"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_write_allowed">[docs]</a>    <span class="k">def</span> <span class="nf">is_StepsPerFile_write_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; StepsPerFile attribute Write State Machine</span>
+
+<span class="sd">        :returns: True if the operation allowed</span>
+<span class="sd">        :rtype: :obj:`bool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span>
+                                <span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">EXTRACT</span><span class="p">,</span>
+                                <span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">OPEN</span><span class="p">,</span>
+                                <span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="NXSDataWriter.is_StepsPerFile_allowed"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_allowed">[docs]</a>    <span class="k">def</span> <span class="nf">is_StepsPerFile_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;StepsPerFile attribute State Machine</span>
+
+<span class="sd">        :returns: True if the operation allowed</span>
+<span class="sd">        :rtype: :obj:`bool`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">OFF</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
 <div class="viewcode-block" id="NXSDataWriter.read_Errors"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.NXSWriter.NXSDataWriter.read_Errors">[docs]</a>    <span class="k">def</span> <span class="nf">read_Errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Read Errors attribute</span>
 
@@ -538,7 +599,10 @@
 
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="p">[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">OPEN</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">CloseFile</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CloseFile</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -892,8 +956,25 @@
           <span class="n">PyTango</span><span class="o">.</span><span class="n">SPECTRUM</span><span class="p">,</span>
           <span class="n">PyTango</span><span class="o">.</span><span class="n">READ</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span>
          <span class="p">{</span>
-             <span class="s">&#39;label&#39;</span><span class="p">:</span> <span class="s">&quot;list of errors&quot;</span><span class="p">,</span>
+             <span class="s">&#39;label&#39;</span><span class="p">:</span> <span class="s">&quot;List of errors&quot;</span><span class="p">,</span>
              <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&quot;list of errors&quot;</span><span class="p">,</span>
+        <span class="p">}],</span>
+        <span class="s">&#39;CurrentFileId&#39;</span><span class="p">:</span>
+        <span class="p">[[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevLong</span><span class="p">,</span>
+          <span class="n">PyTango</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span>
+          <span class="n">PyTango</span><span class="o">.</span><span class="n">READ</span><span class="p">],</span>
+         <span class="p">{</span>
+             <span class="s">&#39;label&#39;</span><span class="p">:</span> <span class="s">&quot;Current file id&quot;</span><span class="p">,</span>
+             <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&quot;current file id&quot;</span><span class="p">,</span>
+        <span class="p">}],</span>
+        <span class="s">&#39;StepsPerFile&#39;</span><span class="p">:</span>
+        <span class="p">[[</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevLong</span><span class="p">,</span>
+          <span class="n">PyTango</span><span class="o">.</span><span class="n">SCALAR</span><span class="p">,</span>
+          <span class="n">PyTango</span><span class="o">.</span><span class="n">READ_WRITE</span><span class="p">],</span>
+         <span class="p">{</span>
+             <span class="s">&#39;label&#39;</span><span class="p">:</span> <span class="s">&quot;Steps per file&quot;</span><span class="p">,</span>
+             <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="s">&quot;Number of steps per file&quot;</span><span class="p">,</span>
+             <span class="s">&#39;Memorized&#39;</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
         <span class="p">}],</span>
     <span class="p">}</span>
 

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.H5PYWriter &mdash; NXSDataWriter 2.8.0 documentation</title>
+    <title>nxswriter.H5PYWriter &mdash; NXSDataWriter 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.8.0',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.8.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.8</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -167,10 +167,7 @@
 
 <span class="sd">&quot;&quot;&quot; Provides h5py file writer &quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">pytz</span>
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
@@ -296,19 +293,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                 <span class="s">&quot;file_update_time&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currenttime</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\0</span><span class="s">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</div>
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="H5PYFile.currenttime"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.H5PYWriter.H5PYFile.currenttime">[docs]</a>    <span class="k">def</span> <span class="nf">currenttime</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; returns current time string</span>
-
-<span class="sd">        :returns: current time</span>
-<span class="sd">        :rtype: :obj:`str`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">tzone</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">tzname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">tz</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="n">tzone</span><span class="p">)</span>
-        <span class="n">fmt</span> <span class="o">=</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M:%S.</span><span class="si">%f</span><span class="s">%z&#39;</span>
-        <span class="n">starttime</span> <span class="o">=</span> <span class="n">tz</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">starttime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span>
 </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="H5PYFile.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.H5PYWriter.H5PYFile.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -538,7 +522,7 @@
 <span class="sd">        :returns: existing flag</span>
 <span class="sd">        :rtype: :obj:`bool`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span>
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </div>
     <span class="nd">@property</span>
 <div class="viewcode-block" id="H5PYGroup.is_valid"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.H5PYWriter.H5PYGroup.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -639,6 +623,8 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">hsh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5object</span><span class="o">.</span><span class="n">shape</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="bp">Ellipsis</span><span class="p">:</span>
+                <span class="n">tsz</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hsh</span><span class="p">))]</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
                 <span class="n">tsz</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hsh</span><span class="p">))]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">tsz</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)]</span>

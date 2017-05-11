@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.FileWriter &mdash; NXSDataWriter 2.8.0 documentation</title>
+    <title>nxswriter.FileWriter &mdash; NXSDataWriter 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.8.0',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.8.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.8</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -168,6 +168,9 @@
 <span class="sd">&quot;&quot;&quot; Provides abstraction for file writer &quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
 <span class="c">#: writer module</span>
 <span class="n">writer</span> <span class="o">=</span> <span class="bp">None</span>
@@ -356,6 +359,19 @@
 <span class="sd">        :type libver: :obj:`str`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FTObject</span><span class="o">.</span><span class="n">_reopen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="FTFile.currenttime"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTFile.currenttime">[docs]</a>    <span class="k">def</span> <span class="nf">currenttime</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; returns current time string</span>
+
+<span class="sd">        :returns: current time</span>
+<span class="sd">        :rtype: :obj:`str`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tzone</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">tzname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">tz</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="n">tzone</span><span class="p">)</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">T%H:%M:%S.</span><span class="si">%f</span><span class="s">%z&#39;</span>
+        <span class="n">starttime</span> <span class="o">=</span> <span class="n">tz</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">starttime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">))</span>
 
 </div></div>
 <div class="viewcode-block" id="FTGroup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTGroup">[docs]</a><span class="k">class</span> <span class="nc">FTGroup</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
@@ -371,6 +387,10 @@
 <span class="sd">        :type tparent: :obj:`FTObject`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FTObject</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="p">)</span>
+        <span class="c"># : (:obj:`int`) current file id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentfileid</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c">#: (:obj:`int`) steps per file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stepsperfile</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="FTGroup.open"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTGroup.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; open a file tree element</span>

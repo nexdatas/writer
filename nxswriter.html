@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter package &mdash; NXSDataWriter 2.8.0 documentation</title>
+    <title>nxswriter package &mdash; NXSDataWriter 2.11.0 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.8.0',
+        VERSION:     '2.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.8.0 documentation" href="index.html" />
+    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="index.html" />
     <link rel="prev" title="Welcome to NXSDataWriter’s documentation!" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.8</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -2705,6 +2705,38 @@ and returns it to the caller.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_allowed">
+<tt class="descname">is_StepsPerFile_allowed</tt><big>(</big><em>_</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_StepsPerFile_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>StepsPerFile attribute State Machine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the operation allowed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_write_allowed">
+<tt class="descname">is_StepsPerFile_write_allowed</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_StepsPerFile_write_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_write_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>StepsPerFile attribute Write State Machine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the operation allowed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nxswriter.NXSWriter.NXSDataWriter.is_XMLSettings_allowed">
 <tt class="descname">is_XMLSettings_allowed</tt><big>(</big><em>_</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_XMLSettings_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_XMLSettings_allowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>XMLSettings attribute State Machine</p>
@@ -2730,6 +2762,20 @@ and returns it to the caller.</td>
 <dt id="nxswriter.NXSWriter.NXSDataWriter.othread">
 <tt class="descname">othread</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.othread" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<a class="reference internal" href="#nxswriter.NXSWriter.CommandThread" title="nxswriter.NXSWriter.CommandThread"><tt class="xref py py-class docutils literal"><span class="pre">CommandThread</span></tt></a>) openentry thread</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.read_CurrentFileId">
+<tt class="descname">read_CurrentFileId</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_CurrentFileId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_CurrentFileId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CurrentFileId</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -2764,6 +2810,20 @@ and returns it to the caller.</td>
 <dt id="nxswriter.NXSWriter.NXSDataWriter.read_JSONRecord">
 <tt class="descname">read_JSONRecord</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_JSONRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_JSONRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read JSONRecord attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.read_StepsPerFile">
+<tt class="descname">read_StepsPerFile</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_StepsPerFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_StepsPerFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read StepsPerFile attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2858,6 +2918,20 @@ and returns it to the caller.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.write_StepsPerFile">
+<tt class="descname">write_StepsPerFile</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.write_StepsPerFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.write_StepsPerFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write StepsPerFile attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nxswriter.NXSWriter.NXSDataWriter.write_XMLSettings">
 <tt class="descname">write_XMLSettings</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.write_XMLSettings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.write_XMLSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write XMLSettings attribute</p>
@@ -2881,7 +2955,7 @@ and returns it to the caller.</td>
 <p>NXSDataWriterClass Constructor</p>
 <dl class="attribute">
 <dt id="nxswriter.NXSWriter.NXSDataWriterClass.attr_list">
-<tt class="descname">attr_list</tt><em class="property"> = {'Errors': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {'description': 'list of errors', 'label': 'list of errors'}], 'JSONRecord': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A JSON string with global client data.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'JSON string with client data'}], 'FileName': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A name of H5 output file with its full path', 'label': 'Output file with its path'}], 'XMLSettings': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'An XML string with Nexus configuration.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'XML Configuration'}]}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.attr_list" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">attr_list</tt><em class="property"> = {'StepsPerFile': [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'Memorized': 'true', 'description': 'Number of steps per file', 'label': 'Steps per file'}], 'Errors': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {'description': 'list of errors', 'label': 'List of errors'}], 'JSONRecord': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A JSON string with global client data.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'JSON string with client data'}], 'XMLSettings': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'An XML string with Nexus configuration.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'XML Configuration'}], 'FileName': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A name of H5 output file with its full path', 'label': 'Output file with its path'}], 'CurrentFileId': [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {'description': 'current file id', 'label': 'Current file id'}]}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.attr_list" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>(<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, </dt>
 <dd>[[ <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrDataFormat" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrDataFormat</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrWriteType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrWriteType</span></tt></a>], <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, any&gt; ] &gt; ) Attribute definitions</dd>
@@ -3367,6 +3441,12 @@ removes the thread pools</td>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="nxswriter.TangoDataWriter.TangoDataWriter.currentfileid">
+<tt class="descname">currentfileid</tt><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.currentfileid" title="Permalink to this definition">¶</a></dt>
+<dd><p>the json data string</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="nxswriter.TangoDataWriter.TangoDataWriter.fileName">
 <tt class="descname">fileName</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.fileName" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) output file name</p>
@@ -3443,6 +3523,12 @@ and runs the INIT pool.</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nxswriter.TangoDataWriter.TangoDataWriter.stepsperfile">
+<tt class="descname">stepsperfile</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.stepsperfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) steps per file</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4546,6 +4632,22 @@ the first element of the list array</td>
 </tr>
 </tbody>
 </table>
+<dl class="classmethod">
+<dt id="nxswriter.FileWriter.FTFile.currenttime">
+<em class="property">classmethod </em><tt class="descname">currenttime</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/FileWriter.html#FTFile.currenttime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FileWriter.FTFile.currenttime" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns current time string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">current time</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="nxswriter.FileWriter.FTFile.flush">
 <tt class="descname">flush</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/FileWriter.html#FTFile.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FileWriter.FTFile.flush" title="Permalink to this definition">¶</a></dt>
@@ -4752,6 +4854,12 @@ the first element of the list array</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nxswriter.FileWriter.FTGroup.stepsperfile">
+<tt class="descname">stepsperfile</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.FileWriter.FTGroup.stepsperfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) steps per file</p>
 </dd></dl>
 
 </dd></dl>
@@ -6316,22 +6424,6 @@ the first element of the list array</td>
 <dt id="nxswriter.H5PYWriter.H5PYFile.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/H5PYWriter.html#H5PYFile.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5PYWriter.H5PYFile.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>close file</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="nxswriter.H5PYWriter.H5PYFile.currenttime">
-<em class="property">classmethod </em><tt class="descname">currenttime</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/H5PYWriter.html#H5PYFile.currenttime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5PYWriter.H5PYFile.currenttime" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns current time string</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">current time</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
