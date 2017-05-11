@@ -84,6 +84,44 @@ class TangoDataWriterTest(unittest.TestCase):
   </group>
 </definition>
 """
+        self._scanXml1 = """
+<definition>
+  <group type="NXentry" name="entry1">
+    <group type="NXinstrument" name="instrument">
+      <attribute name ="short_name"> scan instrument </attribute>
+      <group type="NXdetector" name="detector">
+        <field units="m" type="NX_FLOAT" name="counter1">
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="exp_c01"/>
+          </datasource>
+        </field>
+        <field units="" type="NX_FLOAT" name="mca">
+          <dimensions rank="1">
+            <dim value="2048" index="1"/>
+          </dimensions>
+          <strategy mode="STEP"/>
+          <datasource type="CLIENT">
+            <record name="p09/mca/exp.02"/>
+          </datasource>
+        </field>
+      </group>
+    </group>
+    <group type="NXdata" name="data">
+      <link target="/NXentry/NXinstrument/NXdetector/mca" name="data">
+        <doc>
+          Link to mca in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+      <link target="/entry1/instrument/detector/counter1" name="cnt1">
+        <doc>
+          Link to counter1 in /NXentry/NXinstrument/NXdetector
+        </doc>
+      </link>
+    </group>
+  </group>
+</definition>
+"""
         self._scanXml2 = """
 <definition>
   <group type="NXentry" name="entry1">
@@ -251,10 +289,8 @@ ds.res2 = str(root.is_valid)
 
             f.close()
         finally:
-            try:
+            if os.path.isfile(fname):
                 os.remove(fname)
-            except:
-                pass
 
 
     ## openFile test
@@ -329,7 +365,8 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
 
@@ -397,7 +434,8 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
 
@@ -477,7 +515,8 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
             if dirCreated:
                 os.removedirs(directory)
 
@@ -571,7 +610,8 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
 
@@ -641,7 +681,8 @@ ds.res2 = str(root.is_valid)
 
 
         finally:
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
 
@@ -649,31 +690,46 @@ ds.res2 = str(root.is_valid)
     ## scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
-        print "Run: TangoDataWriterTest.test_scanRecord() "
-        fname = "scantest.h5"
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         try:
             tdw = TangoDataWriter()
             tdw.fileName = fname
 
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
             tdw.openFile()
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
 
             tdw.xmlsettings = self._scanXml % fname
             tdw.openEntry()
 
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
 
 
             tdw.record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
                            + str(self._mca1)+ '  } }')
 
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
             tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
                            + str(self._mca2)+ '  } }')
 
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
             
 
             tdw.closeEntry()
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
 
             tdw.closeFile()
 
+            self.assertEqual(tdw.stepsperfile, 0)
+            self.assertEqual(tdw.currentfileid, 0)
 
 
 
@@ -990,12 +1046,1033 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(at.dtype,"string")
 
             f.close()
-
         finally:
+            if os.path.isfile(fname):
+                os.remove(fname)
 
-            os.remove(fname)
-#            pass
+    ## scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_scanRecord_split(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        tfname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        fname = None
+        try:
+            tdw = TangoDataWriter()
+            tdw.fileName = tfname
+            tdw.stepsperfile = 2
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 0)
+            tdw.openFile()
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 0)
 
+            tdw.xmlsettings = self._scanXml1
+            tdw.openEntry()
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 1)
+
+
+            tdw.record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
+                           + str(self._mca1)+ '  } }')
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 1)
+            tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
+                           + str(self._mca2)+ '  } }')
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 2)
+            
+
+            tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
+                           + str(self._mca2)+ '  } }')
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 2)
+            tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
+                           + str(self._mca2)+ '  } }')
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 3)
+            
+
+            tdw.record('{"data": {"exp_c01":'+str(self._counter[1])+', "p09/mca/exp.02":'\
+                           + str(self._mca2)+ '  } }')
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 3)
+            tdw.record('{"data": {"exp_c01":'+str(self._counter[0])+', "p09/mca/exp.02":'\
+                           + str(self._mca1)+ '  } }')
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 4)
+            
+
+            tdw.closeEntry()
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 1)
+
+            tdw.closeFile()
+
+            self.assertEqual(tdw.stepsperfile, 2)
+            self.assertEqual(tdw.currentfileid, 0)
+
+
+
+            # check the created file
+            
+            fname = '%s/%s%s_00001.h5' % (os.getcwd(), self.__class__.__name__, fun )
+            f = open_file(fname,readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 2)
+
+            en = f.open("entry1")
+            self.assertTrue(en.is_valid)
+            self.assertEqual(en.name,"entry1")
+            self.assertEqual(len(en.attributes),1)
+            self.assertEqual(en.size, 2)
+
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXentry")
+
+#            ins = f.open("entry1/instrument:NXinstrument")    #bad exception
+#            ins = f.open("entry1/instrument")
+            ins = en.open("instrument")
+            self.assertTrue(ins.is_valid)
+            self.assertEqual(ins.name,"instrument")
+            self.assertEqual(len(ins.attributes),2)
+            self.assertEqual(ins.size, 1)
+
+
+            at = ins.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXinstrument")
+
+
+            at = ins.attributes["short_name"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"short_name")
+            self.assertEqual(at[...],"scan instrument")
+
+
+            det = ins.open("detector")
+            self.assertTrue(det.is_valid)
+            self.assertEqual(det.name,"detector")
+            self.assertEqual(len(det.attributes),1)
+            self.assertEqual(det.size, 2)
+
+            at = det.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXdetector")
+
+#            cnt = det.open("counter")              # bad exception
+            cnt = det.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"counter1")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+            value = cnt.read()
+#            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(self._counter[i], value[i])
+
+
+
+            self.assertEqual(len(cnt.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+
+
+            mca = det.open("mca")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name,"mca")
+
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype, "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca1[i], value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+
+            dt = en.open("data")
+            self.assertTrue(dt.is_valid)
+            self.assertEqual(dt.name,"data")
+            self.assertEqual(len(dt.attributes),1)
+            self.assertEqual(dt.size, 2)
+
+
+            at = dt.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXdata")
+
+
+
+
+
+
+            cnt = dt.open("cnt1")
+            self.assertTrue(cnt.is_valid)
+            #            ???
+            self.assertEqual(cnt.name,"cnt1")
+            #   self.assertEqual(cnt.name,"counter1")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+#            print cnt.read()
+            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(self._counter[i], value[i])
+
+
+
+            self.assertEqual(len(cnt.attributes),4)
+
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+
+
+            mca = dt.open("data")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name,"data")
+
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca1[i], value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+
+            f.close()
+            # check the created file
+            
+            fname = '%s/%s%s_00002.h5' % (os.getcwd(), self.__class__.__name__, fun )
+            f = open_file(fname,readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 2)
+
+            en = f.open("entry1")
+            self.assertTrue(en.is_valid)
+            self.assertEqual(en.name,"entry1")
+            self.assertEqual(len(en.attributes),1)
+            self.assertEqual(en.size, 2)
+
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXentry")
+
+#            ins = f.open("entry1/instrument:NXinstrument")    #bad exception
+#            ins = f.open("entry1/instrument")
+            ins = en.open("instrument")
+            self.assertTrue(ins.is_valid)
+            self.assertEqual(ins.name,"instrument")
+            self.assertEqual(len(ins.attributes),2)
+            self.assertEqual(ins.size, 1)
+
+
+            at = ins.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXinstrument")
+
+
+            at = ins.attributes["short_name"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"short_name")
+            self.assertEqual(at[...],"scan instrument")
+
+
+            det = ins.open("detector")
+            self.assertTrue(det.is_valid)
+            self.assertEqual(det.name,"detector")
+            self.assertEqual(len(det.attributes),1)
+            self.assertEqual(det.size, 2)
+
+            at = det.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXdetector")
+
+#            cnt = det.open("counter")              # bad exception
+            cnt = det.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"counter1")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+            value = cnt.read()
+#            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(self._counter[1], value[i])
+
+
+
+            self.assertEqual(len(cnt.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+
+
+            mca = det.open("mca")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name,"mca")
+
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype, "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+
+            dt = en.open("data")
+            self.assertTrue(dt.is_valid)
+            self.assertEqual(dt.name,"data")
+            self.assertEqual(len(dt.attributes),1)
+            self.assertEqual(dt.size, 2)
+
+
+            at = dt.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXdata")
+
+
+
+
+
+
+            cnt = dt.open("cnt1")
+            self.assertTrue(cnt.is_valid)
+            #            ???
+            self.assertEqual(cnt.name,"cnt1")
+            # self.assertEqual(cnt.name,"counter1")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+#            print cnt.read()
+            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(self._counter[1], value[i])
+
+
+
+            self.assertEqual(len(cnt.attributes),4)
+
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+
+
+            mca = dt.open("data")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name,"data")
+
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+
+            f.close()
+            # check the created file
+            
+            fname = '%s/%s%s_00003.h5' % (os.getcwd(), self.__class__.__name__, fun )
+            f = open_file(fname,readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertEqual(f.size, 2)
+
+            en = f.open("entry1")
+            self.assertTrue(en.is_valid)
+            self.assertEqual(en.name,"entry1")
+            self.assertEqual(len(en.attributes),1)
+            self.assertEqual(en.size, 2)
+
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXentry")
+
+#            ins = f.open("entry1/instrument:NXinstrument")    #bad exception
+#            ins = f.open("entry1/instrument")
+            ins = en.open("instrument")
+            self.assertTrue(ins.is_valid)
+            self.assertEqual(ins.name,"instrument")
+            self.assertEqual(len(ins.attributes),2)
+            self.assertEqual(ins.size, 1)
+
+
+            at = ins.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXinstrument")
+
+
+            at = ins.attributes["short_name"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"short_name")
+            self.assertEqual(at[...],"scan instrument")
+
+
+            det = ins.open("detector")
+            self.assertTrue(det.is_valid)
+            self.assertEqual(det.name,"detector")
+            self.assertEqual(len(det.attributes),1)
+            self.assertEqual(det.size, 2)
+
+            at = det.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXdetector")
+
+#            cnt = det.open("counter")              # bad exception
+            cnt = det.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name,"counter1")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+            value = cnt.read()
+#            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(self._counter[1-i], value[i])
+
+
+
+            self.assertEqual(len(cnt.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+
+
+            mca = det.open("mca")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name,"mca")
+
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype, "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca1[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+
+            dt = en.open("data")
+            self.assertTrue(dt.is_valid)
+            self.assertEqual(dt.name,"data")
+            self.assertEqual(len(dt.attributes),1)
+            self.assertEqual(dt.size, 2)
+
+
+            at = dt.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"NX_class")
+            self.assertEqual(at[...],"NXdata")
+
+
+
+
+
+
+            cnt = dt.open("cnt1")
+            self.assertTrue(cnt.is_valid)
+            #            ???
+            self.assertEqual(cnt.name,"cnt1")
+            # self.assertEqual(cnt.name,"counter1")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+#            print cnt.read()
+            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(self._counter[1-i], value[i])
+
+
+
+            self.assertEqual(len(cnt.attributes),4)
+
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+
+
+            mca = dt.open("data")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name,"data")
+
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca2[i], value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(self._mca1[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes),4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape),1)
+            self.assertEqual(at.shape,(1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"nexdatas_strategy")
+            self.assertEqual(at[...],"STEP")
+
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"type")
+            self.assertEqual(at[...],"NX_FLOAT")
+
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+            self.assertEqual(at.name,"units")
+            self.assertEqual(at[...],"")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape,"__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype,"string")
+
+            f.close()
+        finally:
+            for i in range(1, 4):
+                fname = '%s/%s%s_%05d.h5' % (
+                    os.getcwd(), self.__class__.__name__, fun, i )
+                if os.path.isfile(fname):
+                    os.remove(fname)
+            if os.path.isfile(tfname):
+                os.remove(tfname)
+
+                
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
@@ -1338,7 +2415,8 @@ ds.res2 = str(root.is_valid)
 
         finally:
             
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
     ## scanRecord test
@@ -1697,7 +2775,8 @@ ds.res2 = str(root.is_valid)
 
         finally:
             
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
     ## scanRecord test
     # \brief It tests recording of simple h5 file
@@ -2062,7 +3141,8 @@ ds.res2 = str(root.is_valid)
 
         finally:
             
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
     ## scanRecord test
@@ -2171,7 +3251,8 @@ ds.res2 = str(root.is_valid)
             f.close()
 
         finally:
-            os.remove(fname)
+            if os.path.isfile(fname):
+                os.remove(fname)
 
 
 

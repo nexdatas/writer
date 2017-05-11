@@ -369,7 +369,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """
         self.debug_stream("In read_StepsPerFile()")
 
-        attr.set_value(self.tdw.stepsPerFile)
+        attr.set_value(self.tdw.stepsperfile)
 
     def write_StepsPerFile(self, attr):
         """ Write StepsPerFile attribute
@@ -379,7 +379,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
         """
         self.debug_stream("In write_StepsPerFile()")
         if self.is_StepsPerFile_write_allowed():
-            self.tdw.stepsPerFile = attr.get_write_value()
+            self.tdw.stepsperfile = attr.get_write_value()
         else:
             self.warn_stream("To change the file name please close the file.")
             raise Exception(

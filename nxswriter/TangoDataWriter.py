@@ -106,7 +106,7 @@ class TangoDataWriter(object):
         self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
 
         #: (:obj:`int`) steps per file
-        self.stepsPerFile = 0
+        self.stepsperfile = 0
 
         #: (:obj:`int`) current file id
         self.__currentfileid = 0
@@ -268,7 +268,7 @@ class TangoDataWriter(object):
         self.__fileprefix, self.__fileext = os.path.splitext(
             str(self.fileName))
         self.__nxRoot = self.__nxFile.root()
-        self.__nxRoot.stepsperfile = self.stepsPerFile
+        self.__nxRoot.stepsperfile = self.stepsperfile
         self.__nxRoot.currentfileid = self.__currentfileid
 
         #: element file objects
@@ -369,7 +369,7 @@ class TangoDataWriter(object):
                 lfield.close()
             if self.__nxFile and hasattr(self.__nxFile, "flush"):
                 self.__nxFile.flush()
-            if self.stepsPerFile > 0:
+            if self.stepsperfile > 0:
                 self.__filenames = []
                 self.__filetimes = {}
                 self.__nextfile()
@@ -446,8 +446,8 @@ class TangoDataWriter(object):
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
-        if self.stepsPerFile > 0:
-            if (self.__datasources.counter) % self.stepsPerFile == 0:
+        if self.stepsperfile > 0:
+            if (self.__datasources.counter) % self.stepsperfile == 0:
                 self.__nextfile()
 
     def __updateNXRoot(self):
@@ -467,9 +467,9 @@ class TangoDataWriter(object):
                 removes the thread pools
         """
         # flag for FINAL mode
-        if self.stepsPerFile > 0:
+        if self.stepsperfile > 0:
             os.remove(self.fileName)
-            if (self.__datasources.counter) % self.stepsPerFile == 0:
+            if (self.__datasources.counter) % self.stepsperfile == 0:
                 self.__removefile()
 
         self.__datasources.counter = -2
@@ -481,7 +481,7 @@ class TangoDataWriter(object):
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.jsonrecord))
             self.__finalPool.runAndWait()
-            if self.stepsPerFile > 0:
+            if self.stepsperfile > 0:
                 self.__updateNXRoot()
                 while len(self.__filenames) > 1:
                     self.__previousfile()
