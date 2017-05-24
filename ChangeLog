@@ -1,3 +1,7 @@
+2017-05-24 Jan Kotanski <jankotan@gmail.com>
+	* fix for reopening logs
+	* tagged as 2.11.1
+
 2017-05-11 Jan Kotanski <jankotan@gmail.com>
 	* add file split with stepsPerFile
 	* tagged as 2.11.0

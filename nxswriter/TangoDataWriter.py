@@ -274,14 +274,14 @@ class TangoDataWriter(object):
         #: element file objects
         self.__eFile = EFile([], None, self.__nxRoot)
 
-        name = "nexus_logs"
-        if not self.__nxRoot.exists(name):
-            ngroup = self.__nxRoot.create_group(
-                name, "NXcollection")
-        else:
-            ngroup = self.__nxRoot.open(name)
-        name = "configuration"
         if self.addingLogs:
+            name = "nexus_logs"
+            if not self.__nxRoot.exists(name):
+                ngroup = self.__nxRoot.create_group(
+                    name, "NXcollection")
+            else:
+                ngroup = self.__nxRoot.open(name)
+            name = "configuration"
             error = True
             counter = 1
             cname = name
@@ -362,6 +362,8 @@ class TangoDataWriter(object):
 
             if self.addingLogs:
                 self.__entryCounter += 1
+                if not self.__logGroup.is_valid:
+                    self.__logGroup.reopen()
                 lfield = self.__logGroup.create_field(
                     "nexus__entry__%s_xml" % str(self.__entryCounter),
                     "string")
@@ -476,7 +478,7 @@ class TangoDataWriter(object):
 
         if self.addingLogs and self.__logGroup:
             self.__logGroup.close()
-            self.__logGroup = None
+            # self.__logGroup = None
 
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.jsonrecord))
@@ -545,9 +547,13 @@ class TangoDataWriter(object):
         if self.__nxFile:
             self.__nxFile.close()
 
+        if self.addingLogs and self.__logGroup:
+            self.__logGroup.close()
+
         self.__nxRoot = None
         self.__nxFile = None
         self.__eFile = None
+        self.__logGroup = None
         gc.collect()
 
 
