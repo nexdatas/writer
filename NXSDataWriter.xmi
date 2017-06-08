@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
   <classes name="NXSDataWriter" pogoRevision="9.4">
-    <description description="NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.&#xA;&#xA;The server provides storing data from other Tango devices,&#xA;various databases as well as passed by a user client via JSON strings.&#xA;&#xA;Source code: https://github.com/nexdatas/writer&#xA;Project Web page: https://nexdatas.github.io/writer&#xA;NexDaTaS Web page: https://nexdatas.github.io" title="NeXus Data Writer" sourcePath="/home/jkotan/ndts/nexdatas.writer" language="Python" filestogenerate="XMI   file,Protected Regions,html Pages" license="GPL" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
+    <description description="NXSDataWriter is a Tango server which allows to store NeXuS Data in H5 files.&#xA;&#xA;The server provides storing data from other Tango devices,&#xA;various databases as well as passed by a user client via JSON strings.&#xA;&#xA;Source code: https://github.com/nexdatas/writer&#xA;Project Web page: https://nexdatas.github.io/writer&#xA;NexDaTaS Web page: https://nexdatas.github.io" title="NeXus Data Writer" sourcePath="/home/jkotan/ndts/nexdatas.writer" language="Python" filestogenerate="XMI   file,Code files,Protected Regions,html Pages" license="GPL" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false" descriptionHtmlExists="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at desy.de - jan.kotanski" author="jan.kotanski" emailDomain="desy.de" classFamily="Acquisition" siteSpecific="" platform="All Platforms" bus="Not Applicable" manufacturer="DESY" reference=""/>
     </description>
@@ -200,7 +200,7 @@
       <archiveEvent fire="false" libCheckCriteria="false"/>
       <dataReadyEvent fire="false" libCheckCriteria="true"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-      <properties description="Current file id" label="Current file id" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+      <properties description="Steps per file" label="Steps per file" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
       <readExcludedStates>OFF</readExcludedStates>
       <readExcludedStates>EXTRACT</readExcludedStates>
       <readExcludedStates>RUNNING</readExcludedStates>
