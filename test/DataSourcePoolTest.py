@@ -182,8 +182,9 @@ class DataSourcePoolTest(unittest.TestCase):
 
 
         el = DataSourcePool()
-        self.assertEqual(el.common,{})
-        self.assertEqual(el.counter,0)
+        self.assertEqual(el.common, {})
+        self.assertEqual(el.counter, 0)
+        self.assertEqual(el.canfail, False)
         self.assertEqual(type(el.lock),thread.LockType)
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))

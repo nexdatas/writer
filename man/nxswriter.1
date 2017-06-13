@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "May 11, 2017" "2.11" "NXSDataWriter"
+.TH "NXSWRITER" "1" "June 13, 2017" "2.12" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -299,7 +299,7 @@ provides access to the data
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fI\%list\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP} )
+{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP} )
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -465,7 +465,7 @@ constructor
 .IP \(bu 2
 \fBtangoDType\fP (\fI\%str\fP) \-\- type of the data
 .IP \(bu 2
-\fBshape\fP (\fI\%list\fP <\fI\%int\fP>) \-\- shape of the data
+\fBshape\fP (\fBlist\fP <\fI\%int\fP>) \-\- shape of the data
 .IP \(bu 2
 \fBencoding\fP (\fI\%str\fP) \-\- encoding type of Tango DevEncoded varibles
 .IP \(bu 2
@@ -507,7 +507,7 @@ pool with decoding algorithm
 .INDENT 7.0
 .TP
 .B shape = None
-(\fI\%list\fP <\fI\%int\fP>) data shape
+(\fBlist\fP <\fI\%int\fP>) data shape
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -626,6 +626,11 @@ loads user datasources
 .B Parameters
 \fBconfigJSON\fP (:    \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- string with datasources
 .UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B canfail = None
+(\fI\%bool\fP) can fail switch
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -899,7 +904,7 @@ provides the data shape
 the data shape if data was loaded
 .TP
 .B Return type
-\fI\%list\fP <\fI\%int\fP >
+\fBlist\fP <\fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -964,7 +969,7 @@ provides the data shape
 the data shape i.e. \fI[1, 0]\fP
 .TP
 .B Return type
-\fI\%list\fP <\fI\%int\fP >
+\fBlist\fP <\fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1029,7 +1034,7 @@ provides the data shape
 the data shape if data was loaded
 .TP
 .B Return type
-\fI\%list\fP <\fI\%int\fP >
+\fBlist\fP <\fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -1065,12 +1070,15 @@ shape of the attribute, i.e. {index: length}
 .UNINDENT
 .INDENT 7.0
 .TP
-.B markFailed()
+.B markFailed(error=None)
 marks the field as failed
 .INDENT 7.0
 .TP
 .B Brief
 It marks the field as failed
+.TP
+.B Parameters
+\fBerror\fP (\fI\%str\fP) \-\- error string
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1167,12 +1175,15 @@ shape of the field, i.e. {index: length}
 .UNINDENT
 .INDENT 7.0
 .TP
-.B markFailed()
+.B markFailed(error=None)
 marks the field as failed
 .INDENT 7.0
 .TP
 .B Brief
 It marks the field as failed
+.TP
+.B Parameters
+\fBerror\fP (\fI\%str\fP) \-\- error string
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1393,6 +1404,11 @@ constructor
 .UNINDENT
 .INDENT 7.0
 .TP
+.B setCanFail()
+sets can fail flag
+.UNINDENT
+.INDENT 7.0
+.TP
 .B store(xml=None, globalJSON=None)
 stores the tag content
 .INDENT 7.0
@@ -1433,7 +1449,7 @@ constructor
 .INDENT 7.0
 .TP
 .B content = None
-(\fI\%list\fP <\fI\%str\fP>) stored tag content
+(\fBlist\fP <\fI\%str\fP>) stored tag content
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1841,7 +1857,7 @@ constructor
 .INDENT 7.0
 .TP
 .B content = None
-(\fI\%list\fP <\fI\%str\fP>) tag content
+(\fBlist\fP <\fI\%str\fP>) tag content
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2072,13 +2088,13 @@ constructor
 .IP \(bu 2
 \fBfinalState\fP (\fI\%PyTango.DevState\fP) \-\- Final State Code
 .IP \(bu 2
-\fBargs\fP (\fI\%list\fP <\fI\%str\fP>) \-\- List of command arguments
+\fBargs\fP (\fBlist\fP <\fI\%str\fP>) \-\- List of command arguments
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
 .B args = None
-(\fI\%list\fP <\fI\%str\fP>) command arguments
+(\fBlist\fP <\fI\%str\fP>) command arguments
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2279,6 +2295,32 @@ Device initialization
 .UNINDENT
 .INDENT 7.0
 .TP
+.B is_CanFail_allowed(_)
+CanFail attribute State Machine
+.INDENT 7.0
+.TP
+.B Returns
+True if the operation allowed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_CanFail_write_allowed()
+CanFail attribute Write State Machine
+.INDENT 7.0
+.TP
+.B Returns
+True if the operation allowed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B is_CloseEntryAsynch_allowed()
 CloseEntryAsynch command State Machine
 .INDENT 7.0
@@ -2471,6 +2513,16 @@ True if the operation allowed
 .UNINDENT
 .INDENT 7.0
 .TP
+.B read_CanFail(attr)
+Read CanFail attribute
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B read_CurrentFileId(attr)
 Read CurrentFileId
 .INDENT 7.0
@@ -2565,6 +2617,16 @@ Tango Data Writer
 .UNINDENT
 .INDENT 7.0
 .TP
+.B write_CanFail(attr)
+Write CanFail attribute
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B write_FileName(attr)
 Write FileName attribute
 .INDENT 7.0
@@ -2614,7 +2676,7 @@ NXSDataWriterClass class definition
 NXSDataWriterClass Constructor
 .INDENT 7.0
 .TP
-.B attr_list = {\(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}]}
+.B attr_list = {\(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqCanFail\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqGlobal can fail flag. By default it is False\(aq, \(aqlabel\(aq: \(aqCan fail\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -2627,7 +2689,7 @@ NXSDataWriterClass Constructor
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
-[ \fI\%str\fP, \fI\%PyTango.CmdArgType\fP, [ \fI\%list\fP <\fI\%int\fP> ] ] > ) Class Properties
+[ \fI\%str\fP, \fI\%PyTango.CmdArgType\fP, [ \fBlist\fP <\fI\%int\fP> ] ] > ) Class Properties
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2646,7 +2708,7 @@ Command definitions
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
-[ \fI\%str\fP, \fI\%PyTango.CmdArgType\fP, [ \fI\%list\fP <\fI\%int\fP> ] ] > ) Device Properties
+[ \fI\%str\fP, \fI\%PyTango.CmdArgType\fP, [ \fBlist\fP <\fI\%int\fP> ] ] > ) Device Properties
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -2767,7 +2829,7 @@ thread pool with STEP elements
 .INDENT 7.0
 .TP
 .B transparentTags = None
-(\fI\%list\fP <\fI\%str\fP>) transparent tags
+(\fBlist\fP <\fI\%str\fP>) transparent tags
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2818,7 +2880,7 @@ provides access to the data
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fI\%list\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP} )
+{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP} )
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3011,6 +3073,11 @@ It initialize the data writer for the H5 output file
 .UNINDENT
 .INDENT 7.0
 .TP
+.B canfail
+the global can fail flag
+.UNINDENT
+.INDENT 7.0
+.TP
 .B closeEntry()
 closes the data entry
 .INDENT 7.0
@@ -3193,7 +3260,7 @@ data provider
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fI\%list\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP}
+{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP}
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3276,12 +3343,12 @@ default constructor
 .INDENT 7.0
 .TP
 .B attributes = None
-(\fI\%list\fP <\fI\%str\fP>) device attribute names
+(\fBlist\fP <\fI\%str\fP>) device attribute names
 .UNINDENT
 .INDENT 7.0
 .TP
 .B commands = None
-(\fI\%list\fP <\fI\%str\fP>) device command names
+(\fBlist\fP <\fI\%str\fP>) device command names
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3300,7 +3367,7 @@ dictionary with tango members
 .INDENT 7.0
 .TP
 .B properties = None
-(\fI\%list\fP <\fI\%str\fP>) device property names
+(\fBlist\fP <\fI\%str\fP>) device property names
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3438,7 +3505,7 @@ dictionary with {"rank":, "value":, "tangoDType":,
 dictionary with collected data
 .TP
 .B Return type
-{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fI\%list\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP}
+{\(aqrank\(aq: \fI\%str\fP, \(aqvalue\(aq: any, \(aqtangoDType\(aq: \fI\%str\fP,         :        \(aqshape\(aq: \fBlist\fP <int>, \(aqencoding\(aq: \fI\%str\fP,         :        \(aqdecoders\(aq: \fI\%str\fP}
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3668,7 +3735,7 @@ the first element of the list array
 (rank, inverse shape, type)
 .TP
 .B Return type
-(\fI\%int\fP , \fI\%list\fP <\fI\%int\fP > , \fI\%str\fP )
+(\fI\%int\fP , \fBlist\fP <\fI\%int\fP > , \fI\%str\fP )
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3688,7 +3755,7 @@ the first element of the list array
 (rank, shape, type)
 .TP
 .B Return type
-(\fI\%int\fP , \fI\%list\fP <\fI\%int\fP > , \fI\%str\fP )
+(\fI\%int\fP , \fBlist\fP <\fI\%int\fP > , \fI\%str\fP )
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3722,7 +3789,7 @@ the given function to it elements
 created array
 .TP
 .B Return type
-\fI\%list\fP <any>
+\fBlist\fP <any>
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3803,7 +3870,7 @@ attribute shape
 attribute shape
 .TP
 .B Return type
-\fI\%list\fP < \fI\%int\fP >
+\fBlist\fP < \fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4003,7 +4070,7 @@ field shape
 field shape
 .TP
 .B Return type
-\fI\%list\fP < \fI\%int\fP >
+\fBlist\fP < \fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4159,9 +4226,9 @@ open a file tree element
 .IP \(bu 2
 \fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
 .IP \(bu 2
-\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- shape
 .IP \(bu 2
-\fBchunk\fP (\fI\%list\fP < \fI\%int\fP >) \-\- chunk
+\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) \-\- chunk
 .IP \(bu 2
 \fBdfilter\fP (\fBFTDeflate\fP) \-\- filter deflater
 .UNINDENT
@@ -4542,7 +4609,7 @@ attribute shape
 attribute shape
 .TP
 .B Return type
-\fI\%list\fP < \fI\%int\fP >
+\fBlist\fP < \fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4592,7 +4659,7 @@ create a new attribute
 .IP \(bu 2
 \fBdtype\fP (\fI\%str\fP) \-\- attribute type
 .IP \(bu 2
-\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- attribute shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- attribute shape
 .IP \(bu 2
 \fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
 .UNINDENT
@@ -4772,7 +4839,7 @@ field shape
 field shape
 .TP
 .B Return type
-\fI\%list\fP < \fI\%int\fP >
+\fBlist\fP < \fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4963,9 +5030,9 @@ open a file tree element
 .IP \(bu 2
 \fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
 .IP \(bu 2
-\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- shape
 .IP \(bu 2
-\fBchunk\fP (\fI\%list\fP < \fI\%int\fP >) \-\- chunk
+\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) \-\- chunk
 .IP \(bu 2
 \fBdfilter\fP (\fBPNIDeflate\fP) \-\- filter deflater
 .UNINDENT
@@ -5299,7 +5366,7 @@ attribute shape
 attribute shape
 .TP
 .B Return type
-\fI\%list\fP < \fI\%int\fP >
+\fBlist\fP < \fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5374,7 +5441,7 @@ create a new attribute
 .IP \(bu 2
 \fBdtype\fP (\fI\%str\fP) \-\- attribute type
 .IP \(bu 2
-\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- attribute shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- attribute shape
 .IP \(bu 2
 \fBoverwrite\fP (\fI\%bool\fP) \-\- overwrite flag
 .UNINDENT
@@ -5539,7 +5606,7 @@ field shape
 field shape
 .TP
 .B Return type
-\fI\%list\fP < \fI\%int\fP >
+\fBlist\fP < \fI\%int\fP >
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -5730,9 +5797,9 @@ open a file tree element
 .IP \(bu 2
 \fBtype_code\fP (\fI\%str\fP) \-\- nexus field type
 .IP \(bu 2
-\fBshape\fP (\fI\%list\fP < \fI\%int\fP >) \-\- shape
+\fBshape\fP (\fBlist\fP < \fI\%int\fP >) \-\- shape
 .IP \(bu 2
-\fBchunk\fP (\fI\%list\fP < \fI\%int\fP >) \-\- chunk
+\fBchunk\fP (\fBlist\fP < \fI\%int\fP >) \-\- chunk
 .IP \(bu 2
 \fBdfilter\fP (\fBH5PYDeflate\fP) \-\- filter deflater
 .UNINDENT
@@ -5997,7 +6064,7 @@ launches the TANGO server
 .INDENT 7.0
 .TP
 .B Parameters
-\fBargv\fP (\fI\%list\fP <\fI\%str\fP>) \-\- command\-line arguments
+\fBargv\fP (\fBlist\fP <\fI\%str\fP>) \-\- command\-line arguments
 .UNINDENT
 .UNINDENT
 .INDENT 0.0

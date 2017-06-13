@@ -36,7 +36,6 @@ class EStrategy(Element):
         :type last: :class:`nxswriter.Element.Element`
         """
         Element.__init__(self, "strategy", attrs, last)
-
         if "mode" in attrs.keys():
             self.last.strategy = attrs["mode"]
             if hasattr(self.last, "tagAttributes"):
@@ -79,3 +78,8 @@ class EStrategy(Element):
         :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         """
         self.last.postrun = ("".join(self.content)).strip()
+
+    def setCanFail(self):
+        """ sets can fail flag
+        """
+        self.last.canfail = True

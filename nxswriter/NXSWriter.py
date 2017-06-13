@@ -361,6 +361,52 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
+    def read_CanFail(self, attr):
+        """ Read CanFail attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In read_CanFail()")
+
+        attr.set_value(self.tdw.canfail)
+
+    def write_CanFail(self, attr):
+        """ Write CanFail attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In write_CanFail()")
+        if self.is_CanFail_write_allowed():
+            self.tdw.canfail = attr.get_write_value()
+        else:
+            self.warn_stream("To change the file name please close the file.")
+            raise Exception(
+                "To change the file name please close the file.")
+
+    def is_CanFail_write_allowed(self):
+        """ CanFail attribute Write State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF,
+                                PyTango.DevState.EXTRACT,
+                                PyTango.DevState.RUNNING]:
+            return False
+        return True
+
+    def is_CanFail_allowed(self, _):
+        """CanFail attribute State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF]:
+            return False
+        return True
+
     def read_StepsPerFile(self, attr):
         """ Read StepsPerFile attribute
 
@@ -802,6 +848,14 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "Output file with its path",
              'description': "A name of H5 output file with its full path",
+        }],
+        'CanFail':
+        [[PyTango.DevBoolean,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'label': "Can fail",
+             'description': "Global can fail flag. By default it is False",
         }],
         'Errors':
         [[PyTango.DevString,

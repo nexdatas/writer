@@ -161,13 +161,18 @@ class EAttribute(FElement):
 
         self.h5Object[...] = arr
 
-    def markFailed(self):
+    def markFailed(self, error=None):
         """ marks the field as failed
 
         :brief: It marks the field as failed
+        :param error: error string
+        :type error: :obj:`str`
         """
         field = self._lastObject()
         if field is not None:
+            if error:
+                field.attributes.create("nexdatas_canfail_error", "string",
+                                        overwrite=True)[...] = str(error)
             field.attributes.create("nexdatas_canfail", "string",
                                     overwrite=True)[...] = "FAILED"
             Streams.info("EAttribute::markFailed() - "

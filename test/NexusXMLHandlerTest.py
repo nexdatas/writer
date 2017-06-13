@@ -74,7 +74,12 @@ class Closeable(object):
     def close(self):
         self.closed = True
 
-
+class DataSourcePool(object):
+    ## consturctor
+    def __init__(self):
+        ## close flag
+        self.canfail = False
+        
 ## test element
 class TElement(FElement):
     ## The last TElement instance
@@ -143,6 +148,18 @@ class TElement(FElement):
         self.started = True
 
 
+## test element
+class SElement(FElement):
+    ## consturctor
+    def __init__(self, attrs, last):
+        SElement.instance = self
+        self.canfail = False
+    
+    ## run method
+    def setCanFail(self):
+        self.canfail = True
+
+        
 ## test element
 class InnerTag(object):
     ## The last TElement instance
@@ -2043,6 +2060,169 @@ class NexusXMLHandlerTest(unittest.TestCase):
         
         ins = TElement.instance
 
+
+
+        self.assertTrue(isinstance(ins, TElement))
+        self.assertTrue(ins.constructed)
+        self.assertEqual(len(attr1), len(ins.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), ins.attrs[a])
+        self.assertEqual(ins.last, self._eFile)
+        self.assertEqual(ins.content, [value])
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
+        self.assertTrue(ins.linked)
+        self.assertTrue(ins.stored)
+
+        self.assertEqual("", ins.groupTypes[""])
+        self.assertTrue(not ins.started)
+        el.finalPool.runAndWait()
+        self.assertTrue(not ins.started)
+        el.stepPool.runAndWait()
+        self.assertTrue(not ins.started)
+        el.initPool.runAndWait()
+        self.assertTrue(ins.started)
+        
+        
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_TE_field_INIT_canfail_false(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        ## file handle
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        dsp = DataSourcePool()
+        el = NexusXMLHandler(self._eFile, datasources=dsp)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.strategy = 'INIT'
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
+        el.elementClass = {"field":TElement, "strategy":SElement}
+
+
+        attr1 = {"name":"counter","type":"NX_CHAR", "axis":1}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        strtag = '<strategy mode="INIT" />'
+        dsvalue = '<device member="attribute">Something </device><record name="myrecord"></record>'
+        dsend = '</datasource>'
+        value = 'myfield'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value
+        xml += strtag
+        xml +=  '</field>'
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+        self.assertEqual(el.triggerPools, {})
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        
+        ins = TElement.instance
+        sins = SElement.instance
+
+        self.assertEqual(sins.canfail, False)
+
+
+        self.assertTrue(isinstance(ins, TElement))
+        self.assertTrue(ins.constructed)
+        self.assertEqual(len(attr1), len(ins.attrs))
+        for a in attr1:
+            self.assertEqual(str(attr1[a]), ins.attrs[a])
+        self.assertEqual(ins.last, self._eFile)
+        self.assertEqual(ins.content, [value])
+        self.assertTrue(TElement.groupTypes.child(nxtype = "NXmmyentry") is not None)
+        self.assertTrue(TElement.groupTypes.child(name = "mmyentry1") is not None)
+        self.assertTrue(ins.linked)
+        self.assertTrue(ins.stored)
+
+        self.assertEqual("", ins.groupTypes[""])
+        self.assertTrue(not ins.started)
+        el.finalPool.runAndWait()
+        self.assertTrue(not ins.started)
+        el.stepPool.runAndWait()
+        self.assertTrue(not ins.started)
+        el.initPool.runAndWait()
+        self.assertTrue(ins.started)
+        
+        
+
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+
+
+    ## constructor test
+    # \brief It tests default settings
+    def test_TE_field_INIT_canfail_true(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        ## file handle
+        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
+        ## element file objects
+        self._eFile = EFile([], None, self._nxFile)
+
+        dsp = DataSourcePool()
+        dsp.canfail = True
+        el = NexusXMLHandler(self._eFile, datasources=dsp)
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        self.assertTrue(isinstance(el.stepPool,ThreadPool))
+        self.assertTrue(isinstance(el.finalPool,ThreadPool))
+        self.assertEqual(el.triggerPools, {})
+        TElement.instance = None
+        TElement.strategy = None
+        TElement.trigger = None
+        TElement.strategy = 'INIT'
+        TElement.groupTypes = TNObject()
+        ch = TNObject("mmyentry1","NXmmyentry",TElement.groupTypes)
+        el.elementClass = {"field":TElement, "strategy":SElement}
+
+
+        attr1 = {"name":"counter","type":"NX_CHAR", "axis":1}
+        sattr1 = {attr1["type"]:attr1["name"]}
+
+        strtag = '<strategy mode="INIT" />'
+
+        value = 'myfield'
+        st = ''
+        for a in attr1:
+            st += ' %s="%s"' % (a, attr1[a]) 
+        xml = '<field%s>' % (st)
+        xml +=  value
+        xml += strtag
+        xml +=  '</field>'
+        parser = sax.make_parser()
+        sax.parseString(xml, el)
+
+        self.assertEqual(el.triggerPools, {})
+        self.assertTrue(isinstance(el.initPool,ThreadPool))
+        
+        ins = TElement.instance
+
+        sins = SElement.instance
+
+        self.assertEqual(sins.canfail, True)
 
 
         self.assertTrue(isinstance(ins, TElement))

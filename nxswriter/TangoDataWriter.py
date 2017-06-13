@@ -158,6 +158,26 @@ class TangoDataWriter(object):
         self.writer = writer.lower()
         FileWriter.writer = WRITERS[writer.lower()]
 
+    def __getCanFail(self):
+        """ get method for the global can fail flag
+
+        :returns: global can fail flag
+        :rtype: :obj:`bool`
+        """
+        return self.__datasources.canfail
+
+    def __setCanFail(self, canfail):
+        """ set method for the global can fail flag
+
+        :param canfail: the global can fail flag
+        :type canfail: :obj:`bool`
+        """
+        self.__datasources.canfail = canfail
+
+    #: the global can fail flag
+    canfail = property(__getCanFail, __setCanFail,
+                       doc='(:obj:`bool`) the global can fail flag')
+
     def __getJSON(self):
         """ get method for jsonrecord attribute
 
@@ -475,6 +495,7 @@ class TangoDataWriter(object):
                 self.__removefile()
 
         self.__datasources.counter = -2
+        self.__datasources.canfail = False
 
         if self.addingLogs and self.__logGroup:
             self.__logGroup.close()

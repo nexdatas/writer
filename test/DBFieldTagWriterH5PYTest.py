@@ -686,73 +686,90 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkSpectrumField(
             det, "pid_scalar_string", "string", "NX_CHAR", [['']] *3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid_scalar2_string", "string", "NX_CHAR", [''] *3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid_scalar3_string", "string", "NX_CHAR", [''] *3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP","nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP","nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid_scalar4_string", "string", "NX_CHAR", [''] *3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid_scalar_uint", "uint64", "NX_UINT", [numpy.iinfo(getattr(numpy, 'int64')).max] *3,
             attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid_scalar_int64","int64", "NX_INT64", [numpy.iinfo(getattr(numpy, 'int64')).max] *3,
             attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid_scalar_float64", "float64", "NX_FLOAT64", [numpy.finfo(getattr(numpy, 'float64')).max] *3,
             attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None},
             error = 1e-14)
         self._sc.checkScalarField(
             det, "pid_scalar_float32", "float32", "NX_FLOAT32", [numpy.finfo(getattr(numpy, 'float32')).max] *3,
             attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None,
-                      "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"},
+                      "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None},
                                   error = 1e-5)
         self._sc.checkScalarField(
             det, "pid2_image_string", "string", "NX_CHAR", ['']*3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "pid3_image_string", "string", "NX_CHAR", ['']*3,
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                      "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                      "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
 #
         self._sc.checkSingleScalarField(
             det, "init_pid_scalar_int32", "int32", "NX_INT32", numpy.iinfo(getattr(numpy, 'int32')).max,
             attrs = {"type":"NX_INT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(det, "init_pid_scalar_string", "string", "NX_CHAR", '',
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
                                         numpy.finfo(getattr(numpy, 'float32')).max,
             attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None},
                                         error = 1e-6)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
                                         numpy.finfo(getattr(numpy, 'float64')).max,
             attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"},
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None},
                                          error = 1e-14)
         self._sc.checkSingleScalarField(det, "final_pid_scalar_string", "string", "NX_CHAR",'',
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(det, "final_pid2_scalar_string", "string", "NX_CHAR",'',
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(det, "final_pid3_scalar_string", "string", "NX_CHAR",'',
             attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
 
 
@@ -1290,59 +1307,72 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkSpectrumField(det, "pid_spectrum_string", "string", "NX_CHAR",
                                           [['']*len(spectrum) ]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(det, "pid_spectrum_int32", "uint32", "NX_UINT32",
                                     [[numpy.iinfo(getattr(numpy, 'uint32')).max]*len(spectrum)]*3, grows=2 ,
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(det, "pid_spectrum_float64", "float64", "NX_FLOAT64",
                                     [[numpy.finfo(getattr(numpy, 'float64')).max]*len(spectrum)]*3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(det, "pid_scalar_int64", "int64", "NX_INT64",
                                     [[numpy.iinfo(getattr(numpy, 'int64')).max] ]*3 ,
             attrs = {"type":"NX_INT64","units":"", "nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(det, "pid_scalar_float64", "float64", "NX_FLOAT64",
                                     [[numpy.finfo(getattr(numpy, 'float64')).max]]*3 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(det, "name_spectrum_string", "string", "NX_CHAR",
                                        [['']*len(name)]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_int32", "int32", "NX_INT32",
                                           [numpy.iinfo(getattr(numpy, 'int32')).max]*len(spectrum),
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None} )
         self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64",
                                           [numpy.finfo(getattr(numpy, 'float64')).max]*len(spectrum),
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"} )
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None} )
 
 
         self._sc.checkSingleSpectrumField(det, "init_pid_spectrum_string", "string", "NX_CHAR",
                                                 ['' for sub in spectrum ] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(det, "final_pid_scalar_string", "string", "NX_CHAR",
                                                 [''] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(det, "final_pid_image_string", "string", "NX_CHAR",
                                     ['' for sub in spectrum] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(det, "final_pid_spectrum_string", "string", "NX_CHAR",
                                     ['' for sub in spectrum] ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
 
         self._sc.checkSpectrumField(det, "pid_scalar_int32", "int32", "NX_INT32",
                                   [[numpy.iinfo(getattr(numpy, 'int32')).max] ]*3 ,
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
 
 
@@ -2188,74 +2218,91 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkImageField(det, "name_pid_image_string", "string", "NX_CHAR",
                                        [[['' for it in sub] for sub in name_pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR",
                                        [[['' for it in sub] for sub in name]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR",
                                        [[['' for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT",
                                  [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub] for sub in pid]]*3 ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32",
                                  [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for sub in pid]]*3, grows=2 ,
             attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_strategy": None, "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_strategy": None, "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,
             attrs = {"type":"NX_INT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max for it in sub] for sub in pid]]*3, grows=3 ,
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_exported_image_int", "int64", "NX_INT",
                                     [[[numpy.iinfo(getattr(numpy, 'int64')).max]]*3 ]*3,
             attrs = {"type":"NX_INT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_exported_image_uint32", "uint32", "NX_UINT32",
                                     [[[numpy.iinfo(getattr(numpy, 'uint32')).max]*2]*6]*3, grows=3 ,
             attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkImageField(det, "pid_exported_image_float32", "float32", "NX_FLOAT32",
                                     [[[numpy.finfo(getattr(numpy, 'float32')).max]*6]*2]*3, grows=2, error=1e-6 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(det, "init_pid_exported_image_string", "string", "NX_CHAR",
                                     [['' ]*6 ]*2 ,
             attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(det, "init_pid_exported_image_int64", "int64", "NX_INT64",
                                     [[numpy.iinfo(getattr(numpy, 'int64')).max]*6]*2, grows=3 ,
             attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64",
                                    [[ numpy.finfo(getattr(numpy, 'float64')).max]*2]*6, grows=2, error=1e-6 ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(det, "final_pid_image_float64", "float64", "NX_FLOAT64",
                                     [[ numpy.finfo(getattr(numpy, 'float64')).max]]*6,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(det, "init_pid_image_float", "float64", "NX_FLOAT",
                                     [[ numpy.finfo(getattr(numpy, 'float64')).max]] ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
 
 
         self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT",
                                        [[[numpy.iinfo(getattr(numpy, 'int64')).max]]]*3 ,
             attrs = {"type":"NX_UINT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(det, "final_pid_image_float", "float64", "NX_FLOAT",
                                         [[numpy.finfo(getattr(numpy, 'float64')).max]] ,
             attrs = {"type":"NX_FLOAT","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
 
 
@@ -2263,13 +2310,15 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkSingleImageField(det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64",
                                     [[numpy.finfo(getattr(numpy, 'float64')).max] for sub in spectrum] ,
             attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(det, "pid_spectrum_float32", "float32", "NX_FLOAT32",
                                        [[[numpy.finfo(getattr(numpy, 'float32')).max]*6]*2]*3,
                                  grows=2 ,
             attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED"})
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+                     "nexdatas_canfail_error": None})
 
         f.close()
         os.remove(fname)

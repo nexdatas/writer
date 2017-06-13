@@ -585,12 +585,19 @@ class EField(FElementWithAttr):
                 self.__grow()
             self.__writeGrowingData(dh)
 
-    def markFailed(self):
+    def markFailed(self, error=None):
         """ marks the field as failed
 
         :brief: It marks the field as failed
+        :param error: error string
+        :type error: :obj:`str`
         """
         if self.h5Object is not None:
+            if error:
+                self.h5Object.attributes.create(
+                    "nexdatas_canfail_error",
+                    "string",
+                    overwrite=True)[...] = str(error)
             self.h5Object.attributes.create(
                 "nexdatas_canfail", "string", overwrite=True)[...] = "FAILED"
             Streams.info(

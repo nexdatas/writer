@@ -125,7 +125,7 @@ class ThreadPool(object):
                 mess = "ThreadPool::checkErrors() - %s" % str(el.error)
                 if hasattr(el, "canfail") and el.canfail:
                     if hasattr(el, "markFailed"):
-                        el.markFailed()
+                        el.markFailed(str(el.error))
                     Streams.warn(mess)
                 else:
                     errors.append(el.error)

@@ -91,6 +91,7 @@ class EJob(object):
         self.canfail = None
         ## markfail flag
         self.markfail = 0
+        self.error = None
 
     ## run method    
     def run(self):
@@ -100,8 +101,9 @@ class EJob(object):
 
 
     ## run method    
-    def markFailed(self):
+    def markFailed(self, error=None):
         self.markfail += 1
+        self.error = error
 
 ## class job with error
 class SOJob(object):
