@@ -48,7 +48,6 @@ except ImportError:
 
 import json
 import sys
-import os
 import gc
 
 from .H5Elements import EFile
