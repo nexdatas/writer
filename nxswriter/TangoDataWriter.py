@@ -134,7 +134,7 @@ class TangoDataWriter(object):
         self.__filetimes = {}
 
         if server:
-            Streams.setstreams(server)
+            Streams.setstreams(server, id(self))
 
     def __setWriter(self, writer):
         """ set method for  writer module name

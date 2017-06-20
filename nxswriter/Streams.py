@@ -22,18 +22,45 @@
 import sys
 import threading
 
-#: (:class:`PyTango.log4tango.TangoStream`) Tango fatal log stream
-log_fatal = None
-#: (:class:`PyTango.log4tango.TangoStream`) Tango error log stream
-log_error = None
-#: (:class:`PyTango.log4tango.TangoStream`) Tango warn log stream
-log_warn = None
-#: (:class:`PyTango.log4tango.TangoStream`) Tango info log stream
-log_info = None
-#: (:class:`PyTango.log4tango.TangoStream`) Tango debug log stream
-log_debug = None
+#: stream lock
+__streamlock = threading.Lock()
 
-streamlock = threading.Lock()
+#: streams for different ids
+__streamids = {}
+
+class StreamCollection(object):
+
+    def __init__(self, server):
+        
+        #: (:class:`PyTango.log4tango.TangoStream`) Tango fatal log stream
+        self.log_fatal = None
+        #: (:class:`PyTango.log4tango.TangoStream`) Tango error log stream
+        self.log_error = None
+        #: (:class:`PyTango.log4tango.TangoStream`) Tango warn log stream
+        self.log_warn = None
+        #: (:class:`PyTango.log4tango.TangoStream`) Tango info log stream
+        self.log_info = None
+        #: (:class:`PyTango.log4tango.TangoStream`) Tango debug log stream
+        self.log_debug = None
+        #: (:obj:`set <:obj:`str` >`) if tango server
+        self.available = set()
+        if hasattr(server, "log_fatal"):
+            self.log_fatal = server.log_fatal
+            self.available.add("log_fatal")
+        if hasattr(server, "log_error"):
+            self.log_error = server.log_error
+            self.available.add("log_fatal")
+        if hasattr(server, "log_warn"):
+            self.log_warn = server.log_warn
+            self.available.add("log_fatal")
+        if hasattr(server, "log_info"):
+            self.log_info = server.log_info
+            self.available.add("log_fatal")
+        if hasattr(server, "log_debug"):
+            self.available.add("log_debug")
+            self.log_debug = server.log_debug
+        
+
 
 def setstreams(server):
     """ sets log streams
@@ -41,18 +68,9 @@ def setstreams(server):
     :param server: Tango server
     :type server: :class:`PyTango.Device_4Impl`
     """
-    with streamlock:
-        if hasattr(self.__server, "log_fatal"):
-            Streams.log_fatal = server.log_fatal
-        if hasattr(self.__server, "log_error"):
-            Streams.log_error = server.log_error
-        if hasattr(self.__server, "log_warn"):
-            Streams.log_warn = server.log_warn
-        if hasattr(self.__server, "log_info"):
-            Streams.log_info = server.log_info
-        if hasattr(self.__server, "log_debug"):
-            Streams.log_debug = server.log_debug
-    
+    with __streamlock:
+        if sid not in __streamids:
+            __streamids[sid]
 
 def fatal(message, std=True):
     """ writes fatal error message
