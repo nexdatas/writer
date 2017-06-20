@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ProxyTools.py
+# \package test nexdatas
+# \file ProxyTools.py
 # unittests for field Tags running Tango Server
 #
 
@@ -24,12 +24,15 @@ import os
 import PyTango
 import time
 
-## test fixture
+# test fixture
+
+
 class ProxyHelper(object):
-    ## waiting for running server
-    # \proxy server proxy    
+    # waiting for running server
+    # \proxy server proxy
     # \proxy counts number of counts
     # \proxy sec time interval between two counts
+
     @classmethod
     def wait(cls, proxy, counts=-1, sec=0.01):
         found = False
@@ -38,13 +41,11 @@ class ProxyHelper(object):
             try:
                 if proxy.state() != PyTango.DevState.RUNNING:
                     found = True
-            except Exception, e:    
+            except Exception, e:
                 print e
                 found = False
                 raise
-            if cnt:    
+            if cnt:
                 time.sleep(sec)
             cnt += 1
-        return found    
-            
-    
+        return found

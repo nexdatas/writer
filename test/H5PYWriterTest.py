@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ElementTest.py
+# \package test nexdatas
+# \file ElementTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -33,7 +33,7 @@ import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 class testwriter(object):
@@ -50,7 +50,7 @@ class testwriter(object):
         return self.result
 
 
-    def create_file(self,filename, overwrite=False):
+    def create_file(self, filename, overwrite=False):
         """ create a new file
         """
         self.commands.append("create_file")
@@ -58,7 +58,7 @@ class testwriter(object):
         return self.result
 
 
-    def link(self,target, parent, name):
+    def link(self, target, parent, name):
         """ create link
         """
         self.commands.append("link")
@@ -74,10 +74,10 @@ class testwriter(object):
 
 
 
-## test fixture
+# test fixture
 class H5PYWriterTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
@@ -91,7 +91,7 @@ class H5PYWriterTest(unittest.TestCase):
         self.__rnd = random.Random(self.__seed)
 
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
     # \param method called method
     # \param args list with method arguments
@@ -104,7 +104,7 @@ class H5PYWriterTest(unittest.TestCase):
             error = True
         self.assertEqual(error, True)
 
-    ## float list tester
+    # float list tester
     def myAssertFloatList(self, list1, list2, error=0.0):
 
         self.assertEqual(len(list1), len(list2))
@@ -113,7 +113,7 @@ class H5PYWriterTest(unittest.TestCase):
                 print "EL", el, list2[i], error
             self.assertTrue(abs(el-list2[i]) < error)
 
-    ## float image tester
+    # float image tester
     def myAssertImage(self, image1, image2, error=None):
 
         self.assertEqual(len(image1), len(image2))
@@ -127,7 +127,7 @@ class H5PYWriterTest(unittest.TestCase):
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
 
-    ## float image tester
+    # float image tester
     def myAssertVector(self, image1, image2, error=None):
 
         self.assertEqual(len(image1), len(image2))
@@ -144,18 +144,18 @@ class H5PYWriterTest(unittest.TestCase):
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
 
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         print "\nsetting up..."
         print "SEED =", self.__seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -165,12 +165,12 @@ class H5PYWriterTest(unittest.TestCase):
 
         self.assertEqual(el.h5object, w)
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_default_createfile(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         try:
             fl = H5PYWriter.create_file(self._fname)
             fl.close()
@@ -184,9 +184,9 @@ class H5PYWriterTest(unittest.TestCase):
                 f.attributes["file_name"][...],
                 self._fname)
             for at in f.attributes:
-                print at.name , at.read() , at.dtype
+                print at.name, at.read(), at.dtype
                 at.close()
-            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertTrue(f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             f.close()
             fl.close()
@@ -198,19 +198,19 @@ class H5PYWriterTest(unittest.TestCase):
                 f.attributes["file_name"][...],
                 self._fname)
             for at in f.attributes:
-                print at.name ,  at.dtype, at.read()
-            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+                print at.name,  at.dtype, at.read()
+            self.assertTrue(f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
             fl.reopen()
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name , at.read() , at.dtype
+                print at.name, at.read(), at.dtype
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
-            self.assertTrue(f.attributes["NX_class"][...],"NXroot")
+            self.assertTrue(f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
 
@@ -228,12 +228,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyfile(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
         overwrite = False
         nxfl = h5py.File(self._fname, "a", libver='latest')
@@ -303,12 +303,12 @@ class H5PYWriterTest(unittest.TestCase):
         os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pygroup(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -334,13 +334,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -606,7 +606,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(intvec.shape, (0, 2, 30))
 
 
-            strscalar_op= entry.open("strscalar")
+            strscalar_op = entry.open("strscalar")
             floatscalar_op = entry.open("floatscalar")
             intscalar_op = entry.open("intscalar")
             strspec_op = ins.open("strspec")
@@ -852,12 +852,12 @@ class H5PYWriterTest(unittest.TestCase):
         finally:
             os.remove(self._fname)
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyfield_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -883,13 +883,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -959,7 +959,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(floatscalar.shape, (1,))
             self.assertEqual(floatscalar.h5object.shape, (1,))
 
-            vl  = [1123.34, 3234.3 , 234.33, -4.4,34, 0.0, 4.3, 434.5, 23.0,0]
+            vl  = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
 
             floatscalar[...] = vl[0]
             self.assertEqual(floatscalar.read(), vl[0])
@@ -1011,7 +1011,7 @@ class H5PYWriterTest(unittest.TestCase):
 
 
 
-            vl  = [243 ,43 ,45, 34, 45 ,54, 23234]
+            vl  = [243, 43, 45, 34, 45, 54, 23234]
 
             intscalar[...] = vl[0]
             self.assertEqual(intscalar.read(), vl[0])
@@ -1109,12 +1109,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyfield_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -1140,13 +1140,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -1358,12 +1358,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyfield_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -1389,13 +1389,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -1427,18 +1427,18 @@ class H5PYWriterTest(unittest.TestCase):
             strimage[...] = vv
 
             strimage.grow()
-            self.assertEqual(strimage.shape, (3,2))
-            self.assertEqual(strimage.h5object.shape, (3,2))
+            self.assertEqual(strimage.shape, (3, 2))
+            self.assertEqual(strimage.h5object.shape, (3, 2))
 
-            iv = [[strimage[j,i] for i in range(2)] for j in range(2)]
+            iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
             self.myAssertImage(iv, vv)
             strimage[2,:] = [vl[2][0], vl[2][1]]
             vv3 = [[vl[j][i] for i in range(2)] for j in range(3)]
             self.myAssertImage(strimage[...], vv3)
 
             strimage.grow(ext=2)
-            self.assertEqual(strimage.shape, (5,2))
-            self.assertEqual(strimage.h5object.shape, (5,2))
+            self.assertEqual(strimage.shape, (5, 2))
+            self.assertEqual(strimage.h5object.shape, (5, 2))
             vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
             strimage[2:5,:] =  vv4
@@ -1446,8 +1446,8 @@ class H5PYWriterTest(unittest.TestCase):
             self.myAssertImage(strimage[0:3,:], vv3)
 
             strimage.grow(1, 4)
-            self.assertEqual(strimage.shape, (5,6))
-            self.assertEqual(strimage.h5object.shape, (5,6))
+            self.assertEqual(strimage.shape, (5, 6))
+            self.assertEqual(strimage.h5object.shape, (5, 6))
 
             vv6 = [[vl[j][i] for i in range(6)] for j in range(5)]
             strimage.write(vv6)
@@ -1487,18 +1487,18 @@ class H5PYWriterTest(unittest.TestCase):
             floatimage[...] = vv
 
             floatimage.grow()
-            self.assertEqual(floatimage.shape, (21,10))
-            self.assertEqual(floatimage.h5object.shape, (21,10))
+            self.assertEqual(floatimage.shape, (21, 10))
+            self.assertEqual(floatimage.h5object.shape, (21, 10))
 
-            iv = [[floatimage[j,i] for i in range(10)] for j in range(20)]
+            iv = [[floatimage[j, i] for i in range(10)] for j in range(20)]
             self.myAssertImage(iv, vv)
             floatimage[20,:] = [vl[20][i] for i in range(10)]
             vv3 = [[vl[j][i] for i in range(10)] for j in range(21)]
             self.myAssertImage(floatimage[...], vv3)
 
             floatimage.grow(ext=2)
-            self.assertEqual(floatimage.shape, (23,10))
-            self.assertEqual(floatimage.h5object.shape, (23,10))
+            self.assertEqual(floatimage.shape, (23, 10))
+            self.assertEqual(floatimage.h5object.shape, (23, 10))
             vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
             floatimage[2:23,:] =  vv4
@@ -1506,8 +1506,8 @@ class H5PYWriterTest(unittest.TestCase):
             self.myAssertImage(floatimage[0:21,:], vv3)
 
             floatimage.grow(1, 4)
-            self.assertEqual(floatimage.shape, (23,14))
-            self.assertEqual(floatimage.h5object.shape, (23,14))
+            self.assertEqual(floatimage.shape, (23, 14))
+            self.assertEqual(floatimage.h5object.shape, (23, 14))
 
             vv6 = [[vl[j][i] for i in range(14)] for j in range(23)]
             floatimage.write(vv6)
@@ -1541,18 +1541,18 @@ class H5PYWriterTest(unittest.TestCase):
             intimage[...] = vv
 
             intimage.grow()
-            self.assertEqual(intimage.shape, (21,30))
-            self.assertEqual(intimage.h5object.shape, (21,30))
+            self.assertEqual(intimage.shape, (21, 30))
+            self.assertEqual(intimage.h5object.shape, (21, 30))
 
-            iv = [[intimage[j,i] for i in range(30)] for j in range(20)]
+            iv = [[intimage[j, i] for i in range(30)] for j in range(20)]
             self.myAssertImage(iv, vv)
             intimage[20,:] = [vl[20][i] for i in range(30)]
             vv3 = [[vl[j][i] for i in range(30)] for j in range(21)]
             self.myAssertImage(intimage[...], vv3)
 
             intimage.grow(ext=2)
-            self.assertEqual(intimage.shape, (23,30))
-            self.assertEqual(intimage.h5object.shape, (23,30))
+            self.assertEqual(intimage.shape, (23, 30))
+            self.assertEqual(intimage.h5object.shape, (23, 30))
             vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
             intimage[2:23,:] =  vv4
@@ -1560,8 +1560,8 @@ class H5PYWriterTest(unittest.TestCase):
             self.myAssertImage(intimage[0:21,:], vv3)
 
             intimage.grow(1, 4)
-            self.assertEqual(intimage.shape, (23,34))
-            self.assertEqual(intimage.h5object.shape, (23,34))
+            self.assertEqual(intimage.shape, (23, 34))
+            self.assertEqual(intimage.h5object.shape, (23, 34))
 
             vv6 = [[vl[j][i] for i in range(34)] for j in range(23)]
             intimage.write(vv6)
@@ -1626,12 +1626,12 @@ class H5PYWriterTest(unittest.TestCase):
 
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyfield_vec(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -1657,13 +1657,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -1695,28 +1695,28 @@ class H5PYWriterTest(unittest.TestCase):
             strvec[...] = vv
 
             strvec.grow()
-            self.assertEqual(strvec.shape, (4,2,2))
-            self.assertEqual(strvec.h5object.shape, (4,2,2))
+            self.assertEqual(strvec.shape, (4, 2, 2))
+            self.assertEqual(strvec.h5object.shape, (4, 2, 2))
 
-            iv = [[[strvec[k,j,i] for i in range(2)] for j in range(2)] for k in range(3)]
+            iv = [[[strvec[k, j, i] for i in range(2)] for j in range(2)] for k in range(3)]
             self.myAssertVector(iv, vv)
             strvec[3,:,:] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(4)]
             self.myAssertVector(strvec[...], vv3)
 
             strvec.grow(2, 3)
-            self.assertEqual(strvec.shape, (4,2,5))
-            self.assertEqual(strvec.h5object.shape, (4,2,5))
+            self.assertEqual(strvec.shape, (4, 2, 5))
+            self.assertEqual(strvec.h5object.shape, (4, 2, 5))
             vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
 
-            strvec[:,:,2:5] =  vv4
+            strvec[:,:, 2:5] =  vv4
             self.myAssertVector(strvec[...], vv5)
-            self.myAssertVector(strvec[:,:,0:2], vv3)
+            self.myAssertVector(strvec[:,:, 0:2], vv3)
 
             strvec.grow(1, 4)
-            self.assertEqual(strvec.shape, (4,6,5))
-            self.assertEqual(strvec.h5object.shape, (4,6,5))
+            self.assertEqual(strvec.shape, (4, 6, 5))
+            self.assertEqual(strvec.h5object.shape, (4, 6, 5))
 
             vv6 = [[[vl[k][j][i] for i in range(5)] for j in range(6)] for k in range(4)]
             strvec.write(vv6)
@@ -1754,33 +1754,33 @@ class H5PYWriterTest(unittest.TestCase):
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
 
-            ##!!! PNI self.myAssertVector([floatvec[...]], vv2)
+            # !!! PNI self.myAssertVector([floatvec[...]], vv2)
             self.myAssertVector(floatvec[...], vv2)
             floatvec[...] = vv
 
             floatvec.grow()
-            self.assertEqual(floatvec.shape, (2,20,10))
-            self.assertEqual(floatvec.h5object.shape, (2,20,10))
+            self.assertEqual(floatvec.shape, (2, 20, 10))
+            self.assertEqual(floatvec.h5object.shape, (2, 20, 10))
 
-            iv = [[[floatvec[k,j,i] for i in range(10)] for j in range(20)] for k in range(1)]
+            iv = [[[floatvec[k, j, i] for i in range(10)] for j in range(20)] for k in range(1)]
             self.myAssertVector(iv, vv)
             floatvec[1,:,:] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
             vv3 = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(2)]
             self.myAssertVector(floatvec[...], vv3)
 
             floatvec.grow(2, 3)
-            self.assertEqual(floatvec.shape, (2,20,13))
-            self.assertEqual(floatvec.h5object.shape, (2,20,13))
+            self.assertEqual(floatvec.shape, (2, 20, 13))
+            self.assertEqual(floatvec.h5object.shape, (2, 20, 13))
             vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
 
-            floatvec[:,:,10:13] =  vv4
+            floatvec[:,:, 10:13] =  vv4
             self.myAssertVector(floatvec[...], vv5)
-            self.myAssertVector(floatvec[:,:,0:10], vv3)
+            self.myAssertVector(floatvec[:,:, 0:10], vv3)
 
             floatvec.grow(1, 4)
-            self.assertEqual(floatvec.shape, (2,24,13))
-            self.assertEqual(floatvec.h5object.shape, (2,24,13))
+            self.assertEqual(floatvec.shape, (2, 24, 13))
+            self.assertEqual(floatvec.h5object.shape, (2, 24, 13))
 
             vv6 = [[[vl[k][j][i] for i in range(13)] for j in range(24)] for k in range(2)]
             floatvec.write(vv6)
@@ -1819,33 +1819,33 @@ class H5PYWriterTest(unittest.TestCase):
             vv2 = [[[vl[k][j+2][i+2] for i in range(30)] for j in range(2)] for k in range(1)]
             intvec.write(vv2)
             self.myAssertVector(intvec.read(), vv2)
-            ## !!! PNI self.myAssertVector([intvec[...]], vv2)
+            # !!! PNI self.myAssertVector([intvec[...]], vv2)
             self.myAssertVector(intvec[...], vv2)
             intvec[...] = vv
 
             intvec.grow()
-            self.assertEqual(intvec.shape, (2,2,30))
-            self.assertEqual(intvec.h5object.shape, (2,2,30))
+            self.assertEqual(intvec.shape, (2, 2, 30))
+            self.assertEqual(intvec.h5object.shape, (2, 2, 30))
 
-            iv = [[[intvec[k,j,i] for i in range(30)] for j in range(2)] for k in range(1)]
+            iv = [[[intvec[k, j, i] for i in range(30)] for j in range(2)] for k in range(1)]
             self.myAssertVector(iv, vv)
             intvec[1,:,:] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(30)] for j in range(2)] for k in range(2)]
             self.myAssertVector(intvec[...], vv3)
 
             intvec.grow(2, 3)
-            self.assertEqual(intvec.shape, (2,2,33))
-            self.assertEqual(intvec.h5object.shape, (2,2,33))
+            self.assertEqual(intvec.shape, (2, 2, 33))
+            self.assertEqual(intvec.h5object.shape, (2, 2, 33))
             vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
 
-            intvec[:,:,30:33] =  vv4
+            intvec[:,:, 30:33] =  vv4
             self.myAssertVector(intvec[...], vv5)
-            self.myAssertVector(intvec[:,:,0:30], vv3)
+            self.myAssertVector(intvec[:,:, 0:30], vv3)
 
             intvec.grow(1, 4)
-            self.assertEqual(intvec.shape, (2,6,33))
-            self.assertEqual(intvec.h5object.shape, (2,6,33))
+            self.assertEqual(intvec.shape, (2, 6, 33))
+            self.assertEqual(intvec.h5object.shape, (2, 6, 33))
 
             vv6 = [[[vl[k][j][i] for i in range(33)] for j in range(6)] for k in range(2)]
             intvec.write(vv6)
@@ -1914,12 +1914,12 @@ class H5PYWriterTest(unittest.TestCase):
         finally:
             os.remove(self._fname)
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pydeflate(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -1945,13 +1945,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -1972,12 +1972,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pydeflate_const(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -2004,13 +2004,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -2031,12 +2031,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pylink(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -2062,13 +2062,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -2231,12 +2231,12 @@ class H5PYWriterTest(unittest.TestCase):
         finally:
             os.remove(self._fname)
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyattributemanager(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -2262,13 +2262,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -2305,15 +2305,15 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(len(attr2), 0)
 
 
-            atintscalar = attr0.create("atintscalar","int64")
-            atfloatspec = attr0.create("atfloatspec","float32", [12])
-            atstrimage = attr0.create("atstrimage","string", [2,3])
-            atstrscalar = attr1.create("atstrscalar","string")
-            atintspec = attr1.create("atintspec","uint32", [2])
-            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
-            atfloatscalar = attr2.create("atfloatscalar","float64")
-            atstrspec = attr2.create("atstrspec","string", [4])
-            atintimage = attr2.create("atintimage","int32", [3,2])
+            atintscalar = attr0.create("atintscalar", "int64")
+            atfloatspec = attr0.create("atfloatspec", "float32", [12])
+            atstrimage = attr0.create("atstrimage", "string", [2, 3])
+            atstrscalar = attr1.create("atstrscalar", "string")
+            atintspec = attr1.create("atintspec", "uint32", [2])
+            atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
+            atfloatscalar = attr2.create("atfloatscalar", "float64")
+            atstrspec = attr2.create("atstrspec", "string", [4])
+            atintimage = attr2.create("atintimage", "int32", [3, 2])
 
             self.assertEqual(len(attr0), 9)
             self.assertEqual(len(attr1), 4)
@@ -2354,7 +2354,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
             self.assertEqual(atstrimage.dtype, 'string')
-            self.assertEqual(atstrimage.shape, (2,3))
+            self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
             self.myAssertImage(atstrimage.read(), [['']*3]*2)
             self.myAssertImage(atstrimage[...], [['']*3]*2)
@@ -2399,7 +2399,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.dtype, 'float64')
-            self.assertEqual(atfloatimage.shape, (3,2))
+            self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
             self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
             self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
@@ -2444,7 +2444,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.path,
                              '/entry12345:NXentry/intscalar@atintimage')
             self.assertEqual(atintimage.dtype, 'int32')
-            self.assertEqual(atintimage.shape, (3,2))
+            self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
             self.myAssertImage(atintimage.read(), [[0]*2]*3)
             self.myAssertImage(atintimage[...], [[0]*2]*3)
@@ -2504,7 +2504,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
             self.assertEqual(atstrimage.dtype, 'string')
-            self.assertEqual(atstrimage.shape, (2,3))
+            self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
             self.myAssertImage(atstrimage.read(), [['']*3]*2)
             self.myAssertImage(atstrimage[...], [['']*3]*2)
@@ -2549,7 +2549,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.dtype, 'float64')
-            self.assertEqual(atfloatimage.shape, (3,2))
+            self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
             self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
             self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
@@ -2594,7 +2594,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.path,
                              '/entry12345:NXentry/intscalar@atintimage')
             self.assertEqual(atintimage.dtype, 'int32')
-            self.assertEqual(atintimage.shape, (3,2))
+            self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
             self.myAssertImage(atintimage.read(), [[0]*2]*3)
             self.myAssertImage(atintimage[...], [[0]*2]*3)
@@ -2602,8 +2602,8 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
 
-            self.myAssertRaise(Exception, attr2.create, "atintimage","uint64", [4])
-            atintimage = attr2.create("atintimage","uint64", [4], True)
+            self.myAssertRaise(Exception, attr2.create, "atintimage", "uint64", [4])
+            atintimage = attr2.create("atintimage", "uint64", [4], True)
 
             self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atintimage.h5object, tuple))
@@ -2692,12 +2692,12 @@ class H5PYWriterTest(unittest.TestCase):
         finally:
             os.remove(self._fname)
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -2723,13 +2723,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -2766,15 +2766,15 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(len(attr2), 0)
 
 
-            atintscalar = attr0.create("atintscalar","int64")
-            atfloatspec = attr0.create("atfloatspec","float32", [12])
-            atstrimage = attr0.create("atstrimage","string", [2,3])
-            atstrscalar = attr1.create("atstrscalar","string")
-            atintspec = attr1.create("atintspec","uint32", [2])
-            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
-            atfloatscalar = attr2.create("atfloatscalar","float64")
-            atstrspec = attr2.create("atstrspec","string", [4])
-            atintimage = attr2.create("atintimage","int32", [3,2])
+            atintscalar = attr0.create("atintscalar", "int64")
+            atfloatspec = attr0.create("atfloatspec", "float32", [12])
+            atstrimage = attr0.create("atstrimage", "string", [2, 3])
+            atstrscalar = attr1.create("atstrscalar", "string")
+            atintspec = attr1.create("atintspec", "uint32", [2])
+            atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
+            atfloatscalar = attr2.create("atfloatscalar", "float64")
+            atstrspec = attr2.create("atstrspec", "string", [4])
+            atintimage = attr2.create("atintimage", "int32", [3, 2])
 
             self.assertEqual(len(attr0), 9)
             self.assertEqual(len(attr1), 4)
@@ -2974,12 +2974,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -3005,13 +3005,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -3048,15 +3048,15 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(len(attr2), 0)
 
 
-            atintscalar = attr0.create("atintscalar","int64")
-            atfloatspec = attr0.create("atfloatspec","float32", [12])
-            atstrimage = attr0.create("atstrimage","string", [2,3])
-            atstrscalar = attr1.create("atstrscalar","string")
-            atintspec = attr1.create("atintspec","uint32", [2])
-            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
-            atfloatscalar = attr2.create("atfloatscalar","float64")
-            atstrspec = attr2.create("atstrspec","string", [4])
-            atintimage = attr2.create("atintimage","int32", [3,2])
+            atintscalar = attr0.create("atintscalar", "int64")
+            atfloatspec = attr0.create("atfloatspec", "float32", [12])
+            atstrimage = attr0.create("atstrimage", "string", [2, 3])
+            atstrscalar = attr1.create("atstrscalar", "string")
+            atintspec = attr1.create("atintspec", "uint32", [2])
+            atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
+            atfloatscalar = attr2.create("atfloatscalar", "float64")
+            atstrspec = attr2.create("atstrspec", "string", [4])
+            atintimage = attr2.create("atintimage", "int32", [3, 2])
 
             self.assertEqual(len(attr0), 9)
             self.assertEqual(len(attr1), 4)
@@ -3300,12 +3300,12 @@ class H5PYWriterTest(unittest.TestCase):
             os.remove(self._fname)
 
 
-    ## default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_h5pyattribute_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -3331,13 +3331,13 @@ class H5PYWriterTest(unittest.TestCase):
             strspec = ins.create_field("strspec", "string", [10], [6])
             floatspec = ins.create_field("floatspec", "float32", [20], [16])
             intspec = ins.create_field("intspec", "int64", [30], [5])
-            strimage = det.create_field("strimage", "string", [2,2], [2,1])
+            strimage = det.create_field("strimage", "string", [2, 2], [2, 1])
             floatimage = det.create_field(
-                "floatimage", "float64", [20,10], dfilter=df0)
+                "floatimage", "float64", [20, 10], dfilter=df0)
             intimage = det.create_field("intimage", "uint32", [0, 30], [1, 30])
-            strvec = det.create_field("strvec", "string", [0,2,2], [1,2,2])
+            strvec = det.create_field("strvec", "string", [0, 2, 2], [1, 2, 2])
             floatvec = det.create_field(
-                "floatvec", "float64", [1, 20,10], [1, 10, 10], dfilter=df1)
+                "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
@@ -3374,15 +3374,15 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(len(attr2), 0)
 
 
-            atintscalar = attr0.create("atintscalar","int64")
-            atfloatspec = attr0.create("atfloatspec","float32", [12])
-            atstrimage = attr0.create("atstrimage","string", [2,3])
-            atstrscalar = attr1.create("atstrscalar","string")
-            atintspec = attr1.create("atintspec","uint32", [2])
-            atfloatimage = attr1.create("atfloatimage","float64", [3,2])
-            atfloatscalar = attr2.create("atfloatscalar","float64")
-            atstrspec = attr2.create("atstrspec","string", [4])
-            atintimage = attr2.create("atintimage","int32", [3,2])
+            atintscalar = attr0.create("atintscalar", "int64")
+            atfloatspec = attr0.create("atfloatspec", "float32", [12])
+            atstrimage = attr0.create("atstrimage", "string", [2, 3])
+            atstrscalar = attr1.create("atstrscalar", "string")
+            atintspec = attr1.create("atintspec", "uint32", [2])
+            atfloatimage = attr1.create("atfloatimage", "float64", [3, 2])
+            atfloatscalar = attr2.create("atfloatscalar", "float64")
+            atstrspec = attr2.create("atstrspec", "string", [4])
+            atintimage = attr2.create("atintimage", "int32", [3, 2])
 
             self.assertEqual(len(attr0), 9)
             self.assertEqual(len(attr1), 4)
@@ -3412,7 +3412,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
             self.assertEqual(atstrimage.dtype, 'string')
-            self.assertEqual(atstrimage.shape, (2,3))
+            self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
             self.myAssertImage(atstrimage.read(), stvl[0])
             self.myAssertImage(atstrimage[...], stvl[0])
@@ -3440,20 +3440,20 @@ class H5PYWriterTest(unittest.TestCase):
 
             print "TR", atstrimage.read()
 
-            print "TRct", atstrimage[:,1:]
+            print "TRct", atstrimage[:, 1:]
 
-            atstrimage[:,1:] = vv1
+            atstrimage[:, 1:] = vv1
 
             print "VV1", vv1
             print "TR1 ", atstrimage[:,:]
-            print "TR2 ", atstrimage[:,1:]
-            self.myAssertImage(atstrimage.read()[:,1:], vv1)
-            self.myAssertImage(atstrimage[:,1:], vv1)
-            self.myAssertImage(atstrimage.h5object[0]['atstrimage'][:,1:], vv1)
+            print "TR2 ", atstrimage[:, 1:]
+            self.myAssertImage(atstrimage.read()[:, 1:], vv1)
+            self.myAssertImage(atstrimage[:, 1:], vv1)
+            self.myAssertImage(atstrimage.h5object[0]['atstrimage'][:, 1:], vv1)
 
 
             vv2 = [[stvl[3][j][i+1] for i in range(2)] for j in range(2)]
-            atstrimage[:,1:] = vv2
+            atstrimage[:, 1:] = vv2
 
             self.myAssertImage(atstrimage.read(), stvl[3])
             self.myAssertImage(atstrimage[...], stvl[3])
@@ -3470,7 +3470,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.dtype, 'float64')
-            self.assertEqual(atfloatimage.shape, (3,2))
+            self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
             self.myAssertImage(atfloatimage.read(), flvl[0])
             self.myAssertImage(atfloatimage[...], flvl[0])
@@ -3520,7 +3520,7 @@ class H5PYWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.path,
                              '/entry12345:NXentry/intscalar@atintimage')
             self.assertEqual(atintimage.dtype, 'int32')
-            self.assertEqual(atintimage.shape, (3,2))
+            self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
             self.myAssertImage(atintimage.read(), itvl[0])
             self.myAssertImage(atintimage[...], itvl[0])

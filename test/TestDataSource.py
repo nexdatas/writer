@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file TestDataSource.py
+# \package test nexdatas
+# \file TestDataSource.py
 # unittests for field Tags running Tango Server
 #
 import numpy
@@ -25,52 +25,46 @@ from nxswriter.Types import NTP
 from nxswriter.DataSources import DataSource
 
 
-
-
-
-
-
-
-## test datasource
+# test datasource
 class TestDataSource(DataSource):
-        ## constructor
+        # constructor
     # \brief It cleans all member variables
+
     def __init__(self):
-        ## flag for running getData
+        # flag for running getData
         self.dataTaken = False
-        ## list of dimensions
-        self.dims = [] 
-        ## if numpy  datasource
+        # list of dimensions
+        self.dims = []
+        # if numpy  datasource
         self.numpy = True
-        ## validity
+        # validity
         self.valid = True
-        ## returned Data
+        # returned Data
         self.value = None
-        ## the current  static JSON object
+        # the current  static JSON object
         self.globalJSON = None
-        ## the current  dynamic JSON object
+        # the current  dynamic JSON object
         self.localJSON = None
-        ## xml 
+        # xml
         self.xml = None
-        ## decoder pool
-        self.decoders = None        
-        ## datasource pool
+        # decoder pool
+        self.decoders = None
+        # datasource pool
         self.datasources = None
-        ## stack
-        self.stack  = []
-        ## value 0D
+        # stack
+        self.stack = []
+        # value 0D
         self.value0d = 1
-        
-    ## sets the parameters up from xml
+
+    # sets the parameters up from xml
     # \brief xml  datasource parameters
     def setup(self, xml):
         self.stack.append("setup")
         self.stack.append(xml)
         self.xml = None
 
-
-    ## access to data
-    # \brief It is an abstract method providing data   
+    # access to data
+    # \brief It is an abstract method providing data
     def getData(self):
         self.stack.append("getData")
         if self.valid:
@@ -78,38 +72,36 @@ class TestDataSource(DataSource):
             if self.value:
                 return self.value
             elif len(self.dims) == 0:
-                return {"rank":NTP.rTf[0], "value":self.value0d, 
-                        "tangoDType":"DevLong", "shape":[0,0]}
+                return {"rank": NTP.rTf[0], "value": self.value0d,
+                        "tangoDType": "DevLong", "shape": [0, 0]}
             elif numpy:
-                return {"rank":NTP.rTf[len(self.dims)], "value":numpy.ones(self.dims), 
-                        "tangoDType":"DevLong", "shape":self.dims}
+                return {
+                    "rank": NTP.rTf[len(self.dims)], "value": numpy.ones(self.dims),
+                        "tangoDType": "DevLong", "shape": self.dims}
             elif len(self.dims) == 1:
-                return {"rank":NTP.rTf[1], "value":([1] * self.dims[0]), 
-                        "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
+                return {"rank": NTP.rTf[1], "value": ([1] * self.dims[0]),
+                        "tangoDType": "DevLong", "shape": [self.dims[0], 0]}
             elif len(self.dims) == 2:
-                return {"rank":NTP.rTf[2], "value":([[1] * self.dims[1]]*self.dims[0] ), 
-                        "tangoDType":"DevLong", "shape":[self.dims[0], 0]}
-                
+                return {
+                    "rank": NTP.rTf[2], "value": ([[1] * self.dims[1]] * self.dims[0]),
+                        "tangoDType": "DevLong", "shape": [self.dims[0], 0]}
 
-    ## checks if the data is valid
+    # checks if the data is valid
     # \returns if the data is valid
     def isValid(self):
         self.stack.append("isValid")
         return self.valid
 
-
-    ## self-description 
+    # self-description
     # \returns self-describing string
     def __str__(self):
         self.stack.append("__str__")
         return "Test DataSource"
 
-
-
-    ## sets JSON string
+    # sets JSON string
     # \brief It sets the currently used  JSON string
-    # \param globalJSON static JSON string    
-    # \param localJSON dynamic JSON string    
+    # \param globalJSON static JSON string
+    # \param localJSON dynamic JSON string
     def setJSON(self, globalJSON, localJSON=None):
         self.stack.append("setJSON")
         self.stack.append(globalJSON)
@@ -117,15 +109,14 @@ class TestDataSource(DataSource):
         self.globalJSON = globalJSON
         self.localJSON = localJSON
 
-
-    ## sets the used decoders
+    # sets the used decoders
     # \param decoders pool to be set
     def setDecoders(self, decoders):
         self.stack.append("setDecoders")
         self.stack.append(decoders)
-        self.decoders = decoders        
-        
-    ## sets the datasources
+        self.decoders = decoders
+
+    # sets the datasources
     # \param pool datasource pool
     def setDataSources(self, pool):
         self.stack.append("setDataSources")

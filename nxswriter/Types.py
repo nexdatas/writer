@@ -23,6 +23,7 @@ import numpy
 
 
 class Converters(object):
+
     """ set of converters
     """
 
@@ -47,6 +48,7 @@ class Converters(object):
 
 
 class NTP(object):
+
     """ type converter
     """
     #: (:obj:`dict` <:obj:`str` ,:obj:`str` >) map of Python:Tango types

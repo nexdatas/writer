@@ -26,6 +26,7 @@ from . import Streams
 
 
 class DataHolder(object):
+
     """ Holder for passing data
     """
 

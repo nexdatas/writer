@@ -15,14 +15,14 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file runtest.py
+# \package test nexdatas
+# \file runtest.py
 # the unittest runner
 #
 
 try:
     import PyTango
-    ## if module PyTango avalable
+    # if module PyTango avalable
     PYTANGO_AVAILABLE = True
 except ImportError, e:
     PYTANGO_AVAILABLE = False
@@ -33,7 +33,7 @@ try:
         import pni.io.nx.h5
     except:
         import pni.nx.h5
-    ## if module pni avalable
+    # if module pni avalable
     PNI_AVAILABLE = True
 except ImportError, e:
     PNI_AVAILABLE = False
@@ -41,7 +41,7 @@ except ImportError, e:
 
 try:
     import h5py
-    ## if module pni avalable
+    # if module pni avalable
     H5PY_AVAILABLE = True
 except ImportError, e:
     H5PY_AVAILABLE = False
@@ -125,18 +125,17 @@ if PNI_AVAILABLE and H5PY_AVAILABLE:
     import TangoDataWriterPNIH5PYTest
 
 
-    
-## list of available databases
+# list of available databases
 DB_AVAILABLE = []
 
 try:
     import MySQLdb
-    ## connection arguments to MYSQL DB
+    # connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
     args["host"] = 'localhost'
     args["read_default_file"] = '/etc/my.cnf'
-    ## inscance of MySQLdb
+    # inscance of MySQLdb
     mydb = MySQLdb.connect(**args)
     mydb.close()
     DB_AVAILABLE.append("MYSQL")
@@ -145,10 +144,10 @@ except:
         import MySQLdb
         from os.path import expanduser
         home = expanduser("~")
-        ## connection arguments to MYSQL DB
+        # connection arguments to MYSQL DB
         args2 = {'host': u'localhost', 'db': u'tango',
-                'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
-        ## inscance of MySQLdb
+                 'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
+        # inscance of MySQLdb
         mydb = MySQLdb.connect(**args2)
         mydb.close()
         DB_AVAILABLE.append("MYSQL")
@@ -163,39 +162,40 @@ except:
 
 try:
     import psycopg2
-    ## connection arguments to PGSQL DB
+    # connection arguments to PGSQL DB
     args = {}
     args["database"] = 'mydb'
-    ## inscance of psycog2
+    # inscance of psycog2
     pgdb = psycopg2.connect(**args)
     pgdb.close()
     DB_AVAILABLE.append("PGSQL")
 except ImportError, e:
     print "PGSQL not available: %s" % e
-except Exception,e:
+except Exception, e:
     print "PGSQL not available: %s" % e
 except:
     print "PGSQL not available"
 
 
-
 try:
     import cx_Oracle
-    ## pwd
-    passwd = open('%s/pwd' % os.path.dirname(ConvertersTest.__file__)).read()[:-1]
+    # pwd
+    passwd = open('%s/pwd' %
+                  os.path.dirname(ConvertersTest.__file__)).read()[:-1]
 
-    ## connection arguments to ORACLE DB
+    # connection arguments to ORACLE DB
     args = {}
-    args["dsn"] = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+    args[
+        "dsn"] = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
     args["user"] = "read"
     args["password"] = passwd
-    ## inscance of cx_Oracle
+    # inscance of cx_Oracle
     ordb = cx_Oracle.connect(**args)
     ordb.close()
     DB_AVAILABLE.append("ORACLE")
 except ImportError, e:
     print "ORACLE not available: %s" % e
-except Exception,e:
+except Exception, e:
     print "ORACLE not available: %s" % e
 except:
     print "ORACLE not available"
@@ -213,7 +213,7 @@ if "PGSQL" in DB_AVAILABLE:
 if "ORACLE" in DB_AVAILABLE:
     import ORACLESourceTest
 
-    
+
 if PYTANGO_AVAILABLE:
     import TangoSourceTest
     import TgMemberTest
@@ -248,259 +248,252 @@ if PYTANGO_AVAILABLE:
             import DBFieldTagServerH5PYTest
             import DBFieldTagAsynchH5PYTest
 
-#import TestServerSetUp
+# import TestServerSetUp
 
-## main function
+# main function
+
+
 def main():
 
-
-    ## test server
+    # test server
     ts = None
 
-    ## test suit
+    # test suit
     suite = unittest.TestSuite()
 
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ElementTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ElementTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(StreamsTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(StreamsTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ConvertersTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ConvertersTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(NTPTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(NTPTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ErrorsTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ErrorsTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ClientSourceTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(PyEvalSourceTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(PyEvalSourceTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DBaseSourceTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DBaseSourceTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourcePoolTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourcePoolTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceFactoryTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceFactoryTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(UTF8decoderTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(UTF8decoderTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(UINT32decoderTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(UINT32decoderTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(VDEOdecoderTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(VDEOdecoderTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DecoderPoolTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DecoderPoolTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataHolderTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataHolderTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ElementThreadTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(DataSourceDecodersTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(ThreadPoolTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(FetchNameHandlerTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(FetchNameHandlerTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(InnerXMLParserTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest) )
+        unittest.defaultTestLoader.loadTestsFromModule(TNObjectTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(TgDeviceTest) )
-
+        unittest.defaultTestLoader.loadTestsFromModule(TgDeviceTest))
 
     if PNI_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ElementPNITest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ElementPNITest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(PNIWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(PNIWriterTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EStrategyTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FElementTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(
-                FElementWithAttrTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EFieldTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EFieldReshapeTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EGroupTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ELinkTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EAttributeTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EFileTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDocTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDimTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(FElementTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                NexusXMLHandlerTest) )
+                FElementWithAttrTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EFieldTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EFieldReshapeTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EGroupTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ELinkTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EAttributeTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EFileTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDocTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDimTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(
+                NexusXMLHandlerTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest))
 
     if H5PY_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ElementH5PYTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ElementH5PYTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(H5PYWriterTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(H5PYWriterTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EStrategyH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(
-                FElementWithAttrH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EFieldH5PYTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EStrategyH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                EFieldReshapeH5PYTest) )
+                FElementWithAttrH5PYTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EGroupH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ELinkH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EAttributeH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EFileH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDocH5PYTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EFieldH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                NexusXMLHandlerH5PYTest) )
+                EFieldReshapeH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EGroupH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ELinkH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EAttributeH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EFileH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDocH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                ClientFieldTagWriterH5PYTest) )
+                NexusXMLHandlerH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                XMLFieldTagWriterH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ESymbolH5PYTest) )
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FElementH5PYTest) )
+                ClientFieldTagWriterH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                TangoDataWriterH5PYTest) )
+                XMLFieldTagWriterH5PYTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterH5PYTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(ESymbolH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(FElementH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(
+                TangoDataWriterH5PYTest))
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(FileWriterH5PYTest))
 
     if PNI_AVAILABLE and H5PY_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterPNIH5PYTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(FileWriterPNIH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
-                TangoDataWriterPNIH5PYTest) )
+                TangoDataWriterPNIH5PYTest))
 
     if "MYSQL" in DB_AVAILABLE:
         if PNI_AVAILABLE:
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(
-                    DBFieldTagWriterTest) )
+                    DBFieldTagWriterTest))
         if H5PY_AVAILABLE:
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(
-                    DBFieldTagWriterH5PYTest) )
+                    DBFieldTagWriterH5PYTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(MYSQLSourceTest) )
-
+            unittest.defaultTestLoader.loadTestsFromModule(MYSQLSourceTest))
 
     if "PGSQL" in DB_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(PGSQLSourceTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(PGSQLSourceTest))
 
     if "ORACLE" in DB_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ORACLESourceTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ORACLESourceTest))
 
     if PYTANGO_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(TangoSourceTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(TgMemberTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(TgMemberTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(TgGroupTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(TgGroupTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ProxyToolsTest) )
+            unittest.defaultTestLoader.loadTestsFromModule(ProxyToolsTest))
 
         if PNI_AVAILABLE:
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceTest))
 
-            
         if H5PY_AVAILABLE:
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchH5PYTest) )
+                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerH5PYTest) )
-
-
+                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerH5PYTest))
 
         if "MYSQL" in DB_AVAILABLE:
             if PNI_AVAILABLE:
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest) )
+                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest))
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchTest) )
+                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchTest))
             if H5PY_AVAILABLE:
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerH5PYTest) )
+                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerH5PYTest))
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchH5PYTest) )
+                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchH5PYTest))
 
-
-
-    ## test runner
+    # test runner
     runner = unittest.TextTestRunner()
 
-    ## test result
+    # test result
     result = runner.run(suite).wasSuccessful()
     sys.exit(not result)
 
-         
  #   if ts:
  #       ts.tearDown()
 

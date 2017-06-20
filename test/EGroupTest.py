@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file EGroupTest.py
+# \package test nexdatas
+# \file EGroupTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -40,83 +40,83 @@ from nxswriter.Errors import XMLSettingSyntaxError
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
-from Checkers import Checker 
+from Checkers import Checker
 
-#from  xml.sax import SAXParseException
+# from  xml.sax import SAXParseException
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
+# test fixture
 class EGroupTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
         self._fname = "test.h5"
         self._nxFile = None
-        self._eFile = None        
+        self._eFile = None
 
-        self._gattrs = {"name":"test","type":"NXentry" }
+        self._gattrs = {"name": "test", "type": "NXentry"}
         self._gname = "testGroup"
         self._gtype = "NXentry"
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
+            self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
 
-
         self._sc = Checker(self)
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
-        print "CHECKER SEED =", self._sc.seed 
+        # file handle
+        print "\nsetting up..."
+        print "SEED =", self.__seed
+        print "CHECKER SEED =", self._sc.seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -126,26 +126,27 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
 
-        
         self._nxFile.close()
         os.remove(self._fname)
 
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_default_constructor_thesame_name(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -155,29 +156,30 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
-        
+
         self.myAssertRaise(XMLSettingSyntaxError, EGroup, self._gattrs, eFile)
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_constructor_noname(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        gattrs = {"type":"NXentry" , "short_name":"shortname" }
-        el = EGroup( gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        gattrs = {"type": "NXentry", "short_name": "shortname"}
+        el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -187,65 +189,67 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 2)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
-        self.assertEqual(el.h5Object.attributes["short_name"][...], gattrs["short_name"])
+        self.assertEqual(el.h5Object.attributes[
+                         "short_name"][...], gattrs["short_name"])
         self.assertEqual(el.h5Object.attributes["short_name"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["short_name"].shape, (1,))
-        
+
         self._nxFile.close()
         os.remove(self._fname)
 
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_constructor_noobject(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
-        gattrs = {"type":"NXentry" , "short_name":"shortname" }
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
+        gattrs = {"type": "NXentry", "short_name": "shortname"}
         self.myAssertRaise(XMLSettingSyntaxError, EGroup, gattrs, None)
 
-
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_constructor_notype(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
 
-        gattrs = {"short_name":"shortname" }
+        gattrs = {"short_name": "shortname"}
         self.myAssertRaise(XMLSettingSyntaxError, EGroup, gattrs, eFile)
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_constructor_aTn(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
-        maTn = {"signal":1, "axis":2, "primary":3, "offset":4, 
-          "stride":6, "file_time":"12:34", 
-          "file_update_time":"12:45", "restricts":12, 
-          "ignoreExtraGroups":True, "ignoreExtraFields":False,
-          "ignoreExtraAttributes":True, "minOccus":1, "maxOccus":2
-        }
-        gattrs = dict(gattrs,**(maTn))
-        el = EGroup( gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        gattrs = {"type": "NXentry", "name": "shortname"}
+            ## map of tag attribute types
+        maTn = {"signal": 1, "axis": 2, "primary": 3, "offset": 4,
+                "stride": 6, "file_time": "12:34",
+                "file_update_time": "12:45", "restricts": 12,
+                "ignoreExtraGroups": True, "ignoreExtraFields": False,
+                "ignoreExtraAttributes": True, "minOccus": 1, "maxOccus": 2
+                }
+        gattrs = dict(gattrs, **(maTn))
+        el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -255,40 +259,41 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 14)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
+        self.assertEqual(
+            el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
-        
+
         for k in maTn.keys():
             self.assertEqual(el.h5Object.attributes[k][...], gattrs[k])
-            self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
+            self.assertEqual(
+                el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
-            
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_constructor_aTnv(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        gattrs = {"type":"NXentry" , "name":"shortname" }   ## map of tag attribute types 
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        gattrs = {"type": "NXentry", "name": "shortname"}
+            ## map of tag attribute types
         maTnv = {"vector": "1 2 3 4 5"}
-        raTnv = {"vector":[1,2,3,4,5]}
-        gattrs = dict(gattrs,**(maTnv))
+        raTnv = {"vector": [1, 2, 3, 4, 5]}
+        gattrs = dict(gattrs, **(maTnv))
         rattrs = dict(gattrs)
-        rattrs = dict(rattrs,**(raTnv))
+        rattrs = dict(rattrs, **(raTnv))
         error = 1.e-14
 
-
-        el = EGroup( gattrs, eFile)
+        el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -298,32 +303,35 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 2)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
+        self.assertEqual(
+            el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
-        
+
         for k in raTnv.keys():
             for i in range(len(rattrs[k])):
-                self.assertTrue(abs(el.h5Object.attributes[k][i]- rattrs[k][i]) <= error)
-            self.assertEqual(el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
-            self.assertEqual(el.h5Object.attributes[k].shape, (len(rattrs[k]),))
-            
+                self.assertTrue(
+                    abs(el.h5Object.attributes[k][i] - rattrs[k][i]) <= error)
+            self.assertEqual(
+                el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTnv[k]])
+            self.assertEqual(
+                el.h5Object.attributes[k].shape, (len(rattrs[k]),))
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default store method
+    # default store method
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -333,79 +341,75 @@ class EGroupTest(unittest.TestCase):
         el.store()
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
 #        self.myAssertRaise(ValueError, el.store)
-        
+
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-
-
-
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_0d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
         attrs = {
-            "string":["My string","NX_CHAR", "string"],
-            "datetime":["12:34:34","NX_DATE_TIME", "string"],
-            "iso8601":["12:34:34","ISO8601", "string"],
-            "int":[-123,"NX_INT", "int64"],
-            "int8":[12,"NX_INT8", "int8"],
-            "int16":[-123,"NX_INT16", "int16"],
-            "int32":[12345,"NX_INT32", "int32"],
-            "int64":[-12345,"NX_INT64", "int64"],
-            "uint":[123,"NX_UINT", "uint64"],
-            "uint8":[12,"NX_UINT8", "uint8"],
-            "uint16":[123,"NX_UINT16", "uint16"],
-            "uint32":[12345,"NX_UINT32", "uint32"],
-            "uint64":[12345,"NX_UINT64", "uint64"],
-            "float":[-12.345,"NX_FLOAT", "float64",1.e-14],
-            "number":[-12.345e+2,"NX_NUMBER", "float64",1.e-14],
-            "float32":[-12.345e-1,"NX_FLOAT32", "float32",1.e-5],
-            "float64":[-12.345,"NX_FLOAT64", "float64",1.e-14],
-            "bool":[True,"NX_BOOLEAN", "bool"],
-            "bool2":["FaLse","NX_BOOLEAN", "bool"],
-            "bool3":["false","NX_BOOLEAN", "bool"],
-            "bool4":["true","NX_BOOLEAN", "bool"]
-            }
+            "string": ["My string", "NX_CHAR", "string"],
+            "datetime": ["12:34:34", "NX_DATE_TIME", "string"],
+            "iso8601": ["12:34:34", "ISO8601", "string"],
+            "int": [-123, "NX_INT", "int64"],
+            "int8": [12, "NX_INT8", "int8"],
+            "int16": [-123, "NX_INT16", "int16"],
+            "int32": [12345, "NX_INT32", "int32"],
+            "int64": [-12345, "NX_INT64", "int64"],
+            "uint": [123, "NX_UINT", "uint64"],
+            "uint8": [12, "NX_UINT8", "uint8"],
+            "uint16": [123, "NX_UINT16", "uint16"],
+            "uint32": [12345, "NX_UINT32", "uint32"],
+            "uint64": [12345, "NX_UINT64", "uint64"],
+            "float": [-12.345, "NX_FLOAT", "float64", 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", 1.e-14],
+            "bool": [True, "NX_BOOLEAN", "bool"],
+            "bool2": ["FaLse", "NX_BOOLEAN", "bool"],
+            "bool3": ["false", "NX_BOOLEAN", "bool"],
+            "bool4": ["true", "NX_BOOLEAN", "bool"]
+        }
 
         for nm in attrs.keys():
             el.tagAttributes[nm] = (attrs[nm][1], str(attrs[nm][0]))
-            el.store() 
+            el.store()
             at = el.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
-            
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])), at[...])
+
             elif len(attrs[nm]) > 3:
                 self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
-            else: 
+            else:
                 self.assertEqual(at[...], attrs[nm][0])
-
 
         for nm in attrs.keys():
             el.tagAttributes[nm] = (attrs[nm][1], str(attrs[nm][0]), [])
-            el.store() 
+            el.store()
             at = el.h5Attribute(nm)
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
-            
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])), at[...])
+
             elif len(attrs[nm]) > 3:
                 self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
-            else: 
+            else:
                 self.assertEqual(at[...], attrs[nm][0])
 
         for nm in attrs.keys():
@@ -413,415 +417,423 @@ class EGroupTest(unittest.TestCase):
                 "writing multi-dimensional string is not supported by pninx"
                 continue
             el.tagAttributes[nm] = (attrs[nm][1], str(attrs[nm][0]), [1])
-            el.store() 
+            el.store()
 
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
-            
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])), at[...])
+
             elif len(attrs[nm]) > 3:
                 self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][3])
-            else: 
-                
-                if isinstance(at[...], numpy.ndarray): 
-                    self.assertEqual(at[...], numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+            else:
+
+                if isinstance(at[...], numpy.ndarray):
+                    self.assertEqual(
+                        at[...], numpy.array(attrs[nm][0], dtype=attrs[nm][2]))
                 else:
                     self.assertEqual(at[...], attrs[nm][0])
 
         self._nxFile.close()
         os.remove(self._fname)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_1d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
-            "int":[-123,"NX_INT", "int64", (1,)],
-            "int8":[12,"NX_INT8", "int8", (1,)],
-            "int16":[-123,"NX_INT16", "int16", (1,)],
-            "int32":[12345,"NX_INT32", "int32", (1,)],
-            "int64":[-12345,"NX_INT64", "int64", (1,)],
-            "uint":[123,"NX_UINT", "uint64", (1,)],
-            "uint8":[12,"NX_UINT8", "uint8", (1,)],
-            "uint16":[123,"NX_UINT16", "uint16", (1,)],
-            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
-            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
-            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
-            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
-            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
-            }
-
-
+            #            "string":["My string","NX_CHAR", "string" , (1,)],
+            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int": [-123, "NX_INT", "int64", (1,)],
+            "int8": [12, "NX_INT8", "int8", (1,)],
+            "int16": [-123, "NX_INT16", "int16", (1,)],
+            "int32": [12345, "NX_INT32", "int32", (1,)],
+            "int64": [-12345, "NX_INT64", "int64", (1,)],
+            "uint": [123, "NX_UINT", "uint64", (1,)],
+            "uint8": [12, "NX_UINT8", "uint8", (1,)],
+            "uint16": [123, "NX_UINT16", "uint16", (1,)],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+        }
 
         for nm in attrs.keys():
             if attrs[nm][2] == 'string':
                 "writing multi-dimensional string is not supported by pninx"
                 continue
-            el.tagAttributes[nm] = (attrs[nm][1], str(attrs[nm][0]),attrs[nm][3] )
-            el.store() 
+            el.tagAttributes[nm] = (
+                attrs[nm][1], str(attrs[nm][0]), attrs[nm][3])
+            el.store()
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[nm][0])),at[...])
-            
+                self.assertEqual(Converters.toBool(str(attrs[nm][0])), at[...])
+
             elif len(attrs[nm]) > 4:
                 self.assertTrue(abs(at[...] - attrs[nm][0]) <= attrs[nm][4])
-            else: 
-                
-                if isinstance(at[...], numpy.ndarray): 
-                    self.assertEqual(at[...], numpy.array(attrs[nm][0],dtype = attrs[nm][2]))
+            else:
+
+                if isinstance(at[...], numpy.ndarray):
+                    self.assertEqual(
+                        at[...], numpy.array(attrs[nm][0], dtype=attrs[nm][2]))
                 else:
                     self.assertEqual(at[...], attrs[nm][0])
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_1d_single_2(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
-        
-
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
-            "int":[-123,"NX_INT", "int64", (1,)],
-            "int8":[12,"NX_INT8", "int8", (1,)],
-            "int16":[-123,"NX_INT16", "int16", (1,)],
-            "int32":[12345,"NX_INT32", "int32", (1,)],
-            "int64":[-12345,"NX_INT64", "int64", (1,)],
-            "uint":[123,"NX_UINT", "uint64", (1,)],
-            "uint8":[12,"NX_UINT8", "uint8", (1,)],
-            "uint16":[123,"NX_UINT16", "uint16", (1,)],
-            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
-            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
-            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
-            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
-            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
-            }
+            #            "string":["My string","NX_CHAR", "string" , (1,)],
+            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int": [-123, "NX_INT", "int64", (1,)],
+            "int8": [12, "NX_INT8", "int8", (1,)],
+            "int16": [-123, "NX_INT16", "int16", (1,)],
+            "int32": [12345, "NX_INT32", "int32", (1,)],
+            "int64": [-12345, "NX_INT64", "int64", (1,)],
+            "uint": [123, "NX_UINT", "uint64", (1,)],
+            "uint8": [12, "NX_UINT8", "uint8", (1,)],
+            "uint16": [123, "NX_UINT16", "uint16", (1,)],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+        }
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [self.__rnd.randint(1, 1),self.__rnd.randint(0, 3)]
-                attrs[nm][0] =  [ attrs[nm][0]*self.__rnd.randint(0, 3) for r in range(mlen[0])]
-            else:    
+                mlen = [self.__rnd.randint(1, 1), self.__rnd.randint(0, 3)]
+                attrs[nm][0] = [
+                    attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+            else:
                 mlen = [self.__rnd.randint(1, 1)]
                 if nm == 'bool':
-                    attrs[nm][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[nm][0] = [bool(self.__rnd.randint(0, 1))
+                                    for c in range(mlen[0])]
                 else:
-                    attrs[nm][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[nm][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                                    for c in range(mlen[0])]
 
-            attrs[nm][3] =  (mlen[0],)
-
+            attrs[nm][3] = (mlen[0],)
 
         for nm in attrs.keys():
-            el.tagAttributes[nm] = (attrs[nm][1], "".join([str(it)+ " "  for it in attrs[nm][0]]),attrs[nm][3] )
-            el.store() 
+            el.tagAttributes[nm] = (attrs[nm][1], "".join(
+                [str(it) + " " for it in attrs[nm][0]]), attrs[nm][3])
+            el.store()
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[...])
+                    self.assertEqual(
+                        Converters.toBool(str(attrs[nm][0][i])), at[...])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
-                    self.assertTrue(abs(at[...] - attrs[nm][0][i]) <= attrs[nm][4])
-            else: 
-                
+                    self.assertTrue(
+                        abs(at[...] - attrs[nm][0][i]) <= attrs[nm][4])
+            else:
+
                 for i in range(len(attrs[nm][0])):
                     self.assertEqual(at[...], attrs[nm][0][i])
-
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-            ## constructor test
+            # constructor test
     # \brief It tests default settings
     def test_store_1d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
-        
-
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
-            "int":[-123,"NX_INT", "int64", (1,)],
-            "int8":[12,"NX_INT8", "int8", (1,)],
-            "int16":[-123,"NX_INT16", "int16", (1,)],
-            "int32":[12345,"NX_INT32", "int32", (1,)],
-            "int64":[-12345,"NX_INT64", "int64", (1,)],
-            "uint":[123,"NX_UINT", "uint64", (1,)],
-            "uint8":[12,"NX_UINT8", "uint8", (1,)],
-            "uint16":[123,"NX_UINT16", "uint16", (1,)],
-            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
-            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
-            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
-            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
-            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
-            }
+            #            "string":["My string","NX_CHAR", "string" , (1,)],
+            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int": [-123, "NX_INT", "int64", (1,)],
+            "int8": [12, "NX_INT8", "int8", (1,)],
+            "int16": [-123, "NX_INT16", "int16", (1,)],
+            "int32": [12345, "NX_INT32", "int32", (1,)],
+            "int64": [-12345, "NX_INT64", "int64", (1,)],
+            "uint": [123, "NX_UINT", "uint64", (1,)],
+            "uint8": [12, "NX_UINT8", "uint8", (1,)],
+            "uint16": [123, "NX_UINT16", "uint16", (1,)],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+        }
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(0, 3)]
-                attrs[nm][0] =  [ attrs[nm][0]*self.__rnd.randint(0, 3) for r in range(mlen[0])]
-            else:    
+                mlen = [self.__rnd.randint(2, 10), self.__rnd.randint(0, 3)]
+                attrs[nm][0] = [
+                    attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
+            else:
                 mlen = [self.__rnd.randint(2, 10)]
                 if nm == 'bool':
-                    attrs[nm][0] =  [ bool(self.__rnd.randint(0,1))  for c in range(mlen[0]) ]
+                    attrs[nm][0] = [bool(self.__rnd.randint(0, 1))
+                                    for c in range(mlen[0])]
                 else:
-                    attrs[nm][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                    attrs[nm][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                                    for c in range(mlen[0])]
 
-            attrs[nm][3] =  (mlen[0],)
-
+            attrs[nm][3] = (mlen[0],)
 
         for nm in attrs.keys():
-            el.tagAttributes[nm] = (attrs[nm][1], "".join([str(it)+ " "  for it in attrs[nm][0]]),attrs[nm][3] )
-            el.store() 
+            el.tagAttributes[nm] = (attrs[nm][1], "".join(
+                [str(it) + " " for it in attrs[nm][0]]), attrs[nm][3])
+            el.store()
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
-                    self.assertEqual(Converters.toBool(str(attrs[nm][0][i])),at[i])
+                    self.assertEqual(
+                        Converters.toBool(str(attrs[nm][0][i])), at[i])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
-                    self.assertTrue(abs(at[i] - attrs[nm][0][i]) <= attrs[nm][4])
-            else: 
-                
+                    self.assertTrue(
+                        abs(at[i] - attrs[nm][0][i]) <= attrs[nm][4])
+            else:
+
                 for i in range(len(attrs[nm][0])):
                     self.assertEqual(at[i], attrs[nm][0][i])
-
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_2d(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
-        
-
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
-            "int":[-123,"NX_INT", "int64", (1,)],
-            "int8":[12,"NX_INT8", "int8", (1,)],
-            "int16":[-123,"NX_INT16", "int16", (1,)],
-            "int32":[12345,"NX_INT32", "int32", (1,)],
-            "int64":[-12345,"NX_INT64", "int64", (1,)],
-            "uint":[123,"NX_UINT", "uint64", (1,)],
-            "uint8":[12,"NX_UINT8", "uint8", (1,)],
-            "uint16":[123,"NX_UINT16", "uint16", (1,)],
-            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
-            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
-            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
-            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
-            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
-            }
+            #            "string":["My string","NX_CHAR", "string" , (1,)],
+            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int": [-123, "NX_INT", "int64", (1,)],
+            "int8": [12, "NX_INT8", "int8", (1,)],
+            "int16": [-123, "NX_INT16", "int16", (1,)],
+            "int32": [12345, "NX_INT32", "int32", (1,)],
+            "int64": [-12345, "NX_INT64", "int64", (1,)],
+            "uint": [123, "NX_UINT", "uint64", (1,)],
+            "uint8": [12, "NX_UINT8", "uint8", (1,)],
+            "uint16": [123, "NX_UINT16", "uint16", (1,)],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+        }
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10), 
-                        (2 << numpy.dtype(attrs[nm][2]).itemsize)  ]
-#                print "SH",nm,mlen[2]    
-                attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
-            else:    
-                mlen = [self.__rnd.randint(2, 10),self.__rnd.randint(2, 10) ]
+                mlen = [self.__rnd.randint(2, 10), self.__rnd.randint(2, 10),
+                        (2 << numpy.dtype(attrs[nm][2]).itemsize)]
+#                print "SH",nm,mlen[2]
+                attrs[nm][0] = [
+                    [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+            else:
+                mlen = [self.__rnd.randint(2, 10), self.__rnd.randint(2, 10)]
                 if nm == 'bool':
-                    attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[nm][0] = [[bool(self.__rnd.randint(0, 1))
+                                     for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
-            attrs[nm][3] =  (mlen[0],mlen[1])
+                    attrs[nm][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
+                                     for c in range(mlen[1])] for r in range(mlen[0])]
 
-            
+            attrs[nm][3] = (mlen[0], mlen[1])
+
         for nm in attrs.keys():
-            el.tagAttributes[nm] = (attrs[nm][1], 
-                                     "".join(["".join([str(it)+ " "  for it in sub]
-                                                      ) + "\n" for sub in attrs[nm][0]]),
-                                     attrs[nm][3] 
-                                     )
-            el.store() 
+            el.tagAttributes[nm] = (attrs[nm][1],
+                                    "".join(["".join([str(it) + " " for it in sub]
+                                                     ) + "\n" for sub in attrs[nm][0]]),
+                                    attrs[nm][3]
+                                    )
+            el.store()
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[i,j])
+                        self.assertEqual(
+                            Converters.toBool(str(attrs[nm][0][i][j])), at[i, j])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at[i,j] - attrs[nm][0][i][j]) <= attrs[nm][4])
-            else: 
+                        self.assertTrue(
+                            abs(at[i, j] - attrs[nm][0][i][j]) <= attrs[nm][4])
+            else:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(at[i,j], attrs[nm][0][i][j])
-
+                        self.assertEqual(at[i, j], attrs[nm][0][i][j])
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-            ## constructor test
+            # constructor test
     # \brief It tests default settings
     def test_store_2d_single(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertEqual(el.tagAttributes, {})
 
-        
-
         attrs = {
-#            "string":["My string","NX_CHAR", "string" , (1,)],
-#            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
-#            "iso8601":["12:34:34","ISO8601", "string", (1,)],
-            "int":[-123,"NX_INT", "int64", (1,)],
-            "int8":[12,"NX_INT8", "int8", (1,)],
-            "int16":[-123,"NX_INT16", "int16", (1,)],
-            "int32":[12345,"NX_INT32", "int32", (1,)],
-            "int64":[-12345,"NX_INT64", "int64", (1,)],
-            "uint":[123,"NX_UINT", "uint64", (1,)],
-            "uint8":[12,"NX_UINT8", "uint8", (1,)],
-            "uint16":[123,"NX_UINT16", "uint16", (1,)],
-            "uint32":[12345,"NX_UINT32", "uint32", (1,)],
-            "uint64":[12345,"NX_UINT64", "uint64", (1,)],
-            "float":[-12.345,"NX_FLOAT", "float64", (1,),1.e-14],
-            "number":[-12.345e+2,"NX_NUMBER",  "float64",(1,),1.e-14],
-            "float32":[-12.345e-1,"NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64":[-12.345,"NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool":[True,"NX_BOOLEAN", "bool", (1,)],
-            "bool2":["FaLse","NX_BOOLEAN", "bool", (1,)], 
-            "bool3":["false","NX_BOOLEAN", "bool", (1,)],
-            "bool4":["true","NX_BOOLEAN", "bool", (1,)]
-            }
+            #            "string":["My string","NX_CHAR", "string" , (1,)],
+            #            "datetime":["12:34:34","NX_DATE_TIME", "string", (1,) ],
+            #            "iso8601":["12:34:34","ISO8601", "string", (1,)],
+            "int": [-123, "NX_INT", "int64", (1,)],
+            "int8": [12, "NX_INT8", "int8", (1,)],
+            "int16": [-123, "NX_INT16", "int16", (1,)],
+            "int32": [12345, "NX_INT32", "int32", (1,)],
+            "int64": [-12345, "NX_INT64", "int64", (1,)],
+            "uint": [123, "NX_UINT", "uint64", (1,)],
+            "uint8": [12, "NX_UINT8", "uint8", (1,)],
+            "uint16": [123, "NX_UINT16", "uint16", (1,)],
+            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+        }
 
         for nm in attrs.keys():
             if attrs[nm][2] != "bool":
-                mlen = [self.__rnd.randint(1, 1),self.__rnd.randint(1, 1), 
-                        (2 << numpy.dtype(attrs[nm][2]).itemsize)  ]
-#                print "SH",nm,mlen[2]    
-                attrs[nm][0] =  [[ attrs[nm][0]*self.__rnd.randint(0,3) for r in range(mlen[1]) ] for c in range(mlen[0])]
-            else:    
-                mlen = [self.__rnd.randint(1, 1),self.__rnd.randint(1, 1) ]
+                mlen = [self.__rnd.randint(1, 1), self.__rnd.randint(1, 1),
+                        (2 << numpy.dtype(attrs[nm][2]).itemsize)]
+#                print "SH",nm,mlen[2]
+                attrs[nm][0] = [
+                    [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+            else:
+                mlen = [self.__rnd.randint(1, 1), self.__rnd.randint(1, 1)]
                 if nm == 'bool':
-                    attrs[nm][0] =  [[ bool(self.__rnd.randint(0,1))  for c in range(mlen[1]) ] for r in range(mlen[0])]
+                    attrs[nm][0] = [[bool(self.__rnd.randint(0, 1))
+                                     for c in range(mlen[1])] for r in range(mlen[0])]
                 else:
-                    attrs[nm][0] =  [[ ("True" if self.__rnd.randint(0,1) else "False")  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
-            attrs[nm][3] =  (mlen[0],mlen[1])
+                    attrs[nm][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
+                                     for c in range(mlen[1])] for r in range(mlen[0])]
 
-            
+            attrs[nm][3] = (mlen[0], mlen[1])
+
         for nm in attrs.keys():
-            el.tagAttributes[nm] = (attrs[nm][1], 
-                                     "".join(["".join([str(it)+ " "  for it in sub]
-                                                      ) + "\n" for sub in attrs[nm][0]]),
-                                     attrs[nm][3] 
-                                     )
-            el.store() 
+            el.tagAttributes[nm] = (attrs[nm][1],
+                                    "".join(["".join([str(it) + " " for it in sub]
+                                                     ) + "\n" for sub in attrs[nm][0]]),
+                                    attrs[nm][3]
+                                    )
+            el.store()
             at = el.h5Object.attributes[nm]
             self.assertEqual(at.dtype, attrs[nm][2])
             if attrs[nm][2] == "bool":
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertEqual(Converters.toBool(str(attrs[nm][0][i][j])), at[...])
+                        self.assertEqual(
+                            Converters.toBool(str(attrs[nm][0][i][j])), at[...])
                 pass
             elif len(attrs[nm]) > 4:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
-                        self.assertTrue(abs(at[...] - attrs[nm][0][i][j]) <= attrs[nm][4])
-            else: 
+                        self.assertTrue(
+                            abs(at[...] - attrs[nm][0][i][j]) <= attrs[nm][4])
+            else:
                 for i in range(len(attrs[nm][0])):
                     for j in range(len(attrs[nm][0][i])):
                         self.assertEqual(at[...], attrs[nm][0][i][j])
 
-
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_fetchName_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        el = EGroup( self._gattrs, eFile)
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
         self.assertTrue(isinstance(el, FElementWithAttr))
@@ -831,32 +843,32 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, self._gattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
 
+        gNames = {}
+        self.assertEqual(el.store(), None)
 
-        gNames= {}
-        self.assertEqual(el.store(),None)
-
-        gNames= {}
+        gNames = {}
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_fetchName_noname(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        gattrs = {"type":"NXentry"}
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        gattrs = {"type": "NXentry"}
         el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -867,31 +879,32 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
+        self.assertEqual(
+            el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
 
-        gNames= {}
-        self.assertEqual(el.store(),None)
+        gNames = {}
+        self.assertEqual(el.store(), None)
 
-        gNames= {}
+        gNames = {}
 
         self._nxFile.close()
         os.remove(self._fname)
 
-
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_fetchName_notype(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname= '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )  
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(self._fname, overwrite=True).root()
-        eFile = EFile( {}, None, self._nxFile)
-        gattrs = {"type":"NXentry"}
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        gattrs = {"type": "NXentry"}
         el = EGroup(gattrs, eFile)
         self.assertTrue(isinstance(el, Element))
         self.assertTrue(isinstance(el, FElement))
@@ -902,16 +915,16 @@ class EGroupTest(unittest.TestCase):
         self.assertEqual(type(el.h5Object), PNIWriter.PNIGroup)
         self.assertEqual(el.h5Object.name, gattrs["type"][2:])
         self.assertEqual(len(el.h5Object.attributes), 1)
-        self.assertEqual(el.h5Object.attributes["NX_class"][...], gattrs["type"])
+        self.assertEqual(
+            el.h5Object.attributes["NX_class"][...], gattrs["type"])
         self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
         self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
 
-        gNames= {}
+        gNames = {}
         el._tagAttrs.pop("type")
 
         self._nxFile.close()
         os.remove(self._fname)
-
 
 
 if __name__ == '__main__':

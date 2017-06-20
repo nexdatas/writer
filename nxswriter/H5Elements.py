@@ -25,8 +25,10 @@ from .DataHolder import DataHolder
 
 
 class EFile(FElement):
+
     """ file H5 element
     """
+
     def __init__(self, attrs, last, h5fileObject):
         """ constructor
 
@@ -41,8 +43,10 @@ class EFile(FElement):
 
 
 class EDoc(Element):
+
     """ doc tag element
     """
+
     def __init__(self, attrs, last):
         """ constructor
 
@@ -67,8 +71,10 @@ class EDoc(Element):
 
 
 class ESymbol(Element):
+
     """ symbol tag element
     """
+
     def __init__(self, attrs, last):
         """ constructor
 
@@ -96,8 +102,10 @@ class ESymbol(Element):
 
 
 class EDimensions(Element):
+
     """ dimensions tag element
     """
+
     def __init__(self, attrs, last):
         """ constructor
 
@@ -112,8 +120,10 @@ class EDimensions(Element):
 
 
 class EDim(Element):
+
     """ dim tag element
     """
+
     def __init__(self, attrs, last):
         """ constructor
 

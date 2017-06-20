@@ -56,6 +56,7 @@ from .DataSourcePool import DataSourcePool
 
 
 class TangoDataWriter(object):
+
     """ NeXuS data writer
     """
 
@@ -413,7 +414,7 @@ class TangoDataWriter(object):
         self.__nxFile.close()
         self.__currentfileid -= 1
         self.__nxRoot.currentfileid = self.__currentfileid
-        _ = self.__filenames.pop()
+        self.__filenames.pop()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
 

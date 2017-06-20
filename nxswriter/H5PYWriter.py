@@ -103,6 +103,7 @@ def deflate_filter():
 
 
 class H5PYFile(FileWriter.FTFile):
+
     """ file tree file
     """
 
@@ -193,8 +194,10 @@ class H5PYFile(FileWriter.FTFile):
 
 
 class H5PYGroup(FileWriter.FTGroup):
+
     """ file tree group
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -399,8 +402,10 @@ class H5PYGroup(FileWriter.FTGroup):
 
 
 class H5PYField(FileWriter.FTField):
+
     """ file tree file
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -547,8 +552,10 @@ class H5PYField(FileWriter.FTField):
 
 
 class H5PYLink(FileWriter.FTLink):
+
     """ file tree link
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -633,8 +640,10 @@ class H5PYLink(FileWriter.FTLink):
 
 
 class H5PYDeflate(FileWriter.FTDeflate):
+
     """ file tree deflate
     """
+
     def __init__(self):
         """ constructor
 
@@ -685,8 +694,10 @@ class H5PYDeflate(FileWriter.FTDeflate):
 
 
 class H5PYAttributeManager(FileWriter.FTAttributeManager):
+
     """ file tree attribute
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -821,6 +832,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
 
 
 class H5PYAttribute(FileWriter.FTAttribute):
+
     """ file tree attribute
     """
 

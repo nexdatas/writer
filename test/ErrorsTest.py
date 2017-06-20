@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ErrorsTest.py
+# \package test nexdatas
+# \file ErrorsTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -28,125 +28,107 @@ import struct
 import numpy
 
 
+from nxswriter.Errors import (CorruptedFieldArrayError, XMLSettingSyntaxError,
+                              DataSourceError, PackageError, DataSourceSetupError,
+                              XMLSyntaxError, UnsupportedTagError, ThreadError)
 
-from nxswriter.Errors import (CorruptedFieldArrayError,XMLSettingSyntaxError,
-                         DataSourceError,PackageError,DataSourceSetupError,
-                         XMLSyntaxError,UnsupportedTagError,ThreadError)
-                         
 
-## test fixture
+# test fixture
 class ErrorsTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-
-
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        ## file handle
-        print "\nsetting up..."        
+        # file handle
+        print "\nsetting up..."
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-
-    ##  CorruptedFieldArrayError test
+    # CorruptedFieldArrayError test
     # \brief It tests default settings
     def test_CorruptedFieldArrayError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = CorruptedFieldArrayError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-
-    ## XMLSettingSyntaxError test
+    # XMLSettingSyntaxError test
     # \brief It tests default settings
     def test_XMLSettingSyntaxError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = XMLSettingSyntaxError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-    ## DataSourceError test
+    # DataSourceError test
     # \brief It tests default settings
     def test_DataSourceError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = DataSourceError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-
-    ## PackageError test
+    # PackageError test
     # \brief It tests default settings
     def test_PackageError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = PackageError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-
-    ## DataSourceSetupError test
+    # DataSourceSetupError test
     # \brief It tests default settings
     def test_DataSourceSetupError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = DataSourceSetupError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-    ## XMLSyntaxError test
+    # XMLSyntaxError test
     # \brief It tests default settings
     def test_XMLSyntaxError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = XMLSyntaxError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-    ## XMLSyntaxError test
+    # XMLSyntaxError test
     # \brief It tests default settings
     def test_UnsupportedTagError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = UnsupportedTagError()
-        self.assertTrue(isinstance(err,Exception))
+        self.assertTrue(isinstance(err, Exception))
 
-
-
-    ## XMLSyntaxError test
+    # XMLSyntaxError test
     # \brief It tests default settings
     def test_ThreadError(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         err = ThreadError()
-        self.assertTrue(isinstance(err,Exception))
-
-
-
+        self.assertTrue(isinstance(err, Exception))
 
 
 if __name__ == '__main__':

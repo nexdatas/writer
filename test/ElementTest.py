@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ElementTest.py
+# \package test nexdatas
+# \file ElementTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -32,41 +32,38 @@ from nxswriter.Element import Element
 import nxswriter.FileWriter as FileWriter
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-
-
-## test fixture
+# test fixture
 class ElementTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-
         self._tfname = "field"
         self._tfname = "group"
-        self._fattrs = {"short_name":"test","units":"m" }
-
+        self._fattrs = {"short_name": "test", "units": "m"}
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
+        print "\nsetting up..."
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -78,14 +75,13 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.doc, "")
         self.assertEqual(el.last, None)
 
-
-    ## store method test
+    # store method test
     # \brief It tests executing store method
     def test_store(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        el = Element(self._tfname, self._fattrs )
-        el2 = Element(self._tfname, self._fattrs,  el )
+        el = Element(self._tfname, self._fattrs)
+        el2 = Element(self._tfname, self._fattrs,  el)
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2._tagAttrs, self._fattrs)
@@ -93,20 +89,16 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.store(), None)
         self.assertEqual(el2.last, el)
         self.assertEqual(el2.store("<tag/>"), None)
-        
 
-
-    ## _beforeLast method test
+    # _beforeLast method test
     # \brief It tests executing _beforeLast method
     def test_beforeLast(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
-
-
-        el = Element(self._tfname, self._fattrs, None )
-        el2 = Element(self._tfname, self._fattrs,  el )
-        el3 = Element(self._tfname, self._fattrs,  el2 )
+        el = Element(self._tfname, self._fattrs, None)
+        el2 = Element(self._tfname, self._fattrs,  el)
+        el3 = Element(self._tfname, self._fattrs,  el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -114,9 +106,6 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.last, el)
         self.assertEqual(el2._beforeLast(), None)
         self.assertEqual(el3._beforeLast(), el)
-        
-
-
 
 
 if __name__ == '__main__':

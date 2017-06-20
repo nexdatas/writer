@@ -29,6 +29,7 @@ from . import Streams
 
 
 class FElement(Element):
+
     """ NeXuS runnable tag element
     tag element corresponding to one of H5 objects
     """
@@ -241,6 +242,7 @@ class FElement(Element):
 
 
 class FElementWithAttr(FElement):
+
     """ NeXuS runnable tag element with attributes
         tag element corresponding to one of H5 objects with attributes
     """

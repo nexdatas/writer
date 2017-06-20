@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file TangoFieldTagWriterTest.py
+# \package test nexdatas
+# \file TangoFieldTagWriterTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -32,79 +32,89 @@ import PyTango
 
 from ProxyHelper import ProxyHelper
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from  xml.sax import SAXParseException
+from xml.sax import SAXParseException
 
 
 from nxswriter import TangoDataWriter, Types
-from nxswriter.TangoDataWriter  import TangoDataWriter
+from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 import SimpleServerSetUp
 
-## test fixture
+# test fixture
+
+
 class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
         self._simps = SimpleServerSetUp.SimpleServerSetUp()
 
         try:
-            ## random seed
-            self.seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            # random seed
+            self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.seed  = long(time.time() * 256) # use fractional seconds
+            self.seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.seed)
 
+        self._counter = [1, -2, 6, -8, 9, -11]
+        self._bools = ["TruE", "0", "1", "False", "false", "True"]
+        self._fcounter = [1.1, -2.4, 6.54, -8.456, 9.456, -0.46545]
+        self._dcounter = [
+            0.1, -2342.4, 46.54, -854.456, 9.243456, -0.423426545]
+        self._logical = [[True, False, True, False], [
+            True, False, False, True], [False, False, True, True]]
 
-
-        self._counter =  [1,-2,6,-8,9,-11]
-        self._bools =  ["TruE","0","1","False","false", "True"]
-        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
-        self._dcounter =  [0.1,-2342.4,46.54,-854.456,9.243456,-0.423426545]
-        self._logical =  [[True,False,True,False], [True,False,False,True], [False,False,True,True]]
-
-        self._logical2 =  [[[True,False,True,False], [True,False,False,True]],
-                           [[False,False,True,True], [False,False,True,False]],
-                           [[True,False,True,True], [False,False,True,False]]]
+        self._logical2 = [
+            [[True, False, True, False], [True, False, False, True]],
+                           [[False, False, True, True], [
+                               False, False, True, False]],
+                           [[True, False, True, True], [False, False, True, False]]]
 
         self._sc = Checker(self)
-        self._mca1 = [[self.__rnd.randint(-100, 100) for e in range(256)] for i in range(3)]
-        self._mca2 = [[self.__rnd.randint(0, 100) for e in range(256)] for i in range(3)]
+        self._mca1 = [[self.__rnd.randint(-100, 100)
+                       for e in range(256)] for i in range(3)]
+        self._mca2 = [[self.__rnd.randint(0, 100)
+                       for e in range(256)] for i in range(3)]
         self._fmca1 = [self._sc.nicePlot(1024, 10) for i in range(4)]
 #        self._fmca2 = [(float(e)/(100.+e)) for e in range(2048)]
 
-        self._dates = [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
-                        "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
-                       ["1956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
-                        "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],
-                       ["1966-02-21T11:22:02.113+0200","1432-12-11T11:23:13.1223-0300",
-                        "1714-11-10T14:03:13.12-0400","1001-01-01T14:11:11.0011-0100"]]
+        self._dates = [
+            ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+             "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+                       ["1956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+                        "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+                       ["1966-02-21T11:22:02.113+0200", "1432-12-11T11:23:13.1223-0300",
+                        "1714-11-10T14:03:13.12-0400", "1001-01-01T14:11:11.0011-0100"]]
 
-        self._dates2 = [[["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
-                          "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
-                         ["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
-                          "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"]],
-                        [["1996-07-31T21:15:22.123+0600","2012-11-14T14:05:23.2344-0200",
-                          "2014-02-04T04:16:12.43-0100","2012-11-14T14:05:23.2344-0200"],
-                         ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]],
-                        [["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"],
-                         ["956-05-23T12:12:32.123+0400","1212-12-12T12:25:43.1267-0700",
-                          "914-11-04T04:13:13.44-0000","1002-04-03T14:15:03.0012-0300"]]]
+        self._dates2 = [
+            [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+             ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"]],
+                        [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+                          "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+                         ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]],
+                        [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+                         ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+                          "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
 
-        self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]  for e2 in range(10)] for i in range(3)]
+        self._pco1 = [[[self.__rnd.randint(0, 100) for e1 in range(8)]
+                       for e2 in range(10)] for i in range(3)]
         self._fpco1 = [self._sc.nicePlot2D(20, 30, 5) for i in range(4)]
 
         self._bint = "int64" if IS64BIT else "int32"
@@ -114,8 +124,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._dbhost = None
         self._dbport = None
 
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         self._simps.setUp()
@@ -124,20 +133,17 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         print "SEED =", self.seed
         print "CHECKER SEED =", self._sc.seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         self._simps.tearDown()
 
-
-
-
-    ## opens writer
+    # opens writer
     # \param fname file name
     # \param xml XML settings
     # \param json JSON Record with client settings
     # \returns Tango Data Writer instance
-    def openWriter(self, fname, xml, json = None):
+    def openWriter(self, fname, xml, json=None):
         tdw = TangoDataWriter()
         tdw.fileName = fname
 #        tdw.numberOfThreads = 1
@@ -150,10 +156,10 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         tdw.openEntry()
         return tdw
 
-    ## closes writer
+    # closes writer
     # \param tdw Tango Data Writer instance
     # \param json JSON Record with client settings
-    def closeWriter(self, tdw, json = None):
+    def closeWriter(self, tdw, json=None):
         if json:
             tdw.jsonrecord = json
         tdw.closeEntry()
@@ -162,17 +168,17 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
     def setProp(self, rc, name, value):
         setattr(rc, name, value)
 
-    ## performs one record step
+    # performs one record step
     def record(self, tdw, string):
         tdw.record(string)
 
-    ## scanRecord test
+    # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoScalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        xml= """<definition>
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -320,11 +326,12 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._simps.dp.ScalarULong = abs(self._counter[0])
 
         decoder = '"decoders":{"MUTF8":"nxswriter.DecoderPool.UTF8decoder"}'
-        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+        tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         steps = min(len(self._counter), len(self._fcounter), len(self._bools))
         for i in range(steps):
-            self._simps.dp.ScalarBoolean = Types.Converters.toBool(self._bools[i])
+            self._simps.dp.ScalarBoolean = Types.Converters.toBool(
+                self._bools[i])
             self._simps.dp.ScalarUChar = abs(self._counter[i])
             self._simps.dp.ScalarShort = self._counter[i]
             self._simps.dp.ScalarUShort = abs(self._counter[i])
@@ -334,8 +341,8 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             self._simps.dp.ScalarFloat = self._fcounter[i]
             self._simps.dp.ScalarDouble = self._dcounter[i]
             self._simps.dp.ScalarString = self._bools[i]
-            self._simps.dp.ScalarULong64 =long(abs(self._counter[i]))
-            self.record(tdw,'{}')
+            self._simps.dp.ScalarULong64 = long(abs(self._counter[i]))
+            self.record(tdw, '{}')
 #            self._fcounter[i] = self._simps.dp.ScalarFloat
 #            self._dcounter[i] = self._simps.dp.ScalarDouble
 
@@ -344,47 +351,55 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         # check the created file
 
         FileWriter.writer = H5PYWriter
-        f = FileWriter.open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 16)
-        self._sc.checkScalarField(det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
-        self._sc.checkScalarField(det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
-        self._sc.checkScalarField(det, "ScalarShort", "int16", "NX_INT16", self._counter)
-        self._sc.checkScalarField(det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
-        self._sc.checkScalarField(det, "ScalarLong", "int64", "NX_INT", self._counter)
-        self._sc.checkScalarField(det, "ScalarULong","uint64" , "NX_UINT", [abs(c) for c in self._counter])
-        self._sc.checkScalarField(det, "ScalarLong64", "int64", "NX_INT64", self._counter)
-        self._sc.checkScalarField(det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
-        self._sc.checkScalarField(det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error = 1e-6)
-        self._sc.checkScalarField(det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error = 1e-14)
-        self._sc.checkScalarField(det, "ScalarString", "string", "NX_CHAR", self._bools)
-        self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", [u'Hello UTF8! Pr\xf3ba \u6d4b'  for c in self._bools])
-        self._sc.checkScalarField(det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", [u'Hello UTF8! Pr\xf3ba \u6d4b'  for c in self._bools])
-        self._sc.checkScalarField(det, "ScalarState", "string", "NX_CHAR", ["ON"  for c in self._bools])
+        f = FileWriter.open_file(fname, readonly=True)
+        det = self._sc.checkFieldTree(f, fname, 16)
+        self._sc.checkScalarField(
+            det, "ScalarBoolean", "bool", "NX_BOOLEAN", self._bools)
+        self._sc.checkScalarField(
+            det, "ScalarUChar", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(
+            det, "ScalarShort", "int16", "NX_INT16", self._counter)
+        self._sc.checkScalarField(
+            det, "ScalarUShort", "uint16", "NX_UINT16", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(
+            det, "ScalarLong", "int64", "NX_INT", self._counter)
+        self._sc.checkScalarField(
+            det, "ScalarULong", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(
+            det, "ScalarLong64", "int64", "NX_INT64", self._counter)
+        self._sc.checkScalarField(
+            det, "ScalarULong64", "uint64", "NX_UINT64", [abs(c) for c in self._counter])
+        self._sc.checkScalarField(
+            det, "ScalarFloat", "float32", "NX_FLOAT32", self._fcounter, error=1e-6)
+        self._sc.checkScalarField(
+            det, "ScalarDouble", "float64", "NX_FLOAT64", self._dcounter, error=1e-14)
+        self._sc.checkScalarField(
+            det, "ScalarString", "string", "NX_CHAR", self._bools)
+        self._sc.checkScalarField(det, "ScalarEncoded", "string", "NX_CHAR", [
+                                  u'Hello UTF8! Pr\xf3ba \u6d4b' for c in self._bools])
+        self._sc.checkScalarField(det, "ScalarEncoded_MUTF8", "string", "NX_CHAR", [
+                                  u'Hello UTF8! Pr\xf3ba \u6d4b' for c in self._bools])
+        self._sc.checkScalarField(
+            det, "ScalarState", "string", "NX_CHAR", ["ON" for c in self._bools])
 
         # writing encoded attributes not supported for PyTango 7.2.3
 
-        self._sc.checkSingleScalarField(det, "InitScalarULong", "uint32", "NX_UINT32", abs(self._counter[0]))
-        self._sc.checkSingleScalarField(det, "FinalScalarDouble", "float64", "NX_FLOAT64",
-                                        self._dcounter[steps-1], error = 1e-14)
-
+        self._sc.checkSingleScalarField(
+            det, "InitScalarULong", "uint32", "NX_UINT32", abs(self._counter[0]))
+        self._sc.checkSingleScalarField(
+            det, "FinalScalarDouble", "float64", "NX_FLOAT64",
+                                        self._dcounter[steps - 1], error=1e-14)
 
         f.close()
         os.remove(fname)
 
-
-
-
-
-
-
-
-    ## scanRecord test
+    # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        xml= """<definition>
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -536,14 +551,14 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         decoder = '"decoders":{"MUTF8":"nxswriter.DecoderPool.UTF8decoder"}'
 
-        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
-
+        tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         steps = min(len(self._counter), len(self._fcounter), len(self._bools))
         for i in range(steps):
-            if i%2 :
+            if i % 2:
                 self._simps.setUp()
-                self._simps.dp.ScalarBoolean = Types.Converters.toBool(self._bools[i])
+                self._simps.dp.ScalarBoolean = Types.Converters.toBool(
+                    self._bools[i])
                 self._simps.dp.ScalarUChar = abs(self._counter[i])
                 self._simps.dp.ScalarShort = self._counter[i]
                 self._simps.dp.ScalarUShort = abs(self._counter[i])
@@ -553,147 +568,155 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
                 self._simps.dp.ScalarFloat = self._fcounter[i]
                 self._simps.dp.ScalarDouble = self._dcounter[i]
                 self._simps.dp.ScalarString = self._bools[i]
-                self._simps.dp.ScalarULong64 =long(abs(self._counter[i]))
+                self._simps.dp.ScalarULong64 = long(abs(self._counter[i]))
             else:
                 self._simps.tearDown()
 
-            self.record(tdw,'{}')
+            self.record(tdw, '{}')
 
         self._simps.tearDown()
         self.closeWriter(tdw)
         self._simps.setUp()
         # check the created file
 
-
         FileWriter.writer = H5PYWriter
-        f = FileWriter.open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 16)
+        f = FileWriter.open_file(fname, readonly=True)
+        det = self._sc.checkFieldTree(f, fname, 16)
         self._sc.checkScalarField(
             det, "ScalarBoolean", "bool", "NX_BOOLEAN",
-            [(Types.Converters.toBool(self._bools[i]) if i%2 else False) for  i in range(steps)],
-            attrs = {"type":"NX_BOOLEAN","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(Types.Converters.toBool(self._bools[i]) if i % 2 else False)
+             for i in range(steps)],
+            attrs={
+                "type": "NX_BOOLEAN", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarUChar", "uint8", "NX_UINT8",
-            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint8')).max) for  i in range(steps)],
-            attrs = {"type":"NX_UINT8","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'uint8')).max)
+             for i in range(steps)],
+            attrs={"type": "NX_UINT8", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarShort", "int16", "NX_INT16",
-            [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int16')).max) for  i in range(steps)],
-            attrs = {"type":"NX_INT16","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(self._counter[i] if i % 2 else numpy.iinfo(getattr(numpy, 'int16')).max)
+             for i in range(steps)],
+            attrs={"type": "NX_INT16", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarUShort", "uint16", "NX_UINT16",
-            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'uint16')).max) for  i in range(steps)],
-            attrs = {"type":"NX_UINT16","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'uint16')).max)
+             for i in range(steps)],
+            attrs={
+                "type": "NX_UINT16", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarLong", "int64", "NX_INT",
-            [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
-            attrs = {"type":"NX_INT","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(self._counter[i] if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+             for i in range(steps)],
+            attrs={"type": "NX_INT", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarULong", "uint64", "NX_UINT",
-            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
-            attrs = {"type":"NX_UINT","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+             for i in range(steps)],
+            attrs={"type": "NX_UINT", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarLong64", "int64", "NX_INT64",
-            [(self._counter[i] if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
-            attrs = {"type":"NX_INT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": None, "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(self._counter[i] if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+             for i in range(steps)],
+            attrs={"type": "NX_INT64", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": None, "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarULong64", "uint64", "NX_UINT",
-            [(abs(self._counter[i]) if i%2 else numpy.iinfo(getattr(numpy, 'int64')).max) for  i in range(steps)],
-            attrs = {"type":"NX_UINT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(abs(self._counter[i]) if i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max)
+             for i in range(steps)],
+            attrs={
+                "type": "NX_UINT64", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkScalarField(
             det, "ScalarFloat", "float32", "NX_FLOAT32",
-            [(self._fcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float32')).max) for  i in range(steps)],
-            attrs = {"type":"NX_FLOAT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} ,
-            error = 1e-6)
+            [(self._fcounter[i] if i % 2 else numpy.finfo(getattr(numpy, 'float32')).max)
+             for i in range(steps)],
+            attrs={
+                "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None},
+            error=1e-6)
 
         self._sc.checkScalarField(
             det, "ScalarDouble", "float64", "NX_FLOAT64",
-            [(self._dcounter[i] if i%2 else numpy.finfo(getattr(numpy, 'float64')).max) for  i in range(steps)],
-            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} ,
-            error = 1e-14)
-
+            [(self._dcounter[i] if i % 2 else numpy.finfo(getattr(numpy, 'float64')).max)
+             for i in range(steps)],
+            attrs={
+                "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None},
+            error=1e-14)
 
         self._sc.checkScalarField(
             det, "ScalarString", "string", "NX_CHAR",
-            [(self._bools[i] if i%2 else '') for  i in range(steps)],
-            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [(self._bools[i] if i % 2 else '') for i in range(steps)],
+            attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkScalarField(
             det, "ScalarEncoded", "string", "NX_CHAR",
-            [(u'Hello UTF8! Pr\xf3ba \u6d4b' if i%2 else '') for  i in range(steps)],
-            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [(u'Hello UTF8! Pr\xf3ba \u6d4b' if i % 2 else '')
+             for i in range(steps)],
+            attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkScalarField(
             det, "ScalarEncoded_MUTF8", "string", "NX_CHAR",
-            [(u'Hello UTF8! Pr\xf3ba \u6d4b' if i%2 else '') for  i in range(steps)],
-            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
-
+            [(u'Hello UTF8! Pr\xf3ba \u6d4b' if i % 2 else '')
+             for i in range(steps)],
+            attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkScalarField(
             det, "ScalarState", "string", "NX_CHAR",
-            [("ON" if i%2 else '') for  i in range(steps)],
-            attrs = {"type":"NX_CHAR","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
-
-
-
+            [("ON" if i % 2 else '') for i in range(steps)],
+            attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         # writing encoded attributes not supported for PyTango 7.2.3
         self._sc.checkSingleScalarField(
             det, "InitScalarULong", "uint32", "NX_UINT32",
             numpy.iinfo(getattr(numpy, 'uint32')).max,
-            attrs = {"type":"NX_UINT32","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            attrs={
+                "type": "NX_UINT32", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "FinalScalarDouble", "float64", "NX_FLOAT64",
             numpy.finfo(getattr(numpy, 'float64')).max,
-            attrs = {"type":"NX_FLOAT64","units":"m","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
-
-
+            attrs={
+                "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
 
         f.close()
         os.remove(fname)
 
-
-
-
-    ## scanRecord test
+    # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        xml= """<definition>
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -857,15 +880,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 </definition>
 """
 
-
-
-
-
-
-
-
         xml = xml.replace("localhost", self._dbhost)
-
 
         self._simps.dp.SpectrumBoolean = self._logical[0]
         self._simps.dp.SpectrumUChar = self._mca2[0]
@@ -880,16 +895,17 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._simps.dp.SpectrumString = self._dates[0]
 
         decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
-        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+        tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
-        steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
+        steps = min(len(self._logical), len(
+            self._mca1), len(self._mca2), len(self._dates))
         self._simps.tearDown()
         for i in range(steps):
-            if not i%2 :
+            if not i % 2:
                 self._simps.setUp()
 
                 self._simps.dp.SpectrumBoolean = self._logical[i]
@@ -907,8 +923,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             else:
                 self._simps.tearDown()
 
-
-            self.record(tdw,'{}')
+            self.record(tdw, '{}')
 
         self._simps.tearDown()
         self.closeWriter(tdw)
@@ -916,160 +931,147 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         # check the created file
 
-
         FileWriter.writer = H5PYWriter
-        f = FileWriter.open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
+        f = FileWriter.open_file(fname, readonly=True)
+        det = self._sc.checkFieldTree(f, fname, 15)
         self._sc.checkSpectrumField(
             det, "SpectrumBoolean", "bool", "NX_BOOLEAN",
-            [(self._logical[i] if not i%2 else [False]*len(self._logical[i])) for  i in range(steps)],
-            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
+            [(self._logical[i] if not i % 2 else [False] * len(self._logical[i]))
+             for i in range(steps)],
+            attrs={
+                "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "SpectrumUChar", "uint8", "NX_UINT8",
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._mca2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
+            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._mca2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumShort", "int16", "NX_INT16",
-            [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._mca1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
+            [(self._mca1[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int16')).max] * len(self._mca1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT16", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
             grows=3)
         self._sc.checkSpectrumField(
             det, "SpectrumUShort", "uint16", "NX_UINT16",
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._mca2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
+            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'uint16')).max] * len(self._mca2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT16", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
             grows=2)
-
 
         self._sc.checkSpectrumField(
             det, "SpectrumLong", "int32", "NX_INT32",
-            [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [(self._mca1[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._mca1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "SpectrumULong", "uint32", "NX_UINT32",
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._mca2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
+            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'uint32')).max] * len(self._mca2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
             grows=1)
-
-
 
         self._sc.checkSpectrumField(
             det, "SpectrumLong64", "int64", "NX_INT64",
-            [(self._mca1[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
+            [(self._mca1[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._mca1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
             grows=2)
         self._sc.checkSpectrumField(
             det, "SpectrumULong64", "uint64", "NX_UINT64",
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
+            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._mca2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
             grows=2)
-
-
 
         self._sc.checkSpectrumField(
             det, "SpectrumFloat", "float32", "NX_FLOAT32",
-            [(self._fmca1[i] if not i%2 else  [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+            [(self._fmca1[i] if not i % 2 else [numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fmca1[i]))
+             for i in range(steps)],
+            attrs={
+                "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None},
-            grows=0, error = 1e-6)
+            grows=0, error=1e-6)
 
         self._sc.checkSpectrumField(
             det, "SpectrumDouble", "float64", "NX_FLOAT64",
-            [(self._fmca1[i] if not i%2 else  [numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fmca1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+            [(self._fmca1[i] if not i % 2 else [numpy.finfo(getattr(numpy, 'float64')).max] * len(self._fmca1[i]))
+             for i in range(steps)],
+            attrs={
+                "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None},
-            grows=1, error = 1e-14)
-
-
-
+            grows=1, error=1e-14)
 
         self._sc.checkSpectrumField(
             det, "SpectrumString", "string", "NX_CHAR",
-            [(self._dates[i] if not i%2 else  ['']*len(self._dates[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [(self._dates[i] if not i % 2 else [''] * len(self._dates[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         # writing encoded attributes not supported for PyTango 7.2.3
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded", "int32", "NX_INT32",
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._mca2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkSpectrumField(
             det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32",
-            [(self._mca2[i] if not i%2 else  [numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._mca2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [(self._mca2[i] if not i % 2 else [numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._mca2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkSingleSpectrumField(
             det, "InitSpectrumLong64", "int64", "NX_INT64",
-            [numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._mca1[0]),
-            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
+            [numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._mca1[0]),
+            attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkSingleSpectrumField(
             det, "FinalSpectrumFloat", "float32", "NX_FLOAT32",
-            [numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fmca1[0]),
-            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+            [numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fmca1[0]),
+            attrs={
+                "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None},
-            error =1.0e-06)
-
-
-
-
-
+            error=1.0e-06)
 
         f.close()
         os.remove(fname)
 
-
-
-
-
-    ## scanRecord test
+    # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        xml= """<definition>
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -1231,11 +1233,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 </definition>
 """
 
-
         xml = xml.replace("localhost", self._dbhost)
-
-
-
 
         self._simps.dp.SpectrumBoolean = self._logical[0]
         self._simps.dp.SpectrumUChar = self._mca2[0]
@@ -1250,13 +1248,14 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         self._simps.dp.SpectrumString = self._dates[0]
 
         decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
-        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+        tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
-        steps = min(len(self._logical), len(self._mca1), len(self._mca2), len(self._dates))
+        steps = min(len(self._logical), len(
+            self._mca1), len(self._mca2), len(self._dates))
         for i in range(steps):
             self._simps.dp.SpectrumBoolean = self._logical[i]
             self._simps.dp.SpectrumUChar = self._mca2[i]
@@ -1270,65 +1269,77 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             self._simps.dp.SpectrumDouble = self._fmca1[i]
             self._simps.dp.SpectrumString = self._dates[i]
 
-            self.record(tdw,'{}')
+            self.record(tdw, '{}')
 
         self.closeWriter(tdw)
 
         # check the created file
 
-
         FileWriter.writer = H5PYWriter
-        f = FileWriter.open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
-        self._sc.checkSpectrumField(det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps],
-                                    grows = 2)
-        self._sc.checkSpectrumField(det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps],
-                                    grows = 3)
-        self._sc.checkSpectrumField(det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps],
-                                    grows = 2)
-        self._sc.checkSpectrumField(det, "SpectrumLong", "int32", "NX_INT32", self._mca1[:steps])
-        self._sc.checkSpectrumField(det, "SpectrumULong", "uint32", "NX_UINT32", self._mca2[:steps],
-                                    grows = 1)
-        self._sc.checkSpectrumField(det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps],
-                                    grows = 2)
-        self._sc.checkSpectrumField(det, "SpectrumULong64", "uint64", "NX_UINT64", self._mca2[:steps],
-                                    grows = 2)
-        self._sc.checkSpectrumField(det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps],
-                                    error = 1e-6)
-        self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps],
-                                    grows = 1, error = 1e-14)
-        self._sc.checkSpectrumField(det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[:steps],
-                                    error = 1e-14)
+        f = FileWriter.open_file(fname, readonly=True)
+        det = self._sc.checkFieldTree(f, fname, 15)
+        self._sc.checkSpectrumField(
+            det, "SpectrumBoolean", "bool", "NX_BOOLEAN", self._logical[:steps])
+        self._sc.checkSpectrumField(
+            det, "SpectrumUChar", "uint8", "NX_UINT8", self._mca2[:steps],
+                                    grows=2)
+        self._sc.checkSpectrumField(
+            det, "SpectrumShort", "int16", "NX_INT16", self._mca1[:steps],
+                                    grows=3)
+        self._sc.checkSpectrumField(
+            det, "SpectrumUShort", "uint16", "NX_UINT16", self._mca2[:steps],
+                                    grows=2)
+        self._sc.checkSpectrumField(
+            det, "SpectrumLong", "int32", "NX_INT32", self._mca1[:steps])
+        self._sc.checkSpectrumField(
+            det, "SpectrumULong", "uint32", "NX_UINT32", self._mca2[:steps],
+                                    grows=1)
+        self._sc.checkSpectrumField(
+            det, "SpectrumLong64", "int64", "NX_INT64", self._mca1[:steps],
+                                    grows=2)
+        self._sc.checkSpectrumField(
+            det, "SpectrumULong64", "uint64", "NX_UINT64", self._mca2[:steps],
+                                    grows=2)
+        self._sc.checkSpectrumField(
+            det, "SpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[:steps],
+                                    error=1e-6)
+        self._sc.checkSpectrumField(
+            det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[
+                :steps],
+                                    grows=1, error=1e-14)
+        self._sc.checkSpectrumField(
+            det, "SpectrumDouble", "float64", "NX_FLOAT64", self._fmca1[
+                :steps],
+                                    error=1e-14)
 
-        self._sc.checkSpectrumField(det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
+        self._sc.checkSpectrumField(
+            det, "SpectrumString", "string", "NX_CHAR", self._dates[:steps])
         # writing encoded attributes not supported for PyTango 7.2.3
 
-        self._sc.checkSpectrumField(det, "SpectrumEncoded", "int32", "NX_INT32", self._mca2[:steps])
+        self._sc.checkSpectrumField(
+            det, "SpectrumEncoded", "int32", "NX_INT32", self._mca2[:steps])
 
-        self._sc.checkSpectrumField(det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32", self._mca2[:steps])
+        self._sc.checkSpectrumField(
+            det, "SpectrumEncoded_MUINT32", "int32", "NX_INT32", self._mca2[:steps])
 
-        self._sc.checkSingleSpectrumField(det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
+        self._sc.checkSingleSpectrumField(
+            det, "InitSpectrumLong64", "int64", "NX_INT64", self._mca1[0])
 
-        self._sc.checkSingleSpectrumField(det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[steps-1],
-                                          error =1.0e-06)
-
+        self._sc.checkSingleSpectrumField(
+            det, "FinalSpectrumFloat", "float32", "NX_FLOAT32", self._fmca1[
+                steps - 1],
+                                          error=1.0e-06)
 
         f.close()
         os.remove(fname)
 
-
-
-
-
-
-    ## scanRecord test
+    # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoImage(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        xml= """<definition>
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -1505,7 +1516,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 #        print self._fmca1[0]
 
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
-        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+        tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
@@ -1525,59 +1536,68 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             self._simps.dp.ImageDouble = self._fpco1[i]
             self._simps.dp.ImageString = self._dates2[i]
 
-            self.record(tdw,'{}')
+            self.record(tdw, '{}')
             pass
         self.closeWriter(tdw)
 
         # check the created file
 
-
         FileWriter.writer = H5PYWriter
-        f = FileWriter.open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
-        self._sc.checkImageField(det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
-        self._sc.checkImageField(det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows = 2)
-        self._sc.checkImageField(det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps],
-                                 grows = 3)
-        self._sc.checkImageField(det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps],
-                                 grows = 1)
-        self._sc.checkImageField(det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps],
-                                 grows = 2)
-        self._sc.checkImageField(det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps],
-                                 grows = 3)
-        self._sc.checkImageField(det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps],
-                                 grows = 1)
-        self._sc.checkImageField(det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps],
-                                 grows = 2)
-        self._sc.checkImageField(det, "ImageFloat", "float32", "NX_FLOAT32", self._fpco1[:steps],
-                                 grows = 3, error = 1.0e-6)
-        self._sc.checkImageField(det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps],
-                                 grows = 1, error = 1.0e-14)
-        self._sc.checkImageField(det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
-        self._sc.checkImageField(det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows = 3)
+        f = FileWriter.open_file(fname, readonly=True)
+        det = self._sc.checkFieldTree(f, fname, 15)
+        self._sc.checkImageField(
+            det, "ImageBoolean", "bool", "NX_BOOLEAN", self._logical2[:steps])
+        self._sc.checkImageField(
+            det, "ImageUChar", "uint8", "NX_UINT8", self._pco1[:steps],
+                                 grows=2)
+        self._sc.checkImageField(
+            det, "ImageShort", "int16", "NX_INT16", self._pco1[:steps],
+                                 grows=3)
+        self._sc.checkImageField(
+            det, "ImageUShort", "uint16", "NX_UINT16", self._pco1[:steps],
+                                 grows=1)
+        self._sc.checkImageField(
+            det, "ImageLong", "int32", "NX_INT32", self._pco1[:steps],
+                                 grows=2)
+        self._sc.checkImageField(
+            det, "ImageULong", "uint32", "NX_UINT32", self._pco1[:steps],
+                                 grows=3)
+        self._sc.checkImageField(
+            det, "ImageLong64", "int64", "NX_INT64", self._pco1[:steps],
+                                 grows=1)
+        self._sc.checkImageField(
+            det, "ImageULong64", "uint64", "NX_UINT64", self._pco1[:steps],
+                                 grows=2)
+        self._sc.checkImageField(
+            det, "ImageFloat", "float32", "NX_FLOAT32", self._fpco1[:steps],
+                                 grows=3, error=1.0e-6)
+        self._sc.checkImageField(
+            det, "ImageDouble", "float64", "NX_FLOAT64", self._fpco1[:steps],
+                                 grows=1, error=1.0e-14)
+        self._sc.checkImageField(
+            det, "ImageString", "string", "NX_CHAR", self._dates2[:steps])
+        self._sc.checkImageField(
+            det, "ImageEncoded", "uint8", "NX_UINT8", self._pco1[:steps],
+                                 grows=3)
 
-        self._sc.checkImageField(det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
-                                 grows = 3)
+        self._sc.checkImageField(
+            det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8", self._pco1[:steps],
+                                 grows=3)
 
-        self._sc.checkSingleImageField(det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
-        self._sc.checkSingleImageField(det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps-1], error = 1.0e-6)
+        self._sc.checkSingleImageField(
+            det, "InitImageULong64", "uint64", "NX_UINT64", self._pco1[0])
+        self._sc.checkSingleImageField(
+            det, "FinalImageFloat", "float32", "NX_FLOAT32", self._fpco1[steps - 1], error=1.0e-6)
         f.close()
         os.remove(fname)
 
-
-
-
-
-
-    ## scanRecord test
+    # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_tangoImage_canfail(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        xml= """<definition>
+        fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        xml = """<definition>
   <group type="NXentry" name="entry1">
     <group type="NXinstrument" name="instrument">
       <group type="NXdetector" name="detector">
@@ -1757,7 +1777,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 #        print self._fmca1[0]
 
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
-        tdw = self.openWriter(fname, xml, json = '{ '+ decoder +' }' )
+        tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
         import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
@@ -1766,7 +1786,7 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         steps = min(len(self._pco1), len(self._logical2), len(self._fpco1))
         self._simps.tearDown()
         for i in range(steps):
-            if not i%2 :
+            if not i % 2:
                 self._simps.setUp()
                 self._simps.dp.ImageBoolean = self._logical2[i]
                 self._simps.dp.ImageUChar = self._pco1[i]
@@ -1780,9 +1800,9 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
                 self._simps.dp.ImageDouble = self._fpco1[i]
                 self._simps.dp.ImageString = self._dates2[i]
             else:
-                 self._simps.tearDown()
+                self._simps.tearDown()
 
-            self.record(tdw,'{}')
+            self.record(tdw, '{}')
 
         self._simps.tearDown()
         self.closeWriter(tdw)
@@ -1790,158 +1810,153 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
         # check the created file
 
-
         FileWriter.writer = H5PYWriter
-        f = FileWriter.open_file(fname,readonly=True)
-        det = self._sc.checkFieldTree(f, fname , 15)
+        f = FileWriter.open_file(fname, readonly=True)
+        det = self._sc.checkFieldTree(f, fname, 15)
         self._sc.checkImageField(
             det, "ImageBoolean", "bool", "NX_BOOLEAN",
-            [(self._logical2[i] if not i%2 else [[False]*len(self._logical2[i][0])]*len(self._logical2[i])) for  i in range(steps)],
-            attrs = {"type":"NX_BOOLEAN","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None} )
-
+            [(self._logical2[i] if not i % 2 else [[False] * len(self._logical2[i][0])] * len(self._logical2[i]))
+             for i in range(steps)],
+            attrs={
+                "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                     "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(
             det, "ImageUChar", "uint8", "NX_UINT8",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 2 )
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=2)
 
         self._sc.checkImageField(
             det, "ImageShort", "int16", "NX_INT16",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'int16')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 3 )
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'int16')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT16", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=3)
         self._sc.checkImageField(
             det, "ImageUShort", "uint16", "NX_UINT16",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'uint16')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT16","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 1 )
-
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'uint16')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT16", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=1)
 
         self._sc.checkImageField(
             det, "ImageLong", "int32", "NX_INT32",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'int32')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 2 )
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'int32')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=2)
         self._sc.checkImageField(
             det, "ImageULong", "uint32", "NX_UINT32",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'uint32')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 3 )
-
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'uint32')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=3)
 
         self._sc.checkImageField(
             det, "ImageLong64", "int64", "NX_INT64",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_INT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 1 )
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=1)
         self._sc.checkImageField(
             det, "ImageULong64", "uint64", "NX_UINT64",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 2 )
-
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=2)
 
         self._sc.checkImageField(
             det, "ImageFloat", "float32", "NX_FLOAT32",
-            [(self._fpco1[i] if not i%2 else
-              [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+            [(self._fpco1[i] if not i % 2 else
+              [[numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fpco1[i][0])] * len(self._fpco1[i]))
+             for i in range(steps)],
+            attrs={
+                "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None},
-            grows = 3, error = 1.0e-6 )
+            grows=3, error=1.0e-6)
         self._sc.checkImageField(
             det, "ImageDouble", "float64", "NX_FLOAT64",
-            [(self._fpco1[i] if not i%2 else
-              [[numpy.finfo(getattr(numpy, 'float64')).max]*len(self._fpco1[i][0])]*len(self._fpco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_FLOAT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
+            [(self._fpco1[i] if not i % 2 else
+              [[numpy.finfo(getattr(numpy, 'float64')).max] * len(self._fpco1[i][0])] * len(self._fpco1[i]))
+             for i in range(steps)],
+            attrs={
+                "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None},
-            grows = 1, error = 1.0e-14 )
-
-
+            grows=1, error=1.0e-14)
 
         self._sc.checkImageField(
             det, "ImageString", "string", "NX_CHAR",
-            [(self._dates2[i] if not i%2 else
-              [['']*len(self._dates2[i][0])]*len(self._dates2[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_CHAR","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None})
-
+            [(self._dates2[i] if not i % 2 else
+              [[''] * len(self._dates2[i][0])] * len(self._dates2[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(
             det, "ImageEncoded", "uint8", "NX_UINT8",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 3 )
-
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=3)
 
         self._sc.checkImageField(
             det, "ImageEncoded_MLIMA", "uint8", "NX_UINT8",
-            [(self._pco1[i] if not i%2 else
-              [[numpy.iinfo(getattr(numpy, 'uint8')).max]*len(self._pco1[i][0])]*len(self._pco1[i]))
-             for  i in range(steps)],
-            attrs = {"type":"NX_UINT8","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail":"FAILED",
-                     "nexdatas_canfail_error": None},
-            grows = 3 )
+            [(self._pco1[i] if not i % 2 else
+              [[numpy.iinfo(getattr(numpy, 'uint8')).max] * len(self._pco1[i][0])] * len(self._pco1[i]))
+             for i in range(steps)],
+            attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
+                   "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None},
+            grows=3)
 
         self._sc.checkSingleImageField(
             det, "InitImageULong64", "uint64", "NX_UINT64",
-             [[numpy.iinfo(getattr(numpy, 'int64')).max]*len(self._pco1[0][0])]*len(self._pco1[0]) ,
-            attrs = {"type":"NX_UINT64","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail":"FAILED",
+             [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(
+                 self._pco1[0][0])] * len(self._pco1[0]),
+            attrs={"type": "NX_UINT64", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "FinalImageFloat", "float32", "NX_FLOAT32",
-            [[numpy.finfo(getattr(numpy, 'float32')).max]*len(self._fpco1[0][0])]*len(self._fpco1[0]),
-            attrs = {"type":"NX_FLOAT32","units":"","nexdatas_source":None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail":"FAILED",
+            [[numpy.finfo(getattr(numpy, 'float32')).max] * len(
+                self._fpco1[0][0])] * len(self._fpco1[0]),
+            attrs={
+                "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
+                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                      "nexdatas_canfail_error": None})
-
-
 
         f.close()
         os.remove(fname)
-
 
 
 if __name__ == '__main__':

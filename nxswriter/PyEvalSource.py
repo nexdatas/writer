@@ -32,11 +32,13 @@ from .Errors import DataSourceSetupError
 
 
 class Variables(object):
+
     """ Variables for PyEval datasource
     """
 
 
 class PyEvalSource(DataSource):
+
     """ Python Eval data source
     """
 
@@ -145,7 +147,7 @@ class PyEvalSource(DataSource):
         else:
             self.__commonblock = False
 
-    ##
+    #
     def __str__(self):
         """ self-description
 

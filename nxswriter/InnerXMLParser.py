@@ -23,6 +23,7 @@ from xml import sax
 
 
 class InnerXMLHandler(sax.ContentHandler):
+
     """ Inner SAX2 parser
     """
 

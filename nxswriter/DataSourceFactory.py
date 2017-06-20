@@ -25,8 +25,10 @@ from .Element import Element
 
 
 class DataSourceFactory(Element):
+
     """ Data source creator
     """
+
     def __init__(self, attrs, last):
         """ constructor
 

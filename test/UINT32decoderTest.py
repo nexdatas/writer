@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file UINT32decoderTest.py
+# \package test nexdatas
+# \file UINT32decoderTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -32,67 +32,61 @@ import time
 from nxswriter.DecoderPool import UINT32decoder
 
 
-
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-
-
-## test fixture
+# test fixture
 class UINT32decoderTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
         self.__name = 'UINT32'
 
-        self.__data = ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')
+        self.__data = (
+            'INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')
         self.__dtype = "uint32"
         self.__res = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
 
-
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
-         
+            self.__seed = long(time.time() * 256)
+
         self.__rnd = random.Random(self.__seed)
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print "\nsetting up..."
+        print "SEED =", self.__seed
 
-
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
@@ -102,9 +96,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
 
-
-
-    ## load method test
+    # load method test
     # \brief It tests default settings
     def test_load(self):
         fun = sys._getframe().f_code.co_name
@@ -115,15 +107,12 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
 
-        self.assertEqual(dc.load(self.__data),None)
+        self.assertEqual(dc.load(self.__data), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
 
-
-
-
-    ## shape method test
+    # shape method test
     # \brief It tests default settings
     def test_shape(self):
         fun = sys._getframe().f_code.co_name
@@ -138,20 +127,16 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
 
-
-        self.assertEqual(dc.load(self.__data),None)
+        self.assertEqual(dc.load(self.__data), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
-        self.assertEqual(dc.shape(), [len(self.__data[1])/4,0])
+        self.assertEqual(dc.shape(), [len(self.__data[1]) / 4, 0])
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
 
-
-
-
-    ## decode method test
+    # decode method test
     # \brief It tests default settings
     def test_decode_default(self):
         fun = sys._getframe().f_code.co_name
@@ -165,7 +150,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
 
-        self.assertEqual(dc.decode(),None)
+        self.assertEqual(dc.decode(), None)
 
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -175,34 +160,30 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
 
-        self.assertEqual(dc.load(self.__data),None)
+        self.assertEqual(dc.load(self.__data), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
-        self.assertEqual(dc.shape(), [len(self.__data[1])/4,0])
+        self.assertEqual(dc.shape(), [len(self.__data[1]) / 4, 0])
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
 
-
-        
         res = dc.decode()
-        
-        self.assertEqual(len(res),len(self.__res))
+
+        self.assertEqual(len(res), len(self.__res))
         for i in range(len(res)):
-            self.assertEqual(res[i],self.__res[i])
+            self.assertEqual(res[i], self.__res[i])
 
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
-        self.assertEqual(dc.shape(), [len(self.__data[1])/4,0])
+        self.assertEqual(dc.shape(), [len(self.__data[1]) / 4, 0])
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
 
-
-
-    ## decode method test
+    # decode method test
     # \brief It tests default settings
     def test_load_wrong_len(self):
         fun = sys._getframe().f_code.co_name
@@ -211,49 +192,43 @@ class UINT32decoderTest(unittest.TestCase):
 
         dc = UINT32decoder()
 
-        self.myAssertRaise(ValueError,dc.load,data)
+        self.myAssertRaise(ValueError, dc.load, data)
 
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
         self.assertEqual(dc.shape(), None)
 
-
-
-    ## decode method test
+    # decode method test
     # \brief It tests default settings
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        
 
-        arr =[[None,None]]*20
+        arr = [[None, None]] * 20
 
         for a in arr:
 
             mlen = self.__rnd.randint(1, 10)
             lt = [self.__rnd.randint(0, 0xffffffff) for c in range(mlen)]
             a[1] = numpy.array(lt, dtype=numpy.uint32)
-            a[0] = ('INT32',struct.pack('I'*mlen,*lt))
+            a[0] = ('INT32', struct.pack('I' * mlen, *lt))
 
             dc = UINT32decoder()
-            self.assertEqual(dc.load(a[0]),None)
-            
+            self.assertEqual(dc.load(a[0]), None)
+
             res = dc.decode()
-            
+
             self.assertEqual(dc.name, self.__name)
             self.assertEqual(dc.format, a[0][0])
             self.assertEqual(dc.dtype, self.__dtype)
-            self.assertEqual(dc.shape(), [mlen,0])
+            self.assertEqual(dc.shape(), [mlen, 0])
             self.assertEqual(dc.name, self.__name)
             self.assertEqual(dc.format, a[0][0])
             self.assertEqual(dc.dtype, self.__dtype)
-            self.assertEqual(len(res),len(a[1]))
+            self.assertEqual(len(res), len(a[1]))
             for i in range(len(res)):
-                self.assertEqual(res[i],a[1][i])
-                
-
-
+                self.assertEqual(res[i], a[1][i])
 
 
 if __name__ == '__main__':

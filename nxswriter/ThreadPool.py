@@ -27,6 +27,7 @@ from .Errors import ThreadError
 
 
 class ThreadPool(object):
+
     """ Pool with threads
     """
 

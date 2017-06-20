@@ -40,6 +40,7 @@ except ImportError as e:
 
 
 class ProxyTools(object):
+
     """ tools for proxy
     """
 
@@ -99,8 +100,10 @@ class ProxyTools(object):
 
 
 class TangoSource(DataSource):
+
     """ Tango data source
     """
+
     def __init__(self):
         """ constructor
 
@@ -351,6 +354,7 @@ class TangoSource(DataSource):
 
 
 class TgGroup(object):
+
     """ Group of tango devices
     """
 
@@ -516,6 +520,7 @@ class TgGroup(object):
 
 
 class TgDevice(object):
+
     """ tango device
     """
 
@@ -572,6 +577,7 @@ class TgDevice(object):
 
 
 class TgMember(object):
+
     """ tango device member
     """
 

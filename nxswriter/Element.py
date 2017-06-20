@@ -23,6 +23,7 @@ from . import Streams
 
 
 class Element(object):
+
     """ Tag element stored on our stack
     """
 

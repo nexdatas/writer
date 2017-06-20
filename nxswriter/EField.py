@@ -33,8 +33,10 @@ from . import FileWriter
 
 
 class EField(FElementWithAttr):
+
     """ field H5 tag element
     """
+
     def __init__(self, attrs, last):
         """ constructor
 
@@ -306,7 +308,7 @@ class EField(FElementWithAttr):
                 elif len(self.h5Object.shape) == 2:
                     self.h5Object[self.h5Object.shape[0] - 1, 0:len(arr)] = arr
                 elif len(arr) > 1:
-                    self.h5Object.grow(self.grows - 1, len(arr)-1)
+                    self.h5Object.grow(self.grows - 1, len(arr) - 1)
                     self.h5Object[self.h5Object.shape[0] - len(arr):
                                   (self.h5Object.shape[0])] = arr
                 else:
@@ -321,8 +323,8 @@ class EField(FElementWithAttr):
                     self.h5Object[self.h5Object.shape[0] - 1] = arr
                 elif hasattr(arr, "__iter__") and type(arr).__name__ != 'str' \
                         and len(arr) > 1:
-                    self.h5Object.grow(self.grows - 1, len(arr)-1)
-                    self.h5Object[self.h5Object.shape[0]-len(arr):
+                    self.h5Object.grow(self.grows - 1, len(arr) - 1)
+                    self.h5Object[self.h5Object.shape[0] - len(arr):
                                   self.h5Object.shape[0]] = arr
                 else:
                     Streams.error("Rank mismatch", std=False)
@@ -361,7 +363,7 @@ class EField(FElementWithAttr):
                 elif len(holder.shape) > 1 and holder.shape[1] == 1:
                     self.h5Object[self.h5Object.shape[0] - 1, :] = arr[:, 0]
                 elif len(holder.shape) > 1 and holder.shape[0] > 1:
-                    self.h5Object.grow(self.grows - 1, holder.shape[0]-1)
+                    self.h5Object.grow(self.grows - 1, holder.shape[0] - 1)
                     self.h5Object[self.h5Object.shape[0] - holder.shape[0]:
                                   self.h5Object.shape[0], :] = arr
                 else:

@@ -25,8 +25,10 @@ from . import Streams
 
 
 class EGroup(FElementWithAttr):
+
     """ group H5 tag element
     """
+
     def __init__(self, attrs, last):
         """ constructor
 

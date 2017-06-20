@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ThreadPoolTest.py
+# \package test nexdatas
+# \file ThreadPoolTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -34,161 +34,165 @@ from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Errors import ThreadError
 
 
-
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-## datasource
+# datasource
+
+
 class Source(object):
-    ## contructor
+    # contructor
+
     def __init__(self):
-        ## local json
+        # local json
         self.ljson = None
-        ## global json
+        # global json
         self.gjson = None
-    ## sets json string    
-    def setJSON(self,gjson,ljson=None):
+    # sets json string
+
+    def setJSON(self, gjson, ljson=None):
         self.ljson = ljson
         self.gjson = gjson
 
-## H5 object
+# H5 object
+
+
 class H5(object):
-    ## contructor
+    # contructor
+
     def __init__(self):
-        ## close flag
+        # close flag
         self.closed = False
-    
-    ## closing method    
+
+    # closing method
     def close(self):
         self.closed = True
-        
 
-## class job
+
+# class job
 class Job(object):
-    ## contructor
+    # contructor
+
     def __init__(self):
-        ## counter
+        # counter
         self.counter = 0
-        ## error
+        # error
         self.error = None
 
-    ## run method    
+    # run method
     def run(self):
         self.counter += 1
 
 
-## class job with error
+# class job with error
 class EJob(object):
-    ## contructor
+    # contructor
+
     def __init__(self):
-        ## counter
+        # counter
         self.counter = 0
-        ## error
+        # error
         self.error = None
-        ## message
-        self.message = ("Error","My Error")
-        ## canfail flag
+        # message
+        self.message = ("Error", "My Error")
+        # canfail flag
         self.canfail = None
-        ## markfail flag
+        # markfail flag
         self.markfail = 0
         self.error = None
 
-    ## run method    
+    # run method
     def run(self):
         self.counter += 1
         self.error = self.message
 
-
-
-    ## run method    
+    # run method
     def markFailed(self, error=None):
         self.markfail += 1
         self.error = error
 
-## class job with error
+# class job with error
+
+
 class SOJob(object):
-    ## contructor
+    # contructor
+
     def __init__(self):
-        ## counter
+        # counter
         self.counter = 0
-        ## error
+        # error
         self.error = None
-        ## message
-        self.message = ("Error","My Error")
-        ## datasource
+        # message
+        self.message = ("Error", "My Error")
+        # datasource
         self.source = Source()
-        ## datasource
+        # datasource
         self.h5Object = H5()
 
-    ## run method    
+    # run method
     def run(self):
         time.sleep(0.01)
         self.counter += 1
-        
 
 
-## job without run method
+# job without run method
 class WJob(object):
-    ## contructor
+    # contructor
+
     def __init__(self):
         pass
 
 
-
-
-## test fixture
+# test fixture
 class ThreadPoolTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-
         self._tfname = "field"
         self._tfname = "group"
-        self._fattrs = {"short_name":"test","units":"m" }
-
+        self._fattrs = {"short_name": "test", "units": "m"}
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
-         
+            self.__seed = long(time.time() * 256)  # use fractional seconds
+
         self.__rnd = random.Random(self.__seed)
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =",self.__seed 
+        print "\nsetting up..."
+        print "SEED =", self.__seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -196,10 +200,9 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numberOfThreads,nth)
+        self.assertEqual(el.numberOfThreads, nth)
 
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_run_append_join_wait(self):
         fun = sys._getframe().f_code.co_name
@@ -207,43 +210,40 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numberOfThreads,nth)
+        self.assertEqual(el.numberOfThreads, nth)
 
         jlist = [Job() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
-            self.assertEqual(el.append(jb),None)
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 1)
+            self.assertEqual(el.append(jb), None)
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
+        for c in jlist:
+            self.assertEqual(c.counter, 1)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 2)
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-        self.assertEqual(el.runAndWait(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 3)
+        for c in jlist:
+            self.assertEqual(c.counter, 2)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 4)
+        self.assertEqual(el.runAndWait(), None)
 
+        for c in jlist:
+            self.assertEqual(c.counter, 3)
 
-        self.assertEqual(el.runAndWait(),None)    
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-        for c in jlist:    
-            self.assertEqual(c.counter , 5)
+        for c in jlist:
+            self.assertEqual(c.counter, 4)
 
+        self.assertEqual(el.runAndWait(), None)
 
-    ## constructor test
+        for c in jlist:
+            self.assertEqual(c.counter, 5)
+
+    # constructor test
     # \brief It tests default settings
     def test_errors(self):
         fun = sys._getframe().f_code.co_name
@@ -251,38 +251,33 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numberOfThreads,nth)
+        self.assertEqual(el.numberOfThreads, nth)
 
         jlist = [EJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
-            self.assertEqual(el.append(jb),None)
+            self.assertEqual(el.append(jb), None)
 
-            
-        self.assertEqual(el.checkErrors(),None)    
+        self.assertEqual(el.checkErrors(), None)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 1)
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-        self.myAssertRaise(ThreadError,el.checkErrors)    
+        for c in jlist:
+            self.assertEqual(c.counter, 1)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 2)
+        self.myAssertRaise(ThreadError, el.checkErrors)
 
-        self.assertEqual(el.runAndWait(),None)    
-        
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-        self.myAssertRaise(ThreadError,el.checkErrors)    
+        for c in jlist:
+            self.assertEqual(c.counter, 2)
 
+        self.assertEqual(el.runAndWait(), None)
 
+        self.myAssertRaise(ThreadError, el.checkErrors)
 
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_errors_canfail(self):
         fun = sys._getframe().f_code.co_name
@@ -290,44 +285,39 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numberOfThreads,nth)
+        self.assertEqual(el.numberOfThreads, nth)
 
         jlist = [EJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
-            self.assertEqual(el.append(jb),None)
+            self.assertEqual(el.append(jb), None)
 
-            
-        self.assertEqual(el.checkErrors(),None)    
+        self.assertEqual(el.checkErrors(), None)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 1)
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-        self.myAssertRaise(ThreadError,el.checkErrors)    
+        for c in jlist:
+            self.assertEqual(c.counter, 1)
+
+        self.myAssertRaise(ThreadError, el.checkErrors)
 
         for jb in jlist:
-            self.assertEqual(jb.markfail,0)    
-            jb.canfail=True
+            self.assertEqual(jb.markfail, 0)
+            jb.canfail = True
 
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for c in jlist:    
-            self.assertEqual(c.counter , 2)
+        for c in jlist:
+            self.assertEqual(c.counter, 2)
 
-        self.assertEqual(el.runAndWait(),None)    
-        
+        self.assertEqual(el.runAndWait(), None)
 
         el.checkErrors()
         for jb in jlist:
-            self.assertEqual(jb.markfail,1)    
+            self.assertEqual(jb.markfail, 1)
 
-
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_setJSON(self):
         fun = sys._getframe().f_code.co_name
@@ -337,47 +327,41 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numberOfThreads,nth)
+        self.assertEqual(el.numberOfThreads, nth)
 
         jlist = [SOJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
-            self.assertEqual(el.append(jb),None)
+            self.assertEqual(el.append(jb), None)
 
-        self.assertEqual(el.setJSON(gjson),el)
+        self.assertEqual(el.setJSON(gjson), el)
         for jb in jlist:
-            self.assertEqual(jb.source.gjson,gjson)
-            self.assertEqual(jb.source.ljson,None)
+            self.assertEqual(jb.source.gjson, gjson)
+            self.assertEqual(jb.source.ljson, None)
 
-            
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
-        for jb in jlist:
-            self.assertEqual(jb.source.gjson,gjson)
-            self.assertEqual(jb.source.ljson,None)
-
-        for c in jlist:    
-            self.assertEqual(c.counter , 1)
-
-        self.assertEqual(el.setJSON(gjson,ljson),el)
-        for jb in jlist:
-            self.assertEqual(jb.source.gjson,gjson)
-            self.assertEqual(jb.source.ljson,ljson)
-
-
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
-        
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
         for jb in jlist:
-            self.assertEqual(jb.counter , 2)
-            self.assertEqual(jb.source.gjson,gjson)
-            self.assertEqual(jb.source.ljson,ljson)
+            self.assertEqual(jb.source.gjson, gjson)
+            self.assertEqual(jb.source.ljson, None)
 
+        for c in jlist:
+            self.assertEqual(c.counter, 1)
 
+        self.assertEqual(el.setJSON(gjson, ljson), el)
+        for jb in jlist:
+            self.assertEqual(jb.source.gjson, gjson)
+            self.assertEqual(jb.source.ljson, ljson)
 
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
-    ## constructor test
+        for jb in jlist:
+            self.assertEqual(jb.counter, 2)
+            self.assertEqual(jb.source.gjson, gjson)
+            self.assertEqual(jb.source.ljson, ljson)
+
+    # constructor test
     # \brief It tests default settings
     def test_close(self):
         fun = sys._getframe().f_code.co_name
@@ -387,29 +371,25 @@ class ThreadPoolTest(unittest.TestCase):
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
-        self.assertEqual(el.numberOfThreads,nth)
+        self.assertEqual(el.numberOfThreads, nth)
 
         jlist = [SOJob() for c in range(self.__rnd.randint(1, 20))]
         for jb in jlist:
-            self.assertEqual(el.append(jb),None)
+            self.assertEqual(el.append(jb), None)
 
         for jb in jlist:
             self.assertTrue(not jb.h5Object.closed)
 
-        self.assertEqual(el.run(),None)    
-        self.assertEqual(el.join(),None)    
+        self.assertEqual(el.run(), None)
+        self.assertEqual(el.join(), None)
 
         for jb in jlist:
             self.assertTrue(not jb.h5Object.closed)
 
-        self.assertEqual(el.close(),None)
-
+        self.assertEqual(el.close(), None)
 
         for jb in jlist:
             self.assertTrue(jb.h5Object.closed)
-            
-            
-        
 
 
 if __name__ == '__main__':

@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file DBaseSourceTest.py
+# \package test nexdatas
+# \file DBaseSourceTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -37,69 +37,62 @@ from nxswriter.DBaseSource import DBaseSource
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
+# test fixture
 class DBaseSourceTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
-         
+            self.__seed = long(time.time() * 256)  # use fractional seconds
+
         self.__rnd = random.Random(self.__seed)
 
-
-
-
-
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        # file handle
+        print "\nsetting up..."
+        print "SEED =", self.__seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        
-        
+
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.hostname, None)
@@ -113,9 +106,8 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.passwd, None)
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, None)
-        
 
-    ## __str__ test
+    # __str__ test
     # \brief It tests default settings
     def test_str_default(self):
         fun = sys._getframe().f_code.co_name
@@ -127,33 +119,31 @@ class DBaseSourceTest(unittest.TestCase):
 
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.__str__(), " %s DB %s with %s "  % (None,"",None))
+        self.assertEqual(
+            ds.__str__(), " %s DB %s with %s " % (None, "", None))
 
         ds = DBaseSource()
-        ds.dbtype = dbtype                 
+        ds.dbtype = dbtype
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), " %s DB %s with %s "
-                         % (dbtype,"",None))
-
+                         % (dbtype, "", None))
 
         ds = DBaseSource()
-        ds.dbtype = dbtype                 
-        ds.dbname = dbname                 
+        ds.dbtype = dbtype
+        ds.dbname = dbname
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), " %s DB %s with %s "
                          % (dbtype, dbname, None))
 
-
         ds = DBaseSource()
-        ds.dbtype = dbtype                 
-        ds.dbname = dbname                 
-        ds.query = query                 
+        ds.dbtype = dbtype
+        ds.dbname = dbname
+        ds.query = query
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), " %s DB %s with %s "
                          % (dbtype, dbname, query))
 
-
-    ## setup test
+    # setup test
     # \brief It tests default settings
     def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
@@ -171,12 +161,11 @@ class DBaseSourceTest(unittest.TestCase):
         mode = 'SYSDBAL'
         user = 'jkotan'
         passwd = 'secret'
-        mycnf  = '/etc/mysql/my.cnf'
-        
-        
+        mycnf = '/etc/mysql/my.cnf'
+
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource/>")
+        self.myAssertRaise(DataSourceSetupError, ds.setup, "<datasource/>")
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, None)
@@ -191,7 +180,8 @@ class DBaseSourceTest(unittest.TestCase):
 
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><query/></datasource>")
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup, "<datasource><query/></datasource>")
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, '')
@@ -204,11 +194,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, None)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.setup,
-                           "<datasource><query format='%s' /></datasource>" %format)
+                           "<datasource><query format='%s' /></datasource>" % format)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, '')
@@ -220,7 +209,6 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.passwd, None)
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
-
 
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -241,7 +229,7 @@ class DBaseSourceTest(unittest.TestCase):
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query></datasource>" % (format,query)),None)
+            ds.setup("<datasource><query format='%s'>%s</query></datasource>" % (format, query)), None)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -254,12 +242,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbtype='%s'>%s</database></datasource>" % (format,query,dbtypeO,dsn)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbtype='%s'>%s</database></datasource>" % (format, query, dbtypeO, dsn)), None)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -272,11 +258,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database/></datasource>" % (format,query)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database/></datasource>" % (format, query)), None)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -289,11 +274,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s'/></datasource>" % (format,query,dbname)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s'/></datasource>" % (format, query, dbname)), None)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -306,11 +290,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s'/></datasource>" % (format,query,dbname,dbtype)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s'/></datasource>" % (format, query, dbname, dbtype)), None)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -323,11 +306,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s'/></datasource>" % (format,query,dbname,dbtype,user)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s'/></datasource>" % (format, query, dbname, dbtype, user)), None)
         self.assertEqual(ds.hostname, None)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -340,11 +322,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s'/></datasource>" % (format,query,dbname,dbtype,user,passwd,hostname)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s'/></datasource>" % (format, query, dbname, dbtype, user, passwd, hostname)), None)
         self.assertEqual(ds.hostname, hostname)
         self.assertEqual(ds.port, None)
         self.assertEqual(ds.query, query)
@@ -360,7 +341,7 @@ class DBaseSourceTest(unittest.TestCase):
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s' port='%s'/></datasource>" % (format,query,dbname,dbtype,user,passwd,hostname,port)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s' port='%s'/></datasource>" % (format, query, dbname, dbtype, user, passwd, hostname, port)), None)
         self.assertEqual(ds.hostname, hostname)
         self.assertEqual(ds.port, port)
         self.assertEqual(ds.query, query)
@@ -373,11 +354,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
         self.assertEqual(ds.format, format)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s' port='%s' mycnf='%s'/></datasource>" % (format,query,dbname,dbtype,user,passwd,hostname,port,mycnf)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s' port='%s' mycnf='%s'/></datasource>" % (format, query, dbname, dbtype, user, passwd, hostname, port, mycnf)), None)
         self.assertEqual(ds.format, format)
         self.assertEqual(ds.query, query)
         self.assertEqual(ds.dbname, dbname)
@@ -390,11 +370,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.passwd, passwd)
         self.assertEqual(ds.mycnf, mycnf)
 
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s' port='%s' mycnf='%s'/></datasource>" % (format,query,dbname,dbtype,user,passwd,hostname,port,mycnf)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbname='%s' dbtype='%s' user='%s' passwd='%s' hostname='%s' port='%s' mycnf='%s'/></datasource>" % (format, query, dbname, dbtype, user, passwd, hostname, port, mycnf)), None)
         self.assertEqual(ds.format, format)
         self.assertEqual(ds.query, query)
         self.assertEqual(ds.dbname, dbname)
@@ -407,12 +386,10 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.passwd, passwd)
         self.assertEqual(ds.mycnf, mycnf)
 
-
-
         ds = DBaseSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><query format='%s'>%s</query><database dbtype='%s' user='%s' passwd='%s' mode='%s'>%s</database></datasource>" % (format,query,dbtypeO,user,passwd,mode,dsn)),None)
+            ds.setup("<datasource><query format='%s'>%s</query><database dbtype='%s' user='%s' passwd='%s' mode='%s'>%s</database></datasource>" % (format, query, dbtypeO, user, passwd, mode, dsn)), None)
         self.assertEqual(ds.format, format)
         self.assertEqual(ds.query, query)
         self.assertEqual(ds.dbname, None)
@@ -424,7 +401,6 @@ class DBaseSourceTest(unittest.TestCase):
         self.assertEqual(ds.user, user)
         self.assertEqual(ds.passwd, passwd)
         self.assertEqual(ds.mycnf, '/etc/my.cnf')
-
 
 
 if __name__ == '__main__':

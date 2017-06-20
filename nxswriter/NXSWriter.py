@@ -41,6 +41,7 @@ from .TangoDataWriter import TangoDataWriter as TDW
 
 
 class CommandThread(Thread):
+
     """ thread with server command
     """
 
@@ -98,6 +99,7 @@ class CommandThread(Thread):
 
 
 class NXSDataWriter(PyTango.Device_4Impl):
+
     """ Tango Server to store data in H5 files
 
     :brief: Device States Description:
@@ -765,6 +767,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
 
 
 class NXSDataWriterClass(PyTango.DeviceClass):
+
     """ NXSDataWriterClass class definition
     """
 

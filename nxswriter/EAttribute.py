@@ -29,6 +29,7 @@ from . import Streams
 
 
 class EAttribute(FElement):
+
     """ attribute tag element
     """
 

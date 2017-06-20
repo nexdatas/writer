@@ -29,6 +29,7 @@ from .Errors import XMLSyntaxError
 
 
 class TNObject(object):
+
     """ Type Name object
     """
 
@@ -85,6 +86,7 @@ class TNObject(object):
 
 
 class FetchNameHandler(sax.ContentHandler):
+
     """ SAX2 parser
     """
 

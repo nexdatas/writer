@@ -12,17 +12,18 @@ db = PyTango.Database()
 db.add_device(new_device_info_writer)
 db.add_server(new_device_info_writer.server, new_device_info_writer)
 
-#time.sleep(1)
+# time.sleep(1)
 
-psub = subprocess.Popen("./ST S1 &",stdout =  subprocess.PIPE, stderr =  subprocess.PIPE , shell= True)
-#psub = os.system("./ST S1 &")
-#time.sleep(0.3)
+psub = subprocess.Popen(
+    "./ST S1 &", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+# psub = os.system("./ST S1 &")
+# time.sleep(0.3)
 
-#time.sleep(10)
+# time.sleep(10)
 
-try: 
+try:
 #    dp = PyTango.DeviceProxy(new_device_info_writer.name)
-    
+
     found = False
     cnt = 0
     while not found and cnt < 100000:
@@ -33,12 +34,12 @@ try:
         #       print "STATE:",dp.state()
             if dp.state() == PyTango.DevState.ON:
                 found = True
-        except Exception,e:    
+        except Exception, e:
             print "WHAT:", e
             found = False
-            cnt +=1
-    print "STATE:",dp.state()
-        
+            cnt += 1
+    print "STATE:", dp.state()
+
 
 finally:
     print "tearing down ..."
@@ -46,10 +47,11 @@ finally:
     db.delete_server(new_device_info_writer.server)
     output = ""
     pipe = subprocess.Popen(
-        "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE , shell= True).stdout
+        "ps -ef | grep 'SimpleServer.py S1'", stdout=subprocess.PIPE, shell=True).stdout
 
     res = pipe.read().split("\n")
     for r in res:
         sr = r.split()
-        if len(sr)>2:
-            subprocess.call("kill -9 %s" % sr[1],stderr=subprocess.PIPE , shell= True)
+        if len(sr) > 2:
+            subprocess.call("kill -9 %s" %
+                            sr[1], stderr=subprocess.PIPE, shell=True)

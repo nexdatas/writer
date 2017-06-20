@@ -27,8 +27,10 @@ from .Errors import DataSourceSetupError
 
 
 class ClientSource(DataSource):
+
     """ Client data source
     """
+
     def __init__(self):
         """ constructor
 

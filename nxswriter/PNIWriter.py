@@ -83,6 +83,7 @@ def deflate_filter():
 
 
 class PNIFile(FileWriter.FTFile):
+
     """ file tree file
     """
 
@@ -155,6 +156,7 @@ class PNIFile(FileWriter.FTFile):
 
 
 class PNIGroup(FileWriter.FTGroup):
+
     """ file tree group
     """
 
@@ -325,8 +327,10 @@ class PNIGroup(FileWriter.FTGroup):
 
 
 class PNIField(FileWriter.FTField):
+
     """ file tree file
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -450,8 +454,10 @@ class PNIField(FileWriter.FTField):
 
 
 class PNILink(FileWriter.FTLink):
+
     """ file tree link
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -507,8 +513,10 @@ class PNILink(FileWriter.FTLink):
 
 
 class PNIDeflate(FileWriter.FTDeflate):
+
     """ file tree deflate
     """
+
     def __init__(self, h5object):
         """ constructor
 
@@ -557,8 +565,10 @@ class PNIDeflate(FileWriter.FTDeflate):
 
 
 class PNIAttributeManager(FileWriter.FTAttributeManager):
+
     """ file tree attribute
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -637,6 +647,7 @@ class PNIAttributeManager(FileWriter.FTAttributeManager):
 
 
 class PNIAttribute(FileWriter.FTAttribute):
+
     """ file tree attribute
     """
 

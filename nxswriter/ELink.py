@@ -30,6 +30,7 @@ from . import FileWriter
 
 
 class ELink(FElement):
+
     """ link H5 tag element
     """
 

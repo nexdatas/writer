@@ -24,9 +24,11 @@ from . import Streams
 
 
 class EStrategy(Element):
+
     """## strategy tag element
 
     """
+
     def __init__(self, attrs, last):
         """ constructor
 

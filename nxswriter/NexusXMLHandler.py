@@ -44,6 +44,7 @@ from .FetchNameHandler import TNObject
 
 
 class NexusXMLHandler(sax.ContentHandler):
+
     """ SAX2 parser
     """
 

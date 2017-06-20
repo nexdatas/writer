@@ -23,8 +23,10 @@ from .Types import NTP
 
 
 class DataSource(object):
+
     """ Data source
     """
+
     def __init__(self):
         """ constructor
 
