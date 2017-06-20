@@ -20,6 +20,7 @@
 """ labels to Tango Streams """
 
 import sys
+import threading
 
 #: (:class:`PyTango.log4tango.TangoStream`) Tango fatal log stream
 log_fatal = None
@@ -32,6 +33,26 @@ log_info = None
 #: (:class:`PyTango.log4tango.TangoStream`) Tango debug log stream
 log_debug = None
 
+streamlock = threading.Lock()
+
+def setstreams(server):
+    """ sets log streams
+
+    :param server: Tango server
+    :type server: :class:`PyTango.Device_4Impl`
+    """
+    with streamlock:
+        if hasattr(self.__server, "log_fatal"):
+            Streams.log_fatal = server.log_fatal
+        if hasattr(self.__server, "log_error"):
+            Streams.log_error = server.log_error
+        if hasattr(self.__server, "log_warn"):
+            Streams.log_warn = server.log_warn
+        if hasattr(self.__server, "log_info"):
+            Streams.log_info = server.log_info
+        if hasattr(self.__server, "log_debug"):
+            Streams.log_debug = server.log_debug
+    
 
 def fatal(message, std=True):
     """ writes fatal error message
@@ -46,7 +67,6 @@ def fatal(message, std=True):
         try:
             log_fatal.write(message + '\n')
         except:
-            # workaround for PyTango bug: #740
             sys.stderr.write(message + '\n')
     elif std:
         sys.stderr.write(message + '\n')
@@ -65,7 +85,6 @@ def error(message, std=True):
         try:
             log_error.write(message + '\n')
         except:
-            # workaround for PyTango bug: #740
             sys.stderr.write(message + '\n')
     elif std:
         sys.stderr.write(message + '\n')
@@ -84,7 +103,6 @@ def warn(message, std=True):
         try:
             log_warn.write(message + '\n')
         except:
-            # workaround for PyTango bug: #740
             sys.stderr.write(message + '\n')
     elif std:
         sys.stderr.write(message + '\n')
@@ -103,7 +121,6 @@ def info(message, std=True):
         try:
             log_info.write(message + '\n')
         except:
-            # workaround for PyTango bug: #740
             sys.stdout.write(message + '\n')
     elif std:
         sys.stdout.write(message + '\n')
@@ -122,7 +139,6 @@ def debug(message, std=True):
         try:
             log_debug.write(message + '\n')
         except:
-            # workaround for PyTango bug: #740
             sys.stdout.write(message + '\n')
     elif std:
         sys.stdout.write(message + '\n')

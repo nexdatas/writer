@@ -134,16 +134,7 @@ class TangoDataWriter(object):
         self.__filetimes = {}
 
         if server:
-            if hasattr(self.__server, "log_fatal"):
-                Streams.log_fatal = server.log_fatal
-            if hasattr(self.__server, "log_error"):
-                Streams.log_error = server.log_error
-            if hasattr(self.__server, "log_warn"):
-                Streams.log_warn = server.log_warn
-            if hasattr(self.__server, "log_info"):
-                Streams.log_info = server.log_info
-            if hasattr(self.__server, "log_debug"):
-                Streams.log_debug = server.log_debug
+            Streams.setstreams(server)
 
     def __setWriter(self, writer):
         """ set method for  writer module name
