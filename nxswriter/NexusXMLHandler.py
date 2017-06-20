@@ -25,7 +25,7 @@ from xml import sax
 import sys
 import os
 
-from . import Streams
+from .StreamSet import StreamSet
 
 from .Element import Element
 from .FElement import FElement
@@ -44,11 +44,13 @@ from .FetchNameHandler import TNObject
 
 
 class NexusXMLHandler(sax.ContentHandler):
+
     """ SAX2 parser
     """
 
     def __init__(self, fileElement, datasources=None, decoders=None,
-                 groupTypes=None, parser=None, globalJSON=None):
+                 groupTypes=None, parser=None, globalJSON=None,
+                 streams=None):
         """ constructor
 
         :brief: It constructs parser and defines the H5 output file
@@ -65,6 +67,8 @@ class NexusXMLHandler(sax.ContentHandler):
         :param globalJSON: global json string
         :type globalJSON: \
         :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
         sax.ContentHandler.__init__(self)
 
@@ -120,13 +124,13 @@ class NexusXMLHandler(sax.ContentHandler):
 
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:       thread pool with INIT elements
-        self.initPool = ThreadPool()
+        self.initPool = ThreadPool(streams=StreamSet(streams))
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:       thread pool with STEP elements
-        self.stepPool = ThreadPool()
+        self.stepPool = ThreadPool(streams=StreamSet(streams))
         #: (:class:`nxswriter.ThreadPool.ThreadPool`) \
         #:      thread pool with FINAL elements
-        self.finalPool = ThreadPool()
+        self.finalPool = ThreadPool(streams=StreamSet(streams))
 
         #: (:obj:`dict` \
         #:  <:obj:`str`, :class:`nxswriter.ThreadPool.ThreadPool`> ) \
@@ -148,6 +152,9 @@ class NexusXMLHandler(sax.ContentHandler):
 
         #: (:obj:`bool`) if innerparse was running
         self.__inner = False
+
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def __last(self):
         """ the last stack element
@@ -194,7 +201,9 @@ class NexusXMLHandler(sax.ContentHandler):
                 self.__inner = True
             elif name in self.elementClass:
                 self.__stack.append(
-                    self.elementClass[name](attrs, self.__last()))
+                    self.elementClass[name](
+                        attrs, self.__last(),
+                        streams=StreamSet(self._streams)))
                 if hasattr(self.__datasources, "canfail") \
                    and self.__datasources.canfail \
                    and hasattr(self.__stack[-1], "setCanFail"):
@@ -202,17 +211,19 @@ class NexusXMLHandler(sax.ContentHandler):
 
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
-                    Streams.error(
-                        "NexusXMLHandler::startElement() - "
-                        "Unsupported tag: %s, %s "
-                        % (name, attrs.keys()),
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "NexusXMLHandler::startElement() - "
+                            "Unsupported tag: %s, %s "
+                            % (name, attrs.keys()),
+                            std=False)
 
                     raise UnsupportedTagError("Unsupported tag: %s, %s "
                                               % (name, attrs.keys()))
-                Streams.warn(
-                    "NexusXMLHandler::startElement() - "
-                    "Unsupported tag: %s, %s " % (name, attrs.keys()))
+                if self._streams:
+                    self._streams.warn(
+                        "NexusXMLHandler::startElement() - "
+                        "Unsupported tag: %s, %s " % (name, attrs.keys()))
 
                 self.__unsupportedTag = name
 
@@ -262,7 +273,8 @@ class NexusXMLHandler(sax.ContentHandler):
 
         if trigger and strategy == 'STEP':
             if trigger not in self.triggerPools.keys():
-                self.triggerPools[trigger] = ThreadPool()
+                self.triggerPools[trigger] = ThreadPool(
+                    streams=StreamSet(self._streams))
             self.triggerPools[trigger].append(task)
         elif strategy in self.__poolMap.keys():
             self.__poolMap[strategy].append(task)
@@ -276,7 +288,8 @@ class NexusXMLHandler(sax.ContentHandler):
         if self.__storedName in self.withXMLinput:
             res = None
             inner = self.withXMLinput[self.__storedName](
-                self.__storedAttrs, self.__last())
+                self.__storedAttrs, self.__last(),
+                streams=StreamSet(self._streams))
             if hasattr(inner, "setDataSources") \
                     and callable(inner.setDataSources):
                 inner.setDataSources(self.__datasources)

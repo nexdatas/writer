@@ -19,11 +19,11 @@
 
 """ Definitions of TANGO datasource """
 
+import sys
 import time
 import threading
 from xml.dom import minidom
 
-from . import Streams
 from .Types import NTP
 
 from .DataSources import DataSource
@@ -36,19 +36,22 @@ try:
     PYTANGO_AVAILABLE = True
 except ImportError as e:
     PYTANGO_AVAILABLE = False
-    Streams.info("PYTANGO not available: %s" % e)
+    sys.stdout.write("PYTANGO not available: %s" % e)
 
 
 class ProxyTools(object):
+
     """ tools for proxy
     """
 
     @classmethod
-    def proxySetup(cls, device):
+    def proxySetup(cls, device, streams=None):
         """ sets the Tango proxy up
 
         :param device: tango device
         :type device: :obj:`str`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         :returns: proxy if proxy is set up
         :rtype: :class:`PyTango.DeviceProxy`
         """
@@ -60,10 +63,11 @@ class ProxyTools(object):
             proxy.set_source(PyTango.DevSource.DEV)
 
         except:
-            Streams.error(
-                "ProxyTools.proxySetup() - "
-                "Cannot connect to %s " % device,
-                std=False)
+            if streams:
+                streams.error(
+                    "ProxyTools.proxySetup() - "
+                    "Cannot connect to %s " % device,
+                    std=False)
             raise
 
         while not found and cnt < 1000:
@@ -99,17 +103,19 @@ class ProxyTools(object):
 
 
 class TangoSource(DataSource):
+
     """ Tango data source
     """
-    def __init__(self):
+
+    def __init__(self, streams=None):
         """ constructor
 
         :brief: It cleans all member variables
         """
 
-        DataSource.__init__(self)
+        DataSource.__init__(self, streams=streams)
         #: (:class:`TgMember`) Tango device member
-        self.member = TgMember(None)
+        self.member = TgMember(None, streams=self._streams)
         #: (:class:`TgGroup`) datasource tango group
         self.group = None
         #: (:obj:`str`) full device name
@@ -172,10 +178,11 @@ class TangoSource(DataSource):
             name = rec[0].getAttribute("name") \
                 if rec[0].hasAttribute("name") else None
         if not name:
-            Streams.error(
-                "TangoSource::setup() - "
-                "Tango record name not defined: %s" % xml,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "TangoSource::setup() - "
+                    "Tango record name not defined: %s" % xml,
+                    std=False)
 
             raise DataSourceSetupError(
                 "Tango record name not defined: %s" % xml)
@@ -202,12 +209,14 @@ class TangoSource(DataSource):
                 self.group = group
             else:
                 client = True
-            self.member = TgMember(name, memberType, encoding)
+            self.member = TgMember(
+                name, memberType, encoding, streams=self._streams)
         if not device:
-            Streams.error(
-                "TangoSource::setup() - "
-                "Tango device name not defined: %s" % xml,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "TangoSource::setup() - "
+                    "Tango device name not defined: %s" % xml,
+                    std=False)
 
             raise DataSourceSetupError(
                 "Tango device name not defined: %s" % xml)
@@ -218,13 +227,15 @@ class TangoSource(DataSource):
         elif device:
             self.device = "%s" % (device.encode())
 
-        self.__proxy = ProxyTools.proxySetup(self.device)
+        self.__proxy = ProxyTools.proxySetup(
+            self.device, streams=self._streams)
 
         if not self.__proxy:
-            Streams.error(
-                "TangoSource::setup() - "
-                "Cannot connect to: %s \ndefined by %s"
-                % (self.device, xml), std=False)
+            if self._streams:
+                self._streams.error(
+                    "TangoSource::setup() - "
+                    "Cannot connect to: %s \ndefined by %s"
+                    % (self.device, xml), std=False)
 
             raise DataSourceSetupError(
                 "Cannot connect to: %s \ndefined by %s" % (self.device, xml))
@@ -280,22 +291,25 @@ class TangoSource(DataSource):
             if res:
                 return res
         if not PYTANGO_AVAILABLE:
-            Streams.error(
-                "TangoSource::getData() - "
-                "Support for PyTango datasources not available",
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "TangoSource::getData() - "
+                    "Support for PyTango datasources not available",
+                    std=False)
 
             raise PackageError(
                 "Support for PyTango datasources not available")
 
         if self.device and self.member.memberType and self.member.name:
             if not self.__proxy or not ProxyTools.isProxyValid(self.__proxy):
-                self.__proxy = ProxyTools.proxySetup(self.device)
+                self.__proxy = ProxyTools.proxySetup(
+                    self.device, streams=self._streams)
                 if not self.__proxy:
-                    Streams.error(
-                        "TangoSource::getData() - "
-                        "Setting up lasts to long: %s" % self.device,
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "TangoSource::getData() - "
+                            "Setting up lasts to long: %s" % self.device,
+                            std=False)
 
                     raise DataSourceSetupError(
                         "Setting up lasts to long: %s" % self.device)
@@ -304,10 +318,11 @@ class TangoSource(DataSource):
                 self.member.getData(self.__proxy)
             else:
                 if not hasattr(self.__tngrp, "getData"):
-                    Streams.error(
-                        "TangoSource::getData() - "
-                        "DataSource pool not set up",
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "TangoSource::getData() - "
+                            "DataSource pool not set up",
+                            std=False)
 
                     raise DataSourceSetupError("DataSource pool not set up")
 
@@ -337,7 +352,8 @@ class TangoSource(DataSource):
                 self.__pool.common['TANGO'] = {}
             if self.group:
                 if self.group not in self.__pool.common['TANGO'].keys():
-                    self.__pool.common['TANGO'][self.group] = TgGroup()
+                    self.__pool.common['TANGO'][self.group] = TgGroup(
+                        streams=self._streams)
                 self.__tngrp = self.__pool.common['TANGO'][self.group]
 
                 self.__tngrp.lock.acquire()
@@ -351,14 +367,17 @@ class TangoSource(DataSource):
 
 
 class TgGroup(object):
+
     """ Group of tango devices
     """
 
-    def __init__(self, counter=0):
+    def __init__(self, counter=0, streams=None):
         """ default constructor
 
         :param counter: counts of steps
         :type counter: :obj:`int`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
 
         #: (:class:`threading.Lock`) threading lock
@@ -367,6 +386,8 @@ class TgGroup(object):
         self.counter = counter
         #: (:obj:`dict` <:obj:`str`,  :class:`TgDevice`> ) TANGO devices
         self.devices = {}
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def getDevice(self, device):
         """ provides tango device
@@ -378,11 +399,10 @@ class TgGroup(object):
         """
 
         if device not in self.devices:
-            self.devices[device] = TgDevice(device)
+            self.devices[device] = TgDevice(device, streams=self._streams)
         return self.devices[device]
 
-    @classmethod
-    def __fetchAttributes(cls, device):
+    def __fetchAttributes(self, device):
         """ fetches attribute data for given device
 
         :param device: given device
@@ -398,11 +418,12 @@ class TgGroup(object):
             if a.encode().lower() not in alist:
                 errors.append((a, device.device))
         if errors:
-            Streams.error(
-                "TgGroup::getData() - "
-                "attribute not in tango "
-                "device attributes:%s" % errors,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "TgGroup::getData() - "
+                    "attribute not in tango "
+                    "device attributes:%s" % errors,
+                    std=False)
 
             raise DataSourceSetupError(
                 "TgGroup::getData() - "
@@ -494,12 +515,14 @@ class TgGroup(object):
                     mb.reset()
 
                 if not dv.proxy or not ProxyTools.isProxyValid(dv.proxy):
-                    dv.proxy = ProxyTools.proxySetup(dv.device)
+                    dv.proxy = ProxyTools.proxySetup(
+                        dv.device, streams=self._streams)
                     if not dv.proxy:
-                        Streams.error(
-                            "TgGroup::getData() - "
-                            "Setting up lasts to long: %s" % dv.device,
-                            std=False)
+                        if self._streams:
+                            self._streams.error(
+                                "TgGroup::getData() - "
+                                "Setting up lasts to long: %s" % dv.device,
+                                std=False)
 
                         raise DataSourceSetupError(
                             "TgGroup::getData() - "
@@ -516,16 +539,19 @@ class TgGroup(object):
 
 
 class TgDevice(object):
+
     """ tango device
     """
 
-    def __init__(self, device, proxy=None):
+    def __init__(self, device, proxy=None, streams=None):
         """ default constructor
 
         :param device: tango device name
         :type device: :obj:`str`
         :param proxy: device proxy
         :type proxy: :class:`PyTango.DeviceProxy`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
 
         #: (:obj:`str`) tango device name
@@ -541,6 +567,8 @@ class TgDevice(object):
         self.commands = []
         #: (:class:`PyTango.DeviceProxy`) device proxy
         self.proxy = proxy
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def setMember(self, member):
         """ provides tango device member
@@ -572,10 +600,12 @@ class TgDevice(object):
 
 
 class TgMember(object):
+
     """ tango device member
     """
 
-    def __init__(self, name, memberType='attribute', encoding=None):
+    def __init__(self, name, memberType='attribute', encoding=None,
+                 streams=None):
         """ default constructor
 
         :param name: name of data record
@@ -584,6 +614,8 @@ class TgMember(object):
         :type memberType: :obj:`str`
         :param encoding: encoding type of Tango DevEncoded variables
         :type encoding: :obj:`str`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
         #: (:obj:`str`) name of data record
         self.name = name
@@ -599,6 +631,8 @@ class TgMember(object):
         self.__da = None
         #: (:class:`PyTango.CommandInfo`) input command data
         self.__cd = None
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def reset(self):
         """ cleans output value
@@ -645,10 +679,11 @@ class TgMember(object):
         if self.__value:
             return self.__value
         if self.__da is None:
-            Streams.error(
-                "TgMember::getValue() - "
-                "Data for %s not fetched" % self.name,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "TgMember::getValue() - "
+                    "Data for %s not fetched" % self.name,
+                    std=False)
 
             raise DataSourceSetupError(
                 "TgMember::getValue() -  "
@@ -681,10 +716,11 @@ class TgMember(object):
                     "shape": shape}
         elif self.memberType == "command":
             if self.__cd is None:
-                Streams.error(
-                    "TgMember::getValue() - "
-                    "Data for %s not fetched" % self.name,
-                    std=False)
+                if self._streams:
+                    self._streams.error(
+                        "TgMember::getValue() - "
+                        "Data for %s not fetched" % self.name,
+                        std=False)
 
                 raise DataSourceSetupError(
                     "TgMember::getValue() -  "

@@ -22,15 +22,15 @@
 import numpy
 
 from .Types import NTP
-from . import Streams
 
 
 class DataHolder(object):
+
     """ Holder for passing data
     """
 
     def __init__(self, rank, value, tangoDType, shape,
-                 encoding=None, decoders=None):
+                 encoding=None, decoders=None, streams=None):
         """ constructor
 
         :param rank: format of the data, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX
@@ -45,6 +45,8 @@ class DataHolder(object):
         :type encoding: :obj:`str`
         :param decoders: poll with decoding classes
         :type decoders: :class:`nxswriter.DecoderPool.DecoderPool`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
 
         #: (:obj:`str`) data format, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX
@@ -60,6 +62,8 @@ class DataHolder(object):
         #: pool with decoding algorithm
         self.decoders = decoders
 
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
         if str(self.tangoDType) == 'DevEncoded':
             self.__setupEncoded()
 
@@ -76,10 +80,11 @@ class DataHolder(object):
                 self.value = decoder.decode()
                 rank = NTP().arrayRank(self.value)
                 if rank > 2:
-                    Streams.error(
-                        "DataHolder::__setupEncoded() - "
-                        "Unsupported variables format",
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "DataHolder::__setupEncoded() - "
+                            "Unsupported variables format",
+                            std=False)
 
                     raise ValueError("Unsupported variables format")
                 self.format = ["SCALAR", "SPECTRUM",
@@ -91,19 +96,21 @@ class DataHolder(object):
                 self.tangoDType = NTP.pTt[tp]
 
         if self.value is None:
-            Streams.error(
-                "DataHolder::__setupEncoded() - "
-                "Encoding of DevEncoded variables not defined",
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "DataHolder::__setupEncoded() - "
+                    "Encoding of DevEncoded variables not defined",
+                    std=False)
 
             raise ValueError(
                 "Encoding of DevEncoded variables not defined")
 
         if self.shape is None:
-            Streams.error(
-                "DataHolder::__setupEncoded() - "
-                "Encoding or Shape not defined",
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "DataHolder::__setupEncoded() - "
+                    "Encoding or Shape not defined",
+                    std=False)
 
             raise ValueError("Encoding or Shape not defined")
 

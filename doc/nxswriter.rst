@@ -180,10 +180,10 @@ nxswriter.PyEvalSource module
     :undoc-members:
     :show-inheritance:
 
-nxswriter.Streams module
-------------------------
+nxswriter.StreamSet module
+--------------------------
 
-.. automodule:: nxswriter.Streams
+.. automodule:: nxswriter.StreamSet
     :members:
     :undoc-members:
     :show-inheritance:

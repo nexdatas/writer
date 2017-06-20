@@ -103,6 +103,7 @@ def deflate_filter():
 
 
 class H5PYFile(FileWriter.FTFile):
+
     """ file tree file
     """
 
@@ -193,8 +194,10 @@ class H5PYFile(FileWriter.FTFile):
 
 
 class H5PYGroup(FileWriter.FTGroup):
+
     """ file tree group
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -231,7 +234,9 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype: :class:`FTObject`
         """
         if name not in self._h5object:
-            _ = self._h5object.attrs[name]
+            at = self._h5object.attrs[name]
+            if at is None:
+                raise Exception("Empty attriibute")
             return H5PYAttribute((self._h5object.attrs, name), self)
 
         itm = self._h5object.get(name)
@@ -399,8 +404,10 @@ class H5PYGroup(FileWriter.FTGroup):
 
 
 class H5PYField(FileWriter.FTField):
+
     """ file tree file
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -547,8 +554,10 @@ class H5PYField(FileWriter.FTField):
 
 
 class H5PYLink(FileWriter.FTLink):
+
     """ file tree link
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -578,7 +587,10 @@ class H5PYLink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         try:
-            _ = self._h5object
+            obj = self._h5object
+            if obj is None:
+                raise Exception("Empty object")
+
             self.parent.h5object[self.name]
             return True
         except:
@@ -633,8 +645,10 @@ class H5PYLink(FileWriter.FTLink):
 
 
 class H5PYDeflate(FileWriter.FTDeflate):
+
     """ file tree deflate
     """
+
     def __init__(self):
         """ constructor
 
@@ -685,8 +699,10 @@ class H5PYDeflate(FileWriter.FTDeflate):
 
 
 class H5PYAttributeManager(FileWriter.FTAttributeManager):
+
     """ file tree attribute
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -704,7 +720,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             self.path = h5object.name
             self.name = self.path.split("/")[-1]
 
-    def create(self, name, dtype, shape=[], overwrite=False):
+    def create(self, name, dtype, shape=None, overwrite=False):
         """ create a new attribute
 
         :param name: attribute name
@@ -722,6 +738,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         if not overwrite and name in self.h5object.keys():
             raise Exception("Attribute %s exists" % name)
 
+        shape = shape or []
         if shape:
             if isinstance(shape, list):
                 shape = tuple(shape)
@@ -821,6 +838,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
 
 
 class H5PYAttribute(FileWriter.FTAttribute):
+
     """ file tree attribute
     """
 

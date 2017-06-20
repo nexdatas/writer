@@ -19,14 +19,13 @@
 
 """ Provides the base class Element for xml tags """
 
-from . import Streams
-
 
 class Element(object):
+
     """ Tag element stored on our stack
     """
 
-    def __init__(self, name, attrs, last=None):
+    def __init__(self, name, attrs, last=None, streams=None):
         """ constructor
 
         :param name: tag name
@@ -35,6 +34,8 @@ class Element(object):
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
         #: (:obj:`str`) stored tag name
         self.tagName = name
@@ -46,6 +47,8 @@ class Element(object):
         self.doc = ""
         #: (:class:`nxswriter.Element.Element`) the previous element
         self.last = last
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def _lastObject(self):
         """ last H5 file object
@@ -55,9 +58,10 @@ class Element(object):
         if hasattr(self.last, "h5Object"):
             return self.last.h5Object
         else:
-            Streams.warn(
-                "Element::_lastObject() - H5 Object not found : %s"
-                % self.tagName)
+            if self._streams:
+                self._streams.warn(
+                    "Element::_lastObject() - H5 Object not found : %s"
+                    % self.tagName)
 
     def _beforeLast(self):
         """ before last stack element

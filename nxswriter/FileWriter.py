@@ -83,8 +83,10 @@ def deflate_filter():
 
 
 class FTObject(object):
+
     """ virtual file tree object
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -166,6 +168,7 @@ class FTObject(object):
 
 
 class FTFile(FTObject):
+
     """ file tree file
     """
 
@@ -227,6 +230,7 @@ class FTFile(FTObject):
 
 
 class FTGroup(FTObject):
+
     """ file tree group
     """
 
@@ -314,8 +318,10 @@ class FTGroup(FTObject):
 
 
 class FTField(FTObject):
+
     """ file tree file
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -406,6 +412,7 @@ class FTField(FTObject):
 
 
 class FTLink(FTObject):
+
     """ file tree link
     """
 
@@ -434,8 +441,10 @@ class FTLink(FTObject):
 
 
 class FTDeflate(FTObject):
+
     """ file tree deflate
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -485,8 +494,10 @@ class FTDeflate(FTObject):
 
 
 class FTAttributeManager(FTObject):
+
     """ file tree attribute
     """
+
     def __init__(self, h5object, tparent=None):
         """ constructor
 
@@ -535,6 +546,7 @@ class FTAttributeManager(FTObject):
 
 
 class FTAttribute(FTObject):
+
     """ virtual file tree attribute
     """
 

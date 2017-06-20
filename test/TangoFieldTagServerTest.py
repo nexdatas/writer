@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file TangoFieldTagServerTest.py
+# \package test nexdatas
+# \file TangoFieldTagServerTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -28,8 +28,7 @@ import PyTango
 import binascii
 import time
 
-from  xml.sax import SAXParseException
- 
+from xml.sax import SAXParseException
 
 
 from Checkers import Checker
@@ -37,44 +36,48 @@ import ServerSetUp
 import TangoFieldTagWriterTest
 from ProxyHelper import ProxyHelper
 
-## test fixture
+# test fixture
+
+
 class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
-    ## server counter
+    # server counter
     serverCounter = 0
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        TangoFieldTagWriterTest.TangoFieldTagWriterTest.__init__(self, methodName)
+        TangoFieldTagWriterTest.TangoFieldTagWriterTest.__init__(
+            self, methodName)
         unittest.TestCase.__init__(self, methodName)
 
         TangoFieldTagServerTest.serverCounter += 1
-        sins = self.__class__.__name__+"%s" % TangoFieldTagServerTest.serverCounter
-        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
+        sins = self.__class__.__name__ + \
+            "%s" % TangoFieldTagServerTest.serverCounter
+        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
         self.__status = {
-            PyTango.DevState.OFF:"Not Initialized",
-            PyTango.DevState.ON:"Ready",
-            PyTango.DevState.OPEN:"File Open",
-            PyTango.DevState.EXTRACT:"Entry Open",
-            PyTango.DevState.RUNNING:"Writing ...",
-            PyTango.DevState.FAULT:"Error",
-            }
+            PyTango.DevState.OFF: "Not Initialized",
+            PyTango.DevState.ON: "Ready",
+            PyTango.DevState.OPEN: "File Open",
+            PyTango.DevState.EXTRACT: "Entry Open",
+            PyTango.DevState.RUNNING: "Writing ...",
+            PyTango.DevState.FAULT: "Error",
+        }
 
         self._dbhost = None
         self._dbport = None
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         self._sv.setUp()
         self._simps.setUp()
         self._dbhost = self._simps.dp.get_db_host()
         self._dbport = self._simps.dp.get_db_port()
-        print "SEED =", self.seed 
-        print "CHECKER SEED =", self._sc.seed 
-        
-    ## test closer
+        print "SEED =", self.seed
+        print "CHECKER SEED =", self._sc.seed
+
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         self._simps.tearDown()
@@ -88,23 +91,23 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
             {name: value})
         rc.Init()
 
-    ## opens writer
-    # \param fname file name     
+    # opens writer
+    # \param fname file name
     # \param xml XML settings
     # \param json JSON Record with client settings
     # \returns Tango Data Writer proxy instance
-    def openWriter(self, fname, xml, json = None):
+    def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-        
+
         tdw.OpenFile()
-        
+
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-        
+
         tdw.XMLSettings = xml
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
@@ -115,11 +118,10 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         return tdw
 
-
-    ## closes writer
+    # closes writer
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
-    def closeWriter(self, tdw, json= None):
+    def closeWriter(self, tdw, json=None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
@@ -127,15 +129,12 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         tdw.CloseEntry()
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-        
+
         tdw.CloseFile()
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-                
 
-
-
-    ## performs one record step
+    # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
 

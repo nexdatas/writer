@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file ElementTest.py
+# \package test nexdatas
+# \file ElementTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -33,78 +33,71 @@ import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-
-
-## test fixture
+# test fixture
 class ElementH5PYTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
-
         self._tfname = "field"
         self._tfname = "group"
-        self._fattrs = {"short_name":"test","units":"m" }
-
+        self._fattrs = {"short_name": "test", "units": "m"}
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
+        print "\nsetting up..."
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-
-
-
-
-    ## lastObject method test
+    # lastObject method test
     # \brief It tests executing _lastObject method
     def test_lastObject_hp5y(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
 
         FileWriter.writer = H5PYWriter
         fname = self._fname
         nxFile = None
-        eFile = None        
+        eFile = None
 
         gname = "testGroup"
         gtype = "NXentry"
         fdname = "testField"
         fdtype = "int64"
 
-
-        ## file handle
+        # file handle
         nxFile = FileWriter.create_file(fname, overwrite=True).root()
-        ## element file objects
+        # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
         field = group.create_field(fdname, fdtype)
 
-        el = Element(self._tfname, self._fattrs, eFile )
-        el2 = Element(self._tfname, self._fattrs,  el )
+        el = Element(self._tfname, self._fattrs, eFile)
+        el2 = Element(self._tfname, self._fattrs,  el)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
         self.assertEqual(el.doc, "")
         self.assertEqual(el._lastObject(), nxFile)
         self.assertEqual(el2._lastObject(), None)
-        
+
         nxFile.close()
         os.remove(fname)
 

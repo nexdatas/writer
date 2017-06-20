@@ -24,6 +24,7 @@ import numpy
 
 
 class UTF8decoder(object):
+
     """ UTF8 decoder
     """
 
@@ -77,6 +78,7 @@ class UTF8decoder(object):
 
 
 class UINT32decoder(object):
+
     """ INT decoder
     """
 
@@ -141,6 +143,7 @@ class UINT32decoder(object):
 
 
 class VDEOdecoder(object):
+
     """ VIDEO IMAGE LIMA decoder
     """
 
@@ -229,6 +232,7 @@ class VDEOdecoder(object):
 
 
 class DecoderPool(object):
+
     """ Decoder pool
     """
 

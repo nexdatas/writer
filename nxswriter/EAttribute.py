@@ -25,23 +25,25 @@ import numpy
 
 from .DataHolder import DataHolder
 from .FElement import FElement
-from . import Streams
 
 
 class EAttribute(FElement):
+
     """ attribute tag element
     """
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
 
-        FElement.__init__(self, "attribute", attrs, last)
+        FElement.__init__(self, "attribute", attrs, last, streams=streams)
         #: (:obj:`str`) attribute name
         self.name = ""
         #: (:obj:`str`) rank of the attribute
@@ -102,13 +104,15 @@ class EAttribute(FElement):
                     dt = self.source.getData()
                     dh = None
                     if dt:
-                        dh = DataHolder(**dt)
+                        dh = DataHolder(streams=self._streams, **dt)
                     if not dh:
                         message = self.setMessage("Data without value")
                         self.error = message
                     elif not hasattr(self.h5Object, 'shape'):
                         message = self.setMessage("PNI Object not created")
-                        Streams.warn("Attribute::run() - %s " % message[0])
+                        if self._streams:
+                            self._streams.warn(
+                                "Attribute::run() - %s " % message[0])
                         self.error = message
                     else:
                         self.h5Object[...] = dh.cast(self.h5Object.dtype)
@@ -118,10 +122,13 @@ class EAttribute(FElement):
         #            self.error = sys.exc_info()
         finally:
             if self.error:
-                if self.canfail:
-                    Streams.warn("Attribute::run() - %s  " % str(self.error))
-                else:
-                    Streams.error("Attribute::run() - %s  " % str(self.error))
+                if self._streams:
+                    if self.canfail:
+                        self._streams.warn(
+                            "Attribute::run() - %s  " % str(self.error))
+                    else:
+                        self._streams.error(
+                            "Attribute::run() - %s  " % str(self.error))
 
     def __fillMax(self):
         """ fills object with maximum value
@@ -175,9 +182,11 @@ class EAttribute(FElement):
                                         overwrite=True)[...] = str(error)
             field.attributes.create("nexdatas_canfail", "string",
                                     overwrite=True)[...] = "FAILED"
-            Streams.info("EAttribute::markFailed() - "
-                         "%s of %s marked as failed" %
-                         (self.h5Object.name
-                          if hasattr(self.h5Object, "name") else None,
-                          field.name if hasattr(field, "name") else None))
+            if self._streams:
+                self._streams.info(
+                    "EAttribute::markFailed() - "
+                    "%s of %s marked as failed" %
+                    (self.h5Object.name
+                     if hasattr(self.h5Object, "name") else None,
+                     field.name if hasattr(field, "name") else None))
             self.__fillMax()

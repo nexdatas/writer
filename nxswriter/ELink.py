@@ -23,26 +23,27 @@ import sys
 
 from .FElement import FElement
 from .Errors import (XMLSettingSyntaxError)
-from . import Streams
 from .DataHolder import DataHolder
 
 from . import FileWriter
 
 
 class ELink(FElement):
+
     """ link H5 tag element
     """
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
-
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        FElement.__init__(self, "link", attrs, last)
+        FElement.__init__(self, "link", attrs, last, streams=streams)
         #: (:class:`nxswriter.FileWriter.FTLink`) \
         #:     stored H5 file object (defined in base class)
         self.h5Object = None
@@ -82,7 +83,7 @@ class ELink(FElement):
                     dt = self.source.getData()
                     dh = None
                     if dt:
-                        dh = DataHolder(**dt)
+                        dh = DataHolder(streams=self._streams, **dt)
                     if not dh:
                         message = self.setMessage("Data without value")
                         self.error = message
@@ -93,11 +94,11 @@ class ELink(FElement):
             self.error = message
         #            self.error = sys.exc_info()
         finally:
-            if self.error:
+            if self.error and self._streams:
                 if self.canfail:
-                    Streams.warn("Link::run() - %s  " % str(self.error))
+                    self._streams.warn("Link::run() - %s  " % str(self.error))
                 else:
-                    Streams.error("Link::run() - %s  " % str(self.error))
+                    self._streams.error("Link::run() - %s  " % str(self.error))
 
     def createLink(self, groupTypes=None, target=None):
         """ creates the link the H5 file
@@ -119,17 +120,19 @@ class ELink(FElement):
                         self._lastObject(),
                         name)
                 except:
-                    Streams.error(
-                        "ELink::createLink() - "
-                        "The link '%s' to '%s' type cannot be created"
-                        % (name, self.__target),
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "ELink::createLink() - "
+                            "The link '%s' to '%s' type cannot be created"
+                            % (name, self.__target),
+                            std=False)
                     raise XMLSettingSyntaxError(
                         "The link '%s' to '%s' type cannot be created"
                         % (name, self.__target))
         else:
-            Streams.error("ELink::createLink() - No name or type",
-                          std=False)
+            if self._streams:
+                self._streams.error("ELink::createLink() - No name or type",
+                                    std=False)
 
             raise XMLSettingSyntaxError("No name or type")
 
@@ -151,8 +154,7 @@ class ELink(FElement):
             else:
                 self.__target = str(target)
 
-    @classmethod
-    def __typesToNames(cls, text, groupTypes):
+    def __typesToNames(self, text, groupTypes):
         """ converts types to Names using groupTypes dictionary
 
         :param text: original directory
@@ -190,11 +192,12 @@ class ELink(FElement):
                             else:
                                 valid = False
                     if not valid:
-                        Streams.error(
-                            "ELink::__typesToNames() - "
-                            "Link creation problem: %s cannot be found"
-                            % str(res + "/" + sgr[0]),
-                            std=False)
+                        if self._streams:
+                            self._streams.error(
+                                "ELink::__typesToNames() - "
+                                "Link creation problem: %s cannot be found"
+                                % str(res + "/" + sgr[0]),
+                                std=False)
 
                         raise XMLSettingSyntaxError(
                             "Link creation problem: %s cannot be found"

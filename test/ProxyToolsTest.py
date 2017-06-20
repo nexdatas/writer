@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file TangoSourceTest.py
+# \package test nexdatas
+# \file TangoSourceTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -27,7 +27,7 @@ import random
 import struct
 import numpy
 from xml.dom import minidom
-import PyTango 
+import PyTango
 import binascii
 import time
 import json
@@ -38,106 +38,102 @@ import SimpleServerSetUp
 
 from nxswriter.TangoSource import ProxyTools
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test pool
+# test pool
 class pool(object):
 
     def __init__(self):
         self.common = {}
         self.lock = threading.Lock()
         self.counter = 0
-    
-## test fixture
+
+# test fixture
+
+
 class TangoSourceTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
         self._simps = SimpleServerSetUp.SimpleServerSetUp()
-        self._simps2 = SimpleServerSetUp.SimpleServerSetUp( "stestp09/testss/s2r228", "S2")
-
+        self._simps2 = SimpleServerSetUp.SimpleServerSetUp(
+            "stestp09/testss/s2r228", "S2")
 
         self._tfname = "doc"
         self._fname = "test.h5"
         self._nxDoc = None
-        self._eDoc = None        
-        self._fattrs = {"short_name":"test","units":"m" }
+        self._eDoc = None
+        self._fattrs = {"short_name": "test", "units": "m"}
         self._gname = "testDoc"
         self._gtype = "NXentry"
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
-         
+            self.__seed = long(time.time() * 256)  # use fractional seconds
+
         self.__rnd = random.Random(self.__seed)
 
-
-
-
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
         self._simps.setUp()
         self._simps2.setUp()
-        ## file handle
-        print "SEED =",self.__seed 
+        # file handle
+        print "SEED =", self.__seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         self._simps2.tearDown()
         self._simps.tearDown()
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_proxySetup(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 
+        self.myAssertRaise(RuntimeError, ProxyTools.proxySetup, None)
 
-        self.myAssertRaise(RuntimeError, ProxyTools.proxySetup,None)
-
-        self.myAssertRaise(Exception, ProxyTools.proxySetup,"stestp09/testss/s3r228")
+        self.myAssertRaise(
+            Exception, ProxyTools.proxySetup, "stestp09/testss/s3r228")
 
         dp = ProxyTools.proxySetup("stestp09/testss/s2r228")
-        self.assertTrue(isinstance(dp,PyTango.DeviceProxy))
-        self.assertEqual(dp.state(),PyTango._PyTango.DevState.ON)
-        self.assertEqual(dp.dev_name(),"stestp09/testss/s2r228")
-
+        self.assertTrue(isinstance(dp, PyTango.DeviceProxy))
+        self.assertEqual(dp.state(), PyTango._PyTango.DevState.ON)
+        self.assertEqual(dp.dev_name(), "stestp09/testss/s2r228")
 
         dp = ProxyTools.proxySetup("stestp09/testss/s1r228")
-        self.assertTrue(isinstance(dp,PyTango.DeviceProxy))
-        self.assertEqual(dp.dev_name(),"stestp09/testss/s1r228")
-        self.assertEqual(dp.state(),PyTango._PyTango.DevState.ON)
+        self.assertTrue(isinstance(dp, PyTango.DeviceProxy))
+        self.assertEqual(dp.dev_name(), "stestp09/testss/s1r228")
+        self.assertEqual(dp.state(), PyTango._PyTango.DevState.ON)
 
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_isProxyValid(self):
         fun = sys._getframe().f_code.co_name
@@ -146,23 +142,24 @@ class TangoSourceTest(unittest.TestCase):
         self.assertEqual(ProxyTools.isProxyValid(None), False)
         self.assertEqual(ProxyTools.isProxyValid(proxy(False)), False)
         self.assertEqual(ProxyTools.isProxyValid(proxy(True)), True)
-        
-    
-## test proxy class
+
+
+# test proxy class
 class proxy(object):
-    ## constructor
+    # constructor
     # \param if proxy is valid
+
     def __init__(self, valid):
         self.valid = valid
         pass
-    
-    ## get proxy state
+
+    # get proxy state
     def state(self):
         if not self.valid:
             raise Exception("Not valid proxy")
         return "something"
 
-    ## ping method
+    # ping method
     def ping(self):
         if not self.valid:
             raise Exception("Not valid proxy")

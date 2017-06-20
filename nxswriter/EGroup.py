@@ -21,30 +21,34 @@
 
 from .FElement import FElementWithAttr
 from .Errors import (XMLSettingSyntaxError)
-from . import Streams
 
 
 class EGroup(FElementWithAttr):
+
     """ group H5 tag element
     """
-    def __init__(self, attrs, last):
+
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        FElementWithAttr.__init__(self, "group", attrs, last)
+        FElementWithAttr.__init__(self, "group", attrs, last, streams=streams)
         if self._lastObject() is not None:
             if ("type" in attrs.keys()) and ("name" in attrs.keys()):
                 gname = attrs["name"].encode()
             elif "type" in attrs.keys():
                 gname = attrs["type"][2:].encode()
             else:
-                Streams.error(
-                    "EGroup::__init__() - The group type not defined",
-                    std=False)
+                if self._streams:
+                    self._streams.error(
+                        "EGroup::__init__() - The group type not defined",
+                        std=False)
 
                 raise XMLSettingSyntaxError("The group type not defined")
             try:
@@ -53,13 +57,14 @@ class EGroup(FElementWithAttr):
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())
             except:
-                Streams.error(
-                    "EGroup::__init__() - "
-                    "The group '%s' of '%s' type cannot be created. \n"
-                    "Please remove the old file, change the file name "
-                    "or change the group name." %
-                    (gname, attrs["type"].encode()),
-                    std=False)
+                if self._streams:
+                    self._streams.error(
+                        "EGroup::__init__() - "
+                        "The group '%s' of '%s' type cannot be created. \n"
+                        "Please remove the old file, change the file name "
+                        "or change the group name." %
+                        (gname, attrs["type"].encode()),
+                        std=False)
 
                 raise XMLSettingSyntaxError(
                     "The group '%s' of '%s' type cannot be created. \n"
@@ -68,10 +73,11 @@ class EGroup(FElementWithAttr):
                     (gname, attrs["type"].encode()))
 
         else:
-            Streams.error(
-                "EGroup::__init__() - "
-                "File object for the last element does not exist",
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "EGroup::__init__() - "
+                    "File object for the last element does not exist",
+                    std=False)
 
             raise XMLSettingSyntaxError(
                 "File object for the last element does not exist")

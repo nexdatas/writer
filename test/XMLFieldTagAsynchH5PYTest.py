@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file XMLFieldTagAsynchH5PYTest.py
+# \package test nexdatas
+# \file XMLFieldTagAsynchH5PYTest.py
 # unittests for field Tags running Tango Server in asynchronous mode
 #
 import unittest
@@ -31,41 +31,43 @@ import XMLFieldTagWriterH5PYTest
 from ProxyHelper import ProxyHelper
 
 
-## test fixture
+# test fixture
 class XMLFieldTagAsynchH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest):
-    ## server counter
+    # server counter
     serverCounter = 0
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
-        XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest.__init__(self, methodName)
+        XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest.__init__(
+            self, methodName)
 
         XMLFieldTagAsynchH5PYTest.serverCounter += 1
-        sins = self.__class__.__name__+"%s" % XMLFieldTagAsynchH5PYTest.serverCounter
-        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/"+ sins, sins)
+        sins = self.__class__.__name__ + \
+            "%s" % XMLFieldTagAsynchH5PYTest.serverCounter
+        self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
 #        self._counter =  [1, 2]
 #        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
         self.__status = {
-            PyTango.DevState.OFF:"Not Initialized",
-            PyTango.DevState.ON:"Ready",
-            PyTango.DevState.OPEN:"File Open",
-            PyTango.DevState.EXTRACT:"Entry Open",
-            PyTango.DevState.RUNNING:"Writing ...",
-            PyTango.DevState.FAULT:"Error",
-            }
+            PyTango.DevState.OFF: "Not Initialized",
+            PyTango.DevState.ON: "Ready",
+            PyTango.DevState.OPEN: "File Open",
+            PyTango.DevState.EXTRACT: "Entry Open",
+            PyTango.DevState.RUNNING: "Writing ...",
+            PyTango.DevState.FAULT: "Error",
+        }
 
-
-    ## test starter
+    # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "CHECKER SEED =", self._sc.seed 
+        print "CHECKER SEED =", self._sc.seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down oif Tango Server
-    def tearDown(self): 
+    def tearDown(self):
         self._sv.tearDown()
 
     def setProp(self, rc, name, value):
@@ -76,28 +78,25 @@ class XMLFieldTagAsynchH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
             {name: value})
         rc.Init()
 
-
-
-            
-    ## opens writer
-    # \param fname file name     
+    # opens writer
+    # \param fname file name
     # \param xml XML settings
     # \param json JSON Record with client settings
     # \returns Tango Data Writer proxy instance
-    def openWriter(self, fname, xml, json = None):
+    def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
-        self.assertTrue(ProxyHelper.wait(tdw, 10000))    
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.setProp(tdw, "writer", "h5py")
 
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-        
+
         tdw.OpenFile()
-        
+
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-        
+
         tdw.XMLSettings = xml
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
@@ -111,11 +110,10 @@ class XMLFieldTagAsynchH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         return tdw
 
-
-    ## closes writer
+    # closes writer
     # \param tdw Tango Data Writer proxy instance
     # \param json JSON Record with client settings
-    def closeWriter(self, tdw, json = None):
+    def closeWriter(self, tdw, json=None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
         if json:
@@ -126,15 +124,12 @@ class XMLFieldTagAsynchH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
-        
+
         tdw.CloseFile()
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
-                
 
-
-
-    ## performs one record step
+    # performs one record step
     def record(self, tdw, string):
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
@@ -145,4 +140,3 @@ class XMLFieldTagAsynchH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
 
 if __name__ == '__main__':
     unittest.main()
-

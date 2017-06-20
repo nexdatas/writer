@@ -21,7 +21,7 @@
 
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
-from . import Streams
+from .StreamSet import StreamSet
 from . import FileWriter
 import os
 import shutil
@@ -48,7 +48,6 @@ except ImportError:
 
 import json
 import sys
-import os
 import gc
 
 from .H5Elements import EFile
@@ -57,6 +56,7 @@ from .DataSourcePool import DataSourcePool
 
 
 class TangoDataWriter(object):
+
     """ NeXuS data writer
     """
 
@@ -133,17 +133,8 @@ class TangoDataWriter(object):
         #: (:obj:`dict` < :obj:`str`, :obj:`str`>) file time stamps
         self.__filetimes = {}
 
-        if server:
-            if hasattr(self.__server, "log_fatal"):
-                Streams.log_fatal = server.log_fatal
-            if hasattr(self.__server, "log_error"):
-                Streams.log_error = server.log_error
-            if hasattr(self.__server, "log_warn"):
-                Streams.log_warn = server.log_warn
-            if hasattr(self.__server, "log_info"):
-                Streams.log_info = server.log_info
-            if hasattr(self.__server, "log_debug"):
-                Streams.log_debug = server.log_debug
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = StreamSet(server)
 
     def __setWriter(self, writer):
         """ set method for  writer module name
@@ -233,7 +224,7 @@ class TangoDataWriter(object):
         :param xmlset: xml settings
         :type xmlset: :obj:`str`
         """
-        self.__fetcher = FetchNameHandler()
+        self.__fetcher = FetchNameHandler(streams=self._streams)
         sax.parseString(xmlset, self.__fetcher)
         self.__xmlsettings = xmlset
 
@@ -262,12 +253,9 @@ class TangoDataWriter(object):
 
         try:
             self.closeFile()
-        except Exception as e:
-            try:
-                Streams.warning(
-                    "TangoDataWriter::openFile() - File cannot be closed")
-            except:
-                print(str(e))
+        except Exception:
+            self._streams.warn(
+                "TangoDataWriter::openFile() - File cannot be closed")
 
         self.__setWriter(self.writer)
         self.__nxFile = None
@@ -355,7 +343,9 @@ class TangoDataWriter(object):
             handler = NexusXMLHandler(
                 self.__eFile, self.__datasources,
                 self.__decoders, self.__fetcher.groupTypes,
-                parser, json.loads(self.jsonrecord))
+                parser, json.loads(self.jsonrecord),
+                self._streams
+            )
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
 
@@ -414,7 +404,7 @@ class TangoDataWriter(object):
         self.__nxFile.close()
         self.__currentfileid -= 1
         self.__nxRoot.currentfileid = self.__currentfileid
-        _ = self.__filenames.pop()
+        self.__filenames.pop()
         self.__nxFile.name = self.__filenames[-1]
         self.__nxFile.reopen(readonly=False, **self.__pars)
 
@@ -447,7 +437,7 @@ class TangoDataWriter(object):
             localJSON = json.loads(jsonstring)
 
         if self.__stepPool:
-            Streams.info("TangoDataWriter::record() - Default trigger")
+            self._streams.info("TangoDataWriter::record() - Default trigger")
             self.__stepPool.setJSON(json.loads(self.jsonrecord), localJSON)
             self.__stepPool.runAndWait()
             self.__stepPool.checkErrors()
@@ -459,7 +449,7 @@ class TangoDataWriter(object):
         if hasattr(triggers, "__iter__"):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
-                    Streams.info(
+                    self._streams.info(
                         "TangoDataWriter:record() - Trigger: %s" % pool)
                     self.__triggerPools[pool].setJSON(
                         json.loads(self.jsonrecord), localJSON)

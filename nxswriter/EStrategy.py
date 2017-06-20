@@ -20,22 +20,25 @@
 """ Definitions of strategy evaluation classes """
 
 from .Element import Element
-from . import Streams
 
 
 class EStrategy(Element):
-    """## strategy tag element
+
+    """strategy tag element
 
     """
-    def __init__(self, attrs, last):
+
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, "strategy", attrs, last)
+        Element.__init__(self, "strategy", attrs, last, streams=streams)
         if "mode" in attrs.keys():
             self.last.strategy = attrs["mode"]
             if hasattr(self.last, "tagAttributes"):
@@ -43,7 +46,8 @@ class EStrategy(Element):
                     "NX_CHAR", attrs["mode"])
         if "trigger" in attrs.keys():
             self.last.trigger = attrs["trigger"]
-            Streams.info("TRIGGER %s" % attrs["trigger"])
+            if self._streams:
+                self._streams.info("TRIGGER %s" % attrs["trigger"])
             if hasattr(self.last, "tagAttributes"):
                 self.last.tagAttributes["nexdatas_strategy"] = (
                     "NX_CHAR", attrs["trigger"])

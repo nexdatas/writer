@@ -23,14 +23,19 @@ from .Types import NTP
 
 
 class DataSource(object):
+
     """ Data source
     """
-    def __init__(self):
+
+    def __init__(self, streams=None):
         """ constructor
 
         :brief: It cleans all member variables
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        pass
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def setup(self, xml):
         """ sets the parrameters up from xml

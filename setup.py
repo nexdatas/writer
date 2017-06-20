@@ -31,7 +31,6 @@ INDTS = __import__(NDTS)
 from sphinx.setup_command import BuildDoc
 
 
-
 def read(fname):
     """ reading a file
 

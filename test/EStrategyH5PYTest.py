@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file EStrategyTest.py
+# \package test nexdatas
+# \file EStrategyTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -29,8 +29,6 @@ import random
 import numpy
 
 
-
-
 from nxswriter.EStrategy import EStrategy
 from nxswriter.FElement import FElement
 from nxswriter.EField import EField
@@ -40,75 +38,71 @@ from nxswriter.Types import NTP, Converters
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-
-from  xml.sax import SAXParseException
-
+from xml.sax import SAXParseException
 
 
-
-## test fixture
+# test fixture
 class EStrategyH5PYTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
 
         self._fname = "test.h5"
         self._nxFile = None
-        self._eFile = None        
+        self._eFile = None
 
         self._tfname = "field"
         self._tfname = "group"
-        self._fattrs = {"short_name":"test","units":"m" }
+        self._fattrs = {"short_name": "test", "units": "m"}
         self._gname = "testGroup"
         self._gtype = "NXentry"
         self._fdname = "testField"
         self._fdtype = "int64"
 
-
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        ## file handle
+        # file handle
         FileWriter.writer = H5PYWriter
         self._nxFile = FileWriter.create_file(self._fname, overwrite=True)
         self._nxroot = self._nxFile.root()
-        ## element file objects
+        # element file objects
         self._group = self._nxroot.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
-        print "\nsetting up..."        
+        print "\nsetting up..."
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
         self._nxFile.close()
         os.remove(self._fname)
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-
-    ## default constructor test
+    # default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
         print "Run: %s.test_default_constructor() " % self.__class__.__name__
@@ -132,9 +126,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(st.last.shuffle, True)
         self.assertEqual(el.shuffle, True)
 
-
-
-    ## first constructor test
+    # first constructor test
     # \brief It tests default settings
     def test_constructor_1(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
@@ -158,16 +150,16 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(el.trigger, attrs["trigger"])
         self.assertEqual(st.last.grows, int(attrs["grows"]))
         self.assertEqual(el.grows, int(attrs["grows"]))
-        self.assertEqual(st.last.compression, Converters.toBool(attrs["compression"]))
-        self.assertEqual(el.compression,  Converters.toBool(attrs["compression"]))
+        self.assertEqual(
+            st.last.compression, Converters.toBool(attrs["compression"]))
+        self.assertEqual(
+            el.compression,  Converters.toBool(attrs["compression"]))
         self.assertEqual(st.last.rate, int(attrs["rate"]))
         self.assertEqual(el.rate, int(attrs["rate"]))
         self.assertEqual(st.last.shuffle, Converters.toBool(attrs["shuffle"]))
         self.assertEqual(el.shuffle, Converters.toBool(attrs["shuffle"]))
-        
 
-
-    ## first constructor test
+    # first constructor test
     # \brief It tests default settings
     def test_constructor_2(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
@@ -189,18 +181,20 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(el.strategy, attrs["mode"])
         self.assertEqual(st.last.trigger, attrs["trigger"])
         self.assertEqual(el.trigger, attrs["trigger"])
-        self.assertEqual(st.last.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
-        self.assertEqual(el.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1 )
-        self.assertEqual(st.last.compression, Converters.toBool(attrs["compression"]))
-        self.assertEqual(el.compression,  Converters.toBool(attrs["compression"]))
+        self.assertEqual(
+            st.last.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
+        self.assertEqual(
+            el.grows, int(attrs["grows"]) if int(attrs["grows"]) > 0 else 1)
+        self.assertEqual(
+            st.last.compression, Converters.toBool(attrs["compression"]))
+        self.assertEqual(
+            el.compression,  Converters.toBool(attrs["compression"]))
         self.assertEqual(st.last.rate, 5)
         self.assertEqual(el.rate, 5)
         self.assertEqual(st.last.shuffle, True)
         self.assertEqual(el.shuffle, True)
-        
 
-
-    ## first constructor test
+    # first constructor test
     # \brief It tests default settings
     def test_constructor_3(self):
         print "Run: %s.test_constructor() " % self.__class__.__name__
@@ -224,41 +218,43 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(el.trigger, attrs["trigger"])
         self.assertEqual(st.last.grows, int(attrs["grows"]))
         self.assertEqual(el.grows, int(attrs["grows"]))
-        self.assertEqual(st.last.compression, Converters.toBool(attrs["compression"]))
-        self.assertEqual(el.compression,  Converters.toBool(attrs["compression"]))
-        self.assertEqual(st.last.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
-        self.assertEqual(el.rate, int(attrs["rate"])  if int(attrs["rate"]) < 10 else 9)
+        self.assertEqual(
+            st.last.compression, Converters.toBool(attrs["compression"]))
+        self.assertEqual(
+            el.compression,  Converters.toBool(attrs["compression"]))
+        self.assertEqual(
+            st.last.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
+        self.assertEqual(
+            el.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
         self.assertEqual(st.last.shuffle, Converters.toBool(attrs["shuffle"]))
         self.assertEqual(el.shuffle, Converters.toBool(attrs["shuffle"]))
 
-    ## store method test
+    # store method test
     # \brief It tests executing store method
     def test_store(self):
         print "Run: %s.test_store() " % self.__class__.__name__
 
-        attrs = {"mode":"STEP"}
+        attrs = {"mode": "STEP"}
         el = EField(self._fattrs, None)
-        st = EStrategy({"mode":"STEP"}, el)
+        st = EStrategy({"mode": "STEP"}, el)
         self.assertEqual(st.content, [])
         self.assertEqual(st.doc, "")
         self.assertEqual(st.store(), None)
         self.assertEqual(st.last, el)
 
         self.assertEqual(st.store("<tag/>"), None)
-        self.assertEqual(st.last.postrun,"")
+        self.assertEqual(st.last.postrun, "")
 
-        content  = ["Test postrun"]
+        content = ["Test postrun"]
         st.content = content
         self.assertEqual(st.content, st.content)
         self.assertEqual(st.store("<tag/>"), None)
-        self.assertEqual(st.last.postrun,st.content[0])
-
+        self.assertEqual(st.last.postrun, st.content[0])
 
         st.content = ["Test", " postrun"]
         self.assertEqual(st.content, st.content)
         self.assertEqual(st.store("<tag/>"), None)
         self.assertEqual(st.last.postrun, content[0])
-        
 
 
 if __name__ == '__main__':

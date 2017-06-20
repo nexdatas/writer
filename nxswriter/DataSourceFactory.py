@@ -19,23 +19,27 @@
 
 """ factory with datasources """
 
-from . import Streams
-from . import DataSources
 from .Element import Element
+from .StreamSet import StreamSet
+from .DataSources import DataSource
 
 
 class DataSourceFactory(Element):
+
     """ Data source creator
     """
-    def __init__(self, attrs, last):
+
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary with the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element on the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, "datasource", attrs, last)
+        Element.__init__(self, "datasource", attrs, last, streams=streams)
         #: (:class:`nxswriter.DataSourcePool.DataSourcePool`) datasource pool
         self.__dsPool = None
 
@@ -55,17 +59,22 @@ class DataSourceFactory(Element):
         """
         if "type" in attrs.keys():
             if self.__dsPool and self.__dsPool.hasDataSource(attrs["type"]):
-                self.last.source = self.__dsPool.get(attrs["type"])()
+                self.last.source = self.__dsPool.get(attrs["type"])(
+                    streams=StreamSet(self._streams))
             else:
-                Streams.error(
-                    "DataSourceFactory::__createDSource - "
-                    "Unknown data source")
-                self.last.source = DataSources.DataSource()
+                if self._streams:
+                    self._streams.error(
+                        "DataSourceFactory::__createDSource - "
+                        "Unknown data source")
+                self.last.source = DataSource(
+                    streams=StreamSet(self._streams))
         else:
-            Streams.error(
-                "DataSourceFactory::__createDSource - "
-                "Typeless data source")
-            self.last.source = DataSources.DataSource()
+            if self._streams:
+                self._streams.error(
+                    "DataSourceFactory::__createDSource - "
+                    "Typeless data source")
+            self.last.source = DataSource(
+                streams=StreamSet(self._streams))
 
     def store(self, xml=None, globalJSON=None):
         """ sets the datasource form xml string

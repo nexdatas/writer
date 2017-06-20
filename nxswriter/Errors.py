@@ -22,48 +22,56 @@
 
 
 class ThreadError(Exception):
+
     """ exception for problems in thread
     """
     pass
 
 
 class CorruptedFieldArrayError(Exception):
+
     """ exception for corrupted FieldArray
     """
     pass
 
 
 class XMLSettingSyntaxError(Exception):
+
     """ exception for syntax in XML settings
     """
     pass
 
 
 class DataSourceError(Exception):
+
     """ exception for fetching data from data source
     """
     pass
 
 
 class PackageError(Exception):
+
     """ exception for fetching data from data source
     """
     pass
 
 
 class DataSourceSetupError(Exception):
+
     """ exception for setting data source
     """
     pass
 
 
 class XMLSyntaxError(Exception):
+
     """ exception for syntax in XML settings
     """
     pass
 
 
 class UnsupportedTagError(Exception):
+
     """ unsupported tag exception
     """
     pass

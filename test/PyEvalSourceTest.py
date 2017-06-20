@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file PyEvalSourceTest.py
+# \package test nexdatas
+# \file PyEvalSourceTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -32,82 +32,73 @@ import binascii
 import time
 
 
-from nxswriter import DataSources 
+from nxswriter import DataSources
 from nxswriter.DataSources import DataSource
 from nxswriter.PyEvalSource import PyEvalSource
 from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter.Errors import DataSourceSetupError
 from nxswriter.Types import Converters, NTP
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-## test fixture
+# test fixture
 class PyEvalSourceTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
             import time
-            self.__seed  = long(time.time() * 256) # use fractional seconds
+            self.__seed = long(time.time() * 256)  # use fractional seconds
         self.__rnd = random.Random(self.__seed)
 
-
-
-
-
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        ## file handle
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        # file handle
+        print "\nsetting up..."
+        print "SEED =", self.__seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## Exception tester
+    # Exception tester
     # \param exception expected exception
-    # \param method called method      
+    # \param method called method
     # \param args list with method arguments
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except exception, e:
             error = True
         self.assertEqual(error, True)
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        
-        
+
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.__str__(), " PYEVAL %s" % (""))
 
-        
-
-    ## setup test
+    # setup test
     # \brief It tests default settings
     def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
@@ -117,50 +108,48 @@ class PyEvalSourceTest(unittest.TestCase):
         script = 'ds.result = 0'
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource/>")
+        self.myAssertRaise(DataSourceSetupError, ds.setup, "<datasource/>")
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><result/></datasource>")
+        self.myAssertRaise(
+            DataSourceSetupError, ds.setup, "<datasource><result/></datasource>")
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup,"<datasource><result name ='writer'/></datasource>")
+        self.myAssertRaise(DataSourceSetupError, ds.setup,
+                           "<datasource><result name ='writer'/></datasource>")
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.setup("<datasource><result name='%s'>ds.%s = 0 </result></datasource>" % (dname,dname)),None)
+        self.assertEqual(
+            ds.setup("<datasource><result name='%s'>ds.%s = 0 </result></datasource>" % (dname, dname)), None)
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.assertEqual(ds.setup("<datasource><result>%s</result></datasource>"% script ),None)
+        self.assertEqual(
+            ds.setup("<datasource><result>%s</result></datasource>" % script), None)
         self.assertEqual(ds.__str__(), " PYEVAL %s" % (script))
 
+        ds = PyEvalSource()
+        self.assertTrue(isinstance(ds, DataSource))
+        self.myAssertRaise(DataSourceSetupError, ds.setup,
+                           "<datasource><datasource/><result>%s</result></datasource>" % script)
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup, 
-                           "<datasource><datasource/><result>%s</result></datasource>"% script )
-
-
-        ds = PyEvalSource()
-        self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup, 
-                           "<datasource><datasource type='CLIENT'/><result>%s</result></datasource>"% script )
-
-
+        self.myAssertRaise(DataSourceSetupError, ds.setup,
+                           "<datasource><datasource type='CLIENT'/><result>%s</result></datasource>" % script)
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
-        self.myAssertRaise(DataSourceSetupError, ds.setup, 
-                           "<datasource><datasource name='INP'/><result>%s</result></datasource>"% script )
-
+        self.myAssertRaise(DataSourceSetupError, ds.setup,
+                           "<datasource><datasource name='INP'/><result>%s</result></datasource>" % script)
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(ds.setup(
-                "<datasource><datasource type='CLIENT' name='INP'/><result>%s</result></datasource>"% script ),
-                         None)
-
+            "<datasource><datasource type='CLIENT' name='INP'/><result>%s</result></datasource>" % script),
+            None)
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -171,40 +160,36 @@ class PyEvalSourceTest(unittest.TestCase):
    <result>%s</result>
 </datasource>
 """         % script ), None)
-        
 
-    ## Data check 
+    # Data check
     # \brief It check the source Data
     # \param data  tested data
     # \param format data format
     # \param value data value
-    # \param ttype data Tango type    
-    # \param shape data shape    
+    # \param ttype data Tango type
+    # \param shape data shape
     def checkData(self, data, format, value, ttype, shape):
         self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
-        if format == 'SCALAR': 
+        if format == 'SCALAR':
             self.assertEqual(data["value"], value)
-        elif format == 'SPECTRUM': 
+        elif format == 'SPECTRUM':
             self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
                 self.assertEqual(data["value"][i], value[i])
-        else: 
+        else:
             self.assertEqual(len(data["value"]), len(value))
             for i in range(len(value)):
                 self.assertEqual(len(data["value"][i]), len(value[i]))
                 for j in range(len(value[i])):
                     self.assertEqual(data["value"][i][j], value[i][j])
-                
 
-
-    ## getData test
+    # getData test
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
 
         script = 'ds.result = 123.2'
         script2 = 'ds.result = ds.inp'
@@ -215,22 +200,20 @@ class PyEvalSourceTest(unittest.TestCase):
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.getData)
         self.assertEqual(ds.setup(
-                "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>"% script ),
-                         None)
+            "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>" % script),
+            None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 123.2,"DevDouble",[])        
-
+        self.checkData(dt, "SCALAR", 123.2, "DevDouble", [])
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(DataSourceSetupError, ds.getData)
         self.assertEqual(ds.setup(
-                "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>"% script2 ),
-                         None)
+            "<datasource><datasource type='CLIENT' name='inp'/><result>%s</result></datasource>" % script2),
+            None)
         gjson = '{"data":{"inp":"21"}}'
-        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
-        self.myAssertRaise(DataSourceSetupError, ds.setDataSources,dp)
-
+        self.assertEqual(ds.setJSON(json.loads(gjson)), None)
+        self.myAssertRaise(DataSourceSetupError, ds.setDataSources, dp)
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -242,13 +225,12 @@ class PyEvalSourceTest(unittest.TestCase):
   </datasource>
   <result>%s</result>
 </datasource>
-"""% script2 ), None)
+""" % script2 ), None)
         gjson = '{"data":{"inp":21}}'
-        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
-        self.assertEqual(ds.setDataSources(dp),None)
+        self.assertEqual(ds.setJSON(json.loads(gjson)), None)
+        self.assertEqual(ds.setDataSources(dp), None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 21,"DevLong64",[])        
-
+        self.checkData(dt, "SCALAR", 21, "DevLong64", [])
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -263,14 +245,15 @@ class PyEvalSourceTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-"""% script3 ), None)
+""" % script3 ), None)
         gjson = '{"data":{"rinp":21,"rinp2":41}}'
-        self.assertEqual(ds.setJSON(json.loads(gjson)),None)
-        self.assertEqual(ds.setDataSources(dp),None)
+        self.assertEqual(ds.setJSON(json.loads(gjson)), None)
+        self.assertEqual(ds.setDataSources(dp), None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 62,"DevLong64",[])        
+        self.checkData(dt, "SCALAR", 62, "DevLong64", [])
 
-        dp = DataSourcePool(json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+        dp = DataSourcePool(
+            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -285,14 +268,14 @@ class PyEvalSourceTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-"""% script3 ), None)
+""" % script3 ), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
-        self.assertEqual(ds.setDataSources(dp),None)
-        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        self.assertEqual(ds.setDataSources(dp), None)
+        self.assertEqual(
+            ds.setJSON(json.loads(gjson), json.loads(ljson)), None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 62.1,"DevDouble",[])        
-
+        self.checkData(dt, "SCALAR", 62.1, "DevDouble", [])
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -307,19 +290,16 @@ class PyEvalSourceTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-"""% script3 ), None)
+""" % script3 ), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
-        self.assertEqual(ds.setDataSources(dp),None)
-        self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(ljson)),None)
+        self.assertEqual(ds.setDataSources(dp), None)
+        self.assertEqual(
+            ds.setJSON(json.loads(gjson), json.loads(ljson)), None)
         dt = ds.getData()
-        self.checkData(dt, "SCALAR", 62.1,"DevDouble",[])        
+        self.checkData(dt, "SCALAR", 62.1, "DevDouble", [])
 
-
-
-
-
-    ## setup test
+    # setup test
     # \brief It tests default settings
     def test_getData_global_scalar(self):
         fun = sys._getframe().f_code.co_name
@@ -334,23 +314,22 @@ else:
         dp = DataSourcePool()
 
         arr = {
-            "int":[1243,"SCALAR","DevLong64",[]],
-            "long":[-10000000000000000000000003,"SCALAR","DevLong64",[]],
-            "float":[-1.223e-01,"SCALAR","DevDouble",[]],
-            "str":['My String',"SCALAR","DevString",[]],
-            "unicode":[u'12\xf8\xff\xf4',"SCALAR","DevString",[]],
-            "bool":['true',"SCALAR","DevBoolean",[]],
-            }
-
+            "int": [1243, "SCALAR", "DevLong64", []],
+            "long": [-10000000000000000000000003, "SCALAR", "DevLong64", []],
+            "float": [-1.223e-01, "SCALAR", "DevDouble", []],
+            "str": ['My String', "SCALAR", "DevString", []],
+            "unicode": [u'12\xf8\xff\xf4', "SCALAR", "DevString", []],
+            "bool": ['true', "SCALAR", "DevBoolean", []],
+        }
 
         arr2 = {
-            "int":[1123,"SCALAR","DevLong64",[]],
-            "long":[-11231000000000000000000003,"SCALAR","DevLong64",[]],
-            "float":[-1.113e-01,"SCALAR","DevDouble",[]],
-            "str":['My funy',"SCALAR","DevString",[]],
-            "unicode":[u'\xf812\xff\xf4',"SCALAR","DevString",[]],
-            "bool":['false',"SCALAR","DevBoolean",[]],
-            }
+            "int": [1123, "SCALAR", "DevLong64", []],
+            "long": [-11231000000000000000000003, "SCALAR", "DevLong64", []],
+            "float": [-1.113e-01, "SCALAR", "DevDouble", []],
+            "str": ['My funy', "SCALAR", "DevString", []],
+            "unicode": [u'\xf812\xff\xf4', "SCALAR", "DevString", []],
+            "bool": ['false', "SCALAR", "DevBoolean", []],
+        }
 
         for a in arr:
             for a2 in arr2:
@@ -368,28 +347,30 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-"""% script ), None)
-                if arr[a][2] == "DevString" :
-                    gjson = '{"data":{"rinp":"%s"}}' % ( arr[a][0])
+""" % script ), None)
+                if arr[a][2] == "DevString":
+                    gjson = '{"data":{"rinp":"%s"}}' % (arr[a][0])
                 else:
-                    gjson = '{"data":{"rinp":%s}}' % ( arr[a][0])
-                if arr2[a2][2] == "DevString" :
+                    gjson = '{"data":{"rinp":%s}}' % (arr[a][0])
+                if arr2[a2][2] == "DevString":
                     gjson2 = '{"data":{"rinp2":"%s"}}' % (arr2[a2][0])
                 else:
-                    gjson2 = '{"data":{"rinp2":%s}}' % ( arr2[a2][0])
+                    gjson2 = '{"data":{"rinp2":%s}}' % (arr2[a2][0])
 
-                self.assertEqual(ds.setDataSources(dp),None)
-                self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(gjson2)),None)
+                self.assertEqual(ds.setDataSources(dp), None)
+                self.assertEqual(
+                    ds.setJSON(json.loads(gjson), json.loads(gjson2)), None)
                 dt = ds.getData()
-                v1 = Converters.toBool(arr[a][0]) if arr[a][2] == "DevBoolean" else arr[a][0]
-                v2 = Converters.toBool(arr2[a2][0]) if arr2[a2][2] == "DevBoolean" else arr2[a2][0]
-                vv = v1 + v2  if type(v1) == type(v2) else unicode(v1)+ unicode(v2)
-                self.checkData(dt, arr[a][1], vv, NTP.pTt[type(vv).__name__], arr[a][3])        
+                v1 = Converters.toBool(arr[a][0]) if arr[
+                    a][2] == "DevBoolean" else arr[a][0]
+                v2 = Converters.toBool(arr2[a2][0]) if arr2[
+                    a2][2] == "DevBoolean" else arr2[a2][0]
+                vv = v1 + v2 if type(v1) == type(
+                    v2) else unicode(v1) + unicode(v2)
+                self.checkData(
+                    dt, arr[a][1], vv, NTP.pTt[type(vv).__name__], arr[a][3])
 
-
-
-
-    ## setup test
+    # setup test
     # \brief It tests default settings
     def test_getData_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
@@ -404,51 +385,50 @@ else:
 
         dp = DataSourcePool()
         arr = {
-            "int":[1243,"SPECTRUM","DevLong64",[]],
-            "long":[-10000000000000000000000003L,"SPECTRUM","DevLong64",[]],
-            "float":[-1.223e-01,"SPECTRUM","DevDouble",[]],
-            "str":['My String',"SPECTRUM","DevString",[]],
-            "unicode":["Hello","SPECTRUM","DevString",[]],
-#            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
-            "bool":['true',"SPECTRUM","DevBoolean",[]],
-            }
-
+            "int": [1243, "SPECTRUM", "DevLong64", []],
+            "long": [-10000000000000000000000003L, "SPECTRUM", "DevLong64", []],
+            "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
+            "str": ['My String', "SPECTRUM", "DevString", []],
+            "unicode": ["Hello", "SPECTRUM", "DevString", []],
+            #            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            "bool": ['true', "SPECTRUM", "DevBoolean", []],
+        }
 
         arr2 = {
-            "int":[1123,"SPECTRUM","DevLong64",[]],
-            "long":[-1012300000000000000000L,"SPECTRUM","DevLong64",[]],
-            "float":[-1.112e-01,"SPECTRUM","DevDouble",[]],
-            "str":['My String2',"SPECTRUM","DevString",[]],
-            "unicode":["Hello!","SPECTRUM","DevString",[]],
-#            "unicode":[u'\x14\xf8\xff\xf4',"SPECTRUM","DevString",[]],
-            "bool":['false',"SPECTRUM","DevBoolean",[]],
-            }
-
+            "int": [1123, "SPECTRUM", "DevLong64", []],
+            "long": [-1012300000000000000000L, "SPECTRUM", "DevLong64", []],
+            "float": [-1.112e-01, "SPECTRUM", "DevDouble", []],
+            "str": ['My String2', "SPECTRUM", "DevString", []],
+            "unicode": ["Hello!", "SPECTRUM", "DevString", []],
+            #            "unicode":[u'\x14\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            "bool": ['false', "SPECTRUM", "DevBoolean", []],
+        }
 
         for k in arr:
 
             if arr[k][2] != "DevBoolean":
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 3)]
-                arr[k][0] =  [ arr[k][0]*self.__rnd.randint(1, 3) for c in range(mlen[0] )]
-            else:    
+                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
+                arr[k][0] = [arr[k][0] * self.__rnd.randint(1, 3)
+                             for c in range(mlen[0])]
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
-                arr[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                arr[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                             for c in range(mlen[0])]
 
-            arr[k][3] =  [mlen[0]]
-
+            arr[k][3] = [mlen[0]]
 
         for k in arr2:
 
             if arr2[k][2] != "DevBoolean":
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 3)]
-                arr2[k][0] =  [ arr2[k][0]*self.__rnd.randint(1, 3) for c in range(mlen[0] )]
-            else:    
+                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
+                arr2[k][0] = [
+                    arr2[k][0] * self.__rnd.randint(1, 3) for c in range(mlen[0])]
+            else:
                 mlen = [self.__rnd.randint(1, 10)]
-                arr2[k][0] =  [ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[0]) ]
+                arr2[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                              for c in range(mlen[0])]
 
-            arr2[k][3] =  [mlen[0]]
-
-
+            arr2[k][3] = [mlen[0]]
 
         for k in arr:
             for k2 in arr2:
@@ -466,43 +446,45 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-"""% script ), None)
+""" % script ), None)
                 if arr[k][2] == "DevString":
-                    gjson = '{"data":{"rinp":%s}}' % ( str(arr[k][0]).replace("'","\""))
+                    gjson = '{"data":{"rinp":%s}}' % (
+                        str(arr[k][0]).replace("'", "\""))
                 elif arr[k][2] == "DevBoolean":
-                    gjson = '{"data":{"rinp":%s}}' % ( '['+''.join([a + ',' for a in arr[k][0]])[:-1]+"]")
+                    gjson = '{"data":{"rinp":%s}}' % (
+                        '[' + ''.join([a + ',' for a in arr[k][0]])[:-1] + "]")
                 else:
-                    gjson = '{"data":{"rinp":%s}}' % ( '['+''.join([str(a) + ',' for a in arr[k][0]])[:-1]+"]")
-
+                    gjson = '{"data":{"rinp":%s}}' % (
+                        '[' + ''.join([str(a) + ',' for a in arr[k][0]])[:-1] + "]")
 
                 if arr2[k2][2] == "DevString":
-                    gjson2 = '{"data":{"rinp2":%s}}' % ( str(arr2[k2][0]).replace("'","\""))
+                    gjson2 = '{"data":{"rinp2":%s}}' % (
+                        str(arr2[k2][0]).replace("'", "\""))
                 elif arr2[k2][2] == "DevBoolean":
-                    gjson2 = '{"data":{"rinp2":%s}}' % ( '['+''.join([a + ',' for a in arr2[k2][0]])[:-1]+"]")
+                    gjson2 = '{"data":{"rinp2":%s}}' % (
+                        '[' + ''.join([a + ',' for a in arr2[k2][0]])[:-1] + "]")
                 else:
-                    gjson2 = '{"data":{"rinp2":%s}}' % ( '['+''.join([str(a) + ',' for a in arr2[k2][0]])[:-1]+"]")
+                    gjson2 = '{"data":{"rinp2":%s}}' % (
+                        '[' + ''.join([str(a) + ',' for a in arr2[k2][0]])[:-1] + "]")
 
-
-
-
-                self.assertEqual(ds.setDataSources(dp),None)
-                self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(gjson2)),None)
+                self.assertEqual(ds.setDataSources(dp), None)
+                self.assertEqual(
+                    ds.setJSON(json.loads(gjson), json.loads(gjson2)), None)
                 dt = ds.getData()
-                v1 = [Converters.toBool(a) for a in arr[k][0]] if arr[k][2] == "DevBoolean" else arr[k][0]
-                v2 = [Converters.toBool(a) for a in arr2[k2][0]] if arr2[k2][2] == "DevBoolean" else arr2[k2][0]
+                v1 = [Converters.toBool(a)
+                      for a in arr[k][0]] if arr[k][2] == "DevBoolean" else arr[k][0]
+                v2 = [Converters.toBool(a) for a in arr2[k2][0]] if arr2[
+                    k2][2] == "DevBoolean" else arr2[k2][0]
                 vv = v1 + v2  if type(v1[0]).__name__ == type(v2[0]).__name__ \
                     else [unicode(i) for i in v1] + [unicode(i2) for i2 in v2]
-                self.checkData(dt, arr[k][1], vv, NTP.pTt[type(vv[0]).__name__], [arr[k][3][0]+arr2[k2][3][0]])        
+                self.checkData(dt, arr[k][1], vv, NTP.pTt[
+                               type(vv[0]).__name__], [arr[k][3][0] + arr2[k2][3][0]])
 
-
-
-
-    ## getData test
+    # getData test
     # \brief It tests default settings with global json string
     def test_getData_global_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
@@ -514,53 +496,55 @@ else:
         dp = DataSourcePool()
 
         arr = {
-            "int":[1243,"IMAGE","DevLong64",[]],
-            "long":[-10000000000000000000000003,"IMAGE","DevLong64",[]],
-            "float":[-1.223e-01,"IMAGE","DevDouble",[]],
-            "str":['My String',"IMAGE","DevString",[]],
-            "unicode":["Hello","IMAGE","DevString",[]],
-#            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
-            "bool":['true',"IMAGE","DevBoolean",[]],
-            }
-
+            "int": [1243, "IMAGE", "DevLong64", []],
+            "long": [-10000000000000000000000003, "IMAGE", "DevLong64", []],
+            "float": [-1.223e-01, "IMAGE", "DevDouble", []],
+            "str": ['My String', "IMAGE", "DevString", []],
+            "unicode": ["Hello", "IMAGE", "DevString", []],
+            #            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
+            "bool": ['true', "IMAGE", "DevBoolean", []],
+        }
 
         arr2 = {
-            "int":[1123,"SPECTRUM","DevLong64",[]],
-            "long":[-10123000000000000000000003,"SPECTRUM","DevLong64",[]],
-            "float":[-1.112e-01,"SPECTRUM","DevDouble",[]],
-            "str":['My String2',"SPECTRUM","DevString",[]],
-            "unicode":["Hello!","SPECTRUM","DevString",[]],
-#            "unicode":[u'\x14\xf8\xff\xf4',"SPECTRUM","DevString",[]],
-            "bool":['false',"SPECTRUM","DevBoolean",[]],
-            }
-
+            "int": [1123, "SPECTRUM", "DevLong64", []],
+            "long": [-10123000000000000000000003, "SPECTRUM", "DevLong64", []],
+            "float": [-1.112e-01, "SPECTRUM", "DevDouble", []],
+            "str": ['My String2', "SPECTRUM", "DevString", []],
+            "unicode": ["Hello!", "SPECTRUM", "DevString", []],
+            #            "unicode":[u'\x14\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            "bool": ['false', "SPECTRUM", "DevBoolean", []],
+        }
 
         for k in arr:
-            nl2 = self.__rnd.randint(1, 10) 
+            nl2 = self.__rnd.randint(1, 10)
             if arr[k][2] != "DevBoolean":
-                mlen = [self.__rnd.randint(1, 10),nl2, self.__rnd.randint(0,3)]
-                arr[k][0] =  [[ arr[k][0]*self.__rnd.randint(1,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
-                mlen = [self.__rnd.randint(1, 10),nl2]
+                mlen = [
+                    self.__rnd.randint(1, 10), nl2, self.__rnd.randint(0, 3)]
+                arr[k][0] = [[arr[k][0] * self.__rnd.randint(1, 3)
+                              for r in range(mlen[1])] for c in range(mlen[0])]
+            else:
+                mlen = [self.__rnd.randint(1, 10), nl2]
                 if arr[k][2] == 'DevBoolean':
-                    arr[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
-            arr[k][3] =  [mlen[0],mlen[1]]
+                    arr[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
+                                  for c in range(mlen[1])] for r in range(mlen[0])]
 
+            arr[k][3] = [mlen[0], mlen[1]]
 
             if arr2[k][2] != "DevBoolean":
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10), self.__rnd.randint(0,3)]
-                arr2[k][0] =  [[ arr2[k][0]*self.__rnd.randint(1,3) for r in range(mlen[1])] for c in range(mlen[0])]
-            else:    
-                mlen = [self.__rnd.randint(1, 10),self.__rnd.randint(1, 10) ]
+                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
+                    1, 10), self.__rnd.randint(0, 3)]
+                arr2[k][0] = [[arr2[k][0] * self.__rnd.randint(1, 3)
+                               for r in range(mlen[1])] for c in range(mlen[0])]
+            else:
+                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr2[k][2] == 'DevBoolean':
-                    arr2[k][0] =  [[ ("true" if self.__rnd.randint(0,1) else "false")  for c in range(mlen[1]) ] for r in range(mlen[0])]
-                    
-            arr2[k][3] =  [mlen[0],mlen[1]]
+                    arr2[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
+                                   for c in range(mlen[1])] for r in range(mlen[0])]
+
+            arr2[k][3] = [mlen[0], mlen[1]]
 
         for k in arr:
             for k2 in arr2:
-
 
                 ds = PyEvalSource()
                 self.assertTrue(isinstance(ds, DataSource))
@@ -575,54 +559,51 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-"""% script ), None)
+""" % script ), None)
 
                 if arr[k][2] == "DevString":
-                    gjson = '{"data":{"rinp":%s}}' % (str(arr[k][0]).replace("'","\""))
+                    gjson = '{"data":{"rinp":%s}}' % (
+                        str(arr[k][0]).replace("'", "\""))
                 elif arr[k][2] == "DevBoolean":
-                    gjson = '{"data":{"rinp":%s}}' % ('['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," for row in arr[k][0]])[:-1] +']')
+                    gjson = '{"data":{"rinp":%s}}' % (
+                        '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "]," for row in arr[k][0]])[:-1] + ']')
                 else:
-                    gjson = '{"data":{"rinp":%s}}' % ('['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," for row in arr[k][0]])[:-1] +']')
+                    gjson = '{"data":{"rinp":%s}}' % (
+                        '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "]," for row in arr[k][0]])[:-1] + ']')
 
                 if arr2[k2][2] == "DevString":
-                    gjson2 = '{"data":{"rinp2":%s}}' % (str(arr2[k2][0]).replace("'","\""))
+                    gjson2 = '{"data":{"rinp2":%s}}' % (
+                        str(arr2[k2][0]).replace("'", "\""))
                 elif arr2[k2][2] == "DevBoolean":
-                    gjson2 = '{"data":{"rinp2":%s}}' % ('['+"".join([ '['+''.join([a + ',' for a in row])[:-1]+"]," for row in arr2[k2][0]])[:-1] +']')
+                    gjson2 = '{"data":{"rinp2":%s}}' % (
+                        '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "]," for row in arr2[k2][0]])[:-1] + ']')
                 else:
-                    gjson2 = '{"data":{"rinp2":%s}}' % ('['+"".join([ '['+''.join([str(a) + ',' for a in row])[:-1]+"]," for row in arr2[k2][0]])[:-1] +']')
+                    gjson2 = '{"data":{"rinp2":%s}}' % (
+                        '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "]," for row in arr2[k2][0]])[:-1] + ']')
 
-
-
-
-
-                self.assertEqual(ds.setDataSources(dp),None)
-                self.assertEqual(ds.setJSON(json.loads(gjson),json.loads(gjson2)),None)
+                self.assertEqual(ds.setDataSources(dp), None)
+                self.assertEqual(
+                    ds.setJSON(json.loads(gjson), json.loads(gjson2)), None)
                 dt = ds.getData()
-                v1 = [[Converters.toBool(a) for a in row ]for row in arr[k][0]] if arr[k][2] == "DevBoolean" else arr[k][0]
-                v2 = [[Converters.toBool(a) for a in row ]for row in arr2[k2][0]] if arr2[k2][2] == "DevBoolean" else arr2[k2][0]
+                v1 = [[Converters.toBool(a) for a in row]
+                      for row in arr[k][0]] if arr[k][2] == "DevBoolean" else arr[k][0]
+                v2 = [[Converters.toBool(a) for a in row]
+                      for row in arr2[k2][0]] if arr2[k2][2] == "DevBoolean" else arr2[k2][0]
                 vv = v1 + v2  if type(v1[0][0]) == type(v2[0][0]) \
                     else ([[unicode(j) for j in i] for i in v1] + [[unicode(j2) for j2 in i2] for i2 in v2])
-                self.checkData(dt, arr[k][1], vv, NTP.pTt[type(vv[0][0]).__name__], [arr[k][3][0]+arr2[k2][3][0],arr[k][3][1]])        
+                self.checkData(dt, arr[k][1], vv, NTP.pTt[type(vv[0][0]).__name__], [
+                               arr[k][3][0] + arr2[k2][3][0], arr[k][3][1]])
 
-
-
-
-
-    ## isValid test
+    # isValid test
     # \brief It tests default settings
     def test_isValid(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
-
 
         el = PyEvalSource()
         self.assertTrue(isinstance(el, object))
         self.assertEqual(el.isValid(), True)
 
 
-
-
-
-    
 if __name__ == '__main__':
     unittest.main()

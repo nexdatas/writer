@@ -15,8 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
-## \package test nexdatas
-## \file TNObjectTest.py
+# \package test nexdatas
+# \file TNObjectTest.py
 # unittests for field Tags running Tango Server
 #
 import unittest
@@ -30,45 +30,41 @@ import binascii
 from nxswriter.FetchNameHandler import TNObject
 
 
-## if 64-bit machione
+# if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-
-
-## test fixture
+# test fixture
 class ElementTest(unittest.TestCase):
 
-    ## constructor
+    # constructor
     # \param methodName name of the test method
+
     def __init__(self, methodName):
         unittest.TestCase.__init__(self, methodName)
-
-
 
         self._bint = "int64" if IS64BIT else "int32"
         self._buint = "uint64" if IS64BIT else "uint32"
         self._bfloat = "float64" if IS64BIT else "float32"
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256) 
+            self.__seed = long(time.time() * 256)
 
         self.__rnd = random.Random(self.__seed)
 
-
-    ## test starter
+    # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."        
-        print "SEED =", self.__seed 
+        print "\nsetting up..."
+        print "SEED =", self.__seed
 
-    ## test closer
+    # test closer
     # \brief Common tear down
     def tearDown(self):
         print "tearing down ..."
 
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
@@ -97,7 +93,6 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.parent, None)
         self.assertEqual(el.children, [])
 
-
         nn = self.__rnd.randint(1, 9)
         mname = "myename%s" % nn
         mtype = "NXetype%s" % nn
@@ -108,8 +103,6 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.nxtype, mtype)
         self.assertEqual(el.parent, root)
         self.assertEqual(el.children, [])
-
-
 
         nn = self.__rnd.randint(1, 9)
         mname = "mysname%s" % nn
@@ -122,11 +115,10 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.parent, root)
         self.assertEqual(el2.children, [])
 
-
         nn = self.__rnd.randint(1, 9)
         mname = "mygname%s" % nn
         mtype = "NXgtype%s" % nn
-        self.assertEqual(root.children, [el,el2])
+        self.assertEqual(root.children, [el, el2])
         self.assertEqual(el2.children, [])
         el3 = TNObject(mname, mtype, el2)
         self.assertEqual(el2.children, [el3])
@@ -136,11 +128,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el3.parent, el2)
         self.assertEqual(el3.children, [])
 
-
-
-
-
-    ## constructor test
+    # constructor test
     # \brief It tests default settings
     def test_child(self):
         fun = sys._getframe().f_code.co_name
@@ -171,8 +159,6 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el.parent, root)
         self.assertEqual(el.children, [])
 
-
-
         nn = self.__rnd.randint(1, 10)
         mname2 = "myename%s" % nn
         mtype2 = "NXetype%s" % nn
@@ -184,11 +170,10 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(el2.parent, root)
         self.assertEqual(el2.children, [])
 
-
         nn = self.__rnd.randint(1, 10)
         mname3 = "mywname%s" % nn
         mtype3 = "NXwtype%s" % nn
-        self.assertEqual(root.children, [el,el2])
+        self.assertEqual(root.children, [el, el2])
         self.assertEqual(el2.children, [])
         el3 = TNObject(mname3, mtype3, el2)
         self.assertEqual(el2.children, [el3])
@@ -206,16 +191,13 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(ch, el2)
         ch = root.child(mname3)
         self.assertEqual(ch, None)
-        
 
-        ch = root.child(nxtype = mtype)
+        ch = root.child(nxtype=mtype)
         self.assertEqual(ch, el)
-        ch = root.child(nxtype = mtype2)
+        ch = root.child(nxtype=mtype2)
         self.assertEqual(ch, el2)
-        ch = root.child(nxtype = mtype3)
+        ch = root.child(nxtype=mtype3)
         self.assertEqual(ch, None)
-        
-
 
         ch = el2.child()
         self.assertEqual(ch, el3)
@@ -223,24 +205,19 @@ class ElementTest(unittest.TestCase):
         self.assertEqual(ch, el3)
         ch = el2.child(mname2)
         self.assertEqual(ch, None)
-        
 
-        ch = el2.child(nxtype = mtype3)
+        ch = el2.child(nxtype=mtype3)
         self.assertEqual(ch, el3)
-        ch = el2.child(nxtype = mtype2)
+        ch = el2.child(nxtype=mtype2)
         self.assertEqual(ch, None)
-
 
         ch = el3.child()
         self.assertEqual(ch, None)
         ch = el3.child(mname2)
         self.assertEqual(ch, None)
-        
 
-        ch = el3.child(nxtype = mtype2)
+        ch = el3.child(nxtype=mtype2)
         self.assertEqual(ch, None)
-        
-
 
 
 if __name__ == '__main__':
