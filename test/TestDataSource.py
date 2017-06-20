@@ -30,7 +30,7 @@ class TestDataSource(DataSource):
         # constructor
     # \brief It cleans all member variables
 
-    def __init__(self):
+    def __init__(self, streams=None):
         # flag for running getData
         self.dataTaken = False
         # list of dimensions
@@ -55,6 +55,8 @@ class TestDataSource(DataSource):
         self.stack = []
         # value 0D
         self.value0d = 1
+        # streams
+        self._streams = streams
 
     # sets the parameters up from xml
     # \brief xml  datasource parameters

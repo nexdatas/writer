@@ -23,7 +23,6 @@ from xml import sax
 
 import sys
 import os
-from . import Streams
 
 from .Errors import XMLSyntaxError
 
@@ -90,10 +89,12 @@ class FetchNameHandler(sax.ContentHandler):
     """ SAX2 parser
     """
 
-    def __init__(self):
+    def __init__(self, streams=None):
         """ constructor
 
         :brief: It constructs parser handler for fetching group names
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
         sax.ContentHandler.__init__(self)
 
@@ -109,6 +110,8 @@ class FetchNameHandler(sax.ContentHandler):
         self.__content = []
         #: (:obj:`bool`) True if inside attribute tag
         self.__attribute = False
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def startElement(self, name, attrs):
         """ parses the opening tag
@@ -157,10 +160,11 @@ class FetchNameHandler(sax.ContentHandler):
                 if self.__current.nxtype and len(self.__current.nxtype) > 2:
                     self.__current.name = self.__current.nxtype[2:]
                 else:
-                    Streams.error(
-                        "FetchNameHandler::endElement() - "
-                        "The group type not defined",
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "FetchNameHandler::endElement() - "
+                            "The group type not defined",
+                            std=False)
 
                     raise XMLSyntaxError("The group type not defined")
             self.__current = self.__current.parent

@@ -25,7 +25,6 @@ from .DataHolder import DataHolder
 from .Element import Element
 from .Types import NTP
 from .Errors import (XMLSettingSyntaxError)
-from . import Streams
 
 
 class FElement(Element):
@@ -34,7 +33,7 @@ class FElement(Element):
     tag element corresponding to one of H5 objects
     """
 
-    def __init__(self, name, attrs, last, h5object=None):
+    def __init__(self, name, attrs, last, h5object=None, streams=None):
         """ constructor
 
         :param name: tag name
@@ -45,8 +44,10 @@ class FElement(Element):
         :type last: :class:`nxswriter.Element.Element`
         :param h5object: H5 file object
         :type h5object: :class:`nxswriter.FileWriter.FTObject`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, name, attrs, last)
+        Element.__init__(self, name, attrs, last, streams=streams)
         #: (:class:`nxswriter.FileWriter.FTObject`) stored H5 file object
         self.h5Object = h5object
         #: (:class:`nxswriter.DataSources.DataSource`) data source
@@ -98,8 +99,7 @@ class FElement(Element):
                 shape.insert(exDim - 1, 0)
         return shape
 
-    @classmethod
-    def __fetchShape(cls, value, rank):
+    def __fetchShape(self, value, rank):
         """ fetches shape from value and rank
 
         :param rank: rank of the object
@@ -119,10 +119,11 @@ class FElement(Element):
             image = [ln.split() for ln in lines]
             return [len(image), len(image[0])]
         else:
-            Streams.error(
-                "FElement::__fetchShape() "
-                "- Case with not supported rank = %s" % rank,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "FElement::__fetchShape() "
+                    "- Case with not supported rank = %s" % rank,
+                    std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s" % rank)
@@ -191,7 +192,7 @@ class FElement(Element):
                 if checkData and self.source and self.source.isValid():
                     data = self.source.getData()
                     if isinstance(data, dict):
-                        dh = DataHolder(**data)
+                        dh = DataHolder(streams=self._streams, **data)
                         shape = self._reshape(dh.shape, rank, extends,
                                               extraD, exDim)
                         if shape is not None:
@@ -247,7 +248,7 @@ class FElementWithAttr(FElement):
         tag element corresponding to one of H5 objects with attributes
     """
 
-    def __init__(self, name, attrs, last, h5object=None):
+    def __init__(self, name, attrs, last, h5object=None, streams=None):
         """ constructor
 
         :param name: tag name
@@ -258,9 +259,11 @@ class FElementWithAttr(FElement):
         :type last: :class:`nxswriter.Element.Element`
         :param h5object: H5 file object
         :type h5object: :class:`nxswriter.FileWriter.FTObject`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
 
-        FElement.__init__(self, name, attrs, last, h5object)
+        FElement.__init__(self, name, attrs, last, h5object, streams=streams)
         #: (:obj:`dict` <:obj:`str`, (:obj:`str`, :obj:`str`, :obj:`tuple`)>  \
         #:     or :obj:`dict` <:obj:`str`, (:obj:`str`, :obj:`str`) > ) \
         #:     dictionary with attribures from sepatare attribute tags
@@ -269,8 +272,7 @@ class FElementWithAttr(FElement):
         #: (:obj:`dict` <:obj:`str`, h5object>) h5 instances
         self.__h5Instances = {}
 
-    @classmethod
-    def _setValue(cls, rank, val):
+    def _setValue(self, rank, val):
         """ creates DataHolder with given rank and value
 
         :param rank: data rank
@@ -282,21 +284,25 @@ class FElementWithAttr(FElement):
         """
         dh = None
         if not rank or rank == 0:
-            dh = DataHolder("SCALAR", val, "DevString", [1, 0])
+            dh = DataHolder("SCALAR", val, "DevString", [1, 0],
+                            streams=self._streams)
         elif rank == 1:
             spec = val.split()
             dh = DataHolder("SPECTRUM", spec, "DevString",
-                            [len(spec), 0])
+                            [len(spec), 0],
+                            streams=self._streams)
         elif rank == 2:
             lines = val.split("\n")
             image = [ln.split() for ln in lines]
             dh = DataHolder("IMAGE", image, "DevString",
-                            [len(image), len(image[0])])
+                            [len(image), len(image[0])],
+                            streams=self._streams)
         else:
-            Streams.error(
-                "FElement::_createAttributes() - "
-                "Case with not supported rank = %s" % rank,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "FElement::_createAttributes() - "
+                    "Case with not supported rank = %s" % rank,
+                    std=False)
 
             raise XMLSettingSyntaxError(
                 "Case with not supported rank = %s", rank)
@@ -318,7 +324,8 @@ class FElementWithAttr(FElement):
                                 NTP.nTnp[self.tagAttributes[key][0]].encode())
                     dh = DataHolder(
                         "SCALAR", self.tagAttributes[key][1].strip().encode(),
-                        "DevString", [1, 0])
+                        "DevString", [1, 0],
+                        streams=self._streams)
                     self.__h5Instances[key.encode()][...] = \
                         dh.cast(self.__h5Instances[key.encode()].dtype)
                 else:

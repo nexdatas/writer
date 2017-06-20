@@ -21,7 +21,6 @@
 
 from xml.dom import minidom
 
-from . import Streams
 from .DataSources import DataSource
 from .Errors import DataSourceSetupError
 
@@ -31,12 +30,14 @@ class ClientSource(DataSource):
     """ Client data source
     """
 
-    def __init__(self):
+    def __init__(self, streams=None):
         """ constructor
 
         :brief: It sets all member variables to None
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        DataSource.__init__(self)
+        DataSource.__init__(self, streams=streams)
         #: (:obj:`str`) data name
         self.name = None
         #: (:obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>)
@@ -60,10 +61,11 @@ class ClientSource(DataSource):
             self.name = rec[0].getAttribute("name") \
                 if rec[0].hasAttribute("name") else None
         if not self.name:
-            Streams.error(
-                "ClientSource::setup() - "
-                "Client record name not defined: %s" % xml,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "ClientSource::setup() - "
+                    "Client record name not defined: %s" % xml,
+                    std=False)
             raise DataSourceSetupError(
                 "Client record name not defined: %s" % xml)
 

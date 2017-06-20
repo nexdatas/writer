@@ -20,9 +20,9 @@
 """ Definitions of DB datasource """
 
 from xml.dom import minidom
+import sys
 
 from .Types import NTP
-from . import Streams
 
 from .DataSources import DataSource
 from .Errors import (PackageError, DataSourceSetupError)
@@ -35,19 +35,19 @@ try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
-    Streams.info("MYSQL not available: %s" % e)
+    sys.stdout.write("MYSQL not available: %s\n" % e)
 
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
 except ImportError as e:
-    Streams.info("PGSQL not available: %s" % e)
+    sys.stdout.write("PGSQL not available: %s\n" % e)
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
 except ImportError as e:
-    Streams.info("ORACLE not available: %s" % e)
+    sys.stdout.write("ORACLE not available: %s\n" % e)
 
 
 class DBaseSource(DataSource):
@@ -55,12 +55,14 @@ class DBaseSource(DataSource):
     """ DataBase data source
     """
 
-    def __init__(self):
+    def __init__(self, streams=None):
         """ constructor
 
         :brief: It sets all member variables to None
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        DataSource.__init__(self)
+        DataSource.__init__(self, streams=streams)
         #: (:obj:`str`) name of the host with the data source
         self.hostname = None
         #: (:obj:`str`) port related to the host
@@ -114,10 +116,11 @@ class DBaseSource(DataSource):
             self.query = self._getText(query[0])
 
         if not self.format or not self.query:
-            Streams.error(
-                "DBaseSource::setup() - "
-                "Database query or its format not defined: %s" % xml,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "DBaseSource::setup() - "
+                    "Database query or its format not defined: %s" % xml,
+                    std=False)
 
             raise DataSourceSetupError(
                 "Database query or its format not defined: %s" % xml)
@@ -217,10 +220,11 @@ class DBaseSource(DataSource):
                 and self.dbtype in DB_AVAILABLE:
             db = self.__dbConnect[self.dbtype]()
         else:
-            Streams.error(
-                "DBaseSource::getData() - "
-                "Support for %s database not available" % self.dbtype,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "DBaseSource::getData() - "
+                    "Support for %s database not available" % self.dbtype,
+                    std=False)
 
             raise PackageError(
                 "Support for %s database not available" % self.dbtype)

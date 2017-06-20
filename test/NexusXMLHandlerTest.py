@@ -78,9 +78,10 @@ class Closeable(object):
 class DataSourcePool(object):
     # consturctor
 
-    def __init__(self):
+    def __init__(self, streams=None):
         # close flag
         self.canfail = False
+        self._streams = streams
 
 # test element
 
@@ -98,7 +99,7 @@ class TElement(FElement):
     trigger = None
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         TElement.instance = self
         # costructor flag
         self.constructed = True
@@ -121,6 +122,7 @@ class TElement(FElement):
         # run flag
         self.started = False
         # h5object
+        self._streams = streams
         self.h5Object = Closeable()
 
     @classmethod
@@ -154,9 +156,10 @@ class TElement(FElement):
 class SElement(FElement):
     # consturctor
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         SElement.instance = self
         self.canfail = False
+        self._streams = streams
 
     # run method
     def setCanFail(self):
@@ -173,7 +176,7 @@ class InnerTag(object):
     trigger = None
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         InnerTag.instance = self
         # costructor flag
         self.constructed = True
@@ -195,6 +198,7 @@ class InnerTag(object):
         self.xml = None
         # json
         self.json = None
+        self._streams = streams
 
     # stores names
     def store(self, xml, myjson):
@@ -219,7 +223,7 @@ class InnerTagDSDC(object):
     trigger = None
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         InnerTagDSDC.instance = self
         # costructor flag
         self.constructed = True
@@ -245,6 +249,7 @@ class InnerTagDSDC(object):
         self.datasources = None
         # decoders
         self.decoders = None
+        self._streams = streams
 
     # stores names
     def store(self, xml, myjson):
@@ -280,7 +285,7 @@ class InnerTagDS(object):
     trigger = None
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         InnerTagDS.instance = self
         # costructor flag
         self.constructed = True
@@ -306,6 +311,7 @@ class InnerTagDS(object):
         self.datasources = None
         # decoders
         self.decoders = None
+        self._streams = streams
 
     # stores names
     def store(self, xml, myjson):
@@ -336,7 +342,7 @@ class InnerTagDC(object):
     trigger = None
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         InnerTagDC.instance = self
         # costructor flag
         self.constructed = True
@@ -362,6 +368,7 @@ class InnerTagDC(object):
         self.datasources = None
         # decoders
         self.decoders = None
+        self._streams = streams
 
     # stores names
     def store(self, xml, myjson):
@@ -390,7 +397,7 @@ class TElementOS(FElement):
     groupTypes = {"NXmyentry": "myentry1"}
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         TElementOS.instance = self
         # costructor flag
         self.constructed = True
@@ -410,6 +417,7 @@ class TElementOS(FElement):
         self.groupTypes = {}
         # h5object
         self.h5Object = Closeable()
+        self._streams = streams
 
     # fetches names
     def fetchName(self, groupTypes):
@@ -431,7 +439,7 @@ class TElementOL(object):
     groupTypes = {"NXmyentry": "myentry1"}
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         TElementOL.instance = self
         # costructor flag
         self.constructed = True
@@ -449,6 +457,7 @@ class TElementOL(object):
         self.last = last
         # groupTypes
         self.groupTypes = {}
+        self._streams = streams
 
     # fetches names
     def fetchName(self, groupTypes):
@@ -465,7 +474,7 @@ class TElementOF(object):
     groupTypes = {"NXmyentry": "myentry1"}
 
     # consturctor
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         TElementOF.instance = self
         # costructor flag
         self.constructed = True
@@ -483,6 +492,7 @@ class TElementOF(object):
         self.last = last
         # groupTypes
         self.groupTypes = {}
+        self._streams = streams
 
 
 # test fixture

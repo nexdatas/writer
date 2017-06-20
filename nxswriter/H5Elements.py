@@ -29,7 +29,7 @@ class EFile(FElement):
     """ file H5 element
     """
 
-    def __init__(self, attrs, last, h5fileObject):
+    def __init__(self, attrs, last, h5fileObject, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
@@ -38,8 +38,11 @@ class EFile(FElement):
         :type last: :class:`nxswriter.Element.Element`
         :param h5fileObject: H5 file object
         :type h5fileObject: :class:`nxswriter.FileWriter.FTfile`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        FElement.__init__(self, "file", attrs, last, h5fileObject)
+        FElement.__init__(self, "file", attrs, last, h5fileObject,
+                          streams=streams)
 
 
 class EDoc(Element):
@@ -47,15 +50,17 @@ class EDoc(Element):
     """ doc tag element
     """
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, "doc", attrs, last)
+        Element.__init__(self, "doc", attrs, last, streams=streams)
 
     def store(self, xml=None, globalJSON=None):
         """ stores the tag content
@@ -75,15 +80,17 @@ class ESymbol(Element):
     """ symbol tag element
     """
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, "symbol", attrs, last)
+        Element.__init__(self, "symbol", attrs, last, streams=streams)
         #: (:obj:`dict` <:obj:`str`, :obj:`str`>) \
         #:    dictionary with symbols4
         self.symbols = {}
@@ -106,15 +113,17 @@ class EDimensions(Element):
     """ dimensions tag element
     """
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, "dimensions", attrs, last)
+        Element.__init__(self, "dimensions", attrs, last, streams=streams)
         if "rank" in attrs.keys():
             self.last.rank = attrs["rank"]
 
@@ -124,15 +133,17 @@ class EDim(Element):
     """ dim tag element
     """
 
-    def __init__(self, attrs, last):
+    def __init__(self, attrs, last, streams=None):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
         :type attrs: :obj:`dict` <:obj:`str`, :obj:`str`>
         :param last: the last element from the stack
         :type last: :class:`nxswriter.Element.Element`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        Element.__init__(self, "dim", attrs, last)
+        Element.__init__(self, "dim", attrs, last, streams=streams)
         if ("index" in attrs.keys()) and ("value" in attrs.keys()):
             self._beforeLast().lengths[attrs["index"]] = attrs["value"]
         #: (:obj:`str`) index attribute
@@ -156,7 +167,7 @@ class EDim(Element):
         if self.__index is not None and self.source:
             dt = self.source.getData()
             if dt and isinstance(dt, dict):
-                dh = DataHolder(**dt)
+                dh = DataHolder(streams=self._streams, **dt)
                 if dh:
                     self._beforeLast().lengths[self.__index] = str(
                         dh.cast("string"))

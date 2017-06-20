@@ -60,7 +60,7 @@ class NTP(object):
            "uint16": "DevUShort",
            "uint8": "DevUChar", "float": "DevDouble", "float64": "DevDouble",
            "float32": "DevFloat", "float16": "DevFloat",
-           "string": "DevString", "bool": "DevBoolean"}
+           "string": "DevString"}
 
     #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of NEXUS :  numpy types
     nTnp = {"NX_FLOAT32": "float32", "NX_FLOAT64": "float64",

@@ -21,7 +21,6 @@
 
 import Queue
 
-from . import Streams
 from .ElementThread import ElementThread
 from .Errors import ThreadError
 
@@ -31,12 +30,14 @@ class ThreadPool(object):
     """ Pool with threads
     """
 
-    def __init__(self, numberOfThreads=None):
+    def __init__(self, numberOfThreads=None, streams=None):
         """ constructor
 
         :brief: It cleans the member variables
         :param numberOfThreads: number of threads
         :type numberOfThreads: :obj:`int`
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
 
         #: (:obj:`int`) maximal number of threads
@@ -49,6 +50,9 @@ class ThreadPool(object):
         #: (:obj:`list` <:class:`nxswriter.ElementThread.ElementThread`>) \
         #:     list of the threads related to the appended elements
         self.__threadList = []
+
+        #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
+        self._streams = streams
 
     def append(self, elem):
         """ appends the thread element
@@ -127,10 +131,12 @@ class ThreadPool(object):
                 if hasattr(el, "canfail") and el.canfail:
                     if hasattr(el, "markFailed"):
                         el.markFailed(str(el.error))
-                    Streams.warn(mess)
+                    if self._streams:
+                        self._streams.warn(mess)
                 else:
                     errors.append(el.error)
-                    Streams.error(mess, std=False)
+                    if self._streams:
+                        self._streams.error(mess, std=False)
         if errors:
             raise ThreadError("Problems in storing data: %s" % str(errors))
 

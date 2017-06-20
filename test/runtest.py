@@ -72,7 +72,7 @@ import FetchNameHandlerTest
 import InnerXMLParserTest
 import TNObjectTest
 import TgDeviceTest
-import StreamsTest
+import StreamSetTest
 import ElementTest
 
 if not PNI_AVAILABLE and not H5PY_AVAILABLE:
@@ -264,7 +264,7 @@ def main():
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ElementTest))
     suite.addTests(
-        unittest.defaultTestLoader.loadTestsFromModule(StreamsTest))
+        unittest.defaultTestLoader.loadTestsFromModule(StreamSetTest))
     suite.addTests(
         unittest.defaultTestLoader.loadTestsFromModule(ConvertersTest))
     suite.addTests(

@@ -24,7 +24,6 @@ import copy
 from xml.dom import minidom
 
 from .Types import NTP
-from . import Streams
 
 from .DataHolder import DataHolder
 from .DataSources import DataSource
@@ -42,12 +41,14 @@ class PyEvalSource(DataSource):
     """ Python Eval data source
     """
 
-    def __init__(self):
+    def __init__(self, streams=None):
         """ constructor
 
         :brief: It cleans all member variables
+        :param streams: tango-like steamset class
+        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
         """
-        DataSource.__init__(self)
+        DataSource.__init__(self, streams=streams)
         #: (:obj:`str`) name of data
         self.__name = None
         #: (:obj:`dict` <:obj:`str` , :obj:`dict` <:obj:`str`, any>>) \
@@ -106,20 +107,22 @@ class PyEvalSource(DataSource):
                         name = name[3:]
                     self.__sources[name] = (dstype, inp.toxml())
                 else:
-                    Streams.error(
-                        "PyEvalSource::setup() - "
-                        "PyEval input %s not defined" % name,
-                        std=False)
+                    if self._streams:
+                        self._streams.error(
+                            "PyEvalSource::setup() - "
+                            "PyEval input %s not defined" % name,
+                            std=False)
 
                     raise DataSourceSetupError(
                         "PyEvalSource::setup() - "
                         "PyEval input %s not defined" % name)
 
             else:
-                Streams.error(
-                    "PyEvalSource::setup() - "
-                    "PyEval input name wrongly defined",
-                    std=False)
+                if self._streams:
+                    self._streams.error(
+                        "PyEvalSource::setup() - "
+                        "PyEval input name wrongly defined",
+                        std=False)
 
                 raise DataSourceSetupError(
                     "PyEvalSource::setup() - "
@@ -133,10 +136,11 @@ class PyEvalSource(DataSource):
             self.__script = self._getText(res[0])
 
         if len(self.__script) == 0:
-            Streams.error(
-                "PyEvalSource::setup() - "
-                "PyEval script %s not defined" % self.__name,
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "PyEvalSource::setup() - "
+                    "PyEval script %s not defined" % self.__name,
+                    std=False)
 
             raise DataSourceSetupError(
                 "PyEvalSource::setup() - "
@@ -183,9 +187,10 @@ class PyEvalSource(DataSource):
         :        'decoders': :obj:`str`} )
         """
         if not self.__name:
-            Streams.error(
-                "PyEvalSource::getData() - PyEval datasource not set up",
-                std=False)
+            if self._streams:
+                self._streams.error(
+                    "PyEvalSource::getData() - PyEval datasource not set up",
+                    std=False)
 
             raise DataSourceSetupError(
                 "PyEvalSource::getData() - PyEval datasource not set up")
@@ -196,7 +201,7 @@ class PyEvalSource(DataSource):
                 dt = source.getData()
                 value = None
                 if dt:
-                    dh = DataHolder(**dt)
+                    dh = DataHolder(streams=self._streams, **dt)
                     if dh and hasattr(dh, "value"):
                         value = dh.value
                 setattr(ds, name, value)
@@ -272,6 +277,8 @@ class PyEvalSource(DataSource):
                         self.__datasources[name].setDataSources(pool)
 
                 else:
-                    Streams.error(
-                        "PyEvalSource::setDataSources - Unknown data source")
-                    self.__datasources[name] = DataSource()
+                    if self._streams:
+                        self._streams.error(
+                            "PyEvalSource::setDataSources "
+                            "- Unknown data source")
+                        self.__datasources[name] = DataSource()

@@ -715,7 +715,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             self.path = h5object.name
             self.name = self.path.split("/")[-1]
 
-    def create(self, name, dtype, shape=[], overwrite=False):
+    def create(self, name, dtype, shape=None, overwrite=False):
         """ create a new attribute
 
         :param name: attribute name
@@ -733,6 +733,7 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         if not overwrite and name in self.h5object.keys():
             raise Exception("Attribute %s exists" % name)
 
+        shape = shape or []
         if shape:
             if isinstance(shape, list):
                 shape = tuple(shape)
