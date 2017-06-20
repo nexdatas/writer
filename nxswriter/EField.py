@@ -425,7 +425,8 @@ class EField(FElementWithAttr):
         else:
             if self._streams:
                 self._streams.error(
-                    "Vertex growing data with grows>1 not supported", std=False)
+                    "Vertex growing data with grows>1 not supported",
+                    std=False)
             raise XMLSettingSyntaxError(
                 "Vertex growing data with grows>1 not supported")
 

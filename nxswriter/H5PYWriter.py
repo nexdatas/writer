@@ -234,7 +234,9 @@ class H5PYGroup(FileWriter.FTGroup):
         :rtype: :class:`FTObject`
         """
         if name not in self._h5object:
-            _ = self._h5object.attrs[name]
+            at = self._h5object.attrs[name]
+            if at is None:
+                raise Exception("Empty attriibute")
             return H5PYAttribute((self._h5object.attrs, name), self)
 
         itm = self._h5object.get(name)
@@ -585,7 +587,10 @@ class H5PYLink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         try:
-            _ = self._h5object
+            obj = self._h5object
+            if obj is None:
+                raise Exception("Empty object")
+
             self.parent.h5object[self.name]
             return True
         except:
