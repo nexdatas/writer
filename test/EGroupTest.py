@@ -241,7 +241,7 @@ class EGroupTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            ## map of tag attribute types
+            # map of tag attribute types
         maTn = {"signal": 1, "axis": 2, "primary": 3, "offset": 4,
                 "stride": 6, "file_time": "12:34",
                 "file_update_time": "12:45", "restricts": 12,
@@ -285,7 +285,7 @@ class EGroupTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            ## map of tag attribute types
+            # map of tag attribute types
         maTnv = {"vector": "1 2 3 4 5"}
         raTnv = {"vector": [1, 2, 3, 4, 5]}
         gattrs = dict(gattrs, **(maTnv))

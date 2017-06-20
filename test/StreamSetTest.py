@@ -60,7 +60,7 @@ class StreamSetTest(unittest.TestCase):
         self.mystd4 = StringIO()
         self.mystd5 = StringIO()
         self.streams = None
-        
+
     def getRandomString(self, maxsize):
         letters = [chr(i) for i in range(256)]
         size = self.__rnd.randint(1, maxsize)
@@ -112,7 +112,6 @@ class StreamSetTest(unittest.TestCase):
             self.assertEqual(streams.log_info, self.mystd4)
             self.assertEqual(streams.log_debug, self.mystd5)
 
-        
     def test_fatal(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
