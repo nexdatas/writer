@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "June 13, 2017" "2.12" "NXSDataWriter"
+.TH "NXSWRITER" "1" "June 20, 2017" "2.13" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -278,7 +278,7 @@ was created by XMLFile class defined in XMLCreator/simpleXML.py.
 Definitions of CLIENT datasource
 .INDENT 0.0
 .TP
-.B class nxswriter.ClientSource.ClientSource
+.B class nxswriter.ClientSource.ClientSource(streams=None)
 Bases: \fBnxswriter.DataSources.DataSource\fP
 .sp
 Client data source
@@ -288,6 +288,9 @@ constructor
 .TP
 .B Brief
 It sets all member variables to None
+.TP
+.B Parameters
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -349,7 +352,7 @@ Definitions of DB datasource
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.DBaseSource.DBaseSource
+.B class nxswriter.DBaseSource.DBaseSource(streams=None)
 Bases: \fBnxswriter.DataSources.DataSource\fP
 .sp
 DataBase data source
@@ -359,6 +362,9 @@ constructor
 .TP
 .B Brief
 It sets all member variables to None
+.TP
+.B Parameters
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -448,7 +454,7 @@ if \fBformat\fP or \fBquery\fP is not defined
 definition of a data holder with casting methods
 .INDENT 0.0
 .TP
-.B class nxswriter.DataHolder.DataHolder(rank, value, tangoDType, shape, encoding=None, decoders=None)
+.B class nxswriter.DataHolder.DataHolder(rank, value, tangoDType, shape, encoding=None, decoders=None, streams=None)
 Bases: \fI\%object\fP
 .sp
 Holder for passing data
@@ -470,6 +476,8 @@ constructor
 \fBencoding\fP (\fI\%str\fP) \-\- encoding type of Tango DevEncoded varibles
 .IP \(bu 2
 \fBdecoders\fP (\fBnxswriter.DecoderPool.DecoderPool\fP) \-\- poll with decoding classes
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -525,7 +533,7 @@ pool with decoding algorithm
 factory with datasources
 .INDENT 0.0
 .TP
-.B class nxswriter.DataSourceFactory.DataSourceFactory(attrs, last)
+.B class nxswriter.DataSourceFactory.DataSourceFactory(attrs, last, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
 Data source creator
@@ -539,6 +547,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary with the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element on the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -705,7 +715,7 @@ adds additional datasource
 Definitions of various datasources
 .INDENT 0.0
 .TP
-.B class nxswriter.DataSources.DataSource
+.B class nxswriter.DataSources.DataSource(streams=None)
 Bases: \fI\%object\fP
 .sp
 Data source
@@ -715,6 +725,9 @@ constructor
 .TP
 .B Brief
 It cleans all member variables
+.TP
+.B Parameters
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1043,7 +1056,7 @@ the data shape if data was loaded
 Definitions of attribute tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.EAttribute.EAttribute(attrs, last)
+.B class nxswriter.EAttribute.EAttribute(attrs, last, streams=None)
 Bases: \fBnxswriter.FElement.FElement\fP
 .sp
 attribute tag element
@@ -1057,6 +1070,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1138,7 +1153,7 @@ stores the tag content
 Definitions of field tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.EField.EField(attrs, last)
+.B class nxswriter.EField.EField(attrs, last, streams=None)
 Bases: \fBnxswriter.FElement.FElementWithAttr\fP
 .sp
 field H5 tag element
@@ -1152,6 +1167,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1253,7 +1270,7 @@ stores the tag content
 Definitions of group tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.EGroup.EGroup(attrs, last)
+.B class nxswriter.EGroup.EGroup(attrs, last, streams=None)
 Bases: \fBnxswriter.FElement.FElementWithAttr\fP
 .sp
 group H5 tag element
@@ -1267,6 +1284,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1299,7 +1318,7 @@ stores the tag content
 Definitions of link tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.ELink.ELink(attrs, last)
+.B class nxswriter.ELink.ELink(attrs, last, streams=None)
 Bases: \fBnxswriter.FElement.FElement\fP
 .sp
 link H5 tag element
@@ -1313,6 +1332,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1386,10 +1407,10 @@ stores the tag content
 Definitions of strategy evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.EStrategy.EStrategy(attrs, last)
+.B class nxswriter.EStrategy.EStrategy(attrs, last, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
-## strategy tag element
+strategy tag element
 .sp
 constructor
 .INDENT 7.0
@@ -1400,6 +1421,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1428,7 +1451,7 @@ stores the tag content
 Provides the base class Element for xml tags
 .INDENT 0.0
 .TP
-.B class nxswriter.Element.Element(name, attrs, last=None)
+.B class nxswriter.Element.Element(name, attrs, last=None, streams=None)
 Bases: \fI\%object\fP
 .sp
 Tag element stored on our stack
@@ -1444,6 +1467,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1589,7 +1614,7 @@ exception for syntax in XML settings
 Definitions of file tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.FElement.FElement(name, attrs, last, h5object=None)
+.B class nxswriter.FElement.FElement(name, attrs, last, h5object=None, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
 NeXuS runnable tag element
@@ -1608,6 +1633,8 @@ constructor
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
 \fBh5object\fP (\fBnxswriter.FileWriter.FTObject\fP) \-\- H5 file object
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1659,7 +1686,7 @@ error message
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.FElement.FElementWithAttr(name, attrs, last, h5object=None)
+.B class nxswriter.FElement.FElementWithAttr(name, attrs, last, h5object=None, streams=None)
 Bases: \fBnxswriter.FElement.FElement\fP
 .sp
 NeXuS runnable tag element with attributes
@@ -1678,6 +1705,8 @@ constructor
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
 \fBh5object\fP (\fBnxswriter.FileWriter.FTObject\fP) \-\- H5 file object
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1712,7 +1741,7 @@ written as (name, value, shape)
 SAX parser for fetching name attributes of tags
 .INDENT 0.0
 .TP
-.B class nxswriter.FetchNameHandler.FetchNameHandler
+.B class nxswriter.FetchNameHandler.FetchNameHandler(streams=None)
 Bases: \fI\%xml.sax.handler.ContentHandler\fP
 .sp
 SAX2 parser
@@ -1722,6 +1751,9 @@ constructor
 .TP
 .B Brief
 It constructs parser handler for fetching group names
+.TP
+.B Parameters
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -1838,7 +1870,7 @@ child instance
 Definitions of tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.H5Elements.EDim(attrs, last)
+.B class nxswriter.H5Elements.EDim(attrs, last, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
 dim tag element
@@ -1852,6 +1884,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1882,7 +1916,7 @@ stores the tag content
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.H5Elements.EDimensions(attrs, last)
+.B class nxswriter.H5Elements.EDimensions(attrs, last, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
 dimensions tag element
@@ -1896,12 +1930,14 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.H5Elements.EDoc(attrs, last)
+.B class nxswriter.H5Elements.EDoc(attrs, last, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
 doc tag element
@@ -1915,6 +1951,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1935,7 +1973,7 @@ stores the tag content
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.H5Elements.EFile(attrs, last, h5fileObject)
+.B class nxswriter.H5Elements.EFile(attrs, last, h5fileObject, streams=None)
 Bases: \fBnxswriter.FElement.FElement\fP
 .sp
 file H5 element
@@ -1951,12 +1989,14 @@ constructor
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
 \fBh5fileObject\fP (\fBnxswriter.FileWriter.FTfile\fP) \-\- H5 file object
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.H5Elements.ESymbol(attrs, last)
+.B class nxswriter.H5Elements.ESymbol(attrs, last, streams=None)
 Bases: \fBnxswriter.Element.Element\fP
 .sp
 symbol tag element
@@ -1970,6 +2010,8 @@ constructor
 \fBattrs\fP (\fI\%dict\fP <\fI\%str\fP, \fI\%str\fP>) \-\- dictionary of the tag attributes
 .IP \(bu 2
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2717,7 +2759,7 @@ Command definitions
 SAX parser for interpreting content of  XML configuration string
 .INDENT 0.0
 .TP
-.B class nxswriter.NexusXMLHandler.NexusXMLHandler(fileElement, datasources=None, decoders=None, groupTypes=None, parser=None, globalJSON=None)
+.B class nxswriter.NexusXMLHandler.NexusXMLHandler(fileElement, datasources=None, decoders=None, groupTypes=None, parser=None, globalJSON=None, streams=None)
 Bases: \fI\%xml.sax.handler.ContentHandler\fP
 .sp
 SAX2 parser
@@ -2742,6 +2784,8 @@ It constructs parser and defines the H5 output file
 \fBparser\fP (\fI\%xml.sax.xmlreader.XMLReader\fP) \-\- instance of sax.xmlreader
 .IP \(bu 2
 \fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global json string
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2859,7 +2903,7 @@ tags with inner xml as its input
 Definitions of PYEVAL datasource
 .INDENT 0.0
 .TP
-.B class nxswriter.PyEvalSource.PyEvalSource
+.B class nxswriter.PyEvalSource.PyEvalSource(streams=None)
 Bases: \fBnxswriter.DataSources.DataSource\fP
 .sp
 Python Eval data source
@@ -2869,6 +2913,9 @@ constructor
 .TP
 .B Brief
 It cleans all member variables
+.TP
+.B Parameters
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -2939,12 +2986,23 @@ Bases: \fI\%object\fP
 .sp
 Variables for PyEval datasource
 .UNINDENT
-.SS nxswriter.Streams module
+.SS nxswriter.StreamSet module
 .sp
 labels to Tango Streams
 .INDENT 0.0
 .TP
-.B nxswriter.Streams.debug(message, std=True)
+.B class nxswriter.StreamSet.StreamSet(streams)
+Bases: \fI\%object\fP
+.sp
+streamset constractor
+.INDENT 7.0
+.TP
+.B Parameters
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.UNINDENT
+.INDENT 7.0
+.TP
+.B debug(message, std=True)
 writes debug message
 .INDENT 7.0
 .TP
@@ -2958,9 +3016,9 @@ when log stream does not exist
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.error(message, std=True)
+.B error(message, std=True)
 writes error message
 .INDENT 7.0
 .TP
@@ -2974,9 +3032,9 @@ when log stream does not exist
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.fatal(message, std=True)
+.B fatal(message, std=True)
 writes fatal error message
 .INDENT 7.0
 .TP
@@ -2985,14 +3043,16 @@ writes fatal error message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- error message
 .IP \(bu 2
-\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
+\fBstd\fP \-\- True if it writes to sys stream
+.UNINDENT
+.UNINDENT
+.sp
 when log stream does not exist
+:type std: \fI\%bool\fP
 .UNINDENT
-.UNINDENT
-.UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.info(message, std=True)
+.B info(message, std=True)
 writes info message
 .INDENT 7.0
 .TP
@@ -3006,34 +3066,34 @@ when log stream does not exist
 .UNINDENT
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.log_debug = None
+.B log_debug = None
 (\fBPyTango.log4tango.TangoStream\fP) Tango debug log stream
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.log_error = None
+.B log_error = None
 (\fBPyTango.log4tango.TangoStream\fP) Tango error log stream
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.log_fatal = None
+.B log_fatal = None
 (\fBPyTango.log4tango.TangoStream\fP) Tango fatal log stream
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.log_info = None
+.B log_info = None
 (\fBPyTango.log4tango.TangoStream\fP) Tango info log stream
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.log_warn = None
+.B log_warn = None
 (\fBPyTango.log4tango.TangoStream\fP) Tango warn log stream
 .UNINDENT
-.INDENT 0.0
+.INDENT 7.0
 .TP
-.B nxswriter.Streams.warn(message, std=True)
+.B warn(message, std=True)
 writes warning message
 .INDENT 7.0
 .TP
@@ -3044,6 +3104,7 @@ writes warning message
 .IP \(bu 2
 \fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
+.UNINDENT
 .UNINDENT
 .UNINDENT
 .UNINDENT
@@ -3212,12 +3273,17 @@ True if proxy is valid else false
 .UNINDENT
 .INDENT 7.0
 .TP
-.B classmethod proxySetup(device)
+.B classmethod proxySetup(device, streams=None)
 sets the Tango proxy up
 .INDENT 7.0
 .TP
 .B Parameters
+.INDENT 7.0
+.IP \(bu 2
 \fBdevice\fP (\fI\%str\fP) \-\- tango device
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.UNINDENT
 .TP
 .B Returns
 proxy if proxy is set up
@@ -3229,7 +3295,7 @@ proxy if proxy is set up
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.TangoSource.TangoSource
+.B class nxswriter.TangoSource.TangoSource(streams=None)
 Bases: \fBnxswriter.DataSources.DataSource\fP
 .sp
 Tango data source
@@ -3324,7 +3390,7 @@ sets the parrameters up from xml
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.TangoSource.TgDevice(device, proxy=None)
+.B class nxswriter.TangoSource.TgDevice(device, proxy=None, streams=None)
 Bases: \fI\%object\fP
 .sp
 tango device
@@ -3338,6 +3404,8 @@ default constructor
 \fBdevice\fP (\fI\%str\fP) \-\- tango device name
 .IP \(bu 2
 \fBproxy\fP (\fI\%PyTango.DeviceProxy\fP) \-\- device proxy
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3393,7 +3461,7 @@ TgMember instance of tango device member
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.TangoSource.TgGroup(counter=0)
+.B class nxswriter.TangoSource.TgGroup(counter=0, streams=None)
 Bases: \fI\%object\fP
 .sp
 Group of tango devices
@@ -3402,7 +3470,12 @@ default constructor
 .INDENT 7.0
 .TP
 .B Parameters
+.INDENT 7.0
+.IP \(bu 2
 \fBcounter\fP (\fI\%int\fP) \-\- counts of steps
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3455,7 +3528,7 @@ TgDevice instance of tango device
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.TangoSource.TgMember(name, memberType=\(aqattribute\(aq, encoding=None)
+.B class nxswriter.TangoSource.TgMember(name, memberType=\(aqattribute\(aq, encoding=None, streams=None)
 Bases: \fI\%object\fP
 .sp
 tango device member
@@ -3471,6 +3544,8 @@ default constructor
 \fBmemberType\fP (\fI\%str\fP) \-\- member type of the data
 .IP \(bu 2
 \fBencoding\fP (\fI\%str\fP) \-\- encoding type of Tango DevEncoded variables
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -3557,7 +3632,7 @@ sets tango data
 Provides a pool with element threads
 .INDENT 0.0
 .TP
-.B class nxswriter.ThreadPool.ThreadPool(numberOfThreads=None)
+.B class nxswriter.ThreadPool.ThreadPool(numberOfThreads=None, streams=None)
 Bases: \fI\%object\fP
 .sp
 Pool with threads
@@ -3569,7 +3644,12 @@ constructor
 It cleans the member variables
 .TP
 .B Parameters
+.INDENT 7.0
+.IP \(bu 2
 \fBnumberOfThreads\fP (\fI\%int\fP) \-\- number of threads
+.IP \(bu 2
+\fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -5430,7 +5510,7 @@ close attribure manager
 .UNINDENT
 .INDENT 7.0
 .TP
-.B H5PYAttributeManager.create(name, dtype, shape=[], overwrite=False)
+.B H5PYAttributeManager.create(name, dtype, shape=None, overwrite=False)
 create a new attribute
 .INDENT 7.0
 .TP

@@ -19,6 +19,7 @@
 
 """ Definitions of TANGO datasource """
 
+import sys
 import time
 import threading
 from xml.dom import minidom
