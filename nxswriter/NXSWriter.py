@@ -409,6 +409,51 @@ class NXSDataWriter(PyTango.Device_4Impl):
             return False
         return True
 
+    def read_SkipAcquisition(self, attr):
+        """ Read SkipAcquisition attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In read_SkipAcquisition()")
+
+        attr.set_value(self.tdw.skipacquisition)
+
+    def write_SkipAcquisition(self, attr):
+        """ Write SkipAcquisition attribute
+
+        :param attr: attribute object
+        :type attr: :class:`PyTango.Attribute`
+        """
+        self.debug_stream("In write_SkipAcquisition()")
+        if self.is_SkipAcquisition_write_allowed():
+            self.tdw.skipacquisition = attr.get_write_value()
+        else:
+            self.warn_stream("To change the file name please close the file.")
+            raise Exception(
+                "To change the file name please close the file.")
+
+    def is_SkipAcquisition_write_allowed(self):
+        """ SkipAcquisition attribute Write State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF,
+                                PyTango.DevState.RUNNING]:
+            return False
+        return True
+
+    def is_SkipAcquisition_allowed(self, _):
+        """SkipAcquisition attribute State Machine
+
+        :returns: True if the operation allowed
+        :rtype: :obj:`bool`
+        """
+        if self.get_state() in [PyTango.DevState.OFF]:
+            return False
+        return True
+
     def read_StepsPerFile(self, attr):
         """ Read StepsPerFile attribute
 
@@ -859,6 +904,16 @@ class NXSDataWriterClass(PyTango.DeviceClass):
          {
              'label': "Can fail",
              'description': "Global can fail flag. By default it is False",
+        }],
+        'SkipAcquisition':
+        [[PyTango.DevBoolean,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'label': "Skip acquisition",
+             'description': "Skip acquisition. "
+             "It is set to default False value "
+             "after excuting the OpenEntry, Record or CloseEntry",
         }],
         'Errors':
         [[PyTango.DevString,

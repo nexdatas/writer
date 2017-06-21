@@ -28,7 +28,8 @@ class EGroup(FElementWithAttr):
     """ group H5 tag element
     """
 
-    def __init__(self, attrs, last, streams=None):
+    def __init__(self, attrs, last, streams=None,
+                 reloadmode=False):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
@@ -37,8 +38,11 @@ class EGroup(FElementWithAttr):
         :type last: :class:`nxswriter.Element.Element`
         :param streams: tango-like steamset class
         :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
+        :param reloadmode: reload mode
+        :type reloadmode: :obj:`bool`
         """
-        FElementWithAttr.__init__(self, "group", attrs, last, streams=streams)
+        FElementWithAttr.__init__(self, "group", attrs, last, streams=streams,
+                                  reloadmode=reloadmode)
         if self._lastObject() is not None:
             if ("type" in attrs.keys()) and ("name" in attrs.keys()):
                 gname = attrs["name"].encode()
@@ -51,13 +55,19 @@ class EGroup(FElementWithAttr):
                         std=False)
 
                 raise XMLSettingSyntaxError("The group type not defined")
+            if self._reloadmode:
+                names = [kd.name for kd in self._lastObject()]
+                if gname in names:
+                    self.h5Object = self._lastObject().open(gname)
+                    return
             try:
                 #: (:class:`nxswriter.FileWriter.FTGroup`) \
                 #:      stored H5 file object (defined in base class)
                 self.h5Object = self._lastObject().create_group(
                     gname, attrs["type"].encode())
-            except:
+            except Exception as e:
                 if self._streams:
+                    self._streams.debug(str(e))
                     self._streams.error(
                         "EGroup::__init__() - "
                         "The group '%s' of '%s' type cannot be created. \n"

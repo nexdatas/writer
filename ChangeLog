@@ -1,3 +1,8 @@
+2017-06-21 Jan Kotanski <jankotan@gmail.com>
+	* add skipacqusiotion attribute
+	* add globallock to nxswriter
+	* tagged as 2.14.0
+
 2017-06-20 Jan Kotanski <jankotan@gmail.com>
 	* change Streams module into StreamSet class
 	* tagged as 2.13.0

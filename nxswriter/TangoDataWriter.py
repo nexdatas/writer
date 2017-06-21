@@ -136,6 +136,9 @@ class TangoDataWriter(object):
         #: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set
         self._streams = StreamSet(server)
 
+        #: (:obj:`bool`) skip acquisition flag
+        self.skipacquisition = False
+
     def __setWriter(self, writer):
         """ set method for  writer module name
 
@@ -344,7 +347,8 @@ class TangoDataWriter(object):
                 self.__eFile, self.__datasources,
                 self.__decoders, self.__fetcher.groupTypes,
                 parser, json.loads(self.jsonrecord),
-                self._streams
+                self._streams,
+                self.skipacquisition
             )
             parser.setContentHandler(handler)
             parser.setErrorHandler(errorHandler)
@@ -367,8 +371,10 @@ class TangoDataWriter(object):
                     self.numberOfThreads
 
             self.__initPool.setJSON(json.loads(self.jsonrecord))
-            self.__initPool.runAndWait()
-            self.__initPool.checkErrors()
+            if not self.skipacquisition:
+                self.__initPool.runAndWait()
+                self.__initPool.checkErrors()
+            self.skipacquisition = False
 
             if self.addingLogs:
                 self.__entryCounter += 1
@@ -439,8 +445,9 @@ class TangoDataWriter(object):
         if self.__stepPool:
             self._streams.info("TangoDataWriter::record() - Default trigger")
             self.__stepPool.setJSON(json.loads(self.jsonrecord), localJSON)
-            self.__stepPool.runAndWait()
-            self.__stepPool.checkErrors()
+            if not self.skipacquisition:
+                self.__stepPool.runAndWait()
+                self.__stepPool.checkErrors()
 
         triggers = None
         if localJSON and 'triggers' in localJSON.keys():
@@ -453,14 +460,16 @@ class TangoDataWriter(object):
                         "TangoDataWriter:record() - Trigger: %s" % pool)
                     self.__triggerPools[pool].setJSON(
                         json.loads(self.jsonrecord), localJSON)
-                    self.__triggerPools[pool].runAndWait()
-                    self.__triggerPools[pool].checkErrors()
+                    if not self.skipacquisition:
+                        self.__triggerPools[pool].runAndWait()
+                        self.__triggerPools[pool].checkErrors()
 
         if self.__nxFile and hasattr(self.__nxFile, "flush"):
             self.__nxFile.flush()
         if self.stepsperfile > 0:
             if (self.__datasources.counter) % self.stepsperfile == 0:
                 self.__nextfile()
+        self.skipacquisition = False
 
     def __updateNXRoot(self):
         fname = self.__filenames[-1]
@@ -493,14 +502,18 @@ class TangoDataWriter(object):
 
         if self.__finalPool:
             self.__finalPool.setJSON(json.loads(self.jsonrecord))
-            self.__finalPool.runAndWait()
+            if not self.skipacquisition:
+                self.__finalPool.runAndWait()
             if self.stepsperfile > 0:
                 self.__updateNXRoot()
                 while len(self.__filenames) > 1:
                     self.__previousfile()
-                    self.__finalPool.runAndWait()
+                    if not self.skipacquisition:
+                        self.__finalPool.runAndWait()
                     self.__updateNXRoot()
-            self.__finalPool.checkErrors()
+            if not self.skipacquisition:
+                self.__finalPool.checkErrors()
+        self.skipacquisition = False
 
         if self.__initPool:
             self.__initPool.close()

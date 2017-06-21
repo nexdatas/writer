@@ -50,7 +50,7 @@ class NexusXMLHandler(sax.ContentHandler):
 
     def __init__(self, fileElement, datasources=None, decoders=None,
                  groupTypes=None, parser=None, globalJSON=None,
-                 streams=None):
+                 streams=None, reloadmode=False):
         """ constructor
 
         :brief: It constructs parser and defines the H5 output file
@@ -69,6 +69,8 @@ class NexusXMLHandler(sax.ContentHandler):
         :     :obj:`dict` <:obj:`str`, :obj:`dict` <:obj:`str`, any>>
         :param streams: tango-like steamset class
         :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
+        :param reloadmode: reload mode
+        :type reloadmode: :obj: `bool`
         """
         sax.ContentHandler.__init__(self)
 
@@ -108,6 +110,9 @@ class NexusXMLHandler(sax.ContentHandler):
         #: (:obj:`str`) stored name
         self.__storedName = None
 
+        #: (:obj:`bool`) reload mode
+        self.__reloadmode = reloadmode
+
         #: (:obj:`dict` <:obj:`str`, :obj:`type` > ) \
         #: map of tag names to related classes
         self.elementClass = {
@@ -118,6 +123,10 @@ class NexusXMLHandler(sax.ContentHandler):
             'enumeration': Element, 'item': Element,
             'strategy': EStrategy
         }
+
+        #: (:obj:`dict` <:obj:`str`, :obj:`type` > ) \
+        #: map of tag names to related classes
+        self.withAttr = ['group', 'field']
 
         #: (:obj:`list` <:obj:`str`>) transparent tags
         self.transparentTags = ['definition']
@@ -199,6 +208,12 @@ class NexusXMLHandler(sax.ContentHandler):
                     self.__parser, self, name, attrs)
                 self.__parser.setContentHandler(self.__innerHandler)
                 self.__inner = True
+            elif name in self.withAttr:
+                self.__stack.append(
+                    self.elementClass[name](
+                        attrs, self.__last(),
+                        streams=StreamSet(self._streams),
+                        reloadmode=self.__reloadmode))
             elif name in self.elementClass:
                 self.__stack.append(
                     self.elementClass[name](

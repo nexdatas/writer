@@ -19,10 +19,15 @@
 
 """ Tango Data Writer """
 
+import threading
+
 #: package version
 from .Release import __version__
 
-__all__ = ["__version__", "run"]
+__all__ = ["__version__", "run", "globallock"]
+
+#: global lock
+globallock = threading.Lock()
 
 
 def run(argv):
