@@ -261,7 +261,7 @@ class NexusXMLHandler(sax.ContentHandler):
                 if res:
                     self.__addToPool(res, self.__last())
             if hasattr(self.__last(), "createLink") and \
-               callable(self.__last().createLink):
+               callable(self.__last().createLink) and not self.__reloadmode:
                 self.__last().createLink(self.__groupTypes)
             self.__stack.pop()
         elif name not in self.transparentTags:
