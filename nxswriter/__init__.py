@@ -23,7 +23,6 @@ import threading
 
 #: package version
 from .Release import __version__
-from .TangoDataWriter import globallock
 
 #: global lock
 globallock = threading.Lock()
