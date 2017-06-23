@@ -1,4 +1,4 @@
-2017-06-21 Jan Kotanski <jankotan@gmail.com>
+2017-06-23 Jan Kotanski <jankotan@gmail.com>
 	* add skipacqusiotion attribute
 	* add globallock to nxswriter
 	* tagged as 2.14.0
