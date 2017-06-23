@@ -19,12 +19,15 @@
 
 """ Tango Data Writer """
 
+import threading
+
 #: package version
 from .Release import __version__
-from .TangoDataWriter import globallock
+
+#: global lock
+globallock = threading.Lock()
 
 __all__ = ["__version__", "run", "globallock"]
-
 
 def run(argv):
     """ launches the TANGO server
