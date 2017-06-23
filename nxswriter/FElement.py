@@ -248,7 +248,8 @@ class FElementWithAttr(FElement):
         tag element corresponding to one of H5 objects with attributes
     """
 
-    def __init__(self, name, attrs, last, h5object=None, streams=None):
+    def __init__(self, name, attrs, last, h5object=None, streams=None,
+                 reloadmode=False):
         """ constructor
 
         :param name: tag name
@@ -261,6 +262,8 @@ class FElementWithAttr(FElement):
         :type h5object: :class:`nxswriter.FileWriter.FTObject`
         :param streams: tango-like steamset class
         :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
+        :param reloadmode: reload mode
+        :type reloadmode: :obj:`bool`
         """
 
         FElement.__init__(self, name, attrs, last, h5object, streams=streams)
@@ -271,6 +274,8 @@ class FElementWithAttr(FElement):
         self.tagAttributes = {}
         #: (:obj:`dict` <:obj:`str`, h5object>) h5 instances
         self.__h5Instances = {}
+        #: (:obj:`bool`) reload mode
+        self._reloadmode = reloadmode
 
     def _setValue(self, rank, val):
         """ creates DataHolder with given rank and value
@@ -316,6 +321,16 @@ class FElementWithAttr(FElement):
         """
         for key in self.tagAttributes.keys():
             if key not in ["name", "type"]:
+                if self._reloadmode:
+                    fat = None
+                    for at in self.h5Object.attributes:
+                        if at.name == key:
+                            self.__h5Instances[key.encode()] = fat = at
+                            break
+                    if fat:
+                        fat = None
+                        continue
+
                 if len(self.tagAttributes[key]) < 3:
                     if key.encode() not in self.__h5Instances:
                         self.__h5Instances[key.encode()] \

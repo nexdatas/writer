@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "June 20, 2017" "2.13" "NXSDataWriter"
+.TH "NXSWRITER" "1" "June 23, 2017" "2.14" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -347,7 +347,7 @@ sets the parrameters up from xml
 Definitions of DB datasource
 .INDENT 0.0
 .TP
-.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq, \(aqORACLE\(aq]
+.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq]
 (\fI\%list\fP) list of available databases
 .UNINDENT
 .INDENT 0.0
@@ -1153,7 +1153,7 @@ stores the tag content
 Definitions of field tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.EField.EField(attrs, last, streams=None)
+.B class nxswriter.EField.EField(attrs, last, streams=None, reloadmode=False)
 Bases: \fBnxswriter.FElement.FElementWithAttr\fP
 .sp
 field H5 tag element
@@ -1169,6 +1169,8 @@ constructor
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
 \fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.IP \(bu 2
+\fBreloadmode\fP (\fI\%bool\fP) \-\- reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1270,7 +1272,7 @@ stores the tag content
 Definitions of group tag evaluation classes
 .INDENT 0.0
 .TP
-.B class nxswriter.EGroup.EGroup(attrs, last, streams=None)
+.B class nxswriter.EGroup.EGroup(attrs, last, streams=None, reloadmode=False)
 Bases: \fBnxswriter.FElement.FElementWithAttr\fP
 .sp
 group H5 tag element
@@ -1286,6 +1288,8 @@ constructor
 \fBlast\fP (\fBnxswriter.Element.Element\fP) \-\- the last element from the stack
 .IP \(bu 2
 \fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.IP \(bu 2
+\fBreloadmode\fP (\fI\%bool\fP) \-\- reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -1686,7 +1690,7 @@ error message
 .UNINDENT
 .INDENT 0.0
 .TP
-.B class nxswriter.FElement.FElementWithAttr(name, attrs, last, h5object=None, streams=None)
+.B class nxswriter.FElement.FElementWithAttr(name, attrs, last, h5object=None, streams=None, reloadmode=False)
 Bases: \fBnxswriter.FElement.FElement\fP
 .sp
 NeXuS runnable tag element with attributes
@@ -1707,6 +1711,8 @@ constructor
 \fBh5object\fP (\fBnxswriter.FileWriter.FTObject\fP) \-\- H5 file object
 .IP \(bu 2
 \fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.IP \(bu 2
+\fBreloadmode\fP (\fI\%bool\fP) \-\- reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2506,6 +2512,32 @@ True if the operation allowed
 .UNINDENT
 .INDENT 7.0
 .TP
+.B is_SkipAcquisition_allowed(_)
+SkipAcquisition attribute State Machine
+.INDENT 7.0
+.TP
+.B Returns
+True if the operation allowed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B is_SkipAcquisition_write_allowed()
+SkipAcquisition attribute Write State Machine
+.INDENT 7.0
+.TP
+.B Returns
+True if the operation allowed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B is_StepsPerFile_allowed(_)
 StepsPerFile attribute State Machine
 .INDENT 7.0
@@ -2605,6 +2637,16 @@ Read JSONRecord attribute
 .UNINDENT
 .INDENT 7.0
 .TP
+.B read_SkipAcquisition(attr)
+Read SkipAcquisition attribute
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B read_StepsPerFile(attr)
 Read StepsPerFile attribute
 .INDENT 7.0
@@ -2689,6 +2731,16 @@ Write JSONRecord attribute
 .UNINDENT
 .INDENT 7.0
 .TP
+.B write_SkipAcquisition(attr)
+Write SkipAcquisition attribute
+.INDENT 7.0
+.TP
+.B Parameters
+\fBattr\fP (\fI\%PyTango.Attribute\fP) \-\- attribute object
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B write_StepsPerFile(attr)
 Write StepsPerFile attribute
 .INDENT 7.0
@@ -2718,7 +2770,7 @@ NXSDataWriterClass class definition
 NXSDataWriterClass Constructor
 .INDENT 7.0
 .TP
-.B attr_list = {\(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqCanFail\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqGlobal can fail flag. By default it is False\(aq, \(aqlabel\(aq: \(aqCan fail\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}]}
+.B attr_list = {\(aqStepsPerFile\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqMemorized\(aq: \(aqtrue\(aq, \(aqdescription\(aq: \(aqNumber of steps per file\(aq, \(aqlabel\(aq: \(aqSteps per file\(aq}], \(aqCanFail\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqGlobal can fail flag. By default it is False\(aq, \(aqlabel\(aq: \(aqCan fail\(aq}], \(aqErrors\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {\(aqdescription\(aq: \(aqlist of errors\(aq, \(aqlabel\(aq: \(aqList of errors\(aq}], \(aqSkipAcquisition\(aq: [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqSkip acquisition. It is set to default False value after excuting the OpenEntry, Record or CloseEntry\(aq, \(aqlabel\(aq: \(aqSkip acquisition\(aq}], \(aqXMLSettings\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqAn XML string with Nexus configuration.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqXML Configuration\(aq}], \(aqJSONRecord\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA JSON string with global client data.\(aq, \(aqDisplay level\(aq: tango._tango.DispLevel.EXPERT, \(aqlabel\(aq: \(aqJSON string with client data\(aq}], \(aqCurrentFileId\(aq: [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {\(aqdescription\(aq: \(aqcurrent file id\(aq, \(aqlabel\(aq: \(aqCurrent file id\(aq}], \(aqFileName\(aq: [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {\(aqdescription\(aq: \(aqA name of H5 output file with its full path\(aq, \(aqlabel\(aq: \(aqOutput file with its path\(aq}]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -2759,7 +2811,7 @@ Command definitions
 SAX parser for interpreting content of  XML configuration string
 .INDENT 0.0
 .TP
-.B class nxswriter.NexusXMLHandler.NexusXMLHandler(fileElement, datasources=None, decoders=None, groupTypes=None, parser=None, globalJSON=None, streams=None)
+.B class nxswriter.NexusXMLHandler.NexusXMLHandler(fileElement, datasources=None, decoders=None, groupTypes=None, parser=None, globalJSON=None, streams=None, reloadmode=False)
 Bases: \fI\%xml.sax.handler.ContentHandler\fP
 .sp
 SAX2 parser
@@ -2786,6 +2838,8 @@ It constructs parser and defines the H5 output file
 \fBglobalJSON\fP (:     \fI\%dict\fP <\fI\%str\fP, \fI\%dict\fP <\fI\%str\fP, any>>) \-\- global json string
 .IP \(bu 2
 \fBstreams\fP (\fBStreamSet\fP or \fI\%PyTango.Device_4Impl\fP) \-\- tango\-like steamset class
+.IP \(bu 2
+\fBreloadmode\fP \-\- reload mode
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -2887,6 +2941,11 @@ thread pool with STEP elements
 collection of thread pool with triggered STEP elements
 .UNINDENT
 .UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B withAttr = None
+(\fI\%dict\fP <\fI\%str\fP, \fI\%type\fP > ) map of tag names to related classes
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3043,12 +3102,10 @@ writes fatal error message
 .IP \(bu 2
 \fBmessage\fP (\fI\%str\fP) \-\- error message
 .IP \(bu 2
-\fBstd\fP \-\- True if it writes to sys stream
-.UNINDENT
-.UNINDENT
-.sp
+\fBstd\fP (\fI\%bool\fP) \-\- True if it writes to sys stream
 when log stream does not exist
-:type std: \fI\%bool\fP
+.UNINDENT
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -3227,6 +3284,11 @@ It runs threads from the STEP pool
 .UNINDENT
 .INDENT 7.0
 .TP
+.B skipacquisition = None
+(\fI\%bool\fP) skip acquisition flag
+.UNINDENT
+.INDENT 7.0
+.TP
 .B stepsperfile = None
 (\fI\%int\fP) steps per file
 .UNINDENT
@@ -3240,6 +3302,11 @@ It runs threads from the STEP pool
 .B xmlsettings
 the xmlsettings
 .UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.TangoDataWriter.globallock = <thread.lock object at 0x7f9eb5ad2870>
+global lock
 .UNINDENT
 .SS nxswriter.TangoSource module
 .sp

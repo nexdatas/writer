@@ -153,6 +153,35 @@ class EFieldTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
+    # default constructor test
+    # \brief It tests default settings
+    def test_default_constructor(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
+        FileWriter.writer = PNIWriter
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+
+        el = EField(self._fattrs, None)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "field")
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.rank, "0")
+        self.assertEqual(el.lengths, {})
+        self.assertEqual(el.source, None)
+        self.assertEqual(el.strategy, None)
+        self.assertEqual(el.trigger, None)
+        self.assertEqual(el.grows, None)
+        self.assertEqual(el.compression, False)
+        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.shuffle, True)
+        self._nxFile.close()
+        os.remove(self._fname)
+
     # default store method
     # \brief It tests default settings
     def test_store_default(self):
@@ -218,6 +247,58 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.store(), None)
 
         self.myAssertRaise(XMLSettingSyntaxError, el.store)
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+    # default store method
+    # \brief It tests default settings
+    def test_store_default_reload(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
+        FileWriter.writer = PNIWriter
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EField(self._fattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "field")
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.rank, "0")
+        self.assertEqual(el.lengths, {})
+        self.assertEqual(el.strategy, None)
+        self.assertEqual(el.source, None)
+        self.assertEqual(el.trigger, None)
+        self.assertEqual(el.grows, None)
+        self.assertEqual(el.compression, False)
+        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.shuffle, True)
+
+#        self.myAssertRaise(ValueError, el.store)
+#        el.content= ["sdf"]
+        self.assertEqual(el.store(), None)
+
+        self.myAssertRaise(XMLSettingSyntaxError, el.store)
+        el = EField(self._fattrs, eFile, reloadmode=True)
+        self.assertEqual(el.store(), None)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "field")
+        self.assertEqual(el.content, [])
+        self.assertEqual(el.rank, "0")
+        self.assertEqual(el.lengths, {})
+        self.assertEqual(el.strategy, None)
+        self.assertEqual(el.source, None)
+        self.assertEqual(el.trigger, None)
+        self.assertEqual(el.grows, None)
+        self.assertEqual(el.compression, False)
+        self.assertEqual(el.rate, 5)
+        self.assertEqual(el.shuffle, True)
 
         self._nxFile.close()
         os.remove(self._fname)

@@ -36,7 +36,8 @@ class EField(FElementWithAttr):
     """ field H5 tag element
     """
 
-    def __init__(self, attrs, last, streams=None):
+    def __init__(self, attrs, last, streams=None,
+                 reloadmode=False):
         """ constructor
 
         :param attrs: dictionary of the tag attributes
@@ -45,8 +46,11 @@ class EField(FElementWithAttr):
         :type last: :class:`nxswriter.Element.Element`
         :param streams: tango-like steamset class
         :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`
+        :param reloadmode: reload mode
+        :type reloadmode: :obj:`bool`
         """
-        FElementWithAttr.__init__(self, "field", attrs, last, streams=streams)
+        FElementWithAttr.__init__(self, "field", attrs, last, streams=streams,
+                                  reloadmode=reloadmode)
         #: (:obj:`str`) rank of the field
         self.rank = "0"
         #: (:obj:`dict` <:obj:`str`, :obj:`str`>) \
@@ -138,6 +142,13 @@ class EField(FElementWithAttr):
         :returns: H5 object
         :rtype: :class:`nxswriter.FileWriter.FTField`
         """
+
+        if self._reloadmode:
+            names = [kd.name for kd in self._lastObject()]
+            if name in names:
+                f = self._lastObject().open(name)
+                return f
+
         chunk = [s if s > 0 else 1 for s in shape]
         minshape = [1 if s > 0 else 0 for s in shape]
         deflate = None

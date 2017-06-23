@@ -21,8 +21,9 @@
 
 #: package version
 from .Release import __version__
+from .TangoDataWriter import globallock
 
-__all__ = ["__version__", "run"]
+__all__ = ["__version__", "run", "globallock"]
 
 
 def run(argv):
