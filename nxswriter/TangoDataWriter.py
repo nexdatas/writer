@@ -60,6 +60,7 @@ from .DataSourcePool import DataSourcePool
 #: global lock
 globallock = threading.Lock()
 
+
 class TangoDataWriter(object):
 
     """ NeXuS data writer

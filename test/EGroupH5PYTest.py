@@ -137,6 +137,53 @@ class EGroupH5PYTest(unittest.TestCase):
 
     # default constructor test
     # \brief It tests default settings
+    def test_default_constructor_reload(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (
+            os.getcwd(), self.__class__.__name__, fun)
+        FileWriter.writer = H5PYWriter
+        self._nxFile = FileWriter.create_file(
+            self._fname, overwrite=True).root()
+        eFile = EFile({}, None, self._nxFile)
+        el = EGroup(self._gattrs, eFile)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "group")
+        self.assertEqual(el.content, [])
+
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
+        self.assertEqual(el.h5Object.name, self._gattrs["name"])
+        self.assertEqual(len(el.h5Object.attributes), 1)
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
+        self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
+        self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
+
+        self.myAssertRaise(XMLSettingSyntaxError, EGroup, self._gattrs, eFile)
+        el = EGroup(self._gattrs, eFile, reloadmode=True)
+        self.assertTrue(isinstance(el, Element))
+        self.assertTrue(isinstance(el, FElement))
+        self.assertTrue(isinstance(el, FElementWithAttr))
+        self.assertEqual(el.tagName, "group")
+        self.assertEqual(el.content, [])
+
+        self.assertEqual(type(el.h5Object), H5PYWriter.H5PYGroup)
+        self.assertEqual(el.h5Object.name, self._gattrs["name"])
+        self.assertEqual(len(el.h5Object.attributes), 1)
+        self.assertEqual(el.h5Object.attributes[
+                         "NX_class"][...], self._gattrs["type"])
+        self.assertEqual(el.h5Object.attributes["NX_class"].dtype, "string")
+        self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
+        self.assertEqual(el.h5Object.attributes["NX_class"].shape, (1,))
+
+        self._nxFile.close()
+        os.remove(self._fname)
+
+    # default constructor test
+    # \brief It tests default settings
     def test_default_constructor_thesame_name(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)

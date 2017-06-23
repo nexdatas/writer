@@ -26,7 +26,6 @@ from .TangoDataWriter import globallock
 __all__ = ["__version__", "run", "globallock"]
 
 
-
 def run(argv):
     """ launches the TANGO server
 
