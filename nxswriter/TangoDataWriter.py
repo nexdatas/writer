@@ -25,6 +25,8 @@ from .StreamSet import StreamSet
 from . import FileWriter
 import os
 import shutil
+import threading
+
 
 WRITERS = {}
 try:
@@ -54,6 +56,9 @@ from .H5Elements import EFile
 from .DecoderPool import DecoderPool
 from .DataSourcePool import DataSourcePool
 
+
+#: global lock
+globallock = threading.Lock()
 
 class TangoDataWriter(object):
 
