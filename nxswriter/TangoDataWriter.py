@@ -56,7 +56,6 @@ from .DecoderPool import DecoderPool
 from .DataSourcePool import DataSourcePool
 
 
-
 class TangoDataWriter(object):
 
     """ NeXuS data writer
@@ -445,7 +444,10 @@ class TangoDataWriter(object):
             localJSON = json.loads(jsonstring)
 
         if self.__stepPool:
-            self._streams.info("TangoDataWriter::record() - Default trigger")
+            self._streams.info(
+                "TangoDataWriter::record() - Default trigger",
+                False
+            )
             self.__stepPool.setJSON(json.loads(self.jsonrecord), localJSON)
             if not self.skipacquisition:
                 self.__stepPool.runAndWait()
@@ -459,7 +461,9 @@ class TangoDataWriter(object):
             for pool in triggers:
                 if pool in self.__triggerPools.keys():
                     self._streams.info(
-                        "TangoDataWriter:record() - Trigger: %s" % pool)
+                        "TangoDataWriter:record() - Trigger: %s" % pool,
+                        False
+                    )
                     self.__triggerPools[pool].setJSON(
                         json.loads(self.jsonrecord), localJSON)
                     if not self.skipacquisition:
