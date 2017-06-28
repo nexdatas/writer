@@ -1,3 +1,7 @@
+2017-06-29 Jan Kotanski <jankotan@gmail.com>
+	* comment printouts
+	* tagged as 2.14.2
+
 2017-06-23 Jan Kotanski <jankotan@gmail.com>
 	* move globallock into __init__
 	* tagged as 2.14.1

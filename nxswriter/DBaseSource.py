@@ -35,19 +35,22 @@ try:
     import MySQLdb
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
-    sys.stdout.write("MYSQL not available: %s\n" % e)
+    pass
+    # sys.stdout.write("MYSQL not available: %s\n" % e)
 
 try:
     import psycopg2
     DB_AVAILABLE.append("PGSQL")
 except ImportError as e:
-    sys.stdout.write("PGSQL not available: %s\n" % e)
+    pass
+    # sys.stdout.write("PGSQL not available: %s\n" % e)
 
 try:
     import cx_Oracle
     DB_AVAILABLE.append("ORACLE")
 except ImportError as e:
-    sys.stdout.write("ORACLE not available: %s\n" % e)
+    pass
+    # sys.stdout.write("ORACLE not available: %s\n" % e)
 
 
 class DBaseSource(DataSource):
