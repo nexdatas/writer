@@ -19,7 +19,6 @@
 
 """ SAX parser for interpreting content of  XML configuration string """
 
-from . import FileWriter
 from xml import sax
 
 import sys
@@ -324,32 +323,3 @@ class NexusXMLHandler(sax.ContentHandler):
             if isinstance(s, FElement) and not isinstance(s, EFile):
                 if hasattr(s.h5Object, "close") and callable(s.h5Object.close):
                     s.h5Object.close()
-
-
-if __name__ == "__main__":
-
-    if len(sys.argv) < 3:
-        print("usage: NexusXMLHandler.py  <XMLinput>  <h5output>")
-
-    else:
-        #: (:obj:`str`) input XML file
-        fi = sys.argv[1]
-        if os.path.exists(fi):
-            #: (:obj:`str`) output h5 file
-            fo = sys.argv[2]
-
-            #: (:obj:`xml.sax.xmlreader.XMLReader`) parser object
-            mparser = sax.make_parser()
-
-            #: (:obj:`nxswriter.FileWriter.FTFile`) file handle
-            nxFile = FileWriter.create_file(fo, overwrite=True).root()
-            #: (:class:`nxswriter.H5Elements.EFile`) element file objects
-            mfileElement = EFile([], None, nxFile)
-            #: (:class:`nxswriter.NexusXMLHandler.NexusXMLHandler`) \
-            #:     SAX2 handler object
-            mhandler = NexusXMLHandler(mfileElement)
-            mparser.setContentHandler(mhandler)
-
-            mparser.parse(open(fi))
-            mhandler.close()
-            nxFile.close()

@@ -23,10 +23,13 @@ import weakref
 import time
 import pytz
 import datetime
+import threading
 
-#: writer module
+
+#: (:class:`threading.Lock`) writer module
 writer = None
 
+writerlock = threading.Lock()
 
 def open_file(filename, readonly=False, **pars):
     """ open the new file
@@ -40,7 +43,8 @@ def open_file(filename, readonly=False, **pars):
     :returns: file object
     :rtype: :class:`FTFile`
     """
-    return writer.open_file(filename, readonly, **pars)
+    with writerlock:
+        return writer.open_file(filename, readonly, **pars)
 
 
 def create_file(filename, overwrite=False, **pars):
@@ -55,7 +59,8 @@ def create_file(filename, overwrite=False, **pars):
     :returns: file object
     :rtype: :class:`FTFile`
     """
-    return writer.create_file(filename, overwrite, **pars)
+    with writerlock:
+        return writer.create_file(filename, overwrite, **pars)
 
 
 def link(target, parent, name):
@@ -70,7 +75,8 @@ def link(target, parent, name):
     :returns: link object
     :rtype: :class:`FTLink`
     """
-    return writer.link(target, parent, name)
+    with writerlock:
+        return writer.link(target, parent, name)
 
 
 def deflate_filter():
@@ -79,7 +85,8 @@ def deflate_filter():
     :returns: deflate filter object
     :rtype: :class:`FTDeflate`
     """
-    return writer.deflate_filter()
+    with writerlock:
+        return writer.deflate_filter()
 
 
 class FTObject(object):
