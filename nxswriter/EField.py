@@ -155,7 +155,7 @@ class EField(FElementWithAttr):
         # create Filter
 
         if self.compression:
-            deflate = FileWriter.deflate_filter()
+            deflate = FileWriter.deflate_filter(self._lastObject())
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
 
