@@ -44,7 +44,8 @@ def open_file(filename, readonly=False, **pars):
     :rtype: :class:`FTFile`
     """
     with writerlock:
-        return writer.open_file(filename, readonly, **pars)
+        wr = writer
+    return wr.open_file(filename, readonly, **pars)
 
 
 def create_file(filename, overwrite=False, **pars):
@@ -60,7 +61,8 @@ def create_file(filename, overwrite=False, **pars):
     :rtype: :class:`FTFile`
     """
     with writerlock:
-        return writer.create_file(filename, overwrite, **pars)
+        wr = writer
+    return wr.create_file(filename, overwrite, **pars)
 
 
 def link(target, parent, name):
@@ -76,7 +78,8 @@ def link(target, parent, name):
     :rtype: :class:`FTLink`
     """
     with writerlock:
-        return writer.link(target, parent, name)
+        wr = writer
+    return wr.link(target, parent, name)
 
 
 def deflate_filter():
@@ -86,7 +89,8 @@ def deflate_filter():
     :rtype: :class:`FTDeflate`
     """
     with writerlock:
-        return writer.deflate_filter()
+        wr = writer
+    return wr.deflate_filter()
 
 
 class FTObject(object):
