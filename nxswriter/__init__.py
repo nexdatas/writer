@@ -21,10 +21,10 @@
 
 import threading
 
-#: package version
+#: (:obj:`str`) package version
 from .Release import __version__
 
-#: global lock
+#: (:class:`threading.Lock`) global lock
 globallock = threading.Lock()
 
 __all__ = ["__version__", "run", "globallock"]

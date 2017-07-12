@@ -260,7 +260,8 @@ class FileWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.writer = tw
+        FileWriter.setwriter(tw)
+        self.assertEqual(tw, FileWriter.writer)
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
