@@ -151,8 +151,7 @@ class TangoDataWriter(object):
         if not writer:
             writer = "pni" if "pni" in WRITERS.keys() else "h5py"
         self.writer = writer.lower()
-        with FileWriter.writerlock:
-            FileWriter.writer = WRITERS[writer.lower()]
+        FileWriter.setwriter(WRITERS[writer.lower()])
 
     def __getCanFail(self):
         """ get method for the global can fail flag

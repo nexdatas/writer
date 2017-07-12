@@ -26,10 +26,12 @@ import datetime
 import threading
 
 
-#: (:class:`threading.Lock`) writer module
+#: (:mod:`PNIWriter` or :mod:`H5PYWriter`) writer module
 writer = None
 
+#: (:class:`threading.Lock`) writer module
 writerlock = threading.Lock()
+
 
 def open_file(filename, readonly=False, **pars):
     """ open the new file
@@ -91,6 +93,17 @@ def deflate_filter():
     with writerlock:
         wr = writer
     return wr.deflate_filter()
+
+
+def setwriter(wr):
+    """ sets writer
+
+    :param wr: writer module
+    :type wr: :mod:`PNIWriter` or :mod:`H5PYWriter`
+    """
+    global writer
+    with writerlock:
+        writer = wr
 
 
 class FTObject(object):

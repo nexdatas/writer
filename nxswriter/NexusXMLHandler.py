@@ -21,9 +21,6 @@
 
 from xml import sax
 
-import sys
-import os
-
 from .StreamSet import StreamSet
 
 from .Element import Element
