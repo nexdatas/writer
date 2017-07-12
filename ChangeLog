@@ -1,4 +1,9 @@
 2017-07-12 Jan Kotanski <jankotan@gmail.com>
+	* add writer parameter into open_file/create_file
+	* allow to run two different writers simultaneously
+	* tagged as 2.15.0
+
+2017-07-12 Jan Kotanski <jankotan@gmail.com>
 	* improve thread safety of NXSDataWriter
 	* tagged as 2.14.3
 

@@ -26,7 +26,7 @@ import datetime
 import threading
 
 
-#: (:mod:`PNIWriter` or :mod:`H5PYWriter`) writer module
+#: (:mod:`PNIWriter` or :mod:`H5PYWriter`) default writer module
 writer = None
 
 #: (:class:`threading.Lock`) writer module
@@ -45,9 +45,15 @@ def open_file(filename, readonly=False, **pars):
     :returns: file object
     :rtype: :class:`FTFile`
     """
-    with writerlock:
-        wr = writer
-    return wr.open_file(filename, readonly, **pars)
+    if 'writer' in pars.keys():
+        wr = pars.pop('writer')
+    else:
+        with writerlock:
+            wr = writer
+    fl = wr.open_file(filename, readonly, **pars)
+    if hasattr(fl, "writer"):
+        fl.writer = wr
+    return fl
 
 
 def create_file(filename, overwrite=False, **pars):
@@ -62,9 +68,15 @@ def create_file(filename, overwrite=False, **pars):
     :returns: file object
     :rtype: :class:`FTFile`
     """
-    with writerlock:
-        wr = writer
-    return wr.create_file(filename, overwrite, **pars)
+    if 'writer' in pars.keys():
+        wr = pars.pop('writer')
+    else:
+        with writerlock:
+            wr = writer
+    fl = wr.create_file(filename, overwrite, **pars)
+    if hasattr(fl, "writer"):
+        fl.writer = wr
+    return fl
 
 
 def link(target, parent, name):
@@ -79,19 +91,45 @@ def link(target, parent, name):
     :returns: link object
     :rtype: :class:`FTLink`
     """
-    with writerlock:
-        wr = writer
+    node = parent
+    wr = None
+    while node:
+        if hasattr(node, "writer"):
+            wr = node.writer
+            break
+        else:
+            if hasattr(node, "parent"):
+                node = node.parent
+            else:
+                break
+    if not wr:
+        with writerlock:
+            wr = writer
     return wr.link(target, parent, name)
 
 
-def deflate_filter():
+def deflate_filter(parent=None):
     """ create deflate filter
 
+    :param parent: parent object
+    :type parent: :class:`FTObject`
     :returns: deflate filter object
     :rtype: :class:`FTDeflate`
     """
-    with writerlock:
-        wr = writer
+    node = parent
+    wr = None
+    while node:
+        if hasattr(node, "writer"):
+            wr = node.writer
+            break
+        else:
+            if hasattr(node, "parent"):
+                node = node.parent
+            else:
+                break
+    if not wr:
+        with writerlock:
+            wr = writer
     return wr.deflate_filter()
 
 
@@ -203,10 +241,14 @@ class FTFile(FTObject):
         :type h5object: :obj:`any`
         :param filename:  file name
         :type filename: :obj:`str`
+        :param writer: writer module
+        :type writer: :mod:`PNIWriter` or :mod:`H5PYWriter`
         """
         FTObject.__init__(self, h5object, None)
         #: (:obj:`str`) file name
         self.name = filename
+        #: (:mod:`PNIWriter` or :mod:`H5PYWriter`) writer module
+        self.writer = None
 
     def root(self):
         """ root object

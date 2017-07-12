@@ -42,6 +42,25 @@ except:
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+
+class fwriter(object):
+    def __init__(self, tparent=None):
+        self.writer = None
+        self._tparent = tparent
+
+    @property
+    def parent(self):
+        return self._tparent
+
+class fobject(object):
+    def __init__(self, tparent=None):
+        self._tparent = tparent
+
+    @property
+    def parent(self):
+        return self._tparent
+
+
 class testwriter(object):
     def __init__(self):
         self.commands = []
@@ -288,7 +307,8 @@ class FileWriterTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         tw = testwriter()
-        FileWriter.writer = tw
+        FileWriter.setwriter(tw)
+        self.assertEqual(tw, FileWriter.writer)
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = res
@@ -311,6 +331,143 @@ class FileWriterTest(unittest.TestCase):
 
     # test
     # \brief It tests default settings
+    def test_openfile_wr(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        tw = testwriter()
+        for _ in range(10):
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            tres = FileWriter.open_file(fn, writer = tw)
+            self.assertEqual(tw, tres.writer)
+            self.assertEqual(tw.commands[-1], "open_file")
+            self.assertEqual(tw.params[-1], [fn, False, None])
+        for _ in range(10):
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            rb =  bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.open_file(fn, rb, writer = tw)
+            self.assertEqual(tw, tres.writer)
+            self.assertEqual(tw.commands[-1], "open_file")
+            self.assertEqual(tw.params[-1], [fn, rb, None])
+
+    # test
+    # \brief It tests default settings
+    def test_createfile_wr(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        tw = testwriter()
+        for _ in range(10):
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            tres = FileWriter.create_file(fn, writer = tw)
+            self.assertEqual(tw, tres.writer)
+            self.assertEqual(tw.commands[-1], "create_file")
+            self.assertEqual(tw.params[-1], [fn, False, None])
+        for _ in range(10):
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            rb =  bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.create_file(fn, rb, writer = tw)
+            self.assertEqual(tw, tres.writer)
+            self.assertEqual(tw.commands[-1], "create_file")
+            self.assertEqual(tw.params[-1], [fn, rb, None])
+
+    # test
+    # \brief It tests default settings
+    def test_openfile_twr(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        writers = []
+        fobjs = []
+        for _ in range(10):
+            tw = testwriter()
+            writers.append(tw)
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            tres = FileWriter.open_file(fn, writer = tw)
+            fobjs.append(tres)
+            self.assertEqual(tw.commands[-1], "open_file")
+            self.assertEqual(tw.params[-1], [fn, False, None])
+        for i in range(10):
+            tw = writers[i]
+            tres = fobjs[i]
+            self.assertEqual(tw, tres.writer)
+        writers = []
+        fobjs = []
+        for _ in range(10):
+            tw = testwriter()
+            writers.append(tw)
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            rb =  bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.open_file(fn, rb, writer = tw)
+            fobjs.append(tres)
+            self.assertEqual(tw.commands[-1], "open_file")
+            self.assertEqual(tw.params[-1], [fn, rb, None])
+        for i in range(10):
+            tw = writers[i]
+            tres = fobjs[i]
+            self.assertEqual(tw, tres.writer)
+
+
+    # test
+    # \brief It tests default settings
+    def test_createfile_twr(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        writers = []
+        fobjs = []
+        for _ in range(10):
+            tw = testwriter()
+            writers.append(tw)
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            tres = FileWriter.create_file(fn, writer = tw)
+            fobjs.append(tres)
+            self.assertEqual(tw, tres.writer)
+            self.assertEqual(tw.commands[-1], "create_file")
+            self.assertEqual(tw.params[-1], [fn, False, None])
+        for i in range(10):
+            tw = writers[i]
+            tres = fobjs[i]
+            self.assertEqual(tw, tres.writer)
+        writers = []
+        fobjs = []
+        for _ in range(10):
+            tw = testwriter()
+            writers.append(tw)
+            res = self.__rnd.randint(1, 10)
+            tw.result = fwriter()
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            rb =  bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.create_file(fn, rb, writer = tw)
+            fobjs.append(tres)
+            self.assertEqual(tw, tres.writer)
+            self.assertEqual(tw.commands[-1], "create_file")
+            self.assertEqual(tw.params[-1], [fn, rb, None])
+        for i in range(10):
+            tw = writers[i]
+            tres = fobjs[i]
+            self.assertEqual(tw, tres.writer)
+
+    # test
+    # \brief It tests default settings
     def test_link(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -327,6 +484,46 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "link")
             self.assertEqual(tw.params[-1], [fn, fn2, fn3])
+            self.assertEqual(tres, res)
+
+    # test
+    # \brief It tests default settings
+    def test_link_rc(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        tw = testwriter()
+        gparent = fwriter()
+        gparent.writer = tw
+        parent = gparent
+        for _ in range(10):
+            parent = fobject(tparent=parent)
+            res = self.__rnd.randint(1, 10)
+            tw.result = res
+            chars = string.ascii_uppercase + string.digits
+            fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
+            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res*3))
+            tres = FileWriter.link(fn, parent, fn3)
+            self.assertEqual(tres, res)
+            self.assertEqual(tw.commands[-1], "link")
+            self.assertEqual(tw.params[-1], [fn, parent, fn3])
+
+    # test
+    # \brief It tests default settings
+    def test_deflate_filter_rc(self):
+        fun = sys._getframe().f_code.co_name
+        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        tw = testwriter()
+        gparent = fwriter()
+        gparent.writer = tw
+        parent = gparent
+        for _ in range(10):
+            parent = fobject(tparent=parent)
+            res = self.__rnd.randint(1, 10)
+            tw.result = res
+            tres = FileWriter.deflate_filter(parent)
+            self.assertEqual(tres, res)
+            self.assertEqual(tw.commands[-1], "deflate_filter")
+            self.assertEqual(tw.params[-1], [])
             self.assertEqual(tres, res)
 
     # test

@@ -151,7 +151,9 @@ class TangoDataWriter(object):
         if not writer:
             writer = "pni" if "pni" in WRITERS.keys() else "h5py"
         self.writer = writer.lower()
-        FileWriter.setwriter(WRITERS[writer.lower()])
+        wrmodule = WRITERS[writer.lower()]
+        FileWriter.setwriter(wrmodule)
+        return wrmodule
 
     def __getCanFail(self):
         """ get method for the global can fail flag
@@ -261,7 +263,7 @@ class TangoDataWriter(object):
             self._streams.warn(
                 "TangoDataWriter::openFile() - File cannot be closed")
 
-        self.__setWriter(self.writer)
+        wrmodule = self.__setWriter(self.writer)
         self.__nxFile = None
         self.__eFile = None
         self.__initPool = None
@@ -271,12 +273,14 @@ class TangoDataWriter(object):
         self.__currentfileid = 0
 
         self.__pars = self.__getParams(self.writer)
+        pars = dict(self.__pars)
+        pars["writer"] = wrmodule
         if os.path.isfile(self.fileName):
             self.__nxFile = FileWriter.open_file(
-                self.fileName, False, **self.__pars)
+                self.fileName, False, **pars)
         else:
             self.__nxFile = FileWriter.create_file(
-                self.fileName, **self.__pars)
+                self.fileName, **pars)
         self.__fileprefix, self.__fileext = os.path.splitext(
             str(self.fileName))
         self.__nxRoot = self.__nxFile.root()
