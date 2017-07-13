@@ -49,6 +49,46 @@
 		<td> A name of H5 output file with its full path </td>
 	</tr>
 	<tr>
+		<td> <a href="AttrCurrentFileId.html"> CurrentFileId </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> Current file id </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrStepsPerFile.html"> StepsPerFile </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_LONG </td>
+		<td> OPERATOR </td>
+		<td> Steps per file </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrCanFail.html"> CanFail </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_BOOLEAN </td>
+		<td> OPERATOR </td>
+		<td> Global can fail flag. By default it is False </td>
+	</tr>
+	<tr>
+		<td> <a href="AttrSkipAcquisition.html"> SkipAcquisition </a> </td>
+		<td> false </td>
+		<td> false </td>
+		<td> Scalar </td>
+		<td> READ_WRITE </td>
+		<td> Tango::DEV_BOOLEAN </td>
+		<td> OPERATOR </td>
+		<td> Skip acquisition. It is set to default False value  after excuting the OpenEntry, Record or CloseEntry </td>
+	</tr>
+	<tr>
 		<td> <a href="AttrErrors.html"> Errors </a> </td>
 		<td> false </td>
 		<td> false </td>
