@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.DBaseSource &mdash; NXSDataWriter 2.11.0 documentation</title>
+    <title>nxswriter.DBaseSource &mdash; NXSDataWriter 2.15.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.11.0',
+        VERSION:     '2.15.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -90,7 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.StreamSet">nxswriter.StreamSet module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
@@ -168,9 +168,9 @@
 <span class="sd">&quot;&quot;&quot; Definitions of DB datasource &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">xml.dom</span> <span class="kn">import</span> <span class="n">minidom</span>
+<span class="c"># import sys</span>
 
 <span class="kn">from</span> <span class="nn">.Types</span> <span class="kn">import</span> <span class="n">NTP</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Streams</span>
 
 <span class="kn">from</span> <span class="nn">.DataSources</span> <span class="kn">import</span> <span class="n">DataSource</span>
 <span class="kn">from</span> <span class="nn">.Errors</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PackageError</span><span class="p">,</span> <span class="n">DataSourceSetupError</span><span class="p">)</span>
@@ -183,31 +183,37 @@
     <span class="kn">import</span> <span class="nn">MySQLdb</span>
     <span class="n">DB_AVAILABLE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;MYSQL&quot;</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">Streams</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;MYSQL not available: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+    <span class="k">pass</span>
+    <span class="c"># sys.stdout.write(&quot;MYSQL not available: %s\n&quot; % e)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">psycopg2</span>
     <span class="n">DB_AVAILABLE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;PGSQL&quot;</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">Streams</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;PGSQL not available: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+    <span class="k">pass</span>
+    <span class="c"># sys.stdout.write(&quot;PGSQL not available: %s\n&quot; % e)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">cx_Oracle</span>
     <span class="n">DB_AVAILABLE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;ORACLE&quot;</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">Streams</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;ORACLE not available: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+    <span class="k">pass</span>
+    <span class="c"># sys.stdout.write(&quot;ORACLE not available: %s\n&quot; % e)</span>
 
 
 <div class="viewcode-block" id="DBaseSource"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.DBaseSource.DBaseSource">[docs]</a><span class="k">class</span> <span class="nc">DBaseSource</span><span class="p">(</span><span class="n">DataSource</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; DataBase data source</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :brief: It sets all member variables to None</span>
+<span class="sd">        :param streams: tango-like steamset class</span>
+<span class="sd">        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">DataSource</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">DataSource</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="n">streams</span><span class="p">)</span>
         <span class="c">#: (:obj:`str`) name of the host with the data source</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c">#: (:obj:`str`) port related to the host</span>
@@ -261,10 +267,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getText</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;DBaseSource::setup() - &quot;</span>
-                <span class="s">&quot;Database query or its format not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;DBaseSource::setup() - &quot;</span>
+                    <span class="s">&quot;Database query or its format not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                 <span class="s">&quot;Database query or its format not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">)</span>
@@ -364,10 +371,11 @@
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbtype</span> <span class="ow">in</span> <span class="n">DB_AVAILABLE</span><span class="p">:</span>
             <span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dbConnect</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dbtype</span><span class="p">]()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;DBaseSource::getData() - &quot;</span>
-                <span class="s">&quot;Support for </span><span class="si">%s</span><span class="s"> database not available&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbtype</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;DBaseSource::getData() - &quot;</span>
+                    <span class="s">&quot;Support for </span><span class="si">%s</span><span class="s"> database not available&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbtype</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">PackageError</span><span class="p">(</span>
                 <span class="s">&quot;Support for </span><span class="si">%s</span><span class="s"> database not available&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbtype</span><span class="p">)</span>

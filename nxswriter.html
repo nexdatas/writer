@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter package &mdash; NXSDataWriter 2.11.0 documentation</title>
+    <title>nxswriter package &mdash; NXSDataWriter 2.15.0 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.11.0',
+        VERSION:     '2.15.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="index.html" />
+    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="index.html" />
     <link rel="prev" title="Welcome to NXSDataWriter’s documentation!" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -90,7 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.StreamSet">nxswriter.StreamSet module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
@@ -138,7 +138,7 @@
 <li><a class="reference internal" href="#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
 <li><a class="reference internal" href="#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
 <li><a class="reference internal" href="#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
-<li><a class="reference internal" href="#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li><a class="reference internal" href="#module-nxswriter.StreamSet">nxswriter.StreamSet module</a></li>
 <li><a class="reference internal" href="#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
 <li><a class="reference internal" href="#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li><a class="reference internal" href="#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
@@ -196,7 +196,7 @@
 <p>Definitions of CLIENT datasource</p>
 <dl class="class">
 <dt id="nxswriter.ClientSource.ClientSource">
-<em class="property">class </em><tt class="descclassname">nxswriter.ClientSource.</tt><tt class="descname">ClientSource</tt><a class="reference internal" href="_modules/nxswriter/ClientSource.html#ClientSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.ClientSource.ClientSource" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.ClientSource.</tt><tt class="descname">ClientSource</tt><big>(</big><em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/ClientSource.html#ClientSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.ClientSource.ClientSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.DataSources.DataSource" title="nxswriter.DataSources.DataSource"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.DataSources.DataSource</span></tt></a></p>
 <p>Client data source</p>
 <p>constructor</p>
@@ -205,6 +205,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It sets all member variables to None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</td>
 </tr>
 </tbody>
 </table>
@@ -218,7 +220,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary with collected data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>} )</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>} )</td>
 </tr>
 </tbody>
 </table>
@@ -275,13 +277,13 @@
 <p>Definitions of DB datasource</p>
 <dl class="data">
 <dt id="nxswriter.DBaseSource.DB_AVAILABLE">
-<tt class="descclassname">nxswriter.DBaseSource.</tt><tt class="descname">DB_AVAILABLE</tt><em class="property"> = ['MYSQL', 'PGSQL', 'ORACLE']</em><a class="headerlink" href="#nxswriter.DBaseSource.DB_AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nxswriter.DBaseSource.</tt><tt class="descname">DB_AVAILABLE</tt><em class="property"> = ['MYSQL', 'PGSQL']</em><a class="headerlink" href="#nxswriter.DBaseSource.DB_AVAILABLE" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a>) list of available databases</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="nxswriter.DBaseSource.DBaseSource">
-<em class="property">class </em><tt class="descclassname">nxswriter.DBaseSource.</tt><tt class="descname">DBaseSource</tt><a class="reference internal" href="_modules/nxswriter/DBaseSource.html#DBaseSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DBaseSource.DBaseSource" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.DBaseSource.</tt><tt class="descname">DBaseSource</tt><big>(</big><em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/DBaseSource.html#DBaseSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DBaseSource.DBaseSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.DataSources.DataSource" title="nxswriter.DataSources.DataSource"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.DataSources.DataSource</span></tt></a></p>
 <p>DataBase data source</p>
 <p>constructor</p>
@@ -290,6 +292,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It sets all member variables to None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</td>
 </tr>
 </tbody>
 </table>
@@ -400,7 +404,7 @@ if <a class="reference internal" href="#nxswriter.DBaseSource.DBaseSource.format
 <p>definition of a data holder with casting methods</p>
 <dl class="class">
 <dt id="nxswriter.DataHolder.DataHolder">
-<em class="property">class </em><tt class="descclassname">nxswriter.DataHolder.</tt><tt class="descname">DataHolder</tt><big>(</big><em>rank</em>, <em>value</em>, <em>tangoDType</em>, <em>shape</em>, <em>encoding=None</em>, <em>decoders=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/DataHolder.html#DataHolder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DataHolder.DataHolder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.DataHolder.</tt><tt class="descname">DataHolder</tt><big>(</big><em>rank</em>, <em>value</em>, <em>tangoDType</em>, <em>shape</em>, <em>encoding=None</em>, <em>decoders=None</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/DataHolder.html#DataHolder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DataHolder.DataHolder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>Holder for passing data</p>
 <p>constructor</p>
@@ -412,9 +416,10 @@ if <a class="reference internal" href="#nxswriter.DBaseSource.DBaseSource.format
 <li><strong>rank</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; format of the data, i.e. SCALAR, SPECTRUM, IMAGE, VERTEX</li>
 <li><strong>value</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#any" title="(in Python v2.7)"><em>any</em></a>) &#8211; value of the data. It may be also 1D and 2D array</li>
 <li><strong>tangoDType</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; type of the data</li>
-<li><strong>shape</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt;) &#8211; shape of the data</li>
+<li><strong>shape</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt;) &#8211; shape of the data</li>
 <li><strong>encoding</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; encoding type of Tango DevEncoded varibles</li>
 <li><strong>decoders</strong> (<a class="reference internal" href="#nxswriter.DecoderPool.DecoderPool" title="nxswriter.DecoderPool.DecoderPool"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.DecoderPool.DecoderPool</span></tt></a>) &#8211; poll with decoding classes</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -433,7 +438,7 @@ if <a class="reference internal" href="#nxswriter.DBaseSource.DBaseSource.format
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy array of defined type or list
 for strings or value for SCALAR</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.13)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -460,7 +465,7 @@ for strings or value for SCALAR</td>
 <dl class="attribute">
 <dt id="nxswriter.DataHolder.DataHolder.shape">
 <tt class="descname">shape</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.DataHolder.DataHolder.shape" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt;) data shape</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt;) data shape</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -483,7 +488,7 @@ for strings or value for SCALAR</td>
 <p>factory with datasources</p>
 <dl class="class">
 <dt id="nxswriter.DataSourceFactory.DataSourceFactory">
-<em class="property">class </em><tt class="descclassname">nxswriter.DataSourceFactory.</tt><tt class="descname">DataSourceFactory</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/DataSourceFactory.html#DataSourceFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DataSourceFactory.DataSourceFactory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.DataSourceFactory.</tt><tt class="descname">DataSourceFactory</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/DataSourceFactory.html#DataSourceFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DataSourceFactory.DataSourceFactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
 <p>Data source creator</p>
 <p>constructor</p>
@@ -494,6 +499,7 @@ for strings or value for SCALAR</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary with the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element on the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -606,6 +612,12 @@ for strings or value for SCALAR</td>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="nxswriter.DataSourcePool.DataSourcePool.canfail">
+<tt class="descname">canfail</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.DataSourcePool.DataSourcePool.canfail" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) can fail switch</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="nxswriter.DataSourcePool.DataSourcePool.common">
 <tt class="descname">common</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.DataSourcePool.DataSourcePool.common" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
@@ -691,7 +703,7 @@ is registered</td>
 <p>Definitions of various datasources</p>
 <dl class="class">
 <dt id="nxswriter.DataSources.DataSource">
-<em class="property">class </em><tt class="descclassname">nxswriter.DataSources.</tt><tt class="descname">DataSource</tt><a class="reference internal" href="_modules/nxswriter/DataSources.html#DataSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DataSources.DataSource" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.DataSources.</tt><tt class="descname">DataSource</tt><big>(</big><em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/DataSources.html#DataSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.DataSources.DataSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>Data source</p>
 <p>constructor</p>
@@ -700,6 +712,8 @@ is registered</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It cleans all member variables</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</td>
 </tr>
 </tbody>
 </table>
@@ -883,7 +897,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the decoded data if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.13)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -931,7 +945,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the data shape if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -963,7 +977,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the decoded data if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.13)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -1011,7 +1025,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the data shape i.e. <cite>[1, 0]</cite></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1043,7 +1057,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the decoded data if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.12)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.13)"><tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -1091,7 +1105,7 @@ is registered</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the data shape if data was loaded</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -1105,7 +1119,7 @@ is registered</td>
 <p>Definitions of attribute tag evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.EAttribute.EAttribute">
-<em class="property">class </em><tt class="descclassname">nxswriter.EAttribute.</tt><tt class="descname">EAttribute</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EAttribute.html#EAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EAttribute.EAttribute" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.EAttribute.</tt><tt class="descname">EAttribute</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EAttribute.html#EAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EAttribute.EAttribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.FElement.FElement" title="nxswriter.FElement.FElement"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FElement.FElement</span></tt></a></p>
 <p>attribute tag element</p>
 <p>constructor</p>
@@ -1116,6 +1130,7 @@ is registered</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -1132,13 +1147,15 @@ is registered</td>
 
 <dl class="method">
 <dt id="nxswriter.EAttribute.EAttribute.markFailed">
-<tt class="descname">markFailed</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/EAttribute.html#EAttribute.markFailed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EAttribute.EAttribute.markFailed" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">markFailed</tt><big>(</big><em>error=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EAttribute.html#EAttribute.markFailed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EAttribute.EAttribute.markFailed" title="Permalink to this definition">¶</a></dt>
 <dd><p>marks the field as failed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It marks the field as failed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; error string</td>
 </tr>
 </tbody>
 </table>
@@ -1214,7 +1231,7 @@ is registered</td>
 <p>Definitions of field tag evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.EField.EField">
-<em class="property">class </em><tt class="descclassname">nxswriter.EField.</tt><tt class="descname">EField</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EField.html#EField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EField.EField" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.EField.</tt><tt class="descname">EField</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em>, <em>reloadmode=False</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EField.html#EField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EField.EField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.FElement.FElementWithAttr" title="nxswriter.FElement.FElementWithAttr"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FElement.FElementWithAttr</span></tt></a></p>
 <p>field H5 tag element</p>
 <p>constructor</p>
@@ -1225,6 +1242,8 @@ is registered</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+<li><strong>reloadmode</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; reload mode</li>
 </ul>
 </td>
 </tr>
@@ -1253,13 +1272,15 @@ is registered</td>
 
 <dl class="method">
 <dt id="nxswriter.EField.EField.markFailed">
-<tt class="descname">markFailed</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/EField.html#EField.markFailed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EField.EField.markFailed" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">markFailed</tt><big>(</big><em>error=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EField.html#EField.markFailed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EField.EField.markFailed" title="Permalink to this definition">¶</a></dt>
 <dd><p>marks the field as failed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It marks the field as failed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; error string</td>
 </tr>
 </tbody>
 </table>
@@ -1347,7 +1368,7 @@ is registered</td>
 <p>Definitions of group tag evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.EGroup.EGroup">
-<em class="property">class </em><tt class="descclassname">nxswriter.EGroup.</tt><tt class="descname">EGroup</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EGroup.html#EGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EGroup.EGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.EGroup.</tt><tt class="descname">EGroup</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em>, <em>reloadmode=False</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EGroup.html#EGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EGroup.EGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.FElement.FElementWithAttr" title="nxswriter.FElement.FElementWithAttr"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FElement.FElementWithAttr</span></tt></a></p>
 <p>group H5 tag element</p>
 <p>constructor</p>
@@ -1358,6 +1379,8 @@ is registered</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+<li><strong>reloadmode</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; reload mode</li>
 </ul>
 </td>
 </tr>
@@ -1398,7 +1421,7 @@ is registered</td>
 <p>Definitions of link tag evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.ELink.ELink">
-<em class="property">class </em><tt class="descclassname">nxswriter.ELink.</tt><tt class="descname">ELink</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/ELink.html#ELink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.ELink.ELink" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.ELink.</tt><tt class="descname">ELink</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/ELink.html#ELink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.ELink.ELink" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.FElement.FElement" title="nxswriter.FElement.FElement"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FElement.FElement</span></tt></a></p>
 <p>link H5 tag element</p>
 <p>constructor</p>
@@ -1409,6 +1432,7 @@ is registered</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -1499,9 +1523,9 @@ is registered</td>
 <p>Definitions of strategy evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.EStrategy.EStrategy">
-<em class="property">class </em><tt class="descclassname">nxswriter.EStrategy.</tt><tt class="descname">EStrategy</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EStrategy.html#EStrategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EStrategy.EStrategy" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.EStrategy.</tt><tt class="descname">EStrategy</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EStrategy.html#EStrategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EStrategy.EStrategy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
-<p>## strategy tag element</p>
+<p>strategy tag element</p>
 <p>constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1510,11 +1534,18 @@ is registered</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="nxswriter.EStrategy.EStrategy.setCanFail">
+<tt class="descname">setCanFail</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/EStrategy.html#EStrategy.setCanFail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EStrategy.EStrategy.setCanFail" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets can fail flag</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="nxswriter.EStrategy.EStrategy.store">
 <tt class="descname">store</tt><big>(</big><em>xml=None</em>, <em>globalJSON=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/EStrategy.html#EStrategy.store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.EStrategy.EStrategy.store" title="Permalink to this definition">¶</a></dt>
@@ -1541,7 +1572,7 @@ is registered</td>
 <p>Provides the base class Element for xml tags</p>
 <dl class="class">
 <dt id="nxswriter.Element.Element">
-<em class="property">class </em><tt class="descclassname">nxswriter.Element.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>attrs</em>, <em>last=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Element.html#Element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Element.Element" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.Element.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>attrs</em>, <em>last=None</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Element.html#Element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Element.Element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>Tag element stored on our stack</p>
 <p>constructor</p>
@@ -1553,6 +1584,7 @@ is registered</td>
 <li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; tag name</li>
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -1561,7 +1593,7 @@ is registered</td>
 <dl class="attribute">
 <dt id="nxswriter.Element.Element.content">
 <tt class="descname">content</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.Element.Element.content" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) stored tag content</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) stored tag content</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1718,7 +1750,7 @@ is registered</td>
 <p>Definitions of file tag evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.FElement.FElement">
-<em class="property">class </em><tt class="descclassname">nxswriter.FElement.</tt><tt class="descname">FElement</tt><big>(</big><em>name</em>, <em>attrs</em>, <em>last</em>, <em>h5object=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FElement.html#FElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FElement.FElement" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.FElement.</tt><tt class="descname">FElement</tt><big>(</big><em>name</em>, <em>attrs</em>, <em>last</em>, <em>h5object=None</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FElement.html#FElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FElement.FElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
 <p>NeXuS runnable tag element
 tag element corresponding to one of H5 objects</p>
@@ -1732,6 +1764,7 @@ tag element corresponding to one of H5 objects</p>
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
 <li><strong>h5object</strong> (<a class="reference internal" href="#nxswriter.FileWriter.FTObject" title="nxswriter.FileWriter.FTObject"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FileWriter.FTObject</span></tt></a>) &#8211; H5 file object</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -1797,7 +1830,7 @@ tag element corresponding to one of H5 objects</p>
 
 <dl class="class">
 <dt id="nxswriter.FElement.FElementWithAttr">
-<em class="property">class </em><tt class="descclassname">nxswriter.FElement.</tt><tt class="descname">FElementWithAttr</tt><big>(</big><em>name</em>, <em>attrs</em>, <em>last</em>, <em>h5object=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FElement.html#FElementWithAttr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FElement.FElementWithAttr" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.FElement.</tt><tt class="descname">FElementWithAttr</tt><big>(</big><em>name</em>, <em>attrs</em>, <em>last</em>, <em>h5object=None</em>, <em>streams=None</em>, <em>reloadmode=False</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FElement.html#FElementWithAttr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FElement.FElementWithAttr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.FElement.FElement" title="nxswriter.FElement.FElement"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FElement.FElement</span></tt></a></p>
 <p>NeXuS runnable tag element with attributes
 tag element corresponding to one of H5 objects with attributes</p>
@@ -1811,6 +1844,8 @@ tag element corresponding to one of H5 objects with attributes</p>
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
 <li><strong>h5object</strong> (<a class="reference internal" href="#nxswriter.FileWriter.FTObject" title="nxswriter.FileWriter.FTObject"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FileWriter.FTObject</span></tt></a>) &#8211; H5 file object</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+<li><strong>reloadmode</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; reload mode</li>
 </ul>
 </td>
 </tr>
@@ -1852,7 +1887,7 @@ written as (name, value, shape)</dd>
 <p>SAX parser for fetching name attributes of tags</p>
 <dl class="class">
 <dt id="nxswriter.FetchNameHandler.FetchNameHandler">
-<em class="property">class </em><tt class="descclassname">nxswriter.FetchNameHandler.</tt><tt class="descname">FetchNameHandler</tt><a class="reference internal" href="_modules/nxswriter/FetchNameHandler.html#FetchNameHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FetchNameHandler.FetchNameHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.FetchNameHandler.</tt><tt class="descname">FetchNameHandler</tt><big>(</big><em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FetchNameHandler.html#FetchNameHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FetchNameHandler.FetchNameHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/xml.sax.handler.html#xml.sax.handler.ContentHandler" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">xml.sax.handler.ContentHandler</span></tt></a></p>
 <p>SAX2 parser</p>
 <p>constructor</p>
@@ -1861,6 +1896,8 @@ written as (name, value, shape)</dd>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It constructs parser handler for fetching group names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</td>
 </tr>
 </tbody>
 </table>
@@ -1997,7 +2034,7 @@ written as (name, value, shape)</dd>
 <p>Definitions of tag evaluation classes</p>
 <dl class="class">
 <dt id="nxswriter.H5Elements.EDim">
-<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EDim</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EDim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EDim" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EDim</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EDim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EDim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
 <p>dim tag element</p>
 <p>constructor</p>
@@ -2008,6 +2045,7 @@ written as (name, value, shape)</dd>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -2016,7 +2054,7 @@ written as (name, value, shape)</dd>
 <dl class="attribute">
 <dt id="nxswriter.H5Elements.EDim.content">
 <tt class="descname">content</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.H5Elements.EDim.content" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) tag content</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) tag content</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2047,7 +2085,7 @@ written as (name, value, shape)</dd>
 
 <dl class="class">
 <dt id="nxswriter.H5Elements.EDimensions">
-<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EDimensions</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EDimensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EDimensions" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EDimensions</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EDimensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EDimensions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
 <p>dimensions tag element</p>
 <p>constructor</p>
@@ -2058,6 +2096,7 @@ written as (name, value, shape)</dd>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -2067,7 +2106,7 @@ written as (name, value, shape)</dd>
 
 <dl class="class">
 <dt id="nxswriter.H5Elements.EDoc">
-<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EDoc</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EDoc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EDoc" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EDoc</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EDoc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EDoc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
 <p>doc tag element</p>
 <p>constructor</p>
@@ -2078,6 +2117,7 @@ written as (name, value, shape)</dd>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -2105,7 +2145,7 @@ written as (name, value, shape)</dd>
 
 <dl class="class">
 <dt id="nxswriter.H5Elements.EFile">
-<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EFile</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>h5fileObject</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EFile" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">EFile</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>h5fileObject</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#EFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.EFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.FElement.FElement" title="nxswriter.FElement.FElement"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FElement.FElement</span></tt></a></p>
 <p>file H5 element</p>
 <p>constructor</p>
@@ -2117,6 +2157,7 @@ written as (name, value, shape)</dd>
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
 <li><strong>h5fileObject</strong> (<tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FileWriter.FTfile</span></tt>) &#8211; H5 file object</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -2126,7 +2167,7 @@ written as (name, value, shape)</dd>
 
 <dl class="class">
 <dt id="nxswriter.H5Elements.ESymbol">
-<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">ESymbol</tt><big>(</big><em>attrs</em>, <em>last</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#ESymbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.ESymbol" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.H5Elements.</tt><tt class="descname">ESymbol</tt><big>(</big><em>attrs</em>, <em>last</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5Elements.html#ESymbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5Elements.ESymbol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a></p>
 <p>symbol tag element</p>
 <p>constructor</p>
@@ -2137,6 +2178,7 @@ written as (name, value, shape)</dd>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>attrs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; dictionary of the tag attributes</li>
 <li><strong>last</strong> (<a class="reference internal" href="#nxswriter.Element.Element" title="nxswriter.Element.Element"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.Element.Element</span></tt></a>) &#8211; the last element from the stack</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -2270,7 +2312,7 @@ written as (name, value, shape)</dd>
 <li><strong>server</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; Tango server implementation</li>
 <li><strong>command</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; Thread command</li>
 <li><strong>finalState</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.DevState" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.DevState</span></tt></a>) &#8211; Final State Code</li>
-<li><strong>args</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; List of command arguments</li>
+<li><strong>args</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; List of command arguments</li>
 </ul>
 </td>
 </tr>
@@ -2279,7 +2321,7 @@ written as (name, value, shape)</dd>
 <dl class="attribute">
 <dt id="nxswriter.NXSWriter.CommandThread.args">
 <tt class="descname">args</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.NXSWriter.CommandThread.args" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) command arguments</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) command arguments</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2529,6 +2571,38 @@ and returns it to the caller.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.is_CanFail_allowed">
+<tt class="descname">is_CanFail_allowed</tt><big>(</big><em>_</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_CanFail_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_CanFail_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>CanFail attribute State Machine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the operation allowed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.is_CanFail_write_allowed">
+<tt class="descname">is_CanFail_write_allowed</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_CanFail_write_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_CanFail_write_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>CanFail attribute Write State Machine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the operation allowed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nxswriter.NXSWriter.NXSDataWriter.is_CloseEntryAsynch_allowed">
 <tt class="descname">is_CloseEntryAsynch_allowed</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_CloseEntryAsynch_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_CloseEntryAsynch_allowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>CloseEntryAsynch command State Machine</p>
@@ -2705,6 +2779,38 @@ and returns it to the caller.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.is_SkipAcquisition_allowed">
+<tt class="descname">is_SkipAcquisition_allowed</tt><big>(</big><em>_</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_SkipAcquisition_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_SkipAcquisition_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>SkipAcquisition attribute State Machine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the operation allowed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.is_SkipAcquisition_write_allowed">
+<tt class="descname">is_SkipAcquisition_write_allowed</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_SkipAcquisition_write_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_SkipAcquisition_write_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>SkipAcquisition attribute Write State Machine</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the operation allowed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_allowed">
 <tt class="descname">is_StepsPerFile_allowed</tt><big>(</big><em>_</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.is_StepsPerFile_allowed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.is_StepsPerFile_allowed" title="Permalink to this definition">¶</a></dt>
 <dd><p>StepsPerFile attribute State Machine</p>
@@ -2765,6 +2871,20 @@ and returns it to the caller.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.read_CanFail">
+<tt class="descname">read_CanFail</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_CanFail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_CanFail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read CanFail attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nxswriter.NXSWriter.NXSDataWriter.read_CurrentFileId">
 <tt class="descname">read_CurrentFileId</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_CurrentFileId"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_CurrentFileId" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read CurrentFileId</p>
@@ -2810,6 +2930,20 @@ and returns it to the caller.</td>
 <dt id="nxswriter.NXSWriter.NXSDataWriter.read_JSONRecord">
 <tt class="descname">read_JSONRecord</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_JSONRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_JSONRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read JSONRecord attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.read_SkipAcquisition">
+<tt class="descname">read_SkipAcquisition</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.read_SkipAcquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.read_SkipAcquisition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read SkipAcquisition attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2890,6 +3024,20 @@ and returns it to the caller.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.write_CanFail">
+<tt class="descname">write_CanFail</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.write_CanFail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.write_CanFail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write CanFail attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="nxswriter.NXSWriter.NXSDataWriter.write_FileName">
 <tt class="descname">write_FileName</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.write_FileName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.write_FileName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write FileName attribute</p>
@@ -2907,6 +3055,20 @@ and returns it to the caller.</td>
 <dt id="nxswriter.NXSWriter.NXSDataWriter.write_JSONRecord">
 <tt class="descname">write_JSONRecord</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.write_JSONRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.write_JSONRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write JSONRecord attribute</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/attribute.html#PyTango.Attribute" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Attribute</span></tt></a>) &#8211; attribute object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nxswriter.NXSWriter.NXSDataWriter.write_SkipAcquisition">
+<tt class="descname">write_SkipAcquisition</tt><big>(</big><em>attr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NXSWriter.html#NXSDataWriter.write_SkipAcquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriter.write_SkipAcquisition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write SkipAcquisition attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2955,7 +3117,7 @@ and returns it to the caller.</td>
 <p>NXSDataWriterClass Constructor</p>
 <dl class="attribute">
 <dt id="nxswriter.NXSWriter.NXSDataWriterClass.attr_list">
-<tt class="descname">attr_list</tt><em class="property"> = {'StepsPerFile': [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'Memorized': 'true', 'description': 'Number of steps per file', 'label': 'Steps per file'}], 'Errors': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {'description': 'list of errors', 'label': 'List of errors'}], 'JSONRecord': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A JSON string with global client data.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'JSON string with client data'}], 'XMLSettings': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'An XML string with Nexus configuration.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'XML Configuration'}], 'FileName': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A name of H5 output file with its full path', 'label': 'Output file with its path'}], 'CurrentFileId': [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {'description': 'current file id', 'label': 'Current file id'}]}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.attr_list" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">attr_list</tt><em class="property"> = {'StepsPerFile': [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'Memorized': 'true', 'description': 'Number of steps per file', 'label': 'Steps per file'}], 'CanFail': [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'Global can fail flag. By default it is False', 'label': 'Can fail'}], 'Errors': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SPECTRUM, tango._tango.AttrWriteType.READ, 1000], {'description': 'list of errors', 'label': 'List of errors'}], 'SkipAcquisition': [[tango._tango.CmdArgType.DevBoolean, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'Skip acquisition. It is set to default False value after excuting the OpenEntry, Record or CloseEntry', 'label': 'Skip acquisition'}], 'XMLSettings': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'An XML string with Nexus configuration.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'XML Configuration'}], 'JSONRecord': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A JSON string with global client data.', 'Display level': tango._tango.DispLevel.EXPERT, 'label': 'JSON string with client data'}], 'CurrentFileId': [[tango._tango.CmdArgType.DevLong, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ], {'description': 'current file id', 'label': 'Current file id'}], 'FileName': [[tango._tango.CmdArgType.DevString, tango._tango.AttrDataFormat.SCALAR, tango._tango.AttrWriteType.READ_WRITE], {'description': 'A name of H5 output file with its full path', 'label': 'Output file with its path'}]}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.attr_list" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>(<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, </dt>
 <dd>[[ <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrDataFormat" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrDataFormat</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.AttrWriteType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.AttrWriteType</span></tt></a>], <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, any&gt; ] &gt; ) Attribute definitions</dd>
@@ -2967,7 +3129,7 @@ and returns it to the caller.</td>
 <tt class="descname">class_property_list</tt><em class="property"> = {}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.class_property_list" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>(<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, </dt>
-<dd>[ <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, [ <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt; ] ] &gt; ) Class Properties</dd>
+<dd>[ <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, [ <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt; ] ] &gt; ) Class Properties</dd>
 </dl>
 </dd></dl>
 
@@ -2986,7 +3148,7 @@ Command definitions</dd>
 <tt class="descname">device_property_list</tt><em class="property"> = {'NumberOfThreads': [tango._tango.CmdArgType.DevLong, 'maximal number of threads', [100]], 'Writer': [tango._tango.CmdArgType.DevString, 'writer module', ['']]}</em><a class="headerlink" href="#nxswriter.NXSWriter.NXSDataWriterClass.device_property_list" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>(<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, </dt>
-<dd>[ <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, [ <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt; ] ] &gt; ) Device Properties</dd>
+<dd>[ <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/other.html#PyTango.CmdArgType" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.CmdArgType</span></tt></a>, [ <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>&gt; ] ] &gt; ) Device Properties</dd>
 </dl>
 </dd></dl>
 
@@ -2998,7 +3160,7 @@ Command definitions</dd>
 <p>SAX parser for interpreting content of  XML configuration string</p>
 <dl class="class">
 <dt id="nxswriter.NexusXMLHandler.NexusXMLHandler">
-<em class="property">class </em><tt class="descclassname">nxswriter.NexusXMLHandler.</tt><tt class="descname">NexusXMLHandler</tt><big>(</big><em>fileElement</em>, <em>datasources=None</em>, <em>decoders=None</em>, <em>groupTypes=None</em>, <em>parser=None</em>, <em>globalJSON=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NexusXMLHandler.html#NexusXMLHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NexusXMLHandler.NexusXMLHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.NexusXMLHandler.</tt><tt class="descname">NexusXMLHandler</tt><big>(</big><em>fileElement</em>, <em>datasources=None</em>, <em>decoders=None</em>, <em>groupTypes=None</em>, <em>parser=None</em>, <em>globalJSON=None</em>, <em>streams=None</em>, <em>reloadmode=False</em><big>)</big><a class="reference internal" href="_modules/nxswriter/NexusXMLHandler.html#NexusXMLHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.NexusXMLHandler.NexusXMLHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/xml.sax.handler.html#xml.sax.handler.ContentHandler" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">xml.sax.handler.ContentHandler</span></tt></a></p>
 <p>SAX2 parser</p>
 <p>constructor</p>
@@ -3016,6 +3178,8 @@ Command definitions</dd>
 <li><strong>groupTypes</strong> (<a class="reference internal" href="#nxswriter.FetchNameHandler.TNObject" title="nxswriter.FetchNameHandler.TNObject"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.FetchNameHandler.TNObject</span></tt></a>) &#8211; map of NXclass : name</li>
 <li><strong>parser</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/xml.sax.reader.html#xml.sax.xmlreader.XMLReader" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">xml.sax.xmlreader.XMLReader</span></tt></a>) &#8211; instance of sax.xmlreader</li>
 <li><strong>globalJSON</strong> (:     <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, any&gt;&gt;) &#8211; global json string</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+<li><strong>reloadmode</strong> &#8211; reload mode</li>
 </ul>
 </td>
 </tr>
@@ -3123,7 +3287,7 @@ Command definitions</dd>
 <dl class="attribute">
 <dt id="nxswriter.NexusXMLHandler.NexusXMLHandler.transparentTags">
 <tt class="descname">transparentTags</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.NexusXMLHandler.NexusXMLHandler.transparentTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) transparent tags</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) transparent tags</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3137,6 +3301,12 @@ Command definitions</dd>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nxswriter.NexusXMLHandler.NexusXMLHandler.withAttr">
+<tt class="descname">withAttr</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.NexusXMLHandler.NexusXMLHandler.withAttr" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">dict</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#type" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">type</span></tt></a> &gt; ) map of tag names to related classes</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3156,7 +3326,7 @@ Command definitions</dd>
 <p>Definitions of PYEVAL datasource</p>
 <dl class="class">
 <dt id="nxswriter.PyEvalSource.PyEvalSource">
-<em class="property">class </em><tt class="descclassname">nxswriter.PyEvalSource.</tt><tt class="descname">PyEvalSource</tt><a class="reference internal" href="_modules/nxswriter/PyEvalSource.html#PyEvalSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.PyEvalSource.PyEvalSource" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.PyEvalSource.</tt><tt class="descname">PyEvalSource</tt><big>(</big><em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/PyEvalSource.html#PyEvalSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.PyEvalSource.PyEvalSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.DataSources.DataSource" title="nxswriter.DataSources.DataSource"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.DataSources.DataSource</span></tt></a></p>
 <p>Python Eval data source</p>
 <p>constructor</p>
@@ -3165,6 +3335,8 @@ Command definitions</dd>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It cleans all member variables</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</td>
 </tr>
 </tbody>
 </table>
@@ -3178,7 +3350,7 @@ Command definitions</dd>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary with collected data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>} )</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>} )</td>
 </tr>
 </tbody>
 </table>
@@ -3257,12 +3429,25 @@ Command definitions</dd>
 </dd></dl>
 
 </div>
-<div class="section" id="module-nxswriter.Streams">
-<span id="nxswriter-streams-module"></span><h2>nxswriter.Streams module<a class="headerlink" href="#module-nxswriter.Streams" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nxswriter.StreamSet">
+<span id="nxswriter-streamset-module"></span><h2>nxswriter.StreamSet module<a class="headerlink" href="#module-nxswriter.StreamSet" title="Permalink to this headline">¶</a></h2>
 <p>labels to Tango Streams</p>
-<dl class="function">
-<dt id="nxswriter.Streams.debug">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">debug</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Streams.html#debug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Streams.debug" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="nxswriter.StreamSet.StreamSet">
+<em class="property">class </em><tt class="descclassname">nxswriter.StreamSet.</tt><tt class="descname">StreamSet</tt><big>(</big><em>streams</em><big>)</big><a class="reference internal" href="_modules/nxswriter/StreamSet.html#StreamSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.StreamSet.StreamSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
+<p>streamset constractor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>streams</strong> (<a class="reference internal" href="#nxswriter.StreamSet.StreamSet" title="nxswriter.StreamSet.StreamSet"><tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt></a> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nxswriter.StreamSet.StreamSet.debug">
+<tt class="descname">debug</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/StreamSet.html#StreamSet.debug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.debug" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes debug message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3279,9 +3464,9 @@ when log stream does not exist</li>
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="nxswriter.Streams.error">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">error</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Streams.html#error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Streams.error" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="nxswriter.StreamSet.StreamSet.error">
+<tt class="descname">error</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/StreamSet.html#StreamSet.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes error message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3298,9 +3483,9 @@ when log stream does not exist</li>
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="nxswriter.Streams.fatal">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">fatal</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Streams.html#fatal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Streams.fatal" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="nxswriter.StreamSet.StreamSet.fatal">
+<tt class="descname">fatal</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/StreamSet.html#StreamSet.fatal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.fatal" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes fatal error message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3317,9 +3502,9 @@ when log stream does not exist</li>
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="nxswriter.Streams.info">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">info</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Streams.html#info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Streams.info" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="nxswriter.StreamSet.StreamSet.info">
+<tt class="descname">info</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/StreamSet.html#StreamSet.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes info message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3336,39 +3521,39 @@ when log stream does not exist</li>
 </table>
 </dd></dl>
 
-<dl class="data">
-<dt id="nxswriter.Streams.log_debug">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">log_debug</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.Streams.log_debug" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="nxswriter.StreamSet.StreamSet.log_debug">
+<tt class="descname">log_debug</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.log_debug" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">PyTango.log4tango.TangoStream</span></tt>) Tango debug log stream</p>
 </dd></dl>
 
-<dl class="data">
-<dt id="nxswriter.Streams.log_error">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">log_error</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.Streams.log_error" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="nxswriter.StreamSet.StreamSet.log_error">
+<tt class="descname">log_error</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.log_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">PyTango.log4tango.TangoStream</span></tt>) Tango error log stream</p>
 </dd></dl>
 
-<dl class="data">
-<dt id="nxswriter.Streams.log_fatal">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">log_fatal</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.Streams.log_fatal" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="nxswriter.StreamSet.StreamSet.log_fatal">
+<tt class="descname">log_fatal</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.log_fatal" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">PyTango.log4tango.TangoStream</span></tt>) Tango fatal log stream</p>
 </dd></dl>
 
-<dl class="data">
-<dt id="nxswriter.Streams.log_info">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">log_info</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.Streams.log_info" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="nxswriter.StreamSet.StreamSet.log_info">
+<tt class="descname">log_info</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.log_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">PyTango.log4tango.TangoStream</span></tt>) Tango info log stream</p>
 </dd></dl>
 
-<dl class="data">
-<dt id="nxswriter.Streams.log_warn">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">log_warn</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.Streams.log_warn" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="nxswriter.StreamSet.StreamSet.log_warn">
+<tt class="descname">log_warn</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.log_warn" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">PyTango.log4tango.TangoStream</span></tt>) Tango warn log stream</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="nxswriter.Streams.warn">
-<tt class="descclassname">nxswriter.Streams.</tt><tt class="descname">warn</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/Streams.html#warn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.Streams.warn" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="nxswriter.StreamSet.StreamSet.warn">
+<tt class="descname">warn</tt><big>(</big><em>message</em>, <em>std=True</em><big>)</big><a class="reference internal" href="_modules/nxswriter/StreamSet.html#StreamSet.warn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.StreamSet.StreamSet.warn" title="Permalink to this definition">¶</a></dt>
 <dd><p>writes warning message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3383,6 +3568,8 @@ when log stream does not exist</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -3409,6 +3596,12 @@ when log stream does not exist</li>
 <dt id="nxswriter.TangoDataWriter.TangoDataWriter.addingLogs">
 <tt class="descname">addingLogs</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.addingLogs" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) adding logs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nxswriter.TangoDataWriter.TangoDataWriter.canfail">
+<tt class="descname">canfail</tt><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.canfail" title="Permalink to this definition">¶</a></dt>
+<dd><p>the global can fail flag</p>
 </dd></dl>
 
 <dl class="method">
@@ -3526,6 +3719,12 @@ and runs the INIT pool.</td>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="nxswriter.TangoDataWriter.TangoDataWriter.skipacquisition">
+<tt class="descname">skipacquisition</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.skipacquisition" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) skip acquisition flag</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="nxswriter.TangoDataWriter.TangoDataWriter.stepsperfile">
 <tt class="descname">stepsperfile</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoDataWriter.TangoDataWriter.stepsperfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) steps per file</p>
@@ -3580,17 +3779,23 @@ and runs the INIT pool.</td>
 
 <dl class="classmethod">
 <dt id="nxswriter.TangoSource.ProxyTools.proxySetup">
-<em class="property">classmethod </em><tt class="descname">proxySetup</tt><big>(</big><em>device</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#ProxyTools.proxySetup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.ProxyTools.proxySetup" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">proxySetup</tt><big>(</big><em>device</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#ProxyTools.proxySetup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.ProxyTools.proxySetup" title="Permalink to this definition">¶</a></dt>
 <dd><p>sets the Tango proxy up</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>device</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; tango device</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>device</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; tango device</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">proxy if proxy is set up</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">proxy if proxy is set up</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/device_proxy.html#PyTango.DeviceProxy" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.DeviceProxy</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/device_proxy.html#PyTango.DeviceProxy" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.DeviceProxy</span></tt></a></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -3600,7 +3805,7 @@ and runs the INIT pool.</td>
 
 <dl class="class">
 <dt id="nxswriter.TangoSource.TangoSource">
-<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TangoSource</tt><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TangoSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TangoSource" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TangoSource</tt><big>(</big><em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TangoSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TangoSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxswriter.DataSources.DataSource" title="nxswriter.DataSources.DataSource"><tt class="xref py py-class docutils literal"><span class="pre">nxswriter.DataSources.DataSource</span></tt></a></p>
 <p>Tango data source</p>
 <p>constructor</p>
@@ -3634,7 +3839,7 @@ and runs the INIT pool.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary with collected data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>}</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>}</td>
 </tr>
 </tbody>
 </table>
@@ -3719,7 +3924,7 @@ and runs the INIT pool.</td>
 
 <dl class="class">
 <dt id="nxswriter.TangoSource.TgDevice">
-<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TgDevice</tt><big>(</big><em>device</em>, <em>proxy=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TgDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TgDevice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TgDevice</tt><big>(</big><em>device</em>, <em>proxy=None</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TgDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TgDevice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>tango device</p>
 <p>default constructor</p>
@@ -3730,6 +3935,7 @@ and runs the INIT pool.</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>device</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; tango device name</li>
 <li><strong>proxy</strong> (<a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/client_api/device_proxy.html#PyTango.DeviceProxy" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.DeviceProxy</span></tt></a>) &#8211; device proxy</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -3738,13 +3944,13 @@ and runs the INIT pool.</td>
 <dl class="attribute">
 <dt id="nxswriter.TangoSource.TgDevice.attributes">
 <tt class="descname">attributes</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoSource.TgDevice.attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) device attribute names</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) device attribute names</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="nxswriter.TangoSource.TgDevice.commands">
 <tt class="descname">commands</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoSource.TgDevice.commands" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) device command names</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) device command names</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3765,7 +3971,7 @@ and runs the INIT pool.</td>
 <dl class="attribute">
 <dt id="nxswriter.TangoSource.TgDevice.properties">
 <tt class="descname">properties</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.TangoSource.TgDevice.properties" title="Permalink to this definition">¶</a></dt>
-<dd><p>(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) device property names</p>
+<dd><p>(<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) device property names</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3796,7 +4002,7 @@ and runs the INIT pool.</td>
 
 <dl class="class">
 <dt id="nxswriter.TangoSource.TgGroup">
-<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TgGroup</tt><big>(</big><em>counter=0</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TgGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TgGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TgGroup</tt><big>(</big><em>counter=0</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TgGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TgGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>Group of tango devices</p>
 <p>default constructor</p>
@@ -3804,7 +4010,11 @@ and runs the INIT pool.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>counter</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; counts of steps</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>counter</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; counts of steps</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -3867,7 +4077,7 @@ and runs the INIT pool.</td>
 
 <dl class="class">
 <dt id="nxswriter.TangoSource.TgMember">
-<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TgMember</tt><big>(</big><em>name</em>, <em>memberType='attribute'</em>, <em>encoding=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TgMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TgMember" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.TangoSource.</tt><tt class="descname">TgMember</tt><big>(</big><em>name</em>, <em>memberType='attribute'</em>, <em>encoding=None</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/TangoSource.html#TgMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.TangoSource.TgMember" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>tango device member</p>
 <p>default constructor</p>
@@ -3879,6 +4089,7 @@ and runs the INIT pool.</td>
 <li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; name of data record</li>
 <li><strong>memberType</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; member type of the data</li>
 <li><strong>encoding</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; encoding type of Tango DevEncoded variables</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
 </ul>
 </td>
 </tr>
@@ -3919,7 +4130,7 @@ and runs the INIT pool.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary with collected data</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>}</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{&#8216;rank&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>, &#8216;value&#8217;: any, &#8216;tangoDType&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;shape&#8217;: <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;int&gt;, &#8216;encoding&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>,         :        &#8216;decoders&#8217;: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>}</td>
 </tr>
 </tbody>
 </table>
@@ -3985,7 +4196,7 @@ and runs the INIT pool.</td>
 <p>Provides a pool with element threads</p>
 <dl class="class">
 <dt id="nxswriter.ThreadPool.ThreadPool">
-<em class="property">class </em><tt class="descclassname">nxswriter.ThreadPool.</tt><tt class="descname">ThreadPool</tt><big>(</big><em>numberOfThreads=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/ThreadPool.html#ThreadPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.ThreadPool.ThreadPool" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nxswriter.ThreadPool.</tt><tt class="descname">ThreadPool</tt><big>(</big><em>numberOfThreads=None</em>, <em>streams=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/ThreadPool.html#ThreadPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.ThreadPool.ThreadPool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#object" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></a></p>
 <p>Pool with threads</p>
 <p>constructor</p>
@@ -3993,9 +4204,14 @@ and runs the INIT pool.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body">It cleans the member variables</td>
+<tr class="field-odd field"><th class="field-name">Brief:</th><td class="field-body"><p class="first">It cleans the member variables</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>numberOfThreads</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; number of threads</td>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>numberOfThreads</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; number of threads</li>
+<li><strong>streams</strong> (<tt class="xref py py-class docutils literal"><span class="pre">StreamSet</span></tt> or <a class="reference external" href="http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/server_api/device.html#PyTango.Device_4Impl" title="(in PyTango v8.1)"><tt class="xref py py-class docutils literal"><span class="pre">PyTango.Device_4Impl</span></tt></a>) &#8211; tango-like steamset class</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -4191,7 +4407,7 @@ the first element of the list array</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(rank, inverse shape, type)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> , <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt; , <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> )</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> , <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt; , <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> )</td>
 </tr>
 </tbody>
 </table>
@@ -4212,7 +4428,7 @@ the first element of the list array</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(rank, shape, type)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> , <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt; , <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> )</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> , <tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt; , <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> )</td>
 </tr>
 </tbody>
 </table>
@@ -4247,7 +4463,7 @@ the first element of the list array</td>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">created array</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;any&gt;</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;any&gt;</p>
 </td>
 </tr>
 </tbody>
@@ -4344,7 +4560,7 @@ the first element of the list array</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">attribute shape</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -4576,7 +4792,7 @@ the first element of the list array</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">field shape</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -4627,6 +4843,7 @@ the first element of the list array</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>h5object</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#any" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">any</span></tt></a>) &#8211; pni object</li>
 <li><strong>filename</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; file name</li>
+<li><strong>writer</strong> (<tt class="xref py py-mod docutils literal"><span class="pre">PNIWriter</span></tt> or <tt class="xref py py-mod docutils literal"><span class="pre">H5PYWriter</span></tt>) &#8211; writer module</li>
 </ul>
 </td>
 </tr>
@@ -4711,6 +4928,12 @@ the first element of the list array</td>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="nxswriter.FileWriter.FTFile.writer">
+<tt class="descname">writer</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.FileWriter.FTFile.writer" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<tt class="xref py py-mod docutils literal"><span class="pre">PNIWriter</span></tt> or <tt class="xref py py-mod docutils literal"><span class="pre">H5PYWriter</span></tt>) writer module</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -4758,8 +4981,8 @@ the first element of the list array</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; group name</li>
 <li><strong>type_code</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; nexus field type</li>
-<li><strong>shape</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; shape</li>
-<li><strong>chunk</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; chunk</li>
+<li><strong>shape</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; shape</li>
+<li><strong>chunk</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; chunk</li>
 <li><strong>dfilter</strong> (<a class="reference internal" href="#nxswriter.FileWriter.FTDeflate" title="nxswriter.FileWriter.FTDeflate"><tt class="xref py py-class docutils literal"><span class="pre">FTDeflate</span></tt></a>) &#8211; filter deflater</li>
 </ul>
 </td>
@@ -5027,15 +5250,17 @@ the first element of the list array</td>
 
 <dl class="function">
 <dt id="nxswriter.FileWriter.deflate_filter">
-<tt class="descclassname">nxswriter.FileWriter.</tt><tt class="descname">deflate_filter</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nxswriter/FileWriter.html#deflate_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FileWriter.deflate_filter" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nxswriter.FileWriter.</tt><tt class="descname">deflate_filter</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FileWriter.html#deflate_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FileWriter.deflate_filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>create deflate filter</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">deflate filter object</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parent</strong> (<a class="reference internal" href="#nxswriter.FileWriter.FTObject" title="nxswriter.FileWriter.FTObject"><tt class="xref py py-class docutils literal"><span class="pre">FTObject</span></tt></a>) &#8211; parent object</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#nxswriter.FileWriter.FTDeflate" title="nxswriter.FileWriter.FTDeflate"><tt class="xref py py-class docutils literal"><span class="pre">FTDeflate</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">deflate filter object</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#nxswriter.FileWriter.FTDeflate" title="nxswriter.FileWriter.FTDeflate"><tt class="xref py py-class docutils literal"><span class="pre">FTDeflate</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -5091,10 +5316,30 @@ the first element of the list array</td>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="nxswriter.FileWriter.setwriter">
+<tt class="descclassname">nxswriter.FileWriter.</tt><tt class="descname">setwriter</tt><big>(</big><em>wr</em><big>)</big><a class="reference internal" href="_modules/nxswriter/FileWriter.html#setwriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.FileWriter.setwriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets writer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wr</strong> (<tt class="xref py py-mod docutils literal"><span class="pre">PNIWriter</span></tt> or <tt class="xref py py-mod docutils literal"><span class="pre">H5PYWriter</span></tt>) &#8211; writer module</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="data">
 <dt id="nxswriter.FileWriter.writer">
 <tt class="descclassname">nxswriter.FileWriter.</tt><tt class="descname">writer</tt><em class="property"> = None</em><a class="headerlink" href="#nxswriter.FileWriter.writer" title="Permalink to this definition">¶</a></dt>
-<dd><p>writer module</p>
+<dd><p>(<tt class="xref py py-mod docutils literal"><span class="pre">PNIWriter</span></tt> or <tt class="xref py py-mod docutils literal"><span class="pre">H5PYWriter</span></tt>) default writer module</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="nxswriter.FileWriter.writerlock">
+<tt class="descclassname">nxswriter.FileWriter.</tt><tt class="descname">writerlock</tt><em class="property"> = &lt;thread.lock object at 0x7fc62d0c8a30&gt;</em><a class="headerlink" href="#nxswriter.FileWriter.writerlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">threading.Lock</span></tt>) writer module</p>
 </dd></dl>
 
 </div>
@@ -5201,7 +5446,7 @@ the first element of the list array</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">attribute shape</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -5258,7 +5503,7 @@ the first element of the list array</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; attribute name</li>
 <li><strong>dtype</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; attribute type</li>
-<li><strong>shape</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; attribute shape</li>
+<li><strong>shape</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; attribute shape</li>
 <li><strong>overwrite</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; overwrite flag</li>
 </ul>
 </td>
@@ -5471,7 +5716,7 @@ the first element of the list array</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">field shape</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -5696,8 +5941,8 @@ the first element of the list array</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; group name</li>
 <li><strong>type_code</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; nexus field type</li>
-<li><strong>shape</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; shape</li>
-<li><strong>chunk</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; chunk</li>
+<li><strong>shape</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; shape</li>
+<li><strong>chunk</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; chunk</li>
 <li><strong>dfilter</strong> (<a class="reference internal" href="#nxswriter.PNIWriter.PNIDeflate" title="nxswriter.PNIWriter.PNIDeflate"><tt class="xref py py-class docutils literal"><span class="pre">PNIDeflate</span></tt></a>) &#8211; filter deflater</li>
 </ul>
 </td>
@@ -6083,7 +6328,7 @@ the first element of the list array</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">attribute shape</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -6162,7 +6407,7 @@ the first element of the list array</td>
 
 <dl class="method">
 <dt id="nxswriter.H5PYWriter.H5PYAttributeManager.create">
-<tt class="descclassname">H5PYAttributeManager.</tt><tt class="descname">create</tt><big>(</big><em>name</em>, <em>dtype</em>, <em>shape=[]</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5PYWriter.html#H5PYAttributeManager.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5PYWriter.H5PYAttributeManager.create" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">H5PYAttributeManager.</tt><tt class="descname">create</tt><big>(</big><em>name</em>, <em>dtype</em>, <em>shape=None</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/nxswriter/H5PYWriter.html#H5PYAttributeManager.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nxswriter.H5PYWriter.H5PYAttributeManager.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a new attribute</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -6171,7 +6416,7 @@ the first element of the list array</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; attribute name</li>
 <li><strong>dtype</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; attribute type</li>
-<li><strong>shape</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; attribute shape</li>
+<li><strong>shape</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; attribute shape</li>
 <li><strong>overwrite</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; overwrite flag</li>
 </ul>
 </td>
@@ -6364,7 +6609,7 @@ the first element of the list array</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">field shape</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;</td>
 </tr>
 </tbody>
 </table>
@@ -6589,8 +6834,8 @@ the first element of the list array</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>n</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; group name</li>
 <li><strong>type_code</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; nexus field type</li>
-<li><strong>shape</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; shape</li>
-<li><strong>chunk</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; chunk</li>
+<li><strong>shape</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; shape</li>
+<li><strong>chunk</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt; <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> &gt;) &#8211; chunk</li>
 <li><strong>dfilter</strong> (<a class="reference internal" href="#nxswriter.H5PYWriter.H5PYDeflate" title="nxswriter.H5PYWriter.H5PYDeflate"><tt class="xref py py-class docutils literal"><span class="pre">H5PYDeflate</span></tt></a>) &#8211; filter deflater</li>
 </ul>
 </td>
@@ -6898,10 +7143,16 @@ the first element of the list array</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; command-line arguments</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt> &lt;<a class="reference external" href="http://docs.python.org/2.7/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>&gt;) &#8211; command-line arguments</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="data">
+<dt id="nxswriter.globallock">
+<tt class="descclassname">nxswriter.</tt><tt class="descname">globallock</tt><em class="property"> = &lt;thread.lock object at 0x7fc63ce90150&gt;</em><a class="headerlink" href="#nxswriter.globallock" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<tt class="xref py py-class docutils literal"><span class="pre">threading.Lock</span></tt>) global lock</p>
 </dd></dl>
 
 </div>

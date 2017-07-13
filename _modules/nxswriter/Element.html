@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.Element &mdash; NXSDataWriter 2.11.0 documentation</title>
+    <title>nxswriter.Element &mdash; NXSDataWriter 2.15.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.11.0',
+        VERSION:     '2.15.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -90,7 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.StreamSet">nxswriter.StreamSet module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
@@ -167,14 +167,13 @@
 
 <span class="sd">&quot;&quot;&quot; Provides the base class Element for xml tags &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Streams</span>
-
 
 <div class="viewcode-block" id="Element"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.Element.Element">[docs]</a><span class="k">class</span> <span class="nc">Element</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Tag element stored on our stack</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :param name: tag name</span>
@@ -183,6 +182,8 @@
 <span class="sd">        :type attrs: :obj:`dict` &lt;:obj:`str`, :obj:`str`&gt;</span>
 <span class="sd">        :param last: the last element from the stack</span>
 <span class="sd">        :type last: :class:`nxswriter.Element.Element`</span>
+<span class="sd">        :param streams: tango-like steamset class</span>
+<span class="sd">        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c">#: (:obj:`str`) stored tag name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tagName</span> <span class="o">=</span> <span class="n">name</span>
@@ -194,6 +195,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
         <span class="c">#: (:class:`nxswriter.Element.Element`) the previous element</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">=</span> <span class="n">last</span>
+        <span class="c">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span> <span class="o">=</span> <span class="n">streams</span>
 
     <span class="k">def</span> <span class="nf">_lastObject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; last H5 file object</span>
@@ -203,9 +206,10 @@
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="p">,</span> <span class="s">&quot;h5Object&quot;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">h5Object</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s">&quot;Element::_lastObject() - H5 Object not found : </span><span class="si">%s</span><span class="s">&quot;</span>
-                <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">tagName</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s">&quot;Element::_lastObject() - H5 Object not found : </span><span class="si">%s</span><span class="s">&quot;</span>
+                    <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">tagName</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_beforeLast</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; before last stack element</span>

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.FileWriter &mdash; NXSDataWriter 2.11.0 documentation</title>
+    <title>nxswriter.FileWriter &mdash; NXSDataWriter 2.15.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.11.0',
+        VERSION:     '2.15.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -90,7 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.StreamSet">nxswriter.StreamSet module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
@@ -171,9 +171,14 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">pytz</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">threading</span>
 
-<span class="c">#: writer module</span>
+
+<span class="c">#: (:mod:`PNIWriter` or :mod:`H5PYWriter`) default writer module</span>
 <span class="n">writer</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="c">#: (:class:`threading.Lock`) writer module</span>
+<span class="n">writerlock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="open_file"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.open_file">[docs]</a><span class="k">def</span> <span class="nf">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">):</span>
@@ -188,7 +193,15 @@
 <span class="sd">    :returns: file object</span>
 <span class="sd">    :rtype: :class:`FTFile`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s">&#39;writer&#39;</span> <span class="ow">in</span> <span class="n">pars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">wr</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;writer&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">writerlock</span><span class="p">:</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="n">writer</span>
+    <span class="n">fl</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fl</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">):</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">wr</span>
+    <span class="k">return</span> <span class="n">fl</span>
 
 </div>
 <div class="viewcode-block" id="create_file"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.create_file">[docs]</a><span class="k">def</span> <span class="nf">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">):</span>
@@ -203,7 +216,15 @@
 <span class="sd">    :returns: file object</span>
 <span class="sd">    :rtype: :class:`FTFile`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s">&#39;writer&#39;</span> <span class="ow">in</span> <span class="n">pars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">wr</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;writer&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">writerlock</span><span class="p">:</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="n">writer</span>
+    <span class="n">fl</span> <span class="o">=</span> <span class="n">wr</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">,</span> <span class="o">**</span><span class="n">pars</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fl</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">):</span>
+        <span class="n">fl</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="n">wr</span>
+    <span class="k">return</span> <span class="n">fl</span>
 
 </div>
 <div class="viewcode-block" id="link"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.link">[docs]</a><span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -218,21 +239,64 @@
 <span class="sd">    :returns: link object</span>
 <span class="sd">    :rtype: :class:`FTLink`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">parent</span>
+    <span class="n">wr</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">while</span> <span class="n">node</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">):</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">writer</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s">&quot;parent&quot;</span><span class="p">):</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">wr</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">writerlock</span><span class="p">:</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="n">writer</span>
+    <span class="k">return</span> <span class="n">wr</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
 </div>
-<div class="viewcode-block" id="deflate_filter"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.deflate_filter">[docs]</a><span class="k">def</span> <span class="nf">deflate_filter</span><span class="p">():</span>
+<div class="viewcode-block" id="deflate_filter"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.deflate_filter">[docs]</a><span class="k">def</span> <span class="nf">deflate_filter</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; create deflate filter</span>
 
+<span class="sd">    :param parent: parent object</span>
+<span class="sd">    :type parent: :class:`FTObject`</span>
 <span class="sd">    :returns: deflate filter object</span>
 <span class="sd">    :rtype: :class:`FTDeflate`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">writer</span><span class="o">.</span><span class="n">deflate_filter</span><span class="p">()</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">parent</span>
+    <span class="n">wr</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">while</span> <span class="n">node</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s">&quot;writer&quot;</span><span class="p">):</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">writer</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s">&quot;parent&quot;</span><span class="p">):</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">wr</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">writerlock</span><span class="p">:</span>
+            <span class="n">wr</span> <span class="o">=</span> <span class="n">writer</span>
+    <span class="k">return</span> <span class="n">wr</span><span class="o">.</span><span class="n">deflate_filter</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="setwriter"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.setwriter">[docs]</a><span class="k">def</span> <span class="nf">setwriter</span><span class="p">(</span><span class="n">wr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; sets writer</span>
+
+<span class="sd">    :param wr: writer module</span>
+<span class="sd">    :type wr: :mod:`PNIWriter` or :mod:`H5PYWriter`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">writer</span>
+    <span class="k">with</span> <span class="n">writerlock</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">wr</span>
 
 </div>
 <div class="viewcode-block" id="FTObject"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTObject">[docs]</a><span class="k">class</span> <span class="nc">FTObject</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; virtual file tree object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
@@ -314,6 +378,7 @@
 
 </div></div>
 <div class="viewcode-block" id="FTFile"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTFile">[docs]</a><span class="k">class</span> <span class="nc">FTFile</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; file tree file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -324,10 +389,14 @@
 <span class="sd">        :type h5object: :obj:`any`</span>
 <span class="sd">        :param filename:  file name</span>
 <span class="sd">        :type filename: :obj:`str`</span>
+<span class="sd">        :param writer: writer module</span>
+<span class="sd">        :type writer: :mod:`PNIWriter` or :mod:`H5PYWriter`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">FTObject</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="c">#: (:obj:`str`) file name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="c">#: (:mod:`PNIWriter` or :mod:`H5PYWriter`) writer module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="bp">None</span>
 
 <div class="viewcode-block" id="FTFile.root"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTFile.root">[docs]</a>    <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; root object</span>
@@ -375,6 +444,7 @@
 
 </div></div>
 <div class="viewcode-block" id="FTGroup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTGroup">[docs]</a><span class="k">class</span> <span class="nc">FTGroup</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; file tree group</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -462,8 +532,10 @@
 
 </div></div>
 <div class="viewcode-block" id="FTField"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTField">[docs]</a><span class="k">class</span> <span class="nc">FTField</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; file tree file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
@@ -554,6 +626,7 @@
 
 </div></div>
 <div class="viewcode-block" id="FTLink"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTLink">[docs]</a><span class="k">class</span> <span class="nc">FTLink</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; file tree link</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -582,8 +655,10 @@
 
 </div></div>
 <div class="viewcode-block" id="FTDeflate"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTDeflate">[docs]</a><span class="k">class</span> <span class="nc">FTDeflate</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; file tree deflate</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
@@ -633,8 +708,10 @@
 
 </div></div>
 <div class="viewcode-block" id="FTAttributeManager"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTAttributeManager">[docs]</a><span class="k">class</span> <span class="nc">FTAttributeManager</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; file tree attribute</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5object</span><span class="p">,</span> <span class="n">tparent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
@@ -683,6 +760,7 @@
 
 </div></div>
 <div class="viewcode-block" id="FTAttribute"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.FileWriter.FTAttribute">[docs]</a><span class="k">class</span> <span class="nc">FTAttribute</span><span class="p">(</span><span class="n">FTObject</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; virtual file tree attribute</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>nxswriter.TangoSource &mdash; NXSDataWriter 2.11.0 documentation</title>
+    <title>nxswriter.TangoSource &mdash; NXSDataWriter 2.15.0 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '2.11.0',
+        VERSION:     '2.15.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="NXSDataWriter 2.11.0 documentation" href="../../index.html" />
+    <link rel="top" title="NXSDataWriter 2.15.0 documentation" href="../../index.html" />
     <link rel="up" title="nxswriter" href="../nxswriter.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -50,7 +50,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           NXSDataWriter</a>
-        <span class="navbar-text navbar-version pull-left"><b>2.11</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>2.15</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -90,7 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NXSWriter">nxswriter.NXSWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.NexusXMLHandler">nxswriter.NexusXMLHandler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.PyEvalSource">nxswriter.PyEvalSource module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.Streams">nxswriter.Streams module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.StreamSet">nxswriter.StreamSet module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoDataWriter">nxswriter.TangoDataWriter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.TangoSource">nxswriter.TangoSource module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../nxswriter.html#module-nxswriter.ThreadPool">nxswriter.ThreadPool module</a></li>
@@ -167,11 +167,11 @@
 
 <span class="sd">&quot;&quot;&quot; Definitions of TANGO datasource &quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">from</span> <span class="nn">xml.dom</span> <span class="kn">import</span> <span class="n">minidom</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Streams</span>
 <span class="kn">from</span> <span class="nn">.Types</span> <span class="kn">import</span> <span class="n">NTP</span>
 
 <span class="kn">from</span> <span class="nn">.DataSources</span> <span class="kn">import</span> <span class="n">DataSource</span>
@@ -184,19 +184,22 @@
     <span class="n">PYTANGO_AVAILABLE</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">PYTANGO_AVAILABLE</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="n">Streams</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;PYTANGO not available: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;PYTANGO not available: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ProxyTools"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.ProxyTools">[docs]</a><span class="k">class</span> <span class="nc">ProxyTools</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; tools for proxy</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="ProxyTools.proxySetup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.ProxyTools.proxySetup">[docs]</a>    <span class="k">def</span> <span class="nf">proxySetup</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<div class="viewcode-block" id="ProxyTools.proxySetup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.ProxyTools.proxySetup">[docs]</a>    <span class="k">def</span> <span class="nf">proxySetup</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; sets the Tango proxy up</span>
 
 <span class="sd">        :param device: tango device</span>
 <span class="sd">        :type device: :obj:`str`</span>
+<span class="sd">        :param streams: tango-like steamset class</span>
+<span class="sd">        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        :returns: proxy if proxy is set up</span>
 <span class="sd">        :rtype: :class:`PyTango.DeviceProxy`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -208,10 +211,11 @@
             <span class="n">proxy</span><span class="o">.</span><span class="n">set_source</span><span class="p">(</span><span class="n">PyTango</span><span class="o">.</span><span class="n">DevSource</span><span class="o">.</span><span class="n">DEV</span><span class="p">)</span>
 
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;ProxyTools.proxySetup() - &quot;</span>
-                <span class="s">&quot;Cannot connect to </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">device</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">streams</span><span class="p">:</span>
+                <span class="n">streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;ProxyTools.proxySetup() - &quot;</span>
+                    <span class="s">&quot;Cannot connect to </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">device</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
             <span class="k">raise</span>
 
         <span class="k">while</span> <span class="ow">not</span> <span class="n">found</span> <span class="ow">and</span> <span class="n">cnt</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
@@ -247,17 +251,19 @@
 
 </div></div>
 <div class="viewcode-block" id="TangoSource"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TangoSource">[docs]</a><span class="k">class</span> <span class="nc">TangoSource</span><span class="p">(</span><span class="n">DataSource</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Tango data source</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; constructor</span>
 
 <span class="sd">        :brief: It cleans all member variables</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">DataSource</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">DataSource</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="n">streams</span><span class="p">)</span>
         <span class="c">#: (:class:`TgMember`) Tango device member</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">member</span> <span class="o">=</span> <span class="n">TgMember</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">member</span> <span class="o">=</span> <span class="n">TgMember</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
         <span class="c">#: (:class:`TgGroup`) datasource tango group</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c">#: (:obj:`str`) full device name</span>
@@ -320,10 +326,11 @@
             <span class="n">name</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> \
                 <span class="k">if</span> <span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hasAttribute</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;TangoSource::setup() - &quot;</span>
-                <span class="s">&quot;Tango record name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;TangoSource::setup() - &quot;</span>
+                    <span class="s">&quot;Tango record name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                 <span class="s">&quot;Tango record name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">)</span>
@@ -350,12 +357,14 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">client</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">member</span> <span class="o">=</span> <span class="n">TgMember</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">memberType</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">member</span> <span class="o">=</span> <span class="n">TgMember</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">memberType</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">device</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;TangoSource::setup() - &quot;</span>
-                <span class="s">&quot;Tango device name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;TangoSource::setup() - &quot;</span>
+                    <span class="s">&quot;Tango device name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                 <span class="s">&quot;Tango device name not defined: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">xml</span><span class="p">)</span>
@@ -366,13 +375,15 @@
         <span class="k">elif</span> <span class="n">device</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span> <span class="o">=</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">proxySetup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span> <span class="o">=</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">proxySetup</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;TangoSource::setup() - &quot;</span>
-                <span class="s">&quot;Cannot connect to: </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">defined by </span><span class="si">%s</span><span class="s">&quot;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">xml</span><span class="p">),</span> <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;TangoSource::setup() - &quot;</span>
+                    <span class="s">&quot;Cannot connect to: </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">defined by </span><span class="si">%s</span><span class="s">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">xml</span><span class="p">),</span> <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                 <span class="s">&quot;Cannot connect to: </span><span class="si">%s</span><span class="s"> </span><span class="se">\n</span><span class="s">defined by </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">xml</span><span class="p">))</span>
@@ -428,22 +439,25 @@
             <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">res</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">PYTANGO_AVAILABLE</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;TangoSource::getData() - &quot;</span>
-                <span class="s">&quot;Support for PyTango datasources not available&quot;</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;TangoSource::getData() - &quot;</span>
+                    <span class="s">&quot;Support for PyTango datasources not available&quot;</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">PackageError</span><span class="p">(</span>
                 <span class="s">&quot;Support for PyTango datasources not available&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">memberType</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">isProxyValid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span> <span class="o">=</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">proxySetup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span> <span class="o">=</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">proxySetup</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span><span class="p">:</span>
-                    <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s">&quot;TangoSource::getData() - &quot;</span>
-                        <span class="s">&quot;Setting up lasts to long: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                        <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                            <span class="s">&quot;TangoSource::getData() - &quot;</span>
+                            <span class="s">&quot;Setting up lasts to long: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                            <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
                     <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                         <span class="s">&quot;Setting up lasts to long: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -452,10 +466,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">getData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__proxy</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tngrp</span><span class="p">,</span> <span class="s">&quot;getData&quot;</span><span class="p">):</span>
-                    <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s">&quot;TangoSource::getData() - &quot;</span>
-                        <span class="s">&quot;DataSource pool not set up&quot;</span><span class="p">,</span>
-                        <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                            <span class="s">&quot;TangoSource::getData() - &quot;</span>
+                            <span class="s">&quot;DataSource pool not set up&quot;</span><span class="p">,</span>
+                            <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
                     <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span><span class="s">&quot;DataSource pool not set up&quot;</span><span class="p">)</span>
 
@@ -485,7 +500,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">common</span><span class="p">[</span><span class="s">&#39;TANGO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">common</span><span class="p">[</span><span class="s">&#39;TANGO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">common</span><span class="p">[</span><span class="s">&#39;TANGO&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="n">TgGroup</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">common</span><span class="p">[</span><span class="s">&#39;TANGO&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="n">TgGroup</span><span class="p">(</span>
+                        <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__tngrp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pool</span><span class="o">.</span><span class="n">common</span><span class="p">[</span><span class="s">&#39;TANGO&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">]</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">__tngrp</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
@@ -499,14 +515,17 @@
 
 </div></div>
 <div class="viewcode-block" id="TgGroup"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TgGroup">[docs]</a><span class="k">class</span> <span class="nc">TgGroup</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; Group of tango devices</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counter</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; default constructor</span>
 
 <span class="sd">        :param counter: counts of steps</span>
 <span class="sd">        :type counter: :obj:`int`</span>
+<span class="sd">        :param streams: tango-like steamset class</span>
+<span class="sd">        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c">#: (:class:`threading.Lock`) threading lock</span>
@@ -515,6 +534,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span>
         <span class="c">#: (:obj:`dict` &lt;:obj:`str`,  :class:`TgDevice`&gt; ) TANGO devices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span> <span class="o">=</span> <span class="n">streams</span>
 
 <div class="viewcode-block" id="TgGroup.getDevice"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TgGroup.getDevice">[docs]</a>    <span class="k">def</span> <span class="nf">getDevice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides tango device</span>
@@ -526,11 +547,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">device</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="n">TgDevice</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="n">TgDevice</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="n">device</span><span class="p">]</span>
 </div>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">__fetchAttributes</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__fetchAttributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; fetches attribute data for given device</span>
 
 <span class="sd">        :param device: given device</span>
@@ -546,11 +566,12 @@
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alist</span><span class="p">:</span>
                 <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;TgGroup::getData() - &quot;</span>
-                <span class="s">&quot;attribute not in tango &quot;</span>
-                <span class="s">&quot;device attributes:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">errors</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;TgGroup::getData() - &quot;</span>
+                    <span class="s">&quot;attribute not in tango &quot;</span>
+                    <span class="s">&quot;device attributes:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">errors</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                 <span class="s">&quot;TgGroup::getData() - &quot;</span>
@@ -642,12 +663,14 @@
                     <span class="n">mb</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">dv</span><span class="o">.</span><span class="n">proxy</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">isProxyValid</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">proxy</span><span class="p">):</span>
-                    <span class="n">dv</span><span class="o">.</span><span class="n">proxy</span> <span class="o">=</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">proxySetup</span><span class="p">(</span><span class="n">dv</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">dv</span><span class="o">.</span><span class="n">proxy</span> <span class="o">=</span> <span class="n">ProxyTools</span><span class="o">.</span><span class="n">proxySetup</span><span class="p">(</span>
+                        <span class="n">dv</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">dv</span><span class="o">.</span><span class="n">proxy</span><span class="p">:</span>
-                        <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="s">&quot;TgGroup::getData() - &quot;</span>
-                            <span class="s">&quot;Setting up lasts to long: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">dv</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                            <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="s">&quot;TgGroup::getData() - &quot;</span>
+                                <span class="s">&quot;Setting up lasts to long: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">dv</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
                         <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                             <span class="s">&quot;TgGroup::getData() - &quot;</span>
@@ -664,16 +687,19 @@
 
 </div></div>
 <div class="viewcode-block" id="TgDevice"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TgDevice">[docs]</a><span class="k">class</span> <span class="nc">TgDevice</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; tango device</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; default constructor</span>
 
 <span class="sd">        :param device: tango device name</span>
 <span class="sd">        :type device: :obj:`str`</span>
 <span class="sd">        :param proxy: device proxy</span>
 <span class="sd">        :type proxy: :class:`PyTango.DeviceProxy`</span>
+<span class="sd">        :param streams: tango-like steamset class</span>
+<span class="sd">        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c">#: (:obj:`str`) tango device name</span>
@@ -689,6 +715,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c">#: (:class:`PyTango.DeviceProxy`) device proxy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">proxy</span> <span class="o">=</span> <span class="n">proxy</span>
+        <span class="c">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span> <span class="o">=</span> <span class="n">streams</span>
 
 <div class="viewcode-block" id="TgDevice.setMember"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TgDevice.setMember">[docs]</a>    <span class="k">def</span> <span class="nf">setMember</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; provides tango device member</span>
@@ -720,10 +748,12 @@
 
 </div>
 <div class="viewcode-block" id="TgMember"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TgMember">[docs]</a><span class="k">class</span> <span class="nc">TgMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot; tango device member</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">memberType</span><span class="o">=</span><span class="s">&#39;attribute&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">memberType</span><span class="o">=</span><span class="s">&#39;attribute&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; default constructor</span>
 
 <span class="sd">        :param name: name of data record</span>
@@ -732,6 +762,8 @@
 <span class="sd">        :type memberType: :obj:`str`</span>
 <span class="sd">        :param encoding: encoding type of Tango DevEncoded variables</span>
 <span class="sd">        :type encoding: :obj:`str`</span>
+<span class="sd">        :param streams: tango-like steamset class</span>
+<span class="sd">        :type streams: :class:`StreamSet` or :class:`PyTango.Device_4Impl`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c">#: (:obj:`str`) name of data record</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -747,6 +779,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__da</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c">#: (:class:`PyTango.CommandInfo`) input command data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__cd</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c">#: (:class:`StreamSet` or :class:`PyTango.Device_4Impl`) stream set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span> <span class="o">=</span> <span class="n">streams</span>
 
 <div class="viewcode-block" id="TgMember.reset"><a class="viewcode-back" href="../../nxswriter.html#nxswriter.TangoSource.TgMember.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; cleans output value</span>
@@ -793,10 +827,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__da</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s">&quot;TgMember::getValue() - &quot;</span>
-                <span class="s">&quot;Data for </span><span class="si">%s</span><span class="s"> not fetched&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s">&quot;TgMember::getValue() - &quot;</span>
+                    <span class="s">&quot;Data for </span><span class="si">%s</span><span class="s"> not fetched&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
             <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                 <span class="s">&quot;TgMember::getValue() -  &quot;</span>
@@ -829,10 +864,11 @@
                     <span class="s">&quot;shape&quot;</span><span class="p">:</span> <span class="n">shape</span><span class="p">}</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">memberType</span> <span class="o">==</span> <span class="s">&quot;command&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cd</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">Streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                    <span class="s">&quot;TgMember::getValue() - &quot;</span>
-                    <span class="s">&quot;Data for </span><span class="si">%s</span><span class="s"> not fetched&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                    <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_streams</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s">&quot;TgMember::getValue() - &quot;</span>
+                        <span class="s">&quot;Data for </span><span class="si">%s</span><span class="s"> not fetched&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="n">std</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
                 <span class="k">raise</span> <span class="n">DataSourceSetupError</span><span class="p">(</span>
                     <span class="s">&quot;TgMember::getValue() -  &quot;</span>
