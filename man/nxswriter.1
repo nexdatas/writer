@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "June 23, 2017" "2.14" "NXSDataWriter"
+.TH "NXSWRITER" "1" "July 13, 2017" "2.15" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -3303,11 +3303,6 @@ It runs threads from the STEP pool
 the xmlsettings
 .UNINDENT
 .UNINDENT
-.INDENT 0.0
-.TP
-.B nxswriter.TangoDataWriter.globallock = <thread.lock object at 0x7f9eb5ad2870>
-global lock
-.UNINDENT
 .SS nxswriter.TangoSource module
 .sp
 Definitions of TANGO datasource
@@ -4260,6 +4255,8 @@ constructor
 \fBh5object\fP (\fI\%any\fP) \-\- pni object
 .IP \(bu 2
 \fBfilename\fP (\fI\%str\fP) \-\- file name
+.IP \(bu 2
+\fBwriter\fP (\fBPNIWriter\fP or \fBH5PYWriter\fP) \-\- writer module
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4327,6 +4324,11 @@ parent object
 .B Return type
 \fBFTGroup\fP
 .UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B writer = None
+(\fBPNIWriter\fP or \fBH5PYWriter\fP) writer module
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -4604,9 +4606,12 @@ file object
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.FileWriter.deflate_filter()
+.B nxswriter.FileWriter.deflate_filter(parent=None)
 create deflate filter
 .INDENT 7.0
+.TP
+.B Parameters
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
 .TP
 .B Returns
 deflate filter object
@@ -4663,8 +4668,23 @@ file object
 .UNINDENT
 .INDENT 0.0
 .TP
+.B nxswriter.FileWriter.setwriter(wr)
+sets writer
+.INDENT 7.0
+.TP
+.B Parameters
+\fBwr\fP (\fBPNIWriter\fP or \fBH5PYWriter\fP) \-\- writer module
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
 .B nxswriter.FileWriter.writer = None
-writer module
+(\fBPNIWriter\fP or \fBH5PYWriter\fP) default writer module
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.writerlock = <thread.lock object at 0x7fc62d0c8a30>
+(\fBthreading.Lock\fP) writer module
 .UNINDENT
 .SS nxswriter.PNIWriter module
 .sp
@@ -6213,6 +6233,11 @@ launches the TANGO server
 .B Parameters
 \fBargv\fP (\fBlist\fP <\fI\%str\fP>) \-\- command\-line arguments
 .UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.globallock = <thread.lock object at 0x7fc63ce90150>
+(\fBthreading.Lock\fP) global lock
 .UNINDENT
 .INDENT 0.0
 .IP \(bu 2
