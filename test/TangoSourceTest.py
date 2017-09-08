@@ -2807,16 +2807,22 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         for k in arr:
+            print "K", k
             self._simps.dp.write_attribute(arr[k][0], arr[k][3])
-
+        print "ww"
         for k in arr:
+            print "KK", k
+            print "K1"
             el = TangoSource()
             el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'command'
             el.member.name = k
+            print "K2"
             dt = el.getData()
+            print "K3"
             self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
                            1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            print "K4"
 
     # getData test
     # \brief It tests default settings

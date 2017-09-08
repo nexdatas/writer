@@ -623,6 +623,12 @@ class EField(FElementWithAttr):
         """
         if self.h5Object is not None:
             if error:
+                if "nexdatas_canfail_error" in \
+                   [at.name for at in self.h5Object.attributes]:
+                    olderror = \
+                        self.h5Object.attributes["nexdatas_canfail_error"][...]
+                    if olderror:
+                        error = str(olderror) + "\n" + str(error)
                 self.h5Object.attributes.create(
                     "nexdatas_canfail_error",
                     "string",

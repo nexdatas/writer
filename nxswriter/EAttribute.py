@@ -178,6 +178,11 @@ class EAttribute(FElement):
         field = self._lastObject()
         if field is not None:
             if error:
+                if "nexdatas_canfail_error" in \
+                   [at.name for at in field.attributes]:
+                    olderror = field.attributes["nexdatas_canfail_error"][...]
+                    if olderror:
+                        error = str(olderror) + "\n" + str(error)
                 field.attributes.create("nexdatas_canfail_error", "string",
                                         overwrite=True)[...] = str(error)
             field.attributes.create("nexdatas_canfail", "string",
