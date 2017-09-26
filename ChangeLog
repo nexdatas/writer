@@ -1,4 +1,8 @@
 2017-09-08 Jan Kotanski <jankotan@gmail.com>
+	* do not create a link when target is empty
+	* tagged as 2.16.1
+
+2017-09-08 Jan Kotanski <jankotan@gmail.com>
 	* append errors in markFail
 	* tagged as 2.16.0
 
