@@ -1117,18 +1117,21 @@ class ELinkTest(unittest.TestCase):
         atts4 = {"name": "link4"}
         atts5 = {"name": "link5"}
         atts6 = {"name": "link5"}
+        atts7 = {"name": "link7"}
         tatts1 = {"target1": "%s://NXentry/testField" % self._fname,
                   "target2": "%s://NXentry/testField" % self._fname,
                   "target3": "%s://NXentry3/testField" % self._fname,
                   "target4": "%s://NXtestField" % self._fname,
                   "target5": "%s:///NXtestGroup" % self._fname,
-                  "target6": "%s://NXtestField" % self._fname}
+                  "target6": "%s://NXtestField" % self._fname,
+                  "target7": ""}
         stg = {"strategy1": "INIT",
                "strategy2": "STEP",
                "strategy3": "FINAL",
                "strategy4": "INIT",
                "strategy5": "STEP",
-               "strategy6": "FINAL"}
+               "strategy6": "FINAL",
+               "strategy7": "FINAL"}
         gT1 = TNObject()
         ch = TNObject("testGroup", "NXentry", gT1)
         gT2 = TNObject()
@@ -1152,6 +1155,9 @@ class ELinkTest(unittest.TestCase):
         ds6 = TestDataSource()
         ds6.value = {"rank": 0, "value": tatts1["target6"],
                      "tangoDType": "DevString", "shape": [0, 0]}
+        ds7 = TestDataSource()
+        ds7.value = {"rank": 0, "value": tatts1["target7"],
+                     "tangoDType": "DevString", "shape": [0, 0]}
 
         li0 = ELink({}, eFile)
         li1 = ELink(atts1, eFile)
@@ -1174,6 +1180,9 @@ class ELinkTest(unittest.TestCase):
         li6 = ELink(atts6, eFile)
         li6.strategy = stg["strategy6"]
         li6.source = ds6
+        li7 = ELink(atts7, eFile)
+        li7.source = ds7
+        li7.strategy = stg["strategy7"]
 
         fi2 = EField(self._fattrs, gr)
         fi2.content = ["2 "]
@@ -1206,12 +1215,15 @@ class ELinkTest(unittest.TestCase):
         li5.createLink(TNObject())
         li6.createLink(TNObject())
         li6.createLink(TNObject())
+        li7.createLink(TNObject())
+        li7.createLink(TNObject())
         self.assertEqual(li0.h5Object, None)
         self.assertEqual(li1.h5Object, None)
         self.assertEqual(li2.h5Object, None)
         self.assertEqual(li3.h5Object, None)
         self.assertEqual(li4.h5Object, None)
         self.assertEqual(li5.h5Object, None)
+        self.assertEqual(li7.h5Object, None)
 
         self.myAssertRaise(Exception, self._nxFile.open, "link1")
         self.assertEqual(li1.store(), (stg["strategy1"], None))
@@ -1248,15 +1260,23 @@ class ELinkTest(unittest.TestCase):
         li6.run()
         self.assertTrue(li6.error is not None)
 
+        self.myAssertRaise(Exception, self._nxFile.open, "link7")
+        self.assertEqual(li7.store(), (stg["strategy7"], None))
+        self.myAssertRaise(Exception, self._nxFile.open, "link7")
+        li7.run()
+        self.assertEqual(li7.error, None)
+
+        
         self.assertTrue(not self._nxFile.open("link1").is_valid)
         self.assertTrue(not self._nxFile.open("link2").is_valid)
         self.assertTrue(not self._nxFile.open("link3").is_valid)
         self.assertTrue(not self._nxFile.open("link4").is_valid)
         self.assertTrue(not self._nxFile.open("link5").is_valid)
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
+        self.myAssertRaise(Exception, self._nxFile.open, "link7")
 
         self._nxFile.close()
-        os.remove(self._fname)
+#        os.remove(self._fname)
 
     # default constructor test
     # \brief It tests default settings

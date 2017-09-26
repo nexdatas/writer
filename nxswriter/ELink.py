@@ -87,8 +87,9 @@ class ELink(FElement):
                     if not dh:
                         message = self.setMessage("Data without value")
                         self.error = message
-                    target = dh.cast('string')
-                    self.createLink(self.__groupTypes, target)
+                    elif dh.value:
+                        target = dh.cast('string')
+                        self.createLink(self.__groupTypes, target)
         except:
             message = self.setMessage(sys.exc_info()[1].__str__())
             self.error = message
