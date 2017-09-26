@@ -1276,7 +1276,7 @@ class ELinkTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link7")
 
         self._nxFile.close()
-#        os.remove(self._fname)
+        os.remove(self._fname)
 
     # default constructor test
     # \brief It tests default settings
