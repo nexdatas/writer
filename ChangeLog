@@ -1,3 +1,7 @@
+2017-11-20 Jan Kotanski <jankotan@gmail.com>
+	* add DefaultCanFail property
+	* tagged as 2.17.0
+
 2017-09-26 Jan Kotanski <jankotan@gmail.com>
 	* do not create a link when target is empty
 	* tagged as 2.16.1

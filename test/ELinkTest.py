@@ -1266,7 +1266,6 @@ class ELinkTest(unittest.TestCase):
         li7.run()
         self.assertEqual(li7.error, None)
 
-        
         self.assertTrue(not self._nxFile.open("link1").is_valid)
         self.assertTrue(not self._nxFile.open("link2").is_valid)
         self.assertTrue(not self._nxFile.open("link3").is_valid)

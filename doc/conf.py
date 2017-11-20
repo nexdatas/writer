@@ -430,6 +430,6 @@ intersphinx_mapping = {
     'http://docs.python.org/2.7/': None,
     'http://docs.scipy.org/doc/scipy/reference': None,
     'http://docs.scipy.org/doc/numpy': None,
-    'http://www.esrf.fr/computing/cs/tango/tango_doc/kernel_doc/pytango/latest/': None,
+    'http://pytango.readthedocs.io/en/stable/': None,
     'file:///usr/share/doc/python-pni-doc/html/': None,
 }

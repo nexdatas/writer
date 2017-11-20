@@ -102,6 +102,8 @@ class TangoDataWriter(object):
         self.__nxFile = None
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
+        #: (:obj:`bool`) default value of canfail flag
+        self.__defaultCanFail = False
 
         #: (:obj:`str`) writer type
         self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
@@ -174,6 +176,28 @@ class TangoDataWriter(object):
     #: the global can fail flag
     canfail = property(__getCanFail, __setCanFail,
                        doc='(:obj:`bool`) the global can fail flag')
+
+    def __getDefaultCanFail(self):
+        """ get method for the global can fail flag
+
+        :returns: global can fail flag
+        :rtype: :obj:`bool`
+        """
+        return self.__defaultCanFail
+
+    def __setDefaultCanFail(self, canfail):
+        """ set method for the global can fail flag
+
+        :param canfail: the global can fail flag
+        :type canfail: :obj:`bool`
+        """
+        self.__defaultCanFail = canfail
+        self.__datasources.canfail = canfail
+
+    #: the global can fail flag
+    defaultCanFail = property(
+        __getDefaultCanFail, __setDefaultCanFail,
+        doc='(:obj:`bool`) default value of the global can fail flag')
 
     def __getJSON(self):
         """ get method for jsonrecord attribute
@@ -504,7 +528,7 @@ class TangoDataWriter(object):
                 self.__removefile()
 
         self.__datasources.counter = -2
-        self.__datasources.canfail = False
+        self.__datasources.canfail = self.defaultCanFail
 
         if self.addingLogs and self.__logGroup:
             self.__logGroup.close()

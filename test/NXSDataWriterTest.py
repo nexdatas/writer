@@ -257,6 +257,21 @@ class NXSDataWriterTest(unittest.TestCase):
             error = True
         self.assertEqual(error, True)
 
+    def setProp(self, dp, name, value):
+        db = PyTango.Database()
+        name = "" + name[0].upper() + name[1:]
+        db.put_device_property(
+            self._sv.new_device_info_writer.name,
+            {name: value})
+        dp.Init()
+
+    def getProp(self, dp, name):
+        db = PyTango.Database()
+        name = "" + name[0].upper() + name[1:]
+        return db.get_device_property(
+            self._sv.new_device_info_writer.name,
+            name)[name]
+
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
@@ -1808,6 +1823,7 @@ class NXSDataWriterTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
+            # self.assertEqual(self.getProp(dp, "NumberOfThreads"), False)
             dp.FileName = fname
 
             self.assertEqual(dp.stepsperfile, 0)
@@ -2310,6 +2326,815 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.FAULT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            # check the created file
+
+            f = open_file(fname, readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 2)
+
+            en = f.open("entry1")
+            self.assertTrue(en.is_valid)
+            self.assertEqual(en.name, "entry1")
+            self.assertEqual(len(en.attributes), 1)
+            self.assertEqual(en.size, 2)
+
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXentry")
+
+# ins = f.open("entry1/instrument:NXinstrument")    #bad exception
+#            ins = f.open("entry1/instrument")
+            ins = en.open("instrument")
+            self.assertTrue(ins.is_valid)
+            self.assertEqual(ins.name, "instrument")
+            self.assertEqual(len(ins.attributes), 2)
+            self.assertEqual(ins.size, 1)
+
+            at = ins.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXinstrument")
+
+            at = ins.attributes["short_name"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "short_name")
+            self.assertEqual(at[...], "scan instrument")
+
+            det = ins.open("detector")
+            self.assertTrue(det.is_valid)
+            self.assertEqual(det.name, "detector")
+            self.assertEqual(len(det.attributes), 1)
+            self.assertEqual(det.size, 2)
+
+            at = det.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXdetector")
+
+# cnt = det.open("counter")              # bad exception
+            cnt = det.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name, "counter1")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+#            self.assertEqual(cnt.shape, (1,))
+            self.assertEqual(cnt.dtype, "float64")
+#            self.assertEqual(cnt.size, 1)
+            value = cnt.read()
+#            value = cnt[:]
+#            for i in range(len(value)):
+#                self.assertEqual(self._counter[i], value[i])
+
+            self.assertEqual(len(cnt.attributes), 4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            mca = det.open("mca")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name, "mca")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+#            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype, "float64")
+#            self.assertEqual(mca.size, 4096)
+#            value = mca.read()
+#            for i in range(len(value[0])):
+#                self.assertEqual(self._mca1[i], value[0][i])
+#            for i in range(len(value[0])):
+#                self.assertEqual(self._mca2[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes), 4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            dt = en.open("data")
+            self.assertTrue(dt.is_valid)
+            self.assertEqual(dt.name, "data")
+            self.assertEqual(len(dt.attributes), 1)
+            self.assertEqual(dt.size, 2)
+
+            at = dt.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXdata")
+
+ #           cnt = dt.open("cnt1")
+            cnt = dt.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            #            ???
+            #            self.assertEqual(cnt.name,"cnt1")
+            self.assertEqual(cnt.name, "counter1")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+#            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+#            self.assertEqual(cnt.size, 2)
+#            print cnt.read()
+            value = cnt[:]
+#            for i in range(len(value)):
+#                self.assertEqual(self._counter[i], value[i])
+
+            self.assertEqual(len(cnt.attributes), 4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            mca = dt.open("data")
+            self.assertTrue(mca.is_valid)
+#            self.assertEqual(mca.name,"data")
+            self.assertEqual(mca.name, "mca")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+#            self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype,  "float64")
+#            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+#            for i in range(len(value[0])):
+#                self.assertEqual(self._mca1[i], value[0][i])
+#            for i in range(len(value[0])):
+#                self.assertEqual(self._mca2[i], value[1][i])
+
+            self.assertEqual(len(mca.attributes), 4)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            f.close()
+        finally:
+            if os.path.isfile(fname):
+                os.remove(fname)
+
+    # scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_scanRecord_defaultcanfail(self):
+        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fname = '%s/scantest2.h5' % os.getcwd()
+        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        try:
+            dp = PyTango.DeviceProxy(self._sv.device)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
+            #        print 'attributes', dp.attribute_list_query()
+            self.setProp(dp, "DefaultCanFail", True)
+            self.assertEqual(self.getProp(dp, "DefaultCanFail")[0], 'True')
+            dp.FileName = fname
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.OpenFile()
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.XMLSettings = self._scanXml % fname
+            # dp.Canfail = True
+            self.assertEqual(dp.state(), PyTango.DevState.OPEN)
+
+            self.assertEqual(dp.canfail, True)
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.OpenEntry()
+            self.assertEqual(dp.canfail, True)
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.Record('{}')
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.canfail, True)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+            dp.Record('{}')
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.canfail, True)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.CloseEntry()
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.canfail, True)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.CloseFile()
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.canfail, True)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+            self.assertEqual(self.getProp(dp, "DefaultCanFail")[0], 'True')
+
+            # check the created file
+
+            f = open_file(fname, readonly=True)
+            f = f.root()
+            self.assertEqual(6, len(f.attributes))
+            self.assertEqual(f.attributes["file_name"][...], fname)
+            self.assertTrue(f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.size, 2)
+
+            en = f.open("entry1")
+            self.assertTrue(en.is_valid)
+            self.assertEqual(en.name, "entry1")
+            self.assertEqual(len(en.attributes), 1)
+            self.assertEqual(en.size, 2)
+
+            at = en.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXentry")
+
+# ins = f.open("entry1/instrument:NXinstrument")    #bad exception
+#            ins = f.open("entry1/instrument")
+            ins = en.open("instrument")
+            self.assertTrue(ins.is_valid)
+            self.assertEqual(ins.name, "instrument")
+            self.assertEqual(len(ins.attributes), 2)
+            self.assertEqual(ins.size, 1)
+
+            at = ins.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXinstrument")
+
+            at = ins.attributes["short_name"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "short_name")
+            self.assertEqual(at[...], "scan instrument")
+
+            det = ins.open("detector")
+            self.assertTrue(det.is_valid)
+            self.assertEqual(det.name, "detector")
+            self.assertEqual(len(det.attributes), 1)
+            self.assertEqual(det.size, 2)
+
+            at = det.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXdetector")
+
+# cnt = det.open("counter")              # bad exception
+            cnt = det.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            self.assertEqual(cnt.name, "counter1")
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+            value = cnt.read()
+#            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(
+                    value[i], numpy.finfo(getattr(numpy, 'float64')).max)
+
+            self.assertEqual(len(cnt.attributes), 6)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = cnt.attributes["nexdatas_canfail"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail")
+            self.assertEqual(at[...], "FAILED")
+
+            at = cnt.attributes["nexdatas_canfail_error"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail_error")
+            self.assertEqual(
+                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            mca = det.open("mca")
+            self.assertTrue(mca.is_valid)
+            self.assertEqual(mca.name, "mca")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2, 2048))
+            self.assertEqual(mca.dtype, "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
+                                 value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
+                                 value[1][i])
+
+            self.assertEqual(len(mca.attributes), 6)
+
+            at = mca.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = mca.attributes["nexdatas_canfail"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail")
+            self.assertEqual(at[...], "FAILED")
+
+            at = mca.attributes["nexdatas_canfail_error"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail_error")
+            self.assertEqual(
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            dt = en.open("data")
+            self.assertTrue(dt.is_valid)
+            self.assertEqual(dt.name, "data")
+            self.assertEqual(len(dt.attributes), 1)
+            self.assertEqual(dt.size, 2)
+
+            at = dt.attributes["NX_class"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "NX_class")
+            self.assertEqual(at[...], "NXdata")
+
+            #            cnt = dt.open("cnt1")
+            cnt = dt.open("counter1")
+            self.assertTrue(cnt.is_valid)
+            #            ???
+            #            self.assertEqual(cnt.name,"cnt1")
+            self.assertEqual(cnt.name, "counter1")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(cnt.shape), 1)
+            self.assertEqual(cnt.shape, (2,))
+            self.assertEqual(cnt.dtype, "float64")
+            self.assertEqual(cnt.size, 2)
+#            print cnt.read()
+            value = cnt[:]
+            for i in range(len(value)):
+                self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
+                                 value[i])
+
+            self.assertEqual(len(cnt.attributes), 6)
+
+            at = cnt.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = cnt.attributes["nexdatas_canfail"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail")
+            self.assertEqual(at[...], "FAILED")
+
+            at = cnt.attributes["nexdatas_canfail_error"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail_error")
+            self.assertEqual(
+                at[...], "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+
+            at = cnt.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = cnt.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "m")
+
+            at = cnt.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            mca = dt.open("data")
+            self.assertTrue(mca.is_valid)
+            #            self.assertEqual(mca.name,"data")
+            self.assertEqual(mca.name, "mca")
+
+            self.assertTrue(hasattr(cnt.shape, "__iter__"))
+            self.assertEqual(len(mca.shape), 2)
+            self.assertEqual(mca.shape, (2, 2048))
+            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.size, 4096)
+            value = mca.read()
+            for i in range(len(value[0])):
+                self.assertEqual(
+                    numpy.finfo(getattr(numpy, 'float64')).max,
+                    value[0][i])
+            for i in range(len(value[0])):
+                self.assertEqual(
+                    numpy.finfo(getattr(numpy, 'float64')).max,
+                    value[1][i])
+
+            self.assertEqual(len(mca.attributes), 6)
+
+            at = mca.attributes["nexdatas_strategy"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_strategy")
+            self.assertEqual(at[...], "STEP")
+
+            at = mca.attributes["type"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "type")
+            self.assertEqual(at[...], "NX_FLOAT")
+
+            at = mca.attributes["units"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "units")
+            self.assertEqual(at[...], "")
+
+            at = mca.attributes["nexdatas_canfail"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail")
+            self.assertEqual(at[...], "FAILED")
+
+            at = mca.attributes["nexdatas_canfail_error"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+            self.assertEqual(at.name, "nexdatas_canfail_error")
+            self.assertEqual(
+                at[...],
+                "('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n('Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+
+            at = mca.attributes["nexdatas_source"]
+            self.assertTrue(at.is_valid)
+            self.assertTrue(hasattr(at.shape, "__iter__"))
+            self.assertEqual(len(at.shape), 1)
+            self.assertEqual(at.shape, (1,))
+            self.assertEqual(at.dtype, "string")
+
+            f.close()
+        finally:
+            if os.path.isfile(fname):
+                os.remove(fname)
+
+    # scanRecord test
+    # \brief It tests recording of simple h5 file
+    def test_scanRecord_defaultcanfail_false(self):
+        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fname = '%s/scantest2.h5' % os.getcwd()
+        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        try:
+            dp = PyTango.DeviceProxy(self._sv.device)
+            self.assertTrue(ProxyHelper.wait(dp, 10000))
+            #        print 'attributes', dp.attribute_list_query()
+            self.setProp(dp, "DefaultCanFail", False)
+            self.assertEqual(self.getProp(dp, "DefaultCanFail")[0], 'False')
+            dp.FileName = fname
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.ON)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.OpenFile()
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.OPEN)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.XMLSettings = self._scanXml % fname
+            # dp.Canfail = False
+            self.assertEqual(dp.state(), PyTango.DevState.OPEN)
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            self.assertEqual(dp.canfail, False)
+            dp.OpenEntry()
+            self.assertEqual(dp.canfail, False)
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            self.assertEqual(dp.canfail, False)
+            self.myAssertRaise(Exception, dp.Record, '{}')
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.FAULT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+            self.assertEqual(dp.canfail, False)
+            self.myAssertRaise(Exception, dp.Record, '{}')
+
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.FAULT)
+            self.assertEqual(dp.canfail, False)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.CloseEntry()
+            self.assertEqual(dp.canfail, False)
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.FAULT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+
+            dp.CloseFile()
+            self.assertEqual(dp.canfail, False)
+            self.assertEqual(dp.stepsperfile, 0)
+            self.assertEqual(dp.currentfileid, 0)
+            self.assertEqual(dp.state(), PyTango.DevState.FAULT)
+            self.assertEqual(dp.status(), self.__status[dp.state()])
+            self.assertEqual(self.getProp(dp, "DefaultCanFail")[0], 'False')
 
             # check the created file
 

@@ -200,6 +200,7 @@ class NXSDataWriter(PyTango.Device_4Impl):
             )
 
         self.get_device_properties(self.get_device_class())
+        self.tdw.defaultCanFail = bool(self.DefaultCanFail)
 
     def set_state(self, state):
         """set_state method
@@ -383,9 +384,10 @@ class NXSDataWriter(PyTango.Device_4Impl):
         if self.is_CanFail_write_allowed():
             self.tdw.canfail = attr.get_write_value()
         else:
-            self.warn_stream("To change the file name please close the file.")
+            self.warn_stream("To change the can fail flag please"
+                             " close the file.")
             raise Exception(
-                "To change the file name please close the file.")
+                "To change the can fail flag please close the file.")
 
     def is_CanFail_write_allowed(self):
         """ CanFail attribute Write State Machine
@@ -834,6 +836,10 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         [PyTango.DevString,
          "writer module",
          [""]],
+        'DefaultCanFail':
+        [PyTango.DevBoolean,
+         "Default value of CanFail attribute",
+         [False]],
     }
 
     #: (:obj:`dict` <:obj:`str`, \
