@@ -839,7 +839,7 @@ class NXSDataWriterClass(PyTango.DeviceClass):
         'DefaultCanFail':
         [PyTango.DevBoolean,
          "Default value of CanFail attribute",
-         [False]],
+         [True]],
     }
 
     #: (:obj:`dict` <:obj:`str`, \

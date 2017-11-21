@@ -103,7 +103,7 @@ class TangoDataWriter(object):
         #: (:class:`nxswriter.H5Elements.EFile`) element file objects
         self.__eFile = None
         #: (:obj:`bool`) default value of canfail flag
-        self.__defaultCanFail = False
+        self.__defaultCanFail = True
 
         #: (:obj:`str`) writer type
         self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
