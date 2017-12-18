@@ -1,1 +1,1 @@
-FROM jkotan/docker-nxs-stretch:latest
+FROM jkotan/docker-nxs-debian9:latest
