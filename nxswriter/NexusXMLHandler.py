@@ -219,7 +219,6 @@ class NexusXMLHandler(sax.ContentHandler):
                    and self.__datasources.canfail \
                    and hasattr(self.__stack[-1], "setCanFail"):
                     self.__stack[-1].setCanFail()
-
             elif name not in self.transparentTags:
                 if self.raiseUnsupportedTag:
                     if self._streams:

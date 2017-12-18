@@ -239,7 +239,7 @@ class TangoSource(DataSource):
 
             raise DataSourceSetupError(
                 "Cannot connect to: %s \ndefined by %s" % (self.device, xml))
-        elif hostname and port and device and client:
+        if hostname and port and device and client:
             try:
                 host = self.__proxy.get_db_host().split(".")[0]
             except:
