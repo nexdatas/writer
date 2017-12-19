@@ -14,13 +14,13 @@ else
     docker exec -it --user root ndts service mysql restart
 fi
 
-docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y --force-yes  tango-db tango-common; sleep 10'
+docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive; apt-get -qq update; apt-get -qq install -y  tango-db tango-common; sleep 10'
 if [ $? -ne "0" ]
 then
     exit -1
 fi
 echo "install tango servers"
-docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get -qq install -y --force-yes tango-starter tango-test liblog4j1.2-java'
+docker exec -it --user root ndts /bin/sh -c 'export DEBIAN_FRONTEND=noninteractive;  apt-get -qq update; apt-get -qq install -y  tango-starter tango-test liblog4j1.2-java'
 if [ $? -ne "0" ]
 then
     exit -1
