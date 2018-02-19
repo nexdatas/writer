@@ -422,6 +422,8 @@ class TangoDataWriter(object):
                 self.__filenames = []
                 self.__filetimes = {}
                 self.__nextfile()
+            elif "swmr" in self.__pars.keys() and self.__pars["swmr"]:
+                self.__nxFile.reopen(readonly=False, **self.__pars)
 
     def __nextfile(self):
         self.__nxFile.close()
