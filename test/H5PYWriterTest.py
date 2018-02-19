@@ -289,7 +289,7 @@ class H5PYWriterTest(unittest.TestCase):
 
         self.myAssertRaise(
             Exception, fl.reopen, True, True)
-        if SWMR:
+        if fl.hasswmr():
             fl.reopen(False, True)
         else:
             self.myAssertRaise(
