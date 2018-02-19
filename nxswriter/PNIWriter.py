@@ -73,6 +73,20 @@ def link(target, parent, name):
     return el
 
 
+def get_links(parent):
+    """ get links
+
+    :param parent: parent object
+    :type parent: :class:`FTObject`
+    :returns: list of link objects
+    :returns: link object
+    :rtype: :obj: `list` <:class:`PNILink`>
+    """
+    lks = nx.get_links(parent.h5object)
+    links = [PNILink(e, parent) for e in lks]
+    return links
+
+
 def deflate_filter():
     """ create deflate filter
 
@@ -277,6 +291,14 @@ class PNIGroup(FileWriter.FTGroup):
         """
         return self._h5object.exists(name)
 
+    def names(self):
+        """ read the child names
+
+        :returns: pni object
+        :rtype: :obj:`list` <`str`>
+        """
+        return self._h5object.names()
+
     class PNIGroupIter(object):
 
         def __init__(self, group):
@@ -369,6 +391,14 @@ class PNIField(FileWriter.FTField):
         """
         self._h5object = self._tparent.h5object.open(self.name)
         FileWriter.FTField.reopen(self)
+
+    def refresh(self):
+        """ refresh the field
+
+        :returns: refreshed
+        :rtype: :obj:`bool`
+        """
+        return False
 
     def grow(self, dim=0, ext=1):
         """ grow the field
@@ -484,6 +514,14 @@ class PNILink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         return self._h5object is not None and self._h5object.is_valid
+
+    def refresh(self):
+        """ refresh the field
+
+        :returns: refreshed
+        :rtype: :obj:`bool`
+        """
+        return False
 
     @property
     def target_path(self):
