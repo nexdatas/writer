@@ -204,7 +204,7 @@ class H5PYFile(FileWriter.FTFile):
             FileWriter.FTFile.reopen(self)
         if hasattr(self._h5object, "swmr_mode") and swmr:
             self._h5object.swmr_mode = swmr
-        if swmr:
+        elif swmr:
             raise Exception("SWMR not supported")
 
 

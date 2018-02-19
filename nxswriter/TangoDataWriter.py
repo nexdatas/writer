@@ -356,6 +356,8 @@ class TangoDataWriter(object):
                     if "=" in par:
                         ky, vl = par.split('=')
                         if ky:
+                            if ky == "swmr":
+                                vl = True if vl.lower() == "true" else False
                             pars[ky] = vl
         return pars
 
