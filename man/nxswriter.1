@@ -1,6 +1,6 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "NXSWRITER" "1" "November 20, 2017" "2.17" "NXSDataWriter"
+.TH "NXSWRITER" "1" "February 20, 2018" "2.18" "NXSDataWriter"
 .SH NAME
 nxswriter \- nxswriter Documentation
 .
@@ -347,7 +347,7 @@ sets the parrameters up from xml
 Definitions of DB datasource
 .INDENT 0.0
 .TP
-.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq, \(aqORACLE\(aq]
+.B nxswriter.DBaseSource.DB_AVAILABLE = [\(aqMYSQL\(aq, \(aqPGSQL\(aq]
 (\fI\%list\fP) list of available databases
 .UNINDENT
 .INDENT 0.0
@@ -2798,7 +2798,7 @@ Command definitions
 .UNINDENT
 .INDENT 7.0
 .TP
-.B device_property_list = {\(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqDefaultCanFail\(aq: [tango._tango.CmdArgType.DevBoolean, \(aqDefault value of CanFail attribute\(aq, [False]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aq\(aq]]}
+.B device_property_list = {\(aqNumberOfThreads\(aq: [tango._tango.CmdArgType.DevLong, \(aqmaximal number of threads\(aq, [100]], \(aqDefaultCanFail\(aq: [tango._tango.CmdArgType.DevBoolean, \(aqDefault value of CanFail attribute\(aq, [True]], \(aqWriter\(aq: [tango._tango.CmdArgType.DevString, \(aqwriter module\(aq, [\(aq\(aq]]}
 .INDENT 7.0
 .TP
 .B (\fI\%dict\fP <\fI\%str\fP, 
@@ -4204,6 +4204,19 @@ pni object
 .UNINDENT
 .INDENT 7.0
 .TP
+.B refresh()
+refresh the field
+.INDENT 7.0
+.TP
+.B Returns
+refreshed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B reopen()
 reopen attribute
 .UNINDENT
@@ -4281,6 +4294,19 @@ current time
 .TP
 .B flush()
 flash the data
+.UNINDENT
+.INDENT 7.0
+.TP
+.B hasswmr()
+if has swmr_mode
+.INDENT 7.0
+.TP
+.B Returns
+has swmr_mode
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -4433,6 +4459,19 @@ existing flag
 .UNINDENT
 .INDENT 7.0
 .TP
+.B names()
+read the child names
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fBlist\fP <\fIstr\fP>
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B open(name)
 open a file tree element
 .INDENT 7.0
@@ -4487,6 +4526,19 @@ constructor
 \fBh5object\fP (\fI\%any\fP) \-\- pni object
 .IP \(bu 2
 \fBtparent\fP (\fBFTObject\fP) \-\- treee parent
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B refresh()
+refresh the link
+.INDENT 7.0
+.TP
+.B Returns
+refreshed
+.TP
+.B Return type
+\fI\%bool\fP
 .UNINDENT
 .UNINDENT
 .INDENT 7.0
@@ -4582,8 +4634,8 @@ file tree group
 .UNINDENT
 .INDENT 7.0
 .TP
-.B refresh()
-refresh a list of valid children
+.B reload()
+reload a list of valid children
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -4623,6 +4675,40 @@ deflate filter object
 .TP
 .B Return type
 \fBFTDeflate\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.first(array)
+get first element if the only
+.INDENT 7.0
+.TP
+.B Parameters
+\fBarray\fP (\fI\%any\fP) \-\- numpy array
+.TP
+.B Returns
+first element of the array
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.FileWriter.get_links(parent)
+get links
+.INDENT 7.0
+.TP
+.B Parameters
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
+.TP
+.B Returns
+list of link objects
+.TP
+.B Return type
+.INDENT 7.0
+.TP
+.B obj
+\fIlist\fP <\fBFTLink\fP>
+.UNINDENT
+
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -4688,7 +4774,7 @@ sets writer
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.FileWriter.writerlock = <thread.lock object at 0x7fde16547a50>
+.B nxswriter.FileWriter.writerlock = <thread.lock object at 0x7f6aaf8aab10>
 (\fBthreading.Lock\fP) writer module
 .UNINDENT
 .SS nxswriter.PNIWriter module
@@ -4998,6 +5084,19 @@ pni object
 .UNINDENT
 .INDENT 7.0
 .TP
+.B refresh()
+refresh the field
+.INDENT 7.0
+.TP
+.B Returns
+refreshed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B reopen()
 reopen field
 .UNINDENT
@@ -5273,6 +5372,19 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
+.B PNIGroup.names()
+read the child names
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fBlist\fP <\fIstr\fP>
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B PNIGroup.open(name)
 open a file tree element
 .INDENT 7.0
@@ -5359,6 +5471,19 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
+.B refresh()
+refresh the field
+.INDENT 7.0
+.TP
+.B Returns
+refreshed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B reopen()
 reopen field
 .UNINDENT
@@ -5410,6 +5535,30 @@ deflate filter object
 .TP
 .B Return type
 \fBPNIDeflate\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.PNIWriter.get_links(parent)
+get links
+.INDENT 7.0
+.TP
+.B Parameters
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
+.TP
+.B Returns
+list of link objects
+.TP
+.B Returns
+link object
+.TP
+.B Return type
+.INDENT 7.0
+.TP
+.B obj
+\fIlist\fP <\fBPNILink\fP>
+.UNINDENT
+
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -5765,6 +5914,19 @@ pni object
 .UNINDENT
 .INDENT 7.0
 .TP
+.B refresh()
+refresh the field
+.INDENT 7.0
+.TP
+.B Returns
+refreshed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B reopen()
 reopen field
 .UNINDENT
@@ -5832,6 +5994,19 @@ close file
 .TP
 .B flush()
 flash the data
+.UNINDENT
+.INDENT 7.0
+.TP
+.B hasswmr()
+if has swmr_mode
+.INDENT 7.0
+.TP
+.B Returns
+has swmr_mode
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
 .UNINDENT
 .INDENT 7.0
 .TP
@@ -6035,6 +6210,19 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
+.B H5PYGroup.names()
+read the child names
+.INDENT 7.0
+.TP
+.B Returns
+pni object
+.TP
+.B Return type
+\fBlist\fP <\fIstr\fP>
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B H5PYGroup.open(name)
 open a file tree element
 .INDENT 7.0
@@ -6123,6 +6311,19 @@ valid flag
 .UNINDENT
 .INDENT 7.0
 .TP
+.B refresh()
+refresh the field
+.INDENT 7.0
+.TP
+.B Returns
+refreshed
+.TP
+.B Return type
+\fI\%bool\fP
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
 .B reopen()
 reopen field
 .UNINDENT
@@ -6178,6 +6379,30 @@ deflate filter object
 .TP
 .B Return type
 \fBH5PYDeflate\fP
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B nxswriter.H5PYWriter.get_links(parent)
+get links
+.INDENT 7.0
+.TP
+.B Parameters
+\fBparent\fP (\fBFTObject\fP) \-\- parent object
+.TP
+.B Returns
+list of link objects
+.TP
+.B Returns
+link object
+.TP
+.B Return type
+.INDENT 7.0
+.TP
+.B obj
+\fIlist\fP <\fBPNILink\fP>
+.UNINDENT
+
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
@@ -6241,7 +6466,7 @@ launches the TANGO server
 .UNINDENT
 .INDENT 0.0
 .TP
-.B nxswriter.globallock = <thread.lock object at 0x7fde25f9a150>
+.B nxswriter.globallock = <thread.lock object at 0x7f6ab5754150>
 (\fBthreading.Lock\fP) global lock
 .UNINDENT
 .INDENT 0.0
