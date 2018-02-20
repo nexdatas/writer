@@ -152,7 +152,6 @@ class TangoDataWriter(object):
             writer, params = writer.split('?')
         if not writer:
             writer = "pni" if "pni" in WRITERS.keys() else "h5py"
-        self.writer = writer.lower()
         wrmodule = WRITERS[writer.lower()]
         FileWriter.setwriter(wrmodule)
         return wrmodule
@@ -359,6 +358,8 @@ class TangoDataWriter(object):
                             if ky == "swmr":
                                 vl = True if vl.lower() == "true" else False
                             pars[ky] = vl
+        if "swmr" in pars and pars["swmr"] and "libver" not in pars:
+            pars["libver"] = "latest"
         return pars
 
     def openEntry(self):
@@ -406,7 +407,6 @@ class TangoDataWriter(object):
                 self.__initPool.runAndWait()
                 self.__initPool.checkErrors()
             self.skipacquisition = False
-
             if self.addingLogs:
                 self.__entryCounter += 1
                 if not self.__logGroup.is_valid:

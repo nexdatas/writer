@@ -1,4 +1,5 @@
 2018-02-XX Jan Kotanski <jankotan@gmail.com>
+	* set libver=latest if swmr is True
 	* add reopen, names, for FileWriter objects
 	* add get_links for FileWriter
 	* fix refresh method for FileWriter objects
