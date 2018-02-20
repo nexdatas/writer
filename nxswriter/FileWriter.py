@@ -24,6 +24,7 @@ import time
 import pytz
 import datetime
 import threading
+import numpy
 
 
 #: (:mod:`PNIWriter` or :mod:`H5PYWriter`) default writer module
@@ -108,6 +109,31 @@ def link(target, parent, name):
     return wr.link(target, parent, name)
 
 
+def get_links(parent):
+    """ get links
+
+    :param parent: parent object
+    :type parent: :class:`FTObject`
+    :returns: list of link objects
+    :rtype: :obj: `list` <:class:`FTLink`>
+    """
+    node = parent
+    wr = None
+    while node:
+        if hasattr(node, "writer"):
+            wr = node.writer
+            break
+        else:
+            if hasattr(node, "parent"):
+                node = node.parent
+            else:
+                break
+    if not wr:
+        with writerlock:
+            wr = writer
+    return wr.get_links(parent)
+
+
 def deflate_filter(parent=None):
     """ create deflate filter
 
@@ -178,10 +204,10 @@ class FTObject(object):
         """ removes weakref in parent object
         """
         if self._tparent:
-            self._tparent.refresh()
+            self._tparent.reload()
 
-    def refresh(self):
-        """ refresh a list of valid children
+    def reload(self):
+        """ reload a list of valid children
         """
         if self.__tchildren:
             self.__tchildren = [
@@ -229,6 +255,20 @@ class FTObject(object):
         return True
 
 
+def first(array):
+    """  get first element if the only
+
+    :param array: numpy array
+    :type array: :class:`numpy.ndarray`
+    :returns: first element of the array
+    :type array: :obj:`any`
+    """
+    if isinstance(array, numpy.ndarray) and len(array) == 1:
+        return array[0]
+    else:
+        return array
+
+
 class FTFile(FTObject):
 
     """ file tree file
@@ -268,6 +308,14 @@ class FTFile(FTObject):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
+
+    def hasswmr(self):
+        """ if has swmr_mode
+
+        :returns: has swmr_mode
+        :rtype: :obj:`bool`
+        """
+        return False
 
     def reopen(self, readonly=False, swmr=False, libver=None):
         """ reopen attribute
@@ -377,6 +425,13 @@ class FTGroup(FTObject):
         :rtype: :obj:`bool`
         """
 
+    def names(self):
+        """ read the child names
+
+        :returns: pni object
+        :rtype: :obj:`list` <`str`>
+        """
+
     def reopen(self):
         """ reopen attribute
         """
@@ -413,6 +468,13 @@ class FTField(FTObject):
         :type dim: :obj:`int`
         :param dim: size of the grow
         :type dim: :obj:`int`
+        """
+
+    def refresh(self):
+        """ refresh the field
+
+        :returns: refreshed
+        :rtype: :obj:`bool`
         """
 
     def read(self):
@@ -498,6 +560,13 @@ class FTLink(FTObject):
 
         :returns: target path
         :rtype: :obj:`str`
+        """
+
+    def refresh(self):
+        """ refresh the link
+
+        :returns: refreshed
+        :rtype: :obj:`bool`
         """
 
     def reopen(self):

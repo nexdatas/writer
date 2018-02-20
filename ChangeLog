@@ -1,6 +1,9 @@
-2017-11-XX Jan Kotanski <jankotan@gmail.com>
-	* change elif to if in TangoSource
-	* tagged as 2.17.2
+2018-02-XX Jan Kotanski <jankotan@gmail.com>
+	* set libver=latest if swmr is True
+	* add reopen, names, for FileWriter objects
+	* add get_links for FileWriter
+	* fix refresh method for FileWriter objects
+	* tagged as 2.18.0
 
 2017-11-21 Jan Kotanski <jankotan@gmail.com>
 	* set DefaultCanFail property to True

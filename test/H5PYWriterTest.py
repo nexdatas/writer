@@ -32,6 +32,13 @@ import h5py
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
+H5PYMAJOR, H5PYMINOR, H5PYPATCH= h5py.__version__.split(".", 2)
+
+if int(H5PYMAJOR) > 1 or (int(H5PYMAJOR) == 1  and int(H5PYMINOR) > 4):
+    SWMR = True
+else:
+    SWMR = False
+    
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -282,8 +289,11 @@ class H5PYWriterTest(unittest.TestCase):
 
         self.myAssertRaise(
             Exception, fl.reopen, True, True)
-        self.myAssertRaise(
-            Exception, fl.reopen, False, True)
+        if fl.hasswmr():
+            fl.reopen(False, True)
+        else:
+            self.myAssertRaise(
+                Exception, fl.reopen, False, True)
 
 
         fl = H5PYWriter.open_file(self._fname, readonly=True)

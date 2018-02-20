@@ -93,6 +93,21 @@ def link(target, parent, name):
         parent.h5object.get(name, getlink=True), parent).setname(name)
 
 
+def get_links(parent):
+    """ get links
+
+    :param parent: parent object
+    :type parent: :class:`FTObject`
+    :returns: list of link objects
+    :returns: link object
+    :rtype: :obj: `list` <:class:`PNILink`>
+    """
+
+    return [H5PYLink(
+        parent.h5object.get(name, getlink=True), parent).setname(name)
+        for name in parent.names()]
+
+
 def deflate_filter():
     """ create deflate filter
 
@@ -189,8 +204,16 @@ class H5PYFile(FileWriter.FTFile):
             FileWriter.FTFile.reopen(self)
         if hasattr(self._h5object, "swmr_mode") and swmr:
             self._h5object.swmr_mode = swmr
-        if swmr:
+        elif swmr:
             raise Exception("SWMR not supported")
+
+    def hasswmr(self):
+        """ if has swmr_mode
+
+        :returns: has swmr_mode
+        :rtype: :obj:`bool`
+        """
+        return hasattr(self._h5object, "swmr_mode")
 
 
 class H5PYGroup(FileWriter.FTGroup):
@@ -381,6 +404,14 @@ class H5PYGroup(FileWriter.FTGroup):
         """
         return name in self._h5object.keys()
 
+    def names(self):
+        """ read the child names
+
+        :returns: pni object
+        :rtype: :obj:`list` <`str`>
+        """
+        return self._h5object.keys()
+
     @property
     def is_valid(self):
         """ check if group is valid
@@ -442,6 +473,18 @@ class H5PYField(FileWriter.FTField):
         """
         self._h5object = self._tparent.h5object.get(self.name)
         FileWriter.FTField.reopen(self)
+
+    def refresh(self):
+        """ refresh the field
+
+        :returns: refreshed
+        :rtype: :obj:`bool`
+        """
+        if hasattr(self._h5object, "id"):
+            if hasattr(self._h5object.id, "refresh"):
+                self._h5object.id.refresh()
+                return True
+        return False
 
     def grow(self, dim=0, ext=1):
         """ grow the field
@@ -595,6 +638,18 @@ class H5PYLink(FileWriter.FTLink):
             return True
         except:
             return False
+
+    def refresh(self):
+        """ refresh the field
+
+        :returns: refreshed
+        :rtype: :obj:`bool`
+        """
+        if hasattr(self._h5object, "id"):
+            if hasattr(self._h5object.id, "refresh"):
+                self._h5object.id.refresh()
+                return True
+        return False
 
     def read(self):
         """ read object value
