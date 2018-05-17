@@ -20,7 +20,10 @@
 """ Provides pni file writer """
 
 import pni.io.nx.h5 as nx
-from builtins import object
+try:
+    from builtins import object
+except:
+    from __builtin__ import object
 
 from . import FileWriter
 
