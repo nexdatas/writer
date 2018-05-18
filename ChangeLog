@@ -1,4 +1,8 @@
 2018-05-18 Jan Kotanski <jankotan@gmail.com>
+	* second step in  support for utf8 in h5pywriter
+	* tagged as 2.18.2
+
+2018-05-18 Jan Kotanski <jankotan@gmail.com>
 	* fix support for utf8 in h5pywriter
 	* tagged as 2.18.1
 
