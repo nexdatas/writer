@@ -1,4 +1,8 @@
-2018-02-XX Jan Kotanski <jankotan@gmail.com>
+2018-05-18 Jan Kotanski <jankotan@gmail.com>
+	* fix support for utf8 in h5pywriter
+	* tagged as 2.18.1
+
+2018-02-01 Jan Kotanski <jankotan@gmail.com>
 	* set libver=latest if swmr is True
 	* add reopen, names, for FileWriter objects
 	* add get_links for FileWriter
@@ -223,7 +227,7 @@
 	* 	getNXFile -> getFile
 	* 	openNXFile -> openFile
 	* 	closeNXFile -> closeFile
-        * 	jsonRecord -> jsonrecord 
+        * 	jsonRecord -> jsonrecord
         * 	xmlSettings -> xmlsettings
         * 	numThreads -> numberOfThreads
 	* tagged as 1.6.0
@@ -414,4 +418,3 @@
 
 2012-06-07 Jan Kotanski <jankotan@gmail.com>
 	* ChangeLog: creating develop branch
-
