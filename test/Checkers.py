@@ -25,10 +25,16 @@ import unittest
 import binascii
 import time
 import numpy
+import sys
 
 from nxswriter import Types
 
 from math import exp
+
+if sys.version_info > (3,):
+    unicode = str
+else:
+    bytes = str
 
 
 # checks for scalar attributes
@@ -222,7 +228,7 @@ class Checker(object):
             self._tc.assertEqual(len(cnt.shape), 0)
         self._tc.assertEqual(cnt.dtype, dtype)
         # pninx is not supporting reading string areas
-        if not isinstance(values, str):
+        if not isinstance(values, str) and not isinstance(values, unicode):
             value = cnt[...]
             if self._isNumeric(value):
 #                print "Val", name , values ,value
@@ -257,11 +263,10 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         # pninx is not supporting reading string areas
 
-#        print "values", values
-#        print "cnt", cnt[...]
+        # print "values", values, type(values)
+        # print "cnt", cnt[...], type(cnt[...])
         for i in range(len(values)):
-            if isinstance(cnt[...], str):
-                dtype != "string"
+            if isinstance(cnt[...], str) or isinstance(cnt[...], unicode):
                 self._tc.assertEqual(values[i], cnt[...])
             elif dtype != "string" and self._isNumeric(cnt[i]) and not (
                     isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
@@ -362,7 +367,15 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
-        if not isinstance(values[0], str):
+        # print("ONE")
+        # print(values)
+        # print(values[0])
+        # print(type(values[0]))
+        # print("FILE")
+        # print(cnt)
+        # print(cnt[0])
+        # print(type(cnt[0]))
+        if not isinstance(values[0], str) and not isinstance(values[0], unicode):
             value = cnt.read()
             for i in range(len(value)):
 #                print values[i].__repr__(),  value[i].__repr__()
@@ -381,6 +394,14 @@ class Checker(object):
                 else:
                     self._tc.assertTrue(abs(values[i] - cnt[i]) <= error)
             else:
+                # print("ONE")
+                # print(values)
+                # print(values[i])
+                # print(type(values[i]))
+                # print("FILE")
+                # print(cnt)
+                # print(cnt[i])
+                # print(type(cnt[i]))
                 self._tc.assertEqual(values[i], cnt[i])
 
         self._tc.assertEqual(len(cnt.attributes), len(atts))
@@ -421,7 +442,7 @@ class Checker(object):
         self._tc.assertEqual(cnt.dtype, dtype)
         self._tc.assertEqual(cnt.size, 1)
         # pninx is not supporting reading string areas
-        if not isinstance(values, str):
+        if not isinstance(values, str) and not isinstance(values, unicode):
             value = cnt.read()
             if self._isNumeric(value):
                 self._tc.assertTrue(abs(values - value) <= error)
@@ -527,7 +548,7 @@ class Checker(object):
             if atts[a] is not None:
                 self._tc.assertEqual(at[...], atts[a])
 
-        if not isinstance(values, str):
+        if not isinstance(values, str) and not isinstance(values, unicode):
             value = cnt.read()
             if self._isNumeric(value):
                 self._tc.assertTrue(abs(values - value) <= error)

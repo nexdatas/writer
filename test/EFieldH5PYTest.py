@@ -1764,7 +1764,7 @@ class EFieldH5PYTest(unittest.TestCase):
                 el[k].store()
 
                 at = el[k].h5Object.attributes[k]
-
+                # print at
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
                                                 attrs[k][4] if len(attrs[k]) > 4 else 0)

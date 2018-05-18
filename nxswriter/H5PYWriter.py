@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   This file is part of nexdatas - Tango Server for NeXus data writer
 #
-#    Copyright (C) 2012-2017 DESY, Jan Kotanski <jkotan@mail.desy.de>
+#    Copyright (C) 2012-2018 DESY, Jan Kotanski <jkotan@mail.desy.de>
 #
 #    nexdatas is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,9 +22,12 @@
 import h5py
 import numpy as np
 import os
+import sys
 
 from . import FileWriter
 
+if sys.version_info > (3,):
+    unicode = str
 
 def open_file(filename, readonly=False, **pars):
     """ open the new file
@@ -57,12 +60,15 @@ def create_file(filename, overwrite=False, **pars):
     :rtype: :class:`H5PYFile`
     """
     fl = h5py.File(filename, "a" if overwrite else "w-", **pars)
-    fl.attrs.create("file_time", H5PYFile.currenttime() + "\0")
-    fl.attrs.create("HDF5_version", "\0")
-    fl.attrs.create("NX_class", "NXroot" + "\0")
-    fl.attrs.create("NeXus_version", "4.3.0\0")
-    fl.attrs.create("file_name", filename + "\0")
-    fl.attrs.create("file_update_time", H5PYFile.currenttime() + "\0")
+    fl.attrs.create("file_time", np.string_(H5PYFile.currenttime() + "\0"))
+    fl.attrs.create("HDF5_version", np.string_("\0"))
+    fl.attrs.create("NX_class", np.string_("NXroot" + "\0"))
+    fl.attrs.create("NeXus_version", np.string_("4.3.0\0"))
+    if hasattr(filename, "encode"):
+        fl.attrs.create("file_name", np.string_(filename.encode() + b"\0"))
+    else:
+        fl.attrs.create("file_name", np.string_(filename + "\0"))
+    fl.attrs.create("file_update_time", np.string_(H5PYFile.currenttime() + "\0"))
     return H5PYFile(fl, filename)
 
 
@@ -150,7 +156,8 @@ class H5PYFile(FileWriter.FTFile):
         """
         if self._h5object.mode in ["r+"]:
             self._h5object.attrs.create(
-                "file_update_time", self.currenttime() + "\0")
+                "file_update_time",
+                np.string_(self.currenttime() + "\0"))
         return self._h5object.flush()
 
     def close(self):
@@ -159,7 +166,8 @@ class H5PYFile(FileWriter.FTFile):
         FileWriter.FTFile.close(self)
         if self._h5object.mode in ["r+"]:
             self._h5object.attrs.create(
-                "file_update_time", self.currenttime() + "\0")
+                "file_update_time",
+                np.string_(self.currenttime() + "\0"))
         return self._h5object.close()
 
     @property
@@ -242,11 +250,11 @@ class H5PYGroup(FileWriter.FTGroup):
                     self.path = tparent.path + "/" + self.name
             if ":" not in self.name:
                 if "NX_class" in h5object.attrs:
-                    clss = h5object.attrs["NX_class"]
+                    clss = FileWriter.first(h5object.attrs["NX_class"])
                 else:
                     clss = ""
                 if clss:
-                    self.path += ":" + clss
+                    self.path += ":" + str(clss)
 
     def open(self, name):
         """ open a file tree element
@@ -282,9 +290,9 @@ class H5PYGroup(FileWriter.FTGroup):
             """
 
             self.__group = group
-            self.__names = self.__group._h5object.keys() or []
+            self.__names = sorted(self.__group._h5object.keys()) or []
 
-        def next(self):
+        def __next__(self):
             """ the next attribute
 
             :returns: attribute object
@@ -294,6 +302,8 @@ class H5PYGroup(FileWriter.FTGroup):
                 return self.__group.open(self.__names.pop(0))
             else:
                 raise StopIteration()
+
+        next = __next__
 
         def __iter__(self):
             """ attribute iterator
@@ -352,7 +362,8 @@ class H5PYGroup(FileWriter.FTGroup):
         shape = shape or [1]
         mshape = [None for _ in shape] or (None,)
         if type_code == "string":
-            type_code = h5py.special_dtype(vlen=unicode)
+            type_code = h5py.special_dtype(vlen=str)
+            # type_code = h5py.special_dtype(vlen=unicode)
             # type_code = h5py.special_dtype(vlen=bytes)
         if dfilter:
             f = H5PYField(
@@ -504,7 +515,12 @@ class H5PYField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        return self._h5object[...]
+        fl = self._h5object[...]
+        if hasattr(fl, "decode"):
+            return fl.decode(encoding="utf-8")
+        else:
+            return fl
+
 
     def write(self, o):
         """ write the field value
@@ -544,7 +560,12 @@ class H5PYField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        return self._h5object.__getitem__(t)
+        fl = self._h5object.__getitem__(t)
+        if hasattr(fl, "decode"):
+            return fl.decode(encoding="utf-8")
+        else:
+            return fl
+
 
     @property
     def is_valid(self):
@@ -798,7 +819,9 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             if isinstance(shape, list):
                 shape = tuple(shape)
             if dtype == 'string':
-                dtype = h5py.special_dtype(vlen=bytes)
+                # dtype = h5py.special_dtype(vlen=bytes)
+                dtype = h5py.special_dtype(vlen=str)
+                # dtype = np.string_
                 self._h5object.create(
                     name, np.empty(shape, dtype=dtype), shape, dtype)
             else:
@@ -806,7 +829,10 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
                     name, np.zeros(shape, dtype=dtype), shape, dtype)
         else:
             if dtype == "string":
-                self._h5object.create(name, "")
+                self._h5object.create(name, np.string_())
+                # self._h5object.create(name, "", dtype='str')
+                # self._h5object.create(
+                #     name, np.array(0, dtype=dtype), (1,), dtype)
             else:
                 self._h5object.create(
                     name, np.array(0, dtype=dtype), (1,), dtype)
@@ -833,17 +859,19 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
             self.__manager = manager
             self.__iter = self.__manager._h5object.__iter__()
 
-        def next(self):
+        def __next__(self):
             """ the next attribute
 
             :returns: attribute object
             :rtype: :class:`FTAtribute`
             """
-            name = self.__iter.next()
+            name = next(self.__iter)
             if name is None:
                 return None
             return H5PYAttribute((self.__manager._h5object, name),
                                  self.__manager.parent)
+
+        next = __next__
 
         def __iter__(self):
             """ attribute iterator
@@ -917,7 +945,11 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :returns: python object
         :rtype: :obj:`any`
         """
-        return self._h5object[0][self.name]
+        at = self._h5object[0][self.name]
+        if hasattr(at, "decode"):
+            return at.decode(encoding="utf-8")
+        else:
+            return at
 
     def write(self, o):
         """ write attribute value
@@ -927,7 +959,10 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         if isinstance(o, str) and not o.endswith("\0"):
             o += "\0"
-        self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
+        if self.dtype == "string":
+            self._h5object[0][self.name] = np.array(o, dtype=np.string_)
+        else:
+            self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
 
     def __setitem__(self, t, o):
         """ write attribute value
@@ -943,7 +978,10 @@ class H5PYAttribute(FileWriter.FTAttribute):
         if t is Ellipsis or t == slice(None, None, None) or \
            t == (slice(None, None, None), slice(None, None, None)) or \
            (hasattr(o, "__len__") and t == slice(0, len(o), None)):
-            self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
+            if self.dtype == "string":
+                self._h5object[0][self.name] = np.array(o, dtype=np.string_)
+            else:
+                self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
         elif isinstance(t, slice):
             var = self._h5object[0][self.name]
             if self.dtype is not 'string':
@@ -983,10 +1021,15 @@ class H5PYAttribute(FileWriter.FTAttribute):
         """
         if not isinstance(t, int):
             if t is Ellipsis:
-                return self._h5object[0][self.name]
+                at = self._h5object[0][self.name]
             else:
-                return self._h5object[0][self.name][t]
-        return self._h5object[0][self.name].__getitem__(t)
+                at = self._h5object[0][self.name][t]
+        else:
+            at = self._h5object[0][self.name].__getitem__(t)
+        if hasattr(at, "decode"):
+             return at.decode(encoding="utf-8")
+        else:
+            return at
 
     @property
     def is_valid(self):
@@ -1012,6 +1055,8 @@ class H5PYAttribute(FileWriter.FTAttribute):
             dt = str(self._h5object[0][self.name].dtype)
         if dt.endswith("_"):
             dt = dt[:-1]
+        if dt == "bytes":
+            dt = "string"
         if dt == "str":
             dt = "string"
         if dt == "object":

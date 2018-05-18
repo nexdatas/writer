@@ -1726,80 +1726,82 @@ class EFieldTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
-        attrs = {
-            #            "string":["My string","NX_CHAR", "string" , (1,)],
-            "string": ["My_string", "NX_CHAR", "string", (1,)],
-            "datetime": ["12:34:34", "NX_DATE_TIME", "string", (1,)],
-            "iso8601": ["12:34:34", "ISO8601", "string", (1,)],
-            "int": [-123, "NX_INT", "int64", (1,)],
-            "int8": [12, "NX_INT8", "int8", (1,)],
-            "int16": [-123, "NX_INT16", "int16", (1,)],
-            "int32": [12345, "NX_INT32", "int32", (1,)],
-            "int64": [-12345, "NX_INT64", "int64", (1,)],
-            "uint": [123, "NX_UINT", "uint64", (1,)],
-            "uint8": [12, "NX_UINT8", "uint8", (1,)],
-            "uint16": [123, "NX_UINT16", "uint16", (1,)],
-            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
-            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
-            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
-            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
-            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
-            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
-            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
-        }
+        for i in range(10):
+            attrs = {
+                #            "string":["My string","NX_CHAR", "string" , (1,)],
+                "string": ["My_string", "NX_CHAR", "string", (1,)],
+                "datetime": ["12:34:34", "NX_DATE_TIME", "string", (1,)],
+                "iso8601": ["12:34:34", "ISO8601", "string", (1,)],
+                "int": [-123, "NX_INT", "int64", (1,)],
+                "int8": [12, "NX_INT8", "int8", (1,)],
+                "int16": [-123, "NX_INT16", "int16", (1,)],
+                "int32": [12345, "NX_INT32", "int32", (1,)],
+                "int64": [-12345, "NX_INT64", "int64", (1,)],
+                "uint": [123, "NX_UINT", "uint64", (1,)],
+                "uint8": [12, "NX_UINT8", "uint8", (1,)],
+                "uint16": [123, "NX_UINT16", "uint16", (1,)],
+                "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+                "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+                "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+                "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+                "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+                "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+                "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+                "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+                "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+                "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+            }
 
-        for k in attrs.keys():
-            if attrs[k][2] == "string":
-                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
-                attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[0])]
-            elif attrs[k][2] != "bool":
-                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
-                attrs[k][0] = [
-                    attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
-            else:
-                mlen = [self.__rnd.randint(1, 10)]
-                if k == 'bool':
-                    attrs[k][0] = [bool(self.__rnd.randint(0, 1))
-                                   for c in range(mlen[0])]
+            for k in attrs.keys():
+                if attrs[k][2] == "string":
+                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
+                    attrs[k][0] = [
+                        attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[0])]
+                elif attrs[k][2] != "bool":
+                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
+                    attrs[k][0] = [
+                        attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
                 else:
-                    attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
-                                   for c in range(mlen[0])]
+                    mlen = [self.__rnd.randint(1, 10)]
+                    if k == 'bool':
+                        attrs[k][0] = [bool(self.__rnd.randint(0, 1))
+                                       for c in range(mlen[0])]
+                    else:
+                        attrs[k][0] = [("true" if self.__rnd.randint(0, 1) else "false")
+                                       for c in range(mlen[0])]
 
-            attrs[k][3] = (mlen[0],)
+                attrs[k][3] = (mlen[0],)
 
-        FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(
-            self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+            FileWriter.writer = PNIWriter
+            self._nxFile = FileWriter.create_file(
+                self._fname, overwrite=True).root()
+            eFile = EFile({}, None, self._nxFile)
 
-        el = {}
-        for k in attrs.keys():
-            el[k] = EField(
-                {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
+            el = {}
+            for k in attrs.keys():
+                # print k, attrs[k][0]
+                el[k] = EField(
+                    {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
 
-            self.assertEqual(el[k].tagAttributes, {})
-            el[k].tagAttributes[k] = (attrs[k][1], "".join(
-                [str(it) + " " for it in attrs[k][0]]), attrs[k][3])
+                self.assertEqual(el[k].tagAttributes, {})
+                el[k].tagAttributes[k] = (attrs[k][1], "".join(
+                    [str(it) + " " for it in attrs[k][0]]), attrs[k][3])
 
-            ds = TestDataSource()
-            ds.valid = True
-            el[k].source = ds
-            el[k].strategy = 'STEP'
+                ds = TestDataSource()
+                ds.valid = True
+                el[k].source = ds
+                el[k].strategy = 'STEP'
 
-            el[k].store()
+                el[k].store()
 
-            at = el[k].h5Object.attributes[k]
+                at = el[k].h5Object.attributes[k]
+                # print at
+                self._sc.checkSpectrumAttribute(
+                    el[k].h5Object, k, attrs[k][2], attrs[k][0],
+                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
-            self._sc.checkSpectrumAttribute(
-                el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][4] if len(attrs[k]) > 4 else 0)
-
-        self._nxFile.close()
-        os.remove(self._fname)
+            self._nxFile.close()
+            os.remove(self._fname)
 
     # constructor test
     # \brief It tests default settings
