@@ -311,7 +311,7 @@ class PNIGroup(FileWriter.FTGroup):
             self.__group = group
             self.__names = [kid.name for kid in self.__group.h5object]
 
-        def next(self):
+        def __next__(self):
             """ the next attribute
 
             :returns: attribute object
@@ -322,14 +322,15 @@ class PNIGroup(FileWriter.FTGroup):
             else:
                 raise StopIteration()
 
+        next = __next__
+
         def __iter__(self):
             """ attribute iterator
 
             :returns: attribute iterator
             :rtype: :class:`H5PYAttrIter`
             """
-            for name in self.__names:
-                yield self.__group.open(name)
+            return self
 
     def __iter__(self):
         """ attribute iterator

@@ -292,7 +292,7 @@ class H5PYGroup(FileWriter.FTGroup):
             self.__group = group
             self.__names = sorted(self.__group._h5object.keys()) or []
 
-        def next(self):
+        def __next__(self):
             """ the next attribute
 
             :returns: attribute object
@@ -303,14 +303,15 @@ class H5PYGroup(FileWriter.FTGroup):
             else:
                 raise StopIteration()
 
+        next = __next__
+
         def __iter__(self):
             """ attribute iterator
 
             :returns: attribute iterator
             :rtype: :class:`H5PYAttrIter`
             """
-            for name in self.__names:
-                yield self.__group.open(name)
+            return self
 
     def __iter__(self):
         """ attribute iterator
@@ -869,6 +870,8 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
                 return None
             return H5PYAttribute((self.__manager._h5object, name),
                                  self.__manager.parent)
+
+        next = __next__
 
         def __iter__(self):
             """ attribute iterator
