@@ -990,7 +990,14 @@ class H5PYAttribute(FileWriter.FTAttribute):
             else:
                 dtype = h5py.special_dtype(vlen=unicode)
                 var[t] = np.array(o, dtype=dtype)
-            self._h5object[0][self.name] = var
+                var = var.astype(dtype)
+            try:
+                self._h5object[0][self.name] = var
+            except:
+                dtype = h5py.special_dtype(vlen=unicode)
+                tvar = np.array(var, dtype=dtype)
+                self._h5object[0][self.name] = tvar
+
         elif isinstance(t, tuple):
             var = self._h5object[0][self.name]
             if self.dtype is not 'string':
@@ -1008,6 +1015,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
                     var[t] = np.array(o, dtype=self.dtype).tolist()
                 else:
                     var[t] = np.array(o, dtype=self.dtype).tolist()
+                var = var.astype(dtype)
             self._h5object[0][self.name] = var
         else:
             if isinstance(o, str) or isinstance(o, unicode):
