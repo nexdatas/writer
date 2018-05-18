@@ -19,12 +19,28 @@
 
 """ Tango Data Writer implementation """
 
+import os
+import shutil
+
+from xml import sax
+import json
+import sys
+import gc
+
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
 from .StreamSet import StreamSet
 from . import FileWriter
-import os
-import shutil
+
+from .H5Elements import EFile
+from .DecoderPool import DecoderPool
+from .DataSourcePool import DataSourcePool
 
 
 WRITERS = {}
@@ -38,22 +54,6 @@ try:
     WRITERS["h5py"] = H5PYWriter
 except:
     pass
-
-
-from xml import sax
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
-import json
-import sys
-import gc
-
-from .H5Elements import EFile
-from .DecoderPool import DecoderPool
-from .DataSourcePool import DataSourcePool
 
 
 class TangoDataWriter(object):
