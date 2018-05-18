@@ -23,13 +23,11 @@ import h5py
 import numpy as np
 import os
 import sys
-# from future.utils import implements_iterator
 
 from . import FileWriter
 
 if sys.version_info > (3,):
     unicode = str
-
 
 def open_file(filename, readonly=False, **pars):
     """ open the new file
@@ -294,8 +292,7 @@ class H5PYGroup(FileWriter.FTGroup):
             self.__group = group
             self.__names = sorted(self.__group._h5object.keys()) or []
 
-        # @implements_iterator
-        def __next__(self):
+        def next(self):
             """ the next attribute
 
             :returns: attribute object
@@ -306,15 +303,14 @@ class H5PYGroup(FileWriter.FTGroup):
             else:
                 raise StopIteration()
 
-        next = __next__
-
         def __iter__(self):
             """ attribute iterator
 
             :returns: attribute iterator
             :rtype: :class:`H5PYAttrIter`
             """
-            return self
+            for name in self.__names:
+                yield self.__group.open(name)
 
     def __iter__(self):
         """ attribute iterator
@@ -523,7 +519,7 @@ class H5PYField(FileWriter.FTField):
             return fl.decode(encoding="utf-8")
         else:
             return fl
-        
+
 
     def write(self, o):
         """ write the field value
@@ -569,7 +565,7 @@ class H5PYField(FileWriter.FTField):
         else:
             return fl
 
- 
+
     @property
     def is_valid(self):
         """ check if group is valid

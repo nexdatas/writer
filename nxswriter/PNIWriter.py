@@ -20,9 +20,9 @@
 """ Provides pni file writer """
 
 import pni.io.nx.h5 as nx
+#from future.utils import implements_iterator
 
 from . import FileWriter
-
 
 def open_file(filename, readonly=False, libver=None):
     """ open the new file
@@ -311,7 +311,7 @@ class PNIGroup(FileWriter.FTGroup):
             self.__group = group
             self.__names = [kid.name for kid in self.__group.h5object]
 
-        def __next__(self):
+        def next(self):
             """ the next attribute
 
             :returns: attribute object
@@ -322,15 +322,14 @@ class PNIGroup(FileWriter.FTGroup):
             else:
                 raise StopIteration()
 
-        next = __next__
-
         def __iter__(self):
             """ attribute iterator
 
             :returns: attribute iterator
             :rtype: :class:`H5PYAttrIter`
             """
-            return self
+            for name in self.__names:
+                yield self.__group.open(name)
 
     def __iter__(self):
         """ attribute iterator
