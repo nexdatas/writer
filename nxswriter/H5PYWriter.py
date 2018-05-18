@@ -514,7 +514,7 @@ class H5PYField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         fl = self._h5object[...]
-        if hasattr(fl, "decode"):
+        if hasattr(fl, "decode") and not isinstance(fl, unicode):
             return fl.decode(encoding="utf-8")
         else:
             return fl
@@ -558,7 +558,7 @@ class H5PYField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         fl = self._h5object.__getitem__(t)
-        if hasattr(fl, "decode"):
+        if hasattr(fl, "decode") and not isinstance(fl, unicode):
             return fl.decode(encoding="utf-8")
         else:
             return fl
@@ -675,7 +675,7 @@ class H5PYLink(FileWriter.FTLink):
         :rtype: :obj:`bool`
         """
         fl = self.parent.h5object[self.name][...]
-        if hasattr(fl, "decode"):
+        if hasattr(fl, "decode") and not isinstance(fl, unicode):
             return fl.decode(encoding="utf-8")
         else:
             return fl
@@ -943,7 +943,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :rtype: :obj:`any`
         """
         at = self._h5object[0][self.name]
-        if hasattr(at, "decode"):
+        if hasattr(at, "decode") and not isinstance(at, unicode):
             return at.decode(encoding="utf-8")
         else:
             return at
@@ -1037,7 +1037,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
                 at = self._h5object[0][self.name][t]
         else:
             at = self._h5object[0][self.name].__getitem__(t)
-        if hasattr(at, "decode"):
+        if hasattr(at, "decode") and not isinstance(at, unicode):
             return at.decode(encoding="utf-8")
         else:
             return at

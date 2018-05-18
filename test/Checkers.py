@@ -382,6 +382,7 @@ class Checker(object):
         # print(cnt[0])
         # print(type(cnt[0]))
         if not isinstance(values[0], str) and not isinstance(values[0], unicode):
+            # value = cnt[...]
             value = cnt.read()
             for i in range(len(value)):
 #                print values[i].__repr__(),  value[i].__repr__()
