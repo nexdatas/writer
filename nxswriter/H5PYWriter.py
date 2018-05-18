@@ -60,15 +60,12 @@ def create_file(filename, overwrite=False, **pars):
     :rtype: :class:`H5PYFile`
     """
     fl = h5py.File(filename, "a" if overwrite else "w-", **pars)
-    fl.attrs.create("file_time", np.string_(H5PYFile.currenttime() + "\0"))
-    fl.attrs.create("HDF5_version", np.string_("\0"))
-    fl.attrs.create("NX_class", np.string_("NXroot" + "\0"))
-    fl.attrs.create("NeXus_version", np.string_("4.3.0\0"))
-    if hasattr(filename, "encode"):
-        fl.attrs.create("file_name", np.string_(filename.encode() + b"\0"))
-    else:
-        fl.attrs.create("file_name", np.string_(filename + "\0"))
-    fl.attrs.create("file_update_time", np.string_(H5PYFile.currenttime() + "\0"))
+    fl.attrs["file_time"] = unicode(H5PYFile.currenttime())
+    fl.attrs["HDF5_version"] = u""
+    fl.attrs["NX_class"] = u"NXroot"
+    fl.attrs["NeXus_version"] = u"4.3.0"
+    fl.attrs["file_name"] = unicode(filename)
+    fl.attrs["file_update_time"] = unicode(H5PYFile.currenttime())
     return H5PYFile(fl, filename)
 
 
@@ -147,17 +144,16 @@ class H5PYFile(FileWriter.FTFile):
         :rtype: :class:`H5PYGroup`
         """
         g = H5PYGroup(self._h5object, self)
-        g.name = "/"
-        g.path = "/"
+        g.name = u"/"
+        g.path = u"/"
         return g
 
     def flush(self):
         """ flash the data
         """
         if self._h5object.mode in ["r+"]:
-            self._h5object.attrs.create(
-                "file_update_time",
-                np.string_(self.currenttime() + "\0"))
+            self._h5object.attrs["file_update_time"] = \
+                unicode(self.currenttime())
         return self._h5object.flush()
 
     def close(self):
@@ -165,9 +161,8 @@ class H5PYFile(FileWriter.FTFile):
         """
         FileWriter.FTFile.close(self)
         if self._h5object.mode in ["r+"]:
-            self._h5object.attrs.create(
-                "file_update_time",
-                np.string_(self.currenttime() + "\0"))
+            self._h5object.attrs["file_update_time"] = \
+                unicode(self.currenttime())
         return self._h5object.close()
 
     @property
@@ -238,7 +233,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :type tparent: :obj:`FTObject`
         """
         FileWriter.FTGroup.__init__(self, h5object, tparent)
-        self.path = ""
+        self.path = u""
         self.name = None
         if hasattr(h5object, "name"):
             name = h5object.name
