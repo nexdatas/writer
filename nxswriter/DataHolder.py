@@ -20,8 +20,15 @@
 """ definition of a data holder with casting methods """
 
 import numpy
+import sys
 
 from .Types import NTP
+
+
+if sys.version_info > (3,):
+    unicode = str
+else:
+    bytes = str
 
 
 class DataHolder(object):

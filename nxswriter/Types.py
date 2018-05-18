@@ -20,6 +20,11 @@
 """ Types converters  """
 
 import numpy
+import sys
+
+
+if sys.version_info > (3,):
+    long = int
 
 
 class Converters(object):

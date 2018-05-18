@@ -19,10 +19,11 @@
 
 """ Provides pni file writer """
 
+
 import pni.io.nx.h5 as nx
-#from future.utils import implements_iterator
 
 from . import FileWriter
+
 
 def open_file(filename, readonly=False, libver=None):
     """ open the new file

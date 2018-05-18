@@ -1132,10 +1132,10 @@ class EAttributeH5PYTest(unittest.TestCase):
             ea[k].markFailed()
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-
+            # print el[k].h5Object, k, attrs[k][2], attrs[k][0]
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 

@@ -235,14 +235,20 @@ class Checker(object):
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values, value)
+        # print type(cnt[...]), str(type(cnt[...]).__name__)# , str(cnt[...].dtype)
+        # print(str(cnt[...].dtype) if hasattr(cnt[...], "dtype") else "")
         if not isinstance(cnt[...], numpy.string_) and self._isNumeric(cnt[...]) and not (
-                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype).startswith("|S")):
-            if not self._isNumeric(values):
-                # print "BOOL: ", values ,cnt[...], type(values),
-                # type(cnt[...])
+                isinstance(cnt[...], numpy.ndarray) and (str(cnt[...].dtype).startswith("|S"))):
+            if hasattr(cnt[...], "dtype") and str(cnt[...].dtype) == "object":
+                self._tc.assertEqual(values, cnt[...])
+            elif not self._isNumeric(values):
                 self._tc.assertEqual(Types.Converters.toBool(values), cnt[...])
             else:
                 self._tc.assertTrue(abs(values - cnt[...]) <= error)
+        elif isinstance(cnt[...], numpy.bool_):
+            self._tc.assertEqual(Types.Converters.toBool(values), cnt[...])
+        elif self._isNumeric(values):
+            self._tc.assertTrue(abs(values - cnt[...]) <= error)
         else:
             self._tc.assertEqual(values, cnt[...])
 
