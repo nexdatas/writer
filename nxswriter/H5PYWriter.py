@@ -558,11 +558,10 @@ class H5PYField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         fl = self._h5object.__getitem__(t)
-        return fl
-        # if hasattr(fl, "decode"):
-        #     return fl.decode(encoding="utf-8")
-        # else:
-        #     return fl
+        if hasattr(fl, "decode"):
+            return fl.decode(encoding="utf-8")
+        else:
+            return fl
 
     @property
     def is_valid(self):
