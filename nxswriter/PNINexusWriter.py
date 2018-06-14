@@ -89,7 +89,7 @@ pTh = {
     "int": h5cpp.datatype.Integer,
     "int64": h5cpp.datatype.kInt64,
     "int32": h5cpp.datatype.kInt32,
-    "int16": h5cpp.datatype.kIn16,
+    "int16": h5cpp.datatype.kInt16,
     "int8": h5cpp.datatype.kInt8,
     "uint": h5cpp.datatype.kInt64,
     "uint64": h5cpp.datatype.kUInt64,
@@ -97,9 +97,8 @@ pTh = {
     "uint16": h5cpp.datatype.kUInt16,
     "uint8": h5cpp.datatype.kUInt8,
     "float": h5cpp.datatype.Float,
-    "float64": h5cpp.datatype.Float64,
-    "float32": h5cpp.datatype.Float32,
-    "float16": h5cpp.datatype.Float16,
+    "float64": h5cpp.datatype.kFloat64,
+    "float32": h5cpp.datatype.kFloat32,
     "string": h5cpp.datatype.kVariableString
 }
 
@@ -107,9 +106,10 @@ pTh = {
 hTp = {
     h5cpp.datatype.Integer: "long",
     h5cpp.datatype.kVariableString: "string",
+    h5cpp._datatype.Class.STRING: "string",
     h5cpp.datatype.kInt64: "int64",
     h5cpp.datatype.kInt32: "int32",
-    h5cpp.datatype.kIn16: "int16",
+    h5cpp.datatype.kInt16: "int16",
     h5cpp.datatype.kInt8: "int8",
     h5cpp.datatype.kInt64: "uint",
     h5cpp.datatype.kUInt64: "uint64",
@@ -117,9 +117,8 @@ hTp = {
     h5cpp.datatype.kUInt16: "uint16",
     h5cpp.datatype.kUInt8: "uint8",
     h5cpp.datatype.Float:  "float",
-    h5cpp.datatype.Float64: "float64",
-    h5cpp.datatype.Float32: "float32",
-    h5cpp.datatype.Float16: "float16",
+    h5cpp.datatype.kFloat64: "float64",
+    h5cpp.datatype.kFloat32: "float32",
 }
 
 
@@ -248,6 +247,7 @@ class PNINexusFile(FileWriter.FTFile):
         """ close file
         """
         FileWriter.FTFile.close(self)
+        print("CLOSE FILE")
         self._h5object.close()
 
     @property
@@ -266,7 +266,7 @@ class PNINexusFile(FileWriter.FTFile):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
-        return self._h5object.readonly
+        return self._h5object.intent == h5cpp.file.AccessFlags.READONLY
 
     def reopen(self, readonly=False, swmr=False, libver=None):
         """ reopen file
@@ -293,7 +293,7 @@ class PNINexusFile(FileWriter.FTFile):
         else:
             flag = h5cpp.file.AccessFlags.READWRITE
 
-        self._h5object = nexus.open_file(self.name, flag, fapl)
+        self._h5object = h5cpp.file.open(self.name, flag, fapl)
         FileWriter.FTFile.reopen(self)
 
 
