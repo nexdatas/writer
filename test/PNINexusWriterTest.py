@@ -36,10 +36,10 @@ import nxswriter.PNINexusWriter as PNINexusWriter
 from pninexus import h5cpp
 from pninexus import nexus
 
-try:
-    import pni.io.nx.h5 as nx
-except:
-    import pni.nx.h5 as nx
+# try:
+#     import pni.io.nx.h5 as nx
+# except:
+#     import pni.nx.h5 as nx
 
 
 # if 64-bit machione
@@ -2085,10 +2085,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.PNINexusDeflate(nx.deflate_filter())
-            df1 = PNINexusWriter.PNINexusDeflate(nx.deflate_filter())
+            df0 = PNINexusWriter.PNINexusDeflate(h5cpp.filter.Deflate())
+            df1 = PNINexusWriter.PNINexusDeflate(h5cpp.filter.Deflate())
             df1.rate = 2
-            df2 = PNINexusWriter.PNINexusDeflate(nx.deflate_filter())
+            df2 = PNINexusWriter.PNINexusDeflate(h5cpp.filter.Deflate())
             df2.rate = 4
             df2.shuffle = True
 
@@ -2112,15 +2112,15 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
-            self.assertTrue(isinstance(df0.h5object, nx._nxh5.deflate_filter))
+            self.assertTrue(isinstance(df0.h5object, h5cpp.filter.Deflate))
             self.assertEqual(df1.rate, 2)
             self.assertEqual(df1.shuffle, False)
             self.assertEqual(df1.parent, None)
-            self.assertTrue(isinstance(df1.h5object, nx._nxh5.deflate_filter))
+            self.assertTrue(isinstance(df1.h5object, h5cpp.filter.Deflate))
             self.assertEqual(df2.rate, 4)
             self.assertEqual(df2.shuffle, True)
             self.assertEqual(df2.parent, None)
-            self.assertTrue(isinstance(df2.h5object, nx._nxh5.deflate_filter))
+            self.assertTrue(isinstance(df2.h5object, h5cpp.filter.Deflate))
         finally:
             os.remove(self._fname)
 

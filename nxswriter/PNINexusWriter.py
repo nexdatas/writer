@@ -20,6 +20,7 @@
 """ Provides pni file writer """
 
 import math
+import os
 from pninexus import h5cpp
 from pninexus import nexus
 
@@ -181,7 +182,23 @@ def link(target, parent, name):
     :returns: link object
     :rtype: :class:`PNINexusLink`
     """
-    nexus.link(target, parent.h5object, name)
+    if ":/" in target:
+        filename, path = target.split(":/")
+    else:
+        filename, path = None, target
+
+    localfname = PNINexusLink.getfilename(parent)
+    if filename and \
+       os.path.abspath(filename) != os.path.abspath(localfname):
+        h5cpp.node.link(target_file=filename,
+                        target=h5cpp.Path(path),
+                        link_base=parent.h5object,
+                        link_path=h5cpp.Path(name))
+    else:
+        h5cpp.node.link(target=h5cpp.Path(path),
+                        link_base=parent.h5object,
+                        link_path=h5cpp.Path(name))
+
     lks = parent.h5object.links
     lk = [e for e in lks if str(e.path).split("/")[-1] == name][0]
     el = PNINexusLink(lk, parent)
@@ -247,7 +264,6 @@ class PNINexusFile(FileWriter.FTFile):
         """ close file
         """
         FileWriter.FTFile.close(self)
-        print("CLOSE FILE")
         self._h5object.close()
 
     @property
@@ -381,12 +397,12 @@ class PNINexusGroup(FileWriter.FTGroup):
             if dfilter.shuffle:
                 sfilter = h5cpp.filter.Shuffle()
                 sfilter(dcpl)
-        return PNINexusField(
-            nexus.FieldFactory.create(
-                self._h5object, name, type_code, shape,
-                chunk=chunk, dcpl=dcpl),
-            self
-        )
+        if chunk is None and shape is not None:
+            chunk = [(dm if dm != 0 else 1) for dm in shape]
+        field = nexus.FieldFactory.create(
+            self._h5object, name, type_code, shape,
+            chunk=chunk, dcpl=dcpl)
+        return PNINexusField(field, self)
 
     @property
     def size(self):
@@ -738,7 +754,7 @@ class PNINexusDeflate(FileWriter.FTDeflate):
         :type h5object: :obj:`any`
         """
         FileWriter.FTDeflate.__init__(self, h5object)
-        self.__shuffle = None
+        self.__shuffle = False
 
     def __getrate(self):
         """ getter for compression rate
