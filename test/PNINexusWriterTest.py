@@ -393,7 +393,6 @@ class PNINexusWriterTest(unittest.TestCase):
             attr0 = rt.attributes
             attr1 = entry.attributes
 
-            print attr0.h5object
             self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
@@ -401,7 +400,6 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
 
-            print dir(rt)
             self.assertTrue(
                 isinstance(rt, PNINexusWriter.PNINexusGroup))
             self.assertEqual(rt.name, ".")
@@ -413,8 +411,6 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(attr["NX_class"][...], "NXroot")
             self.assertTrue(
                 isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
-            print(dir(rt.h5object.link.path))
-            print(rt.h5object.link.path)
             self.assertEqual(
                 fl.h5object.root().link.path,
                 rt.h5object.link.path)
@@ -433,6 +429,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 isinstance(entry, PNINexusWriter.PNINexusGroup))
             self.assertEqual(entry.name, "entry12345")
             self.assertEqual(entry.path, "/entry12345:NXentry")
+            # self.assertEqual(entry.path, "/entry12345")
             self.assertEqual(
                 len(entry.h5object.attributes), 1)
             attr = entry.attributes
@@ -455,9 +452,11 @@ class PNINexusWriterTest(unittest.TestCase):
                 isinstance(nt, PNINexusWriter.PNINexusGroup))
             self.assertEqual(nt.name, "notype")
             self.assertEqual(nt.path, "/notype")
+                
             self.assertEqual(
-                len(nt.h5object.attributes), 0)
+                len(nt.h5object.attributes), 1)
             attr = nt.attributes
+            self.assertEqual(attr["NX_class"][...], "")
             self.assertTrue(
                 isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
             self.assertEqual(nt.is_valid, True)
@@ -559,45 +558,43 @@ class PNINexusWriterTest(unittest.TestCase):
                 set(['strimage', 'intvec', 'floatimage',
                      'floatvec', 'intimage', 'strvec']))
 
-
-
             self.assertTrue(isinstance(strscalar, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
             self.assertEqual(strscalar.shape, (1,))
 
             self.assertTrue(isinstance(floatscalar, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
             self.assertEqual(floatscalar.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar.dtype, 'float64')
             self.assertEqual(floatscalar.shape, (1,))
 
             self.assertTrue(isinstance(intscalar, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intscalar.h5object,  h5cpp._node.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
             self.assertEqual(intscalar.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar.dtype, 'uint64')
             self.assertEqual(intscalar.shape, (1,))
 
             self.assertTrue(isinstance(strspec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strspec.h5object,  h5cpp._node.Dataset))
             self.assertEqual(strspec.name, 'strspec')
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec.dtype, 'string')
             self.assertEqual(strspec.shape, (10,))
 
             self.assertTrue(isinstance(floatspec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatspec.h5object,  h5cpp._node.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
             self.assertEqual(floatspec.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
 
             self.assertTrue(isinstance(intspec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intspec.h5object,  h5cpp._node.Dataset))
             self.assertEqual(intspec.name, 'intspec')
             self.assertEqual(intspec.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec.dtype, 'int64')
@@ -605,21 +602,21 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strimage, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strimage.h5object,  h5cpp._node.Dataset))
             self.assertEqual(strimage.name, 'strimage')
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
             self.assertEqual(strimage.shape, (2, 2))
 
             self.assertTrue(isinstance(floatimage, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatimage.h5object,  h5cpp._node.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.dtype, 'float64')
             self.assertEqual(floatimage.shape, (20, 10))
 
             self.assertTrue(isinstance(intimage, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intimage.h5object,  h5cpp._node.Dataset))
             self.assertEqual(intimage.name, 'intimage')
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.dtype, 'uint32')
@@ -630,21 +627,21 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strvec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strvec.name, 'strvec')
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
             self.assertEqual(strvec.shape, (0, 2, 2))
 
             self.assertTrue(isinstance(floatvec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
             self.assertEqual(floatvec.shape, (1, 20, 10))
 
             self.assertTrue(isinstance(intvec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec.name, 'intvec')
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec.dtype, 'uint32')
@@ -666,42 +663,42 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strscalar_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strscalar_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strscalar_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar_op.name, 'strscalar')
             self.assertEqual(strscalar_op.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar_op.dtype, 'string')
             self.assertEqual(strscalar_op.shape, (1,))
 
             self.assertTrue(isinstance(floatscalar_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatscalar_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatscalar_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatscalar_op.name, 'floatscalar')
             self.assertEqual(floatscalar_op.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar_op.dtype, 'float64')
             self.assertEqual(floatscalar_op.shape, (1,))
 
             self.assertTrue(isinstance(intscalar_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intscalar_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intscalar_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intscalar_op.name, 'intscalar')
             self.assertEqual(intscalar_op.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar_op.dtype, 'uint64')
             self.assertEqual(intscalar_op.shape, (1,))
 
             self.assertTrue(isinstance(strspec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strspec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strspec_op.name, 'strspec')
             self.assertEqual(strspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec_op.dtype, 'string')
             self.assertEqual(strspec_op.shape, (10,))
 
             self.assertTrue(isinstance(floatspec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatspec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatspec_op.name, 'floatspec')
             self.assertEqual(floatspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec_op.dtype, 'float32')
             self.assertEqual(floatspec_op.shape, (20,))
 
             self.assertTrue(isinstance(intspec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intspec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intspec_op.name, 'intspec')
             self.assertEqual(intspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec_op.dtype, 'int64')
@@ -709,21 +706,21 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strimage_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strimage_op.name, 'strimage')
             self.assertEqual(strimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage_op.dtype, 'string')
             self.assertEqual(strimage_op.shape, (2, 2))
 
             self.assertTrue(isinstance(floatimage_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatimage_op.name, 'floatimage')
             self.assertEqual(floatimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage_op.dtype, 'float64')
             self.assertEqual(floatimage_op.shape, (20, 10))
 
             self.assertTrue(isinstance(intimage_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intimage_op.name, 'intimage')
             self.assertEqual(intimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage_op.dtype, 'uint32')
@@ -732,21 +729,21 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strvec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strvec_op.name, 'strvec')
             self.assertEqual(strvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec_op.dtype, 'string')
             self.assertEqual(strvec_op.shape, (0, 2, 2))
 
             self.assertTrue(isinstance(floatvec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec_op.name, 'floatvec')
             self.assertEqual(floatvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec_op.dtype, 'float64')
             self.assertEqual(floatvec_op.shape, (1, 20, 10))
 
             self.assertTrue(isinstance(intvec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec_op.name, 'intvec')
             self.assertEqual(intvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec_op.dtype, 'uint32')
@@ -756,7 +753,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(lkintimage, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkintimage.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkintimage.h5object, h5cpp._node.Link))
             self.assertTrue(lkintimage.target_path.endswith(
                 "%s://entry12345/instrument/detector/intimage" % self._fname))
             self.assertEqual(
@@ -764,7 +761,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkintimage")
 
             self.assertTrue(isinstance(lkfloatvec, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkfloatvec.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkfloatvec.h5object, h5cpp._node.Link))
             self.assertTrue(lkfloatvec.target_path.endswith(
                 "%s://entry12345/instrument/detector/floatvec" % self._fname))
             self.assertEqual(
@@ -772,7 +769,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkfloatvec")
 
             self.assertTrue(isinstance(lkintspec, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkintspec.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkintspec.h5object, h5cpp._node.Link))
             self.assertTrue(lkintspec.target_path.endswith(
                 "%s://entry12345/instrument/intspec" % self._fname))
             self.assertEqual(
@@ -780,7 +777,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkintspec")
 
             self.assertTrue(isinstance(lkdet, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkdet.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkdet.h5object, h5cpp._node.Link))
             self.assertTrue(lkdet.target_path.endswith(
                 "%s://entry12345/instrument/detector" % self._fname))
             self.assertEqual(
@@ -788,7 +785,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkdet")
 
             self.assertTrue(isinstance(lkno, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkno.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkno.h5object, h5cpp._node.Link))
             self.assertTrue(lkno.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
             self.assertEqual(
@@ -806,7 +803,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(lkintimage_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(lkintimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintimage_op.name, 'lkintimage')
             self.assertEqual(
                 lkintimage_op.path,
@@ -816,7 +813,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(lkfloatvec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
             self.assertEqual(lkfloatvec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
@@ -827,7 +824,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(lkintspec_op, PNINexusWriter.PNINexusField))
             self.assertTrue(
-                isinstance(lkintspec_op.h5object, nx._nxh5.nxfield))
+                isinstance(lkintspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintspec_op.name, 'lkintspec')
             self.assertEqual(lkintspec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkintspec')
@@ -835,7 +832,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(lkintspec_op.shape, (30,))
 
             self.assertTrue(isinstance(lkno_op, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkno_op.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkno_op.h5object, h5cpp._node.Link))
             self.assertTrue(lkno_op.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
             self.assertEqual(
@@ -950,7 +947,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strscalar, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
             self.assertEqual(strscalar.h5object.name, 'strscalar')
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
@@ -998,14 +995,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = strscalar.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
 
 
 
             self.assertTrue(isinstance(floatscalar, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
             self.assertEqual(floatscalar.h5object.name, 'floatscalar')
             self.assertEqual(floatscalar.path, '/entry12345:NXentry/floatscalar')
@@ -1049,14 +1046,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = floatscalar.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
 
 
             self.assertTrue(isinstance(intscalar, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intscalar.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
             self.assertEqual(intscalar.h5object.name, 'intscalar')
             self.assertEqual(intscalar.path, '/entry12345:NXentry/intscalar')
@@ -1102,7 +1099,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = intscalar.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, intscalar)
             self.assertEqual(len(attrs), 0)
 
@@ -1220,7 +1217,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strspec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strspec.name, 'strspec')
             self.assertEqual(strspec.h5object.name, 'strspec')
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
@@ -1266,14 +1263,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = strspec.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strspec)
             self.assertEqual(len(attrs), 0)
 
 
 
             self.assertTrue(isinstance(floatspec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
             self.assertEqual(floatspec.h5object.name, 'floatspec')
             self.assertEqual(floatspec.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
@@ -1316,14 +1313,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = floatspec.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, floatspec)
             self.assertEqual(len(attrs), 0)
 
 
 
             self.assertTrue(isinstance(intspec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intspec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intspec.name, 'intspec')
             self.assertEqual(intspec.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec.dtype, 'int64')
@@ -1368,7 +1365,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = intspec.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, intspec)
             self.assertEqual(len(attrs), 0)
 
@@ -1479,7 +1476,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
             self.assertTrue(isinstance(strimage, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(strimage.name, 'strimage')
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
@@ -1536,14 +1533,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = strimage.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strimage)
             self.assertEqual(len(attrs), 0)
 
 
 
             self.assertTrue(isinstance(floatimage, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.dtype, 'float64')
@@ -1598,7 +1595,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(intimage, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intimage.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(intimage.name, 'intimage')
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.dtype, 'uint32')
@@ -1759,7 +1756,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(strvec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(strvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(strvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strvec.name, 'strvec')
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
@@ -1816,13 +1813,13 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = strvec.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strvec)
             self.assertEqual(len(attrs), 0)
 
 
             self.assertTrue(isinstance(floatvec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(floatvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(floatvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
@@ -1879,14 +1876,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = floatvec.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, floatvec)
             self.assertEqual(len(attrs), 0)
 
 
 
             self.assertTrue(isinstance(intvec, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(intvec.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(intvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec.name, 'intvec')
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec.dtype, 'uint32')
@@ -1944,7 +1941,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             attrs = intvec.attributes
             self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
-            self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
+            self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, intvec)
             self.assertEqual(len(attrs), 0)
 
@@ -2057,15 +2054,16 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
-            self.assertTrue(isinstance(df0.h5object, nx._nxh5.deflate_filter))
+            print(type(df0.h5object))
+            self.assertTrue(isinstance(df0.h5object, h5cpp._filter.Deflate))
             self.assertEqual(df1.rate, 2)
             self.assertEqual(df1.shuffle, False)
             self.assertEqual(df1.parent, None)
-            self.assertTrue(isinstance(df1.h5object, nx._nxh5.deflate_filter))
+            self.assertTrue(isinstance(df1.h5object, h5cpp._filter.Deflate))
             self.assertEqual(df2.rate, 4)
             self.assertEqual(df2.shuffle, True)
             self.assertEqual(df2.parent, None)
-            self.assertTrue(isinstance(df2.h5object, nx._nxh5.deflate_filter))
+            self.assertTrue(isinstance(df2.h5object, h5cpp._filter.Deflate))
         finally:
             os.remove(self._fname)
 
@@ -2169,26 +2167,30 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            nx.link("/entry12345/instrument/detector/intimage", dt.h5object, "lkintimage")
-            lk = [e for e in nx.get_links(dt.h5object) if e.name == "lkintimage"][0]
+            h5cpp.node.link(h5cpp.Path("/entry12345/instrument/detector/intimage"),
+                            dt.h5object, h5cpp.Path("lkintimage"))
+            lk = [e for e in dt.h5object.links if e.path.name == "lkintimage"][0]
             lkintimage = PNINexusWriter.PNINexusLink(lk, dt)
-            nx.link("/entry12345/instrument/detector/floatvec", dt.h5object, "lkfloatvec")
-            lk = [e for e in nx.get_links(dt.h5object) if e.name == "lkfloatvec"][0]
+            h5cpp.node.link(
+                target=h5cpp.Path("/entry12345/instrument/detector/floatvec"),
+                link_base=dt.h5object, link_path=h5cpp.Path("lkfloatvec"))
+            lk = [e for e in dt.h5object.links if e.path.name == "lkfloatvec"][0]
             lkfloatvec = PNINexusWriter.PNINexusLink(lk, dt)
-            nx.link("/entry12345/instrument/intspec", dt.h5object, "lkintspec")
-            lk = [e for e in nx.get_links(dt.h5object) if e.name == "lkintspec"][0]
+            h5cpp.node.link(h5cpp.Path("/entry12345/instrument/intspec"), dt.h5object, h5cpp.Path("lkintspec"))
+            lk = [e for e in dt.h5object.links if e.path.name == "lkintspec"][0]
             lkintspec = PNINexusWriter.PNINexusLink(lk, dt)
-            nx.link("/entry12345/instrument/detector", dt.h5object, "lkdet")
-            lk = [e for e in nx.get_links(dt.h5object) if e.name == "lkdet"][0]
+            h5cpp.node.link(h5cpp.Path("/entry12345/instrument/detector"), dt.h5object, h5cpp.Path("lkdet"))
+            lk = [e for e in dt.h5object.links if e.path.name == "lkdet"][0]
             lkdet = PNINexusWriter.PNINexusLink(lk, dt)
-            nx.link("/notype/unknown", dt.h5object, "lkno")
-            lk = [e for e in nx.get_links(dt.h5object) if e.name == "lkno"][0]
+            h5cpp.node.link(h5cpp.Path("/notype/unknown"), dt.h5object, h5cpp.Path("lkno"))
+            lk = [e for e in dt.h5object.links if e.path.name == "lkno"][0]
             lkno = PNINexusWriter.PNINexusLink(lk, dt)
             lk = None
             e = None
 
             self.assertTrue(isinstance(lkintimage, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkintimage.h5object, nx._nxh5.nxlink))
+            print(type(lkintimage.h5object))
+            self.assertTrue(isinstance(lkintimage.h5object, h5cpp._node.Link))
             self.assertTrue(lkintimage.target_path.endswith(
                 "%s://entry12345/instrument/detector/intimage" % self._fname))
             self.assertEqual(
@@ -2196,7 +2198,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkintimage")
 
             self.assertTrue(isinstance(lkfloatvec, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkfloatvec.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkfloatvec.h5object, h5cpp._node.Link))
             self.assertTrue(lkfloatvec.target_path.endswith(
                 "%s://entry12345/instrument/detector/floatvec" % self._fname))
             self.assertEqual(
@@ -2204,7 +2206,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkfloatvec")
 
             self.assertTrue(isinstance(lkintspec, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkintspec.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkintspec.h5object, h5cpp._node.Link))
             self.assertTrue(lkintspec.target_path.endswith(
                 "%s://entry12345/instrument/intspec" % self._fname))
             self.assertEqual(
@@ -2212,7 +2214,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkintspec")
 
             self.assertTrue(isinstance(lkdet, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkdet.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkdet.h5object, h5cpp._node.Link))
             self.assertTrue(lkdet.target_path.endswith(
                 "%s://entry12345/instrument/detector" % self._fname))
             self.assertEqual(
@@ -2220,7 +2222,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "/entry12345:NXentry/data:NXdata/lkdet")
 
             self.assertTrue(isinstance(lkno, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkno.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkno.h5object, h5cpp._node.Link))
             self.assertTrue(lkno.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
             self.assertEqual(
@@ -2237,7 +2239,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(lkintimage_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(lkintimage_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintimage_op.name, 'lkintimage')
             self.assertEqual(
                 lkintimage_op.path,
@@ -2247,7 +2249,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(lkfloatvec_op, PNINexusWriter.PNINexusField))
-            self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxfield))
+            self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
             self.assertEqual(lkfloatvec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
@@ -2258,7 +2260,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(lkintspec_op, PNINexusWriter.PNINexusField))
             self.assertTrue(
-                isinstance(lkintspec_op.h5object, nx._nxh5.nxfield))
+                isinstance(lkintspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintspec_op.name, 'lkintspec')
             self.assertEqual(lkintspec_op.path,
                              '/entry12345:NXentry/data:NXdata/lkintspec')
@@ -2266,7 +2268,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(lkintspec_op.shape, (30,))
 
             self.assertTrue(isinstance(lkno_op, PNINexusWriter.PNINexusLink))
-            self.assertTrue(isinstance(lkno_op.h5object, nx._nxh5.nxlink))
+            self.assertTrue(isinstance(lkno_op.h5object, h5cpp._node.Link))
             self.assertTrue(lkno_op.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
             self.assertEqual(
@@ -2396,16 +2398,15 @@ class PNINexusWriterTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
             self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -2430,7 +2431,7 @@ class PNINexusWriterTest(unittest.TestCase):
             print dir(atintscalar.h5object)
 
             self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2449,7 +2450,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object[...], 0)
 
             self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -2468,7 +2469,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
 
             self.assertTrue(isinstance(atstrimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -2489,7 +2490,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
             self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
@@ -2511,7 +2512,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -2532,7 +2533,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atfloatimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
@@ -2554,7 +2555,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atfloatscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -2576,7 +2577,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atstrspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -2598,7 +2599,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2632,7 +2633,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atintimage = attr2["atintimage"]
 
             self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -2651,7 +2652,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object[...], 0)
 
             self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -2670,7 +2671,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
 
             self.assertTrue(isinstance(atstrimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -2691,7 +2692,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
             self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
@@ -2713,7 +2714,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -2734,7 +2735,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atfloatimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
@@ -2755,7 +2756,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atfloatscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -2777,7 +2778,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atstrspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -2799,7 +2800,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2823,7 +2824,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atintimage = attr2.create("atintimage", "uint64", [4], True)
 
             self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,
@@ -2997,13 +2998,13 @@ class PNINexusWriterTest(unittest.TestCase):
             print attr0.h5object
             self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -3039,7 +3040,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atintscalar.write(itvl[0])
             
             self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
             self.assertEqual(atintscalar.path, '/@atintscalar')
@@ -3083,7 +3084,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atstrscalar.write(stvl[0])
             
             self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
             self.assertEqual(atstrscalar.path, '/entry12345:NXentry@atstrscalar')
@@ -3129,7 +3130,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atfloatscalar.write(flvl[0])
 
             self.assertTrue(isinstance(atfloatscalar, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatscalar.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
             self.assertEqual(atfloatscalar.path,
@@ -3329,13 +3330,13 @@ class PNINexusWriterTest(unittest.TestCase):
             print attr0.h5object
             self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -3373,7 +3374,7 @@ class PNINexusWriterTest(unittest.TestCase):
             
 
             self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
             self.assertEqual(atfloatspec.path, '/@atfloatspec')
@@ -3433,7 +3434,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             
             self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
             self.assertEqual(atintspec.path, '/entry12345:NXentry@atintspec')
@@ -3492,7 +3493,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atstrspec, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrspec.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
             self.assertEqual(atstrspec.path,
@@ -3712,13 +3713,13 @@ class PNINexusWriterTest(unittest.TestCase):
             print attr0.h5object
             self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr2.h5object, nx._nxh5.nxfield_attributes))
+                isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
@@ -3758,7 +3759,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atstrimage.write(stvl[0])
 
             self.assertTrue(isinstance(atstrimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
             self.assertEqual(atstrimage.path, '/@atstrimage')
@@ -3820,7 +3821,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(isinstance(atfloatimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atfloatimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
             self.assertEqual(atfloatimage.path, '/entry12345:NXentry@atfloatimage')
@@ -3884,7 +3885,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             
             self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
-            self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
+            self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
             self.assertEqual(atintimage.path,

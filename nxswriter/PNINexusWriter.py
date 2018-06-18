@@ -21,6 +21,7 @@
 
 import math
 import os
+import numpy
 from pninexus import h5cpp
 from pninexus import nexus
 
@@ -120,6 +121,8 @@ hTp = {
     h5cpp.datatype.Float:  "float",
     h5cpp.datatype.kFloat64: "float64",
     h5cpp.datatype.kFloat32: "float32",
+#    h5cpp._datatype.Class.FLOAT: "float64",
+#    h5cpp._datatype.Class.INTEGER: "uint64",
 }
 
 
@@ -173,7 +176,7 @@ def create_file(filename, overwrite=False, libver=None):
 def link(target, parent, name):
     """ create link
 
-    :param target: file name
+    :param target: nexus path name
     :type target: :obj:`str`
     :param parent: parent object
     :type parent: :class:`FTObject`
@@ -329,13 +332,33 @@ class PNINexusGroup(FileWriter.FTGroup):
 
         FileWriter.FTGroup.__init__(self, h5object, tparent)
         #: (:obj:`str`) object nexus path
-        self.path = None
+        self.path = u""
         #: (:obj:`str`) object name
         self.name = None
-        if hasattr(h5object, "link") :
-            self.path = str(h5object.link.path)
         if hasattr(h5object, "link"):
             self.name = h5object.link.path.name
+            if tparent and tparent.path:
+                if isinstance(tparent, PNINexusFile):
+                    if self.name == ".":
+                        self.path = u"/"
+                    else:
+                        self.path = u"/"  + self.name
+                else:
+                    if tparent.path.endswith("/"):
+                        self.path = tparent.path
+                    else:
+                        self.path = tparent.path + u"/"
+                    self.path += self.name
+            if ":" not in self.name:
+                if u"NX_class" in [at.name for at in h5object.attributes]:
+                    clss = FileWriter.first(h5object.attributes["NX_class"]).read()
+                else:
+                    clss = ""
+                if clss:
+                    if isinstance(clss, (list, numpy.ndarray)):
+                        clss = clss[0]
+                if clss and clss != 'NXroot':
+                    self.path += u":" + str(clss)
 
     def open(self, name):
         """ open a file tree element
@@ -345,8 +368,9 @@ class PNINexusGroup(FileWriter.FTGroup):
         :returns: file tree object
         :rtype: :class:`FTObject`
         """
-        itm = nexus.get_objects(self._h5object,
-                                nexus.Path(h5cpp.Path(name)))[0]
+        ww = nexus.Path(h5cpp.Path(name))
+        print("WW %s" % ww)
+        itm = nexus.get_objects(self._h5object, nexus.Path(h5cpp.Path(name)))[0]
         if isinstance(itm, h5cpp._node.Dataset):
             el = PNINexusField(itm, self)
         elif isinstance(itm, h5cpp._node.Group):
@@ -524,13 +548,16 @@ class PNINexusField(FileWriter.FTField):
         """
         FileWriter.FTField.__init__(self, h5object, tparent)
         #: (:obj:`str`) object nexus path
-        self.path = None
+        self.path = ''
         #: (:obj:`str`) object name
         self.name = None
         if hasattr(h5object, "link"):
-            self.path = str(h5object.link.path)
-        if hasattr(h5object, "link"):
             self.name = h5object.link.path.name
+            if tparent and tparent.path:
+                if tparent.path == "/":
+                    self.path = "/" + self.name
+                else:
+                    self.path = tparent.path + "/" + self.name
 
     @property
     def attributes(self):
@@ -634,6 +661,10 @@ class PNINexusField(FileWriter.FTField):
         :returns: field data type
         :rtype: :obj:`str`
         """
+        print(dir(self._h5object.datatype))
+        print(self._h5object.datatype.type)
+        print(self._h5object.datatype.size*8)
+
         return hTp[self._h5object.datatype.type]
 
     @property
@@ -643,7 +674,10 @@ class PNINexusField(FileWriter.FTField):
         :returns: field shape
         :rtype: :obj:`list` < :obj:`int` >
         """
-        return self._h5object.dataspace.current_dimensions
+        if hasattr(self._h5object.dataspace, "current_dimensions"):
+            return self._h5object.dataspace.current_dimensions
+        else:
+            return (1,)
 
     @property
     def size(self):
@@ -670,13 +704,16 @@ class PNINexusLink(FileWriter.FTLink):
         """
         FileWriter.FTLink.__init__(self, h5object, tparent)
         #: (:obj:`str`) object nexus path
-        self.path = None
+        self.path = ''
         #: (:obj:`str`) object name
         self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.path
-        if hasattr(h5object, "name"):
-            self.name = h5object.path.name
+        if tparent and tparent.path:
+            self.path = tparent.path
+        if not self.path.endswith("/"):
+            self.path += "/"
+        self.name = h5object.path.name
+        self.path += self.name
+
 
     @property
     def is_valid(self):
@@ -827,7 +864,7 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype: :class:`PNINexusAtribute`
         """
-        names = [at.name for at in self._h5object.attributes]
+        names = [at.name for at in self._h5object]
         if name in names:
             if overwrite:
                 self._h5object.remove(name)
@@ -897,14 +934,11 @@ class PNINexusAttribute(FileWriter.FTAttribute):
         :type tparent: :obj:`FTObject`
         """
         FileWriter.FTAttribute.__init__(self, h5object, tparent)
-        #: (:obj:`str`) object nexus path
-        self.path = None
         #: (:obj:`str`) object name
-        self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.path
-        if hasattr(h5object, "name"):
-            self.name = h5object.name
+        self.name = h5object.name
+        #: (:obj:`str`) object nexus path
+        self.path = tparent.path
+        self.path += "@%s" % self.name
 
     def close(self):
         """ close attribute
