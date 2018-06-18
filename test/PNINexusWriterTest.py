@@ -396,15 +396,15 @@ class PNINexusWriterTest(unittest.TestCase):
             print attr0.h5object
             self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
             self.assertTrue(
-                isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
+                isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
 
             print dir(rt)
             self.assertTrue(
                 isinstance(rt, PNINexusWriter.PNINexusGroup))
-            self.assertEqual(rt.name, "/")
+            self.assertEqual(rt.name, ".")
             self.assertEqual(rt.path, "/")
             self.assertEqual(
                 len(fl.h5object.root().attributes),
@@ -413,9 +413,11 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(attr["NX_class"][...], "NXroot")
             self.assertTrue(
                 isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+            print(dir(rt.h5object.link.path))
+            print(rt.h5object.link.path)
             self.assertEqual(
-                fl.h5object.root().path,
-                rt.h5object.path)
+                fl.h5object.root().link.path,
+                rt.h5object.link.path)
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
             self.assertEqual(rt.parent, fl)

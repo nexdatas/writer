@@ -200,7 +200,7 @@ def link(target, parent, name):
                         link_path=h5cpp.Path(name))
 
     lks = parent.h5object.links
-    lk = [e for e in lks if str(e.path).split("/")[-1] == name][0]
+    lk = [e for e in lks if str(e.path.name) == name][0]
     el = PNINexusLink(lk, parent)
     return el
 
@@ -332,10 +332,10 @@ class PNINexusGroup(FileWriter.FTGroup):
         self.path = None
         #: (:obj:`str`) object name
         self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.link.path
-        if hasattr(h5object, "name"):
-            self.name = str(h5object.link.path).split("/")[-1]
+        if hasattr(h5object, "link") :
+            self.path = str(h5object.link.path)
+        if hasattr(h5object, "link"):
+            self.name = h5object.link.path.name
 
     def open(self, name):
         """ open a file tree element
@@ -447,7 +447,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         :rtype: :obj:`bool`
         """
         return name in [
-            str(lk.path).split("/")[-1] for lk in self._h5object.links]
+            lk.path.name for lk in self._h5object.links]
 
     def names(self):
         """ read the child names
@@ -456,7 +456,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         :rtype: :obj:`list` <`str`>
         """
         return [
-            str(lk.path).split("/")[-1] for lk in self._h5object.links]
+            lk.path.name for lk in self._h5object.links]
 
     class PNINexusGroupIter(object):
 
@@ -468,7 +468,7 @@ class PNINexusGroup(FileWriter.FTGroup):
             """
 
             self.__group = group
-            self.__names = group.names
+            self.__names = group.names()
 
         def __next__(self):
             """ the next attribute
@@ -527,10 +527,10 @@ class PNINexusField(FileWriter.FTField):
         self.path = None
         #: (:obj:`str`) object name
         self.name = None
-        if hasattr(h5object, "path"):
-            self.path = h5object.link.path
-        if hasattr(h5object, "name"):
-            self.name = str(h5object.link.path).split("/")[-1]
+        if hasattr(h5object, "link"):
+            self.path = str(h5object.link.path)
+        if hasattr(h5object, "link"):
+            self.name = h5object.link.path.name
 
     @property
     def attributes(self):
@@ -676,7 +676,7 @@ class PNINexusLink(FileWriter.FTLink):
         if hasattr(h5object, "path"):
             self.path = h5object.path
         if hasattr(h5object, "name"):
-            self.name = str(h5object.path).split("/")[-1]
+            self.name = h5object.path.name
 
     @property
     def is_valid(self):
@@ -722,14 +722,13 @@ class PNINexusLink(FileWriter.FTLink):
         if not fpath:
             fpath = self.getfilename(self)
         return "%s:/%s" % (fpath, opath)
-
     def reopen(self):
         """ reopen field
         """
         lks = self._tparent.h5object.links
         try:
             lk = [e for e in lks
-                  if str(e.path).split("/")[-1] == self.name][0]
+                  if e.path.name == self.name][0]
             self._h5object = lk
         except:
             self._h5object = None
