@@ -214,7 +214,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(f.size, 0)
             # f.close()
             fl.close()
-            
+
             fl.reopen()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -260,7 +260,7 @@ class PNINexusWriterTest(unittest.TestCase):
                                  "PNINexusWriterTesttest_pnifile.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
-            
+
             self.assertEqual(fl.parent, None)
 
             rt = fl.root()
@@ -452,7 +452,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 isinstance(nt, PNINexusWriter.PNINexusGroup))
             self.assertEqual(nt.name, "notype")
             self.assertEqual(nt.path, "/notype")
-                
+
             self.assertEqual(
                 len(nt.h5object.attributes), 1)
             attr = nt.attributes
@@ -949,17 +949,17 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(strscalar, PNINexusWriter.PNINexusField))
             self.assertTrue(isinstance(strscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
-            self.assertEqual(strscalar.h5object.name, 'strscalar')
+            self.assertEqual(strscalar.h5object.link.path.name, 'strscalar')
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
-            self.assertEqual(strscalar.h5object.path, '/entry12345:NXentry/strscalar')
+            self.assertEqual(str(strscalar.h5object.link.path), '/entry12345/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
-            self.assertEqual(strscalar.h5object.dtype, 'string')
+            # self.assertEqual(strscalar.h5object.dtype, 'string')
             self.assertEqual(strscalar.shape, (1,))
-            self.assertEqual(strscalar.h5object.shape, (1,))
+            # self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(strscalar.is_valid, True)
             self.assertEqual(strscalar.h5object.is_valid, True)
             self.assertEqual(strscalar.shape, (1,))
-            self.assertEqual(strscalar.h5object.shape, (1,))
+            # self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (1,))
 
             vl = ["1234", "Somethin to test 1234", "2342;23ml243",
                   "sd", "q234", "12 123 ", "aqds ", "Aasdas"]
@@ -973,7 +973,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strscalar.grow()
             self.assertEqual(strscalar.shape, (2,))
-            self.assertEqual(strscalar.h5object.shape, (2,))
+            self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (2,))
 
             self.assertEqual(strscalar[0], vl[0])
             strscalar[1] =  vl[3]
@@ -981,14 +981,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strscalar.grow(ext=2)
             self.assertEqual(strscalar.shape, (4,))
-            self.assertEqual(strscalar.h5object.shape, (4,))
+            self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (4,))
             strscalar[1:4] =  vl[1:4]
             self.assertEqual(list(strscalar.read()), vl[0:4])
             self.assertEqual(list(strscalar[0:2]), vl[0:2])
 
             strscalar.grow(0, 3)
             self.assertEqual(strscalar.shape, (7,))
-            self.assertEqual(strscalar.h5object.shape, (7,))
+            self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (7,))
             strscalar.write(vl[0:7])
             self.assertEqual(list(strscalar.read()), vl[0:7])
             self.assertEqual(list(strscalar[...]), vl[0:7])
@@ -1010,7 +1010,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(floatscalar.dtype, 'float64')
             self.assertEqual(floatscalar.h5object.dtype, 'float64')
             self.assertEqual(floatscalar.shape, (1,))
-            self.assertEqual(floatscalar.h5object.shape, (1,))
+            self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (1,))
 
             vl  = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
 
@@ -1024,7 +1024,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatscalar.grow()
             self.assertEqual(floatscalar.shape, (2,))
-            self.assertEqual(floatscalar.h5object.shape, (2,))
+            self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (2,))
 
             self.assertEqual(floatscalar[0], vl[0])
             floatscalar[1] =  vl[3]
@@ -1032,14 +1032,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatscalar.grow(ext=2)
             self.assertEqual(floatscalar.shape, (4,))
-            self.assertEqual(floatscalar.h5object.shape, (4,))
+            self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (4,))
             floatscalar[1:4] =  vl[1:4]
             self.assertEqual(list(floatscalar.read()), vl[0:4])
             self.assertEqual(list(floatscalar[0:2]), vl[0:2])
 
             floatscalar.grow(0, 3)
             self.assertEqual(floatscalar.shape, (7,))
-            self.assertEqual(floatscalar.h5object.shape, (7,))
+            self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (7,))
             floatscalar.write(vl[0:7])
             self.assertEqual(list(floatscalar.read()), vl[0:7])
             self.assertEqual(list(floatscalar[...]), vl[0:7])
@@ -1061,7 +1061,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.dtype, 'uint64')
             self.assertEqual(intscalar.h5object.dtype, 'uint64')
             self.assertEqual(intscalar.shape, (1,))
-            self.assertEqual(intscalar.h5object.shape, (1,))
+            self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (1,))
 
 
 
@@ -1077,7 +1077,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intscalar.grow()
             self.assertEqual(intscalar.shape, (2,))
-            self.assertEqual(intscalar.h5object.shape, (2,))
+            self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (2,))
 
             self.assertEqual(intscalar[0], vl[0])
             intscalar[1] =  vl[3]
@@ -1085,14 +1085,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intscalar.grow(ext=2)
             self.assertEqual(intscalar.shape, (4,))
-            self.assertEqual(intscalar.h5object.shape, (4,))
+            self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (4,))
             intscalar[1:4] =  vl[1:4]
             self.assertEqual(list(intscalar.read()), vl[0:4])
             self.assertEqual(list(intscalar[0:2]), vl[0:2])
 
             intscalar.grow(0, 3)
             self.assertEqual(intscalar.shape, (7,))
-            self.assertEqual(intscalar.h5object.shape, (7,))
+            self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (7,))
             intscalar.write(vl[0:7])
             self.assertEqual(list(intscalar.read()), vl[0:7])
             self.assertEqual(list(intscalar[...]), vl[0:7])
@@ -1219,13 +1219,13 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(strspec, PNINexusWriter.PNINexusField))
             self.assertTrue(isinstance(strspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strspec.name, 'strspec')
-            self.assertEqual(strspec.h5object.name, 'strspec')
+            self.assertEqual(strspec.h5object.link.path.name, 'strspec')
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
-            self.assertEqual(strspec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
+            self.assertEqual(str(strspec.h5object.link.path), '/entry12345/instrument/strspec')
             self.assertEqual(strspec.dtype, 'string')
-            self.assertEqual(strspec.h5object.dtype, 'string')
+            # self.assertEqual(strspec.h5object.dtype, 'string')
             self.assertEqual(strspec.shape, (10,))
-            self.assertEqual(strspec.h5object.shape, (10,))
+            self.assertEqual(strspec.h5object.dataspace.current_dimensions, (10,))
 
             chars = string.ascii_uppercase + string.digits
             vl = [
@@ -1241,7 +1241,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strspec.grow()
             self.assertEqual(strspec.shape, (11,))
-            self.assertEqual(strspec.h5object.shape, (11,))
+            self.assertEqual(strspec.h5object.dataspace.current_dimensions, (11,))
 
             self.assertEqual(list(strspec[0:10]), vl[0:10])
             strspec[10] =  vl[10]
@@ -1249,14 +1249,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strspec.grow(ext=2)
             self.assertEqual(strspec.shape, (13,))
-            self.assertEqual(strspec.h5object.shape, (13,))
+            self.assertEqual(strspec.h5object.dataspace.current_dimensions, (13,))
             strspec[1:13] =  vl[1:13]
             self.assertEqual(list(strspec.read()), vl[0:13])
             self.assertEqual(list(strspec[0:2]), vl[0:2])
 
             strspec.grow(0, 3)
             self.assertEqual(strspec.shape, (16,))
-            self.assertEqual(strspec.h5object.shape, (16,))
+            self.assertEqual(strspec.h5object.dataspace.current_dimensions, (16,))
             strspec.write(vl[0:16])
             self.assertEqual(list(strspec.read()), vl[0:16])
             self.assertEqual(list(strspec[...]), vl[0:16])
@@ -1278,7 +1278,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(floatspec.dtype, 'float32')
             self.assertEqual(floatspec.h5object.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
-            self.assertEqual(floatspec.h5object.shape, (20,))
+            self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (20,))
 
 
             vl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
@@ -1291,7 +1291,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatspec.grow()
             self.assertEqual(floatspec.shape, (21,))
-            self.assertEqual(floatspec.h5object.shape, (21,))
+            self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (21,))
 
             self.myAssertFloatList(list(floatspec[0:20]), vl[0:20], 1e-4)
             floatspec[20] =  vl[20]
@@ -1299,14 +1299,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatspec.grow(ext=2)
             self.assertEqual(floatspec.shape, (23,))
-            self.assertEqual(floatspec.h5object.shape, (23,))
+            self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (23,))
             floatspec[1:23] =  vl[1:23]
             self.myAssertFloatList(list(floatspec.read()), vl[0:23], 1e-4)
             self.myAssertFloatList(list(floatspec[0:2]), vl[0:2], 1e-4)
 
             floatspec.grow(0, 3)
             self.assertEqual(floatspec.shape, (26,))
-            self.assertEqual(floatspec.h5object.shape, (26,))
+            self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (26,))
             floatspec.write(vl[0:26])
             self.myAssertFloatList(list(floatspec.read()), vl[0:26], 1e-4)
             self.myAssertFloatList(list(floatspec[...]), vl[0:26], 1e-4)
@@ -1328,7 +1328,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(intspec.h5object.name, 'intspec')
             self.assertEqual(intspec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
             self.assertEqual(intspec.h5object.dtype, 'int64')
-            self.assertEqual(intspec.h5object.shape, (30,))
+            self.assertEqual(intspec.h5object.dataspace.current_dimensions, (30,))
 
 
 
@@ -1343,7 +1343,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intspec.grow()
             self.assertEqual(intspec.shape, (31,))
-            self.assertEqual(intspec.h5object.shape, (31,))
+            self.assertEqual(intspec.h5object.dataspace.current_dimensions, (31,))
 
             self.assertEqual(list(intspec[0:10]), vl[0:10])
             intspec[30] =  vl[30]
@@ -1351,14 +1351,14 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intspec.grow(ext=2)
             self.assertEqual(intspec.shape, (33,))
-            self.assertEqual(intspec.h5object.shape, (33,))
+            self.assertEqual(intspec.h5object.dataspace.current_dimensions, (33,))
             intspec[1:33] =  vl[1:33]
             self.assertEqual(list(intspec.read()), vl[0:33])
             self.assertEqual(list(intspec[0:2]), vl[0:2])
 
             intspec.grow(0, 3)
             self.assertEqual(intspec.shape, (36,))
-            self.assertEqual(intspec.h5object.shape, (36,))
+            self.assertEqual(intspec.h5object.dataspace.current_dimensions, (36,))
             intspec.write(vl[0:36])
             self.assertEqual(list(intspec.read()), vl[0:36])
             self.assertEqual(list(intspec[...]), vl[0:36])
@@ -1481,10 +1481,10 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
             self.assertEqual(strimage.shape, (2, 2))
-            self.assertEqual(strimage.h5object.name, 'strimage')
-            self.assertEqual(strimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
-            self.assertEqual(strimage.h5object.dtype, 'string')
-            self.assertEqual(strimage.h5object.shape, (2, 2))
+            self.assertEqual(strimage.h5object.link.path.name, 'strimage')
+            self.assertEqual(str(strimage.h5object.link.path), '/entry12345/instrument/detector/strimage')
+            # self.assertEqual(strimage.h5object.dtype, 'string')
+            # self.assertEqual(strimage.h5object.dataspace.current_dimensions, (2, 2))
 
 
             chars = string.ascii_uppercase + string.digits
@@ -1505,7 +1505,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strimage.grow()
             self.assertEqual(strimage.shape, (3, 2))
-            self.assertEqual(strimage.h5object.shape, (3, 2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (3, 2))
 
             iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
             self.myAssertImage(iv, vv)
@@ -1515,7 +1515,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strimage.grow(ext=2)
             self.assertEqual(strimage.shape, (5, 2))
-            self.assertEqual(strimage.h5object.shape, (5, 2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 2))
             vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
             strimage[2:5,:] =  vv4
@@ -1524,7 +1524,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strimage.grow(1, 4)
             self.assertEqual(strimage.shape, (5, 6))
-            self.assertEqual(strimage.h5object.shape, (5, 6))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 6))
 
             vv6 = [[vl[j][i] for i in range(6)] for j in range(5)]
             strimage.write(vv6)
@@ -1548,7 +1548,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(floatimage.h5object.name, 'floatimage')
             self.assertEqual(floatimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.h5object.dtype, 'float64')
-            self.assertEqual(floatimage.h5object.shape, (20, 10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20, 10))
 
 
             vl = [
@@ -1566,7 +1566,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatimage.grow()
             self.assertEqual(floatimage.shape, (21, 10))
-            self.assertEqual(floatimage.h5object.shape, (21, 10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (21, 10))
 
             iv = [[floatimage[j, i] for i in range(10)] for j in range(20)]
             self.myAssertImage(iv, vv)
@@ -1576,7 +1576,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatimage.grow(ext=2)
             self.assertEqual(floatimage.shape, (23, 10))
-            self.assertEqual(floatimage.h5object.shape, (23, 10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23, 10))
             vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
             floatimage[2:23,:] =  vv4
@@ -1585,7 +1585,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatimage.grow(1, 4)
             self.assertEqual(floatimage.shape, (23, 14))
-            self.assertEqual(floatimage.h5object.shape, (23, 14))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23, 14))
 
             vv6 = [[vl[j][i] for i in range(14)] for j in range(23)]
             floatimage.write(vv6)
@@ -1603,7 +1603,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(intimage.h5object.name, 'intimage')
             self.assertEqual(intimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.h5object.dtype, 'uint32')
-            self.assertEqual(intimage.h5object.shape, (0, 30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (0, 30))
 
 
             vl = [
@@ -1621,7 +1621,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intimage.grow()
             self.assertEqual(intimage.shape, (21, 30))
-            self.assertEqual(intimage.h5object.shape, (21, 30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (21, 30))
 
             iv = [[intimage[j, i] for i in range(30)] for j in range(20)]
             self.myAssertImage(iv, vv)
@@ -1631,7 +1631,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intimage.grow(ext=2)
             self.assertEqual(intimage.shape, (23, 30))
-            self.assertEqual(intimage.h5object.shape, (23, 30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23, 30))
             vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
             intimage[2:23,:] =  vv4
@@ -1640,7 +1640,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intimage.grow(1, 4)
             self.assertEqual(intimage.shape, (23, 34))
-            self.assertEqual(intimage.h5object.shape, (23, 34))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23, 34))
 
             vv6 = [[vl[j][i] for i in range(34)] for j in range(23)]
             intimage.write(vv6)
@@ -1761,10 +1761,10 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
             self.assertEqual(strvec.shape, (0, 2, 2))
-            self.assertEqual(strvec.h5object.name, 'strvec')
-            self.assertEqual(strvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
-            self.assertEqual(strvec.h5object.dtype, 'string')
-            self.assertEqual(strvec.h5object.shape, (0, 2, 2))
+            self.assertEqual(strvec.h5object.link.path.name, 'strvec')
+            self.assertEqual(str(strvec.h5object.link.path), '/entry12345/instrument/detector/strvec')
+            # self.assertEqual(strvec.h5object.dtype, 'string')
+            # self.assertEqual(strvec.h5object.dataspace.current_dimensions, (0, 2, 2))
 
             chars = string.ascii_uppercase + string.digits
             vl = [[[''.join(self.__rnd.choice(chars)
@@ -1784,7 +1784,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strvec.grow()
             self.assertEqual(strvec.shape, (4, 2, 2))
-            self.assertEqual(strvec.h5object.shape, (4, 2, 2))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 2, 2))
 
             iv = [[[strvec[k, j, i] for i in range(2)] for j in range(2)] for k in range(3)]
             self.myAssertVector(iv, vv)
@@ -1794,7 +1794,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strvec.grow(2, 3)
             self.assertEqual(strvec.shape, (4, 2, 5))
-            self.assertEqual(strvec.h5object.shape, (4, 2, 5))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 2, 5))
             vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
 
@@ -1804,7 +1804,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             strvec.grow(1, 4)
             self.assertEqual(strvec.shape, (4, 6, 5))
-            self.assertEqual(strvec.h5object.shape, (4, 6, 5))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 6, 5))
 
             vv6 = [[[vl[k][j][i] for i in range(5)] for j in range(6)] for k in range(4)]
             strvec.write(vv6)
@@ -1827,7 +1827,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(floatvec.h5object.name, 'floatvec')
             self.assertEqual(floatvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.h5object.dtype, 'float64')
-            self.assertEqual(floatvec.h5object.shape, (1, 20, 10))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1, 20, 10))
 
 
 
@@ -1847,7 +1847,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatvec.grow()
             self.assertEqual(floatvec.shape, (2, 20, 10))
-            self.assertEqual(floatvec.h5object.shape, (2, 20, 10))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 20, 10))
 
             iv = [[[floatvec[k, j, i] for i in range(10)] for j in range(20)] for k in range(1)]
             self.myAssertVector(iv, vv)
@@ -1857,7 +1857,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatvec.grow(2, 3)
             self.assertEqual(floatvec.shape, (2, 20, 13))
-            self.assertEqual(floatvec.h5object.shape, (2, 20, 13))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 20, 13))
             vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
 
@@ -1867,7 +1867,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             floatvec.grow(1, 4)
             self.assertEqual(floatvec.shape, (2, 24, 13))
-            self.assertEqual(floatvec.h5object.shape, (2, 24, 13))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 24, 13))
 
             vv6 = [[[vl[k][j][i] for i in range(13)] for j in range(24)] for k in range(2)]
             floatvec.write(vv6)
@@ -1891,7 +1891,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(intvec.h5object.name, 'intvec')
             self.assertEqual(intvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
             self.assertEqual(intvec.h5object.dtype, 'uint32')
-            self.assertEqual(intvec.h5object.shape, (0, 2, 30))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (0, 2, 30))
 
 
             vl = [[[self.__rnd.randint(1, 1600)
@@ -1912,7 +1912,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intvec.grow()
             self.assertEqual(intvec.shape, (2, 2, 30))
-            self.assertEqual(intvec.h5object.shape, (2, 2, 30))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 2, 30))
 
             iv = [[[intvec[k, j, i] for i in range(30)] for j in range(2)] for k in range(1)]
             self.myAssertVector(iv, vv)
@@ -1922,7 +1922,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intvec.grow(2, 3)
             self.assertEqual(intvec.shape, (2, 2, 33))
-            self.assertEqual(intvec.h5object.shape, (2, 2, 33))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 2, 33))
             vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
 
@@ -1932,7 +1932,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             intvec.grow(1, 4)
             self.assertEqual(intvec.shape, (2, 6, 33))
-            self.assertEqual(intvec.h5object.shape, (2, 6, 33))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 6, 33))
 
             vv6 = [[[vl[k][j][i] for i in range(33)] for j in range(6)] for k in range(2)]
             intvec.write(vv6)
@@ -2444,7 +2444,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.name, 'atintscalar')
             self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
             self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            self.assertEqual(atintscalar.h5object.shape, (1,))
+            self.assertEqual(atintscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atintscalar.h5object.is_valid, True)
             self.assertEqual(atintscalar.h5object.read(), 0)
             self.assertEqual(atintscalar.h5object[...], 0)
@@ -2463,7 +2463,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.shape, (12,))
+            self.assertEqual(atfloatspec.h5object.dataspace.current_dimensions, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
             self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
@@ -2482,7 +2482,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
             self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.shape, (2, 3))
+            self.assertEqual(atstrimage.h5object.dataspace.current_dimensions, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
             self.myAssertImage(atstrimage.h5object.read(), [['']*3]*2)
             self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
@@ -2504,7 +2504,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object.path,
                              '/entry12345:NXentry@atstrscalar')
             self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            self.assertEqual(atstrscalar.h5object.shape, (1,))
+            self.assertEqual(atstrscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atstrscalar.h5object.is_valid, True)
             self.assertEqual(atstrscalar.h5object.read(), '')
             self.assertEqual(atstrscalar.h5object[...], '')
@@ -2525,7 +2525,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.h5object.name, 'atintspec')
             self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
             self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.shape, (2,))
+            self.assertEqual(atintspec.h5object.dataspace.current_dimensions, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), [0]*2)
             self.assertEqual(list(atintspec.h5object[...]), [0]*2)
@@ -2547,7 +2547,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.path,
                              '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.shape, (3, 2))
+            self.assertEqual(atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), [[0.]*2]*3)
             self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
@@ -2570,7 +2570,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object.path,
                              '/entry12345:NXentry/intscalar@atfloatscalar')
             self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            self.assertEqual(atfloatscalar.h5object.shape, (1,))
+            self.assertEqual(atfloatscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atfloatscalar.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.h5object.read(), 0)
             self.assertEqual(atfloatscalar.h5object[...], 0)
@@ -2592,7 +2592,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.path,
                              '/entry12345:NXentry/intscalar@atstrspec')
             self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.shape, (4,))
+            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), ['']*4)
             self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
@@ -2621,7 +2621,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             at = None
 
-            
+
             atintscalar = attr0["atintscalar"]
             atfloatspec = attr0["atfloatspec"]
             atstrimage = attr0["atstrimage"]
@@ -2646,7 +2646,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.name, 'atintscalar')
             self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
             self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            self.assertEqual(atintscalar.h5object.shape, (1,))
+            self.assertEqual(atintscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atintscalar.h5object.is_valid, True)
             self.assertEqual(atintscalar.h5object.read(), 0)
             self.assertEqual(atintscalar.h5object[...], 0)
@@ -2665,7 +2665,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.shape, (12,))
+            self.assertEqual(atfloatspec.h5object.dataspace.current_dimensions, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
             self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
@@ -2684,7 +2684,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
             self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.shape, (2, 3))
+            self.assertEqual(atstrimage.h5object.dataspace.current_dimensions, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
             self.myAssertImage(atstrimage.h5object.read(), [['']*3]*2)
             self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
@@ -2706,7 +2706,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object.path,
                              '/entry12345:NXentry@atstrscalar')
             self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            self.assertEqual(atstrscalar.h5object.shape, (1,))
+            self.assertEqual(atstrscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atstrscalar.h5object.is_valid, True)
             self.assertEqual(atstrscalar.h5object.read(), '')
             self.assertEqual(atstrscalar.h5object[...], '')
@@ -2727,7 +2727,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.h5object.name, 'atintspec')
             self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
             self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.shape, (2,))
+            self.assertEqual(atintspec.h5object.dataspace.current_dimensions, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), [0]*2)
             self.assertEqual(list(atintspec.h5object[...]), [0]*2)
@@ -2749,7 +2749,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.path,
                              '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.shape, (3, 2))
+            self.assertEqual(atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), [[0.]*2]*3)
             self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
@@ -2771,7 +2771,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object.path,
                              '/entry12345:NXentry/intscalar@atfloatscalar')
             self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            self.assertEqual(atfloatscalar.h5object.shape, (1,))
+            self.assertEqual(atfloatscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atfloatscalar.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.h5object.read(), 0)
             self.assertEqual(atfloatscalar.h5object[...], 0)
@@ -2793,7 +2793,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.path,
                              '/entry12345:NXentry/intscalar@atstrspec')
             self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.shape, (4,))
+            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), ['']*4)
             self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
@@ -2815,7 +2815,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.path,
                              '/entry12345:NXentry/intscalar@atintimage')
             self.assertEqual(atintimage.h5object.dtype, 'int32')
-            self.assertEqual(atintimage.h5object.shape, (3, 2))
+            self.assertEqual(atintimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atintimage.h5object.is_valid, True)
             self.myAssertImage(atintimage.h5object.read(), [[0]*2]*3)
             self.myAssertImage(atintimage.h5object[...], [[0]*2]*3)
@@ -2839,12 +2839,12 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.path,
                              '/entry12345:NXentry/intscalar@atintimage')
             self.assertEqual(atintimage.h5object.dtype, 'uint64')
-            self.assertEqual(atintimage.h5object.shape, (4,))
+            self.assertEqual(atintimage.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atintimage.h5object.is_valid, True)
             self.assertEqual(list(atintimage.h5object.read()), [0]*4)
             self.assertEqual(list(atintimage.h5object[...]), [0]*4)
 
-            
+
             attr2.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -3036,9 +3036,9 @@ class PNINexusWriterTest(unittest.TestCase):
             itvl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
 
             flvl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
-            
+
             atintscalar.write(itvl[0])
-            
+
             self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
@@ -3053,7 +3053,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.name, 'atintscalar')
             self.assertEqual(atintscalar.h5object.path, '/@atintscalar')
             self.assertEqual(atintscalar.h5object.dtype, 'int64')
-            self.assertEqual(atintscalar.h5object.shape, (1,))
+            self.assertEqual(atintscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atintscalar.h5object.is_valid, True)
             self.assertEqual(atintscalar.h5object.read(), itvl[0])
             self.assertEqual(atintscalar.h5object[...], itvl[0])
@@ -3080,9 +3080,9 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), itvl[3])
             self.assertEqual(atintscalar[...], itvl[3])
 
-            
+
             atstrscalar.write(stvl[0])
-            
+
             self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
@@ -3098,7 +3098,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object.path,
                              '/entry12345:NXentry@atstrscalar')
             self.assertEqual(atstrscalar.h5object.dtype, 'string')
-            self.assertEqual(atstrscalar.h5object.shape, (1,))
+            self.assertEqual(atstrscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atstrscalar.h5object.is_valid, True)
             self.assertEqual(atstrscalar.h5object.read(), stvl[0])
             self.assertEqual(atstrscalar.h5object[...], stvl[0])
@@ -3145,7 +3145,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object.path,
                              '/entry12345:NXentry/intscalar@atfloatscalar')
             self.assertEqual(atfloatscalar.h5object.dtype, 'float64')
-            self.assertEqual(atfloatscalar.h5object.shape, (1,))
+            self.assertEqual(atfloatscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(atfloatscalar.h5object.is_valid, True)
             self.assertEqual(atfloatscalar.h5object.read(), flvl[0])
             self.assertEqual(atfloatscalar.h5object[...], flvl[0])
@@ -3173,7 +3173,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), flvl[3])
             self.assertEqual(atfloatscalar[...], flvl[3])
 
-            
+
             atfloatscalar.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -3365,13 +3365,13 @@ class PNINexusWriterTest(unittest.TestCase):
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(4)]
                     for _ in range(10)]
-                    
+
             itvl = [[self.__rnd.randint(1, 16000)  for _ in range(2)] for _ in range(10)]
 
             flvl = [[self.__rnd.uniform(-200.0, 200) for _ in range(12)] for _ in range(10)]
 
             atfloatspec.write(flvl[0])
-            
+
 
             self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
@@ -3387,7 +3387,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             self.assertEqual(atfloatspec.h5object.dtype, 'float32')
-            self.assertEqual(atfloatspec.h5object.shape, (12,))
+            self.assertEqual(atfloatspec.h5object.dataspace.current_dimensions, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[0], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[0], 1e-3)
@@ -3414,7 +3414,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
-            
+
             atfloatspec[1:10] = flvl[4][1:10]
 
             self.myAssertFloatList(list(atfloatspec.read()[1:10]), flvl[4][1:10], 1e-3)
@@ -3432,7 +3432,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             atintspec.write(itvl[0])
 
-            
+
             self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
@@ -3447,7 +3447,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.h5object.name, 'atintspec')
             self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
             self.assertEqual(atintspec.h5object.dtype, 'uint32')
-            self.assertEqual(atintspec.h5object.shape, (2,))
+            self.assertEqual(atintspec.h5object.dataspace.current_dimensions, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), itvl[0])
             self.assertEqual(list(atintspec.h5object[...]), itvl[0])
@@ -3508,12 +3508,12 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.path,
                              '/entry12345:NXentry/intscalar@atstrspec')
             self.assertEqual(atstrspec.h5object.dtype, 'string')
-            self.assertEqual(atstrspec.h5object.shape, (4,))
+            self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), stvl[0])
             self.assertEqual(list(atstrspec.h5object[...]), stvl[0])
 
-            
+
             atstrspec[...] = stvl[1]
 
             self.assertEqual(list(atstrspec.read()), stvl[1])
@@ -3551,8 +3551,8 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            
-            
+
+
             atfloatspec.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -3748,7 +3748,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(3)]
                     for _ in range(2)] for _ in range(10)]
-                    
+
             itvl = [[[self.__rnd.randint(1, 16000)  for _ in range(2)]
                      for _ in range(3)] for _ in range(10)]
 
@@ -3770,9 +3770,10 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage[...], stvl[0])
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
-            self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
-            self.assertEqual(atstrimage.h5object.dtype, 'string')
-            self.assertEqual(atstrimage.h5object.shape, (2, 3))
+            print(dir(atstrimage.h5object.datatype.native_type()))
+            # self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
+            # self.assertEqual(atstrimage.h5object.datatype, 'string')
+            # self.assertEqual(atstrimage.h5object.dataspace.current_dimensions, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
             self.myAssertImage(atstrimage.h5object.read(), stvl[0])
             self.myAssertImage(atstrimage.h5object[...], stvl[0])
@@ -3835,7 +3836,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.path,
                              '/entry12345:NXentry@atfloatimage')
             self.assertEqual(atfloatimage.h5object.dtype, 'float64')
-            self.assertEqual(atfloatimage.h5object.shape, (3, 2))
+            self.assertEqual(atfloatimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), flvl[0])
             self.myAssertImage(atfloatimage.h5object[...], flvl[0])
@@ -3883,7 +3884,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             atintimage.write(itvl[0])
 
-            
+
             self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
@@ -3900,7 +3901,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.path,
                              '/entry12345:NXentry/intscalar@atintimage')
             self.assertEqual(atintimage.h5object.dtype, 'int32')
-            self.assertEqual(atintimage.h5object.shape, (3, 2))
+            self.assertEqual(atintimage.h5object.dataspace.current_dimensions, (3, 2))
             self.assertEqual(atintimage.h5object.is_valid, True)
             self.myAssertImage(atintimage.h5object.read(), itvl[0])
             self.myAssertImage(atintimage.h5object[...], itvl[0])
@@ -3943,7 +3944,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.h5object.read(), itvl[3])
             self.myAssertImage(atintimage.h5object[...], itvl[3])
 
-            
+
             atintimage.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)

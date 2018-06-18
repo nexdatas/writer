@@ -21,7 +21,7 @@
 
 import math
 import os
-import numpy
+import numpy as np
 from pninexus import h5cpp
 from pninexus import nexus
 
@@ -355,7 +355,7 @@ class PNINexusGroup(FileWriter.FTGroup):
                 else:
                     clss = ""
                 if clss:
-                    if isinstance(clss, (list, numpy.ndarray)):
+                    if isinstance(clss, (list, np.ndarray)):
                         clss = clss[0]
                 if clss and clss != 'NXroot':
                     self.path += u":" + str(clss)
@@ -416,6 +416,8 @@ class PNINexusGroup(FileWriter.FTGroup):
         """
 
         dcpl = h5cpp.property.DatasetCreationList()
+        #        shape = shape or [1]
+        #        mshape = [None for _ in shape] or (None,)
         if dfilter:
             dfilter.h5object(dcpl)
             if dfilter.shuffle:
@@ -598,6 +600,7 @@ class PNINexusField(FileWriter.FTField):
         :param dim: size of the grow
         :type dim: :obj:`int`
         """
+        print("%s %s" % (dim, ext))
         self._h5object.extent(dim, ext)
 
     def read(self):
@@ -624,8 +627,9 @@ class PNINexusField(FileWriter.FTField):
         :param o: pni object
         :type o: :obj:`any`
         """
+        if self.shape == (1,) and t == 0:
+            return self._h5object.write(o)
         selection = _slice2selection(t)
-        self._h5object.__setitem__(t, o)
         if selection is None:
             self._h5object.write(o)
         else:
@@ -639,6 +643,8 @@ class PNINexusField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
+        if self.shape == (1,) and t == 0:
+            return self._h5object.read()
         selection = _slice2selection(t)
         if selection is None:
             return self._h5object.read()
@@ -970,7 +976,56 @@ class PNINexusAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
-        self._h5object.__setitem__(t, o)
+        if t is Ellipsis or t == slice(None, None, None) or \
+           t == (slice(None, None, None), slice(None, None, None)) or \
+           (hasattr(o, "__len__") and t == slice(0, len(o), None)):
+            if self.dtype == "string":
+                if isinstance(o, str):
+                    self._h5object.write(unicode(o))
+                else:
+                    dtype = np.unicode_
+                    self._h5object.write(np.array(o, dtype=dtype))
+            else:
+                self._h5object.write(np.array(o, dtype=self.dtype))
+        elif isinstance(t, slice):
+            var = self._h5object.read()
+            if self.dtype is not 'string':
+                var[t] = np.array(o, dtype=self.dtype)
+            else:
+                dtype = np.unicode_
+                var[t] = np.array(o, dtype=dtype)
+                var = var.astype(dtype)
+            try:
+                self._h5object.write(var)
+            except:
+                dtype = np.unicode_
+                tvar = np.array(var, dtype=dtype)
+                self._h5object[0][self.name] = tvar
+
+        elif isinstance(t, tuple):
+            var = self._h5object.read()
+            if self.dtype is not 'string':
+                var[t] = np.array(o, dtype=self.dtype)
+            else:
+                dtype = np.unicode_
+                if hasattr(var, "flatten"):
+                    vv = var.flatten().tolist() + \
+                        np.array(o, dtype=dtype).flatten().tolist()
+                    nt = np.array(vv, dtype=dtype)
+                    var = np.array(var, dtype=nt.dtype)
+                    var[t] = np.array(o, dtype=dtype)
+                elif hasattr(var, "tolist"):
+                    var = var.tolist()
+                    var[t] = np.array(o, dtype=self.dtype).tolist()
+                else:
+                    var[t] = np.array(o, dtype=self.dtype).tolist()
+                var = var.astype(dtype)
+            self._h5object.write(var)
+        else:
+            if isinstance(o, str) or isinstance(o, unicode):
+                self._h5object.write(unicode(o))
+            else:
+                self._h5object.write(np.array(o, dtype=self.dtype))
 
     def __getitem__(self, t):
         """ read attribute value
