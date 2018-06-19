@@ -667,11 +667,39 @@ class PNINexusField(FileWriter.FTField):
         :returns: field data type
         :rtype: :obj:`str`
         """
-        print(dir(self._h5object.datatype))
-        print(self._h5object.datatype.type)
-        print(self._h5object.datatype.size*8)
+        if str(self._h5object.datatype.type) == "FLOAT":
+            if self._h5object.datatype.size == 8:
+                return "float64"
+            elif self._h5object.datatype.size == 4:
+                return "float32"
+            elif self._h5object.datatype.size == 16:
+                return "float128"
+            else:
+                return "float"
+        elif str(self._h5object.datatype.type) == "INTEGER":
+            # print(dir(self._h5object.datatype.native_type()))
+            # print(h5cpp._datatype.Sign)
+            # # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
+            # print(dir(self._h5object.datatype.type.name))
+            # print(self._h5object.datatype.type.names)
+            # print(self._h5object.datatype.size*8)
 
+            
+            if self._h5object.datatype.size == 8:
+                return "int64"
+            elif self._h5object.datatype.size == 4:
+                return "int32"
+            elif self._h5object.datatype.size == 2:
+                return "int16"
+            elif self._h5object.datatype.size == 1:
+                return "int8"
+            elif self._h5object.datatype.size == 16:
+                return "int128"
+            else:
+                return "int"
+            
         return hTp[self._h5object.datatype.type]
+#            
 
     @property
     def shape(self):
@@ -1053,6 +1081,44 @@ class PNINexusAttribute(FileWriter.FTAttribute):
         :returns: attribute data type
         :rtype: :obj:`str`
         """
+    @property
+    def dtype(self):
+        """ field data type
+
+        :returns: field data type
+        :rtype: :obj:`str`
+        """
+        if str(self._h5object.datatype.type) == "FLOAT":
+            if self._h5object.datatype.size == 8:
+                return "float64"
+            elif self._h5object.datatype.size == 4:
+                return "float32"
+            elif self._h5object.datatype.size == 16:
+                return "float128"
+            else:
+                return "float"
+        elif str(self._h5object.datatype.type) == "INTEGER":
+            # print(dir(self._h5object.datatype.native_type()))
+            # print(h5cpp._datatype.Sign)
+            # # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
+            # print(dir(self._h5object.datatype.type.name))
+            # print(self._h5object.datatype.type.names)
+            # print(self._h5object.datatype.size*8)
+
+            
+            if self._h5object.datatype.size == 8:
+                return "int64"
+            elif self._h5object.datatype.size == 4:
+                return "int32"
+            elif self._h5object.datatype.size == 2:
+                return "int16"
+            elif self._h5object.datatype.size == 1:
+                return "int8"
+            elif self._h5object.datatype.size == 16:
+                return "int128"
+            else:
+                return "int"
+            
         return hTp[self._h5object.datatype.type]
 
     @property
@@ -1065,10 +1131,11 @@ class PNINexusAttribute(FileWriter.FTAttribute):
         if hasattr(self._h5object.dataspace, "current_dimensions"):
             return self._h5object.dataspace.current_dimensions
         else:
-            []
+            return (1,)
 
     def reopen(self):
         """ reopen attribute
         """
         self._h5object = self._tparent.h5object.attributes[self.name]
         FileWriter.FTAttribute.reopen(self)
+
