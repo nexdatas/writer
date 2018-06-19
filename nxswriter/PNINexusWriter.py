@@ -416,7 +416,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         """
 
         dcpl = h5cpp.property.DatasetCreationList()
-        #        shape = shape or [1]
+        shape = shape or [1]
         #        mshape = [None for _ in shape] or (None,)
         if dfilter:
             dfilter.h5object(dcpl)
