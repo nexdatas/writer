@@ -125,8 +125,6 @@ hTp = {
     h5cpp.datatype.Float:  "float",
     h5cpp.datatype.kFloat64: "float64",
     h5cpp.datatype.kFloat32: "float32",
-#    h5cpp._datatype.Class.FLOAT: "float64",
-#    h5cpp._datatype.Class.INTEGER: "uint64",
 }
 
 
@@ -289,7 +287,7 @@ class PNINexusFile(FileWriter.FTFile):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
-        print( self._h5object.intent)
+        print(self._h5object.intent)  # ??
         return self._h5object.intent == h5cpp.file.AccessFlags.READONLY
 
     def reopen(self, readonly=False, swmr=False, libver=None):
@@ -316,7 +314,7 @@ class PNINexusFile(FileWriter.FTFile):
             flag = h5cpp.file.AccessFlags.READONLY
         else:
             flag = h5cpp.file.AccessFlags.READWRITE
-        print("S %s " %flag)
+        print("S %s " % flag)  # ??
         self.close()
         self._h5object = h5cpp.file.open(self.name, flag, fapl)
         FileWriter.FTFile.reopen(self)
@@ -348,7 +346,7 @@ class PNINexusGroup(FileWriter.FTGroup):
                     if self.name == ".":
                         self.path = u"/"
                     else:
-                        self.path = u"/"  + self.name
+                        self.path = u"/" + self.name
                 else:
                     if tparent.path.endswith("/"):
                         self.path = tparent.path
@@ -357,7 +355,8 @@ class PNINexusGroup(FileWriter.FTGroup):
                     self.path += self.name
             if ":" not in self.name:
                 if u"NX_class" in [at.name for at in h5object.attributes]:
-                    clss = FileWriter.first(h5object.attributes["NX_class"]).read()
+                    clss = FileWriter.first(
+                        h5object.attributes["NX_class"]).read()
                 else:
                     clss = ""
                 if clss:
@@ -374,8 +373,12 @@ class PNINexusGroup(FileWriter.FTGroup):
         :returns: file tree object
         :rtype: :class:`FTObject`
         """
-        ww = nexus.Path(h5cpp.Path(name))
-        itm = nexus.get_objects(self._h5object, nexus.Path(h5cpp.Path(name)))[0]
+        try:
+            itm = nexus.get_objects(
+                self._h5object, nexus.Path(h5cpp.Path(name)))[0]
+        except:
+            itm = [lk for lk in self._h5object.links
+                   if lk.path.name == name][0]
         if isinstance(itm, h5cpp._node.Dataset):
             el = PNINexusField(itm, self)
         elif isinstance(itm, h5cpp._node.Group):
@@ -423,8 +426,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         dcpl = h5cpp.property.DatasetCreationList()
         shape = shape or [1]
         dataspace = h5cpp.dataspace.Simple(
-            tuple(shape),tuple([h5cpp.dataspace.UNLIMITED]*len(shape)))
-        #        mshape = [None for _ in shape] or (None,)
+            tuple(shape), tuple([h5cpp.dataspace.UNLIMITED] * len(shape)))
         if dfilter:
             dfilter.h5object(dcpl)
             if dfilter.shuffle:
@@ -686,13 +688,12 @@ class PNINexusField(FileWriter.FTField):
             # print(self._h5object.datatype.has_class(h5cpp.datatype.kInt8))
             print(super(h5cpp._datatype.Integer, self._h5object.datatype))
             print(self._h5object.datatype.native_type())
-            print(dir(super(h5cpp._datatype.Datatype, self._h5object.datatype.native_type())))
             # print(h5cpp._datatype.Sign)
-            # # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
+            # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
             # print(dir(self._h5object.datatype.type.name))
             # print(self._h5object.datatype.type.names)
             # print(self._h5object.datatype.size*8)
-            
+
             if self._h5object.datatype.size == 8:
                 return "int64"
             elif self._h5object.datatype.size == 4:
@@ -705,9 +706,9 @@ class PNINexusField(FileWriter.FTField):
                 return "int128"
             else:
                 return "int"
-            
+
         return hTp[self._h5object.datatype.type]
-#            
+#
 
     @property
     def shape(self):
@@ -755,7 +756,6 @@ class PNINexusLink(FileWriter.FTLink):
             self.path += "/"
         self.name = h5object.path.name
         self.path += self.name
-
 
     @property
     def is_valid(self):
@@ -919,14 +919,14 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
             if dtype == 'string':
                 at.write(np.empty(shape, dtype="unicode"))
             else:
-                at.write(np.zeros(shape, dtype=dtype))                
+                at.write(np.zeros(shape, dtype=dtype))
         else:
             at = self._h5object.create(name, pTh[dtype])
             if dtype == 'string':
                 at.write(np.array(u"", dtype="unicode"))
             else:
-                at.write(np.array(0, dtype=dtype))                
-            
+                at.write(np.array(0, dtype=dtype))
+
         return PNINexusAttribute(at, self.parent)
 
     def __len__(self):
@@ -1091,13 +1091,6 @@ class PNINexusAttribute(FileWriter.FTAttribute):
 
     @property
     def dtype(self):
-        """ attribute data type
-
-        :returns: attribute data type
-        :rtype: :obj:`str`
-        """
-    @property
-    def dtype(self):
         """ field data type
 
         :returns: field data type
@@ -1120,7 +1113,6 @@ class PNINexusAttribute(FileWriter.FTAttribute):
             # print(self._h5object.datatype.type.names)
             # print(self._h5object.datatype.size*8)
 
-            
             if self._h5object.datatype.size == 8:
                 return "int64"
             elif self._h5object.datatype.size == 4:
@@ -1133,7 +1125,7 @@ class PNINexusAttribute(FileWriter.FTAttribute):
                 return "int128"
             else:
                 return "int"
-            
+
         return hTp[self._h5object.datatype.type]
 
     @property
@@ -1153,4 +1145,3 @@ class PNINexusAttribute(FileWriter.FTAttribute):
         """
         self._h5object = self._tparent.h5object.attributes[self.name]
         FileWriter.FTAttribute.reopen(self)
-
