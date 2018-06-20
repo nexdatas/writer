@@ -1717,36 +1717,6 @@ class PNINexusWriterTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_pnifield_image_bis(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
-
-        try:
-            # overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
-
-            rt = fl.root()
-
-            strimage = rt.create_field("strimage", "string", [2, 2], [2, 1])
-
-            vv  = [["as", "asd"], ["df","dfd"]]
-            strimage[...] = vv
-
-            strimage.grow()
-            print("EE")
-
-            iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
-            print("EE2")
-            fl.close()
-
-        finally:
-            os.remove(self._fname)
-
-
-
-    # default createfile test
-    # \brief It tests default settings
     def test_pnifield_vec(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
@@ -2372,26 +2342,6 @@ class PNINexusWriterTest(unittest.TestCase):
         finally:
             os.remove(self._fname)
 
-    # default createfile test
-    # \brief It tests default settings
-    def test_pniattributemanager_bis(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
-
-        try:
-            overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
-
-            rt = fl.root()
-            attr0 = rt.attributes
-            atstrimage = attr0.create("atstrimage", "string", [2, 3])
-            atstrimage.read()
-
-        finally:
-            os.remove(self._fname)
-
-            
     # default createfile test
     # \brief It tests default settings
     def test_pniattributemanager(self):
