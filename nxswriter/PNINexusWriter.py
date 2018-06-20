@@ -371,7 +371,6 @@ class PNINexusGroup(FileWriter.FTGroup):
         :rtype: :class:`FTObject`
         """
         ww = nexus.Path(h5cpp.Path(name))
-        print("WW %s" % ww)
         itm = nexus.get_objects(self._h5object, nexus.Path(h5cpp.Path(name)))[0]
         if isinstance(itm, h5cpp._node.Dataset):
             el = PNINexusField(itm, self)
@@ -419,7 +418,6 @@ class PNINexusGroup(FileWriter.FTGroup):
 
         dcpl = h5cpp.property.DatasetCreationList()
         shape = shape or [1]
-        print shape
         dataspace = h5cpp.dataspace.Simple(
             tuple(shape),tuple([h5cpp.dataspace.UNLIMITED]*len(shape)))
         #        mshape = [None for _ in shape] or (None,)
