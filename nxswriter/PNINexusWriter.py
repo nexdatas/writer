@@ -30,11 +30,13 @@ from pninexus import nexus
 from . import FileWriter
 
 
-def _slice2selection(t):
+def _slice2selection(t, shape):
     """ converts slice(s) to selection
 
     :param t: slice tuple
     :type t: :obj:`tuple`
+    :return shape: field shape
+    :type shape: :obj:`list` < :obj:`int` >
     :returns: hyperslab selection
     :rtype: :class:`h5cpp.dataspace.Hyperslab`
     """
@@ -54,29 +56,31 @@ def _slice2selection(t):
     elif isinstance(t, int):
         return h5cpp.dataspace.Hyperslab(
             offset=(t,), block=(1,))
-    elif isinstance(t, list):
+    elif isinstance(t, (list, tuple)):
         offset = []
         block = []
         count = []
         stride = []
-        for tel in t:
+        for it, tel in enumerate(t):
             if isinstance(tel, int):
                 offset.append(tel)
                 block.append(1)
                 count.append(1)
-                stride.append(0)
-            elif isinstance(t, slice):
-                if t.step in [None, 1]:
-                    offset.append(tel.start)
-                    block.append(tel.stop - tel.start)
+                stride.append(1)
+            elif isinstance(tel, slice):
+                start = tel.start if tel.start is not None else 0
+                stop = tel.stop if tel.stop is not None else shape[it]
+                if tel.step in [None, 1]:
+                    offset.append(start)
+                    block.append(stop - start)
                     count.append(1)
-                    stride.append(0)
+                    stride.append(1)
                 else:
-                    offset.append(tel.start)
+                    offset.append(start)
                     block.append(1)
                     count.append(
                         int(math.ceil(
-                            (tel.stop - tel.start) / float(tel.step))))
+                            (stop - start) / float(tel.step))))
                     stride.append(tel.step - 1)
         if len(offset):
             return h5cpp.dataspace.Hyperslab(
@@ -603,7 +607,6 @@ class PNINexusField(FileWriter.FTField):
         :param dim: size of the grow
         :type dim: :obj:`int`
         """
-        print("%s %s" % (dim, ext))
         self._h5object.extent(dim, ext)
 
     def read(self):
@@ -632,7 +635,7 @@ class PNINexusField(FileWriter.FTField):
         """
         if self.shape == (1,) and t == 0:
             return self._h5object.write(o)
-        selection = _slice2selection(t)
+        selection = _slice2selection(t, self.shape)
         if selection is None:
             self._h5object.write(o)
         else:
@@ -648,7 +651,7 @@ class PNINexusField(FileWriter.FTField):
         """
         if self.shape == (1,) and t == 0:
             return self._h5object.read()
-        selection = _slice2selection(t)
+        selection = _slice2selection(t, self.shape)
         if selection is None:
             return self._h5object.read()
         else:
@@ -963,7 +966,7 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return True
+        return self._tparent.h5object.is_valid
 
 
 class PNINexusAttribute(FileWriter.FTAttribute):

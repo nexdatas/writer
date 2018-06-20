@@ -1511,10 +1511,7 @@ class PNINexusWriterTest(unittest.TestCase):
             strimage.grow()
             self.assertEqual(strimage.shape, (3, 2))
             self.assertEqual(strimage.h5object.dataspace.current_dimensions, (3, 2))
-            print("EE")
-
             iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
-            print("EE2")
             self.myAssertImage(iv, vv)
 
             strimage[2,:] = [vl[2][0], vl[2][1]]
@@ -3259,7 +3256,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(dt.is_valid, True)
             self.assertEqual(dt.h5object.is_valid, True)
             # ?? self.assertEqual(attr2.is_valid, False)
-            self.assertEqual(attr2.is_valid, True)
+            self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
             self.assertEqual(atintimage.h5object.is_valid, False)
             self.assertEqual(atfloatscalar.is_valid, False)
@@ -4079,12 +4076,15 @@ class PNINexusWriterTest(unittest.TestCase):
 
             fl.reopen()
             self.assertEqual(fl.name, self._fname)
-            self.assertEqual(fl.path, None)
+            self.assertEqual(fl.path,
+                             "%s/%s" % (
+                                 os.getcwd(),
+                                 "PNINexusWriterTesttest_pniattribute_image.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
             self.assertEqual(fl.readonly, False)
-            self.assertEqual(fl.h5object.readonly, False)
+            # self.assertEqual(fl.h5object.readonly, False)
 
             fl.close()
 
