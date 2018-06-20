@@ -1543,16 +1543,15 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strimage)
             self.assertEqual(len(attrs), 0)
 
-
             self.assertTrue(isinstance(floatimage, PNINexusWriter.PNINexusField))
             self.assertTrue(isinstance(floatimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.dtype, 'float64')
             self.assertEqual(floatimage.shape, (20, 10))
-            self.assertEqual(floatimage.h5object.name, 'floatimage')
-            self.assertEqual(floatimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
-            self.assertEqual(floatimage.h5object.dtype, 'float64')
+            self.assertEqual(floatimage.h5object.link.path.name, 'floatimage')
+            self.assertEqual(str(floatimage.h5object.link.path), '/entry12345/instrument/detector/floatimage')
+            # self.assertEqual(floatimage.h5object.dtype, 'float64')
             self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20, 10))
 
 
@@ -1857,9 +1856,9 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
             self.assertEqual(floatvec.shape, (1, 20, 10))
-            self.assertEqual(floatvec.h5object.name, 'floatvec')
-            self.assertEqual(floatvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
-            self.assertEqual(floatvec.h5object.dtype, 'float64')
+            self.assertEqual(floatvec.h5object.link.path.name, 'floatvec')
+            self.assertEqual(str(floatvec.h5object.link.path), '/entry12345/instrument/detector/floatvec')
+            # self.assertEqual(floatvec.h5object.dtype, 'float64')
             self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1, 20, 10))
 
 
@@ -1875,7 +1874,7 @@ class PNINexusWriterTest(unittest.TestCase):
             vv2 = [[[vl[k][j+2][i+2] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
-            self.myAssertVector([floatvec[...]], vv2)
+            self.myAssertVector(floatvec[...], vv2)
             floatvec[...] = vv
 
             floatvec.grow()
