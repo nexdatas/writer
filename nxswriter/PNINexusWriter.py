@@ -285,6 +285,7 @@ class PNINexusFile(FileWriter.FTFile):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
+        print( self._h5object.intent)
         return self._h5object.intent == h5cpp.file.AccessFlags.READONLY
 
     def reopen(self, readonly=False, swmr=False, libver=None):
@@ -311,7 +312,8 @@ class PNINexusFile(FileWriter.FTFile):
             flag = h5cpp.file.AccessFlags.READONLY
         else:
             flag = h5cpp.file.AccessFlags.READWRITE
-
+        print("S %s " %flag)
+        self.close()
         self._h5object = h5cpp.file.open(self.name, flag, fapl)
         FileWriter.FTFile.reopen(self)
 
@@ -417,6 +419,9 @@ class PNINexusGroup(FileWriter.FTGroup):
 
         dcpl = h5cpp.property.DatasetCreationList()
         shape = shape or [1]
+        print shape
+        dataspace = h5cpp.dataspace.Simple(
+            tuple(shape),tuple([h5cpp.dataspace.UNLIMITED]*len(shape)))
         #        mshape = [None for _ in shape] or (None,)
         if dfilter:
             dfilter.h5object(dcpl)
@@ -425,9 +430,9 @@ class PNINexusGroup(FileWriter.FTGroup):
                 sfilter(dcpl)
         if chunk is None and shape is not None:
             chunk = [(dm if dm != 0 else 1) for dm in shape]
-        field = nexus.FieldFactory.create(
-            self._h5object, name, type_code, shape,
-            chunk=chunk, dcpl=dcpl)
+        field = nexus.FieldFactory.create_chunked_(
+            self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
+            chunk, dcpl=dcpl)
         return PNINexusField(field, self)
 
     @property
@@ -793,6 +798,7 @@ class PNINexusLink(FileWriter.FTLink):
         if not fpath:
             fpath = self.getfilename(self)
         return "%s:/%s" % (fpath, opath)
+
     def reopen(self):
         """ reopen field
         """
@@ -906,13 +912,19 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
                 raise Exception("Attribute %s exists" % name)
         shape = shape or []
         if shape:
-            return PNINexusAttribute(
-                self._h5object.create(
-                    name, pTh[dtype], shape), self.parent)
+            at = self._h5object.create(name, pTh[dtype], shape)
+            if dtype == 'string':
+                at.write(np.empty(shape, dtype="unicode"))
+            else:
+                at.write(np.zeros(shape, dtype=dtype))                
         else:
-            return PNINexusAttribute(
-                self._h5object.create(
-                    name, pTh[dtype]), self.parent)
+            at = self._h5object.create(name, pTh[dtype])
+            if dtype == 'string':
+                at.write(np.array(u"", dtype="unicode"))
+            else:
+                at.write(np.array(0, dtype=dtype))                
+            
+        return PNINexusAttribute(at, self.parent)
 
     def __len__(self):
         """ number of attributes
