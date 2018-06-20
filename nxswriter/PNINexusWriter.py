@@ -680,13 +680,15 @@ class PNINexusField(FileWriter.FTField):
             else:
                 return "float"
         elif str(self._h5object.datatype.type) == "INTEGER":
-            # print(dir(self._h5object.datatype.native_type()))
+            # print(self._h5object.datatype.has_class(h5cpp.datatype.kInt8))
+            print(super(h5cpp._datatype.Integer, self._h5object.datatype))
+            print(self._h5object.datatype.native_type())
+            print(dir(super(h5cpp._datatype.Datatype, self._h5object.datatype.native_type())))
             # print(h5cpp._datatype.Sign)
             # # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
             # print(dir(self._h5object.datatype.type.name))
             # print(self._h5object.datatype.type.names)
             # print(self._h5object.datatype.size*8)
-
             
             if self._h5object.datatype.size == 8:
                 return "int64"
