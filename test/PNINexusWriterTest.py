@@ -182,22 +182,22 @@ class PNINexusWriterTest(unittest.TestCase):
         try:
             fl = PNINexusWriter.create_file(self._fname)
             fl.close()
-#            fl = PNINexusWriter.create_file(self._fname, True)
-#            fl.close()
+            fl = PNINexusWriter.create_file(self._fname, True)
+            fl.close()
 
-            # fl = nexus.open_file(self._fname)
-            # f = fl.root()
-            # self.assertEqual(6, len(f.attributes))
-            # for at in f.attributes:
-            #     print at.name, at.read(), at.datatype
-            #     at.close()
-            # self.assertEqual(
-            #     f.attributes["file_name"][...],
-            #     self._fname)
-            # self.assertTrue(f.attributes["NX_class"][...], "NXroot")
-            # self.assertEqual(f.links.size, 0)
-            # f.close()
-            # fl.close()
+            fl = nexus.open_file(self._fname)
+            f = fl.root()
+            self.assertEqual(6, len(f.attributes))
+            for at in f.attributes:
+                print at.name, at.read(), at.datatype
+                at.close()
+            self.assertEqual(
+                f.attributes["file_name"][...],
+                self._fname)
+            self.assertTrue(f.attributes["NX_class"][...], "NXroot")
+            self.assertEqual(f.links.size, 0)
+            f.close()
+            fl.close()
 
             fl = PNINexusWriter.open_file(self._fname, readonly=True)
             f = fl.root()
@@ -4039,7 +4039,10 @@ class PNINexusWriterTest(unittest.TestCase):
 
             fl.reopen(True)
             self.assertEqual(fl.name, self._fname)
-            self.assertEqual(fl.path, None)
+            self.assertEqual(fl.path,
+                             "%s/%s" % (
+                                 os.getcwd(),
+                                 "PNINexusWriterTesttest_pniattribute_image.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)

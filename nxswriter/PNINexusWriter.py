@@ -269,7 +269,11 @@ class PNINexusFile(FileWriter.FTFile):
         """ close file
         """
         FileWriter.FTFile.close(self)
-        self._h5object.close()
+        # workaround for h5cpp bug ??
+        try:
+            self._h5object.close()
+        except:
+            pass
 
     @property
     def is_valid(self):
@@ -461,7 +465,11 @@ class PNINexusGroup(FileWriter.FTGroup):
         """ close group
         """
         FileWriter.FTGroup.close(self)
-        self._h5object.close()
+        # workaround for h5cpp bug ??
+        try:
+            self._h5object.close()
+        except:
+            pass
 
     def reopen(self):
         """ reopen group
@@ -583,7 +591,11 @@ class PNINexusField(FileWriter.FTField):
         """ close field
         """
         FileWriter.FTField.close(self)
-        self._h5object.close()
+        # workaround for h5cpp bug ??
+        try:
+            self._h5object.close()
+        except:
+            pass
 
     def reopen(self):
         """ reopen field
@@ -993,7 +1005,11 @@ class PNINexusAttribute(FileWriter.FTAttribute):
         """ close attribute
         """
         FileWriter.FTAttribute.close(self)
-        self._h5object.close()
+        try:
+            # workaround for h5cpp bug ??
+            self._h5object.close()
+        except:
+            pass
 
     def read(self):
         """ read attribute value
