@@ -138,7 +138,7 @@ def open_file(filename, readonly=False, libver=None):
     :param libver: library version: 'lastest' or 'earliest'
     :type libver: :obj:`str`
     :returns: file object
-    :rtype: :class:`PNINexusFile`
+    :rtype: :class:`H5CppFile`
     """
     fapl = h5cpp.property.FileAccessList()
     flag = h5cpp.file.AccessFlags.READONLY if readonly \
@@ -148,7 +148,7 @@ def open_file(filename, readonly=False, libver=None):
             h5cpp.property.LibVersion.LATEST,
             h5cpp.property.LibVersion.LATEST)
 
-    return PNINexusFile(h5cpp.file.open(filename, flag, fapl), filename)
+    return H5CppFile(h5cpp.file.open(filename, flag, fapl), filename)
 
 
 def create_file(filename, overwrite=False, libver=None):
@@ -161,7 +161,7 @@ def create_file(filename, overwrite=False, libver=None):
     :param libver: library version: 'lastest' or 'earliest'
     :type libver: :obj:`str`
     :returns: file object
-    :rtype: :class:`PNINexusFile`
+    :rtype: :class:`H5CppFile`
     """
     fcpl = h5cpp.property.FileCreationList()
     fapl = h5cpp.property.FileAccessList()
@@ -174,21 +174,21 @@ def create_file(filename, overwrite=False, libver=None):
     #
     # workaround for python-pni #48
     #
-    # return PNINexusFile(nexus.create_file(filename, flag, fcpl, fapl),
+    # return H5CppFile(nexus.create_file(filename, flag, fcpl, fapl),
     #     filename)
     fl = h5cpp.file.create(filename, flag, fcpl, fapl)
     rt = fl.root()
     attrs = rt.attributes
     attrs.create("file_time", pTh["unicode"]).write(
-        unicode(PNINexusFile.currenttime()))
+        unicode(H5CppFile.currenttime()))
     attrs.create("HDF5_version", pTh["unicode"]).write(u"")
     attrs.create("NX_class", pTh["unicode"]).write(u"NXroot")
     attrs.create("NeXus_version", pTh["unicode"]).write(u"4.3.0")
     attrs.create("file_name", pTh["unicode"]).write(unicode(filename))
     attrs.create("file_update_time", pTh["unicode"]).write(
-        unicode(PNINexusFile.currenttime()))
+        unicode(H5CppFile.currenttime()))
     rt.close()
-    return PNINexusFile(fl, filename)
+    return H5CppFile(fl, filename)
 
 
 def link(target, parent, name):
@@ -201,14 +201,14 @@ def link(target, parent, name):
     :param name: link name
     :type name: :obj:`str`
     :returns: link object
-    :rtype: :class:`PNINexusLink`
+    :rtype: :class:`H5CppLink`
     """
     if ":/" in target:
         filename, path = target.split(":/")
     else:
         filename, path = None, target
 
-    localfname = PNINexusLink.getfilename(parent)
+    localfname = H5CppLink.getfilename(parent)
     if filename and \
        os.path.abspath(filename) != os.path.abspath(localfname):
         h5cpp.node.link(target_file=filename,
@@ -222,7 +222,7 @@ def link(target, parent, name):
 
     lks = parent.h5object.links
     lk = [e for e in lks if str(e.path.name) == name][0]
-    el = PNINexusLink(lk, parent)
+    el = H5CppLink(lk, parent)
     return el
 
 
@@ -233,10 +233,10 @@ def get_links(parent):
     :type parent: :class:`FTObject`
     :returns: list of link objects
     :returns: link object
-    :rtype: :obj: `list` <:class:`PNINexusLink`>
+    :rtype: :obj: `list` <:class:`H5CppLink`>
     """
     lks = parent.h5object.links
-    links = [PNINexusLink(e, parent) for e in lks]
+    links = [H5CppLink(e, parent) for e in lks]
     return links
 
 
@@ -244,12 +244,12 @@ def deflate_filter():
     """ create deflate filter
 
     :returns: deflate filter object
-    :rtype: :class:`PNINexusDeflate`
+    :rtype: :class:`H5CppDeflate`
     """
-    return PNINexusDeflate(h5cpp.filter.Deflate())
+    return H5CppDeflate(h5cpp.filter.Deflate())
 
 
-class PNINexusFile(FileWriter.FTFile):
+class H5CppFile(FileWriter.FTFile):
 
     """ file tree file
     """
@@ -272,9 +272,9 @@ class PNINexusFile(FileWriter.FTFile):
         """ root object
 
         :returns: parent object
-        :rtype: :class:`PNINexusGroup`
+        :rtype: :class:`H5CppGroup`
         """
-        return PNINexusGroup(self._h5object.root(), self)
+        return H5CppGroup(self._h5object.root(), self)
 
     def flush(self):
         """ flash the data
@@ -340,7 +340,7 @@ class PNINexusFile(FileWriter.FTFile):
         FileWriter.FTFile.reopen(self)
 
 
-class PNINexusGroup(FileWriter.FTGroup):
+class H5CppGroup(FileWriter.FTGroup):
 
     """ file tree group
     """
@@ -362,7 +362,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         if hasattr(h5object, "link"):
             self.name = h5object.link.path.name
             if tparent and tparent.path:
-                if isinstance(tparent, PNINexusFile):
+                if isinstance(tparent, H5CppFile):
                     if self.name == ".":
                         self.path = u"/"
                     else:
@@ -402,20 +402,20 @@ class PNINexusGroup(FileWriter.FTGroup):
             #     self._h5object, nexus.Path(h5cpp.Path(name)))[0]
             #
             if self._h5object.has_group(h5cpp.Path(name)):
-                return PNINexusGroup(
+                return H5CppGroup(
                     self._h5object.get_group(h5cpp.Path(name)), self)
             elif self._h5object.has_dataset(h5cpp.Path(name)):
-                return PNINexusField(
+                return H5CppField(
                     self._h5object.get_dataset(h5cpp.Path(name)), self)
             elif self._h5object.attributes.exists(name):
-                return PNINexusAttribute(self._h5object.attributes[name], self)
+                return H5CppAttribute(self._h5object.attributes[name], self)
             else:
-                return PNINexusLink([lk for lk in self._h5object.links
+                return H5CppLink([lk for lk in self._h5object.links
                                    if lk.path.name == name][0], self)
 
         except Exception as e:
             print(e)
-            return PNINexusLink([lk for lk in self._h5object.links
+            return H5CppLink([lk for lk in self._h5object.links
                                if lk.path.name == name][0], self)
                 
     def create_group(self, n, nxclass=""):
@@ -426,12 +426,12 @@ class PNINexusGroup(FileWriter.FTGroup):
         :param nxclass: group type
         :type nxclass: :obj:`str`
         :returns: file tree group
-        :rtype: :class:`PNINexusGroup`
+        :rtype: :class:`H5CppGroup`
         """
         gr = h5cpp.node.Group(self._h5object, n)
         gr.attributes.create("NX_class", pTh["unicode"]).write(unicode(nxclass))
-        return PNINexusGroup(gr, self)
-        # return PNINexusGroup(
+        return H5CppGroup(gr, self)
+        # return H5CppGroup(
         #     nexus.BaseClassFactory.create(self._h5object, n, nxclass),
         #     self)
 
@@ -448,9 +448,9 @@ class PNINexusGroup(FileWriter.FTGroup):
         :param chunk: chunk
         :type chunk: :obj:`list` < :obj:`int` >
         :param dfilter: filter deflater
-        :type dfilter: :class:`PNINexusDeflate`
+        :type dfilter: :class:`H5CppDeflate`
         :returns: file tree field
-        :rtype: :class:`PNINexusField`
+        :rtype: :class:`H5CppField`
         """
 
         dcpl = h5cpp.property.DatasetCreationList()
@@ -474,7 +474,7 @@ class PNINexusGroup(FileWriter.FTGroup):
             self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
             dcpl=dcpl)
         
-        return PNINexusField(field, self)
+        return H5CppField(field, self)
 
     @property
     def size(self):
@@ -490,9 +490,9 @@ class PNINexusGroup(FileWriter.FTGroup):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype: :class:`PNINexusAttributeManager`
+        :rtype: :class:`H5CppAttributeManager`
         """
-        return PNINexusAttributeManager(self._h5object.attributes, self)
+        return H5CppAttributeManager(self._h5object.attributes, self)
 
     def close(self):
         """ close group
@@ -507,7 +507,7 @@ class PNINexusGroup(FileWriter.FTGroup):
     def reopen(self):
         """ reopen group
         """
-        if isinstance(self._tparent, PNINexusFile):
+        if isinstance(self._tparent, H5CppFile):
             self._h5object = self._tparent.h5object.root()
         else:
             try:
@@ -539,7 +539,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         return [
             lk.path.name for lk in self._h5object.links]
 
-    class PNINexusGroupIter(object):
+    class H5CppGroupIter(object):
 
         def __init__(self, group):
             """ constructor
@@ -578,7 +578,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         :returns: attribute iterator
         :rtype: :class:`H5PYAttrIter`
         """
-        return self.PNINexusGroupIter(self)
+        return self.H5CppGroupIter(self)
 
     @property
     def is_valid(self):
@@ -590,7 +590,7 @@ class PNINexusGroup(FileWriter.FTGroup):
         return self._h5object.is_valid
 
 
-class PNINexusField(FileWriter.FTField):
+class H5CppField(FileWriter.FTField):
 
     """ file tree file
     """
@@ -621,9 +621,9 @@ class PNINexusField(FileWriter.FTField):
         """ return the attribute manager
 
         :returns: attribute manager
-        :rtype: :class:`PNINexusAttributeManager`
+        :rtype: :class:`H5CppAttributeManager`
         """
-        return PNINexusAttributeManager(self._h5object.attributes, self)
+        return H5CppAttributeManager(self._h5object.attributes, self)
 
     def close(self):
         """ close field
@@ -788,7 +788,7 @@ class PNINexusField(FileWriter.FTField):
         return self._h5object.dataspace.size
 
 
-class PNINexusLink(FileWriter.FTLink):
+class H5CppLink(FileWriter.FTLink):
 
     """ file tree link
     """
@@ -838,7 +838,7 @@ class PNINexusLink(FileWriter.FTLink):
             par = obj.parent
             if par is None:
                 break
-            if isinstance(par, PNINexusFile):
+            if isinstance(par, H5CppFile):
                 filename = par.name
                 break
             else:
@@ -877,7 +877,7 @@ class PNINexusLink(FileWriter.FTLink):
         self._h5object = None
 
 
-class PNINexusDeflate(FileWriter.FTDeflate):
+class H5CppDeflate(FileWriter.FTDeflate):
 
     """ file tree deflate
     """
@@ -930,7 +930,7 @@ class PNINexusDeflate(FileWriter.FTDeflate):
     shuffle = property(__getshuffle, __setshuffle)
 
 
-class PNINexusAttributeManager(FileWriter.FTAttributeManager):
+class H5CppAttributeManager(FileWriter.FTAttributeManager):
 
     """ file tree attribute
     """
@@ -961,7 +961,7 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
         :param overwrite: overwrite flag
         :type overwrite: :obj:`bool`
         :returns: attribute object
-        :rtype: :class:`PNINexusAtribute`
+        :rtype: :class:`H5CppAtribute`
         """
         names = [at.name for at in self._h5object]
         if name in names:
@@ -983,7 +983,7 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
             else:
                 at.write(np.array(0, dtype=dtype))
 
-        return PNINexusAttribute(at, self.parent)
+        return H5CppAttribute(at, self.parent)
 
     def __len__(self):
         """ number of attributes
@@ -1001,7 +1001,7 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
         :returns: attribute object
         :rtype: :class:`FTAtribute`
         """
-        return PNINexusAttribute(
+        return H5CppAttribute(
             self._h5object.__getitem__(name), self.parent)
 
     def close(self):
@@ -1025,7 +1025,7 @@ class PNINexusAttributeManager(FileWriter.FTAttributeManager):
         return self._tparent.h5object.is_valid
 
 
-class PNINexusAttribute(FileWriter.FTAttribute):
+class H5CppAttribute(FileWriter.FTAttribute):
 
     """ file tree attribute
     """

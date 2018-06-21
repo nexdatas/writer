@@ -30,7 +30,7 @@ import string
 import numpy
 
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNINexusWriter as PNINexusWriter
+import nxswriter.H5CppWriter as H5CppWriter
 
 
 from pninexus import h5cpp
@@ -83,7 +83,7 @@ class testwriter(object):
 
 
 # test fixture
-class PNINexusWriterTest(unittest.TestCase):
+class H5CppWriterTest(unittest.TestCase):
 
     # constructor
     # \param methodName name of the test method
@@ -180,9 +180,9 @@ class PNINexusWriterTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
         try:
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
             fl.close()
-            fl = PNINexusWriter.create_file(self._fname, True)
+            fl = H5CppWriter.create_file(self._fname, True)
             fl.close()
 
             fl = h5cpp.file.open(self._fname)
@@ -199,7 +199,7 @@ class PNINexusWriterTest(unittest.TestCase):
             f.close()
             fl.close()
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -229,13 +229,13 @@ class PNINexusWriterTest(unittest.TestCase):
             fl.close()
 
             self.myAssertRaise(
-                Exception, PNINexusWriter.create_file, self._fname)
+                Exception, H5CppWriter.create_file, self._fname)
 
             self.myAssertRaise(
-                Exception, PNINexusWriter.create_file, self._fname,
+                Exception, H5CppWriter.create_file, self._fname,
                 False)
 
-            fl2 = PNINexusWriter.create_file(self._fname, overwrite=True)
+            fl2 = H5CppWriter.create_file(self._fname, overwrite=True)
             fl2.close()
         finally:
             os.remove(self._fname)
@@ -259,15 +259,15 @@ class PNINexusWriterTest(unittest.TestCase):
             rt = nxfl.root()
             attrs = rt.attributes
             attrs.create("file_time", h5cpp.datatype.kVariableString).write(
-                unicode(PNINexusWriter.PNINexusFile.currenttime()))
+                unicode(H5CppWriter.H5CppFile.currenttime()))
             attrs.create("HDF5_version", h5cpp.datatype.kVariableString).write(u"")
             attrs.create("NX_class", h5cpp.datatype.kVariableString).write(u"NXroot")
             attrs.create("NeXus_version", h5cpp.datatype.kVariableString).write(u"4.3.0")
             attrs.create("file_name", h5cpp.datatype.kVariableString).write(
                 unicode(self._fname))
             attrs.create("file_update_time", h5cpp.datatype.kVariableString).write(
-                unicode(PNINexusWriter.PNINexusFile.currenttime()))
-            fl = PNINexusWriter.PNINexusFile(nxfl, self._fname)
+                unicode(H5CppWriter.H5CppFile.currenttime()))
+            fl = H5CppWriter.H5CppFile(nxfl, self._fname)
             self.assertTrue(
                 isinstance(fl, FileWriter.FTFile))
 
@@ -275,7 +275,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pnifile.h5"))
+                                 "H5CppWriterTesttest_pnifile.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
 
@@ -308,7 +308,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pnifile.h5"))
+                                 "H5CppWriterTesttest_pnifile.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -322,7 +322,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pnifile.h5"))
+                                 "H5CppWriterTesttest_pnifile.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -337,7 +337,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -363,7 +363,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -372,10 +372,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -396,30 +396,30 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            lkintimage = PNINexusWriter.link(
+            lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = PNINexusWriter.link(
+            lkfloatvec = H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = PNINexusWriter.link(
+            lkintspec = H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = PNINexusWriter.link(
+            lkdet = H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = PNINexusWriter.link(
+            lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
 
             attr0 = rt.attributes
             attr1 = entry.attributes
 
-            self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
 
             self.assertTrue(
-                isinstance(rt, PNINexusWriter.PNINexusGroup))
+                isinstance(rt, H5CppWriter.H5CppGroup))
             self.assertEqual(rt.name, ".")
             self.assertEqual(rt.path, "/")
             self.assertEqual(
@@ -428,7 +428,7 @@ class PNINexusWriterTest(unittest.TestCase):
             attr = rt.attributes
             self.assertEqual(attr["NX_class"][...], "NXroot")
             self.assertTrue(
-                isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+                isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(
                 fl.h5object.root().link.path,
                 rt.h5object.link.path)
@@ -444,7 +444,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 print rr.name
 
             self.assertTrue(
-                isinstance(entry, PNINexusWriter.PNINexusGroup))
+                isinstance(entry, H5CppWriter.H5CppGroup))
             self.assertEqual(entry.name, "entry12345")
             self.assertEqual(entry.path, "/entry12345:NXentry")
             # self.assertEqual(entry.path, "/entry12345")
@@ -453,7 +453,7 @@ class PNINexusWriterTest(unittest.TestCase):
             attr = entry.attributes
             self.assertEqual(attr["NX_class"][...], "NXentry")
             self.assertTrue(
-                isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+                isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(entry.is_valid, True)
             self.assertEqual(entry.h5object.is_valid, True)
             self.assertEqual(entry.parent, rt)
@@ -467,7 +467,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(
-                isinstance(nt, PNINexusWriter.PNINexusGroup))
+                isinstance(nt, H5CppWriter.H5CppGroup))
             self.assertEqual(nt.name, "notype")
             self.assertEqual(nt.path, "/notype")
 
@@ -476,7 +476,7 @@ class PNINexusWriterTest(unittest.TestCase):
             attr = nt.attributes
             self.assertEqual(attr["NX_class"][...], "")
             self.assertTrue(
-                isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+                isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(nt.is_valid, True)
             self.assertEqual(nt.h5object.is_valid, True)
             self.assertEqual(nt.parent, rt)
@@ -485,7 +485,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(
-                isinstance(ins, PNINexusWriter.PNINexusGroup))
+                isinstance(ins, H5CppWriter.H5CppGroup))
             self.assertEqual(ins.name, "instrument")
             self.assertEqual(
                 ins.path, "/entry12345:NXentry/instrument:NXinstrument")
@@ -494,7 +494,7 @@ class PNINexusWriterTest(unittest.TestCase):
             attr = ins.attributes
             self.assertEqual(attr["NX_class"][...], "NXinstrument")
             self.assertTrue(
-                isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+                isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(ins.is_valid, True)
             self.assertEqual(ins.h5object.is_valid, True)
             self.assertEqual(ins.parent, entry)
@@ -514,7 +514,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             ins_op = entry.open("instrument")
             self.assertTrue(
-                isinstance(ins_op, PNINexusWriter.PNINexusGroup))
+                isinstance(ins_op, H5CppWriter.H5CppGroup))
             self.assertEqual(ins_op.name, "instrument")
             self.assertEqual(
                 ins_op.path, "/entry12345:NXentry/instrument:NXinstrument")
@@ -523,7 +523,7 @@ class PNINexusWriterTest(unittest.TestCase):
             attr = ins_op.attributes
             self.assertEqual(attr["NX_class"][...], "NXinstrument")
             self.assertTrue(
-                isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+                isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(ins_op.is_valid, True)
             self.assertEqual(ins_op.h5object.is_valid, True)
             self.assertEqual(ins_op.parent, entry)
@@ -542,7 +542,7 @@ class PNINexusWriterTest(unittest.TestCase):
                                         "intspec", "strspec"]))
 
             self.assertTrue(
-                isinstance(det, PNINexusWriter.PNINexusGroup))
+                isinstance(det, H5CppWriter.H5CppGroup))
             self.assertEqual(det.name, "detector")
             self.assertEqual(
                 det.path,
@@ -553,7 +553,7 @@ class PNINexusWriterTest(unittest.TestCase):
             attr = det.attributes
             self.assertEqual(attr["NX_class"][...], "NXdetector")
             self.assertTrue(
-                isinstance(attr, PNINexusWriter.PNINexusAttributeManager))
+                isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(det.is_valid, True)
             self.assertEqual(det.h5object.is_valid, True)
             self.assertEqual(det.parent, ins)
@@ -576,42 +576,42 @@ class PNINexusWriterTest(unittest.TestCase):
                 set(['strimage', 'intvec', 'floatimage',
                      'floatvec', 'intimage', 'strvec']))
 
-            self.assertTrue(isinstance(strscalar, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
             self.assertEqual(strscalar.shape, (1,))
 
-            self.assertTrue(isinstance(floatscalar, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
             self.assertEqual(floatscalar.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar.dtype, 'float64')
             self.assertEqual(floatscalar.shape, (1,))
 
-            self.assertTrue(isinstance(intscalar, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intscalar.h5object,  h5cpp._node.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
             self.assertEqual(intscalar.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar.dtype, 'uint64')
             self.assertEqual(intscalar.shape, (1,))
 
-            self.assertTrue(isinstance(strspec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strspec.h5object,  h5cpp._node.Dataset))
             self.assertEqual(strspec.name, 'strspec')
             self.assertEqual(strspec.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec.dtype, 'string')
             self.assertEqual(strspec.shape, (10,))
 
-            self.assertTrue(isinstance(floatspec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatspec.h5object,  h5cpp._node.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
             self.assertEqual(floatspec.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
 
-            self.assertTrue(isinstance(intspec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intspec.h5object,  h5cpp._node.Dataset))
             self.assertEqual(intspec.name, 'intspec')
             self.assertEqual(intspec.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
@@ -619,21 +619,21 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(intspec.shape, (30,))
 
 
-            self.assertTrue(isinstance(strimage, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strimage.h5object,  h5cpp._node.Dataset))
             self.assertEqual(strimage.name, 'strimage')
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage.dtype, 'string')
             self.assertEqual(strimage.shape, (2, 2))
 
-            self.assertTrue(isinstance(floatimage, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatimage.h5object,  h5cpp._node.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage.dtype, 'float64')
             self.assertEqual(floatimage.shape, (20, 10))
 
-            self.assertTrue(isinstance(intimage, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intimage.h5object,  h5cpp._node.Dataset))
             self.assertEqual(intimage.name, 'intimage')
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
@@ -644,21 +644,21 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strvec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strvec.name, 'strvec')
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec.dtype, 'string')
             self.assertEqual(strvec.shape, (0, 2, 2))
 
-            self.assertTrue(isinstance(floatvec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
             self.assertEqual(floatvec.shape, (1, 20, 10))
 
-            self.assertTrue(isinstance(intvec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec.name, 'intvec')
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
@@ -680,42 +680,42 @@ class PNINexusWriterTest(unittest.TestCase):
             intvec_op = det.open("intvec")
 
 
-            self.assertTrue(isinstance(strscalar_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strscalar_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strscalar_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar_op.name, 'strscalar')
             self.assertEqual(strscalar_op.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar_op.dtype, 'string')
             self.assertEqual(strscalar_op.shape, (1,))
 
-            self.assertTrue(isinstance(floatscalar_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatscalar_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatscalar_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatscalar_op.name, 'floatscalar')
             self.assertEqual(floatscalar_op.path, '/entry12345:NXentry/floatscalar')
             self.assertEqual(floatscalar_op.dtype, 'float64')
             self.assertEqual(floatscalar_op.shape, (1,))
 
-            self.assertTrue(isinstance(intscalar_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intscalar_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intscalar_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intscalar_op.name, 'intscalar')
             self.assertEqual(intscalar_op.path, '/entry12345:NXentry/intscalar')
             self.assertEqual(intscalar_op.dtype, 'uint64')
             self.assertEqual(intscalar_op.shape, (1,))
 
-            self.assertTrue(isinstance(strspec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strspec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strspec_op.name, 'strspec')
             self.assertEqual(strspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/strspec')
             self.assertEqual(strspec_op.dtype, 'string')
             self.assertEqual(strspec_op.shape, (10,))
 
-            self.assertTrue(isinstance(floatspec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatspec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatspec_op.name, 'floatspec')
             self.assertEqual(floatspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/floatspec')
             self.assertEqual(floatspec_op.dtype, 'float32')
             self.assertEqual(floatspec_op.shape, (20,))
 
-            self.assertTrue(isinstance(intspec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intspec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intspec_op.name, 'intspec')
             self.assertEqual(intspec_op.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
@@ -723,21 +723,21 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(intspec_op.shape, (30,))
 
 
-            self.assertTrue(isinstance(strimage_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strimage_op.name, 'strimage')
             self.assertEqual(strimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
             self.assertEqual(strimage_op.dtype, 'string')
             self.assertEqual(strimage_op.shape, (2, 2))
 
-            self.assertTrue(isinstance(floatimage_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatimage_op.name, 'floatimage')
             self.assertEqual(floatimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
             self.assertEqual(floatimage_op.dtype, 'float64')
             self.assertEqual(floatimage_op.shape, (20, 10))
 
-            self.assertTrue(isinstance(intimage_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intimage_op.name, 'intimage')
             self.assertEqual(intimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
@@ -746,21 +746,21 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strvec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strvec_op.name, 'strvec')
             self.assertEqual(strvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
             self.assertEqual(strvec_op.dtype, 'string')
             self.assertEqual(strvec_op.shape, (0, 2, 2))
 
-            self.assertTrue(isinstance(floatvec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec_op.name, 'floatvec')
             self.assertEqual(floatvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec_op.dtype, 'float64')
             self.assertEqual(floatvec_op.shape, (1, 20, 10))
 
-            self.assertTrue(isinstance(intvec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec_op.name, 'intvec')
             self.assertEqual(intvec_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
@@ -770,7 +770,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(lkintimage, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkintimage, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkintimage.h5object, h5cpp._node.Link))
             self.assertTrue(lkintimage.target_path.endswith(
                 "%s://entry12345/instrument/detector/intimage" % self._fname))
@@ -778,7 +778,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkintimage.path,
                 "/entry12345:NXentry/data:NXdata/lkintimage")
 
-            self.assertTrue(isinstance(lkfloatvec, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkfloatvec, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkfloatvec.h5object, h5cpp._node.Link))
             self.assertTrue(lkfloatvec.target_path.endswith(
                 "%s://entry12345/instrument/detector/floatvec" % self._fname))
@@ -786,7 +786,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkfloatvec.path,
                 "/entry12345:NXentry/data:NXdata/lkfloatvec")
 
-            self.assertTrue(isinstance(lkintspec, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkintspec, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkintspec.h5object, h5cpp._node.Link))
             self.assertTrue(lkintspec.target_path.endswith(
                 "%s://entry12345/instrument/intspec" % self._fname))
@@ -794,7 +794,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkintspec.path,
                 "/entry12345:NXentry/data:NXdata/lkintspec")
 
-            self.assertTrue(isinstance(lkdet, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkdet, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkdet.h5object, h5cpp._node.Link))
             self.assertTrue(lkdet.target_path.endswith(
                 "%s://entry12345/instrument/detector" % self._fname))
@@ -802,7 +802,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkdet.path,
                 "/entry12345:NXentry/data:NXdata/lkdet")
 
-            self.assertTrue(isinstance(lkno, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkno, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkno.h5object, h5cpp._node.Link))
             self.assertTrue(lkno.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
@@ -820,7 +820,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(lkintimage_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(lkintimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintimage_op.name, 'lkintimage')
             self.assertEqual(
@@ -830,7 +830,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
 
-            self.assertTrue(isinstance(lkfloatvec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(lkfloatvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
             self.assertEqual(lkfloatvec_op.path,
@@ -840,7 +840,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(
-                isinstance(lkintspec_op, PNINexusWriter.PNINexusField))
+                isinstance(lkintspec_op, H5CppWriter.H5CppField))
             self.assertTrue(
                 isinstance(lkintspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintspec_op.name, 'lkintspec')
@@ -849,7 +849,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(lkintspec_op.dtype, 'int64')
             self.assertEqual(lkintspec_op.shape, (30,))
 
-            self.assertTrue(isinstance(lkno_op, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkno_op, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkno_op.h5object, h5cpp._node.Link))
             self.assertTrue(lkno_op.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
@@ -903,7 +903,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -930,7 +930,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -939,10 +939,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -964,7 +964,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(strscalar, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
             self.assertEqual(strscalar.h5object.link.path.name, 'strscalar')
@@ -1012,12 +1012,12 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(strscalar[...]), vl[0:7])
 
             attrs = strscalar.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
 
-            self.assertTrue(isinstance(floatscalar, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
             self.assertEqual(floatscalar.h5object.link.path.name, 'floatscalar')
@@ -1061,14 +1061,14 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(floatscalar[...]), vl[0:7])
 
             attrs = floatscalar.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(intscalar, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
             self.assertEqual(intscalar.h5object.link.path.name, 'intscalar')
@@ -1114,7 +1114,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(intscalar[...]), vl[0:7])
 
             attrs = intscalar.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, intscalar)
             self.assertEqual(len(attrs), 0)
@@ -1172,7 +1172,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -1199,7 +1199,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -1208,10 +1208,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -1232,7 +1232,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            self.assertTrue(isinstance(strspec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strspec.name, 'strspec')
             self.assertEqual(strspec.h5object.link.path.name, 'strspec')
@@ -1278,14 +1278,14 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(strspec[...]), vl[0:16])
 
             attrs = strspec.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strspec)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(floatspec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
             self.assertEqual(floatspec.h5object.link.path.name, 'floatspec')
@@ -1328,14 +1328,14 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertFloatList(list(floatspec[...]), vl[0:26], 1e-4)
 
             attrs = floatspec.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, floatspec)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(intspec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intspec.name, 'intspec')
             self.assertEqual(intspec.path, '/entry12345:NXentry/instrument:NXinstrument/intspec')
@@ -1380,7 +1380,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(intspec[...]), vl[0:36])
 
             attrs = intspec.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, intspec)
             self.assertEqual(len(attrs), 0)
@@ -1409,7 +1409,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pnifield_spectrum.h5"))
+                                 "H5CppWriterTesttest_pnifield_spectrum.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -1423,7 +1423,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pnifield_spectrum.h5"))
+                                 "H5CppWriterTesttest_pnifield_spectrum.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -1441,7 +1441,7 @@ class PNINexusWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -1468,7 +1468,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -1477,10 +1477,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -1500,7 +1500,7 @@ class PNINexusWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-            self.assertTrue(isinstance(strimage, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(strimage.name, 'strimage')
             self.assertEqual(strimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strimage')
@@ -1556,12 +1556,12 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertImage(strimage.read(), vv6)
 
             attrs = strimage.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strimage)
             self.assertEqual(len(attrs), 0)
 
-            self.assertTrue(isinstance(floatimage, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
             self.assertEqual(floatimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatimage')
@@ -1616,7 +1616,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(intimage, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(intimage.name, 'intimage')
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
@@ -1716,7 +1716,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -1742,7 +1742,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -1751,10 +1751,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -1775,7 +1775,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            self.assertTrue(isinstance(strvec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(strvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strvec.name, 'strvec')
             self.assertEqual(strvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/strvec')
@@ -1832,13 +1832,13 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertVector(strvec.read(), vv6)
 
             attrs = strvec.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strvec)
             self.assertEqual(len(attrs), 0)
 
 
-            self.assertTrue(isinstance(floatvec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(floatvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
@@ -1895,14 +1895,14 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertVector(floatvec.read(), vv6)
 
             attrs = floatvec.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, floatvec)
             self.assertEqual(len(attrs), 0)
 
 
 
-            self.assertTrue(isinstance(intvec, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(intvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec.name, 'intvec')
             self.assertEqual(intvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intvec')
@@ -1960,7 +1960,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertVector(intvec.read(), vv6)
 
             attrs = intvec.attributes
-            self.assertTrue(isinstance(attrs, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, intvec)
             self.assertEqual(len(attrs), 0)
@@ -2012,7 +2012,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -2038,7 +2038,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -2047,10 +2047,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = True
 
@@ -2096,7 +2096,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -2105,10 +2105,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.PNINexusDeflate(h5cpp.filter.Deflate())
-            df1 = PNINexusWriter.PNINexusDeflate(h5cpp.filter.Deflate())
+            df0 = H5CppWriter.H5CppDeflate(h5cpp.filter.Deflate())
+            df1 = H5CppWriter.H5CppDeflate(h5cpp.filter.Deflate())
             df1.rate = 2
-            df2 = PNINexusWriter.PNINexusDeflate(h5cpp.filter.Deflate())
+            df2 = H5CppWriter.H5CppDeflate(h5cpp.filter.Deflate())
             df2.rate = 4
             df2.shuffle = True
 
@@ -2154,7 +2154,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -2163,10 +2163,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -2190,25 +2190,25 @@ class PNINexusWriterTest(unittest.TestCase):
             h5cpp.node.link(h5cpp.Path("/entry12345/instrument/detector/intimage"),
                             dt.h5object, h5cpp.Path("lkintimage"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkintimage"][0]
-            lkintimage = PNINexusWriter.PNINexusLink(lk, dt)
+            lkintimage = H5CppWriter.H5CppLink(lk, dt)
             h5cpp.node.link(
                 target=h5cpp.Path("/entry12345/instrument/detector/floatvec"),
                 link_base=dt.h5object, link_path=h5cpp.Path("lkfloatvec"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkfloatvec"][0]
-            lkfloatvec = PNINexusWriter.PNINexusLink(lk, dt)
+            lkfloatvec = H5CppWriter.H5CppLink(lk, dt)
             h5cpp.node.link(h5cpp.Path("/entry12345/instrument/intspec"), dt.h5object, h5cpp.Path("lkintspec"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkintspec"][0]
-            lkintspec = PNINexusWriter.PNINexusLink(lk, dt)
+            lkintspec = H5CppWriter.H5CppLink(lk, dt)
             h5cpp.node.link(h5cpp.Path("/entry12345/instrument/detector"), dt.h5object, h5cpp.Path("lkdet"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkdet"][0]
-            lkdet = PNINexusWriter.PNINexusLink(lk, dt)
+            lkdet = H5CppWriter.H5CppLink(lk, dt)
             h5cpp.node.link(h5cpp.Path("/notype/unknown"), dt.h5object, h5cpp.Path("lkno"))
             lk = [e for e in dt.h5object.links if e.path.name == "lkno"][0]
-            lkno = PNINexusWriter.PNINexusLink(lk, dt)
+            lkno = H5CppWriter.H5CppLink(lk, dt)
             lk = None
             e = None
 
-            self.assertTrue(isinstance(lkintimage, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkintimage, H5CppWriter.H5CppLink))
             print(type(lkintimage.h5object))
             self.assertTrue(isinstance(lkintimage.h5object, h5cpp._node.Link))
             self.assertTrue(lkintimage.target_path.endswith(
@@ -2217,7 +2217,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkintimage.path,
                 "/entry12345:NXentry/data:NXdata/lkintimage")
 
-            self.assertTrue(isinstance(lkfloatvec, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkfloatvec, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkfloatvec.h5object, h5cpp._node.Link))
             self.assertTrue(lkfloatvec.target_path.endswith(
                 "%s://entry12345/instrument/detector/floatvec" % self._fname))
@@ -2225,7 +2225,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkfloatvec.path,
                 "/entry12345:NXentry/data:NXdata/lkfloatvec")
 
-            self.assertTrue(isinstance(lkintspec, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkintspec, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkintspec.h5object, h5cpp._node.Link))
             self.assertTrue(lkintspec.target_path.endswith(
                 "%s://entry12345/instrument/intspec" % self._fname))
@@ -2233,7 +2233,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkintspec.path,
                 "/entry12345:NXentry/data:NXdata/lkintspec")
 
-            self.assertTrue(isinstance(lkdet, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkdet, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkdet.h5object, h5cpp._node.Link))
             self.assertTrue(lkdet.target_path.endswith(
                 "%s://entry12345/instrument/detector" % self._fname))
@@ -2241,7 +2241,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 lkdet.path,
                 "/entry12345:NXentry/data:NXdata/lkdet")
 
-            self.assertTrue(isinstance(lkno, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkno, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkno.h5object, h5cpp._node.Link))
             self.assertTrue(lkno.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
@@ -2258,7 +2258,7 @@ class PNINexusWriterTest(unittest.TestCase):
             lkno_op = dt.open("lkno")
 
 
-            self.assertTrue(isinstance(lkintimage_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(lkintimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintimage_op.name, 'lkintimage')
             self.assertEqual(
@@ -2268,7 +2268,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
 
-            self.assertTrue(isinstance(lkfloatvec_op, PNINexusWriter.PNINexusField))
+            self.assertTrue(isinstance(lkfloatvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
             self.assertEqual(lkfloatvec_op.path,
@@ -2278,7 +2278,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
             self.assertTrue(
-                isinstance(lkintspec_op, PNINexusWriter.PNINexusField))
+                isinstance(lkintspec_op, H5CppWriter.H5CppField))
             self.assertTrue(
                 isinstance(lkintspec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkintspec_op.name, 'lkintspec')
@@ -2287,7 +2287,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(lkintspec_op.dtype, 'int64')
             self.assertEqual(lkintspec_op.shape, (30,))
 
-            self.assertTrue(isinstance(lkno_op, PNINexusWriter.PNINexusLink))
+            self.assertTrue(isinstance(lkno_op, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkno_op.h5object, h5cpp._node.Link))
             self.assertTrue(lkno_op.target_path.endswith(
                 "%s://notype/unknown" % self._fname))
@@ -2343,7 +2343,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             atts = []
@@ -2369,7 +2369,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -2378,10 +2378,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -2402,15 +2402,15 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            lkintimage = PNINexusWriter.link(
+            lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = PNINexusWriter.link(
+            lkfloatvec = H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = PNINexusWriter.link(
+            lkintspec = H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = PNINexusWriter.link(
+            lkdet = H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = PNINexusWriter.link(
+            lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
 
@@ -2418,13 +2418,13 @@ class PNINexusWriterTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -2450,7 +2450,7 @@ class PNINexusWriterTest(unittest.TestCase):
             print dir(atintscalar)
             print dir(atintscalar.h5object)
 
-            self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
@@ -2469,7 +2469,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.read(), 0)
             self.assertEqual(atintscalar.h5object[...], 0)
 
-            self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
@@ -2489,7 +2489,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
             self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
 
-            self.assertTrue(isinstance(atstrimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
@@ -2509,7 +2509,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
 
 
-            self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
@@ -2530,7 +2530,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object[...], '')
 
 
-            self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
@@ -2551,7 +2551,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(atfloatimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
@@ -2573,7 +2573,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(atfloatscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
@@ -2595,7 +2595,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object[...], 0)
 
 
-            self.assertTrue(isinstance(atstrspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
@@ -2617,7 +2617,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
 
 
-            self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
@@ -2651,7 +2651,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atstrspec = attr2["atstrspec"]
             atintimage = attr2["atintimage"]
 
-            self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
@@ -2670,7 +2670,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.read(), 0)
             self.assertEqual(atintscalar.h5object[...], 0)
 
-            self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
@@ -2689,7 +2689,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
             self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
 
-            self.assertTrue(isinstance(atstrimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
@@ -2710,7 +2710,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
@@ -2732,7 +2732,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
@@ -2753,7 +2753,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(atfloatimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
@@ -2774,7 +2774,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
 
 
-            self.assertTrue(isinstance(atfloatscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
@@ -2796,7 +2796,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object[...], 0)
 
 
-            self.assertTrue(isinstance(atstrspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
@@ -2818,7 +2818,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
 
 
-            self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
@@ -2842,7 +2842,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.myAssertRaise(Exception, attr2.create, "atintimage", "uint64", [4])
             atintimage = attr2.create("atintimage", "uint64", [4], True)
 
-            self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
@@ -2937,7 +2937,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
             atts = []
@@ -2965,7 +2965,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -2974,10 +2974,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -2998,15 +2998,15 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            lkintimage = PNINexusWriter.link(
+            lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = PNINexusWriter.link(
+            lkfloatvec = H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = PNINexusWriter.link(
+            lkintspec = H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = PNINexusWriter.link(
+            lkdet = H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = PNINexusWriter.link(
+            lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
 
@@ -3015,13 +3015,13 @@ class PNINexusWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -3058,7 +3058,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             atintscalar.write(itvl[0])
 
-            self.assertTrue(isinstance(atintscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintscalar.parent, rt)
             self.assertEqual(atintscalar.name, 'atintscalar')
@@ -3102,7 +3102,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             atstrscalar.write(stvl[0])
 
-            self.assertTrue(isinstance(atstrscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
             self.assertEqual(atstrscalar.name, 'atstrscalar')
@@ -3148,7 +3148,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             atfloatscalar.write(flvl[0])
 
-            self.assertTrue(isinstance(atfloatscalar, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatscalar.parent, intscalar)
             self.assertEqual(atfloatscalar.name, 'atfloatscalar')
@@ -3248,7 +3248,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pniattribute_scalar.h5"))
+                                 "H5CppWriterTesttest_pniattribute_scalar.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -3262,7 +3262,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pniattribute_scalar.h5"))
+                                 "H5CppWriterTesttest_pniattribute_scalar.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -3277,7 +3277,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
             atts = []
@@ -3304,7 +3304,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             attr0 = rt.attributes
@@ -3329,7 +3329,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -3338,10 +3338,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -3362,15 +3362,15 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            lkintimage = PNINexusWriter.link(
+            lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = PNINexusWriter.link(
+            lkfloatvec = H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = PNINexusWriter.link(
+            lkintspec = H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = PNINexusWriter.link(
+            lkdet = H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = PNINexusWriter.link(
+            lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
 
@@ -3379,13 +3379,13 @@ class PNINexusWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -3424,7 +3424,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atfloatspec.write(flvl[0])
 
 
-            self.assertTrue(isinstance(atfloatspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
             self.assertEqual(atfloatspec.name, 'atfloatspec')
@@ -3484,7 +3484,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atintspec.write(itvl[0])
 
 
-            self.assertTrue(isinstance(atintspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
             self.assertEqual(atintspec.name, 'atintspec')
@@ -3543,7 +3543,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atstrspec.write(stvl[0])
 
 
-            self.assertTrue(isinstance(atstrspec, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
             self.assertEqual(atstrspec.name, 'atstrspec')
@@ -3685,7 +3685,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
             atts = []
@@ -3712,7 +3712,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
         try:
             overwrite = False
-            fl = PNINexusWriter.create_file(self._fname)
+            fl = H5CppWriter.create_file(self._fname)
 
             rt = fl.root()
             nt = rt.create_group("notype")
@@ -3721,10 +3721,10 @@ class PNINexusWriterTest(unittest.TestCase):
             det = ins.create_group("detector", "NXdetector")
             dt = entry.create_group("data", "NXdata")
 
-            df0 = PNINexusWriter.deflate_filter()
-            df1 = PNINexusWriter.deflate_filter()
+            df0 = H5CppWriter.deflate_filter()
+            df1 = H5CppWriter.deflate_filter()
             df1.rate = 2
-            df2 = PNINexusWriter.deflate_filter()
+            df2 = H5CppWriter.deflate_filter()
             df2.rate = 4
             df2.shuffle = 6
 
@@ -3745,15 +3745,15 @@ class PNINexusWriterTest(unittest.TestCase):
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
 
-            lkintimage = PNINexusWriter.link(
+            lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
-            lkfloatvec = PNINexusWriter.link(
+            lkfloatvec = H5CppWriter.link(
                 "/entry12345/instrument/detector/floatvec", dt, "lkfloatvec")
-            lkintspec = PNINexusWriter.link(
+            lkintspec = H5CppWriter.link(
                 "/entry12345/instrument/intspec", dt, "lkintspec")
-            lkdet = PNINexusWriter.link(
+            lkdet = H5CppWriter.link(
                 "/entry12345/instrument/detector", dt, "lkdet")
-            lkno = PNINexusWriter.link(
+            lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
 
 
@@ -3762,13 +3762,13 @@ class PNINexusWriterTest(unittest.TestCase):
             attr2 = intscalar.attributes
 
             print attr0.h5object
-            self.assertTrue(isinstance(attr0, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr1, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
-            self.assertTrue(isinstance(attr2, PNINexusWriter.PNINexusAttributeManager))
+            self.assertTrue(isinstance(attr2, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr2.h5object, h5cpp._attribute.AttributeManager))
 
@@ -3809,7 +3809,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
             atstrimage.write(stvl[0])
 
-            self.assertTrue(isinstance(atstrimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atstrimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrimage.parent, rt)
             self.assertEqual(atstrimage.name, 'atstrimage')
@@ -3872,7 +3872,7 @@ class PNINexusWriterTest(unittest.TestCase):
 
 
 
-            self.assertTrue(isinstance(atfloatimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatimage.parent, entry)
             self.assertEqual(atfloatimage.name, 'atfloatimage')
@@ -3936,7 +3936,7 @@ class PNINexusWriterTest(unittest.TestCase):
             atintimage.write(itvl[0])
 
 
-            self.assertTrue(isinstance(atintimage, PNINexusWriter.PNINexusAttribute))
+            self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintimage.parent, intscalar)
             self.assertEqual(atintimage.name, 'atintimage')
@@ -4046,7 +4046,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pniattribute_image.h5"))
+                                 "H5CppWriterTesttest_pniattribute_image.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -4060,7 +4060,7 @@ class PNINexusWriterTest(unittest.TestCase):
             self.assertEqual(fl.path,
                              "%s/%s" % (
                                  os.getcwd(),
-                                 "PNINexusWriterTesttest_pniattribute_image.h5"))
+                                 "H5CppWriterTesttest_pniattribute_image.h5"))
             self.assertTrue(
                 isinstance(fl.h5object, h5cpp._file.File))
             self.assertEqual(fl.parent, None)
@@ -4075,7 +4075,7 @@ class PNINexusWriterTest(unittest.TestCase):
                 Exception, fl.reopen, False, True)
 
 
-            fl = PNINexusWriter.open_file(self._fname, readonly=True)
+            fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
             atts = []
