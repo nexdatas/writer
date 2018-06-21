@@ -34,7 +34,7 @@ import nxswriter.PNINexusWriter as PNINexusWriter
 
 
 from pninexus import h5cpp
-from pninexus import nexus
+# from pninexus import nexus
 
 # try:
 #     import pni.io.nx.h5 as nx
@@ -185,7 +185,7 @@ class PNINexusWriterTest(unittest.TestCase):
             fl = PNINexusWriter.create_file(self._fname, True)
             fl.close()
 
-            fl = nexus.open_file(self._fname)
+            fl = h5cpp.file.open(self._fname)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             for at in f.attributes:
@@ -248,7 +248,25 @@ class PNINexusWriterTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
         try:
-            nxfl = nexus.create_file(self._fname)
+            fcpl = h5cpp.property.FileCreationList()
+            fapl = h5cpp.property.FileAccessList()
+            flag = h5cpp.file.AccessFlags.EXCLUSIVE
+            fapl.library_version_bounds(
+                h5cpp.property.LibVersion.LATEST,
+                h5cpp.property.LibVersion.LATEST)
+            nxfl = h5cpp.file.create(self._fname, flag, fcpl, fapl)
+            # nxfl = nexus.create_file(self._fname)
+            rt = nxfl.root()
+            attrs = rt.attributes
+            attrs.create("file_time", h5cpp.datatype.kVariableString).write(
+                unicode(PNINexusWriter.PNINexusFile.currenttime()))
+            attrs.create("HDF5_version", h5cpp.datatype.kVariableString).write(u"")
+            attrs.create("NX_class", h5cpp.datatype.kVariableString).write(u"NXroot")
+            attrs.create("NeXus_version", h5cpp.datatype.kVariableString).write(u"4.3.0")
+            attrs.create("file_name", h5cpp.datatype.kVariableString).write(
+                unicode(self._fname))
+            attrs.create("file_update_time", h5cpp.datatype.kVariableString).write(
+                unicode(PNINexusWriter.PNINexusFile.currenttime()))
             fl = PNINexusWriter.PNINexusFile(nxfl, self._fname)
             self.assertTrue(
                 isinstance(fl, FileWriter.FTFile))
