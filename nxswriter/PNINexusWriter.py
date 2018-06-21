@@ -23,7 +23,7 @@ import math
 import os
 import numpy as np
 from pninexus import h5cpp
-from pninexus import nexus
+# from pninexus import nexus
 
 # import pni.io.nx.h5 as nx
 
@@ -171,8 +171,24 @@ def create_file(filename, overwrite=False, libver=None):
         fapl.library_version_bounds(
             h5cpp.property.LibVersion.LATEST,
             h5cpp.property.LibVersion.LATEST)
-    return PNINexusFile(nexus.create_file(filename, flag, fcpl, fapl),
-                        filename)
+    #
+    # workaround for python-pni #48
+    #
+    # return PNINexusFile(nexus.create_file(filename, flag, fcpl, fapl),
+    #     filename)
+    fl = h5cpp.file.create(filename, flag, fcpl, fapl)
+    rt = fl.root()
+    attrs = rt.attributes
+    attrs.create("file_time", pTh["unicode"]).write(
+        unicode(PNINexusFile.currenttime()))
+    attrs.create("HDF5_version", pTh["unicode"]).write(u"")
+    attrs.create("NX_class", pTh["unicode"]).write(u"NXroot")
+    attrs.create("NeXus_version", pTh["unicode"]).write(u"4.3.0")
+    attrs.create("file_name", pTh["unicode"]).write(unicode(filename))
+    attrs.create("file_update_time", pTh["unicode"]).write(
+        unicode(PNINexusFile.currenttime()))
+    rt.close()
+    return PNINexusFile(fl, filename)
 
 
 def link(target, parent, name):
@@ -377,24 +393,31 @@ class PNINexusGroup(FileWriter.FTGroup):
         :returns: file tree object
         :rtype: :class:`FTObject`
         """
-        try:
-            itm = nexus.get_objects(
-                self._h5object, nexus.Path(h5cpp.Path(name)))[0]
-        except:
-            itm = [lk for lk in self._h5object.links
-                   if lk.path.name == name][0]
-        if isinstance(itm, h5cpp._node.Dataset):
-            el = PNINexusField(itm, self)
-        elif isinstance(itm, h5cpp._node.Group):
-            el = PNINexusGroup(itm, self)
-        elif isinstance(itm, h5cpp._attribute.Attribute):
-            el = PNINexusAttribute(itm, self)
-        elif isinstance(itm, h5cpp._node.Link):
-            el = PNINexusLink(itm, self)
-        else:
-            return FileWriter.FTObject(itm, self)
-        return el
 
+        try:
+            #
+            # workaround for python-pni #48
+            #
+            # itm = nexus.get_objects(
+            #     self._h5object, nexus.Path(h5cpp.Path(name)))[0]
+            #
+            if self._h5object.has_group(h5cpp.Path(name)):
+                return PNINexusGroup(
+                    self._h5object.get_group(h5cpp.Path(name)), self)
+            elif self._h5object.has_dataset(h5cpp.Path(name)):
+                return PNINexusField(
+                    self._h5object.get_dataset(h5cpp.Path(name)), self)
+            elif self._h5object.attributes.exists(name):
+                return PNINexusAttribute(self._h5object.attributes[name], self)
+            else:
+                return PNINexusLink([lk for lk in self._h5object.links
+                                   if lk.path.name == name][0], self)
+
+        except Exception as e:
+            print(e)
+            return PNINexusLink([lk for lk in self._h5object.links
+                               if lk.path.name == name][0], self)
+                
     def create_group(self, n, nxclass=""):
         """ open a file tree element
 
@@ -405,9 +428,12 @@ class PNINexusGroup(FileWriter.FTGroup):
         :returns: file tree group
         :rtype: :class:`PNINexusGroup`
         """
-        return PNINexusGroup(
-            nexus.BaseClassFactory.create(self._h5object, n, nxclass),
-            self)
+        gr = h5cpp.node.Group(self._h5object, n)
+        gr.attributes.create("NX_class", pTh["unicode"]).write(unicode(nxclass))
+        return PNINexusGroup(gr, self)
+        # return PNINexusGroup(
+        #     nexus.BaseClassFactory.create(self._h5object, n, nxclass),
+        #     self)
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, dfilter=None):
@@ -438,9 +464,16 @@ class PNINexusGroup(FileWriter.FTGroup):
                 sfilter(dcpl)
         if chunk is None and shape is not None:
             chunk = [(dm if dm != 0 else 1) for dm in shape]
-        field = nexus.FieldFactory.create_chunked_(
+        dcpl.layout = h5cpp.property.DatasetLayout.CHUNKED
+        dcpl.chunk = tuple(chunk)
+        #
+        # field = nexus.FieldFactory.create_chunked_(
+        #     self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
+        #     chunk, dcpl=dcpl)
+        field = h5cpp.node.Dataset(
             self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
-            chunk, dcpl=dcpl)
+            dcpl=dcpl)
+        
         return PNINexusField(field, self)
 
     @property
@@ -477,8 +510,13 @@ class PNINexusGroup(FileWriter.FTGroup):
         if isinstance(self._tparent, PNINexusFile):
             self._h5object = self._tparent.h5object.root()
         else:
-            self._h5object = nexus.get_objects(
-                self._tparent.h5object, nexus.Path(h5cpp.Path(self.name)))[0]
+            try:
+                self._h5object = self._tparent.h5object.get_group(
+                    h5cpp.Path(self.name))
+            except Exception as e:
+                print(str(e))
+                self._h5object = [lk for lk in self._tparent.h5object.links
+                                  if lk.path.name == self.name][0]
         FileWriter.FTGroup.reopen(self)
 
     def exists(self, name):
@@ -600,8 +638,14 @@ class PNINexusField(FileWriter.FTField):
     def reopen(self):
         """ reopen field
         """
-        self._h5object = nexus.get_objects(
-            self._tparent.h5object, nexus.Path(h5cpp.Path(self.name)))[0]
+        try:
+            print(dir(self._tparent.h5object))
+            self._h5object = self._tparent.h5object.get_dataset(
+                h5cpp.Path(self.name))
+        except Exception as e:
+            self._h5object = [lk for lk in self._tparent.h5object.links
+                              if lk.path.name == self.name][0]
+            
         FileWriter.FTField.reopen(self)
 
     def refresh(self):
