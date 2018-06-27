@@ -140,7 +140,10 @@ def open_file(filename, readonly=False, libver=None):
     :returns: file object
     :rtype: :class:`H5CppFile`
     """
+    
     fapl = h5cpp.property.FileAccessList()
+    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
+    fcpl = h5cpp.property.FileCreationList()
     flag = h5cpp.file.AccessFlags.READONLY if readonly \
         else h5cpp.file.AccessFlags.READWRITE
     if libver is None or libver == 'lastest':
@@ -165,6 +168,7 @@ def create_file(filename, overwrite=False, libver=None):
     """
     fcpl = h5cpp.property.FileCreationList()
     fapl = h5cpp.property.FileAccessList()
+    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
     flag = h5cpp.file.AccessFlags.TRUNCATE if overwrite \
         else h5cpp.file.AccessFlags.EXCLUSIVE
     if libver is None or libver == 'lastest':
@@ -322,6 +326,7 @@ class H5CppFile(FileWriter.FTFile):
         """
 
         fapl = h5cpp.property.FileAccessList()
+        fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
         if libver is None or libver == 'lastest' or swmr:
             fapl.library_version_bounds(
                 h5cpp.property.LibVersion.LATEST,
@@ -639,7 +644,6 @@ class H5CppField(FileWriter.FTField):
         """ reopen field
         """
         try:
-            print(dir(self._tparent.h5object))
             self._h5object = self._tparent.h5object.get_dataset(
                 h5cpp.Path(self.name))
         except Exception as e:
@@ -741,25 +745,32 @@ class H5CppField(FileWriter.FTField):
             else:
                 return "float"
         elif str(self._h5object.datatype.type) == "INTEGER":
-            # print(self._h5object.datatype.has_class(h5cpp.datatype.kInt8))
-            print(super(h5cpp._datatype.Integer, self._h5object.datatype))
-            print(self._h5object.datatype.native_type())
-            # print(h5cpp._datatype.Sign)
-            # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
-            # print(dir(self._h5object.datatype.type.name))
-            # print(self._h5object.datatype.type.names)
-            # print(self._h5object.datatype.size*8)
 
             if self._h5object.datatype.size == 8:
-                return "int64"
+                if self._h5object.datatype.is_signed():
+                    return "int64"
+                else:
+                    return "uint64"
             elif self._h5object.datatype.size == 4:
-                return "int32"
+                if self._h5object.datatype.is_signed():
+                    return "int32"
+                else:
+                    return "uint32"
             elif self._h5object.datatype.size == 2:
-                return "int16"
+                if self._h5object.datatype.is_signed():
+                    return "int16"
+                else:
+                    return "uint16"                    
             elif self._h5object.datatype.size == 1:
-                return "int8"
+                if self._h5object.datatype.is_signed():
+                    return "int8"
+                else:
+                    return "int8"                    
             elif self._h5object.datatype.size == 16:
-                return "int128"
+                if self._h5object.datatype.is_signed():
+                    return "int128"
+                else: 
+                    return "uint128"
             else:
                 return "int"
 
@@ -820,7 +831,10 @@ class H5CppLink(FileWriter.FTLink):
         :returns: valid flag
         :rtype: :obj:`bool`
         """
-        return self._h5object is not None and self._h5object.is_valid
+        try:
+            return self._h5object.node.is_valid
+        except:
+            return False
 
     def refresh(self):
         """ refresh the field
@@ -1166,23 +1180,31 @@ class H5CppAttribute(FileWriter.FTAttribute):
             else:
                 return "float"
         elif str(self._h5object.datatype.type) == "INTEGER":
-            # print(dir(self._h5object.datatype.native_type()))
-            # print(h5cpp._datatype.Sign)
-            # # print(self._h5object.datatype.has_class(h5cpp._datatype.Sign))
-            # print(dir(self._h5object.datatype.type.name))
-            # print(self._h5object.datatype.type.names)
-            # print(self._h5object.datatype.size*8)
-
             if self._h5object.datatype.size == 8:
-                return "int64"
+                if self._h5object.datatype.is_signed():
+                    return "int64"
+                else:
+                    return "uint64"
             elif self._h5object.datatype.size == 4:
-                return "int32"
+                if self._h5object.datatype.is_signed():
+                    return "int32"
+                else:
+                    return "uint32"
             elif self._h5object.datatype.size == 2:
-                return "int16"
+                if self._h5object.datatype.is_signed():
+                    return "int16"
+                else:
+                    return "uint16"                    
             elif self._h5object.datatype.size == 1:
-                return "int8"
+                if self._h5object.datatype.is_signed():
+                    return "int8"
+                else:
+                    return "int8"                    
             elif self._h5object.datatype.size == 16:
-                return "int128"
+                if self._h5object.datatype.is_signed():
+                    return "int128"
+                else: 
+                    return "uint128"
             else:
                 return "int"
 
