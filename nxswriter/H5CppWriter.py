@@ -140,10 +140,9 @@ def open_file(filename, readonly=False, libver=None):
     :returns: file object
     :rtype: :class:`H5CppFile`
     """
-    
+
     fapl = h5cpp.property.FileAccessList()
     fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
-    fcpl = h5cpp.property.FileCreationList()
     flag = h5cpp.file.AccessFlags.READONLY if readonly \
         else h5cpp.file.AccessFlags.READWRITE
     if libver is None or libver == 'lastest':
@@ -415,14 +414,16 @@ class H5CppGroup(FileWriter.FTGroup):
             elif self._h5object.attributes.exists(name):
                 return H5CppAttribute(self._h5object.attributes[name], self)
             else:
-                return H5CppLink([lk for lk in self._h5object.links
-                                   if lk.path.name == name][0], self)
+                return H5CppLink(
+                    [lk for lk in self._h5object.links
+                     if lk.path.name == name][0], self)
 
         except Exception as e:
             print(e)
-            return H5CppLink([lk for lk in self._h5object.links
-                               if lk.path.name == name][0], self)
-                
+            return H5CppLink(
+                [lk for lk in self._h5object.links
+                 if lk.path.name == name][0], self)
+
     def create_group(self, n, nxclass=""):
         """ open a file tree element
 
@@ -434,7 +435,8 @@ class H5CppGroup(FileWriter.FTGroup):
         :rtype: :class:`H5CppGroup`
         """
         gr = h5cpp.node.Group(self._h5object, n)
-        gr.attributes.create("NX_class", pTh["unicode"]).write(unicode(nxclass))
+        gr.attributes.create(
+            "NX_class", pTh["unicode"]).write(unicode(nxclass))
         return H5CppGroup(gr, self)
         # return H5CppGroup(
         #     nexus.BaseClassFactory.create(self._h5object, n, nxclass),
@@ -478,7 +480,7 @@ class H5CppGroup(FileWriter.FTGroup):
         field = h5cpp.node.Dataset(
             self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
             dcpl=dcpl)
-        
+
         return H5CppField(field, self)
 
     @property
@@ -649,7 +651,7 @@ class H5CppField(FileWriter.FTField):
         except Exception as e:
             self._h5object = [lk for lk in self._tparent.h5object.links
                               if lk.path.name == self.name][0]
-            
+
         FileWriter.FTField.reopen(self)
 
     def refresh(self):
@@ -760,16 +762,16 @@ class H5CppField(FileWriter.FTField):
                 if self._h5object.datatype.is_signed():
                     return "int16"
                 else:
-                    return "uint16"                    
+                    return "uint16"
             elif self._h5object.datatype.size == 1:
                 if self._h5object.datatype.is_signed():
                     return "int8"
                 else:
-                    return "int8"                    
+                    return "int8"
             elif self._h5object.datatype.size == 16:
                 if self._h5object.datatype.is_signed():
                     return "int128"
-                else: 
+                else:
                     return "uint128"
             else:
                 return "int"
@@ -1194,16 +1196,16 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 if self._h5object.datatype.is_signed():
                     return "int16"
                 else:
-                    return "uint16"                    
+                    return "uint16"
             elif self._h5object.datatype.size == 1:
                 if self._h5object.datatype.is_signed():
                     return "int8"
                 else:
-                    return "int8"                    
+                    return "int8"
             elif self._h5object.datatype.size == 16:
                 if self._h5object.datatype.is_signed():
                     return "int128"
-                else: 
+                else:
                     return "uint128"
             else:
                 return "int"
