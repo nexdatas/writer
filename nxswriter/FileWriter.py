@@ -27,7 +27,8 @@ import threading
 import numpy
 
 
-#: (:mod:`PNIWriter` or :mod:`H5PYWriter`) default writer module
+#: (:mod:`PNIWriter` or :mod:`H5PYWriter`or :mod:`H5CppWriter`)
+#    default writer module
 writer = None
 
 #: (:class:`threading.Lock`) writer module
@@ -163,7 +164,7 @@ def setwriter(wr):
     """ sets writer
 
     :param wr: writer module
-    :type wr: :mod:`PNIWriter` or :mod:`H5PYWriter`
+    :type wr: :mod:`PNIWriter` or :mod:`H5PYWriter` or :mod:`H5CppWriter`
     """
     global writer
     with writerlock:
@@ -283,11 +284,13 @@ class FTFile(FTObject):
         :type filename: :obj:`str`
         :param writer: writer module
         :type writer: :mod:`PNIWriter` or :mod:`H5PYWriter`
+                        or :mod:`H5CppWriter`
         """
         FTObject.__init__(self, h5object, None)
         #: (:obj:`str`) file name
         self.name = filename
-        #: (:mod:`PNIWriter` or :mod:`H5PYWriter`) writer module
+        #: (:mod:`PNIWriter` or :mod:`H5PYWriter` or :mod:`H5CppWriter`)
+        # writer module
         self.writer = None
 
     def root(self):

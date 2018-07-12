@@ -530,7 +530,7 @@ class H5CppGroup(FileWriter.FTGroup):
             """ constructor
 
             :param group: group object
-            :type manager: :obj:`H5PYGroup`
+            :type manager: :obj:`H5CppGroup`
             """
 
             self.__group = group
@@ -553,7 +553,7 @@ class H5CppGroup(FileWriter.FTGroup):
             """ attribute iterator
 
             :returns: attribute iterator
-            :rtype: :class:`H5PYAttrIter`
+            :rtype: :class:`H5CppAttrIter`
             """
             return self
 
@@ -561,7 +561,7 @@ class H5CppGroup(FileWriter.FTGroup):
         """ attribute iterator
 
         :returns: attribute iterator
-        :rtype: :class:`H5PYAttrIter`
+        :rtype: :class:`H5CppAttrIter`
         """
         return self.H5CppGroupIter(self)
 

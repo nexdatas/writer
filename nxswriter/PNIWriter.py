@@ -306,7 +306,7 @@ class PNIGroup(FileWriter.FTGroup):
             """ constructor
 
             :param group: group object
-            :type manager: :obj:`H5PYGroup`
+            :type manager: :obj:`PNIGroup`
             """
 
             self.__group = group
@@ -329,7 +329,7 @@ class PNIGroup(FileWriter.FTGroup):
             """ attribute iterator
 
             :returns: attribute iterator
-            :rtype: :class:`H5PYAttrIter`
+            :rtype: :class:`PNIAttrIter`
             """
             return self
 
@@ -337,7 +337,7 @@ class PNIGroup(FileWriter.FTGroup):
         """ attribute iterator
 
         :returns: attribute iterator
-        :rtype: :class:`H5PYAttrIter`
+        :rtype: :class:`PNIAttrIter`
         """
         return self.PNIGroupIter(self)
 
