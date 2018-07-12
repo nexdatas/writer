@@ -47,6 +47,14 @@ except ImportError, e:
     H5PY_AVAILABLE = False
     print "h5py is not available: %s" % e
 
+try:
+    from pninexus import h5cpp
+    # if module pni avalable
+    H5CPP_AVAILABLE = True
+except ImportError, e:
+    H5CPP_AVAILABLE = False
+    print "h5cpp is not available: %s" % e
+
 
 import os
 import sys
@@ -75,8 +83,8 @@ import TgDeviceTest
 import StreamSetTest
 import ElementTest
 
-if not PNI_AVAILABLE and not H5PY_AVAILABLE:
-    raise Exception("Please install h5py or pni")
+if not PNI_AVAILABLE and not H5PY_AVAILABLE and not H5CPP_AVAILABLE:
+    raise Exception("Please install h5py or pni or h5cpp")
 
 if PNI_AVAILABLE:
     import ElementPNITest
@@ -120,6 +128,8 @@ if H5PY_AVAILABLE:
     import FElementH5PYTest
     import TangoDataWriterH5PYTest
     import FileWriterH5PYTest
+if H5CPP_AVAILABLE:
+    import H5CppWriterTest
 if PNI_AVAILABLE and H5PY_AVAILABLE:
     import FileWriterPNIH5PYTest
     import TangoDataWriterPNIH5PYTest
@@ -351,6 +361,10 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(ESymbolTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest))
+
+    if H5PY_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(H5CppWriterTest))
 
     if H5PY_AVAILABLE:
         suite.addTests(

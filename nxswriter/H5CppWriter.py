@@ -23,9 +23,6 @@ import math
 import os
 import numpy as np
 from pninexus import h5cpp
-# from pninexus import nexus
-
-# import pni.io.nx.h5 as nx
 
 from . import FileWriter
 
@@ -142,7 +139,7 @@ def open_file(filename, readonly=False, libver=None):
     """
 
     fapl = h5cpp.property.FileAccessList()
-    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
+    #    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
     flag = h5cpp.file.AccessFlags.READONLY if readonly \
         else h5cpp.file.AccessFlags.READWRITE
     if libver is None or libver == 'lastest':
@@ -167,18 +164,13 @@ def create_file(filename, overwrite=False, libver=None):
     """
     fcpl = h5cpp.property.FileCreationList()
     fapl = h5cpp.property.FileAccessList()
-    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
+    # fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
     flag = h5cpp.file.AccessFlags.TRUNCATE if overwrite \
         else h5cpp.file.AccessFlags.EXCLUSIVE
     if libver is None or libver == 'lastest':
         fapl.library_version_bounds(
             h5cpp.property.LibVersion.LATEST,
             h5cpp.property.LibVersion.LATEST)
-    #
-    # workaround for python-pni #48
-    #
-    # return H5CppFile(nexus.create_file(filename, flag, fcpl, fapl),
-    #     filename)
     fl = h5cpp.file.create(filename, flag, fcpl, fapl)
     rt = fl.root()
     attrs = rt.attributes
@@ -288,11 +280,8 @@ class H5CppFile(FileWriter.FTFile):
         """ close file
         """
         FileWriter.FTFile.close(self)
-        # workaround for h5cpp bug ??
-        try:
+        if self._h5object.is_valid:
             self._h5object.close()
-        except:
-            pass
 
     @property
     def is_valid(self):
@@ -310,8 +299,12 @@ class H5CppFile(FileWriter.FTFile):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
-        print(self._h5object.intent)  # ??
-        return self._h5object.intent == h5cpp.file.AccessFlags.READONLY
+        flag = self._h5object.intent == h5cpp.file.AccessFlags.READONLY
+        if not flag:
+            return self._h5object.intent == h5cpp.file.AccessFlags.READONLY \
+                   | h5cpp.file.AccessFlags.SWMRREAD
+        else:
+            return flag
 
     def reopen(self, readonly=False, swmr=False, libver=None):
         """ reopen file
@@ -325,7 +318,7 @@ class H5CppFile(FileWriter.FTFile):
         """
 
         fapl = h5cpp.property.FileAccessList()
-        fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
+        # fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
         if libver is None or libver == 'lastest' or swmr:
             fapl.library_version_bounds(
                 h5cpp.property.LibVersion.LATEST,
@@ -338,8 +331,8 @@ class H5CppFile(FileWriter.FTFile):
             flag = h5cpp.file.AccessFlags.READONLY
         else:
             flag = h5cpp.file.AccessFlags.READWRITE
-        print("S %s " % flag)  # ??
-        self.close()
+        if self.is_valid:
+            self.close()
         self._h5object = h5cpp.file.open(self.name, flag, fapl)
         FileWriter.FTFile.reopen(self)
 
@@ -399,12 +392,6 @@ class H5CppGroup(FileWriter.FTGroup):
         """
 
         try:
-            #
-            # workaround for python-pni #48
-            #
-            # itm = nexus.get_objects(
-            #     self._h5object, nexus.Path(h5cpp.Path(name)))[0]
-            #
             if self._h5object.has_group(h5cpp.Path(name)):
                 return H5CppGroup(
                     self._h5object.get_group(h5cpp.Path(name)), self)
@@ -438,9 +425,6 @@ class H5CppGroup(FileWriter.FTGroup):
         gr.attributes.create(
             "NX_class", pTh["unicode"]).write(unicode(nxclass))
         return H5CppGroup(gr, self)
-        # return H5CppGroup(
-        #     nexus.BaseClassFactory.create(self._h5object, n, nxclass),
-        #     self)
 
     def create_field(self, name, type_code,
                      shape=None, chunk=None, dfilter=None):
@@ -473,10 +457,6 @@ class H5CppGroup(FileWriter.FTGroup):
             chunk = [(dm if dm != 0 else 1) for dm in shape]
         dcpl.layout = h5cpp.property.DatasetLayout.CHUNKED
         dcpl.chunk = tuple(chunk)
-        #
-        # field = nexus.FieldFactory.create_chunked_(
-        #     self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
-        #     chunk, dcpl=dcpl)
         field = h5cpp.node.Dataset(
             self._h5object, h5cpp.Path(name), pTh[type_code], dataspace,
             dcpl=dcpl)
@@ -505,11 +485,9 @@ class H5CppGroup(FileWriter.FTGroup):
         """ close group
         """
         FileWriter.FTGroup.close(self)
-        # workaround for h5cpp bug ??
-        try:
+
+        if self._h5object.is_valid:
             self._h5object.close()
-        except:
-            pass
 
     def reopen(self):
         """ reopen group
@@ -636,11 +614,8 @@ class H5CppField(FileWriter.FTField):
         """ close field
         """
         FileWriter.FTField.close(self)
-        # workaround for h5cpp bug ??
-        try:
+        if self._h5object.is_valid:
             self._h5object.close()
-        except:
-            pass
 
     def reopen(self):
         """ reopen field
@@ -1065,11 +1040,8 @@ class H5CppAttribute(FileWriter.FTAttribute):
         """ close attribute
         """
         FileWriter.FTAttribute.close(self)
-        try:
-            # workaround for h5cpp bug ??
+        if self._h5object.is_valid:
             self._h5object.close()
-        except:
-            pass
 
     def read(self):
         """ read attribute value
