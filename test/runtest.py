@@ -113,7 +113,7 @@ if H5PY_AVAILABLE:
     import H5PYWriterTest
     import FElementWithAttrH5PYTest
     import EStrategyH5PYTest
-    import EFieldH5PYTest
+    import EFieladH5PYTest
     import EFieldReshapeH5PYTest
     import EGroupH5PYTest
     import EAttributeH5PYTest
@@ -129,12 +129,41 @@ if H5PY_AVAILABLE:
     import TangoDataWriterH5PYTest
     import FileWriterH5PYTest
 if H5CPP_AVAILABLE:
+    import EDimensionsH5CppTest
+    import ElementH5CppTest
     import H5CppWriterTest
+    import FElementWithAttrH5CppTest
+    import EStrategyH5CppTest
+    import EFieldH5CppTest # ?? bool
+    import EFieldReshapeH5CppTest # ?? bool
+    import EGroupH5CppTest # ?? bool
+    import EAttributeH5CppTest # ?? bool
+    import ELinkH5CppTest # ?? bool/link
+    import EFileH5CppTest
+    import EDocH5CppTest
+    import NexusXMLHandlerH5CppTest # ?? Error reclaiming memory from variable length string data in dataset
+    import ClientFieldTagWriterH5CppTest # ?? bool/enums/str
+    import XMLFieldTagWriterH5CppTest  # ?? bool/enums/str
+    import EDimH5CppTest
+    import ESymbolH5CppTest
+    import FElementH5CppTest
+    import TangoDataWriterH5CppTest # ?? bool
+    import FileWriterH5CppTest # ?? bool
+        
 if PNI_AVAILABLE and H5PY_AVAILABLE:
     import FileWriterPNIH5PYTest
     import TangoDataWriterPNIH5PYTest
 
+# if PNI_AVAILABLE and H5CPP_AVAILABLE:
+#     import FileWriterPNIH5CppTest
+#     import TangoDataWriterPNIH5CppTest
 
+# if PNI_AVAILABLE and H5CPP_AVAILABLE:
+#     import FileWriterH5PYH5CppTest
+#     import TangoDataWriterH5PYH5CppTest
+
+
+    
 # list of available databases
 DB_AVAILABLE = []
 
