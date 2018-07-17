@@ -374,15 +374,13 @@ class Checker(object):
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
         # print("ONE")
-        # print(values)
+        # print(cnt.name)        
         # print(values[0])
         # print(type(values[0]))
         # print("FILE")
-        # print(cnt)
         # print(cnt[0])
         # print(type(cnt[0]))
         if not isinstance(values[0], str) and not isinstance(values[0], unicode):
-            # value = cnt[...]
             value = cnt.read()
             for i in range(len(value)):
 #                print values[i].__repr__(),  value[i].__repr__()
@@ -393,7 +391,9 @@ class Checker(object):
                 else:
                     self._tc.assertEqual(values[i], value[i])
         for i in range(len(values)):
-            if self._isNumeric(cnt[i]):
+            cv= cnt[i]
+#            if self._isNumeric(cnt[i]):
+            if self._isNumeric(cv):
                 if nxtype == "NX_BOOLEAN":
 #                    print "BOOL: ", values[i] ,cnt[i]
                     self._tc.assertEqual(
@@ -660,13 +660,12 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
         for i in range(len(values)):
-#                print i, j, cnt[i,j], lvalues[i][j]
+            # print i,  cnt[i], type(cnt[i]), values[i]
             if self._isNumeric(cnt[i]):
                 if nxtype == "NX_BOOLEAN":
                     self._tc.assertEqual(
                         Types.Converters.toBool(values[i]), cnt[i])
                 else:
-#                    print "CHECK", name, values[i], cnt[i]
                     self._tc.assertTrue(abs(values[i] - cnt[i]) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt[i])

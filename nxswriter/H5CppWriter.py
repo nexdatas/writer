@@ -50,7 +50,7 @@ def _slice2selection(t, shape):
                 offset=(t.start,),
                 count=int(math.ceil((t.stop-t.start)/float(t.step))),
                 stride=(t.step - 1,))
-    elif isinstance(t, int):
+    elif isinstance(t, (int, long)):
         return h5cpp.dataspace.Hyperslab(
             offset=(t,), block=(1,))
     elif isinstance(t, (list, tuple)):
@@ -59,7 +59,7 @@ def _slice2selection(t, shape):
         count = []
         stride = []
         for it, tel in enumerate(t):
-            if isinstance(tel, int):
+            if isinstance(tel, (int, long)):
                 offset.append(tel)
                 block.append(1)
                 count.append(1)
@@ -694,12 +694,26 @@ class H5CppField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         if self.shape == (1,) and t == 0:
-            return self._h5object.read()
+            v = self._h5object.read()
         selection = _slice2selection(t, self.shape)
         if selection is None:
             return self._h5object.read()
-        else:
-            return self._h5object.read(selection=selection)
+        v = self._h5object.read(selection=selection)
+        if hasattr(v, "shape"):
+            shape = v.shape
+            if len(shape) == 3 and  shape[2] == 1:
+                v = v[:,:,0]
+            if len(shape) == 3 and  shape[1] == 1:
+                v = v[:,0,:]
+            if len(shape) == 3 and  shape[0] == 1:
+                v = v[0,:,:]
+            if len(shape) == 2 and  shape[1] == 1:
+                v = v[:,0]
+            if len(shape) == 2 and  shape[0] == 1:
+                v = v[0,:]
+            if len(shape) == 1 and  shape[0] == 1:
+                v = v[0]
+        return v
 
     @property
     def is_valid(self):
@@ -1045,7 +1059,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         #: (:obj:`str`) object nexus path
         self.path = tparent.path
         self.path += "@%s" % self.name
-        
+
         #: (:obj:`bool`) bool flag
         self.boolflag = False
 
