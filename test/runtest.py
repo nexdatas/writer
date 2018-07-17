@@ -113,7 +113,7 @@ if H5PY_AVAILABLE:
     import H5PYWriterTest
     import FElementWithAttrH5PYTest
     import EStrategyH5PYTest
-    import EFieladH5PYTest
+    import EFieldH5PYTest
     import EFieldReshapeH5PYTest
     import EGroupH5PYTest
     import EAttributeH5PYTest
@@ -244,6 +244,8 @@ if "MYSQL" in DB_AVAILABLE:
         import DBFieldTagWriterTest
     if H5PY_AVAILABLE:
         import DBFieldTagWriterH5PYTest
+    if H5CPP_AVAILABLE:
+        import DBFieldTagWriterH5CppTest
     import MYSQLSourceTest
 
 if "PGSQL" in DB_AVAILABLE:
@@ -286,6 +288,9 @@ if PYTANGO_AVAILABLE:
         if H5PY_AVAILABLE:
             import DBFieldTagServerH5PYTest
             import DBFieldTagAsynchH5PYTest
+        if H5CPP_AVAILABLE:
+            import DBFieldTagServerH5CppTest
+            import DBFieldTagAsynchH5CppTest
 
 # import TestServerSetUp
 
@@ -518,6 +523,26 @@ def main():
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerH5PYTest))
 
+        if H5CPP_AVAILABLE:
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchH5CppTest))
+            suite.addTests(
+                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerH5CppTest))
+
         if "MYSQL" in DB_AVAILABLE:
             if PNI_AVAILABLE:
                 suite.addTests(
@@ -529,6 +554,11 @@ def main():
                     unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerH5PYTest))
                 suite.addTests(
                     unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchH5PYTest))
+            if H5CPP_AVAILABLE:
+                suite.addTests(
+                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerH5CppTest))
+                suite.addTests(
+                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchH5CppTest))
 
     # test runner
     runner = unittest.TextTestRunner()

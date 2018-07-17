@@ -1506,6 +1506,7 @@ class EFieldTest(unittest.TestCase):
 
         for k in maTn.keys():
             self.assertEqual(el.h5Object.attributes[k][...], fattrs[k])
+            print k, el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]]
             self.assertEqual(
                 el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
