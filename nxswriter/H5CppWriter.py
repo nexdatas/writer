@@ -43,8 +43,8 @@ def _slice2selection(t, shape):
     elif isinstance(t, slice):
         if t.step in [None, 1]:
             return h5cpp.dataspace.Hyperslab(
-                offset=(t.start,),
-                block=(t.stop-t.start,))
+                offset=(t.start or 0,),
+                block=((t.stop or shape[0]) - (t.start or 0),))
         else:
             return h5cpp.dataspace.Hyperslab(
                 offset=(t.start,),
