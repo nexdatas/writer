@@ -280,6 +280,16 @@ if PYTANGO_AVAILABLE:
         import XMLFieldTagAsynchH5PYTest
         import NXSDataWriterH5PYTest
         import PyEvalTangoSourceH5PYTest
+    if H5CPP_AVAILABLE:
+        import TangoFieldTagWriterH5CppTest
+        import TangoFieldTagServerH5CppTest
+        import ClientFieldTagServerH5CppTest
+        import XMLFieldTagServerH5CppTest
+        import TangoFieldTagAsynchH5CppTest
+        import ClientFieldTagAsynchH5CppTest
+        import XMLFieldTagAsynchH5PYTest
+        import NXSDataWriterH5CppTest
+        import PyEvalTangoSourceH5CppTest
 
     if "MYSQL" in DB_AVAILABLE:
         if PNI_AVAILABLE:
