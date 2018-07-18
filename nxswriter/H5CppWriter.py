@@ -21,10 +21,17 @@
 
 import math
 import os
+import sys
 import numpy as np
 from pninexus import h5cpp
 
 from . import FileWriter
+
+if sys.version_info > (3,):
+    unicode = str
+    long = int
+else:
+    bytes = str
 
 
 def _slice2selection(t, shape):
@@ -299,12 +306,16 @@ class H5CppFile(FileWriter.FTFile):
         :returns: readonly flag
         :rtype: :obj:`bool`
         """
-        flag = self._h5object.intent == h5cpp.file.AccessFlags.READONLY
-        if not flag:
-            return self._h5object.intent == h5cpp.file.AccessFlags.READONLY \
-                   | h5cpp.file.AccessFlags.SWMRREAD
-        else:
-            return flag
+        try:
+            flag = self._h5object.intent == h5cpp.file.AccessFlags.READONLY
+            if not flag:
+                return self._h5object.intent == \
+                    h5cpp.file.AccessFlags.READONLY \
+                    | h5cpp.file.AccessFlags.SWMRREAD
+            else:
+                return flag
+        except:
+            return None
 
     def reopen(self, readonly=False, swmr=False, libver=None):
         """ reopen file
@@ -411,7 +422,7 @@ class H5CppGroup(FileWriter.FTGroup):
                 [lk for lk in self._h5object.links
                  if lk.path.name == name][0], self)
 
-    def create_group(self, n, nxclass=""):
+    def create_group(self, n, nxclass=None):
         """ open a file tree element
 
         :param n: group name
@@ -422,8 +433,9 @@ class H5CppGroup(FileWriter.FTGroup):
         :rtype: :class:`H5CppGroup`
         """
         gr = h5cpp.node.Group(self._h5object, n)
-        gr.attributes.create(
-            "NX_class", pTh["unicode"]).write(unicode(nxclass))
+        if nxclass is not None:
+            gr.attributes.create(
+                "NX_class", pTh["unicode"]).write(unicode(nxclass))
         return H5CppGroup(gr, self)
 
     def create_field(self, name, type_code,
@@ -701,17 +713,17 @@ class H5CppField(FileWriter.FTField):
         v = self._h5object.read(selection=selection)
         if hasattr(v, "shape"):
             shape = v.shape
-            if len(shape) == 3 and  shape[2] == 1:
-                v = v[:,:,0]
-            if len(shape) == 3 and  shape[1] == 1:
-                v = v[:,0,:]
-            if len(shape) == 3 and  shape[0] == 1:
-                v = v[0,:,:]
-            if len(shape) == 2 and  shape[1] == 1:
-                v = v[:,0]
-            if len(shape) == 2 and  shape[0] == 1:
-                v = v[0,:]
-            if len(shape) == 1 and  shape[0] == 1:
+            if len(shape) == 3 and shape[2] == 1:
+                v = v[:, :, 0]
+            if len(shape) == 3 and shape[1] == 1:
+                v = v[:, 0, :]
+            if len(shape) == 3 and shape[0] == 1:
+                v = v[0, :, :]
+            if len(shape) == 2 and shape[1] == 1:
+                v = v[:, 0]
+            if len(shape) == 2 and shape[0] == 1:
+                v = v[0, :]
+            if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
         return v
 
@@ -998,7 +1010,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
         at = H5CppAttribute(at, self.parent)
         if dtype == "bool":
             at.boolflag = True
-        return  at
+        return at
 
     def __len__(self):
         """ number of attributes

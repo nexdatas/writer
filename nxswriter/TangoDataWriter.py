@@ -60,7 +60,7 @@ try:
     WRITERS["h5cpp"] = H5CppWriter
 except:
     pass
-DEFAULTWRITERS =  ["pni", "h5py", "h5cpp"]
+DEFAULTWRITERS = ["pni", "h5py", "h5cpp"]
 
 
 class TangoDataWriter(object):
