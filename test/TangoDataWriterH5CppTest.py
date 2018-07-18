@@ -182,10 +182,10 @@ class TangoDataWriterH5CppTest(unittest.TestCase):
       <strategy mode="FINAL"/>
       <datasource type="PYEVAL">
         <result name='res2'>
-import h5py
+from pninexus import h5cpp
 root = commonblock["__nxroot__"]
-en = root.get("entry1")
-en["mylink"] = h5py.SoftLink("/entry1/nxrootpath")
+en = root.get_group(h5cpp.Path("entry1"))
+h5cpp.node.link(target=h5cpp.Path("/entry1/nxrootpath"), link_base=en, link_path=h5cpp.Path("mylink"))
 ds.res2 = str(True)
         </result>
       </datasource>

@@ -85,7 +85,7 @@ class XMLFieldTagServerH5CppTest(XMLFieldTagWriterH5CppTest.XMLFieldTagWriterH5C
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
-        self.setProp(tdw, "writer", "h5py")
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])

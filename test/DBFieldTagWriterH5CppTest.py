@@ -138,7 +138,7 @@ class DBFieldTagWriterH5CppTest(unittest.TestCase):
         tdw = TangoDataWriter()
         tdw.fileName = fname
         tdw.numberOfThreads = 1
-        tdw.writer = "h5py"
+        tdw.writer = "h5cpp"
 
         tdw.openFile()
         tdw.xmlsettings = xml

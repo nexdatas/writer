@@ -147,7 +147,7 @@ class TangoFieldTagWriterH5CppTest(unittest.TestCase):
         tdw = TangoDataWriter()
         tdw.fileName = fname
 #        tdw.numberOfThreads = 1
-        self.setProp(tdw, "writer", "h5py")
+        self.setProp(tdw, "writer", "h5cpp")
 
         tdw.openFile()
         tdw.xmlsettings = xml

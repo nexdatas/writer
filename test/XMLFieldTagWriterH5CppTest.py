@@ -77,9 +77,9 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \returns Tango Data Writer instance
     def openWriter(self, fname, xml, json=None):
         tdw = TangoDataWriter()
-        tdw.writer = "h5py"
+        tdw.writer = "h5cpp"
         tdw.fileName = fname
-        self.setProp(tdw, "writer", "h5py")
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.openFile()
         tdw.xmlsettings = xml
         if json:

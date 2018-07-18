@@ -121,7 +121,7 @@ class ESymbolH5CppTest(unittest.TestCase):
 
     # _lastObject method test
     # \brief It tests executing _lastObject method
-    def test_lastObject_h5py(self):
+    def test_lastObject_h5cpp(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
 

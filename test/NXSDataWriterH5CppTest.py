@@ -279,7 +279,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             dp.OpenFile()
             self.assertEqual(dp.state(), PyTango.DevState.OPEN)
@@ -360,7 +360,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             dp.OpenFile()
             self.assertEqual(dp.state(), PyTango.DevState.OPEN)
@@ -415,7 +415,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -516,7 +516,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -596,7 +596,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -985,7 +985,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1344,7 +1344,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1826,7 +1826,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -2271,7 +2271,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -2630,7 +2630,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -2981,7 +2981,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = tfname
 
             dp.stepsPerFile = 2
@@ -3944,7 +3944,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             # self.setProp(dp, "DefaultCanFail", False)
             dp.FileName = fname
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -4304,7 +4304,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             #        print 'attributes', dp.attribute_list_query()
             self.setProp(dp, "DefaultCanFail", False)
             dp.FileName = fname
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -4663,7 +4663,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(ProxyHelper.wait(dp, 10000))
             #        print 'attributes', dp.attribute_list_query()
             dp.FileName = fname
-            self.setProp(dp, "writer", "h5py")
+            self.setProp(dp, "writer", "h5cpp")
             dp.FileName = fname
             self.assertEqual(dp.state(), PyTango.DevState.ON)
             self.assertEqual(dp.status(), self.__status[dp.state()])

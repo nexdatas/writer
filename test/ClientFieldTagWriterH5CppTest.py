@@ -102,7 +102,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \returns Tango Data Writer instance
     def openWriter(self, fname, xml, json=None):
         tdw = TangoDataWriter()
-        self.setProp(tdw, "writer", "h5py")
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.fileName = fname
         tdw.openFile()
         tdw.xmlsettings = xml

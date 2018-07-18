@@ -31,7 +31,7 @@ import weakref
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
-import h5py
+from pninexus import h5cpp
 
 
 
@@ -343,11 +343,11 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_default_createfile_h5py(self):
+    def test_default_createfile_h5cpp(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
-        try:
+        try:<
             FileWriter.writer = H5CppWriter
             fl = FileWriter.create_file(self._fname)
             fl.close()
@@ -762,7 +762,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyfile(self):
+    def test_h5cppfile(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
@@ -839,7 +839,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pygroup(self):
+    def test_h5cppgroup(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -1391,7 +1391,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyfield_scalar(self):
+    def test_h5cppfield_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -1649,7 +1649,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyfield_spectrum(self):
+    def test_h5cppfield_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -1899,7 +1899,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyfield_image(self):
+    def test_h5cppfield_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -2168,7 +2168,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyfield_vec(self):
+    def test_h5cppfield_vec(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -2459,7 +2459,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pydeflate(self):
+    def test_h5cppdeflate(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -2519,7 +2519,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyattributemanager(self):
+    def test_h5cppattributemanager(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -2985,7 +2985,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyattribute_scalar(self):
+    def test_h5cppattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -3268,7 +3268,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyattribute_spectrum(self):
+    def test_h5cppattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -3595,7 +3595,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
     # default createfile test
     # \brief It tests default settings
-    def test_h5pyattribute_image(self):
+    def test_h5cppattribute_image(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
