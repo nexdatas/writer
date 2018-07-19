@@ -711,18 +711,27 @@ class H5CppField(FileWriter.FTField):
         if selection is None:
             return self._h5object.read()
         v = self._h5object.read(selection=selection)
+        # if hasattr(v, "shape") and hasattr(v, "reshape"):
+        #     shape = [sh for sh in v.shape if sh != 1]
+        #     if shape != list(v.shape):
+        #         v.reshape(shape)
         if hasattr(v, "shape"):
             shape = v.shape
             if len(shape) == 3 and shape[2] == 1:
                 v = v[:, :, 0]
+                shape = v.shape
             if len(shape) == 3 and shape[1] == 1:
                 v = v[:, 0, :]
+                shape = v.shape
             if len(shape) == 3 and shape[0] == 1:
                 v = v[0, :, :]
+                shape = v.shape
             if len(shape) == 2 and shape[1] == 1:
                 v = v[:, 0]
+                shape = v.shape
             if len(shape) == 2 and shape[0] == 1:
                 v = v[0, :]
+                shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
         return v
@@ -1166,18 +1175,27 @@ class H5CppAttribute(FileWriter.FTAttribute):
         :rtype: :obj:`any`
         """
         v = self._h5object.__getitem__(t)
+        # if hasattr(v, "shape") and hasattr(v, "reshape"):
+        #     shape = [sh for sh in v.shape if sh != 1]
+        #     if shape != list(v.shape):
+        #         v.reshape(shape)
         if hasattr(v, "shape"):
             shape = v.shape
             if len(shape) == 3 and shape[2] == 1:
                 v = v[:, :, 0]
+                shape = v.shape
             if len(shape) == 3 and shape[1] == 1:
                 v = v[:, 0, :]
+                shape = v.shape
             if len(shape) == 3 and shape[0] == 1:
                 v = v[0, :, :]
+                shape = v.shape
             if len(shape) == 2 and shape[1] == 1:
                 v = v[:, 0]
+                shape = v.shape
             if len(shape) == 2 and shape[0] == 1:
                 v = v[0, :]
+                shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
         return v
