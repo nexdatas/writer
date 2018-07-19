@@ -1527,7 +1527,7 @@ class ELinkH5CppTest(unittest.TestCase):
                "strategy5": "STEP",
                "strategy6": "FINAL"}
         gT1 = TNObject()
-        ch = TNObject("testGroup", "NXentry", gT1)
+        chh = TNObject("testGroup", "NXentry", gT1)
         gT2 = TNObject()
         ch = TNObject("entry3", "NXentry", gT2)
 
@@ -1719,7 +1719,10 @@ class ELinkH5CppTest(unittest.TestCase):
             res["l5"][1], gr.h5Object.attributes["NX_class"].dtype)
         self.assertEqual(
             res["l5"][2], gr.h5Object.attributes["NX_class"].shape)
-        self.assertEqual(res["l5"][3], gr.h5Object.name)
+        # change with respect to python-pni and h5py
+        # ?? self.assertEqual(res["l5"][3], gr.h5Object.name)
+        self.assertEqual("testGroup", gr.h5Object.name)
+        self.assertEqual(chh.name, gr.h5Object.name)
 
         self._nxFile.close()
         os.remove(self._fname)
