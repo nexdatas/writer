@@ -1165,7 +1165,22 @@ class H5CppAttribute(FileWriter.FTAttribute):
         :returns: python object
         :rtype: :obj:`any`
         """
-        return self._h5object.__getitem__(t)
+        v = self._h5object.__getitem__(t)
+        if hasattr(v, "shape"):
+            shape = v.shape
+            if len(shape) == 3 and shape[2] == 1:
+                v = v[:, :, 0]
+            if len(shape) == 3 and shape[1] == 1:
+                v = v[:, 0, :]
+            if len(shape) == 3 and shape[0] == 1:
+                v = v[0, :, :]
+            if len(shape) == 2 and shape[1] == 1:
+                v = v[:, 0]
+            if len(shape) == 2 and shape[0] == 1:
+                v = v[0, :]
+            if len(shape) == 1 and shape[0] == 1:
+                v = v[0]
+        return v
 
     @property
     def is_valid(self):
