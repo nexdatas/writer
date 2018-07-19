@@ -406,10 +406,6 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest))
 
-    if H5CPP_AVAILABLE:
-        suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(H5CppWriterTest))
-
     if H5PY_AVAILABLE:
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ElementH5PYTest))

@@ -473,9 +473,7 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(nt.path, "/notype")
 
             self.assertEqual(
-                len(nt.h5object.attributes), 1)
-            attr = nt.attributes
-            self.assertEqual(attr["NX_class"][...], "")
+                len(nt.h5object.attributes), 0)
             self.assertTrue(
                 isinstance(attr, H5CppWriter.H5CppAttributeManager))
             self.assertEqual(nt.is_valid, True)

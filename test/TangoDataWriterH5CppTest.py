@@ -169,13 +169,13 @@ class TangoDataWriterH5CppTest(unittest.TestCase):
     <field units="m" type="NX_CHAR" name="nxrootstr">
       <strategy mode="INIT"/>
       <datasource type="PYEVAL">
-        <result name='res2'>ds.res2 = commonblock["__nxroot__"].filename</result>
+        <result name='res2'>ds.res2 = str(commonblock["__nxroot__"].link.path)</result>
       </datasource>
     </field>
     <field units="m" type="NX_CHAR" name="nxrootpath">
       <strategy mode="INIT"/>
       <datasource type="PYEVAL">
-        <result name='res2'>ds.res2 = (commonblock["__nxroot__"]).name</result>
+        <result name='res2'>ds.res2 = (commonblock["__nxroot__"]).link.path.name</result>
       </datasource>
     </field>
     <field units="m" type="NX_CHAR" name="nxrootlink">
@@ -5760,7 +5760,8 @@ ds.res2 = str(True)
             self.assertEqual(cnt.dtype, "string")
             self.assertEqual(cnt.size, 1)
             value = cnt[:]
-            self.assertEqual(fname, value)
+            #self.assertEqual(fname, value)
+            self.assertEqual("/", value)
 
             cnt = en.open("nxrootpath")
             self.assertTrue(cnt.is_valid)
@@ -5771,7 +5772,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.dtype, "string")
             self.assertEqual(cnt.size, 1)
             value = cnt[:]
-            self.assertEqual('/', value)
+            self.assertEqual('.', value)
 
             cnt = en.open("nxrootlink")
             self.assertTrue(cnt.is_valid)
@@ -5793,7 +5794,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.dtype, "string")
             self.assertEqual(cnt.size, 1)
             value = cnt[:]
-            self.assertEqual('/', value)
+            self.assertEqual('.', value)
 
             f.close()
 
