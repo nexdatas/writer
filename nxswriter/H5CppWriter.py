@@ -308,14 +308,10 @@ class H5CppFile(FileWriter.FTFile):
         """
         try:
             flag = self._h5object.intent == h5cpp.file.AccessFlags.READONLY
-            if not flag:
-                if hasattr(h5cpp.file.AccessFlags, "SWMRREAD"):
+            if not flag and hasattr(h5cpp.file.AccessFlags, "SWMRREAD"):
                     return self._h5object.intent == \
                         h5cpp.file.AccessFlags.READONLY \
                         | h5cpp.file.AccessFlags.SWMRREAD
-                else:
-                    return self._h5object.intent == \
-                        h5cpp.file.AccessFlags.READONLY
             else:
                 return flag
         except:

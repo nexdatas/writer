@@ -1442,15 +1442,19 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
-            fl.reopen(True, True)
+            if hasattr(h5cpp.file.AccessFlags , "SWMRWRITE"):
+                fl.reopen(True, True)
+            else:
+                self.myAssertRaise(
+                    Exception, fl.reopen, True, True)
             fl.close()
-            fl.reopen(False, True)
+            if hasattr(h5cpp.file.AccessFlags , "SWMRWRITE"):
+                fl.reopen(False, True)
+            else:
+                self.myAssertRaise(
+                    Exception, fl.reopen, False, True)
             fl.close()
 
-            # self.myAssertRaise(
-            #     Exception, fl.reopen, True, True)
-            # self.myAssertRaise(
-            #     Exception, fl.reopen, False, True)
 
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
