@@ -1006,7 +1006,9 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
         if shape:
             at = self._h5object.create(name, pTh[dtype], shape)
             if dtype == 'string':
-                at.write(np.empty(shape, dtype="unicode"))
+                emp = np.empty(shape, dtype="unicode")
+                emp[:] = ''
+                at.write(emp)
             else:
                 at.write(np.zeros(shape, dtype=dtype))
         else:
