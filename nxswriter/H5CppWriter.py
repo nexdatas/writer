@@ -309,9 +309,13 @@ class H5CppFile(FileWriter.FTFile):
         try:
             flag = self._h5object.intent == h5cpp.file.AccessFlags.READONLY
             if not flag:
-                return self._h5object.intent == \
-                    h5cpp.file.AccessFlags.READONLY \
-                    | h5cpp.file.AccessFlags.SWMRREAD
+                if hasattr(h5cpp.file.AccessFlags, "SWMRREAD"):
+                    return self._h5object.intent == \
+                        h5cpp.file.AccessFlags.READONLY \
+                        | h5cpp.file.AccessFlags.SWMRREAD
+                else:
+                    return self._h5object.intent == \
+                        h5cpp.file.AccessFlags.READONLY
             else:
                 return flag
         except:
@@ -336,6 +340,8 @@ class H5CppFile(FileWriter.FTFile):
                 h5cpp.property.LibVersion.LATEST)
 
         if swmr:
+            if not hasattr(h5cpp.file.AccessFlags , "SWMRWRITE"):
+                raise Exception("SWMR not supported")
             flag = h5cpp.file.AccessFlags.READWRITE \
                 | h5cpp.file.AccessFlags.SWMRWRITE
         elif readonly:
