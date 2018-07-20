@@ -720,19 +720,25 @@ class H5CppField(FileWriter.FTField):
         if hasattr(v, "shape"):
             shape = v.shape
             if len(shape) == 3 and shape[2] == 1:
-                v.reshape(shape[:2])
+                #: problem with old numpy
+                # v.reshape(shape[:2])
+                v = v[:, :, 0]
                 shape = v.shape
             if len(shape) == 3 and shape[1] == 1:
-                v.reshape([shape[0], shape[2]])
+                # v.reshape([shape[0], shape[2]])
+                v = v[:, 0, :]
                 shape = v.shape
             if len(shape) == 3 and shape[0] == 1:
-                v.reshape([shape[1], shape[2]])
+                # v.reshape([shape[1], shape[2]])
+                v = v[0, :, :]
                 shape = v.shape
             if len(shape) == 2 and shape[1] == 1:
-                v.reshape([shape[0]])
+                # v.reshape([shape[0]])
+                v = v[0, :]
                 shape = v.shape
             if len(shape) == 2 and shape[0] == 1:
-                v.reshape([shape[1]])
+                # v.reshape([shape[1]])
+                v = v[:, 0]
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
@@ -1186,19 +1192,25 @@ class H5CppAttribute(FileWriter.FTAttribute):
         if hasattr(v, "shape"):
             shape = v.shape
             if len(shape) == 3 and shape[2] == 1:
-                v.reshape(shape[:2])
+                #: problem with old numpy
+                # v.reshape(shape[:2])
+                v = v[:, :, 0]
                 shape = v.shape
             if len(shape) == 3 and shape[1] == 1:
-                v.reshape([shape[0], shape[2]])
+                # v.reshape([shape[0], shape[2]])
+                v = v[:, 0, :]
                 shape = v.shape
             if len(shape) == 3 and shape[0] == 1:
-                v.reshape([shape[1], shape[2]])
+                # v.reshape([shape[1], shape[2]])
+                v = v[0, :, :]
                 shape = v.shape
             if len(shape) == 2 and shape[1] == 1:
-                v.reshape([shape[0]])
+                # v.reshape([shape[0]])
+                v = v[0, :]
                 shape = v.shape
             if len(shape) == 2 and shape[0] == 1:
-                v.reshape([shape[1]])
+                # v.reshape([shape[1]])
+                v = v[:, 0]
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
