@@ -95,7 +95,7 @@ pTh = {
     "long": h5cpp.datatype.Integer,
     "str": h5cpp.datatype.kVariableString,
     "unicode": h5cpp.datatype.kVariableString,
-    "bool": h5cpp.datatype.kInt8,
+    "bool": h5cpp.datatype.kEBool,
     "int": h5cpp.datatype.kInt64,
     "int64": h5cpp.datatype.kInt64,
     "int32": h5cpp.datatype.kInt32,
@@ -476,8 +476,8 @@ class H5CppGroup(FileWriter.FTGroup):
             dcpl=dcpl)
 
         fld = H5CppField(field, self)
-        if type_code == "bool":
-            fld.boolflag = True
+        # if type_code == "bool":
+        #     fld.boolflag = True
         return fld
 
     @property
@@ -618,7 +618,7 @@ class H5CppField(FileWriter.FTField):
                 else:
                     self.path = tparent.path + "/" + self.name
         #: (:obj:`bool`) bool flag
-        self.boolflag = False
+        # self.boolflag = False
 
     @property
     def attributes(self):
@@ -760,8 +760,8 @@ class H5CppField(FileWriter.FTField):
         :returns: field data type
         :rtype: :obj:`str`
         """
-        if self.boolflag:
-            return "bool"
+        # if self.boolflag:
+        #     return "bool"
         if str(self._h5object.datatype.type) == "FLOAT":
             if self._h5object.datatype.size == 8:
                 return "float64"
@@ -798,6 +798,11 @@ class H5CppField(FileWriter.FTField):
                     return "int128"
                 else:
                     return "uint128"
+            else:
+                return "int"
+        elif str(self._h5object.datatype.type) == "ENUM":
+            if h5cpp._datatype.is_bool(self._h5object.datatype):
+                return "bool"
             else:
                 return "int"
 
@@ -1027,8 +1032,8 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
                 at.write(np.array(0, dtype=dtype))
 
         at = H5CppAttribute(at, self.parent)
-        if dtype == "bool":
-            at.boolflag = True
+        # if dtype == "bool":
+        #     at.boolflag = True
         return at
 
     def __len__(self):
@@ -1092,7 +1097,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         self.path += "@%s" % self.name
 
         #: (:obj:`bool`) bool flag
-        self.boolflag = False
+        # self.boolflag = False
 
     def close(self):
         """ close attribute
@@ -1232,8 +1237,8 @@ class H5CppAttribute(FileWriter.FTAttribute):
         :returns: field data type
         :rtype: :obj:`str`
         """
-        if self.boolflag:
-            return "bool"
+        # if self.boolflag:
+        #     return "bool"
         if str(self._h5object.datatype.type) == "FLOAT":
             if self._h5object.datatype.size == 8:
                 return "float64"
@@ -1271,7 +1276,11 @@ class H5CppAttribute(FileWriter.FTAttribute):
                     return "uint128"
             else:
                 return "int"
-
+        elif str(self._h5object.datatype.type) == "ENUM":
+            if h5cpp._datatype.is_bool(self._h5object.datatype):
+                return "bool"
+            else:
+                return "int"
         return hTp[self._h5object.datatype.type]
 
     @property
