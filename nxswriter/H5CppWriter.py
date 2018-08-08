@@ -673,7 +673,13 @@ class H5CppField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        return self._h5object.read()
+        v = self._h5object.read()
+        if self.dtype == 'string':
+            try:
+                v = v.decode('UTF-8')
+            except:
+                pass
+        return v
 
     def write(self, o):
         """ write the field value
@@ -709,9 +715,16 @@ class H5CppField(FileWriter.FTField):
         """
         if self.shape == (1,) and t == 0:
             v = self._h5object.read()
+
         selection = _slice2selection(t, self.shape)
         if selection is None:
-            return self._h5object.read()
+            v = self._h5object.read()
+            if self.dtype == 'string':
+                try:
+                    v = v.decode('UTF-8')
+                except:
+                    pass
+            return v
         v = self._h5object.read(selection=selection)
         # if hasattr(v, "shape") and hasattr(v, "reshape"):
         #     shape = [sh for sh in v.shape if sh != 1]
@@ -742,6 +755,11 @@ class H5CppField(FileWriter.FTField):
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
+        if self.dtype == 'string':
+            try:
+                v = v.decode('UTF-8')
+            except:
+                pass
         return v
 
     @property
@@ -1112,7 +1130,13 @@ class H5CppAttribute(FileWriter.FTAttribute):
         :returns: python object
         :rtype: :obj:`any`
         """
-        return self._h5object.read()
+        vl = self._h5object.read()
+        if self.dtype == 'string':
+            try:
+                vl = vl.decode('UTF-8')
+            except:
+                pass
+        return vl
 
     def write(self, o):
         """ write attribute value
@@ -1219,6 +1243,11 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
+        if self.dtype == 'string':
+            try:
+                v = v.decode('UTF-8')
+            except:
+                pass
         return v
 
     @property
