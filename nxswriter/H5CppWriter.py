@@ -336,7 +336,7 @@ class H5CppFile(FileWriter.FTFile):
                 h5cpp.property.LibVersion.LATEST)
 
         if swmr:
-            if not hasattr(h5cpp.file.AccessFlags , "SWMRWRITE"):
+            if not hasattr(h5cpp.file.AccessFlags, "SWMRWRITE"):
                 raise Exception("SWMR not supported")
             flag = h5cpp.file.AccessFlags.READWRITE \
                 | h5cpp.file.AccessFlags.SWMRWRITE
@@ -677,7 +677,7 @@ class H5CppField(FileWriter.FTField):
             # workaround for bug: h5cpp #355
             if self.size == 0:
                 if self.shape:
-                    v = np.empty(shape=self.shape, dtype= self.dtype )
+                    v = np.empty(shape=self.shape, dtype=self.dtype)
                 else:
                     v = []
             else:
@@ -727,7 +727,7 @@ class H5CppField(FileWriter.FTField):
                 # workaround for bug: h5cpp #355
                 if self.size == 0:
                     if self.shape:
-                        v = np.empty(shape=self.shape, dtype= self.dtype )
+                        v = np.empty(shape=self.shape, dtype=self.dtype)
                     else:
                         v = []
                 else:
@@ -741,7 +741,7 @@ class H5CppField(FileWriter.FTField):
                 # workaround for bug: h5cpp #355
                 if self.size == 0:
                     if self.shape:
-                        v = np.empty(shape=self.shape, dtype= self.dtype )
+                        v = np.empty(shape=self.shape, dtype=self.dtype)
                     else:
                         v = []
                 else:
