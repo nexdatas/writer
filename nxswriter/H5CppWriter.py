@@ -673,12 +673,21 @@ class H5CppField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        v = self._h5object.read()
         if self.dtype == 'string':
+            # workaround for bug: h5cpp #355
+            if self.size == 0:
+                if self.shape:
+                    v = np.empty(shape=self.shape, dtype= self.dtype )
+                else:
+                    v = []
+            else:
+                v = self._h5object.read()
             try:
                 v = v.decode('UTF-8')
             except:
                 pass
+        else:
+            v = self._h5object.read()
         return v
 
     def write(self, o):
@@ -714,16 +723,35 @@ class H5CppField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         if self.shape == (1,) and t == 0:
-            v = self._h5object.read()
+            if self.dtype == 'string':
+                # workaround for bug: h5cpp #355
+                if self.size == 0:
+                    if self.shape:
+                        v = np.empty(shape=self.shape, dtype= self.dtype )
+                    else:
+                        v = []
+                else:
+                    v = self._h5object.read()
+            else:
+                v = self._h5object.read()
 
         selection = _slice2selection(t, self.shape)
         if selection is None:
-            v = self._h5object.read()
             if self.dtype == 'string':
+                # workaround for bug: h5cpp #355
+                if self.size == 0:
+                    if self.shape:
+                        v = np.empty(shape=self.shape, dtype= self.dtype )
+                    else:
+                        v = []
+                else:
+                    v = self._h5object.read()
                 try:
                     v = v.decode('UTF-8')
                 except:
                     pass
+            else:
+                v = self._h5object.read()
             return v
         v = self._h5object.read(selection=selection)
         # if hasattr(v, "shape") and hasattr(v, "reshape"):
