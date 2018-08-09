@@ -20,8 +20,6 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
-import sys
 
 import PyTango
 
@@ -32,7 +30,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class XMLFieldTagServerH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest):
+class XMLFieldTagServerH5PYTest(
+        XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 
@@ -62,7 +61,7 @@ class XMLFieldTagServerH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "CHECKER SEED =", self._sc.seed
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -125,6 +124,7 @@ class XMLFieldTagServerH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

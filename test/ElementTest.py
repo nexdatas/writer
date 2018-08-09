@@ -20,16 +20,10 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
 import struct
 
-from nxswriter.H5Elements import EFile
-from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
-import nxswriter.FileWriter as FileWriter
 
 
 # if 64-bit machione
@@ -56,18 +50,18 @@ class ElementTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -79,7 +73,7 @@ class ElementTest(unittest.TestCase):
     # \brief It tests executing store method
     def test_store(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs)
         el2 = Element(self._tfname, self._fattrs,  el)
         self.assertEqual(el2.tagName, self._tfname)
@@ -94,7 +88,7 @@ class ElementTest(unittest.TestCase):
     # \brief It tests executing _beforeLast method
     def test_beforeLast(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
         el2 = Element(self._tfname, self._fattrs,  el)
