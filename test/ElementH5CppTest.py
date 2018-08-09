@@ -22,12 +22,9 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
 
 from nxswriter.H5Elements import EFile
-from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
@@ -57,18 +54,18 @@ class ElementH5CppTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # lastObject method test
     # \brief It tests executing _lastObject method
     def test_lastObject_hp5y(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -87,7 +84,7 @@ class ElementH5CppTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs, eFile)
         el2 = Element(self._tfname, self._fattrs,  el)
