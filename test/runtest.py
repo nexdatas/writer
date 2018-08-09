@@ -21,12 +21,12 @@
 #
 
 try:
-    import PyTango
+    __import__("PyTango")
     # if module PyTango avalable
     PYTANGO_AVAILABLE = True
-except ImportError, e:
+except ImportError as e:
     PYTANGO_AVAILABLE = False
-    print "PyTango is not available: %s" % e
+    print("PyTango is not available: %s" % e)
 
 try:
     try:
@@ -35,25 +35,25 @@ try:
         import pni.nx.h5
     # if module pni avalable
     PNI_AVAILABLE = True
-except ImportError, e:
+except ImportError as e:
     PNI_AVAILABLE = False
-    print "pni is not available: %s" % e
+    print("pni is not available: %s" % e)
 
 try:
     import h5py
     # if module pni avalable
     H5PY_AVAILABLE = True
-except ImportError, e:
+except ImportError as e:
     H5PY_AVAILABLE = False
-    print "h5py is not available: %s" % e
+    print("h5py is not available: %s" % e)
 
 try:
     from pninexus import h5cpp
     # if module pni avalable
     H5CPP_AVAILABLE = True
-except ImportError, e:
+except ImportError as e:
     H5CPP_AVAILABLE = False
-    print "h5cpp is not available: %s" % e
+    print("h5cpp is not available: %s" % e)
 
 
 import os
@@ -190,12 +190,12 @@ except:
         mydb.close()
         DB_AVAILABLE.append("MYSQL")
 
-    except ImportError, e:
-        print "MYSQL not available: %s" % e
-    except Exception, e:
-        print "MYSQL not available: %s" % e
+    except ImportError as e:
+        print("MYSQL not available: %s" % e)
+    except Exception as e:
+        print("MYSQL not available: %s" % e)
     except:
-        print "MYSQL not available"
+        print("MYSQL not available")
 
 
 try:
@@ -207,12 +207,12 @@ try:
     pgdb = psycopg2.connect(**args)
     pgdb.close()
     DB_AVAILABLE.append("PGSQL")
-except ImportError, e:
-    print "PGSQL not available: %s" % e
-except Exception, e:
-    print "PGSQL not available: %s" % e
+except ImportError as e:
+    print("PGSQL not available: %s" % e)
+except Exception as e:
+    print("PGSQL not available: %s" % e)
 except:
-    print "PGSQL not available"
+    print("PGSQL not available")
 
 
 try:
@@ -231,12 +231,12 @@ try:
     ordb = cx_Oracle.connect(**args)
     ordb.close()
     DB_AVAILABLE.append("ORACLE")
-except ImportError, e:
-    print "ORACLE not available: %s" % e
-except Exception, e:
-    print "ORACLE not available: %s" % e
+except ImportError as e:
+    print("ORACLE not available: %s" % e)
+except Exception as e:
+    print("ORACLE not available: %s" % e)
 except:
-    print "ORACLE not available"
+    print("ORACLE not available")
 
 if "MYSQL" in DB_AVAILABLE:
     if PNI_AVAILABLE:
@@ -540,80 +540,113 @@ def main():
 
         if PNI_AVAILABLE:
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    NXSDataWriterTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    ClientFieldTagServerTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    XMLFieldTagServerTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    ClientFieldTagAsynchTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    XMLFieldTagAsynchTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagWriterTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagServerTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagAsynchTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    PyEvalTangoSourceTest))
 
         if H5PY_AVAILABLE:
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    NXSDataWriterH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    ClientFieldTagServerH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    XMLFieldTagAsynchH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagWriterH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagServerH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagAsynchH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    PyEvalTangoSourceH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    ClientFieldTagAsynchH5PYTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerH5PYTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    XMLFieldTagServerH5PYTest))
 
         if H5CPP_AVAILABLE:
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(NXSDataWriterH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    NXSDataWriterH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagServerH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    ClientFieldTagServerH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagAsynchH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    XMLFieldTagAsynchH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagWriterH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagWriterH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagServerH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagServerH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(TangoFieldTagAsynchH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    TangoFieldTagAsynchH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(PyEvalTangoSourceH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    PyEvalTangoSourceH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagAsynchH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    ClientFieldTagAsynchH5CppTest))
             suite.addTests(
-                unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagServerH5CppTest))
+                unittest.defaultTestLoader.loadTestsFromModule(
+                    XMLFieldTagServerH5CppTest))
 
         if "MYSQL" in DB_AVAILABLE:
             if PNI_AVAILABLE:
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerTest))
+                    unittest.defaultTestLoader.loadTestsFromModule(
+                        DBFieldTagServerTest))
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchTest))
+                    unittest.defaultTestLoader.loadTestsFromModule(
+                        DBFieldTagAsynchTest))
             if H5PY_AVAILABLE:
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerH5PYTest))
+                    unittest.defaultTestLoader.loadTestsFromModule(
+                        DBFieldTagServerH5PYTest))
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchH5PYTest))
+                    unittest.defaultTestLoader.loadTestsFromModule(
+                        DBFieldTagAsynchH5PYTest))
             if H5CPP_AVAILABLE:
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagServerH5CppTest))
+                    unittest.defaultTestLoader.loadTestsFromModule(
+                        DBFieldTagServerH5CppTest))
                 suite.addTests(
-                    unittest.defaultTestLoader.loadTestsFromModule(DBFieldTagAsynchH5CppTest))
+                    unittest.defaultTestLoader.loadTestsFromModule(
+                        DBFieldTagAsynchH5CppTest))
 
     # test runner
     runner = unittest.TextTestRunner()
@@ -622,8 +655,6 @@ def main():
     result = runner.run(suite).wasSuccessful()
     sys.exit(not result)
 
- #   if ts:
- #       ts.tearDown()
 
 if __name__ == "__main__":
     main()
