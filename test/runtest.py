@@ -30,9 +30,9 @@ except ImportError as e:
 
 try:
     try:
-        import pni.io.nx.h5
+        __import__("pni.io.nx.h5")
     except:
-        import pni.nx.h5
+        __import__("pni.nx.h5")
     # if module pni avalable
     PNI_AVAILABLE = True
 except ImportError as e:
@@ -40,7 +40,7 @@ except ImportError as e:
     print("pni is not available: %s" % e)
 
 try:
-    import h5py
+    __import__("h5py")
     # if module pni avalable
     H5PY_AVAILABLE = True
 except ImportError as e:
@@ -48,7 +48,7 @@ except ImportError as e:
     print("h5py is not available: %s" % e)
 
 try:
-    from pninexus import h5cpp
+    __import__("pninexus.h5cpp")
     # if module pni avalable
     H5CPP_AVAILABLE = True
 except ImportError as e:
@@ -141,7 +141,7 @@ if H5CPP_AVAILABLE:
     import ELinkH5CppTest  # ?? bool/link
     import EFileH5CppTest
     import EDocH5CppTest
-    import NexusXMLHandlerH5CppTest  # ?? Error reclaiming memory from variable length string data in dataset
+    import NexusXMLHandlerH5CppTest
     import ClientFieldTagWriterH5CppTest  # ?? bool/enums/str
     import XMLFieldTagWriterH5CppTest  # ?? bool/enums/str
     import EDimH5CppTest
@@ -184,7 +184,8 @@ except:
         home = expanduser("~")
         # connection arguments to MYSQL DB
         args2 = {'host': u'localhost', 'db': u'tango',
-                 'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
+                 'read_default_file': u'%s/.my.cnf' % home,
+                 'use_unicode': True}
         # inscance of MySQLdb
         mydb = MySQLdb.connect(**args2)
         mydb.close()
@@ -223,8 +224,12 @@ try:
 
     # connection arguments to ORACLE DB
     args = {}
-    args[
-        "dsn"] = """(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=dbsrv01.desy.de)(PORT=1521))(LOAD_BALANCE=yes)(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"""
+    args["dsn"] = "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)" \
+                  "(HOST=dbsrv01.desy.de)" \
+                  "(PORT=1521))(LOAD_BALANCE=yes)" \
+                  "(CONNECT_DATA=(SERVER=DEDICATED)" \
+                  "(SERVICE_NAME=desy_db.desy.de)(FAILOVER_MODE=(TYPE=NONE)" \
+                  "(METHOD=BASIC)(RETRIES=180)(DELAY=5))))"
     args["user"] = "read"
     args["password"] = passwd
     # inscance of cx_Oracle
@@ -308,9 +313,6 @@ if PYTANGO_AVAILABLE:
 
 def main():
 
-    # test server
-    ts = None
-
     # test suit
     suite = unittest.TestSuite()
 
@@ -393,11 +395,14 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(
                 NexusXMLHandlerTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(TangoDataWriterTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                TangoDataWriterTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ClientFieldTagWriterTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                ClientFieldTagWriterTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(XMLFieldTagWriterTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                XMLFieldTagWriterTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(EDimensionsTest))
         suite.addTests(
@@ -406,6 +411,8 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(FileWriterTest))
 
     if H5PY_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDimH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ElementH5PYTest))
         suite.addTests(
@@ -440,7 +447,8 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(
                 XMLFieldTagWriterH5PYTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsH5PYTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                EDimensionsH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ESymbolH5PYTest))
         suite.addTests(
@@ -449,9 +457,12 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(
                 TangoDataWriterH5PYTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterH5PYTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                FileWriterH5PYTest))
 
     if H5CPP_AVAILABLE:
+        suite.addTests(
+            unittest.defaultTestLoader.loadTestsFromModule(EDimH5CppTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ElementH5CppTest))
         suite.addTests(
@@ -471,7 +482,8 @@ def main():
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(ELinkH5CppTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EAttributeH5CppTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                EAttributeH5CppTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(EFileH5CppTest))
         suite.addTests(
@@ -486,20 +498,25 @@ def main():
             unittest.defaultTestLoader.loadTestsFromModule(
                 XMLFieldTagWriterH5CppTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(EDimensionsH5CppTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                EDimensionsH5CppTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(ESymbolH5CppTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                ESymbolH5CppTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FElementH5CppTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                FElementH5CppTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
                 TangoDataWriterH5CppTest))
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterH5CppTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                FileWriterH5CppTest))
 
     if PNI_AVAILABLE and H5PY_AVAILABLE:
         suite.addTests(
-            unittest.defaultTestLoader.loadTestsFromModule(FileWriterPNIH5PYTest))
+            unittest.defaultTestLoader.loadTestsFromModule(
+                FileWriterPNIH5PYTest))
         suite.addTests(
             unittest.defaultTestLoader.loadTestsFromModule(
                 TangoDataWriterPNIH5PYTest))
