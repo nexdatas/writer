@@ -1361,7 +1361,7 @@ class DBFieldTagWriterH5CppTest(unittest.TestCase):
         self._sc.checkSpectrumField(
             det, "pid_spectrum_float64", "float64", "NX_FLOAT64",
             [[numpy.finfo(getattr(numpy, 'float64')).max] * len(
-                                        spectrum)] * 3,
+             spectrum)] * 3,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",

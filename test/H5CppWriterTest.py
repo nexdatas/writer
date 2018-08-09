@@ -256,7 +256,7 @@ class H5CppWriterTest(unittest.TestCase):
                 h5cpp.property.LibVersion.LATEST)
             # nxfl = nexus.create_file(self._fname)
             nxfl = h5cpp.file.create(self._fname, flag, fcpl, fapl)
-            # # rt = nxfl.root()
+            # rt = nxfl.root()
             fl = H5CppWriter.H5CppFile(nxfl, self._fname)
             rt = fl.root()
             attrs = rt.attributes
@@ -1442,13 +1442,13 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(fl.h5object.readonly, True)
 
             fl.close()
-            if hasattr(h5cpp.file.AccessFlags , "SWMRWRITE"):
+            if hasattr(h5cpp.file.AccessFlags, "SWMRWRITE"):
                 fl.reopen(True, True)
             else:
                 self.myAssertRaise(
                     Exception, fl.reopen, True, True)
             fl.close()
-            if hasattr(h5cpp.file.AccessFlags , "SWMRWRITE"):
+            if hasattr(h5cpp.file.AccessFlags, "SWMRWRITE"):
                 fl.reopen(False, True)
             else:
                 self.myAssertRaise(
@@ -3595,7 +3595,7 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec[...]), stvl[0])
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             self.assertEqual(atstrspec.h5object.name, 'atstrspec')
-            #self.assertEqual(atstrspec.h5object.path,
+            # self.assertEqual(atstrspec.h5object.path,
             #                 '/entry12345:NXentry/intscalar@atstrspec')
             # self.assertEqual(atstrspec.h5object.dtype, 'string')
             self.assertEqual(atstrspec.h5object.dataspace.current_dimensions, (4,))

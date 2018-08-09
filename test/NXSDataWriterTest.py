@@ -4780,7 +4780,7 @@ class NXSDataWriterTest(unittest.TestCase):
             rec = {"data": {"exp_c01": cntg, "image": imageg}}
 
             dp.Record(json.dumps(rec))
-            
+
             dp.CloseEntry()
             self.assertEqual(dp.state(), PyTango.DevState.OPEN)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -5138,7 +5138,7 @@ class NXSDataWriterTest(unittest.TestCase):
             rec = {"data": {"exp_c01": cntg, "image": imageg}}
 
             dp.Record(json.dumps(rec))
-            
+
             dp.CloseEntry()
             self.assertEqual(dp.state(), PyTango.DevState.OPEN)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -5495,7 +5495,7 @@ class NXSDataWriterTest(unittest.TestCase):
             rec = {"data": {"exp_c01": cntg, "image": imageg}}
 
             dp.Record(json.dumps(rec))
-            
+
             dp.CloseEntry()
             self.assertEqual(dp.state(), PyTango.DevState.OPEN)
             self.assertEqual(dp.status(), self.__status[dp.state()])
@@ -5629,8 +5629,8 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 160000)
             value = mca.read()
-            #print "VL", value[0]
-            #print "IM",self._image1
+            # print "VL", value[0]
+            # print "IM",self._image1
             for i in range(len(value[0])):
                 for j in range(len(value[0][0])):
                     self.assertEqual(0, value[0][i][j])

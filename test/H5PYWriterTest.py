@@ -32,7 +32,7 @@ import h5py
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
-H5PYMAJOR, H5PYMINOR, H5PYPATCH= h5py.__version__.split(".", 2)
+H5PYMAJOR, H5PYMINOR, H5PYPATCH = h5py.__version__.split(".", 2)
 
 if int(H5PYMAJOR) > 1 or (int(H5PYMAJOR) == 1  and int(H5PYMINOR) > 4):
     SWMR = True

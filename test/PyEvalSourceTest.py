@@ -593,12 +593,12 @@ else:
                     gjson = '{"data":{"rinp":%s}}' % (
                         '[' + "".join(['[' + ''.join(
                             [a + ',' for a in row])[:-1] + "],"
-                                       for row in arr[k][0]])[:-1] + ']')
+                            for row in arr[k][0]])[:-1] + ']')
                 else:
                     gjson = '{"data":{"rinp":%s}}' % (
                         '[' + "".join(['[' + ''.join(
                             [str(a) + ',' for a in row])[:-1] + "],"
-                                       for row in arr[k][0]])[:-1] + ']')
+                            for row in arr[k][0]])[:-1] + ']')
 
                 if arr2[k2][2] == "DevString":
                     gjson2 = '{"data":{"rinp2":%s}}' % (
@@ -607,12 +607,12 @@ else:
                     gjson2 = '{"data":{"rinp2":%s}}' % (
                         '[' + "".join(['[' + ''.join(
                             [a + ',' for a in row])[:-1] + "],"
-                                       for row in arr2[k2][0]])[:-1] + ']')
+                            for row in arr2[k2][0]])[:-1] + ']')
                 else:
                     gjson2 = '{"data":{"rinp2":%s}}' % (
                         '[' + "".join(['[' + ''.join(
                             [str(a) + ',' for a in row])[:-1] + "],"
-                                       for row in arr2[k2][0]])[:-1] + ']')
+                            for row in arr2[k2][0]])[:-1] + ']')
 
                 self.assertEqual(ds.setDataSources(dp), None)
                 self.assertEqual(

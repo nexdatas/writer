@@ -1755,11 +1755,13 @@ class EFieldTest(unittest.TestCase):
 
             for k in attrs.keys():
                 if attrs[k][2] == "string":
-                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
+                    mlen = [
+                        self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
                     attrs[k][0] = [
                         attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[0])]
                 elif attrs[k][2] != "bool":
-                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
+                    mlen = [
+                        self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                     attrs[k][0] = [
                         attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
                 else:

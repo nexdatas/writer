@@ -467,7 +467,8 @@ ds.res2 = str(True)
     def test_writer(self):
         print "Run: %s.test_writer() " % self.__class__.__name__
         self.assertTrue("h5cpp" in nxswriter.TangoDataWriter.WRITERS.keys())
-        self.assertEqual(nxswriter.TangoDataWriter.WRITERS["h5cpp"], H5CppWriter)
+        self.assertEqual(
+            nxswriter.TangoDataWriter.WRITERS["h5cpp"], H5CppWriter)
 
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
@@ -5760,7 +5761,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.dtype, "string")
             self.assertEqual(cnt.size, 1)
             value = cnt[:]
-            #self.assertEqual(fname, value)
+            # self.assertEqual(fname, value)
             self.assertEqual("/", value)
 
             cnt = en.open("nxrootpath")

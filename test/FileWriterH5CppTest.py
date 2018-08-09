@@ -1964,7 +1964,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(str(strimage.h5object.link.path), '/entry12345/instrument/detector/strimage')
 
             self.assertEqual(strimage.h5object.datatype.type.name, 'STRING')
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (2,2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (2, 2))
 
 
             chars = string.ascii_uppercase + string.digits
@@ -1985,7 +1985,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             strimage.grow()
             self.assertEqual(strimage.shape, (3, 2))
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (3,2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (3, 2))
 
             iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
             self.myAssertImage(iv, vv)
@@ -1995,7 +1995,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             strimage.grow(ext=2)
             self.assertEqual(strimage.shape, (5, 2))
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5,2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 2))
             vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
             strimage[2:5,:] =  vv4
@@ -2004,7 +2004,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             strimage.grow(1, 4)
             self.assertEqual(strimage.shape, (5, 6))
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5,6))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 6))
 
             vv6 = [[vl[j][i] for i in range(6)] for j in range(5)]
             strimage.write(vv6)
@@ -2028,7 +2028,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatimage.h5object.link.path.name, 'floatimage')
             self.assertEqual(str(floatimage.h5object.link.path), '/entry12345/instrument/detector/floatimage')
             self.assertEqual(floatimage.h5object.datatype.type.name, 'FLOAT')
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20,10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20, 10))
 
 
             vl = [
@@ -2046,7 +2046,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatimage.grow()
             self.assertEqual(floatimage.shape, (21, 10))
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (21,10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (21, 10))
 
             iv = [[floatimage[j, i] for i in range(10)] for j in range(20)]
             self.myAssertImage(iv, vv)
@@ -2056,7 +2056,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatimage.grow(ext=2)
             self.assertEqual(floatimage.shape, (23, 10))
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23,10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23, 10))
             vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
             floatimage[2:23,:] =  vv4
@@ -2065,7 +2065,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatimage.grow(1, 4)
             self.assertEqual(floatimage.shape, (23, 14))
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23,14))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23, 14))
 
             vv6 = [[vl[j][i] for i in range(14)] for j in range(23)]
             floatimage.write(vv6)
@@ -2083,7 +2083,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intimage.dtype, 'uint32')
             self.assertEqual(intimage.shape, (0, 30))
             self.assertEqual(intimage.h5object.datatype.type.name, 'INTEGER')
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (0,30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (0, 30))
 
 
             vl = [
@@ -2101,7 +2101,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intimage.grow()
             self.assertEqual(intimage.shape, (21, 30))
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (21,30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (21, 30))
 
             iv = [[intimage[j, i] for i in range(30)] for j in range(20)]
             self.myAssertImage(iv, vv)
@@ -2111,7 +2111,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intimage.grow(ext=2)
             self.assertEqual(intimage.shape, (23, 30))
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23,30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23, 30))
             vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
             intimage[2:23,:] =  vv4
@@ -2120,7 +2120,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intimage.grow(1, 4)
             self.assertEqual(intimage.shape, (23, 34))
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23,34))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23, 34))
 
             vv6 = [[vl[j][i] for i in range(34)] for j in range(23)]
             intimage.write(vv6)
@@ -2237,7 +2237,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(strvec.h5object.link.path.name, 'strvec')
             self.assertEqual(str(strvec.h5object.link.path), '/entry12345/instrument/detector/strvec')
             self.assertEqual(strvec.h5object.datatype.type.name, 'STRING')
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (0,2,2))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (0, 2, 2))
 
             chars = string.ascii_uppercase + string.digits
             vl = [[[''.join(self.__rnd.choice(chars)
@@ -2257,7 +2257,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             strvec.grow()
             self.assertEqual(strvec.shape, (4, 2, 2))
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4,2,2))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 2, 2))
 
             iv = [[[strvec[k, j, i] for i in range(2)] for j in range(2)] for k in range(3)]
             self.myAssertVector(iv, vv)
@@ -2267,7 +2267,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             strvec.grow(2, 3)
             self.assertEqual(strvec.shape, (4, 2, 5))
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4,2,5))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 2, 5))
             vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
 
@@ -2277,7 +2277,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             strvec.grow(1, 4)
             self.assertEqual(strvec.shape, (4, 6, 5))
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4,6,5))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 6, 5))
 
             vv6 = [[[vl[k][j][i] for i in range(5)] for j in range(6)] for k in range(4)]
             strvec.write(vv6)
@@ -2301,7 +2301,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatvec.h5object.link.path.name, 'floatvec')
             self.assertEqual(str(floatvec.h5object.link.path), '/entry12345/instrument/detector/floatvec')
             self.assertEqual(floatvec.h5object.datatype.type.name, 'FLOAT')
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1,20,10))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1, 20, 10))
 
 
 
@@ -2323,7 +2323,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatvec.grow()
             self.assertEqual(floatvec.shape, (2, 20, 10))
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2,20,10))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 20, 10))
 
             iv = [[[floatvec[k, j, i] for i in range(10)] for j in range(20)] for k in range(1)]
             self.myAssertVector(iv, vv)
@@ -2333,7 +2333,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatvec.grow(2, 3)
             self.assertEqual(floatvec.shape, (2, 20, 13))
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2,20,13))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 20, 13))
             vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
 
@@ -2343,7 +2343,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatvec.grow(1, 4)
             self.assertEqual(floatvec.shape, (2, 24, 13))
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2,24,13))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 24, 13))
 
             vv6 = [[[vl[k][j][i] for i in range(13)] for j in range(24)] for k in range(2)]
             floatvec.write(vv6)
@@ -2367,7 +2367,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intvec.h5object.link.path.name, 'intvec')
             self.assertEqual(str(intvec.h5object.link.path), '/entry12345/instrument/detector/intvec')
             self.assertEqual(intvec.h5object.datatype.type.name, 'INTEGER')
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (0,2,30))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (0, 2, 30))
 
 
             vl = [[[self.__rnd.randint(1, 1600)
@@ -2389,7 +2389,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intvec.grow()
             self.assertEqual(intvec.shape, (2, 2, 30))
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2,2,30))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 2, 30))
 
             iv = [[[intvec[k, j, i] for i in range(30)] for j in range(2)] for k in range(1)]
             self.myAssertVector(iv, vv)
@@ -2399,7 +2399,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intvec.grow(2, 3)
             self.assertEqual(intvec.shape, (2, 2, 33))
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2,2,33))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 2, 33))
             vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
 
@@ -2409,7 +2409,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intvec.grow(1, 4)
             self.assertEqual(intvec.shape, (2, 6, 33))
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2,6,33))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 6, 33))
 
             vv6 = [[[vl[k][j][i] for i in range(33)] for j in range(6)] for k in range(2)]
             intvec.write(vv6)

@@ -374,7 +374,7 @@ class Checker(object):
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
         # print("ONE")
-        # print(cnt.name)        
+        # print(cnt.name)
         # print(values[0])
         # print(type(values[0]))
         # print("FILE")
@@ -391,7 +391,7 @@ class Checker(object):
                 else:
                     self._tc.assertEqual(values[i], value[i])
         for i in range(len(values)):
-            cv= cnt[i]
+            cv = cnt[i]
 #            if self._isNumeric(cnt[i]):
             if self._isNumeric(cv):
                 if nxtype == "NX_BOOLEAN":
