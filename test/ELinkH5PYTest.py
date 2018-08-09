@@ -88,13 +88,13 @@ class ELinkH5PYTest(unittest.TestCase):
     def setUp(self):
         # file handle
         FileWriter.writer = H5PYWriter
-        print "\nsetting up..."
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -105,7 +105,7 @@ class ELinkH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -113,7 +113,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -140,7 +140,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -224,7 +224,7 @@ class ELinkH5PYTest(unittest.TestCase):
         self.assertTrue(isinstance(li1.h5Object, H5PYWriter.H5PYLink))
         self.assertEqual(li1.h5Object.name, atts1["name"])
 #        self.assertEqual(li1.h5Object._h5object.name, atts1["name"])
-        print "KL", str(li1.h5Object.target_path), atts1["path"]
+        print("KL %s %s" % (str(li1.h5Object.target_path), atts1["path"]))
         self.assertTrue(str(li1.h5Object.target_path).endswith(atts1["path"]))
         self.assertTrue(isinstance(li2.h5Object, H5PYWriter.H5PYLink))
         self.assertEqual(li2.h5Object.name, atts2["name"])
@@ -324,7 +324,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_nods(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -446,7 +446,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_ds(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -644,7 +644,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -861,7 +861,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -1081,7 +1081,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_failed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -1248,7 +1248,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_rel(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -1477,7 +1477,7 @@ class ELinkH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_twofiles(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._fname2 = '%s/%s%s_2.h5' % (
@@ -1644,11 +1644,11 @@ class ELinkH5PYTest(unittest.TestCase):
         self.myAssertRaise(Exception, self._nxFile.open, "link6")
         li6.run()
         self.assertTrue(li6.error is not None)
-        print fi2.h5Object.shape
+        print(fi2.h5Object.shape)
 
         self._File.close()
         self._File.reopen(readonly=True)
-        print fi2.h5Object
+        print(fi2.h5Object)
 
         self._File.close()
 
@@ -1680,7 +1680,7 @@ class ELinkH5PYTest(unittest.TestCase):
 
         self._File.reopen(readonly=True)
 
-        print fi2.h5Object.shape
+        print(fi2.h5Object.shape)
         self.assertEqual(res["l1"][0], fi2.h5Object.read())
         self.assertEqual(res["l1"][1], fi2.h5Object.dtype)
         self.assertEqual(res["l1"][2], fi2.h5Object.shape)

@@ -63,7 +63,7 @@ class XMLFieldTagAsynchH5PYTest(XMLFieldTagWriterH5PYTest.XMLFieldTagWriterH5PYT
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "CHECKER SEED =", self._sc.seed
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server

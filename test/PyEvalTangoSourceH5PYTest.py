@@ -76,7 +76,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
     def setUp(self):
         # file handle
         self._simps.setUp()
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -92,7 +92,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -143,7 +143,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = 'ds.result = 123.2'
         script2 = 'ds.result = ds.inp'
@@ -257,7 +257,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_global_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 try:
@@ -401,7 +401,7 @@ except:
     # \brief It tests default settings
     def test_getData_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
@@ -512,7 +512,7 @@ else:
     # \brief It tests default settings with global json string
     def test_zzgetData_global_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
@@ -627,7 +627,7 @@ else:
     # \brief It tests default settings
     def ttest_isValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = PyEvalSource()
         self.assertTrue(isinstance(el, object))
@@ -637,7 +637,7 @@ else:
     # \brief It tests default settings
     def test_getData_common_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = 'ds.result = 123.2'
         script2 = 'ds.result = ds.inp'
@@ -770,7 +770,7 @@ ds.res = commonblock["myres"]
     # \brief It tests default settings
     def test_getData_common_h5obj(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         f = nxswriter.H5PYWriter.create_file(fname, False)
@@ -800,7 +800,7 @@ ds.res = commonblock["myres"]
     # \brief It tests default settings
     def test_getData_common_h5(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         f = nxswriter.H5PYWriter.create_file(fname, False)
@@ -830,7 +830,7 @@ ds.res = commonblock["myres"]
     # \brief It tests default settings
     def test_getData_common_global_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 try:
@@ -1005,7 +1005,7 @@ commonblock["myres"] = ds.res
     # \brief It tests default settings
     def test_getData_common_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
@@ -1132,7 +1132,7 @@ commonblock["my1res"] = ds.res
     # \brief It tests default settings with global json string
     def test_zzgetData_common_global_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):

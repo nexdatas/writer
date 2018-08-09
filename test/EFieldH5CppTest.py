@@ -96,14 +96,14 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -114,7 +114,7 @@ class EFieldH5CppTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -122,7 +122,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -151,7 +151,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -184,7 +184,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default_thesame(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -220,7 +220,7 @@ class EFieldH5CppTest(unittest.TestCase):
 
     def test_store_default_reload(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -272,7 +272,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         fattrs = {"name": "test", "units": "m", "type": "NX_INT"}
@@ -306,7 +306,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_1(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -342,7 +342,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -376,7 +376,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_3(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -411,7 +411,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_4(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -445,7 +445,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_5(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -480,7 +480,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_7(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -517,7 +517,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_grows_6(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5CppWriter
@@ -555,7 +555,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_0d_step(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -629,7 +629,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_0d_initfinal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -710,7 +710,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_0d_postrun(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -787,7 +787,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_1d_step(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -900,7 +900,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_1d_initfinal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1000,7 +1000,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_1d_postrun(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1101,7 +1101,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_2d_step(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1189,7 +1189,7 @@ class EFieldH5CppTest(unittest.TestCase):
 
         for k in attrs:
             h5 = el[k].h5Object
-            print "TYPE", h5, h5.dtype
+            print(h5.dtype)
             self.assertEqual(
                 h5.dtype, attrs[k][2] if attrs[k][2] else 'string')
             if attrs[k][2] and attrs[k][2] != 'string_old':
@@ -1214,7 +1214,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_2d_initfinal(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1324,7 +1324,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_create_2d_postrun(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1436,7 +1436,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_createAttributes_aTn(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1472,7 +1472,7 @@ class EFieldH5CppTest(unittest.TestCase):
 
         for k in maTn.keys():
             self.assertEqual(el.h5Object.attributes[k][...], fattrs[k])
-            print k, el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]]
+            print(k)
             self.assertEqual(
                 el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
@@ -1485,7 +1485,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_createAttributes_aTnv(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1538,7 +1538,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_createAttributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         for _ in range(1):
@@ -1627,7 +1627,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_createAttributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1690,7 +1690,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_createAttributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1765,7 +1765,7 @@ class EFieldH5CppTest(unittest.TestCase):
                 el[k].store()
 
                 at = el[k].h5Object.attributes[k]
-                # print at
+                # print(at)
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
                                                 attrs[k][4] if len(attrs[k]) > 4 else 0)
@@ -1777,7 +1777,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_createAttributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1887,7 +1887,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_value_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1972,7 +1972,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_value_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2081,7 +2081,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_value_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2192,7 +2192,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_value_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 # self._fname= '%s/%s_%s.h5' % (os.getcwd(), self.__class__.__name__, fun
 # )
         self._fname = '%s/%s%s.h5' % (
@@ -2331,7 +2331,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_value_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 # self._fname= '%s/%s_%s.h5' % (os.getcwd(), self.__class__.__name__, fun
 # )
         self._fname = '%s/%s%s.h5' % (
@@ -2460,7 +2460,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noData(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2506,7 +2506,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2604,7 +2604,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2704,7 +2704,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2814,7 +2814,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2922,7 +2922,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3048,7 +3048,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3177,7 +3177,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3316,7 +3316,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3443,7 +3443,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3565,7 +3565,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_reshape(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3686,7 +3686,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3810,7 +3810,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3874,7 +3874,7 @@ class EFieldH5CppTest(unittest.TestCase):
                                     for c in range(mlen)] for r in range(steps)]
 
             attrs[k][3] = (len(attrs[k][0][0]),)
-#            print "k",k ,attrs[k][0][0]
+#            sys.stdout.write("b.")k ,attrs[k][0][0]
 
             if attrs[k][1]:
                 el[k] = EField(
@@ -3939,7 +3939,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4056,7 +4056,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4194,7 +4194,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4327,7 +4327,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4456,7 +4456,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4576,7 +4576,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4715,7 +4715,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4839,7 +4839,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -4966,7 +4966,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5086,7 +5086,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5225,7 +5225,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5351,7 +5351,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5476,7 +5476,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5596,7 +5596,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5736,7 +5736,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5864,7 +5864,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -5991,7 +5991,7 @@ class EFieldH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 

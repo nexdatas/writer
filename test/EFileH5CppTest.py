@@ -63,13 +63,13 @@ class EFileH5CppTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
         FileWriter.writer = H5CppWriter
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -80,7 +80,7 @@ class EFileH5CppTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -88,7 +88,7 @@ class EFileH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         el = EFile({}, None, None)
@@ -106,7 +106,7 @@ class EFileH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_nx(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -129,7 +129,7 @@ class EFileH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_attrs(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(

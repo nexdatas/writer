@@ -20,12 +20,8 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 
 from nxswriter.Types import Converters
@@ -60,12 +56,12 @@ class ConvertersTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -76,7 +72,7 @@ class ConvertersTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -84,7 +80,7 @@ class ConvertersTest(unittest.TestCase):
     # \brief It tests default settings
     def test_toBool_instance(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         bools = {
             True: True, False: False,
@@ -133,7 +129,7 @@ class ConvertersTest(unittest.TestCase):
     # \brief It tests default settings
     def test_toBool_class(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         bools = {
             True: True, False: False,
@@ -173,6 +169,7 @@ class ConvertersTest(unittest.TestCase):
 
         for b in bools:
             self.assertEqual(Converters.toBool(b), bools[b])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -81,13 +81,13 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -111,7 +111,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -119,7 +119,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -139,7 +139,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -161,7 +161,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -244,7 +244,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -302,7 +302,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -376,7 +376,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -462,7 +462,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -539,7 +539,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -618,7 +618,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_1X(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -697,7 +697,7 @@ class FElementWithAttrH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_X1(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()

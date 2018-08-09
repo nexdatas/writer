@@ -93,15 +93,15 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
         FileWriter.writer = H5PYWriter
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -112,7 +112,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -120,7 +120,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -146,7 +146,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -172,7 +172,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -191,7 +191,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_simple(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -209,7 +209,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_ds(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -230,7 +230,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_strategy(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -259,7 +259,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_trigger(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -282,7 +282,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -333,7 +333,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -386,7 +386,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -457,7 +457,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -528,7 +528,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -602,7 +602,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -676,7 +676,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -751,7 +751,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_no(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -811,13 +811,13 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes()
             at = el[k].h5Object.attributes[k]
-            print at[...], at.dtype, at.shape
+            print(at)[...], at.dtype, at.shape
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2] or 'string', attrs[k][0],
                 attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         for k in attrs.keys():
-            print "K", k
+            print(k)
 #            if attrs[k][2] == 'string':
 #                "writing multi-dimensional string is not supported by pniio"
 #                continue
@@ -839,7 +839,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_no_string_shape_reduction(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -877,7 +877,7 @@ class EAttributeH5PYTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-            print "K", k
+            print(k)
 #            if attrs[k][2] == 'string':
 #                "writing multi-dimensional string is not supported by pniio"
 #                continue
@@ -899,7 +899,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -981,7 +981,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1063,7 +1063,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1145,7 +1145,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1227,7 +1227,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1310,7 +1310,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1393,7 +1393,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1475,7 +1475,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1569,7 +1569,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1657,7 +1657,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1751,7 +1751,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         attrs = {
@@ -1833,7 +1833,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1936,7 +1936,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2025,7 +2025,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2128,7 +2128,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2218,7 +2218,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2323,7 +2323,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         attrs = {

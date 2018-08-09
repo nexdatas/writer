@@ -80,12 +80,12 @@ class EStrategyH5PYTest(unittest.TestCase):
         # element file objects
         self._group = self._nxroot.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -98,14 +98,14 @@ class EStrategyH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
     # default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
-        print "Run: %s.test_default_constructor() " % self.__class__.__name__
+        print("Run: %s.test_default_constructor() " % self.__class__.__name__)
         el = EField(self._fattrs, None)
         st = EStrategy(self._fattrs, el)
         self.assertTrue(isinstance(st, Element))
@@ -129,7 +129,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # first constructor test
     # \brief It tests default settings
     def test_constructor_1(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         attrs = {}
         attrs["mode"] = "STEP"
         attrs["trigger"] = "def_trigger"
@@ -162,7 +162,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # first constructor test
     # \brief It tests default settings
     def test_constructor_2(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         attrs = {}
         attrs["mode"] = "INIT"
         attrs["trigger"] = "def_trigger1"
@@ -197,7 +197,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # first constructor test
     # \brief It tests default settings
     def test_constructor_3(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         attrs = {}
         attrs["mode"] = "STEP"
         attrs["trigger"] = "def_trigger"
@@ -232,7 +232,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # store method test
     # \brief It tests executing store method
     def test_store(self):
-        print "Run: %s.test_store() " % self.__class__.__name__
+        print("Run: %s.test_store() " % self.__class__.__name__)
 
         attrs = {"mode": "STEP"}
         el = EField(self._fattrs, None)

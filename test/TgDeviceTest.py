@@ -101,7 +101,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -117,7 +117,7 @@ class TgDeviceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -125,7 +125,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         name = "myname%s" % self.__rnd.randint(0, 9)
         proxy = "proxy%s" % self.__rnd.randint(0, 9)
@@ -150,7 +150,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setMember(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = "device/%s" % self.__rnd.randint(0, 9)
         proxy = "proxy%s" % self.__rnd.randint(0, 9)

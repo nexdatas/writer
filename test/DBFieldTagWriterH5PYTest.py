@@ -85,7 +85,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
         try:
             args = {}
             args["db"] = 'tango'
@@ -99,10 +99,10 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
                      'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
-            print "ARGS:", args2
+            print("ARGS: %s" % str(args2))
 
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     def setmycnf(self, xml):
         if not self._largs or 'read_default_file' not in self._largs.keys():
@@ -113,7 +113,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     # Exception tester
@@ -125,7 +125,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -164,7 +164,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -464,7 +464,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -796,7 +796,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1040,7 +1040,6 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         self._sc.checkSpectrumField(
             det, "pid_scalar_float64", "float64", "NX_FLOAT64",
                                     [[float(scalar)]] * 3)
-        print "IMAGE ", [[str(sub[0]) for sub in name]] * 3
         self._sc.checkImageField(
             det, "name_spectrum_string", "string", "NX_CHAR",
                                  [[[str(sub[0])] for sub in name]] * 3)
@@ -1075,7 +1074,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1409,7 +1408,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbSpectrum_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1493,7 +1492,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1879,7 +1878,7 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_dbImage_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">

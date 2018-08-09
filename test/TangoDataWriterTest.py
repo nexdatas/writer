@@ -247,12 +247,12 @@ ds.res2 = str(root.is_valid)
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -263,14 +263,14 @@ ds.res2 = str(root.is_valid)
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -301,11 +301,11 @@ ds.res2 = str(root.is_valid)
             f = open_file(fname, readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -328,7 +328,7 @@ ds.res2 = str(root.is_valid)
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_writer(self):
-        print "Run: %s.test_writer() " % self.__class__.__name__
+        print("Run: %s.test_writer() " % self.__class__.__name__)
         self.assertTrue("pni" in nxswriter.TangoDataWriter.WRITERS.keys())
         self.assertEqual(nxswriter.TangoDataWriter.WRITERS["pni"], PNIWriter)
 
@@ -336,7 +336,7 @@ ds.res2 = str(root.is_valid)
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_valueerror(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -373,11 +373,11 @@ ds.res2 = str(root.is_valid)
             f = open_file(fname, readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -401,7 +401,7 @@ ds.res2 = str(root.is_valid)
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_typeerror(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -438,11 +438,11 @@ ds.res2 = str(root.is_valid)
             f = open_file(fname, readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -467,7 +467,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests validation of opening and closing H5 files.
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         directory = '#nexdatas_test_directoryS#'
         dirCreated = False
@@ -516,11 +516,11 @@ ds.res2 = str(root.is_valid)
 
             f = open_file(fname, readonly=True)
             f = f.root()
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -547,7 +547,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: TangoDataWriterTest.test_openEntry() "
+        print("Run: TangoDataWriterTest.test_openEntry() ")
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
@@ -610,7 +610,7 @@ ds.res2 = str(root.is_valid)
                             self.assertEqual(
                                 c.read(),
                                 '<definition> <group type="NXentry" name="entry"/></definition>')
-                            print c.read()
+                            print(c.read())
                         else:
                             self.assertEqual(c.name, "python_version")
                             self.assertEqual(c.read(), sys.version)
@@ -637,7 +637,7 @@ ds.res2 = str(root.is_valid)
     # openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: TangoDataWriterTest.test_openEntryWithSAXParseException() "
+        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException() ")
         fname = "test.h5"
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -650,9 +650,9 @@ ds.res2 = str(root.is_valid)
             try:
                 error = None
                 tdw.xmlsettings = wrongXml
-            except SAXParseException, e:
+            except SAXParseException as e:
                 error = True
-            except Exception, e:
+            except Exception as e:
                 error = False
             self.assertTrue(error is not None)
             self.assertEqual(error, True)
@@ -661,9 +661,9 @@ ds.res2 = str(root.is_valid)
                 tdw.xmlsettings = xml
                 error = None
                 tdw.openEntry()
-            except SAXParseException, e:
+            except SAXParseException as e:
                 error = True
-            except Exception, e:
+            except Exception as e:
                 error = False
             self.assertTrue(error is None)
 
@@ -702,7 +702,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_twoentry(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -955,7 +955,7 @@ ds.res2 = str(root.is_valid)
                 self.assertEqual(cnt.shape, (2,))
                 self.assertEqual(cnt.dtype, "float64")
                 self.assertEqual(cnt.size, 2)
-    #            print cnt.read()
+    #             print(cnt.read())
                 value = cnt[:]
                 for i in range(len(value)):
                     self.assertEqual(self._counter[i], value[i])
@@ -1056,7 +1056,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -1285,7 +1285,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1386,7 +1386,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_skipacq(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -1675,7 +1675,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1776,7 +1776,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -2054,7 +2054,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -2199,7 +2199,7 @@ ds.res2 = str(root.is_valid)
 
     def test_scanRecord_canfail_setfalse(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -2477,7 +2477,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -2622,7 +2622,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_defaultcanfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -2900,7 +2900,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -3045,7 +3045,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_canfail_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -3281,7 +3281,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
 #            for i in range(len(value)):
 #                self.assertEqual(self._counter[i], value[i])
@@ -3382,7 +3382,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_defaultcanfail_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -3618,7 +3618,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
 #            for i in range(len(value)):
 #                self.assertEqual(self._counter[i], value[i])
@@ -3719,7 +3719,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_defaultcanfail_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -3955,7 +3955,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
 #            for i in range(len(value)):
 #                self.assertEqual(self._counter[i], value[i])
@@ -4056,7 +4056,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_split(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tfname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         fname = None
         try:
@@ -4310,7 +4310,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -4596,7 +4596,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1], value[i])
@@ -4882,7 +4882,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1 - i], value[i])
@@ -4987,7 +4987,7 @@ ds.res2 = str(root.is_valid)
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        print("Run: TangoDataWriterTest.test_scanRecordGrow() ")
         fname = "scantestgrow.h5"
         try:
             tdw = TangoDataWriter()
@@ -5197,7 +5197,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -5299,7 +5299,7 @@ ds.res2 = str(root.is_valid)
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow2(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        print("Run: TangoDataWriterTest.test_scanRecordGrow() ")
         fname = "scantestgrow.h5"
         try:
             tdw = TangoDataWriter()
@@ -5519,7 +5519,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -5626,7 +5626,7 @@ ds.res2 = str(root.is_valid)
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow3(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        print("Run: TangoDataWriterTest.test_scanRecordGrow() ")
         fname = "scantestgrow.h5"
         try:
             tdw = TangoDataWriter()
@@ -5849,7 +5849,7 @@ ds.res2 = str(root.is_valid)
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -5961,7 +5961,7 @@ ds.res2 = str(root.is_valid)
     # \brief It tests recording of simple h5 file
     def test_nxrootlink(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()

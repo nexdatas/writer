@@ -146,12 +146,12 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -162,7 +162,7 @@ class DecoderPoolTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -170,7 +170,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         self.assertTrue(isinstance(el, object))
@@ -191,7 +191,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_hasDecoder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         self.assertTrue(el.hasDecoder("UTF8"))
@@ -212,7 +212,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_get(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         ds = el.get("UTF8")
@@ -240,7 +240,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_append(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         el.append(nxswriter.DecoderPool.UTF8decoder, "UTF")
@@ -309,7 +309,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         el.pop("CL")

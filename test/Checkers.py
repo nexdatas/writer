@@ -819,7 +819,7 @@ class Checker(object):
                 self._tc.assertEqual(at[...], atts[a])
 
         for i in range(len(values)):
-#            print "i",i ,values[i], cnt[i]
+#            sys.stdout.write("b.")i ,values[i], cnt[i]
             self._tc.assertEqual(values[i], cnt[i])
 
     # checks  image field

@@ -85,14 +85,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # opens writer
     # \param fname file name
@@ -127,7 +127,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -340,7 +340,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -479,7 +479,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -608,7 +608,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -752,7 +752,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1038,7 +1038,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1260,7 +1260,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1527,7 +1527,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1709,7 +1709,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2008,7 +2008,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2237,7 +2237,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2543,7 +2543,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">

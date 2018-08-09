@@ -83,14 +83,14 @@ class EGroupTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -101,7 +101,7 @@ class EGroupTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -109,7 +109,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -139,7 +139,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor_thesame_name(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -171,7 +171,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor_reload(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -218,7 +218,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -252,7 +252,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_noobject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         gattrs = {"type": "NXentry", "short_name": "shortname"}
@@ -262,7 +262,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_notype(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -280,7 +280,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_aTn(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -324,7 +324,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_aTnv(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -371,7 +371,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -399,7 +399,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -488,7 +488,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -551,7 +551,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d_single_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -628,7 +628,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -705,7 +705,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -789,7 +789,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -873,7 +873,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -908,7 +908,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter
@@ -944,7 +944,7 @@ class EGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_notype(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = PNIWriter

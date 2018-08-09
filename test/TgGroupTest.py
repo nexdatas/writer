@@ -105,7 +105,7 @@ class TgGroupTest(unittest.TestCase):
         self._simps.setUp()
         self._simps2.setUp()
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -122,7 +122,7 @@ class TgGroupTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -130,7 +130,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         counter = self.__rnd.randint(-2, 100)
 
@@ -148,7 +148,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getDevice(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         counter = self.__rnd.randint(-2, 100)
 
@@ -218,7 +218,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -354,7 +354,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -488,7 +488,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -616,7 +616,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -721,7 +721,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],

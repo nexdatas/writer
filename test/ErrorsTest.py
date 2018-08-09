@@ -20,17 +20,13 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
-import struct
-import numpy
 
 
-from nxswriter.Errors import (CorruptedFieldArrayError, XMLSettingSyntaxError,
-                              DataSourceError, PackageError, DataSourceSetupError,
-                              XMLSyntaxError, UnsupportedTagError, ThreadError)
+from nxswriter.Errors import (
+    CorruptedFieldArrayError, XMLSettingSyntaxError,
+    DataSourceError, PackageError, DataSourceSetupError,
+    XMLSyntaxError, UnsupportedTagError, ThreadError)
 
 
 # test fixture
@@ -46,12 +42,12 @@ class ErrorsTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -62,7 +58,7 @@ class ErrorsTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -70,7 +66,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_CorruptedFieldArrayError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = CorruptedFieldArrayError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -78,7 +74,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XMLSettingSyntaxError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = XMLSettingSyntaxError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -86,7 +82,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_DataSourceError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = DataSourceError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -94,7 +90,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_PackageError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = PackageError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -102,7 +98,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_DataSourceSetupError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = DataSourceSetupError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -110,7 +106,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XMLSyntaxError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = XMLSyntaxError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -118,7 +114,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_UnsupportedTagError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = UnsupportedTagError()
         self.assertTrue(isinstance(err, Exception))
 
@@ -126,7 +122,7 @@ class ErrorsTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ThreadError(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         err = ThreadError()
         self.assertTrue(isinstance(err, Exception))
 

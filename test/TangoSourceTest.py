@@ -112,7 +112,7 @@ class TangoSourceTest(unittest.TestCase):
         self._dbhost = self._simps.dp.get_db_host()
         self._dbport = self._simps.dp.get_db_port()
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -129,7 +129,7 @@ class TangoSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -137,7 +137,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         ds = TangoSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -152,7 +152,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_str_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         device = 'p09/tdw/r228'
@@ -233,7 +233,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         device = 'stestp09/testss/s1r228'
@@ -362,7 +362,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setup_client_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'Writer'
         device = 'stestp09/testss/s1r228'
@@ -526,7 +526,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = TangoSource()
         el.device = 'stestp09/testss/s1r228'
@@ -550,7 +550,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = TangoSource()
         self.assertTrue(isinstance(el, object))
@@ -581,7 +581,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setDataSources_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = TangoSource()
         self.assertTrue(isinstance(el, object))
@@ -654,7 +654,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -710,7 +710,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True, "DevBoolean", False],
@@ -855,7 +855,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_scalar_sar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True, "DevBoolean", False],
@@ -995,7 +995,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_scalar_tango(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True, "DevBoolean", False],
@@ -1135,7 +1135,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar_tl(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -1191,7 +1191,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -1308,7 +1308,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar_group_tl(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -1425,7 +1425,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar_group_noorder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -1544,7 +1544,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -1587,7 +1587,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
@@ -1732,7 +1732,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_spectrum_sar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
@@ -1877,7 +1877,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -1989,7 +1989,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_group_noorder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -2103,7 +2103,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -2148,7 +2148,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
@@ -2350,7 +2350,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_client_image_sar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0], "DevBoolean", False],
@@ -2552,7 +2552,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -2670,7 +2670,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image_group_noorder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -2790,7 +2790,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -2807,28 +2807,28 @@ class TangoSourceTest(unittest.TestCase):
         }
 
         for k in arr:
-            print "K", k
+            print(k)
             self._simps.dp.write_attribute(arr[k][0], arr[k][3])
-        print "ww"
+        print("ww")
         for k in arr:
-            print "KK", k
-            print "K1"
+            print(k)
+            print("K1")
             el = TangoSource()
             el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'command'
             el.member.name = k
-            print "K2"
+            print("K2")
             dt = el.getData()
-            print "K3"
+            print("K3")
             self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
                            1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
-            print "K4"
+            print("K4")
 
     # getData test
     # \brief It tests default settings
     def test_getData_command_lt(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -2860,7 +2860,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -2953,7 +2953,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command_group_lt(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3046,7 +3046,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command_group_noorder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3141,7 +3141,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3246,7 +3246,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop_group_lt(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3351,7 +3351,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop_group_noorder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3458,7 +3458,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3489,7 +3489,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop_lt(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -3520,7 +3520,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_isValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = TangoSource()
         self.assertTrue(isinstance(el, object))
@@ -3530,7 +3530,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setDecoders_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         device = 'stestp09/testss/s1r228'

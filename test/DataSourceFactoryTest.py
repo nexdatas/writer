@@ -78,12 +78,12 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -94,7 +94,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -126,7 +126,7 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         ds = DataSourceFactory(self._fattrs, None)
         self.assertTrue(isinstance(ds, Element))
@@ -149,7 +149,7 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs)
         ds = DataSourceFactory(self._fattrs, el)
@@ -313,7 +313,7 @@ ds.result = ds.myclient + 1
     # \brief It tests default settings
     def test_check_flow(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         atts = {"type": "CL"}
         name = "myRecord"

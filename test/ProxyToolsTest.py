@@ -91,7 +91,7 @@ class TangoSourceTest(unittest.TestCase):
         self._simps.setUp()
         self._simps2.setUp()
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -108,7 +108,7 @@ class TangoSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -116,7 +116,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_proxySetup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         self.myAssertRaise(RuntimeError, ProxyTools.proxySetup, None)
 
@@ -137,7 +137,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_isProxyValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         self.assertEqual(ProxyTools.isProxyValid(None), False)
         self.assertEqual(ProxyTools.isProxyValid(proxy(False)), False)

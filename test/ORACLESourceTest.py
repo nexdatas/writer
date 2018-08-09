@@ -78,7 +78,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
         # connection arguments to ORACLE DB
         args = {}
         args["user"] = self.__user
@@ -86,12 +86,12 @@ class ORACLESourceTest(unittest.TestCase):
         args["password"] = self.__passwd
         # inscance of cx_Oracle
         self._mydb = cx_Oracle.connect(**args)
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     # Exception tester
@@ -103,7 +103,7 @@ class ORACLESourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -135,7 +135,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         query = 'select * from (select IDENT from telefonbuch) where ROWNUM <= 1'
         format = "SPECTRUM"
@@ -177,7 +177,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ['select IDENT from telefonbuch where ROWNUM <= 1',
@@ -217,7 +217,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ['select IDENT from telefonbuch where ROWNUM <= 1',
@@ -259,7 +259,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_trans(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',
@@ -302,7 +302,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ['select IDENT from telefonbuch where ROWNUM <= 5',
@@ -343,7 +343,7 @@ class ORACLESourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',

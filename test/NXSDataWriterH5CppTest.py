@@ -291,11 +291,11 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             f = f.root()
 #            self.assertEqual(f.path, fname)
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -372,11 +372,11 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             #            self.assertEqual(f.name, fname)
 #            self.assertEqual(f.path, fname)
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -882,7 +882,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                 self.assertEqual(cnt.shape, (2,))
                 self.assertEqual(cnt.dtype, "float64")
                 self.assertEqual(cnt.size, 2)
-    #            print cnt.read()
+    #             print(cnt.read())
                 value = cnt[:]
                 for i in range(len(value)):
                     self.assertEqual(self._counter[i], value[i])
@@ -1119,7 +1119,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1236,7 +1236,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1604,7 +1604,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1721,7 +1721,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -2139,7 +2139,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -2552,7 +2552,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             # self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             # self.assertEqual(cnt.size, 2)
-            # print cnt.read()
+            #  print(cnt.read())
             cnt[:]
             # for i in range(len(value)):
             #     self.assertEqual(self._counter[i], value[i])
@@ -2896,7 +2896,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -3293,7 +3293,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -3579,7 +3579,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1], value[i])
@@ -3865,7 +3865,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1 - i], value[i])
@@ -4221,7 +4221,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -4582,7 +4582,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -4942,7 +4942,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(

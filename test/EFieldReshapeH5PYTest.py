@@ -93,14 +93,14 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -111,7 +111,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -119,7 +119,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -217,7 +217,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -317,7 +317,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -423,7 +423,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -531,7 +531,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -650,7 +650,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -772,7 +772,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -910,7 +910,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1036,7 +1036,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1158,7 +1158,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1282,7 +1282,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1346,7 +1346,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                                     for c in range(mlen)] for r in range(steps)]
 
             attrs[k][3] = (len(attrs[k][0][0]),)
-#            print "k",k ,attrs[k][0][0]
+#            sys.stdout.write("b.")k ,attrs[k][0][0]
 
             if attrs[k][1]:
                 el[k] = EField(
@@ -1408,7 +1408,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1533,7 +1533,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1661,7 +1661,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1785,7 +1785,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1912,7 +1912,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2028,7 +2028,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2163,7 +2163,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2283,7 +2283,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2406,7 +2406,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2528,7 +2528,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2663,7 +2663,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2785,7 +2785,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2903,7 +2903,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3022,7 +3022,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3158,7 +3158,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3281,7 +3281,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3402,7 +3402,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 

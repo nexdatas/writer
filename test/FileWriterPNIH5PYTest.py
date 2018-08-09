@@ -185,13 +185,13 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -202,7 +202,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
         try:
             error =  False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -212,7 +212,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
         self.assertEqual(len(list1), len(list2))
         for i, el in enumerate(list1):
             if abs(el-list2[i]) >= error:
-                print "EL", el, list2[i], error
+                print("EL %s %s %s" % (el, list2[i], error))
             self.assertTrue(abs(el-list2[i]) < error)
 
     # float image tester
@@ -224,7 +224,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             for j in range(len(image1[i])):
                 if error is not None:
                     if abs(image1[i][j]-image2[i][j]) >= error:
-                        print "EL", image1[i][j], image2[i][j], error
+                        print("EL %s %s %s" % (image1[i][j], image2[i][j], error))
                     self.assertTrue(abs(image1[i][j]-image2[i][j]) < error)
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
@@ -240,7 +240,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
                 for k in range(len(image1[i][j])):
                     if error is not None:
                         if abs(image1[i][j][k]-image2[i][j][k]) >= error:
-                            print "EL", image1[i][j][k], image2[i][j][k], error
+                            print("EL %s %s %s" % (image1[i][j][k], image2[i][j][k], error))
                         self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
@@ -249,7 +249,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         w = "weerew"
         el = FileWriter.FTObject(w)
 
@@ -259,7 +259,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_openfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -286,7 +286,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -313,7 +313,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_link(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -333,7 +333,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_deflate_filter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -349,7 +349,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_createfile_pni(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         try:
             FileWriter.writer = PNIWriter
@@ -373,7 +373,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -398,7 +398,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_createfile_h5py(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
         try:
             FileWriter.writer = H5PYWriter
@@ -431,7 +431,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -457,7 +457,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftobject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FileWriter.FTObject(None)
         self.assertEqual(fto._h5object, None)
@@ -482,7 +482,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftcloser(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FTCloser(None)
         self.assertEqual(fto._h5object, None)
@@ -540,7 +540,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftobjects(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FileWriter.FTObject(None)
         self.assertEqual(fto.is_valid, True)
@@ -817,7 +817,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
         overwrite = False
@@ -878,7 +878,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -893,7 +893,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
 
         try:
@@ -964,7 +964,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -980,7 +980,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnigroup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1034,7 +1034,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr0 = rt.attributes
             attr1 = entry.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -1042,7 +1042,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
 
-            print dir(rt)
+            print(dir(rt))
             self.assertTrue(
                 isinstance(rt, PNIWriter.PNIGroup))
             self.assertEqual(rt.name, "/")
@@ -1066,7 +1066,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(rt.exists("strument"), False)
 
             for rr in rt:
-                print rr.name
+                print(rr.name)
 
             self.assertTrue(
                 isinstance(entry, PNIWriter.PNIGroup))
@@ -1191,7 +1191,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             kids = set()
             for en in det:
                 kids.add(en.name)
-            print kids
+            print(kids)
 
             self.assertEqual(
                 kids,
@@ -1532,7 +1532,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1548,7 +1548,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pygroup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1602,16 +1602,16 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr0 = rt.attributes
             attr1 = entry.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
-            print dir(attr0.h5object)
+            print(dir(attr0.h5object))
             self.assertTrue(
                 isinstance(attr0.h5object, h5py.AttributeManager))
             self.assertTrue(isinstance(attr1, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5py.AttributeManager))
 
-            print dir(rt)
+            print(dir(rt))
             self.assertTrue(
                 isinstance(rt, H5PYWriter.H5PYGroup))
             self.assertEqual(rt.name, "/")
@@ -1628,7 +1628,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(rt.exists("strument"), False)
 
             for rr in rt:
-                print rr.name
+                print(rr.name)
 
             self.assertTrue(
                 isinstance(entry, H5PYWriter.H5PYGroup))
@@ -1655,7 +1655,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
                 isinstance(nt, H5PYWriter.H5PYGroup))
             self.assertEqual(nt.name, "notype")
             self.assertEqual(nt.path, "/notype")
-            print nt.h5object.attrs.keys()
+            print(nt.h5object.attrs.keys())
             self.assertEqual(
                 len(nt.h5object.attrs), 0)
             attr = nt.attributes
@@ -1749,7 +1749,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             kids = set()
             for en in det:
                 kids.add(en.name)
-            print kids
+            print(kids)
 
             self.assertEqual(
                 kids,
@@ -2082,7 +2082,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2099,7 +2099,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2354,7 +2354,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2371,7 +2371,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2615,7 +2615,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2632,7 +2632,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2894,7 +2894,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2912,7 +2912,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_vec(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3193,7 +3193,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3209,7 +3209,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyfield_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3296,7 +3296,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 
             attrs = strscalar.attributes
             self.assertTrue(isinstance(attrs, H5PYWriter.H5PYAttributeManager))
-            print type(attrs.h5object)
+            print(type(attrs.h5object))
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
@@ -3450,7 +3450,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3467,7 +3467,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyfield_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3700,7 +3700,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3717,7 +3717,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyfield_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3968,7 +3968,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3986,7 +3986,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyfield_vec(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -4259,7 +4259,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -4275,7 +4275,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnideflate(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -4317,7 +4317,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
-            print df0.h5object
+            print(df0.h5object)
             self.assertTrue(isinstance(df0.h5object, nx._nxh5.deflate_filter))
             self.assertEqual(df1.rate, 2)
             self.assertEqual(df1.shuffle, False)
@@ -4335,7 +4335,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pydeflate(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -4393,7 +4393,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattributemanager(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -4448,7 +4448,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -4478,8 +4478,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             self.assertTrue(isinstance(atintscalar, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
@@ -4661,14 +4661,14 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.myAssertImage(atintimage.read(), [[0]*2]*3)
             self.myAssertImage(atintimage[...], [[0]*2]*3)
 
-            print "WW", attr1["NX_class"].name
+            print("WW %s" % attr1["NX_class"].name)
 
             for at in attr0:
-                print at.name
+                print(at.name)
             for at in attr1:
-                print at.name
+                print(at.name)
             for at in attr2:
-                print at.name
+                print(at.name)
 
             at = None
 
@@ -4974,7 +4974,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -4991,7 +4991,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyattributemanager(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -5046,7 +5046,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5py.AttributeManager))
@@ -5076,8 +5076,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             self.assertTrue(isinstance(atintscalar, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, tuple))
@@ -5208,14 +5208,14 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
-            print "WW", attr1["NX_class"].name
+            print("WW %s" % attr1["NX_class"].name)
 
             for at in attr0:
-                print at.name
+                print(at.name)
             for at in attr1:
-                print at.name
+                print(at.name)
             for at in attr2:
-                print at.name
+                print(at.name)
 
             at = None
 
@@ -5437,7 +5437,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -5455,7 +5455,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -5510,7 +5510,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -5540,8 +5540,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
 
             chars = string.ascii_uppercase + string.digits
@@ -5771,7 +5771,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -5788,7 +5788,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -5843,7 +5843,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -5873,8 +5873,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[
@@ -6155,7 +6155,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -6172,7 +6172,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattribute_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -6227,7 +6227,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -6257,8 +6257,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[[
@@ -6539,7 +6539,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -6556,7 +6556,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -6611,7 +6611,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5py.AttributeManager))
@@ -6641,8 +6641,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
 
             chars = string.ascii_uppercase + string.digits
@@ -6687,7 +6687,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), itvl[3])
             self.assertEqual(atintscalar[...], itvl[3])
 
-            print stvl[0], type(stvl[0])
+            print("%s %s" % (stvl[0], type(stvl[0])))
 
             atstrscalar.write(stvl[0])
 
@@ -6822,7 +6822,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -6839,7 +6839,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -6894,7 +6894,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5py.AttributeManager))
@@ -6924,8 +6924,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[
@@ -7149,7 +7149,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -7166,7 +7166,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5pyattribute_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -7221,7 +7221,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5PYWriter.H5PYAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5py.AttributeManager))
@@ -7251,8 +7251,8 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[[
@@ -7301,15 +7301,15 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 
             vv1 = [[stvl[4][j][i] for i in range(2)] for j in range(2)]
 
-            print "TR", atstrimage.read()
+            print("TR %s" % str(atstrimage.read()))
 
-            print "TRct", atstrimage[:, 1:]
+            print("TRct", atstrimage[:, 1:])
 
             atstrimage[:, 1:] = vv1
 
-            print "VV1", vv1
-            print "TR1 ", atstrimage[:,:]
-            print "TR2 ", atstrimage[:, 1:]
+            print("VV1 %s" % vv1)
+            print("TR1 ", atstrimage[:,:])
+            print("TR2 ", atstrimage[:, 1:])
             self.myAssertImage(atstrimage.read()[:, 1:], vv1)
             self.myAssertImage(atstrimage[:, 1:], vv1)
             self.myAssertImage(atstrimage.h5object[0]['atstrimage'][:, 1:], vv1)
@@ -7483,7 +7483,7 @@ class FileWriterPNIH5PYTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)

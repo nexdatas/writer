@@ -94,7 +94,7 @@ class DataSourceDecodersTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -145,7 +145,7 @@ class DataSourceDecodersTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setDecoders(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         atype = 'attribute'
@@ -198,7 +198,7 @@ class DataSourceDecodersTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setDecoders_nopool(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         atype = 'attribute'

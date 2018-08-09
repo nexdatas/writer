@@ -22,11 +22,8 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import json
 import binascii
 import time
@@ -39,6 +36,9 @@ from nxswriter.Types import Converters
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture
@@ -57,7 +57,6 @@ class ClientSourceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -66,13 +65,13 @@ class ClientSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -83,7 +82,7 @@ class ClientSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception as e:
             error = True
         self.assertEqual(error, True)
 
@@ -91,7 +90,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         ds = ClientSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -101,7 +100,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_str_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         name = 'myrecord'
         ds = ClientSource()
@@ -134,7 +133,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setup_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         ds = ClientSource()
@@ -144,13 +143,15 @@ class ClientSourceTest(unittest.TestCase):
         ds = ClientSource()
         self.assertTrue(isinstance(ds, DataSource))
         self.myAssertRaise(
-            DataSourceSetupError, ds.setup, "<datasource><record/></datasource>")
+            DataSourceSetupError, ds.setup,
+            "<datasource><record/></datasource>")
 
         ds = ClientSource()
         self.assertEqual(ds.name, None)
         self.assertTrue(isinstance(ds, DataSource))
         self.assertEqual(
-            ds.setup("<datasource><record name='%s'/></datasource>" % dname), None)
+            ds.setup("<datasource><record name='%s'/></datasource>" % dname),
+            None)
         self.assertEqual(ds.name, dname)
 
     # Data check
@@ -181,7 +182,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         name = 'myrecord'
         name2 = 'myrecord2'
@@ -220,7 +221,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_global_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": [1243, "SCALAR", "DevLong64", []],
@@ -242,7 +243,8 @@ class ClientSourceTest(unittest.TestCase):
             dt = ds.getData()
             if arr[a][2] == "DevBoolean":
                 self.checkData(
-                    dt, arr[a][1], Converters.toBool(arr[a][0]), arr[a][2], arr[a][3])
+                    dt, arr[a][1], Converters.toBool(arr[a][0]),
+                    arr[a][2], arr[a][3])
             else:
                 self.checkData(dt, arr[a][1], arr[a][0], arr[a][2], arr[a][3])
 
@@ -250,7 +252,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_local_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": [-23243, "SCALAR", "DevLong64", []],
@@ -274,7 +276,8 @@ class ClientSourceTest(unittest.TestCase):
             dt = ds.getData()
             if arr[a][2] == "DevBoolean":
                 self.checkData(
-                    dt, arr[a][1], Converters.toBool(arr[a][0]), arr[a][2], arr[a][3])
+                    dt, arr[a][1], Converters.toBool(arr[a][0]),
+                    arr[a][2], arr[a][3])
             else:
                 self.checkData(dt, arr[a][1], arr[a][0], arr[a][2], arr[a][3])
 
@@ -282,7 +285,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
@@ -290,7 +293,7 @@ class ClientSourceTest(unittest.TestCase):
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
-            #            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            # "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
             "bool": ['true', "SPECTRUM", "DevBoolean", []],
         }
 
@@ -317,7 +320,8 @@ class ClientSourceTest(unittest.TestCase):
                     k, '[' + ''.join([a + ',' for a in arr[k][0]])[:-1] + "]")
             else:
                 gjson = '{"data":{"%s":%s}}' % (
-                    k, '[' + ''.join([str(a) + ',' for a in arr[k][0]])[:-1] + "]")
+                    k, '[' + ''.join([str(a)
+                                      + ',' for a in arr[k][0]])[:-1] + "]")
             self.assertEqual(ds.setJSON(json.loads(gjson)), None)
             dt = ds.getData()
             if arr[k][2] == "DevBoolean":
@@ -330,7 +334,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_local_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
@@ -365,7 +369,8 @@ class ClientSourceTest(unittest.TestCase):
                     k, '[' + ''.join([a + ',' for a in arr[k][0]])[:-1] + "]")
             else:
                 ljson = '{"data":{"%s":%s}}' % (
-                    k, '[' + ''.join([str(a) + ',' for a in arr[k][0]])[:-1] + "]")
+                    k, '[' + ''.join([str(a)
+                                      + ',' for a in arr[k][0]])[:-1] + "]")
             gjson = '{"data":{"myrecord":"1"}}'
             self.assertEqual(
                 ds.setJSON(json.loads(gjson), json.loads(ljson)), None)
@@ -380,7 +385,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings with global json string
     def test_getData_global_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": [1243, "IMAGE", "DevLong64", []],
@@ -402,8 +407,10 @@ class ClientSourceTest(unittest.TestCase):
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][2] == 'DevBoolean':
-                    arr[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                   else "false")
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
 
@@ -414,15 +421,22 @@ class ClientSourceTest(unittest.TestCase):
                     k, str(arr[k][0]).replace("'", "\""))
             elif arr[k][2] == "DevBoolean":
                 gjson = '{"data":{"%s":%s}}' % (
-                    k, '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "]," for row in arr[k][0]])[:-1] + ']')
+                    k, '[' + "".join(['['
+                                      + ''.join([a + ',' for a in row])[:-1]
+                                      + "]," for row in arr[k][0]])[:-1] + ']')
             else:
                 gjson = '{"data":{"%s":%s}}' % (
-                    k, '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "]," for row in arr[k][0]])[:-1] + ']')
+                    k, '[' + "".join(['['
+                                      + ''.join([str(a)
+                                                 + ',' for a in row])[:-1]
+                                      + "]," for row in arr[k][0]])[:-1] + ']')
             self.assertEqual(ds.setJSON(json.loads(gjson)), None)
             dt = ds.getData()
             if arr[k][2] == "DevBoolean":
-                self.checkData(dt, arr[k][1], [[Converters.toBool(a) for a in row]
-                               for row in arr[k][0]], arr[k][2], arr[k][3])
+                self.checkData(
+                    dt, arr[k][1], [[Converters.toBool(a) for a in row]
+                                    for row in arr[k][0]],
+                    arr[k][2], arr[k][3])
             else:
                 self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])
 
@@ -430,7 +444,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings with local json string
     def test_getData_local_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": [1243, "IMAGE", "DevLong64", []],
@@ -452,8 +466,10 @@ class ClientSourceTest(unittest.TestCase):
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][2] == 'DevBoolean':
-                    arr[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][0] = [[("true" if self.__rnd.randint(0, 1)
+                                   else "false")
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
                     arr[k][3] = [mlen[0], mlen[1]]
 
@@ -464,16 +480,23 @@ class ClientSourceTest(unittest.TestCase):
                     k, str(arr[k][0]).replace("'", "\""))
             elif arr[k][2] == "DevBoolean":
                 ljson = '{"data":{"%s":%s}}' % (
-                    k, '[' + "".join(['[' + ''.join([a + ',' for a in row])[:-1] + "]," for row in arr[k][0]])[:-1] + ']')
+                    k, '[' + "".join(['['
+                                      + ''.join([a + ',' for a in row])[:-1]
+                                      + "]," for row in arr[k][0]])[:-1] + ']')
             else:
                 ljson = '{"data":{"%s":%s}}' % (
-                    k, '[' + "".join(['[' + ''.join([str(a) + ',' for a in row])[:-1] + "]," for row in arr[k][0]])[:-1] + ']')
+                    k, '['
+                    + "".join(['['
+                               + ''.join([str(a)
+                                          + ',' for a in row])[:-1] + "],"
+                               for row in arr[k][0]])[:-1] + ']')
             gjson = '{"data":{"myrecord":"1"}}'
             self.assertEqual(
                 ds.setJSON(json.loads(gjson), json.loads(ljson)), None)
             dt = ds.getData()
             if arr[k][2] == "DevBoolean":
-                self.checkData(dt, arr[k][1], [[Converters.toBool(a) for a in row]
+                self.checkData(dt, arr[k][1], [[Converters.toBool(a)
+                                                for a in row]
                                for row in arr[k][0]], arr[k][2], arr[k][3])
             else:
                 self.checkData(dt, arr[k][1], arr[k][0], arr[k][2], arr[k][3])
@@ -482,7 +505,7 @@ class ClientSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_isValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = ClientSource()
         self.assertTrue(isinstance(el, object))

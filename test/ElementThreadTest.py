@@ -27,8 +27,12 @@ import random
 import struct
 import binascii
 import time
-import Queue
 from threading import Thread
+
+if sys.version_info > (3,):
+    import queue as Queue
+else:
+    import Queue
 
 from nxswriter.ElementThread import ElementThread
 
@@ -106,19 +110,19 @@ class ElementThreadTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         index = self.__rnd.randint(1, 1000)
         el = ElementThread(index, None)
@@ -129,7 +133,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         index = self.__rnd.randint(1, 1000)
         elementQueue = Queue.Queue()
@@ -154,7 +158,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_jobs(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         jlist = [Job() for c in range(self.__rnd.randint(1, 20))]
 
@@ -175,7 +179,7 @@ class ElementThreadTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_jobs_with_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         jlist = [EJob() for c in range(self.__rnd.randint(1, 20))]
 
