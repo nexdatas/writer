@@ -16,32 +16,43 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file DBFieldTagServerTest.py
+# \file TangoFieldTagServerH5CppTest.py
 # unittests for field Tags running Tango Server
 #
-
 import unittest
+import os
+import sys
+import subprocess
+import random
 import PyTango
+import binascii
+import time
 
+from xml.sax import SAXParseException
+
+
+from Checkers import Checker
 import ServerSetUp
-import DBFieldTagWriterTest
+import TangoFieldTagWriterH5CppTest
 from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
+class TangoFieldTagServerH5CppTest(TangoFieldTagWriterH5CppTest.TangoFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.__init__(self, methodName)
+        TangoFieldTagWriterH5CppTest.TangoFieldTagWriterH5CppTest.__init__(
+            self, methodName)
+        unittest.TestCase.__init__(self, methodName)
 
-        DBFieldTagServerTest.serverCounter += 1
+        TangoFieldTagServerH5CppTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % DBFieldTagServerTest.serverCounter
+            "%s" % TangoFieldTagServerH5CppTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
         self.__status = {
@@ -52,22 +63,33 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
             PyTango.DevState.RUNNING: "Writing ...",
             PyTango.DevState.FAULT: "Error",
         }
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
+
+        self._dbhost = None
+        self._dbport = None
 
     # test starter
-    # \brief Common set up of Tango Server
+    # \brief Common set up
     def setUp(self):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.setUp(self)
         self._sv.setUp()
-        print("SEED = %s" % self.seed)
-        print("CHECKER SEED = %s" % self._sc.seed)
+        self._simps.setUp()
+        self._dbhost = self._simps.dp.get_db_host()
+        self._dbport = self._simps.dp.get_db_port()
+        print "SEED =", self.seed
+        print "CHECKER SEED =", self._sc.seed
 
     # test closer
-    # \brief Common tear down oif Tango Server
+    # \brief Common tear down
     def tearDown(self):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.tearDown(self)
+        self._simps.tearDown()
         self._sv.tearDown()
+
+    def setProp(self, rc, name, value):
+        db = PyTango.Database()
+        name = "" + name[0].upper() + name[1:]
+        db.put_device_property(
+            self._sv.new_device_info_writer.name,
+            {name: value})
+        rc.Init()
 
     # opens writer
     # \param fname file name
@@ -77,6 +99,7 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
@@ -101,7 +124,6 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     # \param json JSON Record with client settings
     def closeWriter(self, tdw, json=None):
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
-        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         if json:
             tdw.JSONRecord = json
@@ -116,7 +138,6 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
-
 
 if __name__ == '__main__':
     unittest.main()

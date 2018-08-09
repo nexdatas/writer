@@ -16,33 +16,46 @@
 #    You should have received a copy of the GNU General Public License
 #    along with nexdatas.  If not, see <http://www.gnu.org/licenses/>.
 # \package test nexdatas
-# \file DBFieldTagServerTest.py
-# unittests for field Tags running Tango Server
+# \file ClientFieldTagAsynchH5CppTest.py
+# unittests for field Tags running Tango Server in asynchronous mode
 #
-
 import unittest
+import os
+import sys
+import subprocess
+import random
+import time
+
 import PyTango
 
+from xml.sax import SAXParseException
+
+from Checkers import Checker
+
 import ServerSetUp
-import DBFieldTagWriterTest
+import ClientFieldTagWriterH5CppTest
 from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
+class ClientFieldTagAsynchH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
     # constructor
     # \param methodName name of the test method
     def __init__(self, methodName):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.__init__(self, methodName)
+        ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest.__init__(
+            self, methodName)
 
-        DBFieldTagServerTest.serverCounter += 1
+        ClientFieldTagAsynchH5CppTest.serverCounter += 1
         sins = self.__class__.__name__ + \
-            "%s" % DBFieldTagServerTest.serverCounter
+            "%s" % ClientFieldTagAsynchH5CppTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
+
+#        self._counter =  [1, 2]
+#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
 
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
@@ -52,21 +65,25 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
             PyTango.DevState.RUNNING: "Writing ...",
             PyTango.DevState.FAULT: "Error",
         }
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
+
+    def setProp(self, rc, name, value):
+        db = PyTango.Database()
+        name = "" + name[0].upper() + name[1:]
+        db.put_device_property(
+            self._sv.new_device_info_writer.name,
+            {name: value})
+        rc.Init()
 
     # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.setUp(self)
         self._sv.setUp()
-        print("SEED = %s" % self.seed)
-        print("CHECKER SEED = %s" % self._sc.seed)
+        print "SEED =", self.seed
+        print "CHECKER SEED =", self._sc.seed
 
     # test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self):
-        DBFieldTagWriterTest.DBFieldTagWriterTest.tearDown(self)
         self._sv.tearDown()
 
     # opens writer
@@ -77,12 +94,12 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     def openWriter(self, fname, xml, json=None):
         tdw = PyTango.DeviceProxy(self._sv.new_device_info_writer.name)
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.setProp(tdw, "writer", "h5cpp")
         tdw.FileName = fname
         self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
         tdw.OpenFile()
-
         self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
@@ -91,7 +108,10 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         if json:
             tdw.JSONRecord = json
-        tdw.OpenEntry()
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        tdw.OpenEntryAsynch()
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         return tdw
@@ -105,18 +125,25 @@ class DBFieldTagServerTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
 
         if json:
             tdw.JSONRecord = json
-        tdw.CloseEntry()
-        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        tdw.CloseEntryAsynch()
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.OPEN)
 
         tdw.CloseFile()
-        self.assertEqual(tdw.state(), PyTango.DevState.ON)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.ON)
 
     # performs one record step
     def record(self, tdw, string):
-        tdw.Record(string)
-
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        tdw.RecordAsynch(string)
+        self.assertTrue(ProxyHelper.wait(tdw, 10000))
+        self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
+        self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
 if __name__ == '__main__':
     unittest.main()

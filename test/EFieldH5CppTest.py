@@ -30,13 +30,7 @@ import numpy
 import time
 
 
-# True if pniio installed
-PNIIO = False
-try:
-    import pni.io.nx.h5 as nx
-    PNIIO = True
-except:
-    import pni.nx.h5 as nx
+PNIIO = True
 
 from TestDataSource import TestDataSource
 
@@ -53,7 +47,7 @@ from nxswriter.Errors import XMLSettingSyntaxError
 
 from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
+import nxswriter.H5CppWriter as H5CppWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -63,7 +57,7 @@ from xml.sax import SAXParseException
 
 
 # test fixture
-class EFieldTest(unittest.TestCase):
+class EFieldH5CppTest(unittest.TestCase):
 
     # constructor
     # \param methodName name of the test method
@@ -131,36 +125,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(
-            self._fname, overwrite=True).root()
-
-        el = EField(self._fattrs, None)
-        self.assertTrue(isinstance(el, Element))
-        self.assertTrue(isinstance(el, FElement))
-        self.assertTrue(isinstance(el, FElementWithAttr))
-        self.assertEqual(el.tagName, "field")
-        self.assertEqual(el.content, [])
-        self.assertEqual(el.rank, "0")
-        self.assertEqual(el.lengths, {})
-        self.assertEqual(el.source, None)
-        self.assertEqual(el.strategy, None)
-        self.assertEqual(el.trigger, None)
-        self.assertEqual(el.grows, None)
-        self.assertEqual(el.compression, False)
-        self.assertEqual(el.rate, 5)
-        self.assertEqual(el.shuffle, True)
-        self._nxFile.close()
-        os.remove(self._fname)
-
-    # default constructor test
-    # \brief It tests default settings
-    def test_default_constructor(self):
-        fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (
-            os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
 
@@ -189,7 +154,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -222,7 +187,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -250,15 +215,15 @@ class EFieldTest(unittest.TestCase):
 
         self._nxFile.close()
         os.remove(self._fname)
-
     # default store method
     # \brief It tests default settings
+
     def test_store_default_reload(self):
         fun = sys._getframe().f_code.co_name
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -311,7 +276,7 @@ class EFieldTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         fattrs = {"name": "test", "units": "m", "type": "NX_INT"}
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -344,7 +309,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -367,7 +332,7 @@ class EFieldTest(unittest.TestCase):
         self.assertEqual(el.shuffle, True)
         self.assertEqual(el.store(), (None, None))
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIField)
+        self.assertEqual(type(el.h5Object), H5CppWriter.H5CppField)
 
         self.assertEqual(el.grows, None)
         self._nxFile.close()
@@ -380,7 +345,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -414,7 +379,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -449,7 +414,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -483,7 +448,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -518,7 +483,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -555,7 +520,7 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -616,7 +581,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -690,7 +655,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -771,7 +736,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -850,7 +815,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -963,7 +928,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1063,7 +1028,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1181,7 +1146,7 @@ class EFieldTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0], mlen[1])
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1224,6 +1189,7 @@ class EFieldTest(unittest.TestCase):
 
         for k in attrs:
             h5 = el[k].h5Object
+            print "TYPE", h5, h5.dtype
             self.assertEqual(
                 h5.dtype, attrs[k][2] if attrs[k][2] else 'string')
             if attrs[k][2] and attrs[k][2] != 'string_old':
@@ -1293,7 +1259,7 @@ class EFieldTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0], mlen[1])
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1403,7 +1369,7 @@ class EFieldTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0], mlen[1])
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1474,7 +1440,7 @@ class EFieldTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1497,7 +1463,7 @@ class EFieldTest(unittest.TestCase):
 
         el.store()
 
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIField)
+        self.assertEqual(type(el.h5Object), H5CppWriter.H5CppField)
         self.assertEqual(el.h5Object.name, fattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 14)
         self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
@@ -1523,7 +1489,7 @@ class EFieldTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1546,8 +1512,8 @@ class EFieldTest(unittest.TestCase):
 
         el.store()
 
-        FileWriter.writer = PNIWriter
-        self.assertEqual(type(el.h5Object), PNIWriter.PNIField)
+        FileWriter.writer = H5CppWriter
+        self.assertEqual(type(el.h5Object), H5CppWriter.H5CppField)
         self.assertEqual(el.h5Object.name, fattrs["name"])
         self.assertEqual(len(el.h5Object.attributes), 2)
         self.assertEqual(el.h5Object.attributes["type"][...], fattrs["type"])
@@ -1575,86 +1541,87 @@ class EFieldTest(unittest.TestCase):
         print "Run: %s.%s() " % (self.__class__.__name__, fun)
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
+        for _ in range(1):
+            attrs = {
+                "string": ["My_string", "NX_CHAR", "string"],
+                #            "string":["My string","NX_CHAR", "string"],
+                "datetime": ["12:34:34", "NX_DATE_TIME", "string"],
+                "iso8601": ["12:34:34", "ISO8601", "string"],
+                "int": [-123, "NX_INT", "int64"],
+                "int8": [12, "NX_INT8", "int8"],
+                "int16": [-123, "NX_INT16", "int16"],
+                "int32": [12345, "NX_INT32", "int32"],
+                "int64": [-12345, "NX_INT64", "int64"],
+                "uint": [123, "NX_UINT", "uint64"],
+                "uint8": [12, "NX_UINT8", "uint8"],
+                "uint16": [123, "NX_UINT16", "uint16"],
+                "uint32": [12345, "NX_UINT32", "uint32"],
+                "uint64": [12345, "NX_UINT64", "uint64"],
+                "float": [-12.345, "NX_FLOAT", "float64", 1.e-14],
+                "number": [-12.345e+2, "NX_NUMBER", "float64", 1.e-14],
+                "float32": [-12.345e-1, "NX_FLOAT32", "float32", 1.e-5],
+                "float64": [-12.345, "NX_FLOAT64", "float64", 1.e-14],
+                "bool": [True, "NX_BOOLEAN", "bool"],
+                "bool2": ["FaLse", "NX_BOOLEAN", "bool"],
+                "bool3": ["false", "NX_BOOLEAN", "bool"],
+                "bool4": ["true", "NX_BOOLEAN", "bool"]
+            }
 
-        attrs = {
-            "string": ["My_string", "NX_CHAR", "string"],
-            #            "string":["My string","NX_CHAR", "string"],
-            "datetime": ["12:34:34", "NX_DATE_TIME", "string"],
-            "iso8601": ["12:34:34", "ISO8601", "string"],
-            "int": [-123, "NX_INT", "int64"],
-            "int8": [12, "NX_INT8", "int8"],
-            "int16": [-123, "NX_INT16", "int16"],
-            "int32": [12345, "NX_INT32", "int32"],
-            "int64": [-12345, "NX_INT64", "int64"],
-            "uint": [123, "NX_UINT", "uint64"],
-            "uint8": [12, "NX_UINT8", "uint8"],
-            "uint16": [123, "NX_UINT16", "uint16"],
-            "uint32": [12345, "NX_UINT32", "uint32"],
-            "uint64": [12345, "NX_UINT64", "uint64"],
-            "float": [-12.345, "NX_FLOAT", "float64", 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER", "float64", 1.e-14],
-            "float32": [-12.345e-1, "NX_FLOAT32", "float32", 1.e-5],
-            "float64": [-12.345, "NX_FLOAT64", "float64", 1.e-14],
-            "bool": [True, "NX_BOOLEAN", "bool"],
-            "bool2": ["FaLse", "NX_BOOLEAN", "bool"],
-            "bool3": ["false", "NX_BOOLEAN", "bool"],
-            "bool4": ["true", "NX_BOOLEAN", "bool"]
-        }
+            FileWriter.writer = H5CppWriter
+            self._nxFile = FileWriter.create_file(
+                self._fname, overwrite=True).root()
+            eFile = EFile({}, None, self._nxFile)
 
-        FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(
-            self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+            el = {}
+            for k in attrs.keys():
+                el[k] = EField(
+                    {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
 
-        el = {}
-        for k in attrs.keys():
-            el[k] = EField(
-                {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
+                self.assertEqual(el[k].tagAttributes, {})
+                el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]))
+                ds = TestDataSource()
+                ds.valid = True
+                el[k].source = ds
+                el[k].strategy = 'STEP'
 
-            self.assertEqual(el[k].tagAttributes, {})
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]))
-            ds = TestDataSource()
-            ds.valid = True
-            el[k].source = ds
-            el[k].strategy = 'STEP'
+                el[k].store()
+                at = el[k].h5Attribute(k)
+                self.assertEqual(at.dtype, attrs[k][2])
+                if attrs[k][2] == "bool":
+                    self.assertEqual(
+                        Converters.toBool(str(attrs[k][0])), at[...])
 
-            el[k].store()
-            at = el[k].h5Attribute(k)
-            self.assertEqual(at.dtype, attrs[k][2])
-            if attrs[k][2] == "bool":
-                self.assertEqual(Converters.toBool(str(attrs[k][0])), at[...])
+                elif len(attrs[k]) > 3:
+                    self.assertTrue(abs(at[...] - attrs[k][0]) <= attrs[k][3])
+                else:
+                    self.assertEqual(at[...], attrs[k][0])
 
-            elif len(attrs[k]) > 3:
-                self.assertTrue(abs(at[...] - attrs[k][0]) <= attrs[k][3])
-            else:
-                self.assertEqual(at[...], attrs[k][0])
+            for k in attrs.keys():
+                el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
+                el[k]._createAttributes()
+                at = el[k].h5Object.attributes[k]
+    #            at = el[k].h5Attribute(k)
+                self._sc.checkScalarAttribute(
+                    el[k].h5Object, k, attrs[k][2], attrs[k][0],
+                                              attrs[k][3] if len(attrs[k]) > 3 else 0)
 
-        for k in attrs.keys():
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
-            el[k]._createAttributes()
-            at = el[k].h5Object.attributes[k]
-#            at = el[k].h5Attribute(k)
-            self._sc.checkScalarAttribute(
-                el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+            for k in attrs.keys():
+    #            if attrs[k][2] == 'string':
+    #                "writing multi-dimensional string is not supported by pninx"
+    #                continue
+                el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
+                el[k]._createAttributes()
+    #            at = el[k].h5Attribute(k)
+                at = el[k].h5Object.attributes[k]
+    #            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
+    # attrs[k][3] if len(attrs[k])>3 else 0)
+                self._sc.checkScalarAttribute(
+                    el[k].h5Object, k, attrs[k][2], attrs[k][0],
+                                                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
-        for k in attrs.keys():
-#            if attrs[k][2] == 'string':
-#                "writing multi-dimensional string is not supported by pninx"
-#                continue
-            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
-            el[k]._createAttributes()
-#            at = el[k].h5Attribute(k)
-            at = el[k].h5Object.attributes[k]
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-# attrs[k][3] if len(attrs[k])>3 else 0)
-            self._sc.checkScalarAttribute(
-                el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+            self._nxFile.close()
 
-        self._nxFile.close()
-
-        os.remove(self._fname)
+            os.remove(self._fname)
 
     # constructor test
     # \brief It tests default settings
@@ -1689,7 +1656,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -1755,11 +1722,13 @@ class EFieldTest(unittest.TestCase):
 
             for k in attrs.keys():
                 if attrs[k][2] == "string":
-                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
+                    mlen = [
+                        self.__rnd.randint(1, 10), self.__rnd.randint(1, 3)]
                     attrs[k][0] = [
                         attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[0])]
                 elif attrs[k][2] != "bool":
-                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
+                    mlen = [
+                        self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                     attrs[k][0] = [
                         attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[0])]
                 else:
@@ -1773,7 +1742,7 @@ class EFieldTest(unittest.TestCase):
 
                 attrs[k][3] = (mlen[0],)
 
-            FileWriter.writer = PNIWriter
+            FileWriter.writer = H5CppWriter
             self._nxFile = FileWriter.create_file(
                 self._fname, overwrite=True).root()
             eFile = EFile({}, None, self._nxFile)
@@ -1787,7 +1756,7 @@ class EFieldTest(unittest.TestCase):
                 self.assertEqual(el[k].tagAttributes, {})
                 el[k].tagAttributes[k] = (attrs[k][1], "".join(
                     [str(it) + " " for it in attrs[k][0]]), attrs[k][3])
-
+                # print el[k].tagAttributes[k]
                 ds = TestDataSource()
                 ds.valid = True
                 el[k].source = ds
@@ -1812,100 +1781,107 @@ class EFieldTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
-        attrs = {
-            "string": ["My_string", "NX_CHAR", "string", (1,)],
-            "datetime": ["12:34:34", "NX_DATE_TIME", "string", (1,)],
-            "iso8601": ["12:34:34", "ISO8601", "string", (1,)],
-            "int": [-123, "NX_INT", "int64", (1,)],
-            "int8": [12, "NX_INT8", "int8", (1,)],
-            "int16": [-123, "NX_INT16", "int16", (1,)],
-            "int32": [12345, "NX_INT32", "int32", (1,)],
-            "int64": [-12345, "NX_INT64", "int64", (1,)],
-            "uint": [123, "NX_UINT", "uint64", (1,)],
-            "uint8": [12, "NX_UINT8", "uint8", (1,)],
-            "uint16": [123, "NX_UINT16", "uint16", (1,)],
-            "uint32": [12345, "NX_UINT32", "uint32", (1,)],
-            "uint64": [12345, "NX_UINT64", "uint64", (1,)],
-            "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
-            "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
-            "bool": [True, "NX_BOOLEAN", "bool", (1,)],
-            "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
-            "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
-            "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
-        }
+        for i in range(10):
 
-        for k in attrs.keys():
-            if attrs[k][2] == "string":
-                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
-                    1, 10), self.__rnd.randint(0, 3)]
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3)
-                                for r in range(mlen[1])] for c in range(mlen[0])]
-            elif attrs[k][2] != "bool":
-                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
-                    1, 10), self.__rnd.randint(0, 3)]
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3)
-                                for r in range(mlen[1])] for c in range(mlen[0])]
-            else:
-                mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
-                if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
-                                    for c in range(mlen[1])] for r in range(mlen[0])]
+            attrs = {
+                "string": ["My_string", "NX_CHAR", "string", (1,)],
+                "datetime": ["12:34:34", "NX_DATE_TIME", "string", (1,)],
+                "iso8601": ["12:34:34", "ISO8601", "string", (1,)],
+                "int": [-123, "NX_INT", "int64", (1,)],
+                "int8": [12, "NX_INT8", "int8", (1,)],
+                "int16": [-123, "NX_INT16", "int16", (1,)],
+                "int32": [12345, "NX_INT32", "int32", (1,)],
+                "int64": [-12345, "NX_INT64", "int64", (1,)],
+                "uint": [123, "NX_UINT", "uint64", (1,)],
+                "uint8": [12, "NX_UINT8", "uint8", (1,)],
+                "uint16": [123, "NX_UINT16", "uint16", (1,)],
+                "uint32": [12345, "NX_UINT32", "uint32", (1,)],
+                "uint64": [12345, "NX_UINT64", "uint64", (1,)],
+                "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
+                "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+                "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
+                "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
+                "bool": [True, "NX_BOOLEAN", "bool", (1,)],
+                "bool2": ["FaLse", "NX_BOOLEAN", "bool", (1,)],
+                "bool3": ["false", "NX_BOOLEAN", "bool", (1,)],
+                "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
+            }
+
+            for k in attrs.keys():
+                if attrs[k][2] == "string":
+                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
+                        1, 10), self.__rnd.randint(0, 3)]
+                    attrs[k][0] = [
+                        [attrs[k][0] * self.__rnd.randint(1, 3) for r in range(mlen[1])] for c in range(mlen[0])]
+                elif attrs[k][2] != "bool":
+                    mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(
+                        1, 10), self.__rnd.randint(0, 3)]
+                    attrs[k][0] = [
+                        [attrs[k][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
                 else:
-                    attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
-                                    for c in range(mlen[1])]for r in range(mlen[0])]
+                    mlen = [
+                        self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
+                    if k == 'bool':
+                        attrs[k][0] = [[bool(self.__rnd.randint(0, 1))
+                                        for c in range(mlen[1])] for r in range(mlen[0])]
+                    else:
+                        attrs[k][0] = [[("True" if self.__rnd.randint(0, 1) else "False")
+                                        for c in range(mlen[1])]for r in range(mlen[0])]
 
-            attrs[k][3] = (mlen[0], mlen[1])
+                attrs[k][3] = (mlen[0], mlen[1])
 
-        FileWriter.writer = PNIWriter
-        self._nxFile = FileWriter.create_file(
-            self._fname, overwrite=True).root()
-        eFile = EFile({}, None, self._nxFile)
+            FileWriter.writer = H5CppWriter
+            self._nxFile = FileWriter.create_file(
+                self._fname, overwrite=True).root()
+            eFile = EFile({}, None, self._nxFile)
 
-        el = {}
-        for k in attrs.keys():
-            el[k] = EField(
-                {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
+            el = {}
+            for k in attrs.keys():
+                el[k] = EField(
+                    {"name": k, "type": attrs[k][1], "units": "m"}, eFile)
 
-            self.assertEqual(el[k].tagAttributes, {})
-            el[k].tagAttributes[k] = (attrs[k][1],
-                                      "".join(["".join([str(it) + " " for it in sub]
-                                                       ) + "\n" for sub in attrs[k][0]]),
-                                      attrs[k][3]
-                                      )
+                self.assertEqual(el[k].tagAttributes, {})
+                el[k].tagAttributes[k] = (attrs[k][1],
+                                          "".join(["".join([str(it) + " " for it in sub]
+                                                           ) + "\n" for sub in attrs[k][0]]),
+                                          attrs[k][3]
+                                          )
 
-            ds = TestDataSource()
-            ds.valid = True
-            el[k].source = ds
-            el[k].strategy = 'STEP'
+                ds = TestDataSource()
+                ds.valid = True
+                el[k].source = ds
+                el[k].strategy = 'STEP'
 
-            el[k].store()
+                el[k].store()
 
-            at = el[k].h5Object.attributes[k]
-            self._sc.checkImageAttribute(
-                el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][4] if len(attrs[k]) > 4 else 0)
+                at = el[k].h5Object.attributes[k]
+#                print k, attrs[k][0],el[k].h5Object.attributes[k].read()
+                self._sc.checkImageAttribute(
+                    el[k].h5Object, k, attrs[k][2], attrs[k][0],
+                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
-            self.assertEqual(at.dtype, attrs[k][2])
-            if attrs[k][2] == "bool":
-                for i in range(len(attrs[k][0])):
-                    for j in range(len(attrs[k][0][i])):
-                        self.assertEqual(
-                            Converters.toBool(str(attrs[k][0][i][j])), at[i, j])
-                pass
-            elif len(attrs[k]) > 4:
-                for i in range(len(attrs[k][0])):
-                    for j in range(len(attrs[k][0][i])):
-                        self.assertTrue(
-                            abs(at[i, j] - attrs[k][0][i][j]) <= attrs[k][4])
-            else:
-                for i in range(len(attrs[k][0])):
-                    for j in range(len(attrs[k][0][i])):
-                        self.assertEqual(at[i, j], attrs[k][0][i][j])
+                self.assertEqual(at.dtype, attrs[k][2])
+                if attrs[k][2] == "bool":
+                    for i in range(len(attrs[k][0])):
+                        for j in range(len(attrs[k][0][i])):
+                            self.assertEqual(
+                                Converters.toBool(str(attrs[k][0][i][j])), at[i, j])
+                    pass
+                elif len(attrs[k]) > 4:
+                    for i in range(len(attrs[k][0])):
+                        for j in range(len(attrs[k][0][i])):
+                            self.assertTrue(
+                                abs(at[i, j] - attrs[k][0][i][j]) <= attrs[k][4])
+                else:
+                    for i in range(len(attrs[k][0])):
+                        for j in range(len(attrs[k][0][i])):
+                            if at.dtype == "string" and at.shape == (1,):
+                                self.assertEqual(at[...], attrs[k][0][i][j])
+                            else:
+                                self.assertEqual(at[i, j], attrs[k][0][i][j])
 
-        self._nxFile.close()
-        os.remove(self._fname)
+            self._nxFile.close()
+            os.remove(self._fname)
 
     # default store method
     # \brief It tests default settings
@@ -1937,7 +1913,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2024,7 +2000,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2133,7 +2109,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2266,7 +2242,7 @@ class EFieldTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0], mlen[1])
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2406,7 +2382,7 @@ class EFieldTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0], mlen[1])
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2488,7 +2464,7 @@ class EFieldTest(unittest.TestCase):
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2556,7 +2532,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2656,7 +2632,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [False, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2754,7 +2730,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool"],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2792,7 +2768,10 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0][0],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                        "shape": [0, 0]}
+            # print k
+            # print ds.value
             el[k].source = ds
             el[k].grows = grow
 
@@ -2813,7 +2792,8 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             for i in range(steps):
                 ds.value = {"rank": NTP.rTf[0], "value": attrs[k][0][i],
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
+                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                            "shape": [0, 0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 #            self.assertEqual(el[k].grows, (grow if grow else 1))
@@ -2862,7 +2842,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -2972,7 +2952,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3100,7 +3080,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3225,7 +3205,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3363,7 +3343,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3491,7 +3471,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3613,7 +3593,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3736,7 +3716,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["false", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3858,7 +3838,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -3986,7 +3966,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4106,7 +4086,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4169,6 +4149,8 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
 
+            # print k, supp
+            # print el[k].error
             if PNIIO or k in supp:
                 self.assertEqual(el[k].error, None)
 
@@ -4241,7 +4223,7 @@ class EFieldTest(unittest.TestCase):
 
         supp = ["string", "datetime", "iso8601"]
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4373,7 +4355,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4501,7 +4483,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4622,7 +4604,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4760,7 +4742,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -4885,7 +4867,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5011,7 +4993,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5132,7 +5114,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5270,7 +5252,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5397,7 +5379,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5521,7 +5503,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5642,7 +5624,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5781,7 +5763,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -5911,7 +5893,7 @@ class EFieldTest(unittest.TestCase):
             "bool4": ["true", "NX_BOOLEAN", "bool", (1,)]
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
@@ -6036,7 +6018,7 @@ class EFieldTest(unittest.TestCase):
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
         }
 
-        FileWriter.writer = PNIWriter
+        FileWriter.writer = H5CppWriter
         self._nxFile = FileWriter.create_file(
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)

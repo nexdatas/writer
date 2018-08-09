@@ -55,6 +55,13 @@ try:
 except:
     pass
 
+try:
+    from . import H5CppWriter
+    WRITERS["h5cpp"] = H5CppWriter
+except:
+    pass
+DEFAULTWRITERS = ["pni", "h5py", "h5cpp"]
+
 
 class TangoDataWriter(object):
 
@@ -106,7 +113,11 @@ class TangoDataWriter(object):
         self.__defaultCanFail = True
 
         #: (:obj:`str`) writer type
-        self.writer = "pni" if "pni" in WRITERS.keys() else "h5py"
+        self.writer = None
+        for wr in DEFAULTWRITERS:
+            if wr in WRITERS.keys():
+                self.writer = wr
+                break
 
         #: (:obj:`int`) steps per file
         self.stepsperfile = 0
@@ -151,7 +162,10 @@ class TangoDataWriter(object):
         if '?' in writer:
             writer, params = writer.split('?')
         if not writer:
-            writer = "pni" if "pni" in WRITERS.keys() else "h5py"
+            for wr in DEFAULTWRITERS:
+                if wr in WRITERS.keys():
+                    writer = wr
+                    break
         wrmodule = WRITERS[writer.lower()]
         FileWriter.setwriter(wrmodule)
         return wrmodule
