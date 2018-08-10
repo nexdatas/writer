@@ -52,6 +52,9 @@ import SimpleServerSetUp
 
 # test fixture
 
+if sys.version_info > (3,):
+    long = int
+
 
 class TangoFieldTagWriterTest(unittest.TestCase):
 

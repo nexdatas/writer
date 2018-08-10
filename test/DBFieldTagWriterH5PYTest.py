@@ -43,6 +43,9 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 import MySQLdb
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class DBFieldTagWriterH5PYTest(unittest.TestCase):

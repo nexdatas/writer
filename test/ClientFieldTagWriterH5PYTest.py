@@ -44,6 +44,9 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 # test fixture
 
+if sys.version_info > (3,):
+    long = int
+
 
 class ClientFieldTagWriterH5PYTest(unittest.TestCase):
 

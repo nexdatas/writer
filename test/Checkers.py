@@ -33,6 +33,7 @@ from math import exp
 
 if sys.version_info > (3,):
     unicode = str
+    long = int
 else:
     bytes = str
 

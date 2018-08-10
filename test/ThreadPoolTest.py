@@ -36,9 +36,10 @@ from nxswriter.Errors import ThreadError
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 # datasource
-
-
 class Source(object):
     # contructor
 

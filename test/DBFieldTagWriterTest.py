@@ -49,6 +49,9 @@ from Checkers import Checker
 
 import MySQLdb
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class DBFieldTagWriterTest(unittest.TestCase):

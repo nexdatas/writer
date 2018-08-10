@@ -33,6 +33,9 @@ import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 import h5py
 
+if sys.version_info > (3,):
+    long = int
+
 
 
 # if 64-bit machione

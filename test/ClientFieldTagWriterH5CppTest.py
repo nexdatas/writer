@@ -44,6 +44,9 @@ import nxswriter.H5CppWriter as H5CppWriter
 
 # test fixture
 
+if sys.version_info > (3,):
+    long = int
+
 
 class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 

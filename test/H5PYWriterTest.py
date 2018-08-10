@@ -43,6 +43,10 @@ else:
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
+
 class testwriter(object):
     def __init__(self):
         self.commands = []

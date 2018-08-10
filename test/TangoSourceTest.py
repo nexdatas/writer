@@ -52,10 +52,17 @@ from nxswriter import DataSources
 from nxswriter.Types import Converters
 
 import threading
-import thread
+
+if sys.version_info > (3,):
+    import _thread as thread
+else:
+    import thread
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test pool
@@ -664,7 +671,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -720,7 +727,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124, "DevLong64", -23],
             "ScalarULong": ["uint64", "DevULong", 234, "DevLong64", 23],
             "ScalarLong64": ["int64", "DevLong64", 234, "DevLong64",  -13],
-            "ScalarULong64": ["uint64", "DevULong64", 23L, "DevLong64", 223L],
+            "ScalarULong64": ["uint64", "DevULong64", 23, "DevLong64", 223],
             "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02,  "DevDouble", +2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
@@ -865,7 +872,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124, "DevLong64", -23],
             "ScalarULong": ["uint64", "DevULong", 234, "DevLong64", 23],
             "ScalarLong64": ["int64", "DevLong64", 234, "DevLong64",  -13],
-            "ScalarULong64": ["uint64", "DevULong64", 23L, "DevLong64", 223L],
+            "ScalarULong64": ["uint64", "DevULong64", 23, "DevLong64", 223],
             "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02,  "DevDouble", +2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
@@ -1005,7 +1012,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124, "DevLong64", -23],
             "ScalarULong": ["uint64", "DevULong", 234, "DevLong64", 23],
             "ScalarLong64": ["int64", "DevLong64", 234, "DevLong64",  -13],
-            "ScalarULong64": ["uint64", "DevULong64", 23L, "DevLong64", 223L],
+            "ScalarULong64": ["uint64", "DevULong64", 23, "DevLong64", 223],
             "ScalarFloat": ["float32", "DevFloat", 12.234, "DevDouble", -12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02,  "DevDouble", +2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue", "DevString", "MyFaTrue"],
@@ -1145,7 +1152,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -1201,7 +1208,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -1215,7 +1222,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -144],
             "ScalarULong": ["uint64", "DevULong", 134],
             "ScalarLong64": ["int64", "DevLong64", 214],
-            "ScalarULong64": ["uint64", "DevULong64", 14L],
+            "ScalarULong64": ["uint64", "DevULong64", 14],
             "ScalarFloat": ["float32", "DevFloat", 11.133, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.111173e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTsdf"],
@@ -1318,7 +1325,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -1332,7 +1339,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -144],
             "ScalarULong": ["uint64", "DevULong", 134],
             "ScalarLong64": ["int64", "DevLong64", 214],
-            "ScalarULong64": ["uint64", "DevULong64", 14L],
+            "ScalarULong64": ["uint64", "DevULong64", 14],
             "ScalarFloat": ["float32", "DevFloat", 11.133, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.111173e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTsdf"],
@@ -1435,7 +1442,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -1449,7 +1456,7 @@ class TangoSourceTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -144],
             "ScalarULong": ["uint64", "DevULong", 134],
             "ScalarLong64": ["int64", "DevLong64", 214],
-            "ScalarULong64": ["uint64", "DevULong64", 14L],
+            "ScalarULong64": ["uint64", "DevULong64", 14],
             "ScalarFloat": ["float32", "DevFloat", 11.133, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.111173e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTsdf"],
@@ -2800,7 +2807,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
@@ -2838,7 +2845,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
@@ -2870,7 +2877,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
@@ -2884,7 +2891,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -121],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 211],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 211],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.116673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyT11e"],
@@ -2963,7 +2970,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
@@ -2977,7 +2984,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -121],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 211],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 211],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.116673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyT11e"],
@@ -3056,7 +3063,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
@@ -3070,7 +3077,7 @@ class TangoSourceTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -121],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 211],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 211],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 13],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 11.134, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.116673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyT11e"],

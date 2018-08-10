@@ -31,6 +31,9 @@ import time
 
 from nxswriter.DecoderPool import VDEOdecoder
 
+if sys.version_info > (3,):
+    long = int
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -73,7 +76,7 @@ class VDEOdecoderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width, height = image.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = ord(str(struct.pack('=H', 1)[-1]))
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
                              width,  height, endian, hsize, 0, 0)

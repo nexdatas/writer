@@ -34,11 +34,15 @@ if sys.version_info > (3,):
 else:
     import Queue
 
+
 from nxswriter.ElementThread import ElementThread
 
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # class job

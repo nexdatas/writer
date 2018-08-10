@@ -49,6 +49,9 @@ from pni.io.nx.h5 import create_file
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class PyEvalTangoSourceTest(unittest.TestCase):
@@ -285,7 +288,7 @@ except:
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234000206, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -416,7 +419,7 @@ else:
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "SPECTRUM", "DevLong64", []],
+            "long": [-10000000000000000000000003, "SPECTRUM", "DevLong64", []],
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
@@ -526,7 +529,7 @@ else:
 
         carr = {
             "int": [1243, "IMAGE", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "IMAGE", "DevLong64", []],
+            "long": [-10000000000000000000000003, "IMAGE", "DevLong64", []],
             "float": [-1.223e-01, "IMAGE", "DevDouble", []],
             "str": ['My String', "IMAGE", "DevString", []],
             "unicode": ["Hello", "IMAGE", "DevString", []],
@@ -859,7 +862,7 @@ commonblock["myres"] = ds.res
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234000206, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -1022,7 +1025,7 @@ commonblock["my1res"] = ds.res
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "SPECTRUM", "DevLong64", []],
+            "long": [-10000000000000000000000003, "SPECTRUM", "DevLong64", []],
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
@@ -1148,7 +1151,7 @@ commonblock["myre3"] = ds.res
 
         carr = {
             "int": [1243, "IMAGE", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "IMAGE", "DevLong64", []],
+            "long": [-10000000000000000000000003, "IMAGE", "DevLong64", []],
             "float": [-1.223e-01, "IMAGE", "DevDouble", []],
             "str": ['My String', "IMAGE", "DevString", []],
             "unicode": ["Hello", "IMAGE", "DevString", []],

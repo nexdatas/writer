@@ -26,7 +26,10 @@ import random
 import time
 import struct
 import binascii
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except:
+    from io import StringIO
 
 from nxswriter import StreamSet
 

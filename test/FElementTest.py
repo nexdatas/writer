@@ -42,11 +42,14 @@ import nxswriter.PNIWriter as PNIWriter
 
 from TestDataSource import TestDataSource
 
+from xml.sax import SAXParseException
+
+
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-
-from xml.sax import SAXParseException
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture

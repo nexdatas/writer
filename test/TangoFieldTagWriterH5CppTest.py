@@ -49,6 +49,9 @@ import SimpleServerSetUp
 
 # test fixture
 
+if sys.version_info > (3,):
+    long = int
+
 
 class TangoFieldTagWriterH5CppTest(unittest.TestCase):
 

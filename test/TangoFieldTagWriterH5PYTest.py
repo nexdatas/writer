@@ -35,6 +35,9 @@ from ProxyHelper import ProxyHelper
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 from xml.sax import SAXParseException
 

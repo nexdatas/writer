@@ -46,6 +46,9 @@ from Checkers import Checker
 
 # test fixture
 
+if sys.version_info > (3,):
+    long = int
+
 
 class ClientFieldTagWriterTest(unittest.TestCase):
 

@@ -51,6 +51,9 @@ import nxswriter.H5CppWriter as H5CppWriter
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class EAttributeH5CppTest(unittest.TestCase):

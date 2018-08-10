@@ -54,13 +54,15 @@ import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
 from Checkers import Checker
+from xml.sax import SAXParseException
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from xml.sax import SAXParseException
-
+if sys.version_info > (3,):
+    long = int
 
 # test fixture
 class EFieldReshapeTest(unittest.TestCase):

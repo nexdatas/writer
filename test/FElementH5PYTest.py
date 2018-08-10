@@ -48,6 +48,9 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 from xml.sax import SAXParseException
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class FElementH5PYTest(unittest.TestCase):

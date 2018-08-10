@@ -31,6 +31,8 @@ import time
 
 from nxswriter.DecoderPool import UINT32decoder
 
+if sys.version_info > (3,):
+    long = int
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

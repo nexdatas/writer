@@ -349,7 +349,7 @@ ds.res2 = str(True)
             try:
                 error = False
                 tdw.jsonrecord = "}"
-            except ValueError, e:
+            except ValueError as e:
                 error = True
             self.assertEqual(error, True)
 
@@ -417,7 +417,7 @@ ds.res2 = str(True)
             try:
                 error = False
                 tdw.jsonrecord = 1223
-            except TypeError, e:
+            except TypeError as e:
                 error = True
             self.assertEqual(error, True)
 

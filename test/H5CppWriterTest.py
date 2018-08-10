@@ -36,10 +36,8 @@ import nxswriter.H5CppWriter as H5CppWriter
 from pninexus import h5cpp
 # from pninexus import nexus
 
-# try:
-#     import pni.io.nx.h5 as nx
-# except:
-#     import pni.nx.h5 as nx
+if sys.version_info > (3,):
+    long = int
 
 
 # if 64-bit machione

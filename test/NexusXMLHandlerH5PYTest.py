@@ -50,7 +50,7 @@ from xml import sax
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 
 # if 64-bit machione

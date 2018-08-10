@@ -31,7 +31,7 @@ import gc
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from .NexusXMLHandler import NexusXMLHandler
 from .FetchNameHandler import FetchNameHandler
