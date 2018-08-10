@@ -38,7 +38,7 @@ from pninexus import h5cpp
 
 if sys.version_info > (3,):
     long = int
-
+    unicode = str
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

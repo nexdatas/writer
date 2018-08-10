@@ -55,7 +55,10 @@ class ClientSource(DataSource):
         :raises: :exc:`nxswriter.Errors.DataSourceSetupError` \
         :        if :obj:`name` is not defined
         """
-        dom = minidom.parseString(xml)
+        if sys.version_info > (3,):
+            dom = minidom.parseString(bytes(xml, "UTF-8"))
+        else:
+            dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         if rec and len(rec) > 0:
             self.name = rec[0].getAttribute("name") \

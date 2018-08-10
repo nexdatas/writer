@@ -120,7 +120,7 @@ class EField(FElementWithAttr):
             shape = self._findShape(
                 self.rank, self.lengths,
                 self.__extraD, self.grows, True, checkData=True)
-            if self.grows > len(shape):
+            if self.grows and self.grows > len(shape):
                 self.grows = len(shape)
             return shape
         except XMLSettingSyntaxError:
@@ -159,28 +159,32 @@ class EField(FElementWithAttr):
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
 
+        if sys.version_info < (3,):
+            name = name.encode()
+            dtype = dtype.encode()
+            
         try:
             if shape:
                 if not chunk:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape, [],
+                        name, dtype, shape, [],
                         deflate)
                 elif self.canfail:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape, chunk,
+                        name, dtype, shape, chunk,
                         deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), minshape or [1], chunk,
+                        name, dtype, minshape or [1], chunk,
                         deflate)
             else:
                 mshape = [1] if self.strategy in ['INIT', 'FINAL'] else [0]
                 if deflate:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), mshape, [1], deflate)
+                        name, dtype, mshape, [1], deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), mshape, [1])
+                        name, dtype, mshape, [1])
         except:
             info = sys.exc_info()
             import traceback
@@ -190,12 +194,12 @@ class EField(FElementWithAttr):
                 self._streams.error(
                     "EField::__createObject() - "
                     "The field '%s' of '%s' type cannot be created: %s" %
-                    (name.encode(), dtype.encode(), message),
+                    (name, dtype, message),
                     std=False)
 
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
-                (name.encode(), dtype.encode(), message))
+                (name, dtype, message))
         return f
 
     def __setAttributes(self):
@@ -208,8 +212,8 @@ class EField(FElementWithAttr):
 
         if self.strategy == "POSTRUN":
             self.h5Object.attributes.create(
-                "postrun".encode(),
-                "string".encode(), overwrite=True)[...] \
+                "postrun",
+                "string", overwrite=True)[...] \
                 = self.postrun.encode().strip()
 
     def __setStrategy(self, name):

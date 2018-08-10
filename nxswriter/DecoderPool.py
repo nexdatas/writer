@@ -135,10 +135,16 @@ class UINT32decoder(object):
         if len(self.__data[1]) % 4:
             raise ValueError("Wrong encoded UINT32 data length")
         if not self.__value:
+            if isinstance(self.__data[1], str):
+                data = bytearray()
+                data.extend(map(ord, self.__data[1]))
+            else:
+                data = self.__data[1]
+            res = struct.unpack('I' * (len(data) // 4), data
             self.__value = numpy.array(
-                struct.unpack('I' * (len(self.__data[1]) // 4),
-                              self.__data[1]),
-                dtype=self.dtype).reshape(len(self.__data[1]) // 4)
+                struct.unpack('I' * (len(data) // 4),
+                              data),
+                dtype=self.dtype).reshape(len(data) // 4)
         return self.__value
 
 
