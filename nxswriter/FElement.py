@@ -301,7 +301,7 @@ class FElementWithAttr(FElement):
                             [len(spec), 0],
                             streams=self._streams)
         elif rank == 2:
-            lines = val.split("\n")
+            lines = val.split(b"\n")
             image = [ln.split() for ln in lines]
             dh = DataHolder("IMAGE", image, "DevString",
                             [len(image), len(image[0])],
