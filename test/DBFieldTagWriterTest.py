@@ -47,7 +47,11 @@ from nxswriter.TangoDataWriter import TangoDataWriter
 from nxswriter.Errors import ThreadError
 from Checkers import Checker
 
-import MySQLdb
+if sys.version_info > (3,):
+    import pymysql
+    pymysql.install_as_MySQLdb()
+else:
+    import MySQLdb
 
 if sys.version_info > (3,):
     long = int

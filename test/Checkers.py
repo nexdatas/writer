@@ -326,7 +326,11 @@ class Checker(object):
     # \param checking instance
     # \returns is instance is numeric
     def _isNumeric(self, instance):
-        attrs = ['__pow__', '__mul__', '__div__', '__add__', '__sub__']
+        if sys.version_info > (3,):
+            attrs = ['__pow__', '__mul__', '__floordiv__', '__truediv__','__add__',
+                     '__sub__']
+        else:
+            attrs = ['__pow__', '__mul__', '__div__', '__add__', '__sub__']
         return all(hasattr(instance, attr) for attr in attrs)
 
     # creates spectrum plot with random Gaussians
@@ -591,9 +595,9 @@ class Checker(object):
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
-        if grows > 1:
+        if grows and grows > 1:
 #            lvalues = zip(*values)
-            lvalues = map(lambda *row: list(row), *values)
+            lvalues = list(map(lambda *row: list(row), *values))
         else:
             lvalues = values
         self._tc.assertEqual(len(cnt.shape), 2)
@@ -844,10 +848,10 @@ class Checker(object):
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         if grows == 3:
-            lvalues = map(
-                lambda *image: map(lambda *row: list(row), *image), *values)
+            lvalues = list(map(
+                lambda *image: map(lambda *row: list(row), *image), *values))
         elif grows == 2:
-            lvalues = map(lambda *row: list(row), *values)
+            lvalues = list(map(lambda *row: list(row), *values))
         else:
             lvalues = values
         self._tc.assertEqual(len(cnt.shape), 3)

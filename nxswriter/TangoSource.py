@@ -228,9 +228,9 @@ class TangoSource(DataSource):
             eport = port
             edevice = device
         else:
-            ehostname = hostname.encode()
-            eport = port.encode()
-            edevice = device.encode()
+            ehostname = hostname.encode() if hostname else hostname 
+            eport = port.encode() if port else port
+            edevice = device.encode() if device else device
         if hostname and port and device:
             self.device = "%s:%s/%s" % (ehostname,
                                         eport, edevice)
