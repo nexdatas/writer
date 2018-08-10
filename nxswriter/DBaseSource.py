@@ -173,7 +173,7 @@ class DBaseSource(DataSource):
         if self.hostname:
             args["host"] = self.hostname
         if sys.version_info < (3,):
-            for k, in list(args.keys()):
+            for k in list(args.keys()):
                 args[k] = args[k].encode()
 
         if self.port:
@@ -197,7 +197,7 @@ class DBaseSource(DataSource):
         if self.hostname:
             args["host"] = self.hostname
         if sys.version_info < (3,):
-            for k, in list(args.keys()):
+            for k in list(args.keys()):
                 args[k] = args[k].encode()
 
         if self.port:
