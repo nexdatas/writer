@@ -40,7 +40,10 @@ from nxswriter.EField import EField
 from nxswriter import DataSources
 from nxswriter.Errors import DataSourceSetupError
 
-import SimpleServerSetUp
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
 
 from nxswriter.DecoderPool import DecoderPool
 

@@ -26,7 +26,11 @@ import subprocess
 
 import PyTango
 import time
-import SimpleServer
+
+try:
+    import SimpleServer
+except:
+    from . import SimpleServer
 
 
 # test fixture
@@ -89,10 +93,15 @@ class SimpleServerSetUp(object):
 
         path = os.path.dirname(SimpleServer.__file__)
 
-        if os.path.isfile("%s/ST" % path):
-            self._psub = subprocess.call(
-                "cd %s; ./ST %s &" % (path, self.instance), stdout=None,
-                stderr=None,  shell=True)
+        if os.path.isfile("%s/SimpleServer.py" % path):
+            if sys.version_info > (3,):
+                self._psub = subprocess.call(
+                    "cd %s; python3 ./SimpleServer.py %s &" % (path, self.instance), stdout=None,
+                    stderr=None,  shell=True)
+            else:
+                self._psub = subprocess.call(
+                    "cd %s; python ./SimpleServer.py %s &" % (path, self.instance), stdout=None,
+                    stderr=None,  shell=True)
             sys.stdout.write("waiting for simple server")
 
         found = False
