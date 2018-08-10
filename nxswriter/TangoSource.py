@@ -425,7 +425,7 @@ class TgGroup(object):
 
         errors = []
         for a in attr:
-            ea = ea if sys.version_info > (3,) else ea.encode()  
+            ea = ea if sys.version_info > (3,) else a.encode()  
             if ae.lower() not in alist:
                 errors.append((a, device.device))
         if errors:
