@@ -33,8 +33,15 @@ import time
 import json
 
 
-import SimpleServerSetUp
-from ProxyHelper import ProxyHelper
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
+
+try:
+    from ProxyHelper import ProxyHelper
+except:
+    from .ProxyHelper import ProxyHelper
 
 
 from nxswriter.TangoSource import DataSource

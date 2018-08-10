@@ -22,16 +22,12 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
 
-from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import ESymbol
@@ -140,7 +136,7 @@ class ESymbolTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs2, eFile)
         el2 = ESymbol(self._fattrs2,  el)
@@ -199,6 +195,7 @@ class ESymbolTest(unittest.TestCase):
         el2.doc = "SYM2"
         self.assertEqual(el3.store(None), None)
         self.assertEqual(el3.symbols, {"test": 'SYM2'})
+
 
 if __name__ == '__main__':
     unittest.main()
