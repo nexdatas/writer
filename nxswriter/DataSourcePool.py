@@ -20,6 +20,7 @@
 """ pool with datasource evaluation classes """
 
 import threading
+import sys
 
 from . import TangoSource
 from . import DBaseSource

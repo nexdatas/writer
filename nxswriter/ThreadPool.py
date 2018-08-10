@@ -46,7 +46,7 @@ class ThreadPool(object):
         """
 
         #: (:obj:`int`) maximal number of threads
-        self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
+        self.numberOfThreads = numberOfThreads or -1
         #: (:class:`Queue.Queue`) queue of the appended elements
         self.__elementQueue = Queue.Queue()
         #: (:obj:`list` <:class:`nxswriter.Element.Element`>) \
