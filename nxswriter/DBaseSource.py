@@ -32,12 +32,7 @@ from .Errors import (PackageError, DataSourceSetupError)
 DB_AVAILABLE = []
 
 try:
-    if sys.version_info > (3,):
-        import pymysql
-        pymysql.install_as_MySQLdb()
-    else:
-        import MySQLdb
-
+    import MySQLdb
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
     pass
