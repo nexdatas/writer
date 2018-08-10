@@ -102,7 +102,7 @@ class SimpleServerSetUp(object):
                 self._psub = subprocess.call(
                     "cd %s; python ./SimpleServer.py %s &" % (path, self.instance), stdout=None,
                     stderr=None,  shell=True)
-            sys.stdout.write("waiting for simple server")
+            sys.stdout.write("waiting for simple server ")
 
         found = False
         cnt = 0
