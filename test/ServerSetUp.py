@@ -89,7 +89,7 @@ class ServerSetUp(object):
         pipe = subprocess.Popen(
             "ps -ef | grep 'NXSDataWriter %s'" % self.instance, stdout=subprocess.PIPE, shell=True).stdout
 
-        res = pipe.read().split("\n")
+        res = str(pipe.read()).split("\n")
         for r in res:
             sr = r.split()
             if len(sr) > 2:
