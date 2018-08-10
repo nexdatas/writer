@@ -211,10 +211,16 @@ class EField(FElementWithAttr):
         self._createAttributes()
 
         if self.strategy == "POSTRUN":
-            self.h5Object.attributes.create(
-                "postrun",
-                "string", overwrite=True)[...] \
-                = self.postrun.encode().strip()
+            if sys.version_info > (3,):
+                self.h5Object.attributes.create(
+                    "postrun",
+                    "string", overwrite=True)[...] \
+                    = self.postrun.strip()
+            else:
+                self.h5Object.attributes.create(
+                    "postrun".encode(),
+                    "string".encode(), overwrite=True)[...] \
+                    = self.postrun.encode().strip()
 
     def __setStrategy(self, name):
         """ provides strategy or fill the value in
@@ -226,7 +232,10 @@ class EField(FElementWithAttr):
             if self.source.isValid():
                 return self.strategy, self.trigger
         else:
-            val = ("".join(self.content)).strip().encode()
+            if sys.version_info > (3,):
+                val = ("".join(self.content)).strip()
+            else:
+                val = ("".join(self.content)).strip().encode()
             if val:
                 dh = self._setValue(int(self.rank), val)
                 self.__growshape(dh.shape)

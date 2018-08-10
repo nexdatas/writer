@@ -140,10 +140,9 @@ class UINT32decoder(object):
                 data.extend(map(ord, self.__data[1]))
             else:
                 data = self.__data[1]
-            res = struct.unpack('I' * (len(data) // 4), data
+            res = struct.unpack('I' * (len(data) // 4), data)
             self.__value = numpy.array(
-                struct.unpack('I' * (len(data) // 4),
-                              data),
+                struct.unpack('I' * (len(data) // 4), data),
                 dtype=self.dtype).reshape(len(data) // 4)
         return self.__value
 

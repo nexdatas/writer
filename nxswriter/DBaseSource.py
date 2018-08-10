@@ -20,7 +20,7 @@
 """ Definitions of DB datasource """
 
 from xml.dom import minidom
-# import sys
+import sys
 
 from .Types import NTP
 

@@ -75,7 +75,7 @@ class DataSourcePool(object):
                         dec = pdec
                     else:
                         dec = __import__(pkg, globals(),
-                                         locals(), pkl[-1]
+                                         locals(), pkl[-1])
                 else:
                     dec = __import__(".".join(pkl[:-1]),
                                      globals(), locals(), pkl[-1])
