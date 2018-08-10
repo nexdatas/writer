@@ -162,6 +162,8 @@ class DBaseSource(DataSource):
         :rtype: :class:`MySQLdb.connections.Connection`
         """
         args = {}
+        if self.mycnf:
+            args["read_default_file"] = self.mycnf
         if self.dbname:
             args["db"] = self.dbname
         if self.user:
@@ -174,8 +176,6 @@ class DBaseSource(DataSource):
             for k in list(args.keys()):
                 args[k] = args[k].encode()
 
-        if self.mycnf:
-            args["read_default_file"] = self
         if self.port:
             args["port"] = int(self.port)
         return MySQLdb.connect(**args)
