@@ -19,6 +19,7 @@
 
 """ Definitions of CLIENT datasource """
 
+import sys
 from xml.dom import minidom
 
 from .DataSources import DataSource
