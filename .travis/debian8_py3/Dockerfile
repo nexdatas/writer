@@ -11,7 +11,7 @@ RUN useradd -ms /bin/bash tango
 RUN  /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; debconf-set-selections <<< "mysql-server-5.5 mysql-server/root_password password rootpw"'
 RUN  /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; debconf-set-selections <<< "mysql-server-5.5 mysql-server/root_password_again password rootpw"'
 RUN apt-get -qq update && apt-get -qq install -y mysql-server-5.5
-RUN apt-get -qq update && apt-get -qq  install -y python3-pymysql
+# RUN apt-get -qq update && apt-get -qq  install -y python3-pymysql
 RUN  /bin/bash -c 'sleep 10'
 RUN /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; debconf-set-selections <<< "tango-db tango-db/db/app-user string tango"'
 RUN /bin/bash -c 'export DEBIAN_FRONTEND=noninteractive; debconf-set-selections <<< "tango-db tango-db/mysql/app-pass	password rootpw"'
