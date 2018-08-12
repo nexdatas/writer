@@ -33,7 +33,11 @@ from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
-import MySQLdb
+try:
+    import MySQLdb
+except:
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)

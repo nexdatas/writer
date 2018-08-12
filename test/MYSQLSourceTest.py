@@ -31,7 +31,11 @@ import json
 import binascii
 import time
 
-import MySQLdb
+try:
+    import MySQLdb
+except:
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 from nxswriter.DataSources import DataSource
 from nxswriter.DBaseSource import DBaseSource

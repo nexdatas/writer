@@ -41,7 +41,11 @@ from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
-import MySQLdb
+try:
+    import MySQLdb
+except:
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 if sys.version_info > (3,):
     long = int

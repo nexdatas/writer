@@ -167,7 +167,11 @@ if PNI_AVAILABLE and H5PY_AVAILABLE:
 DB_AVAILABLE = []
 
 try:
-    import MySQLdb
+    try:
+        import MySQLdb
+    except:
+        import pymysql
+        pymysql.install_as_MySQLdb()
     # connection arguments to MYSQL DB
     args = {}
     args["db"] = 'tango'
