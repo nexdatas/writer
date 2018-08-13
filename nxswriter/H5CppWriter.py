@@ -1217,7 +1217,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         elif isinstance(t, slice):
             var = self._h5object.read()
             if self.dtype is not ['string', b'string']:
-                var[t] = np.array(o, dtype=self.dtype)
+                var[t] = np.array(o, dtype=nptype(self.dtype))
             else:
                 dtype = np.unicode_
                 var[t] = np.array(o, dtype=dtype)
@@ -1232,7 +1232,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         elif isinstance(t, tuple):
             var = self._h5object.read()
             if self.dtype is not ['string', b'string']:
-                var[t] = np.array(o, dtype=self.dtype)
+                var[t] = np.array(o, dtype=nptype(self.dtype))
             else:
                 dtype = np.unicode_
                 if hasattr(var, "flatten"):
