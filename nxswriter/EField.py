@@ -487,7 +487,7 @@ class EField(FElementWithAttr):
         """
         if self.grows and self.grows > 0 and hasattr(self.h5Object, "grow"):
             shape = self.h5Object.shape
-            if self.grows > len(shape):
+            if self.grows and self.grows > len(shape):
                 self.grows = len(shape)
             if not self.grows and self.__extraD:
                 self.grows = 1
@@ -577,7 +577,7 @@ class EField(FElementWithAttr):
         nptype = self.h5Object.dtype
         value = ''
 
-        if self.grows > len(shape):
+        if self.grows and self.grows > len(shape):
             self.grows = len(shape)
         if not self.grows and self.__extraD:
             self.grows = 1

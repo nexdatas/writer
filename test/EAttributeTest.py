@@ -814,7 +814,6 @@ class EAttributeTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes()
             at = el[k].h5Object.attributes[k]
-            print(at)[...], at.dtype, at.shape
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2] or 'string', attrs[k][0],
                 attrs[k][3] if len(attrs[k]) > 3 else 0)
@@ -832,7 +831,7 @@ class EAttributeTest(unittest.TestCase):
 # attrs[k][3] if len(attrs[k])>3 else 0)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 

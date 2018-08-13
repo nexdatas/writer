@@ -38,7 +38,10 @@ try:
 except:
     import pni.nx.h5 as nx
 
-from TestDataSource import TestDataSource
+try:
+    from TestDataSource import TestDataSource
+except:
+    from .TestDataSource import TestDataSource
 
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
@@ -51,7 +54,11 @@ from nxswriter.DataSources import DataSource
 
 from nxswriter.Errors import XMLSettingSyntaxError
 
-from Checkers import Checker
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+    
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
@@ -2926,7 +2933,7 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if (grow and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self._sc.checkScalarField(
@@ -3313,7 +3320,7 @@ class EFieldTest(unittest.TestCase):
                 )
             else:
 
-                if grow > 1:
+                if grow and grow > 1:
                     val = [[a[0] for a in attrs[k][0]]]
                 else:
                     val = attrs[k][0]
@@ -3433,7 +3440,7 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if (grow and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -3447,7 +3454,7 @@ class EFieldTest(unittest.TestCase):
                 )
             else:
 
-                if grow > 1:
+                if grow and grow > 1:
                     val = [[a[0] for a in attrs[k][0]]]
                 else:
                     val = attrs[k][0]
@@ -4054,7 +4061,7 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if (grow  is not None and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -4568,7 +4575,8 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(
+                            grow - 1 if (grow and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -5081,7 +5089,8 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(
+                            grow - 1 if (grow and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -5585,13 +5594,16 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank": NTP.rTf[2],
                             "value": (attrs[k][0][i]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                            "tangoDType": NTP.pTt[
+                                (attrs[k][2])
+                                if attrs[k][2] else "string"],
                             "shape": [attrs[k][3][0], 1]}
                 if not i % 2:
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(
+                            grow - 1 if (grow and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
@@ -6101,13 +6113,15 @@ class EFieldTest(unittest.TestCase):
                                       else [[Converters.toBool(
                                              c) for c in row] for row in attrs[
                                             k][0][i]]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                            "tangoDType": NTP.pTt[(attrs[k][2])
+                                                  if attrs[k][2] else "string"],
                             "shape": [attrs[k][3][0], attrs[k][3][1]]}
                 if not i % 2:
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(
+                            grow - 1 if (grow and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)

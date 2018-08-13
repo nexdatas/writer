@@ -168,7 +168,7 @@ class DataSourceDecodersTest(unittest.TestCase):
         }
 
         for k in arr3:
-
+            print(k)
             el = EField(self._fattrs, None)
             ds = DataSourceFactory(atts, el)
             self.assertTrue(isinstance(ds, Element))
@@ -211,7 +211,7 @@ class DataSourceDecodersTest(unittest.TestCase):
         atts = {"type": "TANGO"}
         name = "myRecord"
         wjson = json.loads(
-            '{"datasources":{"CL":"ClientSource.ClientSource"}}')
+            '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}')
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         arr3 = {
