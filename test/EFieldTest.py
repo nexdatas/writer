@@ -2203,21 +2203,23 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].grows, None)
+            print(k)
+            print(attrs[k])
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][3] if len(
-                                                   attrs[k]) > 3 else 0,
-                                               attrs={"type": attrs[k][1], "units": ""})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(
+                        attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": ""})
             else:
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs[k][3] if len(
-                                                   attrs[k]) > 3 else 0,
-                                               attrs={
-                                                   "type": attrs[k][1], "units": "", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(
+                        attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "", "postrun": None}
                 )
 
         self._nxFile.close()

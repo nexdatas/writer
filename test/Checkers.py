@@ -716,7 +716,7 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
         for i in range(len(values)):
-#                print i, j, cnt[i,j], lvalues[i][j]
+
             if self._isNumeric(cnt[i]):
                 if nxtype == "NX_BOOLEAN":
                     self._tc.assertEqual(
