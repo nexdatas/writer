@@ -38,6 +38,9 @@ import struct
 
 if sys.version_info > (3,):
     long = int
+    # unicode = str
+else:
+    bytes = str
 
 # ==================================================================
 #   SimpleServer Class Description:
@@ -132,7 +135,7 @@ class SimpleServer(PyTango.Device_4Impl):
         # print "In ", self.get_name(), "::always_excuted_hook()"
 
     def encodeSpectrum(self):
-        format = 'INT32'
+        format = b'INT32'
         # uint8 B
 #		mode = 0
         # uint16 H
@@ -140,11 +143,11 @@ class SimpleServer(PyTango.Device_4Impl):
         # uint32 I
         mode = 2
         fspectrum = numpy.array(self.attr_SpectrumULong, dtype='int32')
-        ibuffer = struct.pack('i' * fspectrum.size, *fspectrum)
+        ibuffer = bytes(struct.pack('i' * fspectrum.size, *fspectrum))
         return [format, ibuffer]
 
     def encodeImage(self):
-        format = 'VIDEO_IMAGE'
+        format = b'VIDEO_IMAGE'
         # uint8 B
         mode = 0
         # uint16 H
@@ -158,7 +161,7 @@ class SimpleServer(PyTango.Device_4Impl):
                 width,  height, endian, hsize, 0, 0)
         fimage = self.attr_ImageUChar.flatten()
         ibuffer = struct.pack('B' * fimage.size, *fimage)
-        return [format, header + ibuffer]
+        return [format, bytes(header + ibuffer)]
 
 # ==================================================================
 #

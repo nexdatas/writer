@@ -157,7 +157,7 @@ class NTP(object):
             except IndexError:
                 if hasattr(array, "shape") and len(array.shape) == 0:
                     rank = 0
-                    if type(array) == numpy.string_:
+                    if type(array) in [numpy.string_, numpy.str_]:
                         pythonDType = "str"
                     elif hasattr(array, "dtype"):
                         pythonDType = str(array.dtype)
@@ -168,7 +168,7 @@ class NTP(object):
                     shape.append(len(array))
 
         else:
-            if type(array) == numpy.string_:
+            if type(array) in [numpy.string_, numpy.str_]:
                 pythonDType = "str"
             elif hasattr(array, "dtype"):
                 pythonDType = str(array.dtype)
