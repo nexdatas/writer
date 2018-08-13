@@ -206,6 +206,6 @@ class NTP(object):
         :rtype: :obj:`list` <any>
         """
         if not hasattr(value, "__iter__") or isinstance(value, str):
-            return fun(str(value)) if fun else value
+            return fun(value) if fun else value
         else:
             return [self.createArray(v, fun) for v in value]
