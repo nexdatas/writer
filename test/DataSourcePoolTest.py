@@ -168,7 +168,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.myAssertRaise(ImportError, DataSourcePool, jsn)
 
         el = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
     # hasDataSource test
     # \brief It tests default settings
@@ -188,7 +189,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertTrue(not el.hasDataSource("CL"))
 
         el = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))
@@ -212,7 +214,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertEqual(el.get("CL"), None)
 
         el = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()

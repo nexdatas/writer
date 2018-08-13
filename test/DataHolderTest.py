@@ -31,7 +31,7 @@ import time
 
 
 from nxswriter.DataHolder import DataHolder
-from nxswriter.Types import NTP
+from nxswriter.Types import NTP, nptype
 from nxswriter.DecoderPool import DecoderPool
 
 # if 64-bit machione
@@ -102,7 +102,7 @@ class DataHolderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width, height = image.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
                              width,  height, endian, hsize, 0, 0)
@@ -626,7 +626,8 @@ class DataHolderTest(unittest.TestCase):
                         if ca[c][k] == True:
                             elc = el.cast(it)
                             evalue = numpy.array(
-                                [NTP.convert[it](e) for e in el.value], dtype=it)
+                                [NTP.convert[it](e) for e in el.value],
+                                dtype=nptype(it))
                             self.assertEqual(len(evalue), len(elc))
                             for i in range(len(evalue)):
                                 if types[c][it]:
@@ -734,7 +735,8 @@ class DataHolderTest(unittest.TestCase):
                             elc = el.cast(it)
                             evalue = numpy.array([[NTP.convert[it](e)
                                                    for e in row]
-                                                  for row in el.value], dtype=it)
+                                                  for row in el.value],
+                                                 dtype=nptype(it))
 
                             for i in range(len(evalue)):
                                 self.assertEqual(len(evalue[i]), len(elc[i]))

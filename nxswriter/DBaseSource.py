@@ -212,13 +212,16 @@ class DBaseSource(DataSource):
         """
         args = {}
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["password"] = self.passwd.encode()
+            args["password"] = self.passwd
         if self.dsn:
-            args["dsn"] = self.dsn.encode()
+            args["dsn"] = self.dsn
         if self.mode:
-            args["mode"] = self.mode.encode()
+            args["mode"] = self.mode
+        if sys.version_info < (3,):
+            for k in list(args.keys()):
+                args[k] = args[k].encode()
 
         return cx_Oracle.connect(**args)
 

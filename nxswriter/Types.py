@@ -27,6 +27,19 @@ if sys.version_info > (3,):
     long = int
 
 
+def nptype(dtype):
+    """ converts to numpy types
+
+    :param dtype: h5 writer type type
+    :type dtype: :obj:`str`
+    :returns: nupy type
+    :rtype: :obj:`str`
+    """
+    if dtype == 'string':
+        return 'str'
+    return dtype
+
+
 class Converters(object):
 
     """ set of converters
@@ -66,7 +79,7 @@ class NTP(object):
            "uint8": "DevUChar", "float": "DevDouble", "float64": "DevDouble",
            "float32": "DevFloat", "float16": "DevFloat",
            "string": "DevString", "str": "DevString"}
-        
+
     #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of NEXUS :  numpy types
     nTnp = {"NX_FLOAT32": "float32", "NX_FLOAT64": "float64",
             "NX_FLOAT": "float64", "NX_NUMBER": "float64",

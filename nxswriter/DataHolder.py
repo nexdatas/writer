@@ -22,7 +22,7 @@
 import numpy
 import sys
 
-from .Types import NTP
+from .Types import NTP, nptype
 
 
 if sys.version_info > (3,):
@@ -160,8 +160,8 @@ class DataHolder(object):
                     dtype=dtype)
             else:
                 try:
-                    return numpy.array(self.value, dtype=dtype)
+                    return numpy.array(self.value, dtype=nptype(dtype))
                 except:
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]),
-                        dtype=dtype)
+                        dtype=nptype(dtype))
