@@ -744,7 +744,7 @@ class H5CppField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         if self.shape == (1,) and t == 0:
-            if self.dtype == 'string':
+            if self.dtype in ['string', b'string']:
                 # workaround for bug: h5cpp #355
                 if self.size == 0:
                     if self.shape:
@@ -758,7 +758,7 @@ class H5CppField(FileWriter.FTField):
 
         selection = _slice2selection(t, self.shape)
         if selection is None:
-            if self.dtype == 'string':
+            if self.dtype in ['string', b'string']:
                 # workaround for bug: h5cpp #355
                 if self.size == 0:
                     if self.shape:
@@ -804,7 +804,7 @@ class H5CppField(FileWriter.FTField):
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             try:
                 v = v.decode('UTF-8')
             except:
@@ -1085,7 +1085,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
         shape = shape or []
         if shape:
             at = self._h5object.create(name, pTh[dtype], shape)
-            if dtype == 'string':
+            if dtype in ['string', b'string']:
                 emp = np.empty(shape, dtype="unicode")
                 emp[:] = ''
                 at.write(emp)
@@ -1093,7 +1093,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
                 at.write(np.zeros(shape, dtype=dtype))
         else:
             at = self._h5object.create(name, pTh[dtype])
-            if dtype == 'string':
+            if dtype in ['string', b'string']:
                 at.write(np.array(u"", dtype="unicode"))
             else:
                 at.write(np.array(0, dtype=dtype))
@@ -1180,7 +1180,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         :rtype: :obj:`any`
         """
         vl = self._h5object.read()
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             try:
                 vl = vl.decode('UTF-8')
             except:
@@ -1206,7 +1206,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         if t is Ellipsis or t == slice(None, None, None) or \
            t == (slice(None, None, None), slice(None, None, None)) or \
            (hasattr(o, "__len__") and t == slice(0, len(o), None)):
-            if self.dtype == "string":
+            if self.dtype in ['string', b'string']:
                 if isinstance(o, str):
                     self._h5object.write(unicode(o))
                 else:
@@ -1216,7 +1216,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 self._h5object.write(np.array(o, dtype=self.dtype))
         elif isinstance(t, slice):
             var = self._h5object.read()
-            if self.dtype is not 'string':
+            if self.dtype is not ['string', b'string']:
                 var[t] = np.array(o, dtype=self.dtype)
             else:
                 dtype = np.unicode_
@@ -1231,7 +1231,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
 
         elif isinstance(t, tuple):
             var = self._h5object.read()
-            if self.dtype is not 'string':
+            if self.dtype is not ['string', b'string']:
                 var[t] = np.array(o, dtype=self.dtype)
             else:
                 dtype = np.unicode_
@@ -1292,7 +1292,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             try:
                 v = v.decode('UTF-8')
             except:

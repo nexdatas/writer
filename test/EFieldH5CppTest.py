@@ -32,7 +32,10 @@ import time
 
 PNIIO = True
 
-from TestDataSource import TestDataSource
+try:
+    from TestDataSource import TestDataSource
+except:
+    from .TestDataSource import TestDataSource
 
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
@@ -45,7 +48,11 @@ from nxswriter.DataSources import DataSource
 
 from nxswriter.Errors import XMLSettingSyntaxError
 
-from Checkers import Checker
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
