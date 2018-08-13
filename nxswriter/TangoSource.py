@@ -460,7 +460,7 @@ class TgGroup(object):
         alist = [a.lower() for a in alist]
         if member.name.lower() in alist:
             emname = member.name if sys.version_info > (3,) \
-                     else member.name.encode()
+                else member.name.encode()
             da = proxy.read_attribute(emname)
             member.setData(da)
 

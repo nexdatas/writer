@@ -57,7 +57,7 @@ def _slice2selection(t, shape):
         else:
             return h5cpp.dataspace.Hyperslab(
                 offset=(t.start,),
-                count=int(math.ceil((t.stop-t.start)/float(t.step))),
+                count=int(math.ceil((t.stop - t.start) / float(t.step))),
                 stride=(t.step - 1,))
     elif isinstance(t, (int, long)):
         return h5cpp.dataspace.Hyperslab(
@@ -146,7 +146,7 @@ hTp = {
     h5cpp.datatype.kUInt32: "uint32",
     h5cpp.datatype.kUInt16: "uint16",
     h5cpp.datatype.kUInt8: "uint8",
-    h5cpp.datatype.Float:  "float",
+    h5cpp.datatype.Float: "float",
     h5cpp.datatype.kFloat64: "float64",
     h5cpp.datatype.kFloat32: "float32",
 }

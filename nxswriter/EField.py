@@ -432,8 +432,8 @@ class EField(FElementWithAttr):
                 if len(holder.shape) > 1 and holder.shape[0] > 1:
                     self.h5Object.grow(self.grows - 1, holder.shape[0] - 1)
                     self.h5Object[
-                        self.h5Object.shape[0]
-                        - holder.shape[0]:self.h5Object.shape[0],
+                        self.h5Object.shape[0] -
+                        holder.shape[0]:self.h5Object.shape[0],
                         :, :] = arr
                 else:
                     self.h5Object[self.h5Object.shape[0] - 1, :, :] = arr[0]
@@ -543,8 +543,8 @@ class EField(FElementWithAttr):
                         self.__writeData(dh)
                     else:
                         if len(self.h5Object.shape) >= self.grows \
-                           and (self.h5Object.shape[self.grows - 1] == 1
-                                or self.canfail):
+                           and (self.h5Object.shape[self.grows - 1] == 1 or
+                                self.canfail):
                             self.__growshape(dh.shape)
                         self.__writeGrowingData(dh)
         except:
