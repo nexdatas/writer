@@ -870,7 +870,7 @@ class EFieldH5CppTest(unittest.TestCase):
             self.assertEqual(el[k].shuffle, True)
 
             self.assertEqual(el[k].store(), ("STEP", None))
-            self.assertEqual(el[k].grows, grow if grow else 1)
+            self.assertEqual(el[k].grows, grow if grow and grow else 1)
 
         trip = 0
         for k in attrs:
@@ -1188,7 +1188,7 @@ class EFieldH5CppTest(unittest.TestCase):
 
             self.assertEqual(el[k].store(), ("STEP", None))
 #            if attrs[k][2] and attrs[k][2] != 'string':
-            self.assertEqual(el[k].grows, grow if grow else 1)
+            self.assertEqual(el[k].grows, grow if grow and grow else 1)
 
         for k in attrs:
             h5 = el[k].h5Object
@@ -2799,7 +2799,7 @@ class EFieldH5CppTest(unittest.TestCase):
                             "shape": [0, 0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-#            self.assertEqual(el[k].grows, (grow if grow else 1))
+#            self.assertEqual(el[k].grows, (grow if grow and grow else 1))
             self._sc.checkScalarField(
                 self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                       attrs[k][1], attrs[k][0],
@@ -2905,7 +2905,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self._sc.checkScalarField(
@@ -3292,7 +3292,7 @@ class EFieldH5CppTest(unittest.TestCase):
                 )
             else:
 
-                if grow > 1:
+                if grow and grow > 1:
                     val = [[a[0] for a in attrs[k][0]]]
                 else:
                     val = attrs[k][0]
@@ -3412,7 +3412,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -3426,7 +3426,7 @@ class EFieldH5CppTest(unittest.TestCase):
                 )
             else:
 
-                if grow > 1:
+                if grow and grow > 1:
                     val = [[a[0] for a in attrs[k][0]]]
                 else:
                     val = attrs[k][0]
@@ -4033,7 +4033,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -4549,7 +4549,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -5062,7 +5062,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -5572,7 +5572,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
@@ -6088,7 +6088,7 @@ class EFieldH5CppTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)

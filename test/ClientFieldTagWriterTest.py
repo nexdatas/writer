@@ -42,7 +42,11 @@ from xml.sax import SAXParseException
 
 from nxswriter import TangoDataWriter, Types
 from nxswriter.TangoDataWriter import TangoDataWriter
-from Checkers import Checker
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+    
 
 # test fixture
 

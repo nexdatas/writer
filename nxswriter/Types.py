@@ -35,9 +35,9 @@ def nptype(dtype):
     :returns: nupy type
     :rtype: :obj:`str`
     """
-    if dtype in ['string', b'string']:
+    if str(dtype) in ['string', b'string']:
         return 'str'
-    return str(dtype)
+    return dtype
 
 
 class Converters(object):

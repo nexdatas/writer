@@ -836,7 +836,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkImageField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkImageField(self, det, name, dtype, nxtype, values,
+                        error=0, grows=0, attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -849,7 +850,8 @@ class Checker(object):
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         if grows == 3:
             lvalues = list(map(
-                lambda *image: map(lambda *row: list(row), *image), *values))
+                lambda *image: list(map(
+                    lambda *row: list(row), *image)), *values))
         elif grows == 2:
             lvalues = list(map(lambda *row: list(row), *values))
         else:

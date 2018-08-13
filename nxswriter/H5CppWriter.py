@@ -26,6 +26,8 @@ import numpy as np
 from pninexus import h5cpp
 
 from . import FileWriter
+from .Types import nptype
+
 
 if sys.version_info > (3,):
     unicode = str
@@ -673,11 +675,12 @@ class H5CppField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             # workaround for bug: h5cpp #355
             if self.size == 0:
                 if self.shape:
-                    v = np.empty(shape=self.shape, dtype=self.dtype)
+                    v = np.empty(shape=self.shape,
+                                 dtype=nptype(self.dtype))
                 else:
                     v = []
             else:
