@@ -228,7 +228,7 @@ class TangoSource(DataSource):
             eport = port
             edevice = device
         else:
-            ehostname = hostname.encode() if hostname else hostname 
+            ehostname = hostname.encode() if hostname else hostname
             eport = port.encode() if port else port
             edevice = device.encode() if device else device
         if hostname and port and device:
@@ -425,7 +425,7 @@ class TgGroup(object):
 
         errors = []
         for a in attr:
-            ea = a if sys.version_info > (3,) else a.encode()  
+            ea = a if sys.version_info > (3,) else a.encode()
             if ea.lower() not in alist:
                 errors.append((a, device.device))
         if errors:
@@ -460,7 +460,7 @@ class TgGroup(object):
         alist = [a.lower() for a in alist]
         if member.name.lower() in alist:
             emname = member.name if sys.version_info > (3,) \
-                     else member.name.encode()  
+                     else member.name.encode()
             da = proxy.read_attribute(emname)
             member.setData(da)
 
@@ -477,7 +477,7 @@ class TgGroup(object):
         plist = proxy.get_property_list('*')
         plist = [a.lower() for a in plist]
         emname = member.name if sys.version_info > (3,) \
-                 else member.name.encode()  
+            else member.name.encode()
         if emname.lower() in plist:
             da = proxy.get_property(emname)[emname]
             member.setData(da)
@@ -496,7 +496,7 @@ class TgGroup(object):
                  for cm in proxy.command_list_query()]
         clist = [a.lower() for a in clist]
         emname = member.name if sys.version_info > (3,) \
-                 else member.name.encode()  
+            else member.name.encode()
         if emname.lower() in clist:
             cd = proxy.command_query(emname)
             da = proxy.command_inout(emname)
@@ -607,7 +607,7 @@ class TgDevice(object):
         :type member: :class:`TgMember`
         """
         emname = member.name if sys.version_info > (3,) \
-                 else member.name.encode()  
+            else member.name.encode()
         if member.memberType == 'attribute':
             self.attributes.append(emname)
         elif member.memberType == 'property':

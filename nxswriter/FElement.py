@@ -351,32 +351,56 @@ class FElementWithAttr(FElement):
                             "DevString", [1, 0],
                             streams=self._streams)
                     else:
-                        if ekey not in self.__h5Instances:
-                            self.__h5Instances[ekey] \
-                                = self.h5Object.attributes.create(
-                                    ekey,
-                                    NTP.nTnp[self.tagAttributes[key][0]].encode())
-                        dh = DataHolder(
-                            "SCALAR", self.tagAttributes[key][1].strip().encode(),
-                            "DevString", [1, 0],
-                            streams=self._streams)
-                        
+                        if sys.version_info > (3,):
+                            if ekey not in self.__h5Instances:
+                                self.__h5Instances[ekey] \
+                                    = self.h5Object.attributes.create(
+                                        ekey,
+                                        NTP.nTnp[self.tagAttributes[key][0]])
+                            dh = DataHolder(
+                                "SCALAR", self.tagAttributes[key][1].strip(),
+                                "DevString", [1, 0],
+                                streams=self._streams)
+                        else:
+                            if ekey not in self.__h5Instances:
+                                self.__h5Instances[ekey] \
+                                    = self.h5Object.attributes.create(
+                                        ekey,
+                                        NTP.nTnp[
+                                            self.tagAttributes[key][
+                                                0]].encode())
+                            dh = DataHolder(
+                                "SCALAR",
+                                self.tagAttributes[key][1].strip().encode(),
+                                "DevString", [1, 0],
+                                streams=self._streams)
+
                     self.__h5Instances[ekey][...] = \
                         dh.cast(self.__h5Instances[ekey].dtype)
                 else:
                     shape = self.tagAttributes[key][2]
-                    if ekey not in self.__h5Instances:
-                        self.__h5Instances[ekey] \
-                            = self.h5Object.attributes.create(
-                                ekey,
-                                NTP.nTnp[self.tagAttributes[key][0]].encode(),
-                                shape)
-                    val = self.tagAttributes[key][1].strip().encode()
+                    if sys.version_info > (3,):
+                        if ekey not in self.__h5Instances.keys():
+                            self.__h5Instances[ekey] \
+                                = self.h5Object.attributes.create(
+                                    ekey,
+                                    NTP.nTnp[self.tagAttributes[key][0]],
+                                    shape)
+                        val = self.tagAttributes[key][1].strip()
+                    else:
+                        if ekey not in self.__h5Instances.keys():
+                            self.__h5Instances[ekey] \
+                                = self.h5Object.attributes.create(
+                                    ekey,
+                                    NTP.nTnp[
+                                        self.tagAttributes[key][0]].encode(),
+                                    shape)
+                        val = self.tagAttributes[key][1].strip().encode()
                     if val:
                         rank = len(shape)
                         hsp = self.__h5Instances[ekey].shape
                         if hsp and set(hsp) == set([1]) and \
-                           self.__h5Instances[ekey].dtype == 'string':
+                           self.__h5Instances[ekey].dtype in ['string', 'str']:
                             dh = self._setValue(0, val)
                         else:
                             dh = self._setValue(rank, val)
@@ -415,16 +439,16 @@ class FElementWithAttr(FElement):
                        hasattr(self._tagAttrs[key], "encode"):
                         try:
                             h5att[...] = NTP.convert[
-                                str(self.h5Object.attributes[
-                                    ekey].dtype)
+                                self.h5Object.attributes[
+                                    ekey].dtype
                             ](self._tagAttrs[key].strip().encode())
                         except:
                             h5att[...] = self._tagAttrs[key].strip().encode()
                     else:
                         try:
                             h5att[...] = NTP.convert[
-                                str(self.h5Object.attributes[
-                                    ekey].dtype)
+                                self.h5Object.attributes[
+                                    ekey].dtype
                             ](self._tagAttrs[key])
                         except:
                             h5att[...] = self._tagAttrs[key]

@@ -162,7 +162,7 @@ class EField(FElementWithAttr):
         if sys.version_info < (3,):
             name = name.encode()
             dtype = dtype.encode()
-            
+
         try:
             if shape:
                 if not chunk:

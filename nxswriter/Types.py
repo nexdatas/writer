@@ -35,9 +35,9 @@ def nptype(dtype):
     :returns: nupy type
     :rtype: :obj:`str`
     """
-    if dtype == 'string':
+    if dtype in ['string', b'string']:
         return 'str'
-    return dtype
+    return str(dtype)
 
 
 class Converters(object):
@@ -206,6 +206,6 @@ class NTP(object):
         :rtype: :obj:`list` <any>
         """
         if not hasattr(value, "__iter__") or isinstance(value, str):
-            return fun(value) if fun else value
+            return fun(str(value)) if fun else value
         else:
             return [self.createArray(v, fun) for v in value]
