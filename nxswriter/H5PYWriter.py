@@ -420,7 +420,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: pni object
         :rtype: :obj:`list` <`str`>
         """
-        return self._h5object.keys()
+        return list(self._h5object.keys())
 
     @property
     def is_valid(self):

@@ -36,6 +36,9 @@ import sys
 import numpy
 import struct
 
+if sys.version_info > (3,):
+    long = int
+
 # ==================================================================
 #   SimpleServer Class Description:
 #
@@ -103,7 +106,7 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_SpectrumDouble = [1.123, 23.435, 3.5, 3.345]
         self.attr_SpectrumString = ["Hello", "Word", "!", "!!"]
         self.attr_SpectrumEncoded = [
-            "INT32", "\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
+            b"INT32", b"\x00\x01\x03\x04\x20\x31\x43\x54\x10\x11\x13\x14"]
         self.attr_SpectrumEncoded = self.encodeSpectrum()
 
         self.attr_ImageBoolean = numpy.array([[True]], dtype='int16')

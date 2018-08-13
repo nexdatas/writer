@@ -1286,8 +1286,9 @@ class TangoSourceTest(unittest.TestCase):
 
         for k in arr:
             dt = el[k].getData()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1],
+                           [1, 0], None, None,
+                           arr[k][3] if len(arr[k]) > 3 else 0)
 
         for k in arrb:
             dt = el2[k].getData()
@@ -1307,6 +1308,7 @@ class TangoSourceTest(unittest.TestCase):
                            1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
 
         for k in arr3:
+            print(k)
             el = TangoSource()
             el.device = 'stestp09/testss/s1r228'
             el.member.memberType = 'attribute'
@@ -1315,6 +1317,7 @@ class TangoSourceTest(unittest.TestCase):
             dp = DecoderPool()
             dt = el.setDecoders(dp)
             dt = el.getData()
+            print(dt)
             self.checkData(dt, "SCALAR", arr3[k][
                            2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
 
@@ -3294,12 +3297,12 @@ class TangoSourceTest(unittest.TestCase):
             "DeviceString": ["ScalarString", "string", "DevString", "M11rue"],
         }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
 
-        prop = self._simps2.dp.get_property(arrb.keys())
+        prop = self._simps2.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps2.dp.put_property(prop)
