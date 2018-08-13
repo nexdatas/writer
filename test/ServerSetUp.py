@@ -62,7 +62,7 @@ class ServerSetUp(object):
             self._psub = subprocess.call(
                 "NXSDataWriter %s &" % self.instance, stdout=None,
                 stderr=None, shell=True)
-        sys.stdout.write("waiting for server")
+        sys.stdout.write("waiting for server ")
 
         found = False
         cnt = 0

@@ -949,16 +949,17 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "mca_int":' + str(self._mca1[0]) + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
+            fname, xml, json='{"data": { "mca_int":' + str(self._mca1[0])
+            + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
 
-        mca2 = [[(el + 100) / 2 for el in mca] for mca in self._mca1]
+        mca2 = [[(el + 100) // 2 for el in mca] for mca in self._mca1]
         flip = True
         for mca in self._mca1:
             self.record(tdw, '{"data": { "mca_int":' + str(mca)
-                        + ', "mca_uint":' + str([(el + 100) / 2 for el in mca])
+                        + ', "mca_uint":' + str([(el + 100) // 2 for el in mca])
                         + (', "mca_int_canfail":' + str(mca) if flip else "")
                         + (', "mca_uint_canfail":' + str(
-                           [(el + 100) / 2 for el in mca]) if flip else "")
+                           [(el + 100) // 2 for el in mca]) if flip else "")
                         + '  } }')
             flip = not flip
         self.closeWriter(
@@ -1014,7 +1015,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "mca_uint32_canfail", "uint32", "NX_UINT32",
-                                    [[((self._mca1[j][i] + 100) / 2 if not j % 2 else
+                                    [[((self._mca1[j][i] + 100) // 2 if not j % 2 else
                                        numpy.iinfo(getattr(numpy, 'uint32')).max)
                                       for i in range(
                                           len(self._mca1[
@@ -1914,16 +1915,16 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         tdw = self.openWriter(
             fname, xml, json='{"data": { "pco_int":' + str(self._pco1[0]) + '  } }')
 
-        pco2 = [[[(el + 100) / 2 for el in rpco] for rpco in pco]
+        pco2 = [[[(el + 100) // 2 for el in rpco] for rpco in pco]
                 for pco in self._pco1]
         flip = True
         for pco in self._pco1:
             self.record(tdw, '{"data": { "pco_int":' + str(pco)
                         + ', "pco_uint":' +
-                        str([[(el + 100) / 2 for el in rpco]
+                        str([[(el + 100) // 2 for el in rpco]
                              for rpco in pco])
                         + (', "pco_uint_canfail":' + str(
-                           [[(el + 100) / 2 for el in rpco] for rpco in pco]) if flip else "")
+                           [[(el + 100) // 2 for el in rpco] for rpco in pco]) if flip else "")
                         + '  } }')
             flip = not flip
         self.closeWriter(
@@ -1978,7 +1979,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "pco_uint8_canfail", "uint8", "NX_UINT8",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint8')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],
@@ -1989,7 +1990,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "pco_uint16_canfail", "uint16", "NX_UINT16",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint16')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],
@@ -1999,7 +2000,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                    "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pco_uint32_canfail", "uint32", "NX_UINT32",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint32')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],

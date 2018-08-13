@@ -3189,12 +3189,12 @@ class TangoSourceTest(unittest.TestCase):
             "DeviceString": ["ScalarString", "string", "DevString", "M11rue"],
         }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
 
-        prop = self._simps2.dp.get_property(arrb.keys())
+        prop = self._simps2.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3224,12 +3224,12 @@ class TangoSourceTest(unittest.TestCase):
         dt = el[k].getData()
         dt = el2[k].getData()
 
-        prop = self._simps.dp.get_property(arrb.keys())
+        prop = self._simps.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
-        prop = self._simps2.dp.get_property(arr.keys())
+        prop = self._simps2.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3329,12 +3329,12 @@ class TangoSourceTest(unittest.TestCase):
         dt = el[k].getData()
         dt = el2[k].getData()
 
-        prop = self._simps.dp.get_property(arrb.keys())
+        prop = self._simps.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
-        prop = self._simps2.dp.get_property(arr.keys())
+        prop = self._simps2.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3399,12 +3399,12 @@ class TangoSourceTest(unittest.TestCase):
             "DeviceString": ["ScalarString", "string", "DevString", "M11rue"],
         }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
 
-        prop = self._simps2.dp.get_property(arrb.keys())
+        prop = self._simps2.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps2.dp.put_property(prop)
@@ -3436,12 +3436,12 @@ class TangoSourceTest(unittest.TestCase):
         dt = el[k].getData()
         dt = el2[k].getData()
 
-        prop = self._simps.dp.get_property(arrb.keys())
+        prop = self._simps.dp.get_property(list(arrb.keys()))
         for k in prop.keys():
             prop[k] = [arrb[k][3]]
         self._simps.dp.put_property(prop)
 
-        prop = self._simps2.dp.get_property(arr.keys())
+        prop = self._simps2.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps2.dp.put_property(prop)
