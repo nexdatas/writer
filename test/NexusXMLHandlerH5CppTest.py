@@ -144,7 +144,7 @@ class TElement(FElement):
             return TElement.strategy, TElement.trigger
         if TElement.strategy:
             self.strategy = TElement.strategy
-            return TElement.strategy
+            return TElement.strategy, None
 
     # run method
     def run(self):
@@ -647,7 +647,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<group%s/>' % (st)
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -786,7 +789,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -867,7 +873,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1040,7 +1049,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1246,7 +1258,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1329,7 +1344,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1467,7 +1485,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1609,7 +1630,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1665,7 +1689,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1717,7 +1744,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1769,7 +1799,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1833,7 +1866,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1922,7 +1958,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2015,7 +2054,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2095,7 +2137,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2170,7 +2215,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += strtag
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2248,7 +2296,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += strtag
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2320,7 +2371,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2391,7 +2445,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2460,7 +2517,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(len(el.triggerPools), 1)
         self.assertTrue(isinstance(el.triggerPools["mytrigger"], ThreadPool))
@@ -2543,7 +2603,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2633,7 +2696,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2724,7 +2790,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2815,7 +2884,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</mydefinition>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2961,8 +3033,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         parser = sax.make_parser()
         el.raiseUnsupportedTag = False
         self.assertTrue(not el.raiseUnsupportedTag)
-        sax.parseString(xml, el)
-
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
         self._nxFile.close()
         os.remove(self._fname)
 

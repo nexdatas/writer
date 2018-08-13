@@ -31,7 +31,11 @@ import json
 import binascii
 import time
 
-import SimpleServerSetUp
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
+
 import PyTango
 
 from nxswriter import DataSources
@@ -210,7 +214,8 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
         self.checkData(dt, "SCALAR", 62, "DevLong64", [])
 
         dp = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -276,6 +281,8 @@ except:
             ds.res = ds.inp2
 
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
@@ -413,6 +420,8 @@ else:
     ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
 """
 
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
@@ -523,6 +532,8 @@ if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
 else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
@@ -707,7 +718,8 @@ ds.res = commonblock["myres"]
         self.checkData(dt, "SCALAR", 62, "DevLong64", [])
 
         dp = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -849,6 +861,8 @@ except:
             ds.res = ds.inp2
 commonblock["myres"] = ds.res
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["myres"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()
@@ -1018,6 +1032,8 @@ else:
 commonblock["my1res"] = ds.res
 """
 
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["my1res"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()
@@ -1144,6 +1160,8 @@ else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 commonblock["myre3"] = ds.res
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["myre3"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()

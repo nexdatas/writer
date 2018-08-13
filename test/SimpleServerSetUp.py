@@ -135,7 +135,7 @@ class SimpleServerSetUp(object):
             if len(sr) > 2:
                 subprocess.call("kill -9 %s" %
                                 sr[1], stderr=subprocess.PIPE, shell=True)
-
+        pipe.close()
 
 if __name__ == "__main__":
     simps = SimpleServerSetUp()

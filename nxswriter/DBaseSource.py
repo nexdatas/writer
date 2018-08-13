@@ -115,7 +115,10 @@ class DBaseSource(DataSource):
         :raises: :exc:`nxswriter.Errors.DataSourceSetupError`
             if :obj:`format` or :obj:`query` is not defined
         """
-        dom = minidom.parseString(xml)
+        if sys.version_info > (3,):
+            dom = minidom.parseString(bytes(xml, "UTF-8"))
+        else:
+            dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query) > 0:
             self.format = query[0].getAttribute("format") \

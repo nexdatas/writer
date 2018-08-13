@@ -87,7 +87,8 @@ class ServerSetUp(object):
 
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'NXSDataWriter %s'" % self.instance, stdout=subprocess.PIPE, shell=True).stdout
+            "ps -ef | grep 'NXSDataWriter %s'" % self.instance,
+            stdout=subprocess.PIPE, shell=True).stdout
 
         res = str(pipe.read()).split("\n")
         for r in res:
@@ -95,3 +96,4 @@ class ServerSetUp(object):
             if len(sr) > 2:
                 subprocess.call("kill -9 %s" %
                                 sr[1], stderr=subprocess.PIPE, shell=True)
+        pipe.close()
