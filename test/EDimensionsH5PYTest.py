@@ -229,5 +229,6 @@ class EDimensionsH5PYTest(unittest.TestCase):
         el2.doc = "SYM2"
         self.assertEqual(el3.store(None), None)
 
+
 if __name__ == '__main__':
     unittest.main()

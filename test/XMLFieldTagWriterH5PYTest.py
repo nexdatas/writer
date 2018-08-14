@@ -32,7 +32,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 from xml.sax import SAXParseException
 
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 

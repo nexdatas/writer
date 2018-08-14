@@ -31,7 +31,6 @@ import PyTango
 import binascii
 import time
 import json
-import PyTango
 
 import SimpleServerSetUp
 
@@ -95,7 +94,6 @@ class TgDeviceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)

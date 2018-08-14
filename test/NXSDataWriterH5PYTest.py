@@ -684,8 +684,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
 
             # check the created file
 
-            from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -2509,22 +2508,22 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertEqual(at.name, "NX_class")
             self.assertEqual(at[...], "NXdata")
 
- #           cnt = dt.open("cnt1")
+            #    cnt = dt.open("cnt1")
             cnt = dt.open("counter1")
             self.assertTrue(cnt.is_valid)
-            #            ???
-            #            self.assertEqual(cnt.name,"cnt1")
+            #     ???
+            #     self.assertEqual(cnt.name,"cnt1")
             self.assertEqual(cnt.name, "counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
-#            self.assertEqual(cnt.shape, (2,))
+            #     self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
-#            self.assertEqual(cnt.size, 2)
-#             print(cnt.read())
+            #     self.assertEqual(cnt.size, 2)
+            #     print(cnt.read())
             value = cnt[:]
-#            for i in range(len(value)):
-#                self.assertEqual(self._counter[i], value[i])
+            #    for i in range(len(value)):
+            #        self.assertEqual(self._counter[i], value[i])
 
             self.assertEqual(len(cnt.attributes), 4)
 

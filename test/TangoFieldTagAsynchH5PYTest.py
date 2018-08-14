@@ -151,5 +151,6 @@ class TangoFieldTagAsynchH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
 
+
 if __name__ == '__main__':
     unittest.main()

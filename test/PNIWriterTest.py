@@ -28,6 +28,7 @@ import random
 import binascii
 import string
 import numpy
+import time
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
@@ -44,6 +45,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 if sys.version_info > (3,):
     long = int
 
+
 class testwriter(object):
     def __init__(self):
         self.commands = []
@@ -56,7 +58,6 @@ class testwriter(object):
         self.commands.append("open_file")
         self.params.append([filename, readonly])
         return self.result
-
 
     def create_file(self, filename, overwrite=False):
         """ create a new file
@@ -73,12 +74,10 @@ class testwriter(object):
         self.params.append([target, parent, name])
         return self.result
 
-
     def deflate_filter(self):
         self.commands.append("deflate_filter")
         self.params.append([])
         return self.result
-
 
 
 # test fixture
@@ -90,13 +89,12 @@ class PNIWriterTest(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName)
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
-#        self.__seed =241361343400098333007607831038323262554
+            self.__seed = long(time.time() * 256)
+        # self.__seed = 241361343400098333007607831038323262554
 
         self.__rnd = random.Random(self.__seed)
-
 
     # test starter
     # \brief Common set up
@@ -116,7 +114,7 @@ class PNIWriterTest(unittest.TestCase):
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
         except Exception:
             error = True
@@ -179,7 +177,7 @@ class PNIWriterTest(unittest.TestCase):
     def test_default_createfile(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             fl = PNIWriter.create_file(self._fname)
@@ -245,7 +243,7 @@ class PNIWriterTest(unittest.TestCase):
     def test_pnifile(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -368,7 +366,6 @@ class PNIWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = PNIWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = PNIWriter.link(
@@ -439,7 +436,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(entry.exists("strscalar"), True)
             self.assertEqual(entry.exists("strument"), False)
 
-
             self.assertTrue(
                 isinstance(nt, PNIWriter.PNIGroup))
             self.assertEqual(nt.name, "notype")
@@ -454,7 +450,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(nt.parent, rt)
             self.assertEqual(nt.size, 0)
             self.assertEqual(nt.exists("strument"), False)
-
 
             self.assertTrue(
                 isinstance(ins, PNIWriter.PNIGroup))
@@ -548,8 +543,6 @@ class PNIWriterTest(unittest.TestCase):
                 set(['strimage', 'intvec', 'floatimage',
                      'floatvec', 'intimage', 'strvec']))
 
-
-
             self.assertTrue(isinstance(strscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(strscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(strscalar.name, 'strscalar')
@@ -614,10 +607,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intimage.dtype, 'uint32')
             self.assertEqual(intimage.shape, (0, 30))
 
-
-
-
-
             self.assertTrue(isinstance(strvec, PNIWriter.PNIField))
             self.assertTrue(isinstance(strvec.h5object, nx._nxh5.nxfield))
             self.assertEqual(strvec.name, 'strvec')
@@ -639,7 +628,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intvec.dtype, 'uint32')
             self.assertEqual(intvec.shape, (0, 2, 30))
 
-
             strscalar_op = entry.open("strscalar")
             floatscalar_op = entry.open("floatscalar")
             intscalar_op = entry.open("intscalar")
@@ -652,7 +640,6 @@ class PNIWriterTest(unittest.TestCase):
             strvec_op = det.open("strvec")
             floatvec_op = det.open("floatvec")
             intvec_op = det.open("intvec")
-
 
             self.assertTrue(isinstance(strscalar_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(strscalar_op.h5object, nx._nxh5.nxfield))
@@ -718,8 +705,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intimage_op.dtype, 'uint32')
             self.assertEqual(intimage_op.shape, (0, 30))
 
-
-
             self.assertTrue(isinstance(strvec_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(strvec_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(strvec_op.name, 'strvec')
@@ -741,8 +726,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intvec_op.dtype, 'uint32')
             self.assertEqual(intvec_op.shape, (0, 2, 30))
             self.assertEqual(intvec_op.parent, det)
-
-
 
             self.assertTrue(isinstance(lkintimage, PNIWriter.PNILink))
             self.assertTrue(isinstance(lkintimage.h5object, nx._nxh5.nxlink))
@@ -784,15 +767,11 @@ class PNIWriterTest(unittest.TestCase):
                 lkno.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
-
             lkintimage_op = dt.open("lkintimage")
             lkfloatvec_op = dt.open("lkfloatvec")
             lkintspec_op = dt.open("lkintspec")
             lkdet_op = dt.open("lkdet")
             lkno_op = dt.open("lkno")
-
-
 
             self.assertTrue(isinstance(lkintimage_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(lkintimage_op.h5object, nx._nxh5.nxfield))
@@ -803,7 +782,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.dtype, 'uint32')
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
-
             self.assertTrue(isinstance(lkfloatvec_op, PNIWriter.PNIField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, nx._nxh5.nxfield))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
@@ -811,7 +789,6 @@ class PNIWriterTest(unittest.TestCase):
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
             self.assertEqual(lkfloatvec_op.dtype, 'float64')
             self.assertEqual(lkfloatvec_op.shape, (1, 20, 10))
-
 
             self.assertTrue(
                 isinstance(lkintspec_op, PNIWriter.PNIField))
@@ -831,7 +808,6 @@ class PNIWriterTest(unittest.TestCase):
                 lkno_op.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -839,7 +815,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -936,8 +911,6 @@ class PNIWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
-
             self.assertTrue(isinstance(strscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(strscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(strscalar.name, 'strscalar')
@@ -968,13 +941,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strscalar.h5object.shape, (2,))
 
             self.assertEqual(strscalar[0], vl[0])
-            strscalar[1] =  vl[3]
+            strscalar[1] = vl[3]
             self.assertEqual(list(strscalar[...]), [vl[0], vl[3]])
 
             strscalar.grow(ext=2)
             self.assertEqual(strscalar.shape, (4,))
             self.assertEqual(strscalar.h5object.shape, (4,))
-            strscalar[1:4] =  vl[1:4]
+            strscalar[1:4] = vl[1:4]
             self.assertEqual(list(strscalar.read()), vl[0:4])
             self.assertEqual(list(strscalar[0:2]), vl[0:2])
 
@@ -991,8 +964,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatscalar.name, 'floatscalar')
@@ -1004,7 +975,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatscalar.shape, (1,))
             self.assertEqual(floatscalar.h5object.shape, (1,))
 
-            vl  = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
+            vl = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
 
             floatscalar[...] = vl[0]
             self.assertEqual(floatscalar.read(), vl[0])
@@ -1019,13 +990,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatscalar.h5object.shape, (2,))
 
             self.assertEqual(floatscalar[0], vl[0])
-            floatscalar[1] =  vl[3]
+            floatscalar[1] = vl[3]
             self.assertEqual(list(floatscalar[...]), [vl[0], vl[3]])
 
             floatscalar.grow(ext=2)
             self.assertEqual(floatscalar.shape, (4,))
             self.assertEqual(floatscalar.h5object.shape, (4,))
-            floatscalar[1:4] =  vl[1:4]
+            floatscalar[1:4] = vl[1:4]
             self.assertEqual(list(floatscalar.read()), vl[0:4])
             self.assertEqual(list(floatscalar[0:2]), vl[0:2])
 
@@ -1042,8 +1013,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(intscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(intscalar.name, 'intscalar')
@@ -1055,9 +1024,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.shape, (1,))
             self.assertEqual(intscalar.h5object.shape, (1,))
 
-
-
-            vl  = [243, 43, 45, 34, 45, 54, 23234]
+            vl = [243, 43, 45, 34, 45, 54, 23234]
 
             intscalar[...] = vl[0]
             self.assertEqual(intscalar.read(), vl[0])
@@ -1072,13 +1039,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.h5object.shape, (2,))
 
             self.assertEqual(intscalar[0], vl[0])
-            intscalar[1] =  vl[3]
+            intscalar[1] = vl[3]
             self.assertEqual(list(intscalar[...]), [vl[0], vl[3]])
 
             intscalar.grow(ext=2)
             self.assertEqual(intscalar.shape, (4,))
             self.assertEqual(intscalar.h5object.shape, (4,))
-            intscalar[1:4] =  vl[1:4]
+            intscalar[1:4] = vl[1:4]
             self.assertEqual(list(intscalar.read()), vl[0:4])
             self.assertEqual(list(intscalar[0:2]), vl[0:2])
 
@@ -1105,7 +1072,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.is_valid, False)
             self.assertEqual(intscalar.h5object.is_valid, False)
             self.assertEqual(attrs.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1207,7 +1173,6 @@ class PNIWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertTrue(isinstance(strspec, PNIWriter.PNIField))
             self.assertTrue(isinstance(strspec.h5object, nx._nxh5.nxfield))
             self.assertEqual(strspec.name, 'strspec')
@@ -1224,7 +1189,6 @@ class PNIWriterTest(unittest.TestCase):
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(40)]
 
-
             strspec[...] = vl[0:10]
             self.assertEqual(list(strspec.read()), vl[0:10])
             strspec.write(vl[11:21])
@@ -1236,13 +1200,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strspec.h5object.shape, (11,))
 
             self.assertEqual(list(strspec[0:10]), vl[0:10])
-            strspec[10] =  vl[10]
+            strspec[10] = vl[10]
             self.assertEqual(list(strspec[...]), vl[0:11])
 
             strspec.grow(ext=2)
             self.assertEqual(strspec.shape, (13,))
             self.assertEqual(strspec.h5object.shape, (13,))
-            strspec[1:13] =  vl[1:13]
+            strspec[1:13] = vl[1:13]
             self.assertEqual(list(strspec.read()), vl[0:13])
             self.assertEqual(list(strspec[0:2]), vl[0:2])
 
@@ -1259,8 +1223,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strspec)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatspec, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatspec.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatspec.name, 'floatspec')
@@ -1271,7 +1233,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatspec.h5object.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
             self.assertEqual(floatspec.h5object.shape, (20,))
-
 
             vl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
 
@@ -1286,13 +1247,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatspec.h5object.shape, (21,))
 
             self.myAssertFloatList(list(floatspec[0:20]), vl[0:20], 1e-4)
-            floatspec[20] =  vl[20]
+            floatspec[20] = vl[20]
             self.myAssertFloatList(list(floatspec[...]), vl[0:21], 1e-4)
 
             floatspec.grow(ext=2)
             self.assertEqual(floatspec.shape, (23,))
             self.assertEqual(floatspec.h5object.shape, (23,))
-            floatspec[1:23] =  vl[1:23]
+            floatspec[1:23] = vl[1:23]
             self.myAssertFloatList(list(floatspec.read()), vl[0:23], 1e-4)
             self.myAssertFloatList(list(floatspec[0:2]), vl[0:2], 1e-4)
 
@@ -1309,8 +1270,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatspec)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intspec, PNIWriter.PNIField))
             self.assertTrue(isinstance(intspec.h5object, nx._nxh5.nxfield))
             self.assertEqual(intspec.name, 'intspec')
@@ -1322,10 +1281,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intspec.h5object.dtype, 'int64')
             self.assertEqual(intspec.h5object.shape, (30,))
 
-
-
-            vl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
-
+            vl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
             intspec[...] = vl[0:30]
             self.assertEqual(list(intspec.read()), vl[0:30])
@@ -1338,13 +1294,13 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intspec.h5object.shape, (31,))
 
             self.assertEqual(list(intspec[0:10]), vl[0:10])
-            intspec[30] =  vl[30]
+            intspec[30] = vl[30]
             self.assertEqual(list(intspec[...]), vl[0:31])
 
             intspec.grow(ext=2)
             self.assertEqual(intspec.shape, (33,))
             self.assertEqual(intspec.h5object.shape, (33,))
-            intspec[1:33] =  vl[1:33]
+            intspec[1:33] = vl[1:33]
             self.assertEqual(list(intspec.read()), vl[0:33])
             self.assertEqual(list(intspec[0:2]), vl[0:2])
 
@@ -1361,8 +1317,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, intspec)
             self.assertEqual(len(attrs), 0)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -1370,7 +1324,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1486,7 +1439,6 @@ class PNIWriterTest(unittest.TestCase):
                  for _ in range(10)]
                 for _ in range(30)]
 
-
             vv = [[vl[j][i] for i in range(2)] for j in range(2)]
             strimage[...] = vv
             self.myAssertImage(strimage.read(), vv)
@@ -1501,7 +1453,7 @@ class PNIWriterTest(unittest.TestCase):
 
             iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
             self.myAssertImage(iv, vv)
-            strimage[2,:] = [vl[2][0], vl[2][1]]
+            strimage[2, :] = [vl[2][0], vl[2][1]]
             vv3 = [[vl[j][i] for i in range(2)] for j in range(3)]
             self.myAssertImage(strimage[...], vv3)
 
@@ -1510,9 +1462,9 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(strimage.h5object.shape, (5, 2))
             vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
-            strimage[2:5,:] =  vv4
+            strimage[2:5, :] = vv4
             self.myAssertImage(strimage[...], vv5)
-            self.myAssertImage(strimage[0:3,:], vv3)
+            self.myAssertImage(strimage[0:3, :], vv3)
 
             strimage.grow(1, 4)
             self.assertEqual(strimage.shape, (5, 6))
@@ -1528,8 +1480,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
             self.assertEqual(attrs.parent, strimage)
             self.assertEqual(len(attrs), 0)
-
-
 
             self.assertTrue(isinstance(floatimage, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatimage.h5object, nx._nxh5.nxfield))
@@ -1562,7 +1512,7 @@ class PNIWriterTest(unittest.TestCase):
 
             iv = [[floatimage[j, i] for i in range(10)] for j in range(20)]
             self.myAssertImage(iv, vv)
-            floatimage[20,:] = [vl[20][i] for i in range(10)]
+            floatimage[20, :] = [vl[20][i] for i in range(10)]
             vv3 = [[vl[j][i] for i in range(10)] for j in range(21)]
             self.myAssertImage(floatimage[...], vv3)
 
@@ -1571,9 +1521,9 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatimage.h5object.shape, (23, 10))
             vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
-            floatimage[2:23,:] =  vv4
+            floatimage[2:23, :] = vv4
             self.myAssertImage(floatimage[...], vv5)
-            self.myAssertImage(floatimage[0:21,:], vv3)
+            self.myAssertImage(floatimage[0:21, :], vv3)
 
             floatimage.grow(1, 4)
             self.assertEqual(floatimage.shape, (23, 14))
@@ -1583,8 +1533,6 @@ class PNIWriterTest(unittest.TestCase):
             floatimage.write(vv6)
             self.myAssertImage(floatimage[...], vv6)
             self.myAssertImage(floatimage.read(), vv6)
-
-
 
             self.assertTrue(isinstance(intimage, PNIWriter.PNIField))
             self.assertTrue(isinstance(intimage.h5object, nx._nxh5.nxfield))
@@ -1596,7 +1544,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intimage.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.h5object.dtype, 'uint32')
             self.assertEqual(intimage.h5object.shape, (0, 30))
-
 
             vl = [
                 [self.__rnd.randint(1, 1600) for _ in range(80)]
@@ -1617,7 +1564,7 @@ class PNIWriterTest(unittest.TestCase):
 
             iv = [[intimage[j, i] for i in range(30)] for j in range(20)]
             self.myAssertImage(iv, vv)
-            intimage[20,:] = [vl[20][i] for i in range(30)]
+            intimage[20, :] = [vl[20][i] for i in range(30)]
             vv3 = [[vl[j][i] for i in range(30)] for j in range(21)]
             self.myAssertImage(intimage[...], vv3)
 
@@ -1626,9 +1573,9 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(intimage.h5object.shape, (23, 30))
             vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
-            intimage[2:23,:] =  vv4
+            intimage[2:23, :] = vv4
             self.myAssertImage(intimage[...], vv5)
-            self.myAssertImage(intimage[0:21,:], vv3)
+            self.myAssertImage(intimage[0:21, :], vv3)
 
             intimage.grow(1, 4)
             self.assertEqual(intimage.shape, (23, 34))
@@ -1639,8 +1586,6 @@ class PNIWriterTest(unittest.TestCase):
             self.myAssertImage(intimage[...], vv6)
             self.myAssertImage(intimage.read(), vv6)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -1648,7 +1593,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1685,7 +1629,6 @@ class PNIWriterTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = PNIWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -1702,8 +1645,6 @@ class PNIWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -1746,7 +1687,6 @@ class PNIWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertTrue(isinstance(strvec, PNIWriter.PNIField))
             self.assertTrue(isinstance(strvec.h5object, nx._nxh5.nxfield))
             self.assertEqual(strvec.name, 'strvec')
@@ -1780,7 +1720,7 @@ class PNIWriterTest(unittest.TestCase):
 
             iv = [[[strvec[k, j, i] for i in range(2)] for j in range(2)] for k in range(3)]
             self.myAssertVector(iv, vv)
-            strvec[3,:,:] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
+            strvec[3, :, :] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(4)]
             self.myAssertVector(strvec[...], vv3)
 
@@ -1790,9 +1730,9 @@ class PNIWriterTest(unittest.TestCase):
             vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
 
-            strvec[:,:, 2:5] =  vv4
+            strvec[:, :, 2:5] = vv4
             self.myAssertVector(strvec[...], vv5)
-            self.myAssertVector(strvec[:,:, 0:2], vv3)
+            self.myAssertVector(strvec[:, :, 0:2], vv3)
 
             strvec.grow(1, 4)
             self.assertEqual(strvec.shape, (4, 6, 5))
@@ -1809,7 +1749,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strvec)
             self.assertEqual(len(attrs), 0)
 
-
             self.assertTrue(isinstance(floatvec, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatvec.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatvec.name, 'floatvec')
@@ -1820,8 +1759,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(floatvec.h5object.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.h5object.dtype, 'float64')
             self.assertEqual(floatvec.h5object.shape, (1, 20, 10))
-
-
 
             vl = [[[self.__rnd.uniform(-20000.0, 20000)
                     for _ in range(70)]
@@ -1843,7 +1780,7 @@ class PNIWriterTest(unittest.TestCase):
 
             iv = [[[floatvec[k, j, i] for i in range(10)] for j in range(20)] for k in range(1)]
             self.myAssertVector(iv, vv)
-            floatvec[1,:,:] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
+            floatvec[1, :, :] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
             vv3 = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(2)]
             self.myAssertVector(floatvec[...], vv3)
 
@@ -1853,9 +1790,9 @@ class PNIWriterTest(unittest.TestCase):
             vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
 
-            floatvec[:,:, 10:13] =  vv4
+            floatvec[:, :, 10:13] = vv4
             self.myAssertVector(floatvec[...], vv5)
-            self.myAssertVector(floatvec[:,:, 0:10], vv3)
+            self.myAssertVector(floatvec[:, :, 0:10], vv3)
 
             floatvec.grow(1, 4)
             self.assertEqual(floatvec.shape, (2, 24, 13))
@@ -1871,8 +1808,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
             self.assertEqual(attrs.parent, floatvec)
             self.assertEqual(len(attrs), 0)
-
-
 
             self.assertTrue(isinstance(intvec, PNIWriter.PNIField))
             self.assertTrue(isinstance(intvec.h5object, nx._nxh5.nxfield))
@@ -1908,7 +1843,7 @@ class PNIWriterTest(unittest.TestCase):
 
             iv = [[[intvec[k, j, i] for i in range(30)] for j in range(2)] for k in range(1)]
             self.myAssertVector(iv, vv)
-            intvec[1,:,:] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
+            intvec[1, :, :] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(30)] for j in range(2)] for k in range(2)]
             self.myAssertVector(intvec[...], vv3)
 
@@ -1918,9 +1853,9 @@ class PNIWriterTest(unittest.TestCase):
             vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
 
-            intvec[:,:, 30:33] =  vv4
+            intvec[:, :, 30:33] = vv4
             self.myAssertVector(intvec[...], vv5)
-            self.myAssertVector(intvec[:,:, 0:30], vv3)
+            self.myAssertVector(intvec[:, :, 0:30], vv3)
 
             intvec.grow(1, 4)
             self.assertEqual(intvec.shape, (2, 6, 33))
@@ -1937,8 +1872,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, intvec)
             self.assertEqual(len(attrs), 0)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -1946,7 +1879,6 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1982,7 +1914,6 @@ class PNIWriterTest(unittest.TestCase):
                 Exception, fl.reopen, True, True)
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
-
 
             fl = PNIWriter.open_file(self._fname, readonly=True)
             f = fl.root()
@@ -2041,7 +1972,6 @@ class PNIWriterTest(unittest.TestCase):
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
-
 
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
@@ -2608,7 +2538,7 @@ class PNIWriterTest(unittest.TestCase):
 
             at = None
 
-            
+
             atintscalar = attr0["atintscalar"]
             atfloatspec = attr0["atfloatspec"]
             atstrimage = attr0["atstrimage"]
@@ -2831,7 +2761,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(list(atintimage.h5object.read()), [0]*4)
             self.assertEqual(list(atintimage.h5object[...]), [0]*4)
 
-            
+
             attr2.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -3020,12 +2950,12 @@ class PNIWriterTest(unittest.TestCase):
             stvl = [
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(10)]
-            itvl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
+            itvl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
             flvl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
-            
+
             atintscalar.write(itvl[0])
-            
+
             self.assertTrue(isinstance(atintscalar, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
             self.assertEqual(atintscalar.parent, rt)
@@ -3067,9 +2997,9 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), itvl[3])
             self.assertEqual(atintscalar[...], itvl[3])
 
-            
+
             atstrscalar.write(stvl[0])
-            
+
             self.assertTrue(isinstance(atstrscalar, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, nx._nxh5.nxattribute))
             self.assertEqual(atstrscalar.parent, entry)
@@ -3160,7 +3090,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), flvl[3])
             self.assertEqual(atfloatscalar[...], flvl[3])
 
-            
+
             atfloatscalar.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -3352,13 +3282,13 @@ class PNIWriterTest(unittest.TestCase):
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(4)]
                     for _ in range(10)]
-                    
-            itvl = [[self.__rnd.randint(1, 16000)  for _ in range(2)] for _ in range(10)]
+
+            itvl = [[self.__rnd.randint(1, 16000) for _ in range(2)] for _ in range(10)]
 
             flvl = [[self.__rnd.uniform(-200.0, 200) for _ in range(12)] for _ in range(10)]
 
             atfloatspec.write(flvl[0])
-            
+
 
             self.assertTrue(isinstance(atfloatspec, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, nx._nxh5.nxattribute))
@@ -3401,7 +3331,7 @@ class PNIWriterTest(unittest.TestCase):
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
-            
+
             atfloatspec[1:10] = flvl[4][1:10]
 
             self.myAssertFloatList(list(atfloatspec.read()[1:10]), flvl[4][1:10], 1e-3)
@@ -3419,7 +3349,7 @@ class PNIWriterTest(unittest.TestCase):
 
             atintspec.write(itvl[0])
 
-            
+
             self.assertTrue(isinstance(atintspec, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atintspec.h5object, nx._nxh5.nxattribute))
             self.assertEqual(atintspec.parent, entry)
@@ -3500,7 +3430,7 @@ class PNIWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec.h5object.read()), stvl[0])
             self.assertEqual(list(atstrspec.h5object[...]), stvl[0])
 
-            
+
             atstrspec[...] = stvl[1]
 
             self.assertEqual(list(atstrspec.read()), stvl[1])
@@ -3538,8 +3468,8 @@ class PNIWriterTest(unittest.TestCase):
 
 
 
-            
-            
+
+
             atfloatspec.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -3735,8 +3665,8 @@ class PNIWriterTest(unittest.TestCase):
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(3)]
                     for _ in range(2)] for _ in range(10)]
-                    
-            itvl = [[[self.__rnd.randint(1, 16000)  for _ in range(2)]
+
+            itvl = [[[self.__rnd.randint(1, 16000) for _ in range(2)]
                      for _ in range(3)] for _ in range(10)]
 
             flvl = [[[self.__rnd.uniform(-200.0, 200) for _ in range(2)]
@@ -3767,18 +3697,18 @@ class PNIWriterTest(unittest.TestCase):
             atstrimage[...] = stvl[1]
 
             self.myAssertImage(atstrimage.read(), stvl[1])
-            self.myAssertImage(atstrimage[:,:], stvl[1])
+            self.myAssertImage(atstrimage[:, :], stvl[1])
             self.myAssertImage(atstrimage.h5object.read(), stvl[1])
-            self.myAssertImage(atstrimage.h5object[:,:], stvl[1])
+            self.myAssertImage(atstrimage.h5object[:, :], stvl[1])
 
-            atstrimage[:,:] = stvl[2]
+            atstrimage[:, :] = stvl[2]
 
             self.myAssertImage(atstrimage.read(), stvl[2])
             self.myAssertImage(atstrimage[...], stvl[2])
             self.myAssertImage(atstrimage.h5object.read(), stvl[2])
             self.myAssertImage(atstrimage.h5object[...], stvl[2])
 
-            atstrimage[0:2,:] = stvl[3]
+            atstrimage[0:2, :] = stvl[3]
 
             self.myAssertImage(atstrimage.read(), stvl[3])
             self.myAssertImage(atstrimage[...], stvl[3])
@@ -3832,18 +3762,18 @@ class PNIWriterTest(unittest.TestCase):
             atfloatimage[...] = flvl[1]
 
             self.myAssertImage(atfloatimage.read(), flvl[1])
-            self.myAssertImage(atfloatimage[:,:], flvl[1])
+            self.myAssertImage(atfloatimage[:, :], flvl[1])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[1])
-            self.myAssertImage(atfloatimage.h5object[:,:], flvl[1])
+            self.myAssertImage(atfloatimage.h5object[:, :], flvl[1])
 
-            atfloatimage[:,:] = flvl[2]
+            atfloatimage[:, :] = flvl[2]
 
             self.myAssertImage(atfloatimage.read(), flvl[2])
             self.myAssertImage(atfloatimage[...], flvl[2])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[2])
             self.myAssertImage(atfloatimage.h5object[...], flvl[2])
 
-            atfloatimage[0:3,:] = flvl[3]
+            atfloatimage[0:3, :] = flvl[3]
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
@@ -3851,16 +3781,16 @@ class PNIWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.h5object[...], flvl[3])
 
             vv1 = [[flvl[4][j][i] for i in range(2)] for j in range(2)]
-            atfloatimage[1:,:] = vv1
+            atfloatimage[1:, :] = vv1
 
-            self.myAssertImage(atfloatimage.read()[1:,:], vv1)
-            self.myAssertImage(atfloatimage[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object.read()[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object[1:,:], vv1)
+            self.myAssertImage(atfloatimage.read()[1:, :], vv1)
+            self.myAssertImage(atfloatimage[1:, :], vv1)
+            self.myAssertImage(atfloatimage.h5object.read()[1:, :], vv1)
+            self.myAssertImage(atfloatimage.h5object[1:, :], vv1)
 
 
             vv2 = [[flvl[3][j+1][i] for i in range(2)] for j in range(2)]
-            atfloatimage[1:,:] = vv2
+            atfloatimage[1:, :] = vv2
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
@@ -3870,7 +3800,7 @@ class PNIWriterTest(unittest.TestCase):
 
             atintimage.write(itvl[0])
 
-            
+
             self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atintimage.h5object, nx._nxh5.nxattribute))
             self.assertEqual(atintimage.parent, intscalar)
@@ -3895,18 +3825,18 @@ class PNIWriterTest(unittest.TestCase):
             atintimage[...] = itvl[1]
 
             self.myAssertImage(atintimage.read(), itvl[1])
-            self.myAssertImage(atintimage[:,:], itvl[1])
+            self.myAssertImage(atintimage[:, :], itvl[1])
             self.myAssertImage(atintimage.h5object.read(), itvl[1])
-            self.myAssertImage(atintimage.h5object[:,:], itvl[1])
+            self.myAssertImage(atintimage.h5object[:, :], itvl[1])
 
-            atintimage[:,:] = itvl[2]
+            atintimage[:, :] = itvl[2]
 
             self.myAssertImage(atintimage.read(), itvl[2])
             self.myAssertImage(atintimage[...], itvl[2])
             self.myAssertImage(atintimage.h5object.read(), itvl[2])
             self.myAssertImage(atintimage.h5object[...], itvl[2])
 
-            atintimage[0:3,:] = itvl[3]
+            atintimage[0:3, :] = itvl[3]
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
@@ -3914,23 +3844,21 @@ class PNIWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.h5object[...], itvl[3])
 
             vv1 = [[itvl[4][j][i] for i in range(2)] for j in range(2)]
-            atintimage[1:,:] = vv1
+            atintimage[1:, :] = vv1
 
-            self.myAssertImage(atintimage.read()[1:,:], vv1)
-            self.myAssertImage(atintimage[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object.read()[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object[1:,:], vv1)
-
+            self.myAssertImage(atintimage.read()[1:, :], vv1)
+            self.myAssertImage(atintimage[1:, :], vv1)
+            self.myAssertImage(atintimage.h5object.read()[1:, :], vv1)
+            self.myAssertImage(atintimage.h5object[1:, :], vv1)
 
             vv2 = [[itvl[3][j+1][i] for i in range(2)] for j in range(2)]
-            atintimage[1:,:] = vv2
+            atintimage[1:, :] = vv2
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
             self.myAssertImage(atintimage.h5object.read(), itvl[3])
             self.myAssertImage(atintimage.h5object[...], itvl[3])
 
-            
             atintimage.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)

@@ -138,5 +138,6 @@ class XMLFieldTagAsynchH5CppTest(XMLFieldTagWriterH5CppTest.XMLFieldTagWriterH5C
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
 
+
 if __name__ == '__main__':
     unittest.main()

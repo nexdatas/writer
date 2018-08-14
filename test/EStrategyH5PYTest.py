@@ -9,7 +9,7 @@
 #    (at your option) any later version.
 #
 #    nexdatas is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    but WITHOUT ANY WARRANTY; without even the implied waranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
@@ -23,9 +23,7 @@ import unittest
 import os
 import sys
 import subprocess
-import random
 import struct
-import random
 import numpy
 
 

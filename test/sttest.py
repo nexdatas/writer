@@ -22,8 +22,9 @@ psub = subprocess.Popen(
 
 # time.sleep(10)
 
+
 try:
-#    dp = PyTango.DeviceProxy(new_device_info_writer.name)
+    #  dp = PyTango.DeviceProxy(new_device_info_writer.name)
 
     found = False
     cnt = 0

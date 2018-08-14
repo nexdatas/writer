@@ -47,6 +47,7 @@ from xml.sax import SAXParseException
 if sys.version_info > (3,):
     long = int
 
+
 # test fixture
 class FElementWithAttrTest(unittest.TestCase):
 
@@ -75,7 +76,6 @@ class FElementWithAttrTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -302,7 +302,7 @@ class FElementWithAttrTest(unittest.TestCase):
 
     # constructor test
     # \brief It tests default settings
-    def test_createAttributes_1d_single(self):
+    def test_createAttributes_1d_single_2(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (

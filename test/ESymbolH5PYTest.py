@@ -201,5 +201,6 @@ class ESymbolH5PYTest(unittest.TestCase):
         self.assertEqual(el3.store(None), None)
         self.assertEqual(el3.symbols, {"test": 'SYM2'})
 
+
 if __name__ == '__main__':
     unittest.main()

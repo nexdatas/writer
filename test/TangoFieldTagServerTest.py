@@ -138,5 +138,6 @@ class TangoFieldTagServerTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
     def record(self, tdw, string):
         tdw.Record(string)
 
+
 if __name__ == '__main__':
     unittest.main()

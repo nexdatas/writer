@@ -42,7 +42,7 @@ if sys.version_info > (3,):
 from xml.sax import SAXParseException
 
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
@@ -67,7 +67,6 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.seed)
@@ -900,7 +899,6 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
@@ -1253,7 +1251,6 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
@@ -1521,7 +1518,6 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
@@ -1782,7 +1778,6 @@ class TangoFieldTagWriterH5PYTest(unittest.TestCase):
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 

@@ -50,6 +50,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 if sys.version_info > (3,):
     long = int
 
+
 # test fixture
 class EGroupH5CppTest(unittest.TestCase):
 
@@ -74,7 +75,6 @@ class EGroupH5CppTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -290,7 +290,7 @@ class EGroupH5CppTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            # map of tag attribute types
+        # map of tag attribute types
         maTn = {"signal": 1, "axis": 2, "primary": 3, "offset": 4,
                 "stride": 6, "file_time": "12:34",
                 "file_update_time": "12:45", "restricts": 12,
@@ -334,7 +334,7 @@ class EGroupH5CppTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            # map of tag attribute types
+        # map of tag attribute types
         maTnv = {"vector": "1 2 3 4 5"}
         raTnv = {"vector": [1, 2, 3, 4, 5]}
         gattrs = dict(gattrs, **(maTnv))
@@ -626,7 +626,7 @@ class EGroupH5CppTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-            # constructor test
+        # constructor test
     # \brief It tests default settings
     def test_store_1d(self):
         fun = sys._getframe().f_code.co_name
@@ -745,7 +745,7 @@ class EGroupH5CppTest(unittest.TestCase):
             if attrs[nm][2] != "bool":
                 mlen = [self.__rnd.randint(2, 10), self.__rnd.randint(2, 10),
                         (2 << numpy.dtype(attrs[nm][2]).itemsize)]
-#                print "SH",nm,mlen[2]
+                #                print "SH",nm,mlen[2]
                 attrs[nm][0] = [
                     [attrs[nm][0] * self.__rnd.randint(0, 3) for r in range(mlen[1])] for c in range(mlen[0])]
             else:
@@ -787,7 +787,7 @@ class EGroupH5CppTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_2d_single(self):
         fun = sys._getframe().f_code.co_name

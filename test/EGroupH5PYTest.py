@@ -75,7 +75,6 @@ class EGroupH5PYTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -291,7 +290,7 @@ class EGroupH5PYTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            # map of tag attribute types
+        # map of tag attribute types
         maTn = {"signal": 1, "axis": 2, "primary": 3, "offset": 4,
                 "stride": 6, "file_time": "12:34",
                 "file_update_time": "12:45", "restricts": 12,
@@ -335,7 +334,7 @@ class EGroupH5PYTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            # map of tag attribute types
+        # map of tag attribute types
         maTnv = {"vector": "1 2 3 4 5"}
         raTnv = {"vector": [1, 2, 3, 4, 5]}
         gattrs = dict(gattrs, **(maTnv))
@@ -627,7 +626,7 @@ class EGroupH5PYTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_1d(self):
         fun = sys._getframe().f_code.co_name
@@ -788,7 +787,7 @@ class EGroupH5PYTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_2d_single(self):
         fun = sys._getframe().f_code.co_name

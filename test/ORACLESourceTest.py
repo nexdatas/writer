@@ -42,6 +42,9 @@ from nxswriter.Types import Converters
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class ORACLESourceTest(unittest.TestCase):
@@ -65,7 +68,6 @@ class ORACLESourceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -270,8 +272,8 @@ class ORACLESourceTest(unittest.TestCase):
                       "SPECTRUM", "DevLong64", [1, 0]],
             "str": ['select NAME,VNAME from telefonbuch where ROWNUM <= 1',
                     "SPECTRUM", "DevString", [1, 0]],
-            "str": ['select NAME,VNAME from telefonbuch where ROWNUM <= 1',
-                    "SPECTRUM", "DevString", [1, 0]],
+            # "str": ['select NAME,VNAME from telefonbuch where ROWNUM <= 1',
+            #        "SPECTRUM", "DevString", [1, 0]],
             "unicode": ['select NAME,IDENT from telefonbuch where ROWNUM <= 1',
                         "SPECTRUM", "DevString", [1, 0]],
             "bool": ['select IDENT,IDENT from telefonbuch where ROWNUM <= 1',

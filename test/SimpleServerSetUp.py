@@ -140,6 +140,7 @@ class SimpleServerSetUp(object):
                                 sr[1], stderr=subprocess.PIPE, shell=True)
         pipe.close()
 
+
 if __name__ == "__main__":
     simps = SimpleServerSetUp()
     simps.setUp()

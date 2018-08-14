@@ -154,5 +154,6 @@ class UTF8decoderTest(unittest.TestCase):
         self.assertEqual(dc.format, self.__data[0])
         self.assertEqual(dc.dtype, self.__dtype)
 
+
 if __name__ == '__main__':
     unittest.main()

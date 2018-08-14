@@ -188,5 +188,6 @@ class EDocTest(unittest.TestCase):
         self.assertEqual(el3.store([None, "<tag/>", None]), None)
         self.assertEqual(el.doc, "<tag/>")
 
+
 if __name__ == '__main__':
     unittest.main()

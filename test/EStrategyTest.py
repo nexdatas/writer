@@ -25,7 +25,6 @@ import sys
 import subprocess
 import random
 import struct
-import random
 import numpy
 
 

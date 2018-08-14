@@ -110,7 +110,6 @@ class TangoSourceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -600,7 +599,7 @@ class TangoSourceTest(unittest.TestCase):
         el = TangoSource()
         self.assertTrue(isinstance(el, object))
         pl = pool()
-        self.assertTrue(not 'TANGO' in pl.common.keys())
+        self.assertTrue('TANGO' not in pl.common.keys())
 
         self.assertEqual(el.setDataSources(pl), None)
         self.assertTrue('TANGO' in pl.common.keys())

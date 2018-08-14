@@ -28,7 +28,6 @@ from pni.io.nx.h5 import open_file
 from xml.sax import SAXParseException
 
 import nxswriter
-from nxswriter import TangoDataWriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 

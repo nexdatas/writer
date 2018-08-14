@@ -58,7 +58,7 @@ try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
-    
+
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
@@ -70,6 +70,7 @@ from xml.sax import SAXParseException
 
 if sys.version_info > (3,):
     long = int
+
 
 # test fixture
 class EFieldTest(unittest.TestCase):
@@ -164,7 +165,7 @@ class EFieldTest(unittest.TestCase):
 
     # default constructor test
     # \brief It tests default settings
-    def test_default_constructor(self):
+    def test_default_constructor_2(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
@@ -1644,21 +1645,21 @@ class EFieldTest(unittest.TestCase):
 #            at = el[k].h5Attribute(k)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         for k in attrs.keys():
-#            if attrs[k][2] == 'string':
-#                "writing multi-dimensional string is not supported by pninx"
-#                continue
+            #            if attrs[k][2] == 'string':
+            #                "writing multi-dimensional string is not supported by pninx"
+            #                continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes()
-#            at = el[k].h5Attribute(k)
+            #            at = el[k].h5Attribute(k)
             at = el[k].h5Object.attributes[k]
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-# attrs[k][3] if len(attrs[k])>3 else 0)
+            #            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
+            # attrs[k][3] if len(attrs[k])>3 else 0)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -4060,7 +4061,8 @@ class EFieldTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if (grow  is not None and grow > 0) else 0), None)
+                        el[k].h5Object.grow(
+                            grow - 1 if (grow is not None and grow > 0) else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -4068,16 +4070,19 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringSpectrumField(self._nxFile, k, 'string',
-                                                  attrs[k][1], attrs[k][0],
-                                                  attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkStringSpectrumField(
+                    self._nxFile, k, 'string',
+                    attrs[k][1], attrs[k][0],
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
-                self._sc.checkSpectrumField(self._nxFile, k, attrs[k][2],
-                                            attrs[k][1], attrs[k][0],
-                                            attrs[k][5] if len(
-                                                attrs[k]) > 5 else 0,
-                                            grows=grow,
-                                            attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkSpectrumField(
+                    self._nxFile, k, attrs[k][2],
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][5] if len(attrs[k]) > 5 else 0,
+                    grows=grow,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -4458,24 +4463,21 @@ class EFieldTest(unittest.TestCase):
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
-#            self.assertEqual(el[k].store(), None)
-#            self.myAssertRaise(ValueError, el[k].store)
+            #            self.assertEqual(el[k].store(), None)
+            #            self.myAssertRaise(ValueError, el[k].store)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkScalarField(self._nxFile, k,
-                                          attrs[k][2] if attrs[
-                                          k][2] else 'string',
-                                          attrs[k][1], [c[0][0]
-                                                        for c in attrs[
-                                                            k][0]], 0,
-                                          attrs={"type": attrs[k][1], "units": "m"})
+                self._sc.checkScalarField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], [c[0][0] for c in attrs[k][0]], 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
 
             else:
                 self._sc.checkImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                         attrs[k][1], attrs[k][0],
-                                         attrs[k][4] if len(
-                                             attrs[k]) > 4 else 0, grow,
-                                         attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0, grow,
+                    attrs={"type": attrs[k][1], "units": "m"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -4582,21 +4584,20 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkScalarField(self._nxFile, k,
-                                          attrs[k][2] if attrs[
-                                          k][2] else 'string',
-                                          attrs[k][1], [c[0][0]
-                                                        for c in attrs[
-                                                            k][0]], 0,
-                                          attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkScalarField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], [c[0][0] for c in attrs[k][0]], 0,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
 
             else:
                 self._sc.checkImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                         attrs[k][1], attrs[k][0],
-                                         attrs[k][5] if len(
-                                             attrs[k]) > 5 else 0, grow,
-                                         attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][5] if len(attrs[k]) > 5 else 0, grow,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -4704,37 +4705,33 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m"})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1], "units": "m"})
                 else:
-                    self._sc.checkSingleSpectrumField(self._nxFile, k,
-                                                      attrs[k][2] if attrs[
-                                                          k][2] else 'string',
-                                                      attrs[k][1], attrs[
-                                                          k][0][0], 0,
-                                                      attrs={"type": attrs[k][1], "units": "m", "postrun": None})
+                    self._sc.checkSingleSpectrumField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0][0], 0,
+                        attrs={"type": attrs[k][1], "units": "m", "postrun": None})
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -4827,38 +4824,37 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1], "units": "m",
+                               "nexdatas_canfail": "FAILED"})
                 else:
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1], "units": "m",
+                               "postrun": None, "nexdatas_canfail": "FAILED"})
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], [
-                                                    [attrs[k][0][0][0]]],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs[k][1], [[attrs[k][0][0][0]]],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], [[attrs[k][0][0][0]]],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"}
+                    attrs[k][1], [[attrs[k][0][0][0]]],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m",
+                        "postrun": None, "nexdatas_canfail": "FAILED"}
                 )
 
         self._nxFile.close()
@@ -4964,23 +4960,25 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
 
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[2],
-                            "value": (attrs[k][0][i] if attrs[k][2] != "bool" else [[Converters.toBool(c) for c in attrs[k][0][i][0]]]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                            "shape": [1, attrs[k][3][1]]}
+                ds.value = {
+                    "rank": NTP.rTf[2],
+                    "value": (attrs[k][0][i] if attrs[k][2] != "bool"
+                              else [[Converters.toBool(c) for c in attrs[k][0][i][0]]]),
+                    "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                    "shape": [1, attrs[k][3][1]]}
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k,
-                                               attrs[k][2] if attrs[
-                                               k][2] else 'string',
-                                               # attrs[k][1],  [[ row[0]  for
-                                               # row in img]for img in
-                                               # attrs[k][0]] ,
-                                               attrs[k][1],  attrs[k][0],
-                                               attrs={"type": attrs[k][1], "units": "m"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    # attrs[k][1],  [[ row[0]  for
+                    # row in img]for img in
+                    # attrs[k][0]] ,
+                    attrs[k][1],  attrs[k][0],
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
                                          attrs[k][1], attrs[k][0],
@@ -5082,7 +5080,8 @@ class EFieldTest(unittest.TestCase):
             for i in range(steps):
                 ds.value = {"rank": NTP.rTf[2],
                             "value": (attrs[k][0][i]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                            "tangoDType": NTP.pTt[(attrs[k][2])
+                                                  if attrs[k][2] else "string"],
                             "shape": [1, attrs[k][3][1]]}
                 if not i % 2:
                     self.assertEqual(el[k].run(), None)
@@ -5095,19 +5094,20 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].error, None)
 #            self.myAssertRaise(ValueError, el[k].store)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k,
-                                               attrs[k][2] if attrs[
-                                               k][2] else 'string',
-                                               attrs[k][1],  [[row for row in img]
-                                                              for img in attrs[
-                                                                  k][0]],
-                                               attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1],  [[row for row in img]
+                                   for img in attrs[k][0]],
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
                                          attrs[k][1], attrs[k][0],
                                          attrs[k][5] if len(
                     attrs[k]) > 5 else 0, grow,
-                    attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -5186,7 +5186,8 @@ class EFieldTest(unittest.TestCase):
             el[k].strategy = stt
             ds = TestDataSource()
             ds.value = {"rank": NTP.rTf[2],
-                        "value": (attrs[k][0] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0]]),
+                        "value": (attrs[k][0] if attrs[k][2] != "bool"
+                                  else [[Converters.toBool(c[0])] for c in attrs[k][0]]),
                         "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
                         "shape": [attrs[k][3][0], 1]}
             el[k].source = ds
@@ -5215,37 +5216,33 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkSingleSpectrumField(self._nxFile, k,
-                                                      attrs[k][2] if attrs[
-                                                          k][2] else 'string',
-                                                      attrs[k][1], [
-                                                          c[0] for c in attrs[k][0]], 0,
-                                                      attrs={"type": attrs[k][1], "units": "m"})
+                    self._sc.checkSingleSpectrumField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], [c[0] for c in attrs[k][0]], 0,
+                        attrs={"type": attrs[k][1], "units": "m"})
                 else:
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][1], [
-                                                         c[0] for c in attrs[k][0]],
-                                                         attrs={"type": attrs[k][1], "units": "m", "postrun": None})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], [c[0] for c in attrs[k][0]],
+                        attrs={"type": attrs[k][1], "units": "m", "postrun": None})
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
 
         self._nxFile.close()
@@ -5340,38 +5337,37 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkSingleSpectrumField(self._nxFile, k,
-                                                      attrs[k][2] if attrs[
-                                                          k][2] else 'string',
-                                                      attrs[k][1], [
-                                                          c[0] for c in attrs[k][0]], 0,
-                                                      attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    self._sc.checkSingleSpectrumField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], [c[0] for c in attrs[k][0]], 0,
+                        attrs={"type": attrs[k][1], "units": "m",
+                               "nexdatas_canfail": "FAILED"})
                 else:
-                    self._sc.checkSingleSpectrumField(self._nxFile, k,
-                                                      attrs[k][2] if attrs[
-                                                          k][2] else 'string',
-                                                      attrs[k][1], [
-                                                          c[0] for c in attrs[k][0]], 0,
-                                                      attrs={"type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"})
+                    self._sc.checkSingleSpectrumField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], [c[0] for c in attrs[k][0]], 0,
+                        attrs={"type": attrs[k][1], "units": "m",
+                               "postrun": None, "nexdatas_canfail": "FAILED"})
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], [
-                                                    [attrs[k][0][0][0]]],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs[k][1], [[attrs[k][0][0][0]]],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], [[attrs[k][0][0][0]]],
-                                          attrs[k][4] if len(
-                                              attrs[k]) > 4 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"}
+                    attrs[k][1], [[attrs[k][0][0][0]]],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None,
+                        "nexdatas_canfail": "FAILED"}
                 )
 
         self._nxFile.close()
@@ -5477,21 +5473,23 @@ class EFieldTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
 
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[2],
-                            "value": (attrs[k][0][i] if attrs[k][2] != "bool" else [[Converters.toBool(c[0])] for c in attrs[k][0][i]]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                            "shape": [attrs[k][3][0], 1]}
+                ds.value = {
+                    "rank": NTP.rTf[2],
+                    "value": (attrs[k][0][i] if attrs[k][2] != "bool"
+                              else [[Converters.toBool(c[0])] for c in attrs[k][0][i]]),
+                    "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+                    "shape": [attrs[k][3][0], 1]}
                 self.assertEqual(el[k].run(), None)
 
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
 
-                self._sc.checkStringImageField(self._nxFile, k,
-                                               attrs[k][2] if attrs[
-                                               k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs={"type": attrs[k][1], "units": "m"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], attrs[k][0],
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self._sc.checkImageField(self._nxFile, k, attrs[k][2],
                                          attrs[k][1], attrs[k][0],
@@ -5608,19 +5606,20 @@ class EFieldTest(unittest.TestCase):
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].error, None)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k,
-                                               attrs[k][2] if attrs[
-                                               k][2] else 'string',
-                                               attrs[k][1], [[row for row in img]
-                                                             for img in attrs[
-                                                                 k][0]],
-                                               attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], [[row for row in img]
+                                  for img in attrs[k][0]],
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
             else:
-                self._sc.checkImageField(self._nxFile, k, attrs[k][2],
-                                         attrs[k][1], attrs[k][0],
-                                         attrs[k][5] if len(
-                    attrs[k]) > 5 else 0, grow,
-                    attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkImageField(
+                    self._nxFile, k, attrs[k][2],
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][5] if len(attrs[k]) > 5 else 0, grow,
+                    attrs={"type": attrs[k][1], "units": "m",
+                           "nexdatas_canfail": "FAILED"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -5729,19 +5728,18 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m"})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1], "units": "m"})
                 else:
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m", "postrun": None})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1],
+                               "units": "m", "postrun": None})
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
@@ -5856,19 +5854,20 @@ class EFieldTest(unittest.TestCase):
             if attrs[k][2] == "string_old" or not attrs[k][2]:
                 self.assertEqual(el[k].grows, None)
                 if stt != 'POSTRUN':
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1], "units": "m",
+                               "nexdatas_canfail": "FAILED"})
                 else:
-                    self._sc.checkSingleStringImageField(self._nxFile, k,
-                                                         attrs[k][2] if attrs[
-                                                         k][2] else 'string',
-                                                         attrs[k][
-                                                             1], attrs[k][0],
-                                                         attrs={"type": attrs[k][1], "units": "m", "postrun": None, "nexdatas_canfail": "FAILED"})
+                    self._sc.checkSingleStringImageField(
+                        self._nxFile, k,
+                        attrs[k][2] if attrs[k][2] else 'string',
+                        attrs[k][1], attrs[k][0],
+                        attrs={"type": attrs[k][1],
+                               "units": "m", "postrun": None,
+                               "nexdatas_canfail": "FAILED"})
 
             elif stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
@@ -5993,29 +5992,31 @@ class EFieldTest(unittest.TestCase):
             el[k].store()
 
             for i in range(steps):
-                ds.value = {"rank": NTP.rTf[2],
-                            "value": (attrs[k][0][i] if attrs[k][2] != "bool"
-                                      else [[Converters.toBool(
-                                             c) for c in row] for row in attrs[
-                                            k][0][i]]),
-                            "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                            "shape": [attrs[k][3][0], attrs[k][3][1]]}
+                ds.value = {
+                    "rank": NTP.rTf[2],
+                    "value": (
+                        attrs[k][0][i] if attrs[k][2] != "bool"
+                        else [[Converters.toBool(c) for c in row]
+                              for row in attrs[k][0][i]]),
+                    "tangoDType": NTP.pTt[
+                        (attrs[k][2])
+                        if attrs[k][2] else "string"],
+                    "shape": [attrs[k][3][0], attrs[k][3][1]]}
                 self.assertEqual(el[k].run(), None)
 
             self.assertEqual(el[k].error, None)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k,
-                                               attrs[k][2] if attrs[
-                                               k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs={"type": attrs[k][1], "units": "m"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], attrs[k][0],
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self._sc.checkImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][4] if len(
-                                                    attrs[k]) > 4 else 0, grow,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][4] if len(attrs[k]) > 4 else 0, grow,
+                    attrs={"type": attrs[k][1], "units": "m"})
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -6125,18 +6126,18 @@ class EFieldTest(unittest.TestCase):
 
             self.assertEqual(el[k].error, None)
             if attrs[k][2] == "string_old" or not attrs[k][2]:
-                self._sc.checkStringImageField(self._nxFile, k,
-                                               attrs[k][2] if attrs[
-                                               k][2] else 'string',
-                                               attrs[k][1], attrs[k][0],
-                                               attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                self._sc.checkStringImageField(
+                    self._nxFile, k,
+                    attrs[k][2] if attrs[k][2] else 'string',
+                    attrs[k][1], attrs[k][0],
+                    attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
             else:
                 self._sc.checkImageField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][5] if len(
-                                                    attrs[k]) > 5 else 0, grow,
-                                                attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][5] if len(
+                        attrs[k]) > 5 else 0, grow,
+                    attrs={"type": attrs[k][1], "units": "m", "nexdatas_canfail": "FAILED"})
 
         self._nxFile.close()
         os.remove(self._fname)

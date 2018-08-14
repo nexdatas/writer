@@ -2508,7 +2508,7 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(at.name, "NX_class")
             self.assertEqual(at[...], "NXdata")
 
- #           cnt = dt.open("cnt1")
+            # cnt = dt.open("cnt1")
             cnt = dt.open("counter1")
             self.assertTrue(cnt.is_valid)
             #            ???
@@ -3317,7 +3317,7 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(at.name, "NX_class")
             self.assertEqual(at[...], "NXdata")
 
- #           cnt = dt.open("cnt1")
+            # cnt = dt.open("cnt1")
             cnt = dt.open("counter1")
             self.assertTrue(cnt.is_valid)
             #            ???

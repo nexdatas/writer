@@ -23,9 +23,7 @@ import unittest
 import os
 import sys
 import subprocess
-import random
 import struct
-import random
 import numpy
 
 from TestDataSource import TestDataSource
@@ -852,7 +850,7 @@ class ELinkH5CppTest(unittest.TestCase):
             l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype)
         self.assertEqual(
             l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape)
- #       self.assertEqual(l5.name, gr.h5Object.name )
+        #       self.assertEqual(l5.name, gr.h5Object.name )
 
         self._nxFile.close()
         os.remove(self._fname)

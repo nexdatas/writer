@@ -39,6 +39,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 if sys.version_info > (3,):
     long = int
 
+
 # datasource
 class Source(object):
     # contructor

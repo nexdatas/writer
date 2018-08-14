@@ -26,7 +26,6 @@ import subprocess
 import random
 import struct
 import json
-from nxswriter.H5Elements import EFile
 from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
 from nxswriter.EGroup import EGroup
@@ -2917,7 +2916,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
             TElement.groupTypes.child(nxtype="NXmmyentry") is not None)
         self.assertTrue(
             TElement.groupTypes.child(name="mmyentry1") is not None)
- #       self.assertTrue(gr.fetched)
+        #   self.assertTrue(gr.fetched)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
 

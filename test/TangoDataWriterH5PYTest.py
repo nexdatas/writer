@@ -27,7 +27,6 @@ import numpy
 from xml.sax import SAXParseException
 
 import nxswriter
-from nxswriter import TangoDataWriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 
@@ -301,7 +300,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -368,7 +367,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -436,7 +435,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -525,7 +524,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 #            print("\nFile attributes:")
@@ -588,7 +587,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -691,7 +690,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -784,7 +783,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -1118,7 +1117,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -1510,7 +1509,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -1854,7 +1853,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -2249,7 +2248,7 @@ ds.res2 = str(True)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.openFile()
             self.assertEqual(tdw.canfail, True)
-            self.assertEqual(tdw.defaultCanFail, False)
+            self.assertEqual(tdw.defaultCanFail, True)
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -2270,13 +2269,13 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.closeEntry()
-            self.assertEqual(tdw.canfail, False)
+            self.assertEqual(tdw.canfail, True)
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.closeFile()
-            self.assertEqual(tdw.canfail, False)
-            self.assertEqual(tdw.defaultCanFail, False)
+            self.assertEqual(tdw.canfail, True)
+            self.assertEqual(tdw.defaultCanFail, True)
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -2284,7 +2283,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -2714,7 +2713,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -3094,7 +3093,7 @@ ds.res2 = str(True)
 
     # scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_scanRecord_canfail_false(self):
+    def test_scanRecord_canfail_false_2(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
@@ -3146,7 +3145,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -3491,7 +3490,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -3853,7 +3852,7 @@ ds.res2 = str(True)
             fname = '%s/%s%s_00001.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4140,7 +4139,7 @@ ds.res2 = str(True)
 
             fname = '%s/%s%s_00002.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4427,7 +4426,7 @@ ds.res2 = str(True)
 
             fname = '%s/%s%s_00003.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4746,7 +4745,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -5068,7 +5067,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -5397,7 +5396,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -5731,7 +5730,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5PYWriter
+            FileWriter.writer = H5PYWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))

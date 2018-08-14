@@ -26,6 +26,7 @@ import subprocess
 import random
 import struct
 import binascii
+import time
 
 from nxswriter.FetchNameHandler import TNObject
 

@@ -74,7 +74,6 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
         self.__rnd = random.Random(self.__seed)
 
@@ -187,7 +186,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
   </datasource>
   <result>%s</result>
 </datasource>
-""" % script2 ), None)
+""" % script2), None)
         gjson = '{"data":{"inp":21}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -207,7 +206,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21,"rinp2":41}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -232,7 +231,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -254,7 +253,7 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -336,7 +335,7 @@ except:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), a2, script) ), None)
+""" % (self._simps.dp.dev_name(), a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -376,7 +375,7 @@ except:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script) ), None)
+""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -494,7 +493,7 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
                         str(carr[k][0]).replace("'", "\""))
@@ -512,7 +511,7 @@ else:
                       for a in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [Converters.toBool(a) for a in arr[k2][2]] if arr[
                     k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0]).__name__] == type(v2[0]).__name__:
+                if NTP.pTt[type(v1[0]).__name__] == str(type(v2[0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -610,7 +609,7 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
 
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
@@ -629,7 +628,7 @@ else:
                       for row in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
                       for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0][0]).__name__] == type(v2[0][0]).__name__:
+                if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -693,7 +692,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result>%s</result>
 </datasource>
-""" % script2 ), None)
+""" % script2), None)
         gjson = '{"data":{"inp":21}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -713,7 +712,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21,"rinp2":41}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -738,7 +737,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -760,7 +759,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -776,7 +775,7 @@ ds.res = commonblock["myres"]
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % script4 ), None)
+""" % script4), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -808,7 +807,7 @@ ds.res = commonblock["myres"]
             self.assertEqual(ds.setup("""
 <datasource>
  <result name='res2'>%s</result>
-</datasource>""" % script ), None)
+</datasource>""" % script), None)
             dt = ds.getData()
             self.checkData(dt, "SCALAR", dspid, "DevLong64", [])
         finally:
@@ -838,7 +837,7 @@ ds.res = commonblock["myres"]
             self.assertEqual(ds.setup("""
 <datasource>
  <result name='res2'>%s</result>
-</datasource>""" % script ), None)
+</datasource>""" % script), None)
             dt = ds.getData()
             self.checkData(dt, "SCALAR", dspid, "DevLong64", [])
         finally:
@@ -919,7 +918,7 @@ commonblock["myres"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), a2, script) ), None)
+""" % (self._simps.dp.dev_name(), a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -951,7 +950,7 @@ commonblock["myres"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
                 self.assertEqual(ds2.setDataSources(dsp), None)
                 dt = ds2.getData()
                 self.checkData(dt, carr[a][1], vv, NTP.pTt[
@@ -972,7 +971,7 @@ commonblock["myres"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script) ), None)
+""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -1012,7 +1011,7 @@ commonblock["myres"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
                 self.assertEqual(ds2.setDataSources(dsp), None)
                 dt = ds2.getData()
                 if type(vv).__name__ == 'ndarray':
@@ -1109,7 +1108,7 @@ commonblock["my1res"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
                         str(carr[k][0]).replace("'", "\""))
@@ -1127,7 +1126,7 @@ commonblock["my1res"] = ds.res
                       for a in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [Converters.toBool(a) for a in arr[k2][2]] if arr[
                     k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0]).__name__] == type(v2[0]).__name__:
+                if NTP.pTt[type(v1[0]).__name__] == str(type(v2[0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -1144,7 +1143,7 @@ commonblock["my1res"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 dt = ds.getData()
@@ -1241,7 +1240,7 @@ commonblock["myre3"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
 
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
@@ -1260,7 +1259,7 @@ commonblock["myre3"] = ds.res
                       for row in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
                       for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0][0]).__name__] == type(v2[0][0]).__name__:
+                if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -1278,7 +1277,7 @@ commonblock["myre3"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 dt = ds.getData()

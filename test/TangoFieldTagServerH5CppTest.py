@@ -139,5 +139,6 @@ class TangoFieldTagServerH5CppTest(TangoFieldTagWriterH5CppTest.TangoFieldTagWri
     def record(self, tdw, string):
         tdw.Record(string)
 
+
 if __name__ == '__main__':
     unittest.main()
