@@ -1482,7 +1482,6 @@ class EFieldH5CppTest(unittest.TestCase):
 
         for k in maTn.keys():
             self.assertEqual(el.h5Object.attributes[k][...], fattrs[k])
-            print(k)
             self.assertEqual(
                 el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
@@ -2587,8 +2586,6 @@ class EFieldH5CppTest(unittest.TestCase):
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
             #            self.myAssertRaise(ValueError, el[k].store)
-            print(k)
-            print(attrs[k])
             if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
