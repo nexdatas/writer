@@ -96,12 +96,14 @@ class SimpleServerSetUp(object):
         if os.path.isfile("%s/SimpleServer.py" % path):
             if sys.version_info > (3,):
                 self._psub = subprocess.call(
-                    "cd %s; python3 ./SimpleServer.py %s &" % (path, self.instance), stdout=None,
-                    stderr=None,  shell=True)
+                    "cd %s; python3 ./SimpleServer.py %s &" %
+                    (path, self.instance), stdout=None,
+                    stderr=None, shell=True)
             else:
                 self._psub = subprocess.call(
-                    "cd %s; python ./SimpleServer.py %s &" % (path, self.instance), stdout=None,
-                    stderr=None,  shell=True)
+                    "cd %s; python ./SimpleServer.py %s &" %
+                    (path, self.instance), stdout=None,
+                    stderr=None, shell=True)
             sys.stdout.write("waiting for simple server ")
 
         found = False
@@ -127,7 +129,8 @@ class SimpleServerSetUp(object):
 
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'SimpleServer.py %s'" % self.instance, stdout=subprocess.PIPE, shell=True).stdout
+            "ps -ef | grep 'SimpleServer.py %s'" % self.instance,
+            stdout=subprocess.PIPE, shell=True).stdout
 
         res = str(pipe.read()).split("\n")
         for r in res:
