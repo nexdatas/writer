@@ -35,7 +35,7 @@ try:
         #       print "STATE:",dp.state()
             if dp.state() == PyTango.DevState.ON:
                 found = True
-        except Exception:
+        except Exception as e:
             print("WHAT: %s" % e)
             found = False
             cnt += 1

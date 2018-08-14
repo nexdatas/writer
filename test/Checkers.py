@@ -328,7 +328,7 @@ class Checker(object):
     def _isNumeric(self, instance):
         if sys.version_info > (3,):
             attrs = ['__pow__', '__mul__', '__floordiv__',
-                     '__truediv__','__add__', '__sub__']
+                     '__truediv__', '__add__', '__sub__']
         else:
             attrs = ['__pow__', '__mul__', '__div__', '__add__', '__sub__']
         return all(hasattr(instance, attr) for attr in attrs)

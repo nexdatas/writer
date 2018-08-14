@@ -358,7 +358,7 @@ ds.res2 = str(root.is_valid)
             try:
                 error = False
                 tdw.jsonrecord = "}"
-            except ValueError as e:
+            except ValueError:
                 error = True
             self.assertEqual(error, True)
 
@@ -423,7 +423,7 @@ ds.res2 = str(root.is_valid)
             try:
                 error = False
                 tdw.jsonrecord = 1223
-            except TypeError as e:
+            except TypeError:
                 error = True
             self.assertEqual(error, True)
 
@@ -653,7 +653,7 @@ ds.res2 = str(root.is_valid)
             try:
                 error = None
                 tdw.xmlsettings = wrongXml
-            except SAXParseException as e:
+            except SAXParseException:
                 error = True
             except Exception:
                 error = False

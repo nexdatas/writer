@@ -352,7 +352,7 @@ ds.res2 = str(True)
             try:
                 error = False
                 tdw.jsonrecord = "}"
-            except ValueError as e:
+            except ValueError:
                 error = True
             self.assertEqual(error, True)
 
@@ -420,7 +420,7 @@ ds.res2 = str(True)
             try:
                 error = False
                 tdw.jsonrecord = 1223
-            except TypeError as e:
+            except TypeError:
                 error = True
             self.assertEqual(error, True)
 
@@ -653,7 +653,7 @@ ds.res2 = str(True)
     # openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException() ")
+        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException()")
         fname = "test.h5"
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -667,7 +667,7 @@ ds.res2 = str(True)
             try:
                 error = None
                 tdw.xmlsettings = wrongXml
-            except SAXParseException as e:
+            except SAXParseException:
                 error = True
             except Exception:
                 error = False
@@ -678,7 +678,7 @@ ds.res2 = str(True)
                 tdw.xmlsettings = xml
                 error = None
                 tdw.openEntry()
-            except SAXParseException as e:
+            except SAXParseException:
                 error = True
             except Exception:
                 error = False
