@@ -7,7 +7,7 @@
 #   - computing a similar diff to what github is showing in a PR. The
 #     diff is done between:
 #       1. the common ancestor of the local branch and the
-#          pni-libraries/python-pni remote
+#          nexdatas/writer remote
 #       2. the local branch
 #   - run flake8 --diff --show-source on the computed diff
 #
@@ -31,7 +31,7 @@ set -o errexit
 # pipefail is necessary to propagate exit codes
 set -o pipefail
 
-PROJECT=pni-libraries/python-pni
+PROJECT=nexdatas/writer
 PROJECT_URL=https://github.com/$PROJECT.git
 
 # Find the remote with the project name (upstream in most cases)
