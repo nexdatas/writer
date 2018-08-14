@@ -138,8 +138,9 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(image1[i]), len(image2[i]))
             for j in range(len(image1[i])):
                 if error is not None:
-                    if abs(image1[i][j]-image2[i][j]) >= error:
-                        print("EL %s %s %s" % (image1[i][j], image2[i][j], error))
+                    if abs(image1[i][j] - image2[i][j]) >= error:
+                        print("EL %s %s %s" % (
+                            image1[i][j], image2[i][j], error))
                     self.assertTrue(abs(image1[i][j]-image2[i][j]) < error)
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
@@ -154,9 +155,11 @@ class H5CppWriterTest(unittest.TestCase):
                 self.assertEqual(len(image1[i][j]), len(image2[i][j]))
                 for k in range(len(image1[i][j])):
                     if error is not None:
-                        if abs(image1[i][j][k]-image2[i][j][k]) >= error:
-                            print("EL %s %s %s" % (image1[i][j][k], image2[i][j][k], error))
-                        self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
+                        if abs(image1[i][j][k] - image2[i][j][k]) >= error:
+                            print("EL %s %s %s" % (
+                                image1[i][j][k], image2[i][j][k], error))
+                        self.assertTrue(
+                            abs(image1[i][j][k]-image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
 
@@ -215,7 +218,6 @@ class H5CppWriterTest(unittest.TestCase):
 
             fl.reopen()
             self.assertEqual(6, len(f.attributes))
-            atts = []
             for at in f.attributes:
                 print(at)
                 print("%s %s %s" % (at.name, at.read(), at.dtype))
@@ -2657,8 +2659,8 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
 
             print("WW %s" % attr1["NX_class"].name)
 

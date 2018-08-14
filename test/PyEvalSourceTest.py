@@ -496,8 +496,8 @@ else:
                     if arr[k][2] == "DevBoolean" else arr[k][0]
                 v2 = [Converters.toBool(a) for a in arr2[k2][0]] if arr2[
                     k2][2] == "DevBoolean" else arr2[k2][0]
-                vv = v1 + v2 if (str(type(v1[0]).__name__)
-                                 == str(type(v2[0]).__name__)) \
+                vv = v1 + v2 if (str(type(v1[0]).__name__) ==
+                                 str(type(v2[0]).__name__)) \
                     else [unicode(i) for i in v1] + [unicode(i2) for i2 in v2]
                 self.checkData(dt, arr[k][1], vv, NTP.pTt[
                                type(vv[0]).__name__],

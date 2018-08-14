@@ -133,7 +133,8 @@ class H5PYWriterTest(unittest.TestCase):
             for j in range(len(image1[i])):
                 if error is not None:
                     if abs(image1[i][j]-image2[i][j]) >= error:
-                        print("EL %s %s %s" % (image1[i][j], image2[i][j], error))
+                        print("EL %s %s %s" % (image1[i][j],
+                                               image2[i][j], error))
                     self.assertTrue(abs(image1[i][j]-image2[i][j]) < error)
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
@@ -148,12 +149,13 @@ class H5PYWriterTest(unittest.TestCase):
                 self.assertEqual(len(image1[i][j]), len(image2[i][j]))
                 for k in range(len(image1[i][j])):
                     if error is not None:
-                        if abs(image1[i][j][k]-image2[i][j][k]) >= error:
-                            print("EL %s %s %s" % (image1[i][j][k], image2[i][j][k], error))
-                        self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
+                        if abs(image1[i][j][k] - image2[i][j][k]) >= error:
+                            print("EL %s %s %s" % (
+                                image1[i][j][k], image2[i][j][k], error))
+                        self.assertTrue(
+                            abs(image1[i][j][k]-image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
-
 
     # test starter
     # \brief Common set up
@@ -181,7 +183,8 @@ class H5PYWriterTest(unittest.TestCase):
     def test_default_createfile(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (os.getcwd(),
+                                      self.__class__.__name__, fun )
         try:
             fl = H5PYWriter.create_file(self._fname)
             fl.close()
@@ -209,7 +212,7 @@ class H5PYWriterTest(unittest.TestCase):
                 f.attributes["file_name"][...],
                 self._fname)
             for at in f.attributes:
-                print(at.name),  at.dtype, at.read()
+                print("%s %s %s" % (at.name,  at.dtype, at.read())
             self.assertTrue(f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
@@ -244,7 +247,8 @@ class H5PYWriterTest(unittest.TestCase):
     def test_h5pyfile(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        self._fname = '%s/%s%s.h5' % (os.getcwd(),
+                                      self.__class__.__name__, fun )
 
         overwrite = False
         nxfl = h5py.File(self._fname, "a", libver='latest')
@@ -322,7 +326,8 @@ class H5PYWriterTest(unittest.TestCase):
     def test_h5pygroup(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
+        self._fname = '%s/%s%s.h5' % (os.getcwd(),
+                                      self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -2463,7 +2468,8 @@ class H5PYWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.read(), [[0]*2]*3)
             self.myAssertImage(atintimage[...], [[0]*2]*3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
-            self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
+            self.assertEqual(
+                atintimage.h5object, (attr2.h5object, 'atintimage'))
 
             print("WW %s" % attr1["NX_class"].name)
 
@@ -3458,9 +3464,6 @@ class H5PYWriterTest(unittest.TestCase):
 
             atstrimage[:, 1:] = vv1
 
-            print("VV1 %s" % vv1)
-            print("TR1 ", atstrimage[:,:])
-            print("TR2 ", atstrimage[:, 1:])
             self.myAssertImage(atstrimage.read()[:, 1:], vv1)
             self.myAssertImage(atstrimage[:, 1:], vv1)
             self.myAssertImage(atstrimage.h5object[0]['atstrimage'][:, 1:], vv1)
