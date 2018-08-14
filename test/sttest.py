@@ -2,6 +2,7 @@ import PyTango
 import subprocess
 import time
 import os
+import sys
 
 new_device_info_writer = PyTango.DbDevInfo()
 new_device_info_writer._class = "SimpleServer"
@@ -34,7 +35,7 @@ try:
         #       print "STATE:",dp.state()
             if dp.state() == PyTango.DevState.ON:
                 found = True
-        except Exception as e:
+        except Exception:
             print("WHAT: %s" % e)
             found = False
             cnt += 1

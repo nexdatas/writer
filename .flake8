@@ -8,6 +8,7 @@ exclude=
     dist,
     __pycache__,
     build,
-    test
+    test,
+
 # max-complexity = 10
-ignore = F401, F403, E722
+ignore = F401, F403, E722, F601

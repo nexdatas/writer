@@ -327,8 +327,8 @@ class Checker(object):
     # \returns is instance is numeric
     def _isNumeric(self, instance):
         if sys.version_info > (3,):
-            attrs = ['__pow__', '__mul__', '__floordiv__', '__truediv__','__add__',
-                     '__sub__']
+            attrs = ['__pow__', '__mul__', '__floordiv__',
+                     '__truediv__','__add__', '__sub__']
         else:
             attrs = ['__pow__', '__mul__', '__div__', '__add__', '__sub__']
         return all(hasattr(instance, attr) for attr in attrs)
@@ -825,7 +825,6 @@ class Checker(object):
                 self._tc.assertEqual(at[...], atts[a])
 
         for i in range(len(values)):
-#            sys.stdout.write("b.")i ,values[i], cnt[i]
             self._tc.assertEqual(values[i], cnt[i])
 
     # checks  image field

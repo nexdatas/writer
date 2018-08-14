@@ -264,7 +264,7 @@ ds.res2 = str(True)
         try:
             error = False
             method(*args, **kwargs)
-        except Exception as e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -670,7 +670,7 @@ ds.res2 = str(True)
                 tdw.xmlsettings = wrongXml
             except SAXParseException as e:
                 error = True
-            except Exception as e:
+            except Exception:
                 error = False
             self.assertTrue(error is not None)
             self.assertEqual(error, True)
@@ -681,7 +681,7 @@ ds.res2 = str(True)
                 tdw.openEntry()
             except SAXParseException as e:
                 error = True
-            except Exception as e:
+            except Exception:
                 error = False
             self.assertTrue(error is None)
 

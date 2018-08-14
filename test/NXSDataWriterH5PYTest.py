@@ -264,7 +264,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except Exception as e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -528,7 +528,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
                 dp.XMLSettings = wrongXml
             except PyTango.DevFailed as e:
                 error = True
-            except Exception as e:
+            except Exception:
                 error = False
             self.assertEqual(error, True)
             self.assertTrue(error is not None)

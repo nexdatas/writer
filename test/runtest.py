@@ -197,7 +197,7 @@ except:
 
     except ImportError as e:
         print("MYSQL not available: %s" % e)
-    except Exception as e:
+    except Exception:
         print("MYSQL not available: %s" % e)
     except:
         print("MYSQL not available")
@@ -214,7 +214,7 @@ try:
     DB_AVAILABLE.append("PGSQL")
 except ImportError as e:
     print("PGSQL not available: %s" % e)
-except Exception as e:
+except Exception:
     print("PGSQL not available: %s" % e)
 except:
     print("PGSQL not available")
@@ -242,7 +242,7 @@ try:
     DB_AVAILABLE.append("ORACLE")
 except ImportError as e:
     print("ORACLE not available: %s" % e)
-except Exception as e:
+except Exception:
     print("ORACLE not available: %s" % e)
 except:
     print("ORACLE not available")

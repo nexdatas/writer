@@ -91,7 +91,7 @@ class PGSQLSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except Exception as e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 

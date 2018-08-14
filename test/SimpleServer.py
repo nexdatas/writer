@@ -1520,5 +1520,5 @@ if __name__ == '__main__':
 
     except PyTango.DevFailed as e:
         print('-------> Received a DevFailed exception: %s' % str(e))
-    except Exception as e:
+    except Exception:
         print('-------> An unforeseen exception occured.... %s' % str(e))
