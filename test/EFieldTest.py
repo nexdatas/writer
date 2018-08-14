@@ -1515,7 +1515,6 @@ class EFieldTest(unittest.TestCase):
 
         for k in maTn.keys():
             self.assertEqual(el.h5Object.attributes[k][...], fattrs[k])
-            print(k)
             self.assertEqual(
                 el.h5Object.attributes[k].dtype, NTP.nTnp[NTP.aTn[k]])
             self.assertEqual(el.h5Object.attributes[k].shape, (1,))
@@ -2203,8 +2202,6 @@ class EFieldTest(unittest.TestCase):
             self.assertEqual(el[k].store(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
             self.assertEqual(el[k].grows, None)
-            print(k)
-            print(attrs[k])
             if stt != 'POSTRUN':
                 self._sc.checkXMLSpectrumField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',

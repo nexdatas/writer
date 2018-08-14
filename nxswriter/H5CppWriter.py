@@ -166,7 +166,7 @@ def open_file(filename, readonly=False, libver=None):
     """
 
     fapl = h5cpp.property.FileAccessList()
-    #    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
+    # fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
     flag = h5cpp.file.AccessFlags.READONLY if readonly \
         else h5cpp.file.AccessFlags.READWRITE
     if libver is None or libver == 'lastest':
@@ -477,7 +477,6 @@ class H5CppGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype: :class:`H5CppField`
         """
-
         dcpl = h5cpp.property.DatasetCreationList()
         shape = shape or [1]
         dataspace = h5cpp.dataspace.Simple(

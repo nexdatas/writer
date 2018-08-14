@@ -134,21 +134,21 @@ if H5CPP_AVAILABLE:
     import H5CppWriterTest
     import FElementWithAttrH5CppTest
     import EStrategyH5CppTest
-    import EFieldH5CppTest  # ?? bool
-    import EFieldReshapeH5CppTest  # ?? bool
-    import EGroupH5CppTest  # ?? bool
-    import EAttributeH5CppTest  # ?? bool
-    import ELinkH5CppTest  # ?? bool/link
+    import EFieldH5CppTest
+    import EFieldReshapeH5CppTest
+    import EGroupH5CppTest
+    import EAttributeH5CppTest
+    import ELinkH5CppTest
     import EFileH5CppTest
     import EDocH5CppTest
     import NexusXMLHandlerH5CppTest
-    import ClientFieldTagWriterH5CppTest  # ?? bool/enums/str
-    import XMLFieldTagWriterH5CppTest  # ?? bool/enums/str
+    import ClientFieldTagWriterH5CppTest
+    import XMLFieldTagWriterH5CppTest
     import EDimH5CppTest
     import ESymbolH5CppTest
     import FElementH5CppTest
-    import TangoDataWriterH5CppTest  # ?? bool
-    import FileWriterH5CppTest  # ?? bool
+    import TangoDataWriterH5CppTest
+    import FileWriterH5CppTest
 
 if PNI_AVAILABLE and H5PY_AVAILABLE:
     import FileWriterPNIH5PYTest

@@ -461,7 +461,8 @@ class Checker(object):
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
-                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
+            isinstance(cnt[...], numpy.ndarray) and
+                str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
 #                    print "BOOL: ", values[i] ,cnt[i]
                 self._tc.assertEqual(

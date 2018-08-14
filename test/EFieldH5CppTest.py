@@ -2586,24 +2586,26 @@ class EFieldH5CppTest(unittest.TestCase):
             el[k].store()
 #            self.assertEqual(el[k].store(), None)
             self.assertEqual(el[k].run(), None)
-#            self.myAssertRaise(ValueError, el[k].store)
+            #            self.myAssertRaise(ValueError, el[k].store)
+            print(k)
+            print(attrs[k])
             if stt != 'POSTRUN':
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                                attrs[k][1], attrs[k][0],
-                                                attrs[k][3] if len(
-                                                    attrs[k]) > 3 else 0,
-                                                attrs={"type": attrs[k][1], "units": "m"})
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(
+                    attrs[k]) > 3 else 0,
+                    attrs={"type": attrs[k][1], "units": "m"})
             else:
                 self.assertEqual(el[k].grows, None)
                 self._sc.checkSingleScalarField(
                     self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
-                                          attrs[k][1], attrs[k][0],
-                                          attrs[k][3] if len(
-                                              attrs[k]) > 3 else 0,
-                                          attrs={
-                                              "type": attrs[k][1], "units": "m", "postrun": None}
+                    attrs[k][1], attrs[k][0],
+                    attrs[k][3] if len(
+                        attrs[k]) > 3 else 0,
+                    attrs={
+                        "type": attrs[k][1], "units": "m", "postrun": None}
                 )
             self.assertEqual(el[k].error, None)
 
