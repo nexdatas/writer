@@ -41,7 +41,7 @@ class ProxyHelper(object):
             try:
                 if proxy.state() != PyTango.DevState.RUNNING:
                     found = True
-            except Exception:
+            except Exception as e:
                 print(e)
                 found = False
                 raise

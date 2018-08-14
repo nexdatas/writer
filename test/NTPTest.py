@@ -207,30 +207,30 @@ class NTPTest(unittest.TestCase):
             [[-0.243], 1],
             [[1] * mlen[0], 1],
             [[-2.1233] * mlen[1], 1],
-            [[-2.1233 * self.__rnd.randint(2,  100)
+            [[-2.1233 * self.__rnd.randint(2, 100)
               for c in range(mlen[2])], 1],
             [[[123.123] * mlen[0]], 2],
             [[[13.123]] * mlen[1], 2],
-            [[[13.123 * self.__rnd.randint(2,  100)
+            [[[13.123 * self.__rnd.randint(2, 100)
               for c in range(mlen[2])]], 2],
-            [[[13.123 * self.__rnd.randint(2,  100)]
+            [[[13.123 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])], 2],
-            [[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]
               for cc in range(mlen[2])], 2],
             [[[[123.123] * mlen[0]]], 3],
             [[[[123.123]] * mlen[0]], 3],
             [[[[13.123]]] * mlen[1], 3],
-            [[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[13.123 * self.__rnd.randint(2, 100)
               for c in range(mlen[2])]]], 3],
-            [[[[13.123 * self.__rnd.randint(2,  100)]
+            [[[[13.123 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])]], 3],
-            [[[[13.123 * self.__rnd.randint(2,  100)]]
+            [[[[13.123 * self.__rnd.randint(2, 100)]]
               for c in range(mlen[2])], 3],
-            [[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]
               for cc in range(mlen[2])]], 3],
-            [[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]]
+            [[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]]
               for cc in range(mlen[2])], 3],
-            [[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[13.123 * self.__rnd.randint(2, 100)
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccC in range(mlen[2])], 3],
             [[[[[123.123] * mlen[0]]]], 4],
@@ -238,31 +238,31 @@ class NTPTest(unittest.TestCase):
             [[[[[123.123]]] * mlen[0]], 4],
             [[[[[13.123]]]] * mlen[1], 4],
             [[[[[13.123 * self.__rnd.randint(
-                2,  100) for c in range(mlen[2])]]]],
+                2, 100) for c in range(mlen[2])]]]],
              4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])]]], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]]
               for c in range(mlen[2])]], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]]]
               for c in range(mlen[2])], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]
               for cc in range(mlen[2])]]], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]]
+            [[[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]]
               for cc in range(mlen[2])]], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[1])]]
               for cc in range(mlen[2])], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]
                for ccc in range(mlen[3])]], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]]
               for ccc in range(mlen[3])], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccc in range(mlen[3])] for cccc in range(mlen[0])], 4],
         ]
@@ -293,93 +293,85 @@ class NTPTest(unittest.TestCase):
             [[False], 1, [1], "bool"],
             [[1] * mlen[0], 1, [mlen[0]], "int"],
             [["sdf"] * mlen[1], 1, [mlen[1]], "str"],
-            [[-2.1233 * self.__rnd.randint(2,  100)
+            [[-2.1233 * self.__rnd.randint(2, 100)
               for c in range(
               mlen[2])], 1, [mlen[2]], "float"],
             [[[123] * mlen[0]], 2, [mlen[0], 1], "int"],
             [[["text"]] * mlen[1], 2, [1, mlen[1]], "str"],
-            [[[13.12 * self.__rnd.randint(2,  100)
+            [[[13.12 * self.__rnd.randint(2, 100)
               for c in range(
                mlen[
                    2])]], 2, [
                        mlen[2], 1], "float"],
-            [[[13 * self.__rnd.randint(2,  100)]
+            [[[13 * self.__rnd.randint(2, 100)]
               for c in range(
-                      mlen[2])], 2, [1, mlen[2]], "int"],
-            [[["a" * self.__rnd.randint(2,  100)
+                mlen[2])], 2, [1, mlen[2]], "int"],
+            [[["a" * self.__rnd.randint(2, 100)
                for c in range(mlen[1])] for cc in range(mlen[2])], 2,
              [mlen[1], mlen[2]], "str"],
             [[[[True] * mlen[0]]], 3, [mlen[0], 1, 1], "bool"],
             [[[[123.123]] * mlen[0]], 3, [1, mlen[0], 1], "float"],
             [[[["as"]]] * mlen[1], 3, [1, 1, mlen[1]], "str"],
-            [[[[13 * self.__rnd.randint(2,  100)
+            [[[[13 * self.__rnd.randint(2, 100)
                 for c in range(mlen[2])]]], 3, [
              mlen[2], 1, 1], "int"],
-            [[[[13.123 * self.__rnd.randint(2,  100)]
-               for c in range(
-                       mlen[
-                           2])]], 3, [
-             1, mlen[2], 1], "float"],
-            [[[["ta" * self.__rnd.randint(1,  100)]]
-              for c in range(
-                      mlen[
-                          2])], 3, [
-                              1, 1, mlen[2]], "str"],
-            [[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[13.123 * self.__rnd.randint(2, 100)]
+               for c in range(mlen[2])]], 3, [1, mlen[2], 1], "float"],
+            [[[["ta" * self.__rnd.randint(1, 100)]]
+              for c in range(mlen[2])], 3, [1, 1, mlen[2]], "str"],
+            [[[[13.123 * self.__rnd.randint(2, 100)
                 for c in range(mlen[1])]
                for cc in range(mlen[2])]], 3,
              [mlen[1], mlen[2], 1],
              "float"],
-            [[[[13 * self.__rnd.randint(2,  100)
+            [[[[13 * self.__rnd.randint(2, 100)
                 for c in range(mlen[1])]]
               for cc in range(mlen[2])], 3,
              [mlen[1], 1, mlen[2]], "int"],
-            [[[["w" * self.__rnd.randint(2,  100)
+            [[[["w" * self.__rnd.randint(2, 100)
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccC in range(
-                  mlen[3])], 3, [mlen[1], mlen[2], mlen[3]], "str"],
+                mlen[3])], 3, [mlen[1], mlen[2], mlen[3]], "str"],
             [[[[[False] * mlen[0]]]], 4, [mlen[0], 1, 1, 1], "bool"],
             [[[[[123.123]] * mlen[0]]], 4, [1, mlen[0], 1, 1], "float"],
             [[[[[123]]] * mlen[0]], 4, [1, 1, mlen[0], 1], "int"],
             [[[[["bleble"]]]] * mlen[1], 4, [1, 1, 1, mlen[1]], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
-                 for c in range(mlen[2])]]]], 4, [
-                         mlen[2], 1, 1, 1], "float"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
-                for c in range(mlen[2])]]], 4, [
-                        1, mlen[2], 1, 1], "int"],
-            [[[[["1" * self.__rnd.randint(2,  100)]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)
+                 for c in range(mlen[2])]]]], 4, [mlen[2], 1, 1, 1], "float"],
+            [[[[[13 * self.__rnd.randint(2, 100)]
+                for c in range(mlen[2])]]], 4, [1, mlen[2], 1, 1], "int"],
+            [[[[["1" * self.__rnd.randint(2, 100)]]
                for c in range(mlen[2])]], 4, [1, 1, mlen[2], 1], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]]]
               for c in range(mlen[2])], 4, [1, 1, 1, mlen[2]], "float"],
             [[[[[13 * self.__rnd.randint(
-                2,  100) for c in range(
+                2, 100) for c in range(
                     mlen[1])] for cc in range(mlen[2])]]], 4,
              [mlen[1], mlen[2], 1, 1], "int"],
-            [[[[["t" * self.__rnd.randint(2,  100)
+            [[[[["t" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]], 4,
              [mlen[1], 1, mlen[2], 1], "str"],
             [[[[[13.123 * self.__rnd.randint(
-                2,  100)] for c in range(
+                2, 100)] for c in range(
                     mlen[1])]] for cc in range(mlen[2])], 4,
              [1, mlen[1], 1, mlen[2]], "float"],
-            [[[[[13 * self.__rnd.randint(2,  100)
+            [[[[[13 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]
                for ccc in range(mlen[3])]], 4,
              [mlen[1], mlen[2], mlen[3], 1], "int"],
-            [[[[["13" * self.__rnd.randint(2,  100)
+            [[[[["13" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]]
               for ccc in range(mlen[3])], 4,
              [mlen[1], mlen[2], 1, mlen[3]], "str"],
-            [[[[[13.00 * self.__rnd.randint(2,  100)
+            [[[[[13.00 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [mlen[1], 1, mlen[2], mlen[3]], "float"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [1, mlen[1], mlen[2], mlen[3]], "int"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[0])] for cc in range(mlen[1])]
               for ccc in range(mlen[2])] for cccc in range(mlen[3])], 4,
              [mlen[0], mlen[1], mlen[2], mlen[3]], "float"],
@@ -420,84 +412,80 @@ class NTPTest(unittest.TestCase):
             [[False], 1, [1], "bool"],
             [[1] * mlen[0], 1, [mlen[0]], "int64"],
             [["sdf"] * mlen[1], 1, [mlen[1]], "str"],
-            [[-2.1233 * self.__rnd.randint(2,  100)
+            [[-2.1233 * self.__rnd.randint(2, 100)
               for c in range(
-                      mlen[
-                          2])], 1, [
-                              mlen[2]], "float64"],
+                mlen[2])], 1, [mlen[2]], "float64"],
             [[[123] * mlen[0]], 2, [mlen[0], 1], "int64"],
             [[["text"]] * mlen[1], 2, [1, mlen[1]], "str"],
-            [[[13.12 * self.__rnd.randint(2,  100)
+            [[[13.12 * self.__rnd.randint(2, 100)
                for c in range(
-                       mlen[
-                           2])]], 2, [
-                               mlen[2], 1], "float64"],
-            [[[13 * self.__rnd.randint(2,  100)]
+                mlen[2])]], 2, [mlen[2], 1], "float64"],
+            [[[13 * self.__rnd.randint(2, 100)]
               for c in range(
-                    mlen[2])], 2, [1, mlen[2]], "int64"],
-            [[["a" * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+                mlen[2])], 2, [1, mlen[2]], "int64"],
+            [[["a" * self.__rnd.randint(2, 100) for c in range(mlen[1])]
               for cc in range(mlen[2])], 2,
              [mlen[1], mlen[2]], "str"],
             [[[[True] * mlen[0]]], 3, [mlen[0], 1, 1], "bool"],
             [[[[123.123]] * mlen[0]], 3, [1, mlen[0], 1], "float64"],
             [[[["as"]]] * mlen[1], 3, [1, 1, mlen[1]], "str"],
-            [[[[13 * self.__rnd.randint(2,  100)
+            [[[[13 * self.__rnd.randint(2, 100)
                 for c in range(mlen[2])]]], 3, [
-                        mlen[2], 1, 1], "int64"],
-            [[[[13.123 * self.__rnd.randint(2,  100)]
+                    mlen[2], 1, 1], "int64"],
+            [[[[13.123 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])]], 3, [1, mlen[2], 1], "float64"],
-            [[[["ta" * self.__rnd.randint(1,  100)]]
+            [[[["ta" * self.__rnd.randint(1, 100)]]
               for c in range(mlen[2])], 3, [1, 1, mlen[2]], "str"],
-            [[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]
               for cc in range(mlen[2])]], 3, [mlen[1], mlen[2], 1],
              "float64"],
-            [[[[13 * self.__rnd.randint(2,  100) for c in range(mlen[1])]]
+            [[[[13 * self.__rnd.randint(2, 100) for c in range(mlen[1])]]
               for cc in range(mlen[2])], 3, [mlen[1], 1, mlen[2]],
              "int64"],
-            [[[["w" * self.__rnd.randint(2,  100)
+            [[[["w" * self.__rnd.randint(2, 100)
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccC in range(
-                      mlen[3])], 3, [mlen[1], mlen[2], mlen[3]], "str"],
+                mlen[3])], 3, [mlen[1], mlen[2], mlen[3]], "str"],
             [[[[[False] * mlen[0]]]], 4, [mlen[0], 1, 1, 1], "bool"],
             [[[[[123.123]] * mlen[0]]], 4, [1, mlen[0], 1, 1], "float64"],
             [[[[[123]]] * mlen[0]], 4, [1, 1, mlen[0], 1], "int64"],
             [[[[["bleble"]]]] * mlen[1], 4, [1, 1, 1, mlen[1]], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[2])]]]], 4,
              [mlen[2], 1, 1, 1], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[2])]]], 4, [1, mlen[2], 1, 1], "int64"],
-            [[[[["1" * self.__rnd.randint(2,  100)]]
+            [[[[["1" * self.__rnd.randint(2, 100)]]
               for c in range(mlen[2])]], 4, [1, 1, mlen[2], 1], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]]]
               for c in range(mlen[2])], 4, [1, 1, 1, mlen[2]], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100) for c in range(
-                    mlen[1])] for cc in range(mlen[2])]]], 4,
+            [[[[[13 * self.__rnd.randint(2, 100) for c in range(
+                mlen[1])] for cc in range(mlen[2])]]], 4,
              [mlen[1], mlen[2], 1, 1], "int64"],
-            [[[[["t" * self.__rnd.randint(2,  100)
+            [[[[["t" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]], 4,
              [mlen[1], 1, mlen[2], 1], "str"],
             [[[[[13.123 * self.__rnd.randint(
-                2,  100)] for c in range(
+                2, 100)] for c in range(
                     mlen[1])]] for cc in range(mlen[2])], 4,
              [1, mlen[1], 1, mlen[2]], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)
+            [[[[[13 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]
                for ccc in range(mlen[3])]], 4,
              [mlen[1], mlen[2], mlen[3], 1], "int64"],
-            [[[[["13" * self.__rnd.randint(2,  100)
+            [[[[["13" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]]
               for ccc in range(mlen[3])], 4,
              [mlen[1], mlen[2], 1, mlen[3]], "str"],
-            [[[[[13.00 * self.__rnd.randint(2,  100)
+            [[[[[13.00 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [mlen[1], 1, mlen[2], mlen[3]], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [1, mlen[1], mlen[2], mlen[3]], "int64"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[0])] for cc in range(mlen[1])]
               for ccc in range(mlen[2])] for cccc in range(mlen[3])], 4,
              [mlen[0], mlen[1], mlen[2], mlen[3]], "float64"],
@@ -533,35 +521,35 @@ class NTPTest(unittest.TestCase):
             [[False], 1, [1], "bool"],
             [[1] * mlen[0], 1, [mlen[0]], "int"],
             [["sdf"] * mlen[1], 1, [mlen[1]], "str"],
-            [[-2.1233 * self.__rnd.randint(2,  100)
+            [[-2.1233 * self.__rnd.randint(2, 100)
               for c in range(
               mlen[2])], 1, [mlen[2]], "float"],
             [[[123] * mlen[0]], 2, [1, mlen[0]], "int"],
             [[["text"]] * mlen[1], 2, [mlen[1], 1], "str"],
-            [[[13.12 * self.__rnd.randint(2,  100)
+            [[[13.12 * self.__rnd.randint(2, 100)
               for c in range(mlen[2])]], 2, [1, mlen[2]], "float"],
-            [[[13 * self.__rnd.randint(2,  100)]
+            [[[13 * self.__rnd.randint(2, 100)]
               for c in range(
               mlen[2])], 2, [mlen[2], 1], "int"],
-            [[["a" * self.__rnd.randint(2,  100)
+            [[["a" * self.__rnd.randint(2, 100)
                for c in range(mlen[1])] for cc in range(mlen[2])], 2,
              [mlen[2], mlen[1]], "str"],
             [[[[True] * mlen[0]]], 3, [1, 1, mlen[0]], "bool"],
             [[[[123.123]] * mlen[0]], 3, [1, mlen[0], 1], "float"],
             [[[["as"]]] * mlen[1], 3, [mlen[1], 1, 1], "str"],
-            [[[[13 * self.__rnd.randint(2,  100)
+            [[[[13 * self.__rnd.randint(2, 100)
                 for c in range(mlen[2])]]], 3, [
              1, 1, mlen[2]], "int"],
-            [[[[13.123 * self.__rnd.randint(2,  100)]
+            [[[[13.123 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])]], 3, [1, mlen[2], 1], "float"],
-            [[[["ta" * self.__rnd.randint(1,  100)]]
+            [[[["ta" * self.__rnd.randint(1, 100)]]
               for c in range(mlen[2])], 3, [mlen[2], 1, 1], "str"],
-            [[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]
               for cc in range(mlen[2])]], 3, [1, mlen[2], mlen[1]],
              "float"],
-            [[[[13 * self.__rnd.randint(2,  100) for c in range(mlen[1])]]
+            [[[[13 * self.__rnd.randint(2, 100) for c in range(mlen[1])]]
               for cc in range(mlen[2])], 3, [mlen[2], 1, mlen[1]], "int"],
-            [[[["w" * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[["w" * self.__rnd.randint(2, 100) for c in range(mlen[1])]
                for cc in range(mlen[2])]
               for ccC in range(mlen[3])], 3, [mlen[3], mlen[2], mlen[1]],
              "str"],
@@ -569,42 +557,42 @@ class NTPTest(unittest.TestCase):
             [[[[[123.123]] * mlen[0]]], 4, [1, 1, mlen[0], 1], "float"],
             [[[[[123]]] * mlen[0]], 4, [1, mlen[0], 1, 1], "int"],
             [[[[["bleble"]]]] * mlen[1], 4, [mlen[1], 1, 1, 1], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[2])]]]], 4, [1, 1, 1, mlen[2]], "float"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[2])]]], 4, [1, 1, mlen[2], 1], "int"],
-            [[[[["1" * self.__rnd.randint(2,  100)]]
+            [[[[["1" * self.__rnd.randint(2, 100)]]
               for c in range(mlen[2])]], 4, [1, mlen[2], 1, 1], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]]]
               for c in range(mlen[2])], 4, [mlen[2], 1, 1, 1], "float"],
             [[[[[13 * self.__rnd.randint(
-                2,  100) for c in range(mlen[1])]
+                2, 100) for c in range(mlen[1])]
                 for cc in range(mlen[2])]]], 4,
              [1, 1, mlen[2], mlen[1]], "int"],
-            [[[[["t" * self.__rnd.randint(2,  100)
+            [[[[["t" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]], 4,
              [1, mlen[2], 1, mlen[1]], "str"],
             [[[[[13.123 * self.__rnd.randint(
-                2,  100)] for c in range(
+                2, 100)] for c in range(
                     mlen[1])]] for cc in range(mlen[2])], 4,
              [mlen[2], 1, mlen[1], 1], "float"],
-            [[[[[13 * self.__rnd.randint(2,  100)
+            [[[[[13 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]
                for ccc in range(mlen[3])]], 4,
              [1, mlen[3], mlen[2], mlen[1]], "int"],
-            [[[[["13" * self.__rnd.randint(2,  100)
+            [[[[["13" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]]
               for ccc in range(mlen[3])], 4,
              [mlen[3], 1, mlen[2], mlen[1]], "str"],
-            [[[[[13.00 * self.__rnd.randint(2,  100)
+            [[[[[13.00 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [mlen[3], mlen[2], 1, mlen[1]], "float"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [mlen[3], mlen[2], mlen[1], 1], "int"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[0])] for cc in range(mlen[1])]
               for ccc in range(mlen[2])] for cccc in range(mlen[3])], 4,
              [mlen[3], mlen[2], mlen[1], mlen[0]], "float"],
@@ -639,33 +627,33 @@ class NTPTest(unittest.TestCase):
             [[False], 1, [1], "bool"],
             [[1] * mlen[0], 1, [mlen[0]], "int64"],
             [["sdf"] * mlen[1], 1, [mlen[1]], "str"],
-            [[-2.1233 * self.__rnd.randint(2,  100)
+            [[-2.1233 * self.__rnd.randint(2, 100)
               for c in range(mlen[2])], 1, [mlen[2]], "float64"],
             [[[123] * mlen[0]], 2, [1, mlen[0]], "int64"],
             [[["text"]] * mlen[1], 2, [mlen[1], 1], "str"],
-            [[[13.12 * self.__rnd.randint(2,  100)
+            [[[13.12 * self.__rnd.randint(2, 100)
               for c in range(mlen[2])]], 2, [1, mlen[2]], "float64"],
-            [[[13 * self.__rnd.randint(2,  100)]
+            [[[13 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])], 2, [mlen[2], 1], "int64"],
-            [[["a" * self.__rnd.randint(2,  100)
+            [[["a" * self.__rnd.randint(2, 100)
                for c in range(mlen[1])] for cc in range(mlen[2])], 2,
              [mlen[2], mlen[1]], "str"],
             [[[[True] * mlen[0]]], 3, [1, 1, mlen[0]], "bool"],
             [[[[123.123]] * mlen[0]], 3, [1, mlen[0], 1], "float64"],
             [[[["as"]]] * mlen[1], 3, [mlen[1], 1, 1], "str"],
-            [[[[13 * self.__rnd.randint(2,  100)
+            [[[[13 * self.__rnd.randint(2, 100)
                 for c in range(mlen[2])]]], 3, [1, 1, mlen[2]], "int64"],
-            [[[[13.123 * self.__rnd.randint(2,  100)]
+            [[[[13.123 * self.__rnd.randint(2, 100)]
               for c in range(mlen[2])]], 3, [1, mlen[2], 1], "float64"],
-            [[[["ta" * self.__rnd.randint(1,  100)]]
+            [[[["ta" * self.__rnd.randint(1, 100)]]
               for c in range(mlen[2])], 3, [mlen[2], 1, 1], "str"],
-            [[[[13.123 * self.__rnd.randint(2,  100) for c in range(mlen[1])]
+            [[[[13.123 * self.__rnd.randint(2, 100) for c in range(mlen[1])]
                for cc in range(mlen[2])]], 3, [1, mlen[2], mlen[1]],
              "float64"],
-            [[[[13 * self.__rnd.randint(2,  100) for c in range(mlen[1])]]
+            [[[[13 * self.__rnd.randint(2, 100) for c in range(mlen[1])]]
               for cc in range(mlen[2])], 3, [mlen[2], 1, mlen[1]],
              "int64"],
-            [[[["w" * self.__rnd.randint(2,  100)
+            [[[["w" * self.__rnd.randint(2, 100)
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccC in range(
                   mlen[3])], 3, [mlen[3], mlen[2], mlen[1]], "str"],
@@ -673,41 +661,41 @@ class NTPTest(unittest.TestCase):
             [[[[[123.123]] * mlen[0]]], 4, [1, 1, mlen[0], 1], "float64"],
             [[[[[123]]] * mlen[0]], 4, [1, mlen[0], 1, 1], "int64"],
             [[[[["bleble"]]]] * mlen[1], 4, [mlen[1], 1, 1, 1], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[2])]]]], 4,
              [1, 1, 1, mlen[2]], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[2])]]], 4, [1, 1, mlen[2], 1], "int64"],
-            [[[[["1" * self.__rnd.randint(2,  100)]]
+            [[[[["1" * self.__rnd.randint(2, 100)]]
               for c in range(mlen[2])]], 4, [1, mlen[2], 1, 1], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]]]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]]]
               for c in range(mlen[2])], 4, [mlen[2], 1, 1, 1], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)
+            [[[[[13 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]]], 4,
              [1, 1, mlen[2], mlen[1]], "int64"],
-            [[[[["t" * self.__rnd.randint(2,  100)
+            [[[[["t" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]], 4,
              [1, mlen[2], 1, mlen[1]], "str"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)]
+            [[[[[13.123 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[1])]] for cc in range(mlen[2])], 4,
              [mlen[2], 1, mlen[1], 1], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)
+            [[[[[13 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]
                for ccc in range(mlen[3])]], 4,
              [1, mlen[3], mlen[2], mlen[1]], "int64"],
-            [[[[["13" * self.__rnd.randint(2,  100)
+            [[[[["13" * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])] for cc in range(mlen[2])]]
               for ccc in range(mlen[3])], 4,
              [mlen[3], 1, mlen[2], mlen[1]], "str"],
-            [[[[[13.00 * self.__rnd.randint(2,  100)
+            [[[[[13.00 * self.__rnd.randint(2, 100)
                  for c in range(mlen[1])]] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [mlen[3], mlen[2], 1, mlen[1]], "float64"],
-            [[[[[13 * self.__rnd.randint(2,  100)]
+            [[[[[13 * self.__rnd.randint(2, 100)]
                 for c in range(mlen[1])] for cc in range(mlen[2])]
               for ccc in range(mlen[3])], 4,
              [mlen[3], mlen[2], mlen[1], 1], "int64"],
-            [[[[[13.123 * self.__rnd.randint(2,  100)
+            [[[[[13.123 * self.__rnd.randint(2, 100)
                  for c in range(mlen[0])] for cc in range(mlen[1])]
               for ccc in range(mlen[2])] for cccc in range(mlen[3])], 4,
              [mlen[3], mlen[2], mlen[1], mlen[0]], "float64"],
@@ -938,8 +926,8 @@ class NTPTest(unittest.TestCase):
                             for i in range(len(evalue)):
                                 if types[c][it]:
                                     self.assertTrue(
-                                        abs(evalue[i] - elc[i])
-                                        <= types[c][it])
+                                        abs(evalue[i] - elc[i]) <=
+                                        types[c][it])
                                 else:
                                     self.assertEqual(evalue[i], elc[i])
                 evalue = [e for e in value]
@@ -1046,8 +1034,8 @@ class NTPTest(unittest.TestCase):
                                 for j in range(len(evalue[i])):
                                     if types[c][it]:
                                         self.assertTrue(
-                                            abs(evalue[i][j] - elc[i][j])
-                                            <= types[c][it])
+                                            abs(evalue[i][j] - elc[i][j]) <=
+                                            types[c][it])
                                     else:
                                         self.assertEqual(
                                             evalue[i][j], elc[i][j])

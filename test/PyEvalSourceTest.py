@@ -267,7 +267,8 @@ class PyEvalSourceTest(unittest.TestCase):
 
         dp = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -628,8 +629,8 @@ else:
                       for row in arr2[k2][0]] \
                     if arr2[k2][2] == "DevBoolean" else arr2[k2][0]
                 vv = v1 + v2 if str(type(v1[0][0])) == str(type(v2[0][0])) \
-                    else ([[unicode(j) for j in i] for i in v1]
-                          + [[unicode(j2) for j2 in i2] for i2 in v2])
+                    else ([[unicode(j) for j in i] for i in v1] +
+                          [[unicode(j2) for j2 in i2] for i2 in v2])
                 self.checkData(dt, arr[k][1], vv,
                                NTP.pTt[type(vv[0][0]).__name__], [
                                arr[k][3][0] + arr2[k2][3][0], arr[k][3][1]])

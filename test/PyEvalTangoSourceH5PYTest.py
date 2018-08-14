@@ -115,7 +115,8 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
     # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, format, value, ttype, shape, encoding=None, decoders=None, error=0):
+    def checkData(self, data, format, value, ttype, shape, encoding=None,
+                  decoders=None, error=0):
         self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
@@ -215,7 +216,8 @@ class PyEvalTangoSourceH5PYTest(unittest.TestCase):
 
         dp = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -530,7 +532,8 @@ else:
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[unicode(j) for j in i] for i in ds.inp] + \
+        [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 """
         if sys.version_info > (3,):
             script = script.replace("unicode", "str")
@@ -718,7 +721,9 @@ ds.res = commonblock["myres"]
         self.checkData(dt, "SCALAR", 62, "DevLong64", [])
 
         dp = DataSourcePool(
-            json.loads('{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -1035,7 +1040,7 @@ commonblock["my1res"] = ds.res
             script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["my1res"]'
         dsp = DataSourcePool()
-        dcp = DecoderPool()
+        DecoderPool()
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
@@ -1156,7 +1161,8 @@ commonblock["my1res"] = ds.res
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
     ds.res = ds.inp + ds.inp2
 else:
-    ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
+    ds.res = [[unicode(j) for j in i] for i in ds.inp] + """ + \
+        """[[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 commonblock["myre3"] = ds.res
 """
         if sys.version_info > (3,):
@@ -1171,7 +1177,7 @@ commonblock["myre3"] = ds.res
             "float": [-1.223e-01, "IMAGE", "DevDouble", []],
             "str": ['My String', "IMAGE", "DevString", []],
             "unicode": ["Hello", "IMAGE", "DevString", []],
-            #            "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
+            # "unicode":[u'\x12\xf8\xff\xf4',"IMAGE","DevString",[]],
             "bool": ['true', "IMAGE", "DevBoolean", []],
         }
 

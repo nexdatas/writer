@@ -623,16 +623,16 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -658,16 +658,16 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -930,7 +930,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                 self.assertTrue(hasattr(cnt.shape, "__iter__"))
                 self.assertEqual(len(mca.shape), 2)
                 self.assertEqual(mca.shape, (2, 2048))
-                self.assertEqual(mca.dtype,  "float64")
+                self.assertEqual(mca.dtype, "float64")
                 self.assertEqual(mca.size, 4096)
                 value = mca.read()
                 for i in range(len(value[0])):
@@ -1016,16 +1016,16 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1381,9 +1381,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1444,9 +1444,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1505,9 +1505,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
             dp.skipacquisition = True
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1533,7 +1533,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             f = H5CppWriter.open_file(fname, readonly=True)
             f = f.root()
-#            self.assertEqual(f.path, fname)
+            # self.assertEqual(f.path, fname)
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...], "NXroot")
@@ -2214,7 +2214,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -2601,7 +2601,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             # self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             # self.assertEqual(mca.size, 4096)
             mca.read()
             # for i in range(len(value[0])):
@@ -2945,7 +2945,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (4, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 8192)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3040,48 +3040,48 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 1)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 2)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 2)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 3)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 3)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0])
-                      + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 4)
@@ -3341,7 +3341,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3627,7 +3627,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3913,7 +3913,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4270,7 +4270,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 100, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4631,7 +4631,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 100, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4991,7 +4991,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 200, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 160000)
             value = mca.read()
             for i in range(len(value[0])):

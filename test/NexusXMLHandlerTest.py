@@ -652,7 +652,7 @@ class NexusXMLHandlerTest(unittest.TestCase):
             sax.parseString(bytes(xml, "UTF-8"), el)
         else:
             sax.parseString(xml, el)
-        
+
         self.assertEqual(el.triggerPools, {})
 
         en = self._nxFile.open(attr1["name"])

@@ -215,7 +215,8 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
 
         dp = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -719,7 +720,8 @@ ds.res = commonblock["myres"]
 
         dp = DataSourcePool(
             json.loads(
-                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))

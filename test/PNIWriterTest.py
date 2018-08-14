@@ -156,11 +156,11 @@ class PNIWriterTest(unittest.TestCase):
                 self.assertEqual(len(image1[i][j]), len(image2[i][j]))
                 for k in range(len(image1[i][j])):
                     if error is not None:
-                        if abs(image1[i][j][k]-image2[i][j][k]) >= error:
+                        if abs(image1[i][j][k] - image2[i][j][k]) >= error:
                             print("EL %s %s %s"
                                   % (image1[i][j][k], image2[i][j][k], error))
                         self.assertTrue(
-                            abs(image1[i][j][k]-image2[i][j][k]) < error)
+                            abs(image1[i][j][k] - image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
 

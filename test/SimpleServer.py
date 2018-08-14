@@ -73,7 +73,6 @@ class SimpleServer(PyTango.Device_4Impl):
         """ """
         # print "[Device delete_device method] for device",self.get_name()
 
-
     # ------------------------------------------------------------------
     #    Device initialization
     # ------------------------------------------------------------------
@@ -142,7 +141,7 @@ class SimpleServer(PyTango.Device_4Impl):
         # uint16 H
         #        mode = 1
         # uint32 I
-        mode = 2
+        #        mode = 2
         fspectrum = numpy.array(self.attr_SpectrumULong, dtype='int32')
         ibuffer = bytes(struct.pack('i' * fspectrum.size, *fspectrum))
         return [format, ibuffer]
@@ -159,7 +158,7 @@ class SimpleServer(PyTango.Device_4Impl):
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack(
             '!IHHqiiHHHH', 0x5644454f, version, mode, -1,
-                width,  height, endian, hsize, 0, 0)
+            width, height, endian, hsize, 0, 0)
         fimage = self.attr_ImageUChar.flatten()
         ibuffer = struct.pack('B' * fimage.size, *fimage)
         return [format, bytes(header + ibuffer)]
@@ -176,7 +175,6 @@ class SimpleServer(PyTango.Device_4Impl):
         """ """
         # print "In ", self.get_name(), "::read_attr_hardware()"
 
-
     # ------------------------------------------------------------------
     #    Read ScalarLong attribute
     # ------------------------------------------------------------------
@@ -187,203 +185,161 @@ class SimpleServer(PyTango.Device_4Impl):
         #    Add your own code here
         attr.set_value(self.attr_ScalarLong)
 
-
     # ------------------------------------------------------------------
     #    Write ScalarLong attribute
     # ------------------------------------------------------------------
     def write_ScalarLong(self, attr):
         # print "In ", self.get_name(), "::write_ScalarLong()"
-
         #    Add your own code here
-#        self.attr_ScalarLong = []
-#        attr.get_write_value(self.attr_ScalarLong)
+        #        self.attr_ScalarLong = []
+        #        attr.get_write_value(self.attr_ScalarLong)
         self.attr_ScalarLong = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarLong
-
 
     # ------------------------------------------------------------------
     #    Read ScalarBoolean attribute
     # ------------------------------------------------------------------
     def read_ScalarBoolean(self, attr):
         # print "In ", self.get_name(), "::read_ScalarBoolean()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarBoolean)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarBoolean attribute
     # ------------------------------------------------------------------
     def write_ScalarBoolean(self, attr):
         # print "In ", self.get_name(), "::write_ScalarBoolean()"
-
         #    Add your own code here
         self.attr_ScalarBoolean = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarBoolean
-
 
     # ------------------------------------------------------------------
     #    Read ScalarShort attribute
     # ------------------------------------------------------------------
     def read_ScalarShort(self, attr):
         # print "In ", self.get_name(), "::read_ScalarShort()"
-
         #    Add your own code here
         attr.set_value(self.attr_ScalarShort)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarShort attribute
     # ------------------------------------------------------------------
     def write_ScalarShort(self, attr):
         # print "In ", self.get_name(), "::write_ScalarShort()"
-
         #    Add your own code here
         self.attr_ScalarShort = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarShort
-
 
     # ------------------------------------------------------------------
     #    Read ScalarUShort attribute
     # ------------------------------------------------------------------
     def read_ScalarUShort(self, attr):
         # print "In ", self.get_name(), "::read_ScalarUShort()"
-
         #    Add your own code here
         attr.set_value(self.attr_ScalarUShort)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarUShort attribute
     # ------------------------------------------------------------------
     def write_ScalarUShort(self, attr):
         # print "In ", self.get_name(), "::write_ScalarUShort()"
-
         #    Add your own code here
         self.attr_ScalarUShort = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarUShort
-
 
     # ------------------------------------------------------------------
     #    Read ScalarULong attribute
     # ------------------------------------------------------------------
     def read_ScalarULong(self, attr):
         # print "In ", self.get_name(), "::read_ScalarULong()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarULong)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarULong attribute
     # ------------------------------------------------------------------
     def write_ScalarULong(self, attr):
         # print "In ", self.get_name(), "::write_ScalarULong()"
-
         #    Add your own code here
         self.attr_ScalarULong = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarULong
-
 
     # ------------------------------------------------------------------
     #    Read ScalarLong64 attribute
     # ------------------------------------------------------------------
     def read_ScalarLong64(self, attr):
         # print "In ", self.get_name(), "::read_ScalarLong64()"
-
         #    Add your own code here
         attr.set_value(self.attr_ScalarLong64)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarLong64 attribute
     # ------------------------------------------------------------------
     def write_ScalarLong64(self, attr):
         # print "In ", self.get_name(), "::write_ScalarLong64()"
-
         #    Add your own code here
         self.attr_ScalarLong64 = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarLong64
-
 
     # ------------------------------------------------------------------
     #    Read ScalarULong64 attribute
     # ------------------------------------------------------------------
     def read_ScalarULong64(self, attr):
         # print "In ", self.get_name(), "::read_ScalarULong64()"
-
         #    Add your own code here
         attr.set_value(long(self.attr_ScalarULong64))
         # Do not work as well
-
 
     # ------------------------------------------------------------------
     #    Write ScalarULong64 attribute
     # ------------------------------------------------------------------
     def write_ScalarULong64(self, attr):
         # print "In ", self.get_name(), "::write_ScalarULong64()"
-
         #    Add your own code here
         self.attr_ScalarULong64 = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarULong64
-
 
     # ------------------------------------------------------------------
     #    Read ScalarFloat attribute
     # ------------------------------------------------------------------
     def read_ScalarFloat(self, attr):
         # print "In ", self.get_name(), "::read_ScalarFloat()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarFloat)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarFloat attribute
     # ------------------------------------------------------------------
     def write_ScalarFloat(self, attr):
         # print "In ", self.get_name(), "::write_ScalarFloat()"
-
         #    Add your own code here
         self.attr_ScalarFloat = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarFloat
-
 
     # ------------------------------------------------------------------
     #    Read ScalarDouble attribute
     # ------------------------------------------------------------------
     def read_ScalarDouble(self, attr):
         # print "In ", self.get_name(), "::read_ScalarDouble()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarDouble)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarDouble attribute
     # ------------------------------------------------------------------
     def write_ScalarDouble(self, attr):
         # print "In ", self.get_name(), "::write_ScalarDouble()"
-
         #    Add your own code here
         self.attr_ScalarDouble = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarDouble
-
 
     # ------------------------------------------------------------------
     #    Read ScalarString attribute
     # ------------------------------------------------------------------
     def read_ScalarString(self, attr):
         # print "In ", self.get_name(), "::read_ScalarString()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarString)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarString attribute
@@ -395,40 +351,30 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_ScalarString = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarString
 
-
     # ------------------------------------------------------------------
     #    Read ScalarEncoded attribute
     # ------------------------------------------------------------------
     def read_ScalarEncoded(self, attr):
         # print "In ", self.get_name(), "::read_ScalarEncoded()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarEncoded[0], self.attr_ScalarEncoded[1])
-
 
     # ------------------------------------------------------------------
     #    Write ScalarEncoded attribute
     # ------------------------------------------------------------------
     def write_ScalarEncoded(self, attr):
         # print "In ", self.get_name(), "::write_ScalarEncoded()"
-
         #    Add your own code here
-
         self.attr_ScalarEncoded = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarEncoded
-
 
     # ------------------------------------------------------------------
     #    Read ScalarUChar attribute
     # ------------------------------------------------------------------
     def read_ScalarUChar(self, attr):
         # print "In ", self.get_name(), "::read_ScalarUChar()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ScalarUChar)
-
 
     # ------------------------------------------------------------------
     #    Write ScalarUChar attribute
@@ -439,315 +385,249 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_ScalarUChar = attr.get_write_value()
         # print "Attribute value = ", self.attr_ScalarUChar
 
-
     # ------------------------------------------------------------------
     #    Read SpectrumEncoded attribute
     # ------------------------------------------------------------------
     def read_SpectrumEncoded(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumEncoded()"
-
         #    Add your own code here
         self.attr_SpectrumEncoded = self.encodeSpectrum()
         attr.set_value(
             self.attr_SpectrumEncoded[0], self.attr_SpectrumEncoded[1])
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumEncoded attribute
     # ------------------------------------------------------------------
     def write_SpectrumEncoded(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumEncoded()"
-
         #    Add your own code here
         self.attr_SpectrumEncoded = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumEncoded
-
 
     # ------------------------------------------------------------------
     #    Read ImageEncoded attribute
     # ------------------------------------------------------------------
     def read_ImageEncoded(self, attr):
         # print "In ", self.get_name(), "::read_ImageEncoded()"
-
         #    Add your own code here
         self.attr_ImageEncoded = self.encodeImage()
         attr.set_value(self.attr_ImageEncoded[0], self.attr_ImageEncoded[1])
-
 
     # ------------------------------------------------------------------
     #    Write ImageEncoded attribute
     # ------------------------------------------------------------------
     def write_ImageEncoded(self, attr):
         # print "In ", self.get_name(), "::write_ImageEncoded()"
-
         #    Add your own code here
         self.attr_ImageEncoded = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageEncoded
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumBoolean attribute
     # ------------------------------------------------------------------
     def read_SpectrumBoolean(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumBoolean()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumBoolean)
         # print self.attr_SpectrumBoolean
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumBoolean attribute
     # ------------------------------------------------------------------
     def write_SpectrumBoolean(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumBoolean()"
-
         #    Add your own code here
         self.attr_SpectrumBoolean = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumBoolean
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumUChar attribute
     # ------------------------------------------------------------------
     def read_SpectrumUChar(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumUChar()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumUChar)
         # print self.attr_SpectrumUChar
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumUChar attribute
     # ------------------------------------------------------------------
     def write_SpectrumUChar(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumUChar()"
-
         #    Add your own code here
         self.attr_SpectrumUChar = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumUChar
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumShort attribute
     # ------------------------------------------------------------------
     def read_SpectrumShort(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumShort()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumShort)
         # print self.attr_SpectrumShort
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumShort attribute
     # ------------------------------------------------------------------
     def write_SpectrumShort(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumShort()"
-
         #    Add your own code here
         self.attr_SpectrumShort = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumShort
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumUShort attribute
     # ------------------------------------------------------------------
     def read_SpectrumUShort(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumUShort()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumUShort)
         # print self.attr_SpectrumUShort
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumUShort attribute
     # ------------------------------------------------------------------
     def write_SpectrumUShort(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumUShort()"
-
         #    Add your own code here
         self.attr_SpectrumUShort = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumUShort
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumLong attribute
     # ------------------------------------------------------------------
     def read_SpectrumLong(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumLong()"
-
         #    Add your own code here
         attr.set_value(self.attr_SpectrumLong)
         # print self.attr_SpectrumLong
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumLong attribute
     # ------------------------------------------------------------------
     def write_SpectrumLong(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumLong()"
-
         #    Add your own code here
         self.attr_SpectrumLong = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumLong
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumULong attribute
     # ------------------------------------------------------------------
     def read_SpectrumULong(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumULong()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumULong)
         # print self.attr_SpectrumULong
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumULong attribute
     # ------------------------------------------------------------------
     def write_SpectrumULong(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumULong()"
-
         #    Add your own code here
         self.attr_SpectrumULong = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumULong
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumLong64 attribute
     # ------------------------------------------------------------------
     def read_SpectrumLong64(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumLong64()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumLong64)
         # print self.attr_SpectrumLong64
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumLong64 attribute
     # ------------------------------------------------------------------
     def write_SpectrumLong64(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumLong64()"
-
         #    Add your own code here
         self.attr_SpectrumLong64 = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumLong64
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumULong64 attribute
     # ------------------------------------------------------------------
     def read_SpectrumULong64(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumULong64()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumULong64)
         # print self.attr_SpectrumULong64
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumULong64 attribute
     # ------------------------------------------------------------------
     def write_SpectrumULong64(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumULong64()"
-
         #    Add your own code here
         self.attr_SpectrumULong64 = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumULong64
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumFloat attribute
     # ------------------------------------------------------------------
     def read_SpectrumFloat(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumFloat()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumFloat)
         # print self.attr_SpectrumFloat
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumFloat attribute
     # ------------------------------------------------------------------
     def write_SpectrumFloat(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumFloat()"
-
         #    Add your own code here
         self.attr_SpectrumFloat = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumFloat
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumDouble attribute
     # ------------------------------------------------------------------
     def read_SpectrumDouble(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumDouble()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumDouble)
         # print self.attr_SpectrumDouble
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumDouble attribute
     # ------------------------------------------------------------------
     def write_SpectrumDouble(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumDouble()"
-
         #    Add your own code here
         self.attr_SpectrumDouble = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumDouble
-
 
     # ------------------------------------------------------------------
     #    Read SpectrumString attribute
     # ------------------------------------------------------------------
     def read_SpectrumString(self, attr):
         # print "In ", self.get_name(), "::read_SpectrumString()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_SpectrumString)
         # print self.attr_SpectrumString
-
 
     # ------------------------------------------------------------------
     #    Write SpectrumString attribute
     # ------------------------------------------------------------------
     def write_SpectrumString(self, attr):
         # print "In ", self.get_name(), "::write_SpectrumString()"
-
         #    Add your own code here
         self.attr_SpectrumString = attr.get_write_value()
         # print "Attribute value = ", self.attr_SpectrumString
-
 
     # ------------------------------------------------------------------
     #    Read ImageBoolean attribute
     # ------------------------------------------------------------------
     def read_ImageBoolean(self, attr):
         # print "In ", self.get_name(), "::read_ImageBoolean()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ImageBoolean)
         # print self.attr_ImageBoolean
-
 
     # ------------------------------------------------------------------
     #    Write ImageBoolean attribute
@@ -758,18 +638,14 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_ImageBoolean = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageBoolean
 
-
     # ------------------------------------------------------------------
     #    Read ImageUChar attribute
     # ------------------------------------------------------------------
     def read_ImageUChar(self, attr):
         # print "In ", self.get_name(), "::read_ImageUChar()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ImageUChar)
         # print self.attr_ImageUChar
-
 
     # ------------------------------------------------------------------
     #    Write ImageUChar attribute
@@ -778,20 +654,16 @@ class SimpleServer(PyTango.Device_4Impl):
         # print "In ", self.get_name(), "::write_ImageUChar()"
         self.attr_ImageUChar = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageUChar
-
         #    Add your own code here
-
 
     # ------------------------------------------------------------------
     #    Read ImageShort attribute
     # ------------------------------------------------------------------
     def read_ImageShort(self, attr):
         # print "In ", self.get_name(), "::read_ImageShort()"
-
         #    Add your own code here
         attr.set_value(self.attr_ImageShort)
         # print self.attr_ImageShort
-
 
     # ------------------------------------------------------------------
     #    Write ImageShort attribute
@@ -802,86 +674,68 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_ImageShort = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageShort
 
-
     # ------------------------------------------------------------------
     #    Read ImageUShort attribute
     # ------------------------------------------------------------------
     def read_ImageUShort(self, attr):
         # print "In ", self.get_name(), "::read_ImageUShort()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ImageUShort)
         # print self.attr_ImageUShort
-
 
     # ------------------------------------------------------------------
     #    Write ImageUShort attribute
     # ------------------------------------------------------------------
     def write_ImageUShort(self, attr):
         # print "In ", self.get_name(), "::write_ImageUShort()"
-
         #    Add your own code here
         self.attr_ImageUShort = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageUShort
-
 
     # ------------------------------------------------------------------
     #    Read ImageLong attribute
     # ------------------------------------------------------------------
     def read_ImageLong(self, attr):
         # print "In ", self.get_name(), "::read_ImageLong()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ImageLong)
         # print self.attr_ImageLong
-
 
     # ------------------------------------------------------------------
     #    Write ImageLong attribute
     # ------------------------------------------------------------------
     def write_ImageLong(self, attr):
         # print "In ", self.get_name(), "::write_ImageLong()"
-
         #    Add your own code here
         self.attr_ImageLong = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageLong
-
 
     # ------------------------------------------------------------------
     #    Read ImageULong attribute
     # ------------------------------------------------------------------
     def read_ImageULong(self, attr):
         # print "In ", self.get_name(), "::read_ImageULong()"
-
         #    Add your own code here
-
         attr.set_value(self.attr_ImageULong)
         # print self.attr_ImageULong
-
 
     # ------------------------------------------------------------------
     #    Write ImageULong attribute
     # ------------------------------------------------------------------
     def write_ImageULong(self, attr):
         # print "In ", self.get_name(), "::write_ImageULong()"
-
         #    Add your own code here
         self.attr_ImageULong = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageULong
-
 
     # ------------------------------------------------------------------
     #    Read ImageLong64 attribute
     # ------------------------------------------------------------------
     def read_ImageLong64(self, attr):
         # print "In ", self.get_name(), "::read_ImageLong64()"
-
         #    Add your own code here
         attr.set_value(self.attr_ImageLong64)
         # print self.attr_ImageLong64
-
 
     # ------------------------------------------------------------------
     #    Write ImageLong64 attribute
@@ -892,101 +746,83 @@ class SimpleServer(PyTango.Device_4Impl):
         self.attr_ImageLong64 = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageLong64
 
-
     # ------------------------------------------------------------------
     #    Read ImageULong64 attribute
     # ------------------------------------------------------------------
     def read_ImageULong64(self, attr):
         # print "In ", self.get_name(), "::read_ImageULong64()"
-
         #    Add your own code here
         attr.set_value(self.attr_ImageULong64)
         # print self.attr_ImageULong64
-
 
     # ------------------------------------------------------------------
     #    Write ImageULong64 attribute
     # ------------------------------------------------------------------
     def write_ImageULong64(self, attr):
         # print "In ", self.get_name(), "::write_ImageULong64()"
-
         #    Add your own code here
         self.attr_ImageULong64 = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageULong64
-
 
     # ------------------------------------------------------------------
     #    Read ImageFloat attribute
     # ------------------------------------------------------------------
     def read_ImageFloat(self, attr):
         # print "In ", self.get_name(), "::read_ImageFloat()"
-
         #    Add your own code here
         attr.set_value(self.attr_ImageFloat)
         # print self.attr_ImageFloat
-
 
     # ------------------------------------------------------------------
     #    Write ImageFloat attribute
     # ------------------------------------------------------------------
     def write_ImageFloat(self, attr):
         # print "In ", self.get_name(), "::write_ImageFloat()"
-
         #    Add your own code here
         self.attr_ImageFloat = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageFloat
-
 
     # ------------------------------------------------------------------
     #    Read ImageDouble attribute
     # ------------------------------------------------------------------
     def read_ImageDouble(self, attr):
         # print "In ", self.get_name(), "::read_ImageDouble()"
-
         #    Add your own code here
         attr.set_value(self.attr_ImageDouble)
         # print self.attr_ImageDouble
-
 
     # ------------------------------------------------------------------
     #    Write ImageDouble attribute
     # ------------------------------------------------------------------
     def write_ImageDouble(self, attr):
         # print "In ", self.get_name(), "::write_ImageDouble()"
-
         #    Add your own code here
         self.attr_ImageDouble = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageDouble
-
 
     # ------------------------------------------------------------------
     #    Read ImageString attribute
     # ------------------------------------------------------------------
     def read_ImageString(self, attr):
         # print "In ", self.get_name(), "::read_ImageString()"
-
         #    Add your own code here
         attr.set_value(self.attr_ImageString)
         # print self.attr_ImageString
-
 
     # ------------------------------------------------------------------
     #    Write ImageString attribute
     # ------------------------------------------------------------------
     def write_ImageString(self, attr):
         # print "In ", self.get_name(), "::write_ImageString()"
-
         #    Add your own code here
         self.attr_ImageString = attr.get_write_value()
         # print "Attribute value = ", self.attr_ImageString
-
 
     # ==================================================================
     #
     #    SimpleServer command methods
     #
     # ==================================================================
-
     # ------------------------------------------------------------------
     #    GetBoolean command:
     #
@@ -997,9 +833,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetBoolean(self):
         # print "In ", self.get_name(), "::GetBoolean()"
         #    Add your own code here
-
         return self.attr_ScalarBoolean
-
 
     # ------------------------------------------------------------------
     #    GetShort command:
@@ -1011,9 +845,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetShort(self):
         # print "In ", self.get_name(), "::GetShort()"
         #    Add your own code here
-
         return self.attr_ScalarShort
-
 
     # ------------------------------------------------------------------
     #    GetLong command:
@@ -1025,9 +857,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetLong(self):
         # print "In ", self.get_name(), "::GetLong()"
         #    Add your own code here
-
         return self.attr_ScalarLong
-
 
     # ------------------------------------------------------------------
     #    GetLong64 command:
@@ -1039,9 +869,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetLong64(self):
         # print "In ", self.get_name(), "::GetLong64()"
         #    Add your own code here
-
         return self.attr_ScalarLong64
-
 
     # ------------------------------------------------------------------
     #    GetFloat command:
@@ -1053,9 +881,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetFloat(self):
         # print "In ", self.get_name(), "::GetFloat()"
         #    Add your own code here
-
         return self.attr_ScalarFloat
-
 
     # ------------------------------------------------------------------
     #    GetDouble command:
@@ -1067,9 +893,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetDouble(self):
         # print "In ", self.get_name(), "::GetDouble()"
         #    Add your own code here
-
         return self.attr_ScalarDouble
-
 
     # ------------------------------------------------------------------
     #    GetUShort command:
@@ -1081,9 +905,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetUShort(self):
         # print "In ", self.get_name(), "::GetUShort()"
         #    Add your own code here
-
         return self.attr_ScalarUShort
-
 
     # ------------------------------------------------------------------
     #    GetULong command:
@@ -1095,9 +917,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetULong(self):
         # print "In ", self.get_name(), "::GetULong()"
         #    Add your own code here
-
         return self.attr_ScalarULong
-
 
     # ------------------------------------------------------------------
     #    GetULong64 command:
@@ -1109,9 +929,7 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetULong64(self):
         # print "In ", self.get_name(), "::GetULong64()"
         #    Add your own code here
-
         return self.attr_ScalarULong64
-
 
     # ------------------------------------------------------------------
     #    GetString command:
@@ -1123,7 +941,6 @@ class SimpleServer(PyTango.Device_4Impl):
     def GetString(self):
         # print "In ", self.get_name(), "::GetString()"
         #    Add your own code here
-
         return self.attr_ScalarString
 
 
@@ -1133,367 +950,363 @@ class SimpleServer(PyTango.Device_4Impl):
 #
 # ==================================================================
 class SimpleServerClass(PyTango.DeviceClass):
-
     #    Class Properties
     class_property_list = {
         'ClassBoolean':
-                    [PyTango.DevBoolean,
-                     "classBoolean",
-                     [True]],
-            'ClassShort':
-                    [PyTango.DevShort,
-                     "ClassShort",
-                     [1]],
-            'ClassLong':
-                    [PyTango.DevLong,
-                     "ClassLong",
-                     [-123555]],
-            'ClassFloat':
-                    [PyTango.DevFloat,
-                     "ClassFloat",
-                     [12.345]],
-            'ClassDouble':
-                    [PyTango.DevDouble,
-                     "ClassDouble",
-                     [1.23445]],
-            'ClassUShort':
-                    [PyTango.DevUShort,
-                     "ClassUShort",
-                     [1]],
-            'ClassULong':
-                    [PyTango.DevULong,
-                     "ClassULong",
-                     [12343]],
-            'ClassString':
-                    [PyTango.DevString,
-                     "ClassString",
-                     ["My ClassString"]],
+        [PyTango.DevBoolean,
+         "classBoolean",
+         [True]],
+        'ClassShort':
+        [PyTango.DevShort,
+         "ClassShort",
+         [1]],
+        'ClassLong':
+        [PyTango.DevLong,
+         "ClassLong",
+         [-123555]],
+        'ClassFloat':
+        [PyTango.DevFloat,
+         "ClassFloat",
+         [12.345]],
+        'ClassDouble':
+        [PyTango.DevDouble,
+         "ClassDouble",
+         [1.23445]],
+        'ClassUShort':
+        [PyTango.DevUShort,
+         "ClassUShort",
+         [1]],
+        'ClassULong':
+        [PyTango.DevULong,
+         "ClassULong",
+         [12343]],
+        'ClassString':
+        [PyTango.DevString,
+         "ClassString",
+         ["My ClassString"]],
     }
-
     #    Device Properties
     device_property_list = {
         'DeviceBoolean':
-                    [PyTango.DevBoolean,
-                     "DeviceBoolean",
-                     [False]],
-            'DeviceShort':
-                    [PyTango.DevShort,
-                     "DeviceShort",
-                     [12]],
-            'DeviceLong':
-                    [PyTango.DevLong,
-                     "DeviceLong",
-                     [1234566]],
-            'DeviceFloat':
-                    [PyTango.DevFloat,
-                     "DeviceFloat",
-                     [12.4345]],
-            'DeviceDouble':
-                    [PyTango.DevDouble,
-                     "DeviceDouble",
-                     [3.453456]],
-            'DeviceUShort':
-                    [PyTango.DevUShort,
-                     "DeviceUShort",
-                     [1]],
-            'DeviceULong':
-                    [PyTango.DevULong,
-                     "DeviceULong",
-                     [23234]],
-            'DeviceString':
-                    [PyTango.DevString,
-                     "DeviceString",
-                     ["My Sting"]],
+        [PyTango.DevBoolean,
+         "DeviceBoolean",
+         [False]],
+        'DeviceShort':
+        [PyTango.DevShort,
+         "DeviceShort",
+         [12]],
+        'DeviceLong':
+        [PyTango.DevLong,
+         "DeviceLong",
+         [1234566]],
+        'DeviceFloat':
+        [PyTango.DevFloat,
+         "DeviceFloat",
+         [12.4345]],
+        'DeviceDouble':
+        [PyTango.DevDouble,
+         "DeviceDouble",
+         [3.453456]],
+        'DeviceUShort':
+        [PyTango.DevUShort,
+         "DeviceUShort",
+         [1]],
+        'DeviceULong':
+        [PyTango.DevULong,
+         "DeviceULong",
+         [23234]],
+        'DeviceString':
+        [PyTango.DevString,
+         "DeviceString",
+         ["My Sting"]],
     }
-
     #    Command definitions
     cmd_list = {
         'GetBoolean':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevBoolean, "ScalarBoolean"]],
-            'GetShort':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevShort, "ScalarShort"]],
-            'GetLong':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevLong, "ScalarLong"]],
-            'GetLong64':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevLong64, "ScalarLong64"]],
-            'GetFloat':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevFloat, "ScalarFloat"]],
-            'GetDouble':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevDouble, "ScalarDouble"]],
-            'GetUShort':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevUShort, "ScalarUShort"]],
-            'GetULong':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevULong, "ScalarULong"]],
-            'GetULong64':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevULong64, "ScalarULong64"]],
-            'GetString':
-                    [[PyTango.DevVoid, ""],
-                     [PyTango.DevString, "ScalarString"]],
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevBoolean, "ScalarBoolean"]],
+        'GetShort':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevShort, "ScalarShort"]],
+        'GetLong':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevLong, "ScalarLong"]],
+        'GetLong64':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevLong64, "ScalarLong64"]],
+        'GetFloat':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevFloat, "ScalarFloat"]],
+        'GetDouble':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevDouble, "ScalarDouble"]],
+        'GetUShort':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevUShort, "ScalarUShort"]],
+        'GetULong':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevULong, "ScalarULong"]],
+        'GetULong64':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevULong64, "ScalarULong64"]],
+        'GetString':
+        [[PyTango.DevVoid, ""],
+         [PyTango.DevString, "ScalarString"]],
     }
-
     #    Attribute definitions
     attr_list = {
         'ScalarLong':
-                    [[PyTango.DevLong,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "test long scalar attribute",
-                     }],
-            'ScalarBoolean':
-                    [[PyTango.DevBoolean,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "test scalar bool attribute",
-                     }],
-            'ScalarShort':
-                    [[PyTango.DevShort,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "Scalar Short attribute",
-                     }],
-            'ScalarUShort':
-                    [[PyTango.DevUShort,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarUShort attribute",
-                     }],
-            'ScalarULong':
-                    [[PyTango.DevULong,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarULong attribute",
-                     }],
-            'ScalarLong64':
-                    [[PyTango.DevLong64,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarLong64 attribute",
-                     }],
-            'ScalarULong64':
-                    [[PyTango.DevULong64,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarULong64 attribute",
-                     }],
-            'ScalarFloat':
-                    [[PyTango.DevFloat,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarFloat attribute",
-                     }],
-            'ScalarDouble':
-                    [[PyTango.DevDouble,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarDouble attribute",
-                     }],
-            'ScalarString':
-                    [[PyTango.DevString,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarString attribute",
-                     }],
-            'ScalarEncoded':
-                    [[PyTango.DevEncoded,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarEncoded attribute",
-                     }],
-            'ScalarUChar':
-                    [[PyTango.DevUChar,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ScalarUChar attribute",
-                     }],
-            'SpectrumEncoded':
-                    [[PyTango.DevEncoded,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "SpectrumEncoded attribute",
-                     }],
-            'ImageEncoded':
-                    [[PyTango.DevEncoded,
-                      PyTango.SCALAR,
-                      PyTango.READ_WRITE],
-                     {
-                     'description': "ImageEncoded attribute",
-                     }],
-            'SpectrumBoolean':
-                    [[PyTango.DevBoolean,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumBoolean attribute",
-                     }],
-            'SpectrumUChar':
-                    [[PyTango.DevUChar,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumUChar attribute",
-                     }],
-            'SpectrumShort':
-                    [[PyTango.DevShort,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumShort attribute",
-                     }],
-            'SpectrumUShort':
-                    [[PyTango.DevUShort,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumUShort",
-                     }],
-            'SpectrumLong':
-                    [[PyTango.DevLong,
-                      PyTango.SPECTRUM,
-                      PyTango.WRITE, 4096],
-                     {
-                     'description': "SpectrumLong attribute",
-                     }],
-            'SpectrumULong':
-                    [[PyTango.DevULong,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumULong attribute",
-                     }],
-            'SpectrumLong64':
-                    [[PyTango.DevLong64,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumLong64 attribute",
-                     }],
-            'SpectrumULong64':
-                    [[PyTango.DevULong64,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumULong64 attribute",
-                     }],
-            'SpectrumFloat':
-                    [[PyTango.DevFloat,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumFloat attribute",
-                     }],
-            'SpectrumDouble':
-                    [[PyTango.DevDouble,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumDouble attribute",
-                     }],
-            'SpectrumString':
-                    [[PyTango.DevString,
-                      PyTango.SPECTRUM,
-                      PyTango.READ_WRITE, 4096],
-                     {
-                     'description': "SpectrumString attribute",
-                     }],
-            'ImageBoolean':
-                    [[PyTango.DevBoolean,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageBoolean attribute",
-                     }],
-            'ImageUChar':
-                    [[PyTango.DevUChar,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageUChar attribute",
-                     }],
-            'ImageShort':
-                    [[PyTango.DevShort,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageShort attribute",
-                     }],
-            'ImageUShort':
-                    [[PyTango.DevUShort,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageUShort attribute",
-                     }],
-            'ImageLong':
-                    [[PyTango.DevLong,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageLong attribute",
-                     }],
-            'ImageULong':
-                    [[PyTango.DevULong,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageULong attribute",
-                     }],
-            'ImageLong64':
-                    [[PyTango.DevLong64,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageLong64 attribute",
-                     }],
-            'ImageULong64':
-                    [[PyTango.DevULong64,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageULong64 attribute",
-                     }],
-            'ImageFloat':
-                    [[PyTango.DevFloat,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageFloat attribute",
-                     }],
-            'ImageDouble':
-                    [[PyTango.DevDouble,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageDouble attribute",
-                     }],
-            'ImageString':
-                    [[PyTango.DevString,
-                      PyTango.IMAGE,
-                      PyTango.READ_WRITE, 4096, 4096],
-                     {
-                     'description': "ImageString attribute",
-                     }],
+        [[PyTango.DevLong,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "test long scalar attribute",
+        }],
+        'ScalarBoolean':
+        [[PyTango.DevBoolean,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "test scalar bool attribute",
+        }],
+        'ScalarShort':
+        [[PyTango.DevShort,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "Scalar Short attribute",
+        }],
+        'ScalarUShort':
+        [[PyTango.DevUShort,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarUShort attribute",
+        }],
+        'ScalarULong':
+        [[PyTango.DevULong,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarULong attribute",
+        }],
+        'ScalarLong64':
+        [[PyTango.DevLong64,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarLong64 attribute",
+        }],
+        'ScalarULong64':
+        [[PyTango.DevULong64,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarULong64 attribute",
+        }],
+        'ScalarFloat':
+        [[PyTango.DevFloat,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarFloat attribute",
+        }],
+        'ScalarDouble':
+        [[PyTango.DevDouble,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarDouble attribute",
+        }],
+        'ScalarString':
+        [[PyTango.DevString,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarString attribute",
+        }],
+        'ScalarEncoded':
+        [[PyTango.DevEncoded,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+            'description': "ScalarEncoded attribute",
+        }],
+        'ScalarUChar':
+        [[PyTango.DevUChar,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ScalarUChar attribute",
+        }],
+        'SpectrumEncoded':
+        [[PyTango.DevEncoded,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "SpectrumEncoded attribute",
+        }],
+        'ImageEncoded':
+        [[PyTango.DevEncoded,
+          PyTango.SCALAR,
+          PyTango.READ_WRITE],
+         {
+             'description': "ImageEncoded attribute",
+        }],
+        'SpectrumBoolean':
+        [[PyTango.DevBoolean,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+            'description': "SpectrumBoolean attribute",
+        }],
+        'SpectrumUChar':
+        [[PyTango.DevUChar,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumUChar attribute",
+        }],
+        'SpectrumShort':
+        [[PyTango.DevShort,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumShort attribute",
+        }],
+        'SpectrumUShort':
+        [[PyTango.DevUShort,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumUShort",
+        }],
+        'SpectrumLong':
+        [[PyTango.DevLong,
+          PyTango.SPECTRUM,
+          PyTango.WRITE, 4096],
+         {
+             'description': "SpectrumLong attribute",
+        }],
+        'SpectrumULong':
+        [[PyTango.DevULong,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumULong attribute",
+        }],
+        'SpectrumLong64':
+        [[PyTango.DevLong64,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumLong64 attribute",
+        }],
+        'SpectrumULong64':
+        [[PyTango.DevULong64,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumULong64 attribute",
+        }],
+        'SpectrumFloat':
+        [[PyTango.DevFloat,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumFloat attribute",
+        }],
+        'SpectrumDouble':
+        [[PyTango.DevDouble,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumDouble attribute",
+        }],
+        'SpectrumString':
+        [[PyTango.DevString,
+          PyTango.SPECTRUM,
+          PyTango.READ_WRITE, 4096],
+         {
+             'description': "SpectrumString attribute",
+        }],
+        'ImageBoolean':
+        [[PyTango.DevBoolean,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageBoolean attribute",
+        }],
+        'ImageUChar':
+        [[PyTango.DevUChar,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageUChar attribute",
+        }],
+        'ImageShort':
+        [[PyTango.DevShort,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+            'description': "ImageShort attribute",
+        }],
+        'ImageUShort':
+        [[PyTango.DevUShort,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageUShort attribute",
+        }],
+        'ImageLong':
+        [[PyTango.DevLong,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageLong attribute",
+        }],
+        'ImageULong':
+        [[PyTango.DevULong,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageULong attribute",
+        }],
+        'ImageLong64':
+        [[PyTango.DevLong64,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageLong64 attribute",
+        }],
+        'ImageULong64':
+        [[PyTango.DevULong64,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageULong64 attribute",
+        }],
+        'ImageFloat':
+        [[PyTango.DevFloat,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageFloat attribute",
+        }],
+        'ImageDouble':
+        [[PyTango.DevDouble,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageDouble attribute",
+        }],
+        'ImageString':
+        [[PyTango.DevString,
+          PyTango.IMAGE,
+          PyTango.READ_WRITE, 4096, 4096],
+         {
+             'description': "ImageString attribute",
+        }],
     }
 
 
@@ -1505,6 +1318,7 @@ class SimpleServerClass(PyTango.DeviceClass):
         self.set_type(name)
         # print "In SimpleServerClass  constructor"
 
+
 # ==================================================================
 #
 #    SimpleServer class main method
@@ -1514,12 +1328,10 @@ if __name__ == '__main__':
     try:
         py = PyTango.Util(sys.argv)
         py.add_TgClass(SimpleServerClass, SimpleServer, 'SimpleServer')
-
         U = PyTango.Util.instance()
         U.server_init()
         U.server_run()
-
     except PyTango.DevFailed as e:
         print('-------> Received a DevFailed exception: %s' % str(e))
-    except Exception:
+    except Exception as e:
         print('-------> An unforeseen exception occured.... %s' % str(e))

@@ -640,7 +640,7 @@ ds.res2 = str(root.is_valid)
     # openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException() ")
+        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException()")
         fname = "test.h5"
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
