@@ -91,11 +91,11 @@ if [[ -z "$COMMIT_RANGE" ]]; then
     echo '--------------------------------------------------------------------------------'
     git log -2 $LOCAL_BRANCH_REF
 
-    REMOTE_DEVELOP_REF="$REMOTE/master"
+    REMOTE_DEVELOP_REF="$REMOTE/develop"
     # Make sure that $REMOTE_DEVELOP_REF is a valid reference
     echo -e "\nFetching $REMOTE_DEVELOP_REF"
     echo '--------------------------------------------------------------------------------'
-    git fetch $REMOTE master:refs/remotes/$REMOTE_DEVELOP_REF
+    git fetch $REMOTE develop:refs/remotes/$REMOTE_DEVELOP_REF
     LOCAL_BRANCH_SHORT_HASH=$(git rev-parse --short $LOCAL_BRANCH_REF)
     REMOTE_DEVELOP_SHORT_HASH=$(git rev-parse --short $REMOTE_DEVELOP_REF)
 
