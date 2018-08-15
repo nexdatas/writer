@@ -34,12 +34,11 @@ from ProxyHelper import ProxyHelper
 
 import ServerSetUp
 import ClientFieldTagWriterTest
-from ProxyHelper import ProxyHelper
+
 
 # test fixture
-
-
-class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
+class ClientFieldTagServerTest(
+        ClientFieldTagWriterTest.ClientFieldTagWriterTest):
     # server counter
     serverCounter = 0
 
@@ -124,6 +123,7 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

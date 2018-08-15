@@ -32,13 +32,6 @@ import PyTango
 
 from ProxyHelper import ProxyHelper
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
-if sys.version_info > (3,):
-    long = int
-
-
 from xml.sax import SAXParseException
 
 
@@ -50,9 +43,15 @@ import nxswriter.H5PYWriter as H5PYWriter
 
 import SimpleServerSetUp
 
+
+if sys.version_info > (3,):
+    long = int
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 # test fixture
-
-
 class TangoFieldTagWriterH5PYTest(unittest.TestCase):
 
     # constructor

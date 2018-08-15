@@ -40,13 +40,13 @@ except:
 from xml.sax import SAXParseException
 
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
-    
+
 
 # test fixture
 
@@ -66,7 +66,6 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             # random seed
             self.seed = long(time.time() * 256)  # use fractional seconds
 #        self.seed = 53867028435352363366241944565880343254

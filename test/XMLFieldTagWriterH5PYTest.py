@@ -26,9 +26,6 @@ import subprocess
 import random
 import struct
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
 from xml.sax import SAXParseException
 
 
@@ -39,9 +36,11 @@ from Checkers import Checker
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 # test fixture
-
-
 class XMLFieldTagWriterH5PYTest(unittest.TestCase):
 
     # constructor

@@ -772,8 +772,6 @@ class Checker(object):
                 if atts[a] is not None:
                     self._tc.assertEqual(at[...], atts[a])
 
-
-        #   print "VAL", values
         for i in range(len(values)):
             for j in range(len(values[i])):
                 #     print "CNT", cnt[j]

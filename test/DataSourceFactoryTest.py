@@ -35,7 +35,6 @@ import TestDataSource
 from nxswriter.DataSourceFactory import DataSourceFactory
 from nxswriter.DataSources import DataSource
 from nxswriter.DataSourcePool import DataSourcePool
-from nxswriter.DecoderPool import DecoderPool
 from nxswriter.Element import Element
 from nxswriter.EField import EField
 from nxswriter import DataSources

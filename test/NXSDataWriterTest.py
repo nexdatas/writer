@@ -527,7 +527,7 @@ class NXSDataWriterTest(unittest.TestCase):
             try:
                 error = None
                 dp.XMLSettings = wrongXml
-            except PyTango.DevFailed as e:
+            except PyTango.DevFailed:
                 error = True
             except Exception:
                 error = False

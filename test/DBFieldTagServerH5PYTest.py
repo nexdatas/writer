@@ -128,5 +128,6 @@ class DBFieldTagServerH5PYTest(DBFieldTagWriterH5PYTest.DBFieldTagWriterH5PYTest
     def record(self, tdw, string):
         tdw.Record(string)
 
+
 if __name__ == '__main__':
     unittest.main()

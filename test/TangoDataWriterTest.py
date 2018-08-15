@@ -663,7 +663,7 @@ ds.res2 = str(root.is_valid)
                 tdw.xmlsettings = xml
                 error = None
                 tdw.openEntry()
-            except SAXParseException as e:
+            except SAXParseException:
                 error = True
             except Exception:
                 error = False

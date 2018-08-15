@@ -113,7 +113,8 @@ class DataSourceDecodersTest(unittest.TestCase):
     # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, dformat, value, ttype, shape, encoding=None, decoders=None, error=0):
+    def checkData(self, data, dformat, value, ttype, shape, encoding=None,
+                  decoders=None, error=0):
         self.assertEqual(data["rank"], dformat)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
@@ -162,9 +163,13 @@ class DataSourceDecodersTest(unittest.TestCase):
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded": [
+               "string", "DevEncoded",
+               ('INT32',
+                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr3:
@@ -178,24 +183,33 @@ class DataSourceDecodersTest(unittest.TestCase):
             self.assertEqual(ds.doc, "")
             self.assertEqual(ds.last, el)
             self.assertEqual(ds.setDataSources(DataSourcePool()), None)
-            self.assertEqual(ds.store(["<datasource type='TANGO'>",
-                                       "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
-                                       k, device, arr3[k][2][0]),
-                                       "</datasource>"], gjson), None)
+            self.assertEqual(
+                ds.store(
+                    ["<datasource type='TANGO'>",
+                     "<record name='%s'/> <device name='%s' encoding='%s'/>" %
+                     (k, device, arr3[k][2][0]),
+                     "</datasource>"],
+                    gjson),
+                None)
             self.assertEqual(type(ds.last.source), TangoSource.TangoSource)
             self.assertEqual(ds.last.source.member.name, k)
             self.assertEqual(ds.last.source.device, device)
             self.assertEqual(ds.last.source.member.encoding, arr3[k][2][0])
             self.assertEqual(
-                ds.last.source.__str__(), " TANGO Device %s : %s (%s)" % (device, k, atype))
+                ds.last.source.__str__(), " TANGO Device %s : %s (%s)"
+                % (device, k, atype))
             self.assertEqual(len(ds.last.tagAttributes), 1)
-            self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-                'NX_CHAR', "<datasource type='TANGO'><record name='%s'/> <device name='stestp09/testss/s1r228' encoding='%s'/></datasource>" % (k, arr3[k][2][0])))
+            self.assertEqual(
+                ds.last.tagAttributes["nexdatas_source"],
+                ('NX_CHAR', "<datasource type='TANGO'><record name='%s'/> "
+                 "<device name='stestp09/testss/s1r228' encoding='%s'/>"
+                 "</datasource>" % (k, arr3[k][2][0])))
             dp = DecoderPool()
             self.assertEqual(ds.setDecoders(dp), None)
             dt = ds.last.source.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], dp)
+            self.checkData(
+                dt, "SCALAR", arr3[k][2], arr3[k][1], [1, 0],
+                arr3[k][2][0], dp)
 
     # constructor test
     # \brief It tests default settings
@@ -215,9 +229,13 @@ class DataSourceDecodersTest(unittest.TestCase):
         gjson = json.loads('{"data":{"myRecord":"1"}}')
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+           "SpectrumEncoded": [
+               "string", "DevEncoded",
+               ('INT32',
+                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr3:
@@ -231,24 +249,29 @@ class DataSourceDecodersTest(unittest.TestCase):
             self.assertEqual(ds.doc, "")
             self.assertEqual(ds.last, el)
             self.assertEqual(ds.setDataSources(DataSourcePool()), None)
-            self.assertEqual(ds.store(["<datasource type='TANGO'>",
-                                       "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
-                                       k, device, arr3[k][2][0]),
-                                       "</datasource>"], gjson), None)
+            self.assertEqual(ds.store(
+                ["<datasource type='TANGO'>",
+                 "<record name='%s'/> <device name='%s' encoding='%s'/>" % (
+                     k, device, arr3[k][2][0]),
+                 "</datasource>"], gjson), None)
             self.assertEqual(type(ds.last.source), TangoSource.TangoSource)
             self.assertEqual(ds.last.source.member.name, k)
             self.assertEqual(ds.last.source.device, device)
             self.assertEqual(ds.last.source.member.encoding, arr3[k][2][0])
             self.assertEqual(
-                ds.last.source.__str__(), " TANGO Device %s : %s (%s)" % (device, k, atype))
+                ds.last.source.__str__(),
+                " TANGO Device %s : %s (%s)" % (device, k, atype))
             self.assertEqual(len(ds.last.tagAttributes), 1)
             self.assertEqual(ds.last.tagAttributes["nexdatas_source"], (
-                'NX_CHAR', "<datasource type='TANGO'><record name='%s'/> <device name='stestp09/testss/s1r228' encoding='%s'/></datasource>" % (k, arr3[k][2][0])))
+                'NX_CHAR',
+                "<datasource type='TANGO'><record name='%s'/> "
+                "<device name='stestp09/testss/s1r228' encoding='%s'/>"
+                "</datasource>" % (k, arr3[k][2][0])))
             dp = DecoderPool()
             self.assertEqual(ds.setDecoders(None), None)
             dt = ds.last.source.getData()
-            self.checkData(dt, "SCALAR", arr3[k][
-                           2], arr3[k][1], [1, 0], arr3[k][2][0], None)
+            self.checkData(dt, "SCALAR", arr3[k][2], arr3[k][1],
+                           [1, 0], arr3[k][2][0], None)
 
 
 if __name__ == '__main__':

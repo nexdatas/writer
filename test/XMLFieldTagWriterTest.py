@@ -26,9 +26,6 @@ import subprocess
 import random
 import struct
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
 try:
     from pni.io.nx.h5 import open_file
 except:
@@ -41,9 +38,12 @@ from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 # test fixture
-
-
 class XMLFieldTagWriterTest(unittest.TestCase):
 
     # constructor

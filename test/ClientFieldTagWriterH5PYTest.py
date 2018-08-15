@@ -40,7 +40,7 @@ try:
 except:
     from .Checkers import Checker
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
@@ -63,7 +63,6 @@ class ClientFieldTagWriterH5PYTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             # random seed
             self.seed = long(time.time() * 256)  # use fractional seconds
 #        self.seed = 53867028435352363366241944565880343254

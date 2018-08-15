@@ -31,7 +31,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class DBFieldTagServerH5CppTest(DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
+class DBFieldTagServerH5CppTest(
+        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
@@ -127,6 +128,7 @@ class DBFieldTagServerH5CppTest(DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppT
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

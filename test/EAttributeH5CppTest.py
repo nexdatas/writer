@@ -81,7 +81,6 @@ class EAttributeH5CppTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -147,7 +146,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
     # default constructor test
     # \brief It tests default settings
-    def test_default_constructor(self):
+    def test_default_constructor_2(self):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
@@ -819,25 +818,18 @@ class EAttributeH5CppTest(unittest.TestCase):
                 attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         for k in attrs.keys():
-            print(k)
-#            if attrs[k][2] == 'string':
-#                "writing multi-dimensional string is not supported by pniio"
-#                continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes()
-#            at = el[k].h5Attribute(k)
             at = el[k].h5Object.attributes[k]
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-# attrs[k][3] if len(attrs[k])>3 else 0)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_run_value_no_string_shape_reduction(self):
         fun = sys._getframe().f_code.co_name
@@ -880,18 +872,12 @@ class EAttributeH5CppTest(unittest.TestCase):
 
         for k in attrs.keys():
             print(k)
-#            if attrs[k][2] == 'string':
-#                "writing multi-dimensional string is not supported by pniio"
-#                continue
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes()
-#            at = el[k].h5Attribute(k)
             at = el[k].h5Object.attributes[k]
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-# attrs[k][3] if len(attrs[k])>3 else 0)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -961,7 +947,6 @@ class EAttributeH5CppTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, "")
 
             ea[k].run()
@@ -1046,7 +1031,6 @@ class EAttributeH5CppTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
@@ -1055,7 +1039,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -1210,7 +1194,6 @@ class EAttributeH5CppTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
@@ -1219,7 +1202,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -1293,7 +1276,6 @@ class EAttributeH5CppTest(unittest.TestCase):
                                  2] == 'string' or not attrs[k][2] else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
@@ -1302,7 +1284,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                          attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
@@ -1371,7 +1353,6 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[k][2])
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
@@ -1381,11 +1362,11 @@ class EAttributeH5CppTest(unittest.TestCase):
             if attrs[k][2] and attrs[k][2] != 'string':
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                    attrs[k][4] if len(attrs[k]) > 4 else 0)
             else:
                 self._sc.checkScalarAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                              attrs[k][4] if len(attrs[k]) > 4 else 0)
+                    attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1453,21 +1434,19 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[k][2])
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             self.assertEqual(ea[k].markFailed(), None)
             self.assertEqual(type(ea[k].h5Object), H5CppWriter.H5CppAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            self.assertEqual(ea[k].h5Object.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string':
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                    attrs[k][5] if len(attrs[k]) > 5 else 0)
             else:
                 self._sc.checkScalarAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                    attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -1561,7 +1540,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkSpectrumAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1649,7 +1628,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkSpectrumAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -1743,7 +1722,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][4] if len(attrs[k]) > 4 else 0)
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1920,15 +1899,9 @@ class EAttributeH5CppTest(unittest.TestCase):
             ea[k].run()
             self.assertEqual(type(ea[k].h5Object), H5CppWriter.H5CppAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' % k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -2009,15 +1982,9 @@ class EAttributeH5CppTest(unittest.TestCase):
             ea[k].markFailed()
             self.assertEqual(type(ea[k].h5Object), H5CppWriter.H5CppAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#           if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][5] if len(attrs[k]) > 5 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -2113,15 +2080,9 @@ class EAttributeH5CppTest(unittest.TestCase):
             ea[k].run()
             self.assertEqual(type(ea[k].h5Object), H5CppWriter.H5CppAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)
@@ -2308,15 +2269,9 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(type(ea[k].h5Object), H5CppWriter.H5CppAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
 
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)
@@ -2399,15 +2354,9 @@ class EAttributeH5CppTest(unittest.TestCase):
             self.assertEqual(type(ea[k].h5Object), H5CppWriter.H5CppAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
 
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][5] if len(attrs[k]) > 5 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)

@@ -34,7 +34,7 @@ IS64BIT = (struct.calcsize("P") == 8)
 
 from xml.sax import SAXParseException
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from nxswriter.Errors import ThreadError
 from Checkers import Checker
@@ -64,7 +64,6 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.seed)
@@ -103,7 +102,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
             from os.path import expanduser
             home = expanduser("~")
             args2 = {'host': u'localhost', 'db': u'tango',
-                     'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
+                     'read_default_file': u'%s/.my.cnf' % home,
+                     'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
             print("ARGS: %s" % str(args2))
@@ -115,7 +115,9 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         if not self._largs or 'read_default_file' not in self._largs.keys():
             return str(xml.replace("$mycnf", ""))
         else:
-            return str(xml.replace("$mycnf", 'mycnf="%s"' % self._largs['read_default_file']))
+            return str(xml.replace(
+                "$mycnf",
+                'mycnf="%s"' % self._largs['read_default_file']))
 
     # test closer
     # \brief Common tear down
@@ -184,7 +186,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+$mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -196,7 +199,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -207,7 +211,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         <field  units="m" name="pid_scalar3_string" type="NX_CHAR">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -218,7 +223,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="0" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -228,7 +234,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         <field  units="m" name="pid_scalar_uint" type="NX_UINT">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -241,7 +248,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <strategy mode="STEP"/>
           <dimensions rank="0" />
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -252,7 +260,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         <field  units="m" name="pid_scalar_float64" type="NX_FLOAT64">
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -264,7 +273,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="0" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -279,7 +289,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -290,7 +301,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -301,7 +313,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         <field  units="m" name="init_pid_scalar_int32" type="NX_INT32">
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -312,7 +325,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         <field  units="m" name="init_pid_scalar_string" type="NX_CHAR">
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -323,7 +337,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         <field  units="m" name="final_pid_scalar_float32" type="NX_FLOAT32">
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -335,7 +350,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="0" />
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -349,7 +365,9 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -360,7 +378,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="1"/>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -374,7 +393,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="0"/>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -411,12 +431,12 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 17)
         self._sc.checkSpectrumField(
             det, "pid_scalar_string", "string", "NX_CHAR", [[scalar]] * 3,
-                                    attrs={"type": "NX_CHAR", "units": "m",
-                                           "nexdatas_source": None, "nexdatas_strategy": "STEP"})
+            attrs={"type": "NX_CHAR", "units": "m",
+                   "nexdatas_source": None, "nexdatas_strategy": "STEP"})
         self._sc.checkSpectrumField(
             det, "pid_scalar2_string", "string", "NX_CHAR", [[scalar]] * 3,
-                                    attrs={"type": "NX_CHAR", "units": "m",
-                                           "nexdatas_source": None, "nexdatas_strategy": "STEP"})
+            attrs={"type": "NX_CHAR", "units": "m",
+                   "nexdatas_source": None, "nexdatas_strategy": "STEP"})
         self._sc.checkScalarField(
             det, "pid_scalar3_string", "string", "NX_CHAR", [scalar] * 3)
         self._sc.checkScalarField(
@@ -427,20 +447,21 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
             det, "pid_scalar_int64", "int64", "NX_INT64", [int(scalar)] * 3)
         self._sc.checkScalarField(
             det, "pid_scalar_float64", "float64", "NX_FLOAT64", [
-                float(scalar)] * 3,
-                                  error=1e-14)
+                float(scalar)] * 3, error=1e-14)
         self._sc.checkScalarField(
             det, "pid_scalar_float32", "float32", "NX_FLOAT32", [
                 float(scalar)] * 3,
-                                  error=1e-5)
-        self._sc.checkImageField(det, "pid2_image_string", "string", "NX_CHAR",
-                                 [[[str(scalar)]]] * 3,
-                                 attrs={"type": "NX_CHAR", "units": "m",
-                                        "nexdatas_source": None, "nexdatas_strategy": "STEP"})
-        self._sc.checkImageField(det, "pid3_image_string", "string", "NX_CHAR",
-                                 [[[str(scalar)]]] * 3,
-                                 attrs={"type": "NX_CHAR", "units": "m",
-                                        "nexdatas_source": None, "nexdatas_strategy": "STEP"})
+            error=1e-5)
+        self._sc.checkImageField(
+            det, "pid2_image_string", "string", "NX_CHAR",
+            [[[str(scalar)]]] * 3,
+            attrs={"type": "NX_CHAR", "units": "m",
+                   "nexdatas_source": None, "nexdatas_strategy": "STEP"})
+        self._sc.checkImageField(
+            det, "pid3_image_string", "string", "NX_CHAR",
+            [[[str(scalar)]]] * 3,
+            attrs={"type": "NX_CHAR", "units": "m",
+                   "nexdatas_source": None, "nexdatas_strategy": "STEP"})
 
         self._sc.checkSingleScalarField(
             det, "init_pid_scalar_int32", "int32", "NX_INT32", int(scalar))
@@ -728,16 +749,16 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
                 numpy.finfo(getattr(numpy, 'float64')).max] * 3,
             attrs={
                 "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1e-14)
         self._sc.checkScalarField(
             det, "pid_scalar_float32", "float32", "NX_FLOAT32", [
                 numpy.finfo(getattr(numpy, 'float32')).max] * 3,
             attrs={
                 "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
-                      "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
                                   error=1e-5)
         self._sc.checkScalarField(
             det, "pid2_image_string", "string", "NX_CHAR", [''] * 3,
@@ -755,8 +776,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
             det, "init_pid_scalar_int32", "int32", "NX_INT32", numpy.iinfo(
                 getattr(numpy, 'int32')).max,
             attrs={"type": "NX_INT32", "units": "m", "nexdatas_source": None,
-                                       "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                                       "nexdatas_canfail_error": None})
+                   "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "init_pid_scalar_string", "string", "NX_CHAR", '',
             attrs={"type": "NX_CHAR", "units": "m", "nexdatas_source": None,
@@ -764,8 +785,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "final_pid_scalar_float32", "float32", "NX_FLOAT32",
-                                        numpy.finfo(
-                                            getattr(numpy, 'float32')).max,
+            numpy.finfo(
+                getattr(numpy, 'float32')).max,
             attrs={
                 "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
@@ -773,8 +794,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
                                         error=1e-6)
         self._sc.checkSingleScalarField(
             det, "final_pid_scalar_float64", "float64", "NX_FLOAT64",
-                                        numpy.finfo(
-                                            getattr(numpy, 'float64')).max,
+            numpy.finfo(
+                getattr(numpy, 'float64')).max,
             attrs={
                 "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
@@ -818,7 +839,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_string" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -833,7 +855,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="2"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -848,7 +871,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" comporession="true" rate="4" shuffle="true"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -860,7 +884,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -877,7 +902,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -891,7 +917,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -903,7 +930,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT name FROM device limit 6
             </query>
@@ -918,7 +946,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="1" />
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -932,7 +961,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -947,7 +977,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -1034,45 +1065,45 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 13)
         self._sc.checkSpectrumField(
             det, "pid_spectrum_string", "string", "NX_CHAR",
-                                          [[str(sub[0]) for sub in spectrum]] * 3)
+            [[str(sub[0]) for sub in spectrum]] * 3)
         self._sc.checkSpectrumField(
             det, "pid_spectrum_int32", "uint32", "NX_UINT32",
-                                    [[sub[0] for sub in spectrum]] * 3, grows=2)
+            [[sub[0] for sub in spectrum]] * 3, grows=2)
         self._sc.checkSpectrumField(
             det, "pid_spectrum_float64", "float64", "NX_FLOAT64",
-                                    [[float(sub[0]) for sub in spectrum]] * 3)
+            [[float(sub[0]) for sub in spectrum]] * 3)
         self._sc.checkSpectrumField(
             det, "pid_scalar_int64", "int64", "NX_INT64",
-                                    [[int(scalar)]] * 3)
+            [[int(scalar)]] * 3)
         self._sc.checkSpectrumField(
             det, "pid_scalar_float64", "float64", "NX_FLOAT64",
-                                    [[float(scalar)]] * 3)
+            [[float(scalar)]] * 3)
         self._sc.checkImageField(
             det, "name_spectrum_string", "string", "NX_CHAR",
-                                 [[[str(sub[0])] for sub in name]] * 3)
+            [[[str(sub[0])] for sub in name]] * 3)
         self._sc.checkSingleSpectrumField(
             det, "init_pid_spectrum_int32", "int32", "NX_INT32",
-                                          [sub[0] for sub in spectrum])
+            [sub[0] for sub in spectrum])
         self._sc.checkSingleSpectrumField(
             det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64",
-                                          [sub[0] for sub in spectrum])
+            [sub[0] for sub in spectrum])
 
         self._sc.checkSingleSpectrumField(
             det, "init_pid_spectrum_string", "string", "NX_CHAR",
-                                                [str(sub[0]) for sub in spectrum])
+            [str(sub[0]) for sub in spectrum])
         self._sc.checkSingleSpectrumField(
             det, "final_pid_scalar_string", "string", "NX_CHAR",
                                                 [scalar])
         self._sc.checkSingleImageField(
             det, "final_pid_image_string", "string", "NX_CHAR",
-                                       [[str(sub[0])] for sub in spectrum])
+            [[str(sub[0])] for sub in spectrum])
         self._sc.checkSingleSpectrumField(
             det, "final_pid_spectrum_string", "string", "NX_CHAR",
-                                    [str(sub[0]) for sub in spectrum])
+            [str(sub[0]) for sub in spectrum])
 
         self._sc.checkSpectrumField(
             det, "pid_scalar_int32", "int32", "NX_INT32",
-                                  [[int(scalar)]] * 3)
+            [[int(scalar)]] * 3)
 
         f.close()
         os.remove(fname)
@@ -1124,7 +1155,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="1">
             <dim index="1" value="6"/>
           </dimensions>
-          <strategy mode="STEP" comporession="true" rate="4" shuffle="true" canfail="true"/>
+          <strategy mode="STEP" comporession="true" rate="4" shuffle="true"
+ canfail="true"/>
           <datasource name="single_mysql_record_int" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="SPECTRUM">
@@ -1320,56 +1352,57 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 13)
         self._sc.checkSpectrumField(
             det, "pid_spectrum_string", "string", "NX_CHAR",
-                                          [[''] * len(spectrum)] * 3,
+            [[''] * len(spectrum)] * 3,
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "pid_spectrum_int32", "uint32", "NX_UINT32",
-                                    [[numpy.iinfo(getattr(numpy, 'uint32')).max] * len(spectrum)] * 3, grows=2,
+            [[numpy.iinfo(getattr(numpy, 'uint32')).max] * len(spectrum)] * 3,
+            grows=2,
             attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "pid_spectrum_float64", "float64", "NX_FLOAT64",
-                                    [[numpy.finfo(getattr(numpy, 'float64')).max] * len(
-                                        spectrum)] * 3,
+            [[numpy.finfo(getattr(numpy, 'float64')).max] * len(
+                spectrum)] * 3,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "pid_scalar_int64", "int64", "NX_INT64",
-                                    [[numpy.iinfo(
-                                        getattr(numpy, 'int64')).max]] * 3,
+            [[numpy.iinfo(
+                getattr(numpy, 'int64')).max]] * 3,
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "pid_scalar_float64", "float64", "NX_FLOAT64",
-                                    [[numpy.finfo(
-                                        getattr(numpy, 'float64')).max]] * 3,
+            [[numpy.finfo(
+                getattr(numpy, 'float64')).max]] * 3,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None})
         self._sc.checkSpectrumField(
             det, "name_spectrum_string", "string", "NX_CHAR",
-                                       [[''] * len(name)] * 3,
+            [[''] * len(name)] * 3,
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(
             det, "init_pid_spectrum_int32", "int32", "NX_INT32",
-                                          [numpy.iinfo(getattr(numpy, 'int32')).max] * len(
-                                              spectrum),
+            [numpy.iinfo(getattr(numpy, 'int32')).max] * len(
+                spectrum),
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(
             det, "final_pid_spectrum_float64", "float64", "NX_FLOAT64",
-                                          [numpy.finfo(getattr(numpy, 'float64')).max] * len(
-                                              spectrum),
+            [numpy.finfo(getattr(numpy, 'float64')).max] * len(
+                spectrum),
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
@@ -1377,33 +1410,33 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
 
         self._sc.checkSingleSpectrumField(
             det, "init_pid_spectrum_string", "string", "NX_CHAR",
-                                                ['' for sub in spectrum],
+            ['' for sub in spectrum],
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(
             det, "final_pid_scalar_string", "string", "NX_CHAR",
-                                                [''],
+            [''],
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(
             det, "final_pid_image_string", "string", "NX_CHAR",
-                                    ['' for sub in spectrum],
+            ['' for sub in spectrum],
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(
             det, "final_pid_spectrum_string", "string", "NX_CHAR",
-                                    ['' for sub in spectrum],
+            ['' for sub in spectrum],
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
 
         self._sc.checkSpectrumField(
             det, "pid_scalar_int32", "int32", "NX_INT32",
-                                  [[numpy.iinfo(
-                                      getattr(numpy, 'int32')).max]] * 3,
+            [[numpy.iinfo(
+                getattr(numpy, 'int32')).max]] * 3,
             attrs={"type": "NX_INT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
@@ -1429,7 +1462,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="1"/>
           <strategy mode="INIT"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -1443,7 +1477,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="single_mysql_record_int" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 1
             </query>
@@ -1513,7 +1548,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT name, pid FROM device limit 6
             </query>
@@ -1527,7 +1563,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT name FROM device limit 6
             </query>
@@ -1543,7 +1580,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1560,7 +1598,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1572,7 +1611,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2"/>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1584,7 +1624,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2"/>
           <strategy mode="INIT"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1600,7 +1641,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1614,7 +1656,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="2" compression="true"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1629,7 +1672,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" grows="3"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1643,7 +1687,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP"  />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1657,7 +1702,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="STEP" compression="true" grows="3" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1668,7 +1714,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1678,9 +1725,11 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
 
         <field name="pid_exported_image_float32" type="NX_FLOAT32" units="">
           <dimensions rank="2" />
-          <strategy mode="STEP" compression="true" rate="2" shuffle="false" grows="2" />
+          <strategy mode="STEP" compression="true" rate="2" shuffle="false"
+ grows="2" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1691,7 +1740,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="INIT" compression="true" grows="3" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1703,7 +1753,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="INIT" compression="true" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1715,7 +1766,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           <dimensions rank="2" />
           <strategy mode="STEP" grows="2"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1724,14 +1776,17 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
 
 
 
-        <field name="final_pid_exported_image_float64" type="NX_FLOAT64" units="">
+        <field name="final_pid_exported_image_float64" type="NX_FLOAT64"
+ units="">
           <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="2"/>
           </dimensions>
-          <strategy mode="FINAL" compression="true" rate="2" shuffle="false" grows="2" />
+          <strategy mode="FINAL" compression="true" rate="2" shuffle="false"
+ grows="2" />
           <datasource name="pid_exported" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="IMAGE">
               SELECT pid, exported FROM device limit 6
             </query>
@@ -1747,7 +1802,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="FINAL"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SPECTRUM">
               SELECT pid FROM device limit 6
             </query>
@@ -1764,7 +1820,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
           </dimensions>
           <strategy mode="INIT"/>
           <datasource name="mysql_record" type="DB">
-            <database dbname="tango" dbtype="MYSQL" hostname="localhost" $mycnf/>
+            <database dbname="tango" dbtype="MYSQL" hostname="localhost"
+ $mycnf/>
             <query format="SCALAR">
               SELECT pid FROM device limit 1
             </query>
@@ -1826,57 +1883,64 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 19)
         self._sc.checkImageField(
             det, "name_pid_image_string", "string", "NX_CHAR",
-                                       [[[str(it) for it in sub] for sub in name_pid]] * 3)
-        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR",
-                                 [[[str(it) for it in sub] for sub in name]] * 3)
-        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR",
-                                 [[[str(it) for it in sub] for sub in pid]] * 3)
-        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT",
-                                 [[[float(it) for it in sub] for sub in pid]] * 3)
-        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32",
-                                 [[[int(it) for it in sub] for sub in pid]] * 3, grows=2)
-        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT",
-                                 [[[int(pid[0][0])]]] * 3)
-        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64",
-                                 [[[int(it) for it in sub] for sub in pid]] * 3, grows=3)
+            [[[str(it) for it in sub] for sub in name_pid]] * 3)
+        self._sc.checkImageField(
+            det, "name_image_string", "string", "NX_CHAR",
+            [[[str(it) for it in sub] for sub in name]] * 3)
+        self._sc.checkImageField(
+            det, "pid_image_string", "string", "NX_CHAR",
+            [[[str(it) for it in sub] for sub in pid]] * 3)
+        self._sc.checkImageField(
+            det, "pid_image_float", "float64", "NX_FLOAT",
+            [[[float(it) for it in sub] for sub in pid]] * 3)
+        self._sc.checkImageField(
+            det, "pid_image_int32", "int32", "NX_INT32",
+            [[[int(it) for it in sub] for sub in pid]] * 3, grows=2)
+        self._sc.checkImageField(
+            det, "pid_image_int", "int64", "NX_INT",
+            [[[int(pid[0][0])]]] * 3)
+        self._sc.checkImageField(
+            det, "pid_image_int64", "int64", "NX_INT64",
+            [[[int(it) for it in sub] for sub in pid]] * 3, grows=3)
         self._sc.checkImageField(
             det, "pid_exported_image_int", "int64", "NX_INT",
-                                    [pid_exported] * 3)
+            [pid_exported] * 3)
         self._sc.checkImageField(
             det, "pid_exported_image_uint32", "uint32", "NX_UINT32",
-                                    [pid_exported] * 3, grows=3)
+            [pid_exported] * 3, grows=3)
         self._sc.checkImageField(
             det, "pid_exported_image_float32", "float32", "NX_FLOAT32",
-                                    [pid_exported] * 3, grows=2, error=1e-6)
+            [pid_exported] * 3, grows=2, error=1e-6)
         self._sc.checkSingleImageField(
             det, "init_pid_exported_image_string", "string", "NX_CHAR",
-                                    [[str(it) for it in sub] for sub in pid_exported])
+            [[str(it) for it in sub] for sub in pid_exported])
         self._sc.checkSingleImageField(
             det, "init_pid_exported_image_int64", "int64", "NX_INT64",
-                                    pid_exported, grows=3)
+            pid_exported, grows=3)
         self._sc.checkSingleImageField(
             det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64",
-                                    pid_exported, grows=2, error=1e-6)
+            pid_exported, grows=2, error=1e-6)
         self._sc.checkSingleImageField(
             det, "final_pid_image_float64", "float64", "NX_FLOAT64",
-                                    [[float(sub[0])] for sub in pid])
+            [[float(sub[0])] for sub in pid])
         self._sc.checkSingleImageField(
             det, "init_pid_image_float", "float64", "NX_FLOAT",
-                                    [[float(pid[0][0])]])
+            [[float(pid[0][0])]])
 
-        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT",
-                                 [[[int(scalar)]]] * 3)
+        self._sc.checkImageField(
+            det, "pid_image_uint", "uint64", "NX_UINT",
+            [[[int(scalar)]]] * 3)
         self._sc.checkSingleImageField(
             det, "final_pid_image_float", "float64", "NX_FLOAT",
-                                        [[float(scalar)]])
+            [[float(scalar)]])
 
         self._sc.checkSingleImageField(
             det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64",
-                                    [[float(sub[0])] for sub in spectrum])
+            [[float(sub[0])] for sub in spectrum])
 
         self._sc.checkImageField(
             det, "pid_spectrum_float32", "float32", "NX_FLOAT32",
-                                       [[[float(sub[0])] for sub in spectrum]] * 3, grows=2)
+            [[[float(sub[0])] for sub in spectrum]] * 3, grows=2)
 
         f.close()
         os.remove(fname)
@@ -2076,7 +2140,8 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
             <dim index="1" value="2"/>
             <dim index="2" value="6"/>
           </dimensions>
-          <strategy mode="STEP" compression="true" rate="2" shuffle="false" grows="2"  canfail="true"/>
+          <strategy mode="STEP" compression="true" rate="2" shuffle="false"
+ grows="2"  canfail="true"/>
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
@@ -2131,12 +2196,14 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
 
 
 
-        <field name="final_pid_exported_image_float64" type="NX_FLOAT64" units="">
+        <field name="final_pid_exported_image_float64" type="NX_FLOAT64"
+ units="">
           <dimensions rank="2">
             <dim index="1" value="6"/>
             <dim index="2" value="2"/>
           </dimensions>
-          <strategy mode="FINAL" compression="true" rate="2" shuffle="false" grows="2"  canfail="true"/>
+          <strategy mode="FINAL" compression="true" rate="2" shuffle="false"
+ grows="2"  canfail="true"/>
           <datasource name="pid_exported" type="DB">
             <database dbname="tango" dbtype="MYSQL" hostname="localhost"/>
             <query format="IMAGE">
@@ -2231,125 +2298,137 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 19)
         self._sc.checkImageField(
             det, "name_pid_image_string", "string", "NX_CHAR",
-                                       [[['' for it in sub]
-                                           for sub in name_pid]] * 3,
+            [[['' for it in sub]
+              for sub in name_pid]] * 3,
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
-        self._sc.checkImageField(det, "name_image_string", "string", "NX_CHAR",
-                                 [[['' for it in sub]
-                                   for sub in name]] * 3,
-                                 attrs={
-                                     "type": "NX_CHAR", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
-        self._sc.checkImageField(det, "pid_image_string", "string", "NX_CHAR",
-                                 [[['' for it in sub]
-                                   for sub in pid]] * 3,
-                                 attrs={
-                                     "type": "NX_CHAR", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
-        self._sc.checkImageField(det, "pid_image_float", "float64", "NX_FLOAT",
-                                 [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub]
-                                   for sub in pid]] * 3,
-                                 attrs={
-                                     "type": "NX_FLOAT", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
-        self._sc.checkImageField(det, "pid_image_int32", "int32", "NX_INT32",
-                                 [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for sub in pid]] * 3, grows=2,
-                                 attrs={
-                                     "type": "NX_INT32", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_strategy": None, "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
-        self._sc.checkImageField(det, "pid_image_int", "int64", "NX_INT",
-                                 [[[numpy.iinfo(
-                                   getattr(numpy, 'int64')).max]]] * 3,
-                                 attrs={
-                                     "type": "NX_INT", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
-        self._sc.checkImageField(det, "pid_image_int64", "int64", "NX_INT64",
-                                 [[[numpy.iinfo(getattr(numpy, 'int64')).max for it in sub] for sub in pid]] * 3, grows=3,
-                                 attrs={
-                                     "type": "NX_INT64", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "name_image_string", "string", "NX_CHAR",
+            [[['' for it in sub]
+              for sub in name]] * 3,
+            attrs={
+                "type": "NX_CHAR", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "pid_image_string", "string", "NX_CHAR",
+            [[['' for it in sub]
+              for sub in pid]] * 3,
+            attrs={
+                "type": "NX_CHAR", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "pid_image_float", "float64", "NX_FLOAT",
+            [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub]
+              for sub in pid]] * 3,
+            attrs={
+                "type": "NX_FLOAT", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "pid_image_int32", "int32", "NX_INT32",
+            [[[numpy.iinfo(getattr(numpy, 'int32')).max for it in sub] for
+              sub in pid]] * 3, grows=2,
+            attrs={
+                "type": "NX_INT32", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": None, "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "pid_image_int", "int64", "NX_INT",
+            [[[numpy.iinfo(
+                getattr(numpy, 'int64')).max]]] * 3,
+            attrs={
+                "type": "NX_INT", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "pid_image_int64", "int64", "NX_INT64",
+            [[[numpy.iinfo(getattr(numpy, 'int64')).max for it in sub]
+              for sub in pid]] * 3,
+            grows=3,
+            attrs={
+                "type": "NX_INT64", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pid_exported_image_int", "int64", "NX_INT",
-                                    [[[numpy.iinfo(getattr(numpy, 'int64')).max]]
-                                     * 3] * 3,
+            [[[numpy.iinfo(getattr(numpy, 'int64')).max]]
+             * 3] * 3,
             attrs={"type": "NX_INT", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pid_exported_image_uint32", "uint32", "NX_UINT32",
-                                    [[[numpy.iinfo(getattr(numpy, 'uint32')).max] * 2] * 6] * 3, grows=3,
+            [[[numpy.iinfo(getattr(numpy, 'uint32')).max] * 2] * 6] * 3,
+            grows=3,
             attrs={"type": "NX_UINT32", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pid_exported_image_float32", "float32", "NX_FLOAT32",
-                                    [[[numpy.finfo(getattr(numpy, 'float32')).max] * 6] * 2] * 3, grows=2, error=1e-6,
+            [[[numpy.finfo(getattr(numpy, 'float32')).max] * 6] * 2] * 3,
+            grows=2, error=1e-6,
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "init_pid_exported_image_string", "string", "NX_CHAR",
-                                    [[''] * 6] * 2,
+            [[''] * 6] * 2,
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "init_pid_exported_image_int64", "int64", "NX_INT64",
-                                    [[numpy.iinfo(getattr(numpy, 'int64')).max] * 6] * 2, grows=3,
+            [[numpy.iinfo(getattr(numpy, 'int64')).max] * 6] * 2, grows=3,
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "final_pid_exported_image_float64", "float64", "NX_FLOAT64",
-                                   [[numpy.finfo(getattr(numpy, 'float64')).max] * 2] * 6, grows=2, error=1e-6,
+            [[numpy.finfo(getattr(numpy, 'float64')).max] * 2] * 6, grows=2,
+            error=1e-6,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "final_pid_image_float64", "float64", "NX_FLOAT64",
-                                    [[numpy.finfo(
-                                        getattr(numpy, 'float64')).max]] * 6,
+            [[numpy.finfo(
+                getattr(numpy, 'float64')).max]] * 6,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "init_pid_image_float", "float64", "NX_FLOAT",
-                                    [[numpy.finfo(
-                                        getattr(numpy, 'float64')).max]],
+            [[numpy.finfo(
+                getattr(numpy, 'float64')).max]],
             attrs={"type": "NX_FLOAT", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
 
-        self._sc.checkImageField(det, "pid_image_uint", "uint64", "NX_UINT",
-                                 [[[numpy.iinfo(
-                                   getattr(numpy, 'int64')).max]]] * 3,
-                                 attrs={
-                                     "type": "NX_UINT", "units": "", "nexdatas_source": None,
-                                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                                 "nexdatas_canfail_error": None})
+        self._sc.checkImageField(
+            det, "pid_image_uint", "uint64", "NX_UINT",
+            [[[numpy.iinfo(getattr(numpy, 'int64')).max]]] * 3,
+            attrs={
+                "type": "NX_UINT", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "final_pid_image_float", "float64", "NX_FLOAT",
-                                        [[numpy.finfo(
-                                            getattr(numpy, 'float64')).max]],
+            [[numpy.finfo(
+                getattr(numpy, 'float64')).max]],
             attrs={"type": "NX_FLOAT", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
 
         self._sc.checkSingleImageField(
             det, "init_pid_spectrum_float64", "float64", "NX_FLOAT64",
-                                    [[numpy.finfo(getattr(numpy, 'float64')).max]
-                                     for sub in spectrum],
+            [[numpy.finfo(getattr(numpy, 'float64')).max]
+             for sub in spectrum],
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
@@ -2357,10 +2436,10 @@ class DBFieldTagWriterH5PYTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "pid_spectrum_float32", "float32", "NX_FLOAT32",
-                                       [[[numpy.finfo(
-                                           getattr(
-                                               numpy, 'float32')).max] * 6] * 2] * 3,
-                                 grows=2,
+            [[[numpy.finfo(
+                getattr(
+                    numpy, 'float32')).max] * 6] * 2] * 3,
+            grows=2,
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
