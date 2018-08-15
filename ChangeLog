@@ -1,3 +1,7 @@
+2018-08-15 Jan Kotanski <jankotan@gmail.com>
+	* add support for h5cpp
+	* tagged as 2.19.0
+
 2018-05-18 Jan Kotanski <jankotan@gmail.com>
 	* second step in  support for utf8 in h5pywriter
 	* tagged as 2.18.2
