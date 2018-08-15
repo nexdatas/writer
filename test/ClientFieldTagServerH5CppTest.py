@@ -20,26 +20,19 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
-import sys
-import subprocess
-import random
 
 import PyTango
 
-from xml.sax import SAXParseException
-
-from Checkers import Checker
 from ProxyHelper import ProxyHelper
 
 import ServerSetUp
 import ClientFieldTagWriterH5CppTest
-from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class ClientFieldTagServerH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest):
+class ClientFieldTagServerH5CppTest(
+        ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
@@ -54,8 +47,6 @@ class ClientFieldTagServerH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTag
             "%s" % ClientFieldTagServerH5CppTest.serverCounter
         self._sv = ServerSetUp.ServerSetUp("testp09/testtdw/" + sins, sins)
 
-#        self._counter =  [1, 2]
-#        self._fcounter =  [1.1,-2.4,6.54,-8.456,9.456,-0.46545]
         self.__status = {
             PyTango.DevState.OFF: "Not Initialized",
             PyTango.DevState.ON: "Ready",
@@ -69,8 +60,8 @@ class ClientFieldTagServerH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTag
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -133,6 +124,7 @@ class ClientFieldTagServerH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTag
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

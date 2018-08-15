@@ -80,7 +80,10 @@ class EAttribute(FElement):
             else:
                 shape = self._findShape(self.rank, self.lengths,
                                         extends=True, checkData=True)
-            val = ("".join(self.content)).strip().encode()
+            if sys.version_info > (3,):
+                val = ("".join(self.content)).strip()
+            else:
+                val = ("".join(self.content)).strip().encode()
             if not shape:
                 self.last.tagAttributes[self.name] = (tp, val)
             else:

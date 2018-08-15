@@ -25,6 +25,7 @@ import os
 import sys
 
 from . import FileWriter
+from .Types import nptype
 
 if sys.version_info > (3,):
     unicode = str
@@ -359,7 +360,7 @@ class H5PYGroup(FileWriter.FTGroup):
         """
         shape = shape or [1]
         mshape = [None for _ in shape] or (None,)
-        if type_code == "string":
+        if type_code in ['string', b'string']:
             type_code = h5py.special_dtype(vlen=unicode)
             # type_code = h5py.special_dtype(vlen=unicode)
             # type_code = h5py.special_dtype(vlen=bytes)
@@ -419,7 +420,7 @@ class H5PYGroup(FileWriter.FTGroup):
         :returns: pni object
         :rtype: :obj:`list` <`str`>
         """
-        return self._h5object.keys()
+        return list(self._h5object.keys())
 
     @property
     def is_valid(self):
@@ -818,18 +819,20 @@ class H5PYAttributeManager(FileWriter.FTAttributeManager):
         if shape:
             if isinstance(shape, list):
                 shape = tuple(shape)
-            if dtype == 'string':
+            if dtype in ['string', b'string']:
                 dtype = h5py.special_dtype(vlen=unicode)
                 self._h5object.create(
-                    name, np.empty(shape, dtype=dtype), shape, dtype)
+                    name, np.empty(shape, dtype=dtype),
+                    shape, nptype(dtype))
             else:
                 self._h5object.create(
                     name, np.zeros(shape, dtype=dtype), shape, dtype)
         else:
-            if dtype == "string":
+            if dtype in ['string', b'string']:
                 dtype = h5py.special_dtype(vlen=unicode)
                 self._h5object.create(
-                    name, np.array(u"", dtype=dtype), dtype=dtype)
+                    name, np.array(u"", dtype=dtype),
+                    dtype=dtype)
             else:
                 self._h5object.create(
                     name, np.array(0, dtype=dtype), (1,), dtype)
@@ -954,7 +957,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         :param o: python object
         :type o: :obj:`any`
         """
-        if self.dtype == "string":
+        if self.dtype in ['string', b'string']:
             if isinstance(o, str):
                 self._h5object[0][self.name] = unicode(o)
             else:
@@ -974,7 +977,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
         if t is Ellipsis or t == slice(None, None, None) or \
            t == (slice(None, None, None), slice(None, None, None)) or \
            (hasattr(o, "__len__") and t == slice(0, len(o), None)):
-            if self.dtype == "string":
+            if self.dtype in ['string', b'string']:
                 if isinstance(o, str):
                     self._h5object[0][self.name] = unicode(o)
                 else:
@@ -984,7 +987,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
                 self._h5object[0][self.name] = np.array(o, dtype=self.dtype)
         elif isinstance(t, slice):
             var = self._h5object[0][self.name]
-            if self.dtype is not 'string':
+            if self.dtype not in ['string', b'string']:
                 var[t] = np.array(o, dtype=self.dtype)
             else:
                 dtype = h5py.special_dtype(vlen=unicode)
@@ -999,7 +1002,7 @@ class H5PYAttribute(FileWriter.FTAttribute):
 
         elif isinstance(t, tuple):
             var = self._h5object[0][self.name]
-            if self.dtype is not 'string':
+            if self.dtype not in ['string', b'string']:
                 var[t] = np.array(o, dtype=self.dtype)
             else:
                 dtype = h5py.special_dtype(vlen=unicode)

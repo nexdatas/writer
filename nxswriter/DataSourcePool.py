@@ -20,6 +20,7 @@
 """ pool with datasource evaluation classes """
 
 import threading
+import sys
 
 from . import TangoSource
 from . import DBaseSource
@@ -68,8 +69,13 @@ class DataSourcePool(object):
                 and hasattr(configJSON['datasources'], 'keys'):
             for dk in configJSON['datasources'].keys():
                 pkl = configJSON['datasources'][dk].split(".")
-                dec = __import__(".".join(pkl[:-1]),
-                                 globals(), locals(), pkl[-1])
+                pkg = ".".join(pkl[:-1])
+                if pkg in sys.modules.keys():
+                    pdec = sys.modules[pkg]
+                    dec = pdec
+                else:
+                    dec = __import__(pkg, globals(),
+                                     locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
 
     def hasDataSource(self, datasource):

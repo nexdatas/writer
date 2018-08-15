@@ -61,7 +61,7 @@ class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "CHECKER SEED =", self._sc.seed
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -116,6 +116,7 @@ class XMLFieldTagServerTest(XMLFieldTagWriterTest.XMLFieldTagWriterTest):
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

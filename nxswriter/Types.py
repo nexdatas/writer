@@ -27,6 +27,19 @@ if sys.version_info > (3,):
     long = int
 
 
+def nptype(dtype):
+    """ converts to numpy types
+
+    :param dtype: h5 writer type type
+    :type dtype: :obj:`str`
+    :returns: nupy type
+    :rtype: :obj:`str`
+    """
+    if str(dtype) in ['string', b'string']:
+        return 'str'
+    return dtype
+
+
 class Converters(object):
 
     """ set of converters
@@ -65,7 +78,7 @@ class NTP(object):
            "uint16": "DevUShort",
            "uint8": "DevUChar", "float": "DevDouble", "float64": "DevDouble",
            "float32": "DevFloat", "float16": "DevFloat",
-           "string": "DevString"}
+           "string": "DevString", "str": "DevString"}
 
     #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of NEXUS :  numpy types
     nTnp = {"NX_FLOAT32": "float32", "NX_FLOAT64": "float64",
@@ -84,7 +97,7 @@ class NTP(object):
                "float": float, "int64": long, "int32": int,
                "int16": int, "int8": int, "int": int, "uint64": long,
                "uint32": long, "uint16": int,
-               "uint8": int, "uint": int, "string": str,
+               "uint8": int, "uint": int, "string": str, "str": str,
                "bool": Converters.toBool}
 
     #: (:obj:`dict` <:obj:`str` , :obj:`str` >) map of tag attribute types
@@ -144,7 +157,7 @@ class NTP(object):
             except IndexError:
                 if hasattr(array, "shape") and len(array.shape) == 0:
                     rank = 0
-                    if type(array) == numpy.string_:
+                    if type(array) in [numpy.string_, numpy.str_]:
                         pythonDType = "str"
                     elif hasattr(array, "dtype"):
                         pythonDType = str(array.dtype)
@@ -155,7 +168,7 @@ class NTP(object):
                     shape.append(len(array))
 
         else:
-            if type(array) == numpy.string_:
+            if type(array) in [numpy.string_, numpy.str_]:
                 pythonDType = "str"
             elif hasattr(array, "dtype"):
                 pythonDType = str(array.dtype)

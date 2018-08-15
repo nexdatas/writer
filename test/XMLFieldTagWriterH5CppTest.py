@@ -26,22 +26,21 @@ import subprocess
 import random
 import struct
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
 from xml.sax import SAXParseException
 
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 # test fixture
-
-
 class XMLFieldTagWriterH5CppTest(unittest.TestCase):
 
     # constructor
@@ -59,13 +58,13 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     def setProp(self, rc, name, value):
         setattr(rc, name, value)
@@ -104,7 +103,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -203,7 +202,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
                                      attrs={"type": "NX_INT32", "units": "m"})
         self._sc.checkXMLScalarField(det, "counter64", "int64", "NX_INT64", mc,
                                      attrs={"type": "NX_INT64", "units": "m"})
-        self._sc.checkXMLScalarField(det, "ucounter",  "uint64", "NX_UINT", uc,
+        self._sc.checkXMLScalarField(det, "ucounter", "uint64", "NX_UINT", uc,
                                      attrs={"type": "NX_UINT", "units": "m"})
         self._sc.checkXMLScalarField(det, "ucounter8", "uint8", "NX_UINT8", uc,
                                      attrs={"type": "NX_UINT8", "units": "m"})
@@ -234,10 +233,10 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
             det, "time", "string", "NX_DATE_TIME", string,
                                      attrs={"type": "NX_DATE_TIME", "units": "m"})
         self._sc.checkXMLScalarField(
-            det, "isotime", "string", "ISO8601",  string,
+            det, "isotime", "string", "ISO8601", string,
                                      attrs={"type": "ISO8601", "units": "m"})
         self._sc.checkXMLScalarField(
-            det, "string_time", "string", "NX_CHAR",  string,
+            det, "string_time", "string", "NX_CHAR", string,
                                      attrs={"type": "NX_CHAR", "units": "m"})
         self._sc.checkXMLScalarField(det, "flags", "bool", "NX_BOOLEAN", True,
                                      attrs={"type": "NX_BOOLEAN", "units": "m"})
@@ -249,7 +248,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlAttrScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -300,9 +299,9 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         f = FileWriter.open_file(fname, readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 4, 3)
         self._sc.checkScalarAttribute(
-            det, "scalar_float",  "float64", fls,  error=1.e-14)
+            det, "scalar_float", "float64", fls, error=1.e-14)
         self._sc.checkScalarAttribute(det, "scalar_string", "string", sts)
-        self._sc.checkScalarAttribute(det, "scalar_int",  "int64", ins)
+        self._sc.checkScalarAttribute(det, "scalar_int", "int64", ins)
         self._sc.checkScalarAttribute(det, "flag", "bool", ls)
         self._sc.checkScalarAttribute(
             field, "scalar_float32", "float32", fls, error=1.e-6)
@@ -316,7 +315,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -502,7 +501,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
             det, "mca_int", "int64", "NX_INT", [1, 2, 3, 4, 5],
                                      attrs={"type": "NX_INT", "units": ""})
         self._sc.checkXMLSpectrumField(
-            det, "mca_int8", "int8", "NX_INT8",  [1, 2, 3, 4, 5])
+            det, "mca_int8", "int8", "NX_INT8", [1, 2, 3, 4, 5])
         self._sc.checkXMLSpectrumField(
             det, "mca_int16", "int16", "NX_INT16", [1, 2, 3, 4, 5],
                                      attrs={"type": "NX_INT16", "units": ""})
@@ -513,9 +512,9 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
             det, "mca_int64", "int64", "NX_INT64", [1, 2, 3, 4, 5],
                                      attrs={"type": "NX_INT64", "units": ""})
         self._sc.checkXMLSpectrumField(
-            det, "mca_uint",  "uint64", "NX_UINT",  [1, 2, 3, 4, 5])
+            det, "mca_uint", "uint64", "NX_UINT", [1, 2, 3, 4, 5])
         self._sc.checkXMLSpectrumField(
-            det, "mca_uint8", "uint8", "NX_UINT8",  [1, 2, 3, 4, 5],
+            det, "mca_uint8", "uint8", "NX_UINT8", [1, 2, 3, 4, 5],
                                      attrs={"type": "NX_UINT8", "units": ""})
         self._sc.checkXMLSpectrumField(
             det, "mca_uint16", "uint16", "NX_UINT16", [1, 2, 3, 4, 5],
@@ -563,7 +562,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlAttrSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -658,7 +657,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -876,7 +875,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         FileWriter.writer = H5CppWriter
         f = FileWriter.open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 19)
-        self._sc.checkXMLImageField(det, "pco_int",  "int64", "NX_INT", image)
+        self._sc.checkXMLImageField(det, "pco_int", "int64", "NX_INT", image)
         self._sc.checkXMLImageField(det, "pco_int8", "int8", "NX_INT8", image)
         self._sc.checkXMLImageField(
             det, "pco_int16", "int16", "NX_INT16", image)
@@ -885,7 +884,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         self._sc.checkXMLImageField(
             det, "pco_int64", "int64", "NX_INT64", image)
         self._sc.checkXMLImageField(
-            det, "pco_uint",  "uint64", "NX_UINT", image)
+            det, "pco_uint", "uint64", "NX_UINT", image)
         self._sc.checkXMLImageField(
             det, "pco_uint8", "uint8", "NX_UINT8", image)
         self._sc.checkXMLImageField(
@@ -896,16 +895,16 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
             det, "pco_uint64", "uint64", "NX_UINT64", image)
 
         self._sc.checkXMLImageField(
-            det, "pco_float",  "float64", "NX_FLOAT", fimage,
+            det, "pco_float", "float64", "NX_FLOAT", fimage,
                                     error=1.0e-14)
         self._sc.checkXMLImageField(
-            det, "pco_float32", "float32", "NX_FLOAT32",  fimage,
+            det, "pco_float32", "float32", "NX_FLOAT32", fimage,
                                     error=1.0e-5)
         self._sc.checkXMLImageField(
-            det, "pco_float64", "float64", "NX_FLOAT64",  fimage,
+            det, "pco_float64", "float64", "NX_FLOAT64", fimage,
                                     error=1.0e-14)
         self._sc.checkXMLImageField(
-            det, "pco_number", "float64", "NX_NUMBER",  fimage,
+            det, "pco_number", "float64", "NX_NUMBER", fimage,
                                     error=1.0e-14)
 
         self._sc.checkXMLImageField(det, "flags", "bool", "NX_BOOLEAN", bimage)
@@ -925,7 +924,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_xmlAttrImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1043,7 +1042,7 @@ class XMLFieldTagWriterH5CppTest(unittest.TestCase):
         FileWriter.writer = H5CppWriter
         f = FileWriter.open_file(fname, readonly=True)
         det, field = self._sc.checkAttributeTree(f, fname, 4, 4)
-        self._sc.checkImageAttribute(det, "image_float",  "float64", fimage,
+        self._sc.checkImageAttribute(det, "image_float", "float64", fimage,
                                      error=1.e-14)
         self._sc.checkImageAttribute(det, "image_int", "int64", image)
         self._sc.checkImageAttribute(det, "image_bool", "bool", bimage)

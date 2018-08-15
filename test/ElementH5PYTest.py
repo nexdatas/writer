@@ -57,18 +57,18 @@ class ElementH5PYTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # lastObject method test
     # \brief It tests executing _lastObject method
     def test_lastObject_hp5y(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -90,7 +90,7 @@ class ElementH5PYTest(unittest.TestCase):
         field = group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs, eFile)
-        el2 = Element(self._tfname, self._fattrs,  el)
+        el2 = Element(self._tfname, self._fattrs, el)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)

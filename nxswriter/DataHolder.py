@@ -22,7 +22,7 @@
 import numpy
 import sys
 
-from .Types import NTP
+from .Types import NTP, nptype
 
 
 if sys.version_info > (3,):
@@ -140,7 +140,7 @@ class DataHolder(object):
                 else:
                     return self.value
             else:
-                if self.value == "" and dtype != 'string':
+                if self.value == "" and (dtype not in ['str', 'string']):
                     return NTP.convert[dtype](0)
                 else:
                     return NTP.convert[dtype](self.value)
@@ -148,7 +148,7 @@ class DataHolder(object):
         else:
             if dtype in NTP.pTt.keys() \
                     and NTP.pTt[dtype] == str(self.tangoDType) \
-                    and dtype != "string":
+                    and (dtype not in ['str', 'string']):
                 if type(self.value).__name__ == 'ndarray' and \
                         self.value.dtype.name == dtype:
                     return self.value
@@ -160,8 +160,8 @@ class DataHolder(object):
                     dtype=dtype)
             else:
                 try:
-                    return numpy.array(self.value, dtype=dtype)
+                    return numpy.array(self.value, dtype=nptype(dtype))
                 except:
                     return numpy.array(
                         NTP().createArray(self.value, NTP.convert[dtype]),
-                        dtype=dtype)
+                        dtype=nptype(dtype))

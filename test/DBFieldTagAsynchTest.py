@@ -63,8 +63,8 @@ class DBFieldTagAsynchTest(DBFieldTagWriterTest.DBFieldTagWriterTest):
     def setUp(self):
         DBFieldTagWriterTest.DBFieldTagWriterTest.setUp(self)
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server

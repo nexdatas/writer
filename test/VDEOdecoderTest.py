@@ -31,6 +31,9 @@ import time
 
 from nxswriter.DecoderPool import VDEOdecoder
 
+if sys.version_info > (3,):
+    long = int
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -54,7 +57,7 @@ class VDEOdecoderTest(unittest.TestCase):
 
         self.__data = self.encodeImage(self.__imageUChar)
         self.__dtype = "uint8"
-        self.__res = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
+        self.__res = numpy.array([1234, 5678, 45, 345], dtype=numpy.uint32)
 
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
@@ -73,10 +76,10 @@ class VDEOdecoderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width, height = image.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = ord(str(struct.pack('=H', 1)[-1]))
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
-                             width,  height, endian, hsize, 0, 0)
+                             width, height, endian, hsize, 0, 0)
         fimage = image.flatten()
         #  for uint32 and python2.6 one gets the struct.pack bug:
         #  test/VDEOdecoderTest.py:90:
@@ -92,19 +95,19 @@ class VDEOdecoderTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # constructor test
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dc = VDEOdecoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -119,7 +122,7 @@ class VDEOdecoderTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -127,7 +130,7 @@ class VDEOdecoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         data = {
             "uint8": [None, 0xff, None],
@@ -197,7 +200,7 @@ class VDEOdecoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load_wrong_len(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = (
             'VIDEO_IMAGE', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
 
@@ -214,7 +217,7 @@ class VDEOdecoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         data = {
             "uint8": [None, 0xff, None],

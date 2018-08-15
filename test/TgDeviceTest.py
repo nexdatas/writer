@@ -31,7 +31,6 @@ import PyTango
 import binascii
 import time
 import json
-import PyTango
 
 import SimpleServerSetUp
 
@@ -50,10 +49,13 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter import DataSources
 
 import threading
-import thread
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test pool
@@ -92,7 +94,6 @@ class TgDeviceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -101,7 +102,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -117,7 +118,7 @@ class TgDeviceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -125,7 +126,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         name = "myname%s" % self.__rnd.randint(0, 9)
         proxy = "proxy%s" % self.__rnd.randint(0, 9)
@@ -150,7 +151,7 @@ class TgDeviceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setMember(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = "device/%s" % self.__rnd.randint(0, 9)
         proxy = "proxy%s" % self.__rnd.randint(0, 9)

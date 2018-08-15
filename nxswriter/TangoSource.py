@@ -171,7 +171,10 @@ class TangoSource(DataSource):
         :type xml: :obj:`str`
         """
 
-        dom = minidom.parseString(xml)
+        if sys.version_info > (3,):
+            dom = minidom.parseString(bytes(xml, "UTF-8"))
+        else:
+            dom = minidom.parseString(xml)
         rec = dom.getElementsByTagName("record")
         name = None
         if rec and len(rec) > 0:
@@ -220,12 +223,19 @@ class TangoSource(DataSource):
 
             raise DataSourceSetupError(
                 "Tango device name not defined: %s" % xml)
-
+        if sys.version_info > (3,):
+            ehostname = hostname
+            eport = port
+            edevice = device
+        else:
+            ehostname = hostname.encode() if hostname else hostname
+            eport = port.encode() if port else port
+            edevice = device.encode() if device else device
         if hostname and port and device:
-            self.device = "%s:%s/%s" % (hostname.encode(),
-                                        port.encode(), device.encode())
+            self.device = "%s:%s/%s" % (ehostname,
+                                        eport, edevice)
         elif device:
-            self.device = "%s" % (device.encode())
+            self.device = "%s" % (edevice)
 
         self.__proxy = ProxyTools.proxySetup(
             self.device, streams=self._streams)
@@ -243,10 +253,10 @@ class TangoSource(DataSource):
             try:
                 host = self.__proxy.get_db_host().split(".")[0]
             except:
-                host = hostname.encode().split(".")[0]
+                host = ehostname.split(".")[0]
             self.client = "%s:%s/%s/%s" % (
-                host, port.encode(),
-                device.encode(), name.lower()
+                host, eport,
+                edevice, name.lower()
             )
 
     def setDecoders(self, decoders):
@@ -415,7 +425,8 @@ class TgGroup(object):
 
         errors = []
         for a in attr:
-            if a.encode().lower() not in alist:
+            ea = a if sys.version_info > (3,) else a.encode()
+            if ea.lower() not in alist:
                 errors.append((a, device.device))
         if errors:
             if self._streams:
@@ -448,7 +459,9 @@ class TgGroup(object):
         alist = proxy.get_attribute_list()
         alist = [a.lower() for a in alist]
         if member.name.lower() in alist:
-            da = proxy.read_attribute(member.name.encode())
+            emname = member.name if sys.version_info > (3,) \
+                else member.name.encode()
+            da = proxy.read_attribute(emname)
             member.setData(da)
 
     @classmethod
@@ -463,9 +476,10 @@ class TgGroup(object):
 
         plist = proxy.get_property_list('*')
         plist = [a.lower() for a in plist]
-        if member.name.encode().lower() in plist:
-            da = proxy.get_property(
-                member.name.encode())[member.name.encode()]
+        emname = member.name if sys.version_info > (3,) \
+            else member.name.encode()
+        if emname.lower() in plist:
+            da = proxy.get_property(emname)[emname]
             member.setData(da)
 
     @classmethod
@@ -481,9 +495,11 @@ class TgGroup(object):
         clist = [cm.cmd_name
                  for cm in proxy.command_list_query()]
         clist = [a.lower() for a in clist]
-        if member.name.encode().lower() in clist:
-            cd = proxy.command_query(member.name.encode())
-            da = proxy.command_inout(member.name.encode())
+        emname = member.name if sys.version_info > (3,) \
+            else member.name.encode()
+        if emname.lower() in clist:
+            cd = proxy.command_query(emname)
+            da = proxy.command_inout(emname)
             member.setData(da, cd)
 
     def getData(self, counter, proxy=None, member=None):
@@ -590,13 +606,14 @@ class TgDevice(object):
         :param member: given tango device member
         :type member: :class:`TgMember`
         """
-
+        emname = member.name if sys.version_info > (3,) \
+            else member.name.encode()
         if member.memberType == 'attribute':
-            self.attributes.append(member.name.encode())
+            self.attributes.append(emname)
         elif member.memberType == 'property':
-            self.properties.append(member.name.encode())
+            self.properties.append(emname)
         elif member.memberType == 'command':
-            self.commands.append(member.name.encode())
+            self.commands.append(emname)
 
 
 class TgMember(object):
@@ -741,20 +758,21 @@ class TgMember(object):
         :type proxy: :class:`PyTango.DeviceProxy`
         """
         self.reset()
+        ename = self.name if sys.version_info > (3,) else self.name.encode()
         if self.memberType == "attribute":
             alist = proxy.get_attribute_list()
             alist = [a.lower() for a in alist]
-            if self.name.encode().lower() in alist:
-                self.__da = proxy.read_attribute(self.name.encode())
+            if ename.lower() in alist:
+                self.__da = proxy.read_attribute(ename)
         elif self.memberType == "property":
             plist = proxy.get_property_list('*')
             plist = [a.lower() for a in plist]
-            if self.name.encode().lower() in plist:
+            if ename.lower() in plist:
                 self.__da = proxy.get_property(
-                    self.name.encode())[self.name.encode()]
+                    ename)[ename]
         elif self.memberType == "command":
             clist = [cm.cmd_name for cm in proxy.command_list_query()]
             clist = [a.lower() for a in clist]
-            if self.name.encode().lower() in clist:
-                self.__cd = proxy.command_query(self.name.encode())
-                self.__da = proxy.command_inout(self.name.encode())
+            if ename.lower() in clist:
+                self.__cd = proxy.command_query(ename)
+                self.__da = proxy.command_inout(ename)

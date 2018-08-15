@@ -21,6 +21,7 @@
 
 import threading
 import copy
+import sys
 from xml.dom import minidom
 
 from .Types import NTP
@@ -93,7 +94,10 @@ class PyEvalSource(DataSource):
         :type xml: :obj:`str`
         """
 
-        dom = minidom.parseString(xml)
+        if sys.version_info > (3,):
+            dom = minidom.parseString(bytes(xml, "UTF-8"))
+        else:
+            dom = minidom.parseString(xml)
         mds = dom.getElementsByTagName("datasource")
         inputs = []
         if mds and len(mds) > 0:

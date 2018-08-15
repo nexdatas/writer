@@ -23,9 +23,7 @@ import unittest
 import os
 import sys
 import subprocess
-import random
 import struct
-import random
 import numpy
 
 from TestDataSource import TestDataSource
@@ -94,13 +92,13 @@ class ELinkTest(unittest.TestCase):
     def setUp(self):
         # file handle
         FileWriter.writer = PNIWriter
-        print "\nsetting up..."
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -111,7 +109,7 @@ class ELinkTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -119,7 +117,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -146,7 +144,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -341,7 +339,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_nods(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -463,7 +461,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_ds(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -661,7 +659,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -869,7 +867,7 @@ class ELinkTest(unittest.TestCase):
             l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype)
         self.assertEqual(
             l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape)
- #       self.assertEqual(l5.name, gr.h5Object.name )
+        #       self.assertEqual(l5.name, gr.h5Object.name )
 
         self._nxFile.close()
         os.remove(self._fname)
@@ -878,7 +876,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -1095,7 +1093,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_failed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -1281,7 +1279,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_rel(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -1508,7 +1506,7 @@ class ELinkTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createLink_strategy_external_twofiles(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._fname2 = '%s/%s%s_2.h5' % (

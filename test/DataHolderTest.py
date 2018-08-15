@@ -31,11 +31,14 @@ import time
 
 
 from nxswriter.DataHolder import DataHolder
-from nxswriter.Types import NTP
+from nxswriter.Types import NTP, nptype
 from nxswriter.DecoderPool import DecoderPool
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture
@@ -59,7 +62,6 @@ class DataHolderTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -68,13 +70,13 @@ class DataHolderTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -85,7 +87,7 @@ class DataHolderTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -99,10 +101,10 @@ class DataHolderTest(unittest.TestCase):
         mode = modes[str(image.dtype)]
         width, height = image.shape
         version = 1
-        endian = ord(struct.pack('=H', 1)[-1])
+        endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
-                             width,  height, endian, hsize, 0, 0)
+                             width, height, endian, hsize, 0, 0)
         fimage = image.flatten()
 #  for uint32 and python2.6 one gets the struct.pack bug:
 # test/VDEOdecoderTest.py:90: DeprecationWarning: struct integer overflow
@@ -115,7 +117,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -132,7 +134,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -146,7 +148,7 @@ class DataHolderTest(unittest.TestCase):
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
-            #            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            # "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
         }
 
         for a in arr:
@@ -171,7 +173,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -183,7 +185,8 @@ class DataHolderTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -222,7 +225,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -234,7 +237,8 @@ class DataHolderTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -249,7 +253,8 @@ class DataHolderTest(unittest.TestCase):
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
                     arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                                  for c in range(mlen[1])]
+                                 for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
 
@@ -275,20 +280,25 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_encode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dp = DecoderPool()
-        spectrum = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
+        spectrum = numpy.array([1234, 5678, 45, 345], dtype=numpy.uint32)
         image = numpy.array(
             [[2, 5, 4, 6], [3, 4, 3, 4], [3, 6, 7, 8]], dtype='uint8')
 
         arr = {
-            "ScalarEncoded": ["UTF8", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"),
-                              [1, 0], "SCALAR", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b", "DevString"],
-           "SpectrumEncoded": ["UINT32", "DevEncoded",
-                               ('INT32',
-                                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00'),
-                               [4, 0], "SPECTRUM", spectrum, "DevULong"],
-           "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded", self.encodeImage(image),
+            "ScalarEncoded": [
+                "UTF8", "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b"),
+                [1, 0], "SCALAR",
+                "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b", "DevString"],
+           "SpectrumEncoded": [
+               "UINT32", "DevEncoded",
+               ('INT32',
+                '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00'),
+               [4, 0], "SPECTRUM", spectrum, "DevULong"],
+           "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
+                            self.encodeImage(image),
                             list(image.shape), "IMAGE", image, "DevUChar"],
         }
 
@@ -325,13 +335,13 @@ class DataHolderTest(unittest.TestCase):
                     for j in range(el.shape[1]):
                         self.assertEqual(el.value[i][j], arr[a][5][i][j])
             else:
-                print "WARNING", a, "Case not supported"
+                print("WARNING %s %s" % (a, "Case not supported"))
 
     # setup test
     # \brief It tests default settings
     def test_constructor_encode_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dp = DecoderPool()
         spectrum = numpy.array([1234], dtype=numpy.uint32)
         image = numpy.array([[2]], dtype='uint16')
@@ -342,7 +352,8 @@ class DataHolderTest(unittest.TestCase):
            "SpectrumEncoded": ["UINT32", "DevEncoded",
                                ('INT32', '\xd2\x04\x00\x00'),
                                [1, 0], "SPECTRUM", spectrum, "DevULong"],
-           "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded", self.encodeImage(image),
+           "ImageEncoded": ["LIMA_VIDEO_IMAGE", "DevEncoded",
+                            self.encodeImage(image),
                             list(image.shape), "IMAGE", image, "DevUShort"],
         }
 
@@ -369,7 +380,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arrs = {}
 
@@ -397,7 +408,7 @@ class DataHolderTest(unittest.TestCase):
 
         arrs["s"] = {
             "ScalarString": ["string", "DevString", "MyTrue"],
-            #            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            # "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
         }
 
         types = {}
@@ -435,24 +446,20 @@ class DataHolderTest(unittest.TestCase):
                 self.assertEqual(el.encoding, data["encoding"])
                 self.assertEqual(el.decoders, data["decoders"])
                 for c in ca:
-                    if ca[c][k] == True:
+                    if ca[c][k] is True:
                         for it in types[c]:
 
-#                            print "CAST", arr[a][1] ,"to", it
-# print  "VAL",NTP.convert[it](el.value), el.cast(it)
                             self.assertEqual(
                                 NTP.convert[it](el.value), el.cast(it))
                     else:
                         for it in types[c]:
-#                            print "CAST", arr[a][1] ,"to", it
-#                            el.cast(it)
                             self.myAssertRaise(ValueError, el.cast, it)
 
     # setup test
     # \brief It tests default settings
     def test_cast_scalar_from_string(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arrs = {}
 
@@ -522,11 +529,9 @@ class DataHolderTest(unittest.TestCase):
                 self.assertEqual(el.decoders, data["decoders"])
                 for c in ca:
                     for it in types[c]:
-# print "CAST",k, arr[a][1] ,"to", c, it,":", el.value, ca[c][k]
-                        if ca[c][k] == True:
+                        if ca[c][k] is True:
                             self.assertEqual(
                                 NTP.convert[it](el.value), el.cast(it))
-# print  "VAL",NTP.convert[it](el.value), el.cast(it)
                         else:
                             self.myAssertRaise(ValueError, el.cast, it)
 
@@ -534,7 +539,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arrs = {}
 
@@ -557,12 +562,13 @@ class DataHolderTest(unittest.TestCase):
 
         arrs["f"] = {
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
         }
 
         arrs["s"] = {
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
-            #            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            #  "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
         }
 
         types = {}
@@ -591,7 +597,8 @@ class DataHolderTest(unittest.TestCase):
                     mlen = [
                         self.__rnd.randint(1, 10), self.__rnd.randint(0, 3)]
                     arr[k][2] = [
-                        arr[k][2] * self.__rnd.randint(1, 3) for c in range(mlen[0])]
+                        arr[k][2] * self.__rnd.randint(1, 3)
+                        for c in range(mlen[0])]
                 else:
                     mlen = [self.__rnd.randint(1, 10)]
                     arr[k][2] = [(True if self.__rnd.randint(0, 1) else False)
@@ -619,11 +626,11 @@ class DataHolderTest(unittest.TestCase):
                 self.assertEqual(el.decoders, data["decoders"])
                 for c in ca:
                     for it in types[c]:
-#                        print "CAST", arr[a][1] ,"to", it ,ca[c][k], c,k
-                        if ca[c][k] == True:
+                        if ca[c][k] is True:
                             elc = el.cast(it)
                             evalue = numpy.array(
-                                [NTP.convert[it](e) for e in el.value], dtype=it)
+                                [NTP.convert[it](e) for e in el.value],
+                                dtype=nptype(it))
                             self.assertEqual(len(evalue), len(elc))
                             for i in range(len(evalue)):
                                 if types[c][it]:
@@ -638,7 +645,7 @@ class DataHolderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_cast_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arrs = {}
 
@@ -661,12 +668,13 @@ class DataHolderTest(unittest.TestCase):
 
         arrs["f"] = {
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
         }
 
         arrs["s"] = {
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
-            #            "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
+            #  "State":[ "string", "DevState", PyTango._PyTango.DevState.ON],
         }
 
         types = {}
@@ -696,13 +704,16 @@ class DataHolderTest(unittest.TestCase):
                     1, 10), self.__rnd.randint(0, 3)]
                 if arr[k][1] != "DevBoolean":
                     arr[k][2] = [[arr[k][2] * self.__rnd.randint(0, 3)
-                                  for r in range(mlen[1])] for c in range(mlen[0])]
+                                  for r in range(mlen[1])]
+                                 for c in range(mlen[0])]
                 else:
                     mlen = [
                         self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                     if arr[k][1] == 'DevBoolean':
-                        arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                      for c in range(mlen[1])] for r in range(mlen[0])]
+                        arr[k][2] = [[(True if self.__rnd.randint(0, 1)
+                                       else False)
+                                      for c in range(mlen[1])]
+                                     for r in range(mlen[0])]
 
                 arr[k][3] = [mlen[0], mlen[1]]
 
@@ -726,19 +737,20 @@ class DataHolderTest(unittest.TestCase):
                 self.assertEqual(el.decoders, data["decoders"])
                 for c in ca:
                     for it in types[c]:
-#                        print "CAST", arr[a][1] ,"to", it ,ca[c][k], c,k
-                        if ca[c][k] == True:
+                        if ca[c][k] is True:
                             elc = el.cast(it)
                             evalue = numpy.array([[NTP.convert[it](e)
                                                    for e in row]
-                                                  for row in el.value], dtype=it)
+                                                  for row in el.value],
+                                                 dtype=nptype(it))
 
                             for i in range(len(evalue)):
                                 self.assertEqual(len(evalue[i]), len(elc[i]))
                                 for j in range(len(evalue[i])):
                                     if types[c][it]:
                                         self.assertTrue(
-                                            abs(evalue[i][j] - elc[i][j]) <= types[c][it])
+                                            abs(evalue[i][j] - elc[i][j]) <=
+                                            types[c][it])
                                     else:
                                         self.assertEqual(
                                             evalue[i][j], elc[i][j])

@@ -19,6 +19,8 @@
 
 """ Definitions of group tag evaluation classes """
 
+import sys
+
 from .FElement import FElementWithAttr
 from .Errors import (XMLSettingSyntaxError)
 
@@ -45,9 +47,15 @@ class EGroup(FElementWithAttr):
                                   reloadmode=reloadmode)
         if self._lastObject() is not None:
             if ("type" in attrs.keys()) and ("name" in attrs.keys()):
-                gname = attrs["name"].encode()
+                if sys.version_info > (3,):
+                    gname = attrs["name"]
+                else:
+                    gname = attrs["name"].encode()
             elif "type" in attrs.keys():
-                gname = attrs["type"][2:].encode()
+                if sys.version_info > (3,):
+                    gname = attrs["type"][2:]
+                else:
+                    gname = attrs["type"][2:].encode()
             else:
                 if self._streams:
                     self._streams.error(
@@ -63,9 +71,17 @@ class EGroup(FElementWithAttr):
             try:
                 #: (:class:`nxswriter.FileWriter.FTGroup`) \
                 #:      stored H5 file object (defined in base class)
-                self.h5Object = self._lastObject().create_group(
-                    gname, attrs["type"].encode())
+                if sys.version_info > (3,):
+                    self.h5Object = self._lastObject().create_group(
+                        gname, attrs["type"])
+                else:
+                    self.h5Object = self._lastObject().create_group(
+                        gname, attrs["type"].encode())
             except Exception as e:
+                if sys.version_info < (3,):
+                    atype = attrs["type"]
+                else:
+                    atype = attrs["type"].encode()
                 if self._streams:
                     self._streams.debug(str(e))
                     self._streams.error(
@@ -73,14 +89,14 @@ class EGroup(FElementWithAttr):
                         "The group '%s' of '%s' type cannot be created. \n"
                         "Please remove the old file, change the file name "
                         "or change the group name." %
-                        (gname, attrs["type"].encode()),
+                        (gname, atype),
                         std=False)
 
                 raise XMLSettingSyntaxError(
                     "The group '%s' of '%s' type cannot be created. \n"
                     "Please remove the old file, change the file name "
                     "or change the group name." %
-                    (gname, attrs["type"].encode()))
+                    (gname, atype))
 
         else:
             if self._streams:

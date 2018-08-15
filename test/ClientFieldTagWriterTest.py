@@ -29,24 +29,29 @@ import binascii
 import time
 import numpy
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
+from xml.sax import SAXParseException
+
+from nxswriter import Types
+from nxswriter.TangoDataWriter import TangoDataWriter
 
 try:
     from pni.io.nx.h5 import open_file
 except:
     from pni.nx.h5 import open_file
 
-from xml.sax import SAXParseException
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
 
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
 
-from nxswriter import TangoDataWriter, Types
-from nxswriter.TangoDataWriter import TangoDataWriter
-from Checkers import Checker
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
-
-
 class ClientFieldTagWriterTest(unittest.TestCase):
 
     # constructor
@@ -59,7 +64,6 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             # random seed
             self.seed = long(time.time() * 256)  # use fractional seconds
 #        self.seed = 53867028435352363366241944565880343254
@@ -85,14 +89,14 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # opens writer
     # \param fname file name
@@ -127,7 +131,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -270,7 +274,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                         + ', "cnt_u16":' + str(uc)
                         + ', "cnt_u32":' + str(uc)
                         + ((', "cnt_u64_canfail":' + str(uc)) if flip else ' ')
-                        + ',  "cnt_u64":' + str(uc)
+                        + ', "cnt_u64":' + str(uc)
                         + ' } '
                         + str(trigstr if flip else ' ')
                         + '  }')
@@ -340,7 +344,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -468,9 +472,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarAttribute(det, "scalar_float32_canfail", "float32",
                                       numpy.finfo(getattr(numpy, 'float32')).max)
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
 
         f.close()
         os.remove(fname)
@@ -479,7 +483,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -608,7 +612,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -752,7 +756,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -942,16 +946,17 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "mca_int":' + str(self._mca1[0]) + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
+            fname, xml, json='{"data": { "mca_int":' + str(self._mca1[0])
+            + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
 
-        mca2 = [[(el + 100) / 2 for el in mca] for mca in self._mca1]
+        mca2 = [[(el + 100) // 2 for el in mca] for mca in self._mca1]
         flip = True
         for mca in self._mca1:
             self.record(tdw, '{"data": { "mca_int":' + str(mca)
-                        + ', "mca_uint":' + str([(el + 100) / 2 for el in mca])
+                        + ', "mca_uint":' + str([(el + 100) // 2 for el in mca])
                         + (', "mca_int_canfail":' + str(mca) if flip else "")
                         + (', "mca_uint_canfail":' + str(
-                           [(el + 100) / 2 for el in mca]) if flip else "")
+                           [(el + 100) // 2 for el in mca]) if flip else "")
                         + '  } }')
             flip = not flip
         self.closeWriter(
@@ -962,7 +967,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         f = open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 18)
         self._sc.checkSpectrumField(
-            det, "mca_int",  "int64", "NX_INT", self._mca1)
+            det, "mca_int", "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(
             det, "mca_int8", "int8", "NX_INT8", self._mca1, grows=2)
         self._sc.checkSpectrumField(
@@ -972,7 +977,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(
             det, "mca_int64", "int64", "NX_INT64", self._mca1)
         self._sc.checkSpectrumField(
-            det, "mca_uint",  "uint64", "NX_UINT", mca2)
+            det, "mca_uint", "uint64", "NX_UINT", mca2)
         self._sc.checkSpectrumField(
             det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows=2)
         self._sc.checkSpectrumField(
@@ -1007,7 +1012,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "mca_uint32_canfail", "uint32", "NX_UINT32",
-                                    [[((self._mca1[j][i] + 100) / 2 if not j % 2 else
+                                    [[((self._mca1[j][i] + 100) // 2 if not j % 2 else
                                        numpy.iinfo(getattr(numpy, 'uint32')).max)
                                       for i in range(
                                           len(self._mca1[
@@ -1038,7 +1043,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1260,7 +1265,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1527,7 +1532,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1646,7 +1651,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         logical = ["1", "0", "true", "false", "True", "False", "TrUe", "FaLsE"]
         tdw = self.openWriter(fname, xml, json='{"data": {'
                               + ' "mca_float":' + str(self._fmca1[0])
-                              + ',  "flags":' +
+                              + ', "flags":' +
                               str(logical).replace("'", "\"")
                               + ', "mca_int":' + str(self._mca1[0])
                               + '  } }')
@@ -1655,13 +1660,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         for i in range(steps):
             self.record(tdw, '{"data": {'
                         + ' "mca_float":' + str(self._fmca1[i])
-                        + ',  "flags":' + str(logical).replace("'", "\"")
+                        + ', "flags":' + str(logical).replace("'", "\"")
                         + '  } }')
             flip = not flip
         self.closeWriter(tdw, json='{"data": {'
                          + ' "mca_float":' + str(self._fmca1[0])
                          + ', "mca_int":' + str(self._mca1[0])
-                         + ',  "flags":' + str(logical).replace("'", "\"")
+                         + ', "flags":' + str(logical).replace("'", "\"")
                          + ', "mca_uint":' + str(self._mca2[0])
                          + '  } }')
 
@@ -1699,9 +1704,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                         [False] * 8)
 
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
         f.close()
         os.remove(fname)
 
@@ -1709,7 +1714,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1907,16 +1912,16 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         tdw = self.openWriter(
             fname, xml, json='{"data": { "pco_int":' + str(self._pco1[0]) + '  } }')
 
-        pco2 = [[[(el + 100) / 2 for el in rpco] for rpco in pco]
+        pco2 = [[[(el + 100) // 2 for el in rpco] for rpco in pco]
                 for pco in self._pco1]
         flip = True
         for pco in self._pco1:
             self.record(tdw, '{"data": { "pco_int":' + str(pco)
                         + ', "pco_uint":' +
-                        str([[(el + 100) / 2 for el in rpco]
+                        str([[(el + 100) // 2 for el in rpco]
                              for rpco in pco])
                         + (', "pco_uint_canfail":' + str(
-                           [[(el + 100) / 2 for el in rpco] for rpco in pco]) if flip else "")
+                           [[(el + 100) // 2 for el in rpco] for rpco in pco]) if flip else "")
                         + '  } }')
             flip = not flip
         self.closeWriter(
@@ -1927,7 +1932,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         f = open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 17)
         self._sc.checkImageField(
-            det, "pco_int",  "int64", "NX_INT", self._pco1)
+            det, "pco_int", "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(
             det, "pco_int8", "int8", "NX_INT8", self._pco1, grows=2)
         self._sc.checkImageField(
@@ -1936,7 +1941,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "pco_int32", "int32", "NX_INT32", self._pco1, grows=2)
         self._sc.checkImageField(
             det, "pco_int64", "int64", "NX_INT64", self._pco1)
-        self._sc.checkImageField(det, "pco_uint",  "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
         self._sc.checkImageField(
             det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows=3)
         self._sc.checkImageField(
@@ -1949,12 +1954,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleImageField(
             det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "final_pco_uint",  "uint64", "NX_UINT", pco2[0])
+            det, "final_pco_uint", "uint64", "NX_UINT", pco2[0])
 
 # self._sc.checkSingleImageField(det, "init_pco_int64_canfail", "int64",
 # "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "init_pco_int64_canfail",  "int64", "NX_INT64",
+            det, "init_pco_int64_canfail", "int64", "NX_INT64",
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco]
              for rpco in self._pco1[0]],
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
@@ -1962,7 +1967,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                    "nexdatas_canfail_error": None})
 
         self._sc.checkSingleImageField(
-            det, "final_pco_uint_canfail",  "uint64", "NX_UINT",
+            det, "final_pco_uint_canfail", "uint64", "NX_UINT",
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco]
              for rpco in self._pco1[0]],
             attrs={"type": "NX_UINT", "units": "", "nexdatas_source": None,
@@ -1971,7 +1976,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "pco_uint8_canfail", "uint8", "NX_UINT8",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint8')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],
@@ -1982,7 +1987,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "pco_uint16_canfail", "uint16", "NX_UINT16",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint16')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],
@@ -1992,7 +1997,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                    "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pco_uint32_canfail", "uint32", "NX_UINT32",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint32')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],
@@ -2008,7 +2013,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2237,7 +2242,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2543,7 +2548,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2716,7 +2721,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                    ["True", "False", "TrUe", "FaLsE"]]
         tdw = self.openWriter(fname, xml, json='{"data": {'
                               + ' "pco_float":' + str(self._fpco1[0])
-                              + ',  "flags":' +
+                              + ', "flags":' +
                               str(logical).replace("'", "\"")
                               + ', "pco_int":' + str(self._pco1[0])
                               + '  } }')
@@ -2725,13 +2730,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             self.record(tdw, '{"data": {'
                         + ' "pco_float":' + str(self._fpco1[i])
                         + ', "pco_int":' + str(self._pco1[i])
-                        + ',  "flags":' + str(logical).replace("'", "\"")
+                        + ', "flags":' + str(logical).replace("'", "\"")
                         + '  } }')
 
         self.closeWriter(tdw, json='{"data": {'
                          + ' "pco_float":' + str(self._fpco1[0])
                          + ', "pco_int":' + str(self._pco1[0])
-                         + ',  "flags":' + str(logical).replace("'", "\"")
+                         + ', "flags":' + str(logical).replace("'", "\"")
                          + '  } }')
 
         # check the created file
@@ -2740,7 +2745,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageAttribute(
             det, "image_float", "float64", self._fpco1[steps - 1],
                                       error=1.e-14)
-        self._sc.checkImageAttribute(det, "image_int",  "int64", self._pco1[0])
+        self._sc.checkImageAttribute(det, "image_int", "int64", self._pco1[0])
         self._sc.checkImageAttribute(det, "image_bool", "bool", logical)
         self._sc.checkImageAttribute(
             det, "image_int32", "int32", self._pco1[steps - 1])
@@ -2768,9 +2773,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # STRING NOT SUPPORTED BY PNINX
 
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
         f.close()
         os.remove(fname)
 

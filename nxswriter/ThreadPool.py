@@ -19,10 +19,15 @@
 
 """ Provides a pool with element threads """
 
-import Queue
+import sys
 
 from .ElementThread import ElementThread
 from .Errors import ThreadError
+
+if sys.version_info > (3,):
+    import queue as Queue
+else:
+    import Queue
 
 
 class ThreadPool(object):
@@ -41,7 +46,7 @@ class ThreadPool(object):
         """
 
         #: (:obj:`int`) maximal number of threads
-        self.numberOfThreads = numberOfThreads if numberOfThreads >= 1 else -1
+        self.numberOfThreads = numberOfThreads or -1
         #: (:class:`Queue.Queue`) queue of the appended elements
         self.__elementQueue = Queue.Queue()
         #: (:obj:`list` <:class:`nxswriter.Element.Element`>) \

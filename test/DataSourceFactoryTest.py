@@ -35,7 +35,6 @@ import TestDataSource
 from nxswriter.DataSourceFactory import DataSourceFactory
 from nxswriter.DataSources import DataSource
 from nxswriter.DataSourcePool import DataSourcePool
-from nxswriter.DecoderPool import DecoderPool
 from nxswriter.Element import Element
 from nxswriter.EField import EField
 from nxswriter import DataSources
@@ -78,12 +77,12 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -94,7 +93,7 @@ class DataSourceFactoryTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -126,7 +125,7 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         ds = DataSourceFactory(self._fattrs, None)
         self.assertTrue(isinstance(ds, Element))
@@ -149,7 +148,7 @@ class DataSourceFactoryTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs)
         ds = DataSourceFactory(self._fattrs, el)
@@ -313,7 +312,7 @@ ds.result = ds.myclient + 1
     # \brief It tests default settings
     def test_check_flow(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         atts = {"type": "CL"}
         name = "myRecord"
@@ -347,7 +346,7 @@ ds.result = ds.myclient + 1
         self.assertEqual(
             td.stack[1], '<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result>\nds.result = ds.myclient + 1\n</result>\n</datasource>')
         self.assertEqual(td.stack[2], 'setJSON')
-        self.assertEqual(td.stack[3],  {u'data': {u'myRecord': 1123}})
+        self.assertEqual(td.stack[3], {u'data': {u'myRecord': 1123}})
         self.assertEqual(td.stack[4], None)
         self.assertEqual(td.stack[5], "setDataSources")
         self.assertEqual(td.stack[6], dsp)

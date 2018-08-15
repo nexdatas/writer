@@ -51,6 +51,9 @@ import nxswriter.H5PYWriter as H5PYWriter
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class EAttributeH5PYTest(unittest.TestCase):
@@ -78,7 +81,6 @@ class EAttributeH5PYTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -93,15 +95,15 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
         FileWriter.writer = H5PYWriter
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -112,7 +114,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -120,7 +122,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -144,9 +146,9 @@ class EAttributeH5PYTest(unittest.TestCase):
 
     # default constructor test
     # \brief It tests default settings
-    def test_default_constructor(self):
+    def test_default_constructor_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self._nxFile = FileWriter.create_file(
@@ -172,7 +174,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -191,7 +193,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_simple(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -209,7 +211,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_ds(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -230,7 +232,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_strategy(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -259,7 +261,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_trigger(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -282,7 +284,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -333,7 +335,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -352,7 +354,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -386,7 +388,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -405,7 +407,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -457,7 +459,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -476,7 +478,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -528,7 +530,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -547,7 +549,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -602,7 +604,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -621,7 +623,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -676,7 +678,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_Attributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -695,7 +697,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -751,7 +753,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_no(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -811,35 +813,28 @@ class EAttributeH5PYTest(unittest.TestCase):
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             el[k]._createAttributes()
             at = el[k].h5Object.attributes[k]
-            print at[...], at.dtype, at.shape
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2] or 'string', attrs[k][0],
                 attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         for k in attrs.keys():
-            print "K", k
-#            if attrs[k][2] == 'string':
-#                "writing multi-dimensional string is not supported by pniio"
-#                continue
+            print(k)
             el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [1])
             el[k]._createAttributes()
-#            at = el[k].h5Attribute(k)
             at = el[k].h5Object.attributes[k]
-#            self._sc.checkSpectrumAttribute(el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-# attrs[k][3] if len(attrs[k])>3 else 0)
             self._sc.checkScalarAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                            attrs[k][3] if len(attrs[k]) > 3 else 0)
+                attrs[k][3] if len(attrs[k]) > 3 else 0)
 
         self._nxFile.close()
 
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_run_value_no_string_shape_reduction(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -877,7 +872,7 @@ class EAttributeH5PYTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-            print "K", k
+            print(k)
 #            if attrs[k][2] == 'string':
 #                "writing multi-dimensional string is not supported by pniio"
 #                continue
@@ -899,7 +894,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -959,7 +954,6 @@ class EAttributeH5PYTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, "")
 
             ea[k].run()
@@ -981,7 +975,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1016,7 +1010,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1044,7 +1038,6 @@ class EAttributeH5PYTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
@@ -1063,7 +1056,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1097,7 +1090,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1145,7 +1138,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1180,7 +1173,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1208,7 +1201,6 @@ class EAttributeH5PYTest(unittest.TestCase):
                 self.assertEqual(at[...], '' if attrs[k][2] == 'string' else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
@@ -1227,7 +1219,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_0d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1261,7 +1253,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1291,7 +1283,6 @@ class EAttributeH5PYTest(unittest.TestCase):
                                  2] == 'string' or not attrs[k][2] else 0)
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].markFailed()
@@ -1310,7 +1301,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1329,7 +1320,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1345,7 +1336,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1369,7 +1360,6 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[k][2])
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             ea[k].run()
@@ -1393,7 +1383,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1414,7 +1404,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1427,7 +1417,7 @@ class EAttributeH5PYTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1439,10 +1429,13 @@ class EAttributeH5PYTest(unittest.TestCase):
                 el[k].tagAttributes[k] = (attrs[k][1], '',)
             ds = TestDataSource()
             ds.valid = True
-            ds.value = {"rank": NTP.rTf[1], "value": [attrs[k][0]] if attrs[k][2] != "bool"
-                        else [Converters.toBool(attrs[k][0])],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                        "shape": [1, 0]}
+            ds.value = {
+                "rank": NTP.rTf[1],
+                "value": [attrs[k][0]] if attrs[k][2] != "bool"
+                else [Converters.toBool(attrs[k][0])],
+                "tangoDType": NTP.pTt[(attrs[k][2])
+                                      if attrs[k][2] else "string"],
+                "shape": [1, 0]}
             ea[k].source = ds
             el[k].strategy = 'STEP'
 
@@ -1451,21 +1444,19 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(at.dtype, attrs[k][2])
 
         for k in attrs.keys():
-#            el[k].tagAttributes[k] = (attrs[k][1], str(attrs[k][0]), [])
             self.assertEqual(ea[k].name, k)
             self.assertEqual(ea[k].h5Object, None)
             self.assertEqual(ea[k].markFailed(), None)
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            self.assertEqual(ea[k].h5Object.shape,(1,))
             if attrs[k][2] and attrs[k][2] != 'string':
                 self._sc.checkSpectrumAttribute(
                     el[k].h5Object, k, attrs[k][2], [attrs[k][0]],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                    attrs[k][5] if len(attrs[k]) > 5 else 0)
             else:
                 self._sc.checkScalarAttribute(
                     el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                    attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -1475,7 +1466,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1494,7 +1485,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1530,7 +1521,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0],)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1569,7 +1560,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1590,7 +1581,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1618,7 +1609,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0],)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1657,7 +1648,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1676,7 +1667,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1711,7 +1702,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (1, 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1751,7 +1742,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         attrs = {
@@ -1771,7 +1762,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1793,7 +1784,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (1, 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1823,7 +1814,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(ea[k].h5Object.name, k)
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                                attrs[k][5] if len(attrs[k]) > 5 else 0)
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -1833,7 +1824,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1852,7 +1843,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1890,7 +1881,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (1, len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1918,15 +1909,9 @@ class EAttributeH5PYTest(unittest.TestCase):
             ea[k].run()
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' % k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
 
         self._nxFile.close()
 
@@ -1936,7 +1921,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1957,7 +1942,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1979,7 +1964,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (1, len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2007,15 +1992,9 @@ class EAttributeH5PYTest(unittest.TestCase):
             ea[k].markFailed()
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#           if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][5] if len(attrs[k]) > 5 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
 
         self._nxFile.close()
 
@@ -2025,7 +2004,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2044,7 +2023,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2082,7 +2061,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (len(attrs[k][0]), 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2111,15 +2090,9 @@ class EAttributeH5PYTest(unittest.TestCase):
             ea[k].run()
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)
@@ -2128,7 +2101,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2149,7 +2122,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -2172,7 +2145,7 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             attrs[k][3] = (len(attrs[k][0]), 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2201,15 +2174,9 @@ class EAttributeH5PYTest(unittest.TestCase):
             ea[k].markFailed()
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][5] if len(attrs[k]) > 5 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)
@@ -2218,7 +2185,7 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2237,7 +2204,7 @@ class EAttributeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2261,22 +2228,38 @@ class EAttributeH5PYTest(unittest.TestCase):
             mlen = self.__rnd.randint(2, 10)
             if attrs[k][2] == "string":
 
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3) for c in range(mlen)]
+                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(1, 3)
+                                for c in range(mlen)]
                                for c2 in range(self.__rnd.randint(2, 10))]
             elif attrs[k][2] != "bool":
-                attrs[k][0] = [[attrs[k][0] * self.__rnd.randint(0, 3) for c in range(mlen)]
-                               for c2 in range(self.__rnd.randint(2, 10))]
+                attrs[k][0] = [
+                    [
+                        attrs[k][0] * self.__rnd.randint(0, 3)
+                        for c in range(mlen)
+                    ]
+                    for c2 in range(self.__rnd.randint(2, 10))
+                ]
             else:
                 if k == 'bool':
-                    attrs[k][0] = [[bool(self.__rnd.randint(0, 1)) for c in range(mlen)]
-                                   for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] = [
+                        [
+                            bool(self.__rnd.randint(0, 1)) for c
+                            in range(mlen)
+                        ]
+                        for c2 in range(self.__rnd.randint(2, 10))
+                    ]
                 else:
-                    attrs[k][0] = [[("true" if self.__rnd.randint(0, 1) else "false")
-                                    for c in range(mlen)] for c2 in range(self.__rnd.randint(2, 10))]
+                    attrs[k][0] = [
+                        [
+                            ("true" if self.__rnd.randint(0, 1) else "false")
+                            for c in range(mlen)
+                        ]
+                        for c2 in range(self.__rnd.randint(2, 10))
+                    ]
 
             attrs[k][3] = (len(attrs[k][0]), len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2288,10 +2271,14 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
 
             print
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
-                        else [[Converters.toBool(c) for c in row] for row in attrs[k][0]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
-                        "shape": [attrs[k][3][0], attrs[k][3][1]]}
+            ds.value = {
+                "rank": NTP.rTf[2],
+                "value": attrs[k][0] if attrs[k][2] != "bool"
+                else [[Converters.toBool(c) for c in row]
+                      for row in attrs[k][0]],
+                "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                      else "string"],
+                "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
 
@@ -2306,15 +2293,9 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
 
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][4] if len(attrs[k]) > 4 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][4] if len(attrs[k]) > 4 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)
@@ -2323,29 +2304,45 @@ class EAttributeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_value_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         attrs = {
             "string": ["", "NX_CHAR", "string", (1,)],
             "datetime": ["", "NX_DATE_TIME", "string", (1,)],
             "iso8601": ["", "ISO8601", "string", (1,)],
-            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT", "int64", (1,)],
-            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8", "int8", (1,)],
-            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16", "int16", (1,)],
-            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32", "int32", (1,)],
-            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64", "int64", (1,)],
-            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT", "uint64", (1,)],
-            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT", "uint64", (1,)],
-            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max, "NX_UINT8", "uint8", (1,)],
-            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max, "NX_UINT16", "uint16", (1,)],
-            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max, "NX_UINT32", "uint32", (1,)],
-            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
-            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
-            "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
-            "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
-            "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
+            "int": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT",
+                    "int64", (1,)],
+            "int8": [numpy.iinfo(getattr(numpy, 'int8')).max, "NX_INT8",
+                     "int8", (1,)],
+            "int16": [numpy.iinfo(getattr(numpy, 'int16')).max, "NX_INT16",
+                      "int16", (1,)],
+            "int32": [numpy.iinfo(getattr(numpy, 'int32')).max, "NX_INT32",
+                      "int32", (1,)],
+            "int64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_INT64",
+                      "int64", (1,)],
+            "uint": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT",
+                     "uint64", (1,)],
+            #            "uint":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT", "uint64", (1,)],
+            "uint8": [numpy.iinfo(getattr(numpy, 'uint8')).max,
+                      "NX_UINT8", "uint8", (1,)],
+            "uint16": [numpy.iinfo(getattr(numpy, 'uint16')).max,
+                       "NX_UINT16", "uint16", (1,)],
+            "uint32": [numpy.iinfo(getattr(numpy, 'uint32')).max,
+                       "NX_UINT32", "uint32", (1,)],
+            "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max,
+                       "NX_UINT64", "uint64", (1,)],
+            #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,
+            # "NX_UINT64", "uint64", (1,)],
+            "float": [numpy.finfo(getattr(numpy, 'float64')).max,
+                      "NX_FLOAT", "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max,
+                       "NX_NUMBER", "float64", (1,), 1.e-14],
+            "float32": [numpy.finfo(getattr(numpy, 'float32')).max,
+                        "NX_FLOAT32", "float32", (1,), 1.e-5],
+            "float64": [numpy.finfo(getattr(numpy, 'float64')).max,
+                        "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
         }
 
@@ -2363,11 +2360,12 @@ class EAttributeH5PYTest(unittest.TestCase):
 
             mlen = self.__rnd.randint(2, 10)
             attrs[k][0] = [[attrs[k][0]
-                            for c in range(mlen)] for c2 in range(self.__rnd.randint(2, 10))]
+                            for c in range(mlen)]
+                           for c2 in range(self.__rnd.randint(2, 10))]
 
             attrs[k][3] = (len(attrs[k][0]), len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2379,9 +2377,12 @@ class EAttributeH5PYTest(unittest.TestCase):
             ds.valid = True
 
             print
-            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0] if attrs[k][2] != "bool"
-                        else [[Converters.toBool(c) for c in row] for row in attrs[k][0]],
-                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"],
+            ds.value = {"rank": NTP.rTf[2], "value": attrs[k][0]
+                        if attrs[k][2] != "bool"
+                        else [[Converters.toBool(c) for c in row]
+                              for row in attrs[k][0]],
+                        "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2]
+                                              else "string"],
                         "shape": [attrs[k][3][0], attrs[k][3][1]]}
             ea[k].source = ds
             el[k].strategy = stt
@@ -2397,15 +2398,9 @@ class EAttributeH5PYTest(unittest.TestCase):
             self.assertEqual(type(ea[k].h5Object), H5PYWriter.H5PYAttribute)
             self.assertEqual(ea[k].h5Object.name, k)
 
-#            if ea[k].h5Object.dtype != 'string':
             self._sc.checkImageAttribute(
                 el[k].h5Object, k, attrs[k][2], attrs[k][0],
-                                         attrs[k][5] if len(attrs[k]) > 5 else 0)
-#            else:
-#                self.assertEqual(ea[k].error[0],
-#                                 'Data for %s not found. DATASOURCE:Test DataSource' %k)
-#                self.assertEqual(ea[k].error[1],
-#                                'Storing multi-dimension string attributes not supported by pniio')
+                attrs[k][5] if len(attrs[k]) > 5 else 0)
         self._nxFile.close()
 
         os.remove(self._fname)

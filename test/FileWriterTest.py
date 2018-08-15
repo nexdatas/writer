@@ -28,6 +28,7 @@ import random
 import binascii
 import string
 import weakref
+import time
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
@@ -42,6 +43,9 @@ except:
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 class fwriter(object):
     def __init__(self, tparent=None):
@@ -51,6 +55,7 @@ class fwriter(object):
     @property
     def parent(self):
         return self._tparent
+
 
 class fobject(object):
     def __init__(self, tparent=None):
@@ -183,6 +188,7 @@ TField = createClass("TField", FileWriter.FTField)
 TAttributeManager = createClass("TAttributeManager", FileWriter.FTAttributeManager)
 TLink = createClass("TLink", FileWriter.FTLink)
 
+
 # test fixture
 class FileWriterTest(unittest.TestCase):
 
@@ -192,9 +198,9 @@ class FileWriterTest(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName)
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
+            self.__seed = long(time.time() * 256)
 #        self.__seed =241361343400098333007607831038323262554
 
         self.__rnd = random.Random(self.__seed)
@@ -203,13 +209,13 @@ class FileWriterTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -218,9 +224,9 @@ class FileWriterTest(unittest.TestCase):
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -229,9 +235,9 @@ class FileWriterTest(unittest.TestCase):
 
         self.assertEqual(len(list1), len(list2))
         for i, el in enumerate(list1):
-            if abs(el-list2[i]) >= error:
-                print "EL", el, list2[i], error
-            self.assertTrue(abs(el-list2[i]) < error)
+            if abs(el - list2[i]) >= error:
+                print("EL %s %s %s" % (el, list2[i], error))
+            self.assertTrue(abs(el - list2[i]) < error)
 
     # float image tester
     def myAssertImage(self, image1, image2, error=None):
@@ -241,9 +247,11 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(len(image1[i]), len(image2[i]))
             for j in range(len(image1[i])):
                 if error is not None:
-                    if abs(image1[i][j]-image2[i][j]) >= error:
-                        print "EL", image1[i][j], image2[i][j], error
-                    self.assertTrue(abs(image1[i][j]-image2[i][j]) < error)
+                    if abs(image1[i][j] - image2[i][j]) >= error:
+                        print("EL %s %s %s" % (
+                            image1[i][j], image2[i][j], error))
+                    self.assertTrue(
+                        abs(image1[i][j] - image2[i][j]) < error)
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
 
@@ -257,9 +265,11 @@ class FileWriterTest(unittest.TestCase):
                 self.assertEqual(len(image1[i][j]), len(image2[i][j]))
                 for k in range(len(image1[i][j])):
                     if error is not None:
-                        if abs(image1[i][j][k]-image2[i][j][k]) >= error:
-                            print "EL", image1[i][j][k], image2[i][j][k], error
-                        self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
+                        if abs(image1[i][j][k] - image2[i][j][k]) >= error:
+                            print("EL %s %s %s" % (
+                                image1[i][j][k], image2[i][j][k], error))
+                        self.assertTrue(
+                            abs(image1[i][j][k] - image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
 
@@ -267,7 +277,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         w = "weerew"
         el = FileWriter.FTObject(w)
 
@@ -277,7 +287,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_openfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.setwriter(tw)
         self.assertEqual(tw, FileWriter.writer)
@@ -295,7 +305,7 @@ class FileWriterTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
+            rb = bool(self.__rnd.randint(0, 1))
             tres = FileWriter.open_file(fn, rb)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "open_file")
@@ -305,7 +315,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.setwriter(tw)
         self.assertEqual(tw, FileWriter.writer)
@@ -323,7 +333,7 @@ class FileWriterTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
+            rb = bool(self.__rnd.randint(0, 1))
             tres = FileWriter.create_file(fn, rb)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "create_file")
@@ -333,14 +343,14 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_openfile_wr(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            tres = FileWriter.open_file(fn, writer = tw)
+            tres = FileWriter.open_file(fn, writer=tw)
             self.assertEqual(tw, tres.writer)
             self.assertEqual(tw.commands[-1], "open_file")
             self.assertEqual(tw.params[-1], [fn, False, None])
@@ -349,8 +359,8 @@ class FileWriterTest(unittest.TestCase):
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
-            tres = FileWriter.open_file(fn, rb, writer = tw)
+            rb = bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.open_file(fn, rb, writer=tw)
             self.assertEqual(tw, tres.writer)
             self.assertEqual(tw.commands[-1], "open_file")
             self.assertEqual(tw.params[-1], [fn, rb, None])
@@ -359,14 +369,14 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createfile_wr(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         for _ in range(10):
             res = self.__rnd.randint(1, 10)
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            tres = FileWriter.create_file(fn, writer = tw)
+            tres = FileWriter.create_file(fn, writer=tw)
             self.assertEqual(tw, tres.writer)
             self.assertEqual(tw.commands[-1], "create_file")
             self.assertEqual(tw.params[-1], [fn, False, None])
@@ -375,8 +385,8 @@ class FileWriterTest(unittest.TestCase):
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
-            tres = FileWriter.create_file(fn, rb, writer = tw)
+            rb = bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.create_file(fn, rb, writer=tw)
             self.assertEqual(tw, tres.writer)
             self.assertEqual(tw.commands[-1], "create_file")
             self.assertEqual(tw.params[-1], [fn, rb, None])
@@ -385,7 +395,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_openfile_twr(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         writers = []
         fobjs = []
         for _ in range(10):
@@ -395,7 +405,7 @@ class FileWriterTest(unittest.TestCase):
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            tres = FileWriter.open_file(fn, writer = tw)
+            tres = FileWriter.open_file(fn, writer=tw)
             fobjs.append(tres)
             self.assertEqual(tw.commands[-1], "open_file")
             self.assertEqual(tw.params[-1], [fn, False, None])
@@ -412,8 +422,8 @@ class FileWriterTest(unittest.TestCase):
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
-            tres = FileWriter.open_file(fn, rb, writer = tw)
+            rb = bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.open_file(fn, rb, writer=tw)
             fobjs.append(tres)
             self.assertEqual(tw.commands[-1], "open_file")
             self.assertEqual(tw.params[-1], [fn, rb, None])
@@ -427,7 +437,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createfile_twr(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         writers = []
         fobjs = []
         for _ in range(10):
@@ -437,7 +447,7 @@ class FileWriterTest(unittest.TestCase):
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            tres = FileWriter.create_file(fn, writer = tw)
+            tres = FileWriter.create_file(fn, writer=tw)
             fobjs.append(tres)
             self.assertEqual(tw, tres.writer)
             self.assertEqual(tw.commands[-1], "create_file")
@@ -455,8 +465,8 @@ class FileWriterTest(unittest.TestCase):
             tw.result = fwriter()
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
-            tres = FileWriter.create_file(fn, rb, writer = tw)
+            rb = bool(self.__rnd.randint(0, 1))
+            tres = FileWriter.create_file(fn, rb, writer=tw)
             fobjs.append(tres)
             self.assertEqual(tw, tres.writer)
             self.assertEqual(tw.commands[-1], "create_file")
@@ -470,7 +480,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_link(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -478,8 +488,8 @@ class FileWriterTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            fn2 = ''.join(self.__rnd.choice(chars) for _ in range(res*2))
-            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res*3))
+            fn2 = ''.join(self.__rnd.choice(chars) for _ in range(res * 2))
+            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res * 3))
             tres = FileWriter.link(fn, fn2, fn3)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "link")
@@ -490,7 +500,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_link_rc(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         gparent = fwriter()
         gparent.writer = tw
@@ -501,7 +511,7 @@ class FileWriterTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res*3))
+            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res * 3))
             tres = FileWriter.link(fn, parent, fn3)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "link")
@@ -511,7 +521,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_deflate_filter_rc(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         gparent = fwriter()
         gparent.writer = tw
@@ -530,7 +540,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_deflate_filter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -546,8 +556,8 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_createfile_pni(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             FileWriter.writer = PNIWriter
             fl = FileWriter.create_file(self._fname)
@@ -570,7 +580,7 @@ class FileWriterTest(unittest.TestCase):
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -596,7 +606,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftobject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FileWriter.FTObject(None)
         self.assertEqual(fto._h5object, None)
@@ -621,7 +631,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftcloser(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FTCloser(None)
         self.assertEqual(fto._h5object, None)
@@ -675,11 +685,11 @@ class FileWriterTest(unittest.TestCase):
         self.assertEqual(fto3.is_valid, True)
         self.assertEqual(fto4.is_valid, True)
 
-   # default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_ftobjects(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FileWriter.FTObject(None)
         self.assertEqual(fto.is_valid, True)
@@ -957,8 +967,8 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
             overwrite = False
@@ -1028,7 +1038,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1044,7 +1054,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnigroup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1098,7 +1108,7 @@ class FileWriterTest(unittest.TestCase):
             attr0 = rt.attributes
             attr1 = entry.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -1106,7 +1116,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(
                 isinstance(attr1.h5object, nx._nxh5.nxgroup_attributes))
 
-            print dir(rt)
+            print(dir(rt))
             self.assertTrue(
                 isinstance(rt, PNIWriter.PNIGroup))
             self.assertEqual(rt.name, "/")
@@ -1130,7 +1140,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(rt.exists("strument"), False)
 
             for rr in rt:
-                print rr.name
+                print(rr.name)
 
             self.assertTrue(
                 isinstance(entry, PNIWriter.PNIGroup))
@@ -1255,7 +1265,7 @@ class FileWriterTest(unittest.TestCase):
             kids = set()
             for en in det:
                 kids.add(en.name)
-            print kids
+            print(kids)
 
             self.assertEqual(
                 kids,
@@ -1596,7 +1606,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1613,7 +1623,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1683,13 +1693,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(strscalar.h5object.shape, (2,))
 
             self.assertEqual(strscalar[0], vl[0])
-            strscalar[1] =  vl[3]
+            strscalar[1] = vl[3]
             self.assertEqual(list(strscalar[...]), [vl[0], vl[3]])
 
             strscalar.grow(ext=2)
             self.assertEqual(strscalar.shape, (4,))
             self.assertEqual(strscalar.h5object.shape, (4,))
-            strscalar[1:4] =  vl[1:4]
+            strscalar[1:4] = vl[1:4]
             self.assertEqual(list(strscalar.read()), vl[0:4])
             self.assertEqual(list(strscalar[0:2]), vl[0:2])
 
@@ -1706,8 +1716,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(floatscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(floatscalar.name, 'floatscalar')
@@ -1719,7 +1727,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(floatscalar.shape, (1,))
             self.assertEqual(floatscalar.h5object.shape, (1,))
 
-            vl  = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
+            vl = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
 
             floatscalar[...] = vl[0]
             self.assertEqual(floatscalar.read(), vl[0])
@@ -1734,13 +1742,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(floatscalar.h5object.shape, (2,))
 
             self.assertEqual(floatscalar[0], vl[0])
-            floatscalar[1] =  vl[3]
+            floatscalar[1] = vl[3]
             self.assertEqual(list(floatscalar[...]), [vl[0], vl[3]])
 
             floatscalar.grow(ext=2)
             self.assertEqual(floatscalar.shape, (4,))
             self.assertEqual(floatscalar.h5object.shape, (4,))
-            floatscalar[1:4] =  vl[1:4]
+            floatscalar[1:4] = vl[1:4]
             self.assertEqual(list(floatscalar.read()), vl[0:4])
             self.assertEqual(list(floatscalar[0:2]), vl[0:2])
 
@@ -1757,8 +1765,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intscalar, PNIWriter.PNIField))
             self.assertTrue(isinstance(intscalar.h5object, nx._nxh5.nxfield))
             self.assertEqual(intscalar.name, 'intscalar')
@@ -1770,9 +1776,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.shape, (1,))
             self.assertEqual(intscalar.h5object.shape, (1,))
 
-
-
-            vl  = [243, 43, 45, 34, 45, 54, 23234]
+            vl = [243, 43, 45, 34, 45, 54, 23234]
 
             intscalar[...] = vl[0]
             self.assertEqual(intscalar.read(), vl[0])
@@ -1787,13 +1791,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.h5object.shape, (2,))
 
             self.assertEqual(intscalar[0], vl[0])
-            intscalar[1] =  vl[3]
+            intscalar[1] = vl[3]
             self.assertEqual(list(intscalar[...]), [vl[0], vl[3]])
 
             intscalar.grow(ext=2)
             self.assertEqual(intscalar.shape, (4,))
             self.assertEqual(intscalar.h5object.shape, (4,))
-            intscalar[1:4] =  vl[1:4]
+            intscalar[1:4] = vl[1:4]
             self.assertEqual(list(intscalar.read()), vl[0:4])
             self.assertEqual(list(intscalar[0:2]), vl[0:2])
 
@@ -1868,7 +1872,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1885,7 +1889,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1952,13 +1956,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(strspec.h5object.shape, (11,))
 
             self.assertEqual(list(strspec[0:10]), vl[0:10])
-            strspec[10] =  vl[10]
+            strspec[10] = vl[10]
             self.assertEqual(list(strspec[...]), vl[0:11])
 
             strspec.grow(ext=2)
             self.assertEqual(strspec.shape, (13,))
             self.assertEqual(strspec.h5object.shape, (13,))
-            strspec[1:13] =  vl[1:13]
+            strspec[1:13] = vl[1:13]
             self.assertEqual(list(strspec.read()), vl[0:13])
             self.assertEqual(list(strspec[0:2]), vl[0:2])
 
@@ -2002,13 +2006,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(floatspec.h5object.shape, (21,))
 
             self.myAssertFloatList(list(floatspec[0:20]), vl[0:20], 1e-4)
-            floatspec[20] =  vl[20]
+            floatspec[20] = vl[20]
             self.myAssertFloatList(list(floatspec[...]), vl[0:21], 1e-4)
 
             floatspec.grow(ext=2)
             self.assertEqual(floatspec.shape, (23,))
             self.assertEqual(floatspec.h5object.shape, (23,))
-            floatspec[1:23] =  vl[1:23]
+            floatspec[1:23] = vl[1:23]
             self.myAssertFloatList(list(floatspec.read()), vl[0:23], 1e-4)
             self.myAssertFloatList(list(floatspec[0:2]), vl[0:2], 1e-4)
 
@@ -2040,7 +2044,7 @@ class FileWriterTest(unittest.TestCase):
 
 
 
-            vl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
+            vl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
 
             intspec[...] = vl[0:30]
@@ -2054,13 +2058,13 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(intspec.h5object.shape, (31,))
 
             self.assertEqual(list(intspec[0:10]), vl[0:10])
-            intspec[30] =  vl[30]
+            intspec[30] = vl[30]
             self.assertEqual(list(intspec[...]), vl[0:31])
 
             intspec.grow(ext=2)
             self.assertEqual(intspec.shape, (33,))
             self.assertEqual(intspec.h5object.shape, (33,))
-            intspec[1:33] =  vl[1:33]
+            intspec[1:33] = vl[1:33]
             self.assertEqual(list(intspec.read()), vl[0:33])
             self.assertEqual(list(intspec[0:2]), vl[0:2])
 
@@ -2129,7 +2133,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2146,7 +2150,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2207,7 +2211,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(2)] for j in range(2)]
             strimage[...] = vv
             self.myAssertImage(strimage.read(), vv)
-            vv2 = [[vl[j+2][i+2] for i in range(2)] for j in range(2)]
+            vv2 = [[vl[j + 2][i + 2] for i in range(2)] for j in range(2)]
             strimage.write(vv2)
             self.myAssertImage(list(strimage[...]), vv2)
             strimage[...] = vv
@@ -2218,18 +2222,18 @@ class FileWriterTest(unittest.TestCase):
 
             iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
             self.myAssertImage(iv, vv)
-            strimage[2,:] = [vl[2][0], vl[2][1]]
+            strimage[2, :] = [vl[2][0], vl[2][1]]
             vv3 = [[vl[j][i] for i in range(2)] for j in range(3)]
             self.myAssertImage(strimage[...], vv3)
 
             strimage.grow(ext=2)
             self.assertEqual(strimage.shape, (5, 2))
             self.assertEqual(strimage.h5object.shape, (5, 2))
-            vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
+            vv4 = [[vl[j + 2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
-            strimage[2:5,:] =  vv4
+            strimage[2:5, :] = vv4
             self.myAssertImage(strimage[...], vv5)
-            self.myAssertImage(strimage[0:3,:], vv3)
+            self.myAssertImage(strimage[0:3, :], vv3)
 
             strimage.grow(1, 4)
             self.assertEqual(strimage.shape, (5, 6))
@@ -2268,7 +2272,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(10)] for j in range(20)]
             floatimage[...] = vv
             self.myAssertImage(floatimage.read(), vv)
-            vv2 = [[vl[j+20][i+10] for i in range(10)] for j in range(20)]
+            vv2 = [[vl[j + 20][i + 10] for i in range(10)] for j in range(20)]
             floatimage.write(vv2)
             self.myAssertImage(list(floatimage[...]), vv2)
             floatimage[...] = vv
@@ -2279,18 +2283,18 @@ class FileWriterTest(unittest.TestCase):
 
             iv = [[floatimage[j, i] for i in range(10)] for j in range(20)]
             self.myAssertImage(iv, vv)
-            floatimage[20,:] = [vl[20][i] for i in range(10)]
+            floatimage[20, :] = [vl[20][i] for i in range(10)]
             vv3 = [[vl[j][i] for i in range(10)] for j in range(21)]
             self.myAssertImage(floatimage[...], vv3)
 
             floatimage.grow(ext=2)
             self.assertEqual(floatimage.shape, (23, 10))
             self.assertEqual(floatimage.h5object.shape, (23, 10))
-            vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
+            vv4 = [[vl[j + 2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
-            floatimage[2:23,:] =  vv4
+            floatimage[2:23, :] = vv4
             self.myAssertImage(floatimage[...], vv5)
-            self.myAssertImage(floatimage[0:21,:], vv3)
+            self.myAssertImage(floatimage[0:21, :], vv3)
 
             floatimage.grow(1, 4)
             self.assertEqual(floatimage.shape, (23, 14))
@@ -2323,7 +2327,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(30)] for j in range(20)]
             intimage[...] = vv
             self.myAssertImage(intimage.read(), vv)
-            vv2 = [[vl[j+20][i+10] for i in range(30)] for j in range(20)]
+            vv2 = [[vl[j + 20][i + 10] for i in range(30)] for j in range(20)]
             intimage.write(vv2)
             self.myAssertImage(list(intimage[...]), vv2)
             intimage[...] = vv
@@ -2334,18 +2338,18 @@ class FileWriterTest(unittest.TestCase):
 
             iv = [[intimage[j, i] for i in range(30)] for j in range(20)]
             self.myAssertImage(iv, vv)
-            intimage[20,:] = [vl[20][i] for i in range(30)]
+            intimage[20, :] = [vl[20][i] for i in range(30)]
             vv3 = [[vl[j][i] for i in range(30)] for j in range(21)]
             self.myAssertImage(intimage[...], vv3)
 
             intimage.grow(ext=2)
             self.assertEqual(intimage.shape, (23, 30))
             self.assertEqual(intimage.h5object.shape, (23, 30))
-            vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
+            vv4 = [[vl[j + 2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
-            intimage[2:23,:] =  vv4
+            intimage[2:23, :] = vv4
             self.myAssertImage(intimage[...], vv5)
-            self.myAssertImage(intimage[0:21,:], vv3)
+            self.myAssertImage(intimage[0:21, :], vv3)
 
             intimage.grow(1, 4)
             self.assertEqual(intimage.shape, (23, 34))
@@ -2408,7 +2412,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2426,7 +2430,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnifield_vec(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2487,7 +2491,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec[...] = vv
             self.myAssertVector(strvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i+2] for i in range(2)] for j in range(2)] for k in range(3)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec.write(vv2)
             self.myAssertVector(list(strvec[...]), vv2)
             strvec[...] = vv
@@ -2498,19 +2502,19 @@ class FileWriterTest(unittest.TestCase):
 
             iv = [[[strvec[k, j, i] for i in range(2)] for j in range(2)] for k in range(3)]
             self.myAssertVector(iv, vv)
-            strvec[3,:,:] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
+            strvec[3, :, :] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(4)]
             self.myAssertVector(strvec[...], vv3)
 
             strvec.grow(2, 3)
             self.assertEqual(strvec.shape, (4, 2, 5))
             self.assertEqual(strvec.h5object.shape, (4, 2, 5))
-            vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
+            vv4 = [[[vl[k][j][i + 2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
 
-            strvec[:,:, 2:5] =  vv4
+            strvec[:, :, 2:5] = vv4
             self.myAssertVector(strvec[...], vv5)
-            self.myAssertVector(strvec[:,:, 0:2], vv3)
+            self.myAssertVector(strvec[:, :, 0:2], vv3)
 
             strvec.grow(1, 4)
             self.assertEqual(strvec.shape, (4, 6, 5))
@@ -2549,7 +2553,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec[...] = vv
             self.myAssertVector(floatvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i+2] for i in range(10)] for j in range(20)] for k in range(1)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
             self.myAssertVector([floatvec[...]], vv2)
@@ -2561,19 +2565,19 @@ class FileWriterTest(unittest.TestCase):
 
             iv = [[[floatvec[k, j, i] for i in range(10)] for j in range(20)] for k in range(1)]
             self.myAssertVector(iv, vv)
-            floatvec[1,:,:] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
+            floatvec[1, :, :] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
             vv3 = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(2)]
             self.myAssertVector(floatvec[...], vv3)
 
             floatvec.grow(2, 3)
             self.assertEqual(floatvec.shape, (2, 20, 13))
             self.assertEqual(floatvec.h5object.shape, (2, 20, 13))
-            vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
+            vv4 = [[[vl[k][j][i + 10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
 
-            floatvec[:,:, 10:13] =  vv4
+            floatvec[:, :, 10:13] = vv4
             self.myAssertVector(floatvec[...], vv5)
-            self.myAssertVector(floatvec[:,:, 0:10], vv3)
+            self.myAssertVector(floatvec[:, :, 0:10], vv3)
 
             floatvec.grow(1, 4)
             self.assertEqual(floatvec.shape, (2, 24, 13))
@@ -2614,7 +2618,7 @@ class FileWriterTest(unittest.TestCase):
 
             intvec[...] = vv
             self.myAssertVector(intvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i+2] for i in range(30)] for j in range(2)] for k in range(1)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(30)] for j in range(2)] for k in range(1)]
             intvec.write(vv2)
             self.myAssertVector(intvec.read(), vv2)
             self.myAssertVector([intvec[...]], vv2)
@@ -2626,19 +2630,19 @@ class FileWriterTest(unittest.TestCase):
 
             iv = [[[intvec[k, j, i] for i in range(30)] for j in range(2)] for k in range(1)]
             self.myAssertVector(iv, vv)
-            intvec[1,:,:] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
+            intvec[1, :, :] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(30)] for j in range(2)] for k in range(2)]
             self.myAssertVector(intvec[...], vv3)
 
             intvec.grow(2, 3)
             self.assertEqual(intvec.shape, (2, 2, 33))
             self.assertEqual(intvec.h5object.shape, (2, 2, 33))
-            vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
+            vv4 = [[[vl[k][j][i + 30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
 
-            intvec[:,:, 30:33] =  vv4
+            intvec[:, :, 30:33] = vv4
             self.myAssertVector(intvec[...], vv5)
-            self.myAssertVector(intvec[:,:, 0:30], vv3)
+            self.myAssertVector(intvec[:, :, 0:30], vv3)
 
             intvec.grow(1, 4)
             self.assertEqual(intvec.shape, (2, 6, 33))
@@ -2654,8 +2658,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs.h5object, nx._nxh5.nxfield_attributes))
             self.assertEqual(attrs.parent, intvec)
             self.assertEqual(len(attrs), 0)
-
-
 
             entry.close()
             self.assertEqual(rt.is_valid, True)
@@ -2707,7 +2709,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2724,7 +2726,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pnideflate(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2766,7 +2768,7 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
-            print df0.h5object
+            print(df0.h5object)
             self.assertTrue(isinstance(df0.h5object, nx._nxh5.deflate_filter))
             self.assertEqual(df1.rate, 2)
             self.assertEqual(df1.shuffle, False)
@@ -2785,7 +2787,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattributemanager(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2840,7 +2842,7 @@ class FileWriterTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -2870,8 +2872,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             self.assertTrue(isinstance(atintscalar, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, nx._nxh5.nxattribute))
@@ -2900,16 +2902,16 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.dtype, 'float32')
             self.assertEqual(atfloatspec.shape, (12,))
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(list(atfloatspec.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec[...]), [0.] * 12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             self.assertEqual(atfloatspec.h5object.dtype, 'float32')
             self.assertEqual(atfloatspec.h5object.shape, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
-            self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.h5object.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec.h5object[...]), [0.] * 12)
 
             self.assertTrue(isinstance(atstrimage, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
@@ -2919,16 +2921,16 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.dtype, 'string')
             self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
-            self.myAssertImage(atstrimage.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage[...], [[''] * 3] * 2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
             self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             self.assertEqual(atstrimage.h5object.dtype, 'string')
             self.assertEqual(atstrimage.h5object.shape, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
-            self.myAssertImage(atstrimage.h5object.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.h5object.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage.h5object[...], [[''] * 3] * 2)
 
 
 
@@ -2962,16 +2964,16 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.dtype, 'uint32')
             self.assertEqual(atintspec.shape, (2,))
             self.assertEqual(atintspec.is_valid, True)
-            self.assertEqual(list(atintspec.read()), [0]*2)
-            self.assertEqual(list(atintspec[...]), [0]*2)
+            self.assertEqual(list(atintspec.read()), [0] * 2)
+            self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object.name, 'atintspec')
             self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
             self.assertEqual(atintspec.h5object.dtype, 'uint32')
             self.assertEqual(atintspec.h5object.shape, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
-            self.assertEqual(list(atintspec.h5object.read()), [0]*2)
-            self.assertEqual(list(atintspec.h5object[...]), [0]*2)
+            self.assertEqual(list(atintspec.h5object.read()), [0] * 2)
+            self.assertEqual(list(atintspec.h5object[...]), [0] * 2)
 
 
 
@@ -2983,8 +2985,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
-            self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             self.assertEqual(atfloatimage.h5object.name, 'atfloatimage')
             self.assertEqual(atfloatimage.h5object.path,
@@ -2992,8 +2994,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.dtype, 'float64')
             self.assertEqual(atfloatimage.h5object.shape, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
-            self.myAssertImage(atfloatimage.h5object.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.h5object.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage.h5object[...], [[0.] * 2] * 3)
 
 
 
@@ -3028,8 +3030,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.dtype, 'string')
             self.assertEqual(atstrspec.shape, (4,))
             self.assertEqual(atstrspec.is_valid, True)
-            self.assertEqual(list(atstrspec.read()), ['']*4)
-            self.assertEqual(list(atstrspec[...]), ['']*4)
+            self.assertEqual(list(atstrspec.read()), [''] * 4)
+            self.assertEqual(list(atstrspec[...]), [''] * 4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             self.assertEqual(atstrspec.h5object.name, 'atstrspec')
             self.assertEqual(atstrspec.h5object.path,
@@ -3037,8 +3039,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.dtype, 'string')
             self.assertEqual(atstrspec.h5object.shape, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
-            self.assertEqual(list(atstrspec.h5object.read()), ['']*4)
-            self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
+            self.assertEqual(list(atstrspec.h5object.read()), [''] * 4)
+            self.assertEqual(list(atstrspec.h5object[...]), [''] * 4)
 
 
             self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
@@ -3050,17 +3052,17 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
 
-            print "WW", attr1["NX_class"].name
+            print("WW %s" % attr1["NX_class"].name)
 
             for at in attr0:
-                print at.name
+                print(at.name)
             for at in attr1:
-                print at.name
+                print(at.name)
             for at in attr2:
-                print at.name
+                print(at.name)
 
             at = None
 
@@ -3102,16 +3104,16 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.dtype, 'float32')
             self.assertEqual(atfloatspec.shape, (12,))
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(list(atfloatspec.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec[...]), [0.] * 12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
             self.assertEqual(atfloatspec.h5object.name, 'atfloatspec')
             self.assertEqual(atfloatspec.h5object.path, '/@atfloatspec')
             self.assertEqual(atfloatspec.h5object.dtype, 'float32')
             self.assertEqual(atfloatspec.h5object.shape, (12,))
             self.assertEqual(atfloatspec.h5object.is_valid, True)
-            self.assertEqual(list(atfloatspec.h5object.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec.h5object[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.h5object.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec.h5object[...]), [0.] * 12)
 
             self.assertTrue(isinstance(atstrimage, PNIWriter.PNIAttribute))
             self.assertTrue(isinstance(atstrimage.h5object, nx._nxh5.nxattribute))
@@ -3121,16 +3123,16 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrimage.dtype, 'string')
             self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
-            self.myAssertImage(atstrimage.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage[...], [[''] * 3] * 2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             self.assertEqual(atstrimage.h5object.name, 'atstrimage')
             self.assertEqual(atstrimage.h5object.path, '/@atstrimage')
             self.assertEqual(atstrimage.h5object.dtype, 'string')
             self.assertEqual(atstrimage.h5object.shape, (2, 3))
             self.assertEqual(atstrimage.h5object.is_valid, True)
-            self.myAssertImage(atstrimage.h5object.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage.h5object[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.h5object.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage.h5object[...], [[''] * 3] * 2)
 
 
 
@@ -3164,16 +3166,16 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.dtype, 'uint32')
             self.assertEqual(atintspec.shape, (2,))
             self.assertEqual(atintspec.is_valid, True)
-            self.assertEqual(list(atintspec.read()), [0]*2)
-            self.assertEqual(list(atintspec[...]), [0]*2)
+            self.assertEqual(list(atintspec.read()), [0] * 2)
+            self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object.name, 'atintspec')
             self.assertEqual(atintspec.h5object.path, '/entry12345:NXentry@atintspec')
             self.assertEqual(atintspec.h5object.dtype, 'uint32')
             self.assertEqual(atintspec.h5object.shape, (2,))
             self.assertEqual(atintspec.h5object.is_valid, True)
-            self.assertEqual(list(atintspec.h5object.read()), [0]*2)
-            self.assertEqual(list(atintspec.h5object[...]), [0]*2)
+            self.assertEqual(list(atintspec.h5object.read()), [0] * 2)
+            self.assertEqual(list(atintspec.h5object[...]), [0] * 2)
 
 
 
@@ -3185,8 +3187,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
-            self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             self.assertEqual(atfloatimage.h5object.name, 'atfloatimage')
             self.assertEqual(atfloatimage.h5object.path,
@@ -3194,8 +3196,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.dtype, 'float64')
             self.assertEqual(atfloatimage.h5object.shape, (3, 2))
             self.assertEqual(atfloatimage.h5object.is_valid, True)
-            self.myAssertImage(atfloatimage.h5object.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage.h5object[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.h5object.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage.h5object[...], [[0.] * 2] * 3)
 
 
             self.assertTrue(isinstance(atfloatscalar, PNIWriter.PNIAttribute))
@@ -3229,8 +3231,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.dtype, 'string')
             self.assertEqual(atstrspec.shape, (4,))
             self.assertEqual(atstrspec.is_valid, True)
-            self.assertEqual(list(atstrspec.read()), ['']*4)
-            self.assertEqual(list(atstrspec[...]), ['']*4)
+            self.assertEqual(list(atstrspec.read()), [''] * 4)
+            self.assertEqual(list(atstrspec[...]), [''] * 4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             self.assertEqual(atstrspec.h5object.name, 'atstrspec')
             self.assertEqual(atstrspec.h5object.path,
@@ -3238,8 +3240,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.dtype, 'string')
             self.assertEqual(atstrspec.h5object.shape, (4,))
             self.assertEqual(atstrspec.h5object.is_valid, True)
-            self.assertEqual(list(atstrspec.h5object.read()), ['']*4)
-            self.assertEqual(list(atstrspec.h5object[...]), ['']*4)
+            self.assertEqual(list(atstrspec.h5object.read()), [''] * 4)
+            self.assertEqual(list(atstrspec.h5object[...]), [''] * 4)
 
 
             self.assertTrue(isinstance(atintimage, PNIWriter.PNIAttribute))
@@ -3251,8 +3253,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             self.assertEqual(atintimage.h5object.name, 'atintimage')
             self.assertEqual(atintimage.h5object.path,
@@ -3260,8 +3262,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.dtype, 'int32')
             self.assertEqual(atintimage.h5object.shape, (3, 2))
             self.assertEqual(atintimage.h5object.is_valid, True)
-            self.myAssertImage(atintimage.h5object.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage.h5object[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.h5object.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage.h5object[...], [[0] * 2] * 3)
 
             self.myAssertRaise(Exception, attr2.create, "atintimage", "uint64", [4])
             atintimage = attr2.create("atintimage", "uint64", [4], True)
@@ -3275,8 +3277,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'uint64')
             self.assertEqual(atintimage.shape, (4,))
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(list(atintimage.read()), [0]*4)
-            self.assertEqual(list(atintimage[...]), [0]*4)
+            self.assertEqual(list(atintimage.read()), [0] * 4)
+            self.assertEqual(list(atintimage[...]), [0] * 4)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             self.assertEqual(atintimage.h5object.name, 'atintimage')
             self.assertEqual(atintimage.h5object.path,
@@ -3284,8 +3286,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.dtype, 'uint64')
             self.assertEqual(atintimage.h5object.shape, (4,))
             self.assertEqual(atintimage.h5object.is_valid, True)
-            self.assertEqual(list(atintimage.h5object.read()), [0]*4)
-            self.assertEqual(list(atintimage.h5object[...]), [0]*4)
+            self.assertEqual(list(atintimage.h5object.read()), [0] * 4)
+            self.assertEqual(list(atintimage.h5object[...]), [0] * 4)
 
 
             attr2.close()
@@ -3366,7 +3368,7 @@ class FileWriterTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3384,7 +3386,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3439,7 +3441,7 @@ class FileWriterTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -3469,15 +3471,15 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
 
             chars = string.ascii_uppercase + string.digits
             stvl = [
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(10)]
-            itvl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
+            itvl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
             flvl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
 
@@ -3700,7 +3702,7 @@ class FileWriterTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3717,7 +3719,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3772,7 +3774,7 @@ class FileWriterTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -3802,8 +3804,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[
@@ -3811,7 +3813,7 @@ class FileWriterTest(unittest.TestCase):
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(4)]
                     for _ in range(10)]
 
-            itvl = [[self.__rnd.randint(1, 16000)  for _ in range(2)] for _ in range(10)]
+            itvl = [[self.__rnd.randint(1, 16000) for _ in range(2)] for _ in range(10)]
 
             flvl = [[self.__rnd.uniform(-200.0, 200) for _ in range(12)] for _ in range(10)]
 
@@ -3836,8 +3838,6 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[0], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[0], 1e-3)
-
-
 
             atfloatspec[...] = flvl[1]
 
@@ -4084,7 +4084,7 @@ class FileWriterTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -4101,7 +4101,7 @@ class FileWriterTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pniattribute_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -4156,7 +4156,7 @@ class FileWriterTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, PNIWriter.PNIAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, nx._nxh5.nxgroup_attributes))
@@ -4186,8 +4186,8 @@ class FileWriterTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[[
@@ -4195,7 +4195,7 @@ class FileWriterTest(unittest.TestCase):
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(3)]
                     for _ in range(2)] for _ in range(10)]
 
-            itvl = [[[self.__rnd.randint(1, 16000)  for _ in range(2)]
+            itvl = [[[self.__rnd.randint(1, 16000) for _ in range(2)]
                      for _ in range(3)] for _ in range(10)]
 
             flvl = [[[self.__rnd.uniform(-200.0, 200) for _ in range(2)]
@@ -4226,18 +4226,18 @@ class FileWriterTest(unittest.TestCase):
             atstrimage[...] = stvl[1]
 
             self.myAssertImage(atstrimage.read(), stvl[1])
-            self.myAssertImage(atstrimage[:,:], stvl[1])
+            self.myAssertImage(atstrimage[:, :], stvl[1])
             self.myAssertImage(atstrimage.h5object.read(), stvl[1])
-            self.myAssertImage(atstrimage.h5object[:,:], stvl[1])
+            self.myAssertImage(atstrimage.h5object[:, :], stvl[1])
 
-            atstrimage[:,:] = stvl[2]
+            atstrimage[:, :] = stvl[2]
 
             self.myAssertImage(atstrimage.read(), stvl[2])
             self.myAssertImage(atstrimage[...], stvl[2])
             self.myAssertImage(atstrimage.h5object.read(), stvl[2])
             self.myAssertImage(atstrimage.h5object[...], stvl[2])
 
-            atstrimage[0:2,:] = stvl[3]
+            atstrimage[0:2, :] = stvl[3]
 
             self.myAssertImage(atstrimage.read(), stvl[3])
             self.myAssertImage(atstrimage[...], stvl[3])
@@ -4253,7 +4253,7 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.h5object[:, 1:], vv1)
 
 
-            vv2 = [[stvl[3][j][i+1] for i in range(2)] for j in range(2)]
+            vv2 = [[stvl[3][j][i + 1] for i in range(2)] for j in range(2)]
             atstrimage[:, 1:] = vv2
 
             self.myAssertImage(atstrimage.read(), stvl[3])
@@ -4291,18 +4291,18 @@ class FileWriterTest(unittest.TestCase):
             atfloatimage[...] = flvl[1]
 
             self.myAssertImage(atfloatimage.read(), flvl[1])
-            self.myAssertImage(atfloatimage[:,:], flvl[1])
+            self.myAssertImage(atfloatimage[:, :], flvl[1])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[1])
-            self.myAssertImage(atfloatimage.h5object[:,:], flvl[1])
+            self.myAssertImage(atfloatimage.h5object[:, :], flvl[1])
 
-            atfloatimage[:,:] = flvl[2]
+            atfloatimage[:, :] = flvl[2]
 
             self.myAssertImage(atfloatimage.read(), flvl[2])
             self.myAssertImage(atfloatimage[...], flvl[2])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[2])
             self.myAssertImage(atfloatimage.h5object[...], flvl[2])
 
-            atfloatimage[0:3,:] = flvl[3]
+            atfloatimage[0:3, :] = flvl[3]
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
@@ -4310,16 +4310,16 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.h5object[...], flvl[3])
 
             vv1 = [[flvl[4][j][i] for i in range(2)] for j in range(2)]
-            atfloatimage[1:,:] = vv1
+            atfloatimage[1:, :] = vv1
 
-            self.myAssertImage(atfloatimage.read()[1:,:], vv1)
-            self.myAssertImage(atfloatimage[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object.read()[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object[1:,:], vv1)
+            self.myAssertImage(atfloatimage.read()[1:, :], vv1)
+            self.myAssertImage(atfloatimage[1:, :], vv1)
+            self.myAssertImage(atfloatimage.h5object.read()[1:, :], vv1)
+            self.myAssertImage(atfloatimage.h5object[1:, :], vv1)
 
 
-            vv2 = [[flvl[3][j+1][i] for i in range(2)] for j in range(2)]
-            atfloatimage[1:,:] = vv2
+            vv2 = [[flvl[3][j + 1][i] for i in range(2)] for j in range(2)]
+            atfloatimage[1:, :] = vv2
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
@@ -4354,18 +4354,18 @@ class FileWriterTest(unittest.TestCase):
             atintimage[...] = itvl[1]
 
             self.myAssertImage(atintimage.read(), itvl[1])
-            self.myAssertImage(atintimage[:,:], itvl[1])
+            self.myAssertImage(atintimage[:, :], itvl[1])
             self.myAssertImage(atintimage.h5object.read(), itvl[1])
-            self.myAssertImage(atintimage.h5object[:,:], itvl[1])
+            self.myAssertImage(atintimage.h5object[:, :], itvl[1])
 
-            atintimage[:,:] = itvl[2]
+            atintimage[:, :] = itvl[2]
 
             self.myAssertImage(atintimage.read(), itvl[2])
             self.myAssertImage(atintimage[...], itvl[2])
             self.myAssertImage(atintimage.h5object.read(), itvl[2])
             self.myAssertImage(atintimage.h5object[...], itvl[2])
 
-            atintimage[0:3,:] = itvl[3]
+            atintimage[0:3, :] = itvl[3]
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
@@ -4373,16 +4373,16 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.h5object[...], itvl[3])
 
             vv1 = [[itvl[4][j][i] for i in range(2)] for j in range(2)]
-            atintimage[1:,:] = vv1
+            atintimage[1:, :] = vv1
 
-            self.myAssertImage(atintimage.read()[1:,:], vv1)
-            self.myAssertImage(atintimage[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object.read()[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object[1:,:], vv1)
+            self.myAssertImage(atintimage.read()[1:, :], vv1)
+            self.myAssertImage(atintimage[1:, :], vv1)
+            self.myAssertImage(atintimage.h5object.read()[1:, :], vv1)
+            self.myAssertImage(atintimage.h5object[1:, :], vv1)
 
 
-            vv2 = [[itvl[3][j+1][i] for i in range(2)] for j in range(2)]
-            atintimage[1:,:] = vv2
+            vv2 = [[itvl[3][j + 1][i] for i in range(2)] for j in range(2)]
+            atintimage[1:, :] = vv2
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
@@ -4468,7 +4468,7 @@ class FileWriterTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -4479,10 +4479,6 @@ class FileWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
-
-
 
 
 if __name__ == '__main__':

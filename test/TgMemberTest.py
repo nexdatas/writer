@@ -22,39 +22,26 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
 import PyTango
 import binascii
-import time
-import json
-import PyTango
 
 import SimpleServerSetUp
 from ProxyHelper import ProxyHelper
 
 
-from nxswriter.DataSources import DataSource
-from nxswriter.TangoSource import TangoSource
 from nxswriter.TangoSource import TgMember
-from nxswriter.TangoSource import TgGroup
-from nxswriter.TangoSource import TgDevice
 from nxswriter.DecoderPool import DecoderPool
-from nxswriter.Element import Element
-from nxswriter.EField import EField
-from nxswriter.DataSourceFactory import DataSourceFactory
 from nxswriter.Errors import DataSourceSetupError
-from nxswriter.DataSourcePool import DataSourcePool
-from nxswriter import DataSources
 
 import threading
-import thread
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test pool
@@ -108,7 +95,7 @@ class TgMemberTest(unittest.TestCase):
         # file handle
         self._dbhost = self._simps.dp.get_db_host()
         self._dbport = self._simps.dp.get_db_port()
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -124,7 +111,7 @@ class TgMemberTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -132,7 +119,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         name = "myname%s" % self.__rnd.randint(0, 9)
         memberType = self.__rnd.choice(["attribute", "command", "property"])
@@ -165,7 +152,8 @@ class TgMemberTest(unittest.TestCase):
     # \param encoding data encoding
     # \param decoders data decoders
     # \param error data error
-    def checkData(self, data, format, value, ttype, shape, encoding=None, decoders=None, error=0):
+    def checkData(self, data, format, value, ttype, shape,
+                  encoding=None, decoders=None, error=0):
         self.assertEqual(data["rank"], format)
         self.assertEqual(data["tangoDType"], ttype)
         self.assertEqual(data["shape"], shape)
@@ -200,16 +188,16 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         dname = 'writer'
         device = 'stestp09/testss/s1r228'
-        ctype = 'command'
-        atype = 'attribute'
-        host = self._dbhost
-        port = '10000'
-        encoding = 'UTF8'
-        group = 'common_motors'
+        # ctype = 'command'
+        # atype = 'attribute'
+        # host = self._dbhost
+        # port = '10000'
+        # encoding = 'UTF8'
+        # group = 'common_motors'
 
         proxy = PyTango.DeviceProxy(device)
         self.assertTrue(ProxyHelper.wait(proxy, 10000))
@@ -238,7 +226,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -251,7 +239,7 @@ class TgMemberTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -262,9 +250,13 @@ class TgMemberTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-'
+                 '\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -277,8 +269,9 @@ class TgMemberTest(unittest.TestCase):
             mb = TgMember(k)
             mb.getData(proxy)
             dt = mb.getValue()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][2], arr[k][1], [1, 0], None, None,
+                arr[k][3] if len(arr[k]) > 3 else 0)
 
         for k in arr3:
             mb = TgMember(k, encoding=arr3[k][2][0])
@@ -292,7 +285,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -304,7 +297,8 @@ class TgMemberTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
         device = 'stestp09/testss/s1r228'
@@ -331,14 +325,15 @@ class TgMemberTest(unittest.TestCase):
             mb.getData(proxy)
             dt = mb.getValue()
 
-            self.checkData(dt, "SPECTRUM", arr[k][2], arr[k][1], arr[
-                           k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3], None, None,
+                arr[k][4] if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -353,7 +348,8 @@ class TgMemberTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                            1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -367,8 +363,9 @@ class TgMemberTest(unittest.TestCase):
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
-                    arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][2] = [
+                        [(True if self.__rnd.randint(0, 1) else False)
+                         for c in range(mlen[1])] for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -377,14 +374,15 @@ class TgMemberTest(unittest.TestCase):
             mb = TgMember(k)
             mb.getData(proxy)
             dt = mb.getValue()
-            self.checkData(dt, "IMAGE", arr[k][2], arr[k][1], arr[
-                           k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "IMAGE", arr[k][2], arr[k][1], arr[k][3],
+                None, None, arr[k][4] if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
     def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -396,10 +394,11 @@ class TgMemberTest(unittest.TestCase):
             "GetUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
-            "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234L],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -410,8 +409,9 @@ class TgMemberTest(unittest.TestCase):
             mb = TgMember(k, "command")
             mb.getData(proxy)
             dt = mb.getValue()
-            self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                           1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(dt, "SCALAR", arr[k][3], arr[k][2],
+                           [1, 0], None, None,
+                           arr[k][4] if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -421,19 +421,20 @@ class TgMemberTest(unittest.TestCase):
         self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            # "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -123],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 234],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234L],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+            # "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            # "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -2.456673e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -441,16 +442,18 @@ class TgMemberTest(unittest.TestCase):
             mb = TgMember(k, "property")
             mb.getData(proxy)
             dt = mb.getValue()
-            self.checkData(dt, "SCALAR", str(self._simps.device_prop[k]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
-# self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None,
-# arr[k][4] if len(arr[k])>4 else 0)
+            self.checkData(
+                dt, "SCALAR", str(self._simps.device_prop[k]),
+                'DevString', [1, 0], None, None,
+                arr[k][4] if len(arr[k]) > 4 else 0)
+            # self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None,
+            # arr[k][4] if len(arr[k])>4 else 0)
 
     # getData test
     # \brief It tests default settings
     def test_setData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -463,7 +466,7 @@ class TgMemberTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -474,9 +477,13 @@ class TgMemberTest(unittest.TestCase):
         }
 
         arr3 = {
-            "ScalarEncoded": ["string", "DevEncoded", ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
-           "SpectrumEncoded": ["string", "DevEncoded",
-                               ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')],
+            "ScalarEncoded": [
+                "string", "DevEncoded",
+                ("UTF8", "Hello UTF8! Pr\xc3\xb3ba \xe6\xb5\x8b")],
+            "SpectrumEncoded": [
+                "string", "DevEncoded",
+                ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-'
+                 '\x00\x00\x00Y\x01\x00\x00')],
         }
 
         for k in arr1:
@@ -490,8 +497,8 @@ class TgMemberTest(unittest.TestCase):
             da = proxy.read_attribute(k)
             mb.setData(da)
             dt = mb.getValue()
-            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [
-                           1, 0], None, None, arr[k][3] if len(arr[k]) > 3 else 0)
+            self.checkData(dt, "SCALAR", arr[k][2], arr[k][1], [1, 0],
+                           None, None, arr[k][3] if len(arr[k]) > 3 else 0)
 
         for k in arr3:
             mb = TgMember(k, encoding=arr3[k][2][0])
@@ -506,7 +513,7 @@ class TgMemberTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -518,7 +525,8 @@ class TgMemberTest(unittest.TestCase):
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02,
+                               [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
         device = 'stestp09/testss/s1r228'
@@ -546,14 +554,15 @@ class TgMemberTest(unittest.TestCase):
             mb.setData(da)
             dt = mb.getValue()
 
-            self.checkData(dt, "SPECTRUM", arr[k][2], arr[k][1], arr[
-                           k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SPECTRUM", arr[k][2], arr[k][1], arr[k][3],
+                None, None, arr[k][4] if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
     def test_setData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
@@ -568,7 +577,8 @@ class TgMemberTest(unittest.TestCase):
             "ImageLong64": ["int64", "DevLong64", 234, [1, 0]],
             "ImageULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "ImageFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "ImageDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "ImageDouble": ["float64", "DevDouble", -2.456673e+02,
+                            [1, 0], 1e-14],
             "ImageString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -582,8 +592,9 @@ class TgMemberTest(unittest.TestCase):
             else:
                 mlen = [self.__rnd.randint(1, 10), self.__rnd.randint(1, 10)]
                 if arr[k][1] == 'DevBoolean':
-                    arr[k][2] = [[(True if self.__rnd.randint(0, 1) else False)
-                                  for c in range(mlen[1])] for r in range(mlen[0])]
+                    arr[k][2] = [
+                        [(True if self.__rnd.randint(0, 1) else False)
+                         for c in range(mlen[1])] for r in range(mlen[0])]
 
             arr[k][3] = [mlen[0], mlen[1]]
             self._simps.dp.write_attribute(k, arr[k][2])
@@ -593,29 +604,31 @@ class TgMemberTest(unittest.TestCase):
             da = proxy.read_attribute(k)
             mb.setData(da)
             dt = mb.getValue()
-            self.checkData(dt, "IMAGE", arr[k][2], arr[k][1], arr[
-                           k][3], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "IMAGE", arr[k][2], arr[k][1], arr[k][3],
+                None, None, arr[k][4] if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
     def test_setData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         device = 'stestp09/testss/s1r228'
         proxy = PyTango.DeviceProxy(device)
         self.assertTrue(ProxyHelper.wait(proxy, 10000))
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            #  "GetUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "GetShort": ["ScalarShort", "int16", "DevShort", -123],
             "GetUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
-            "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234L],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
-            "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
+            "GetDouble": ["ScalarDouble", "float64", "DevDouble",
+                          -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
@@ -628,8 +641,9 @@ class TgMemberTest(unittest.TestCase):
             da = proxy.command_inout(k)
             mb.setData(da, cd)
             dt = mb.getValue()
-            self.checkData(dt, "SCALAR", arr[k][3], arr[k][2], [
-                           1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SCALAR", arr[k][3], arr[k][2], [
+                    1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
 
     # getData test
     # \brief It tests default settings
@@ -639,23 +653,24 @@ class TgMemberTest(unittest.TestCase):
         self.assertTrue(ProxyHelper.wait(proxy, 10000))
 
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
-            #            "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
+            # "DeviceUChar":["ScalarUChar", "uint8", "DevUChar", 23],
             "DeviceShort": ["ScalarShort", "int16", "DevShort", -123],
             "DeviceUShort": ["ScalarUShort", "uint16", "DevUShort", 1234],
             "DeviceLong": ["ScalarLong", "int64", "DevLong", -124],
             "DeviceULong": ["ScalarULong", "uint64", "DevULong", 234],
-            #            "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234L],
-            #            "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23L],
+            # "DeviceLong64":["ScalarLong64", "int64", "DevLong64", 234],
+            # "DeviceULong64":["ScalarULong64", "uint64", "DevULong64", 23],
             "DeviceFloat": ["ScalarFloat", "float32", "DevFloat", 12.234],
-            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02],
+            "DeviceDouble": ["ScalarDouble", "float64", "DevDouble",
+                             -2.456673e+02],
             "DeviceString": ["ScalarString", "string", "DevString", "MyTrue"],
         }
 
-        prop = self._simps.dp.get_property(arr.keys())
+        prop = self._simps.dp.get_property(list(arr.keys()))
         for k in prop.keys():
             prop[k] = [arr[k][3]]
         self._simps.dp.put_property(prop)
@@ -665,8 +680,10 @@ class TgMemberTest(unittest.TestCase):
             da = proxy.get_property(k)[k]
             mb.setData(da)
             dt = mb.getValue()
-            self.checkData(dt, "SCALAR", str(arr[k][3]),
-                           'DevString', [1, 0], None, None, arr[k][4] if len(arr[k]) > 4 else 0)
+            self.checkData(
+                dt, "SCALAR", str(arr[k][3]),
+                'DevString', [1, 0], None, None,
+                arr[k][4] if len(arr[k]) > 4 else 0)
 # self.checkData(dt,"SCALAR", arr[k][3],arr[k][2],[1,0],None,None,
 # arr[k][4] if len(arr[k])>4 else 0)
 

@@ -20,7 +20,7 @@
 """ Definitions of DB datasource """
 
 from xml.dom import minidom
-# import sys
+import sys
 
 from .Types import NTP
 
@@ -32,7 +32,11 @@ from .Errors import (PackageError, DataSourceSetupError)
 DB_AVAILABLE = []
 
 try:
-    import MySQLdb
+    try:
+        import MySQLdb
+    except:
+        import pymysql
+        pymysql.install_as_MySQLdb()
     DB_AVAILABLE.append("MYSQL")
 except ImportError as e:
     pass
@@ -111,7 +115,10 @@ class DBaseSource(DataSource):
         :raises: :exc:`nxswriter.Errors.DataSourceSetupError`
             if :obj:`format` or :obj:`query` is not defined
         """
-        dom = minidom.parseString(xml)
+        if sys.version_info > (3,):
+            dom = minidom.parseString(bytes(xml, "UTF-8"))
+        else:
+            dom = minidom.parseString(xml)
         query = dom.getElementsByTagName("query")
         if query and len(query) > 0:
             self.format = query[0].getAttribute("format") \
@@ -158,15 +165,19 @@ class DBaseSource(DataSource):
         """
         args = {}
         if self.mycnf:
-            args["read_default_file"] = self.mycnf.encode()
+            args["read_default_file"] = self.mycnf
         if self.dbname:
-            args["db"] = self.dbname.encode()
+            args["db"] = self.dbname
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["passwd"] = self.passwd.encode()
+            args["passwd"] = self.passwd
         if self.hostname:
-            args["host"] = self.hostname.encode()
+            args["host"] = self.hostname
+        if sys.version_info < (3,):
+            for k in list(args.keys()):
+                args[k] = args[k].encode()
+
         if self.port:
             args["port"] = int(self.port)
         return MySQLdb.connect(**args)
@@ -180,13 +191,17 @@ class DBaseSource(DataSource):
         args = {}
 
         if self.dbname:
-            args["database"] = self.dbname.encode()
+            args["database"] = self.dbname
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["password"] = self.passwd.encode()
+            args["password"] = self.passwd
         if self.hostname:
-            args["host"] = self.hostname.encode()
+            args["host"] = self.hostname
+        if sys.version_info < (3,):
+            for k in list(args.keys()):
+                args[k] = args[k].encode()
+
         if self.port:
             args["port"] = int(self.port)
 
@@ -200,13 +215,16 @@ class DBaseSource(DataSource):
         """
         args = {}
         if self.user:
-            args["user"] = self.user.encode()
+            args["user"] = self.user
         if self.passwd:
-            args["password"] = self.passwd.encode()
+            args["password"] = self.passwd
         if self.dsn:
-            args["dsn"] = self.dsn.encode()
+            args["dsn"] = self.dsn
         if self.mode:
-            args["mode"] = self.mode.encode()
+            args["mode"] = self.mode
+        if sys.version_info < (3,):
+            for k in list(args.keys()):
+                args[k] = args[k].encode()
 
         return cx_Oracle.connect(**args)
 

@@ -34,12 +34,12 @@ from ProxyHelper import ProxyHelper
 
 import ServerSetUp
 import ClientFieldTagWriterH5PYTest
-from ProxyHelper import ProxyHelper
 
 # test fixture
 
 
-class ClientFieldTagServerH5PYTest(ClientFieldTagWriterH5PYTest.ClientFieldTagWriterH5PYTest):
+class ClientFieldTagServerH5PYTest(
+        ClientFieldTagWriterH5PYTest.ClientFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 
@@ -69,8 +69,8 @@ class ClientFieldTagServerH5PYTest(ClientFieldTagWriterH5PYTest.ClientFieldTagWr
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -133,6 +133,7 @@ class ClientFieldTagServerH5PYTest(ClientFieldTagWriterH5PYTest.ClientFieldTagWr
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

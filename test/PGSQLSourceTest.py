@@ -22,24 +22,20 @@
 import unittest
 import os
 import sys
-import subprocess
 import random
 import struct
-import numpy
-from xml.dom import minidom
-import json
 import binascii
-import time
 
 import psycopg2
 
-from nxswriter.DataSources import DataSource
 from nxswriter.DBaseSource import DBaseSource
-from nxswriter.Errors import DataSourceSetupError, PackageError
-from nxswriter.Types import Converters
+from nxswriter.Errors import PackageError
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture
@@ -72,18 +68,18 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
         # connection arguments to PGSQL DB
         args = {}
         args["database"] = 'mydb'
         # inscance of psycog2
         self._mydb = psycopg2.connect(**args)
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     # Exception tester
@@ -95,7 +91,7 @@ class PGSQLSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -127,7 +123,7 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         query = "select city from weather limit 1"
         format = "SPECTRUM"
@@ -167,16 +163,23 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT temp_lo FROM weather limit 1", "SCALAR", "DevLong64", [1, 0]],
-            "long": ["SELECT temp_lo FROM weather limit 1", "SCALAR", "DevLong64", [1, 0]],
-            "float": ["SELECT prcp FROM weather limit 1", "SCALAR", "DevDouble", [1, 0]],
-            "str": ["SELECT city FROM weather limit 1", "SCALAR", "DevString", [1, 0]],
-            "unicode": ["SELECT city FROM weather limit 1", "SCALAR", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM weather limit 1","SCALAR","DevBoolean",[1,0]],
-            "bool": ["SELECT temp_lo FROM weather limit 1", "SCALAR", "DevLong64", [1, 0]],
+            "int": ["SELECT temp_lo FROM weather limit 1", "SCALAR",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT temp_lo FROM weather limit 1", "SCALAR",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT prcp FROM weather limit 1", "SCALAR",
+                      "DevDouble", [1, 0]],
+            "str": ["SELECT city FROM weather limit 1", "SCALAR",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT city FROM weather limit 1", "SCALAR",
+                        "DevString", [1, 0]],
+            # "bool":["SELECT exported FROM weather limit 1","SCALAR",
+            #    "DevBoolean",[1,0]],
+            "bool": ["SELECT temp_lo FROM weather limit 1", "SCALAR",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -200,16 +203,23 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "long": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "float": ["SELECT prcp FROM weather limit 1", "SPECTRUM", "DevDouble", [1, 0]],
-            "str": ["SELECT city FROM weather limit 1", "SPECTRUM", "DevString", [1, 0]],
-            "unicode": ["SELECT city FROM weather limit 1", "SPECTRUM", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM weather limit 1","SPECTRUM","DevBoolean",[1,0]],
-            "bool": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM", "DevLong64", [1, 0]],
+            "int": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT prcp FROM weather limit 1", "SPECTRUM",
+                      "DevDouble", [1, 0]],
+            "str": ["SELECT city FROM weather limit 1", "SPECTRUM",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT city FROM weather limit 1", "SPECTRUM",
+                        "DevString", [1, 0]],
+            #  "bool":["SELECT exported FROM weather limit 1",
+            # "SPECTRUM","DevBoolean",[1,0]],
+            "bool": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -235,16 +245,23 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_trans(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "long": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "float": ["SELECT prcp FROM weather limit 1", "SPECTRUM", "DevDouble", [1, 0]],
-            "str": ["SELECT city FROM weather limit 1", "SPECTRUM", "DevString", [1, 0]],
-            "unicode": ["SELECT city FROM weather limit 1", "SPECTRUM", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM weather limit 1","SPECTRUM","DevBoolean",[1,0]],
-            "bool": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM", "DevLong64", [1, 0]],
+            "int": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT prcp FROM weather limit 1", "SPECTRUM",
+                      "DevDouble", [1, 0]],
+            "str": ["SELECT city FROM weather limit 1", "SPECTRUM",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT city FROM weather limit 1", "SPECTRUM",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM weather limit 1",
+            # "SPECTRUM","DevBoolean",[1,0]],
+            "bool": ["SELECT temp_lo FROM weather limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -263,22 +280,30 @@ class PGSQLSourceTest(unittest.TestCase):
             dt = ds.getData()
 
             self.checkData(
-                dt, arr[a][1], list(el for el in value[0]), arr[a][2], arr[a][3])
+                dt, arr[a][1], list(el for el in value[0]), arr[a][2],
+                arr[a][3])
 
     # setup test
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT temp_lo FROM weather limit 4", "SPECTRUM", "DevLong64", [1, 0]],
-            "long": ["SELECT temp_lo FROM weather limit 4", "SPECTRUM", "DevLong64", [1, 0]],
-            "float": ["SELECT prcp FROM weather limit 4", "SPECTRUM", "DevDouble", [1, 0]],
-            "str": ["SELECT city FROM weather limit 4", "SPECTRUM", "DevString", [1, 0]],
-            "unicode": ["SELECT city FROM weather limit 4", "SPECTRUM", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM weather limit 4","SPECTRUM","DevBoolean",[1,0]],
-            "bool": ["SELECT temp_lo FROM weather limit 4", "SPECTRUM", "DevLong64", [1, 0]],
+            "int": ["SELECT temp_lo FROM weather limit 4", "SPECTRUM",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT temp_lo FROM weather limit 4", "SPECTRUM",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT prcp FROM weather limit 4", "SPECTRUM",
+                      "DevDouble", [1, 0]],
+            "str": ["SELECT city FROM weather limit 4", "SPECTRUM",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT city FROM weather limit 4", "SPECTRUM",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM weather limit 4",
+            #  "SPECTRUM","DevBoolean",[1,0]],
+            "bool": ["SELECT temp_lo FROM weather limit 4", "SPECTRUM",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -303,16 +328,23 @@ class PGSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT temp_lo FROM weather limit 4", "IMAGE", "DevLong64", [1, 0]],
-            "long": ["SELECT temp_lo FROM weather limit 4", "IMAGE", "DevLong64", [1, 0]],
-            "float": ["SELECT prcp FROM weather limit 4", "IMAGE", "DevDouble", [1, 0]],
-            "str": ["SELECT city FROM weather limit 4", "IMAGE", "DevString", [1, 0]],
-            "unicode": ["SELECT city FROM weather limit 4", "IMAGE", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM weather limit 4","IMAGE","DevBoolean",[1,0]],
-            "bool": ["SELECT temp_lo FROM weather limit 4", "IMAGE", "DevLong64", [1, 0]],
+            "int": ["SELECT temp_lo FROM weather limit 4", "IMAGE",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT temp_lo FROM weather limit 4", "IMAGE",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT prcp FROM weather limit 4", "IMAGE",
+                      "DevDouble", [1, 0]],
+            "str": ["SELECT city FROM weather limit 4", "IMAGE",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT city FROM weather limit 4", "IMAGE",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM weather limit 4",
+            #  "IMAGE","DevBoolean",[1,0]],
+            "bool": ["SELECT temp_lo FROM weather limit 4", "IMAGE",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:

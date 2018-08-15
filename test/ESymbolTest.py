@@ -22,16 +22,12 @@
 import unittest
 import os
 import sys
-import subprocess
-import random
 import struct
-import numpy
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
 
 
-from nxswriter.H5Elements import FElement
 from nxswriter.Element import Element
 from nxswriter.H5Elements import EFile
 from nxswriter.H5Elements import ESymbol
@@ -67,12 +63,12 @@ class ESymbolTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -83,7 +79,7 @@ class ESymbolTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -91,7 +87,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         el = ESymbol({}, None)
@@ -106,9 +102,9 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing store method
     def test_store(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs2)
-        el2 = ESymbol(self._fattrs2,  el)
+        el2 = ESymbol(self._fattrs2, el)
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2._tagAttrs, self._fattrs2)
@@ -123,7 +119,7 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_lastObject_pni(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -140,10 +136,10 @@ class ESymbolTest(unittest.TestCase):
         # element file objects
         eFile = EFile([], None, nxFile)
         group = nxFile.create_group(gname, gtype)
-        field = group.create_field(fdname, fdtype)
+        group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        el2 = ESymbol(self._fattrs2,  el)
+        el2 = ESymbol(self._fattrs2, el)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs2)
@@ -159,11 +155,11 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing _beforeLast method
     def test_beforeLast(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
-        el2 = Element(self._tfname, self._fattrs,  el)
-        el3 = ESymbol(self._fattrs,  el2)
+        el2 = Element(self._tfname, self._fattrs, el)
+        el3 = ESymbol(self._fattrs, el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -178,11 +174,11 @@ class ESymbolTest(unittest.TestCase):
     # \brief It tests executing _beforeLast method
     def test_store_beforeLast(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
-        el2 = Element(self._tfname, self._fattrs,  el)
-        el3 = ESymbol(self._fattrs,  el2)
+        el2 = Element(self._tfname, self._fattrs, el)
+        el3 = ESymbol(self._fattrs, el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -199,6 +195,7 @@ class ESymbolTest(unittest.TestCase):
         el2.doc = "SYM2"
         self.assertEqual(el3.store(None), None)
         self.assertEqual(el3.symbols, {"test": 'SYM2'})
+
 
 if __name__ == '__main__':
     unittest.main()

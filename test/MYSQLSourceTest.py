@@ -31,7 +31,11 @@ import json
 import binascii
 import time
 
-import MySQLdb
+try:
+    import MySQLdb
+except:
+    import pymysql
+    pymysql.install_as_MySQLdb()
 
 from nxswriter.DataSources import DataSource
 from nxswriter.DBaseSource import DBaseSource
@@ -40,6 +44,10 @@ from nxswriter.Types import Converters
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture
@@ -62,7 +70,6 @@ class MYSQLSourceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -74,7 +81,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
         # connection arguments to MYSQL DB
         try:
             args = {}
@@ -89,8 +96,8 @@ class MYSQLSourceTest(unittest.TestCase):
                      'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
-            print "ARGS:", args2
-        print "SEED =", self.__seed
+            print("ARGS: %s" % str(args2))
+        print("SEED = %s" % self.__seed)
 
     def setsource(self, sr):
         if self._largs:
@@ -100,7 +107,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._mydb.close()
 
     # Exception tester
@@ -112,7 +119,7 @@ class MYSQLSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -144,7 +151,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         query = "select pid from devices;"
         query2 = "SELECT pid FROM device limit 1"
@@ -189,7 +196,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ["SELECT pid FROM device limit 1", "SCALAR", "DevLong64", [1, 0]],
@@ -224,7 +231,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ["SELECT pid FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
@@ -261,7 +268,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum_trans(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ["SELECT pid,exported FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
@@ -297,7 +304,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ["SELECT pid FROM device limit 4", "SPECTRUM", "DevLong64", [1, 0]],
@@ -333,7 +340,7 @@ class MYSQLSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "int": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64", [1, 0]],

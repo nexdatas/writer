@@ -29,6 +29,7 @@ import numpy
 import binascii
 import time
 
+from xml.sax import SAXParseException
 
 from TestDataSource import TestDataSource
 
@@ -50,7 +51,8 @@ from Checkers import Checker
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-from xml.sax import SAXParseException
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture
@@ -93,14 +95,14 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -111,7 +113,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -119,7 +121,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -217,7 +219,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -317,7 +319,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -405,7 +407,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                             "tangoDType": NTP.pTt[(attrs[k][2]) if attrs[k][2] else "string"], "shape": [0, 0]}
                 self.assertEqual(el[k].run(), None)
 #            self.myAssertRaise(ValueError, el[k].store)
-#            self.assertEqual(el[k].grows, (grow if grow else 1))
+#            self.assertEqual(el[k].grows, (grow if grow and grow else 1))
             self._sc.checkScalarField(
                 self._nxFile, k, attrs[k][2] if attrs[k][2] else 'string',
                                       attrs[k][1], attrs[k][0],
@@ -423,7 +425,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_0d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -511,7 +513,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self._sc.checkScalarField(
@@ -531,7 +533,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -550,7 +552,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -650,7 +652,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -671,7 +673,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -772,7 +774,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -791,7 +793,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -883,7 +885,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                 )
             else:
 
-                if grow > 1:
+                if grow and grow > 1:
                     val = [[a[0] for a in attrs[k][0]]]
                 else:
                     val = attrs[k][0]
@@ -910,7 +912,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -931,7 +933,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             #            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
@@ -1002,7 +1004,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -1016,7 +1018,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                 )
             else:
 
-                if grow > 1:
+                if grow and grow > 1:
                     val = [[a[0] for a in attrs[k][0]]]
                 else:
                     val = attrs[k][0]
@@ -1036,7 +1038,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1055,7 +1057,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1158,7 +1160,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1179,7 +1181,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1282,7 +1284,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1301,7 +1303,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1346,7 +1348,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                                     for c in range(mlen)] for r in range(steps)]
 
             attrs[k][3] = (len(attrs[k][0][0]),)
-#            print "k",k ,attrs[k][0][0]
+#            sys.stdout.write("b.")k ,attrs[k][0][0]
 
             if attrs[k][1]:
                 el[k] = EField(
@@ -1408,7 +1410,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_1d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1429,7 +1431,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             #            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
@@ -1501,7 +1503,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string":
                     self.assertEqual(not el[k].error, False)
@@ -1533,7 +1535,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1552,7 +1554,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1661,7 +1663,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1682,7 +1684,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1785,7 +1787,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1804,7 +1806,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1912,7 +1914,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_single_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -1933,7 +1935,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             #            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
@@ -2002,7 +2004,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].run(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
 
             self.assertEqual(el[k].error, None)
@@ -2028,7 +2030,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2047,7 +2049,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2163,7 +2165,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2184,7 +2186,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -2283,7 +2285,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2302,7 +2304,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2390,7 +2392,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #            if  attrs[k][2] == "string" or not  attrs[k][2]:
 #                self._sc.checkStringSpectrumField(self._nxFile, k,
 #                                            attrs[k][2] if attrs[k][2] else 'string',
-#                                            attrs[k][1],  [[ row[0]  for row in img]for img in attrs[k][0]] ,
+#                                            attrs[k][1], [[ row[0]  for row in img]for img in attrs[k][0]] ,
 #                                            attrs = {"type":attrs[k][1],"units":"m"})
 #            else:
             self._sc.checkImageField(self._nxFile, k, attrs[k][2] or 'string',
@@ -2406,7 +2408,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2427,7 +2429,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             #            "uint64":[12345,"NX_UINT64", "uint64", (1,),numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14, numpy.finfo(getattr(numpy, 'float64')).max],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14, numpy.finfo(getattr(numpy, 'float64')).max],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14, numpy.finfo(getattr(numpy, 'float64')).max],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5, numpy.finfo(getattr(numpy, 'float32')).max],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14, numpy.finfo(getattr(numpy, 'float64')).max],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
@@ -2500,7 +2502,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
@@ -2511,7 +2513,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
 #            if  attrs[k][2] == "string" or not  attrs[k][2]:
 #                self._sc.checkScalarField(self._nxFile, k,
 #                                          attrs[k][2] if attrs[k][2] else 'string',
-#                                          attrs[k][1],  ['']*steps ,
+#                                          attrs[k][1], ['']*steps ,
 #                                          attrs = {"type":attrs[k][1],"units":"m", "nexdatas_canfail":"FAILED"})
 #            else:
             self._sc.checkImageField(self._nxFile, k, attrs[k][2] or 'string',
@@ -2528,7 +2530,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2547,7 +2549,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2663,7 +2665,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2684,7 +2686,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -2785,7 +2787,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2804,7 +2806,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2903,7 +2905,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_double_2_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -2924,7 +2926,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             #            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
@@ -2993,7 +2995,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)
@@ -3022,7 +3024,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3041,7 +3043,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -3158,7 +3160,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_noX_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3179,7 +3181,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -3281,7 +3283,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3300,7 +3302,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
 
@@ -3402,7 +3404,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_X_2d_markFailed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
 
@@ -3423,7 +3425,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
             #            "uint64":[12345,"NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'uint64')).max],
             "uint64": [12345, "NX_UINT64", "uint64", (1,), numpy.iinfo(getattr(numpy, 'int64')).max],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), numpy.finfo(getattr(numpy, 'float32')).max, 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), numpy.finfo(getattr(numpy, 'float64')).max, 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,), False],
@@ -3497,7 +3499,7 @@ class EFieldReshapeH5PYTest(unittest.TestCase):
                     self.assertEqual(el[k].markFailed(), None)
                 else:
                     self.assertEqual(
-                        el[k].h5Object.grow(grow - 1 if grow > 0 else 0), None)
+                        el[k].h5Object.grow(grow - 1 if grow and grow > 0 else 0), None)
                     self.assertEqual(el[k].markFailed(), None)
                 if i and attrs[k][2] != "string_old":
                     self.assertEqual(not el[k].error, False)

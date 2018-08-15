@@ -27,7 +27,6 @@ import random
 import struct
 import binascii
 import time
-import Queue
 import json
 
 from nxswriter.ThreadPool import ThreadPool
@@ -37,9 +36,11 @@ from nxswriter.Errors import ThreadError
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
+
 # datasource
-
-
 class Source(object):
     # contructor
 
@@ -177,26 +178,26 @@ class ThreadPoolTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # constructor test
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
@@ -206,7 +207,7 @@ class ThreadPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_run_append_join_wait(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
@@ -247,7 +248,7 @@ class ThreadPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_errors(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
@@ -281,7 +282,7 @@ class ThreadPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_errors_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         nth = self.__rnd.randint(1, 10)
         el = ThreadPool(nth)
@@ -321,7 +322,7 @@ class ThreadPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_setJSON(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         gjson = json.loads('{"data":{"a":"1"}}')
         ljson = json.loads('{"data":{"n":2}}')
 
@@ -365,7 +366,7 @@ class ThreadPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_close(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         gjson = json.loads('{"data":{"a":"1"}}')
         ljson = json.loads('{"data":{"n":2}}')
 
