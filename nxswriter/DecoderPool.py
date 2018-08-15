@@ -138,7 +138,7 @@ class UINT32decoder(object):
         if not self.__value:
             if isinstance(self.__data[1], str):
                 data = bytearray()
-                data.extend(map(ord, self.__data[1]))
+                data.extend(list(map(ord, self.__data[1])))
             else:
                 data = self.__data[1]
             # res = struct.unpack('I' * (len(data) // 4), data)
