@@ -39,15 +39,13 @@ except:
 from xml.sax import SAXParseException
 import struct
 
+import ServerSetUp
+
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-import ServerSetUp
-
 # test fixture
-
-
 class NXSDataWriterTest(unittest.TestCase):
     # server counter
     serverCounter = 0

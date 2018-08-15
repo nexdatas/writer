@@ -29,6 +29,21 @@ import struct
 import numpy
 import time
 
+from nxswriter.FElement import FElementWithAttr
+from nxswriter.FElement import FElement
+from nxswriter.EField import EField
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.EGroup import EGroup
+from nxswriter.Types import NTP, Converters
+from nxswriter.DataSources import DataSource
+from xml.sax import SAXParseException
+
+from nxswriter.Errors import XMLSettingSyntaxError
+
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+
 
 # True if pniio installed
 PNIIO = False
@@ -43,30 +58,14 @@ try:
 except:
     from .TestDataSource import TestDataSource
 
-from nxswriter.FElement import FElementWithAttr
-from nxswriter.FElement import FElement
-from nxswriter.EField import EField
-from nxswriter.Element import Element
-from nxswriter.H5Elements import EFile
-from nxswriter.EGroup import EGroup
-from nxswriter.Types import NTP, Converters
-from nxswriter.DataSources import DataSource
-
-from nxswriter.Errors import XMLSettingSyntaxError
-
 try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
-
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-
-from xml.sax import SAXParseException
 
 if sys.version_info > (3,):
     long = int

@@ -29,6 +29,20 @@ import numpy
 import binascii
 import time
 
+from nxswriter.FElement import FElementWithAttr
+from nxswriter.FElement import FElement
+from nxswriter.EField import EField
+from nxswriter.Element import Element
+from nxswriter.H5Elements import EFile
+from nxswriter.EGroup import EGroup
+from nxswriter.Types import NTP, Converters
+from nxswriter.DataSources import DataSource
+
+from nxswriter.Errors import XMLSettingSyntaxError
+import nxswriter.FileWriter as FileWriter
+import nxswriter.PNIWriter as PNIWriter
+from xml.sax import SAXParseException
+
 
 # True if pniio installed
 PNIIO = False
@@ -43,24 +57,10 @@ try:
 except:
     from .TestDataSource import TestDataSource
 
-from nxswriter.FElement import FElementWithAttr
-from nxswriter.FElement import FElement
-from nxswriter.EField import EField
-from nxswriter.Element import Element
-from nxswriter.H5Elements import EFile
-from nxswriter.EGroup import EGroup
-from nxswriter.Types import NTP, Converters
-from nxswriter.DataSources import DataSource
-
-from nxswriter.Errors import XMLSettingSyntaxError
-import nxswriter.FileWriter as FileWriter
-import nxswriter.PNIWriter as PNIWriter
-
 try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
-from xml.sax import SAXParseException
 
 
 # if 64-bit machione

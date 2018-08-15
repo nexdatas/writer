@@ -28,14 +28,12 @@ import struct
 import binascii
 import time
 from threading import Thread
+from nxswriter.ElementThread import ElementThread
 
 if sys.version_info > (3,):
     import queue as Queue
 else:
     import Queue
-
-
-from nxswriter.ElementThread import ElementThread
 
 
 # if 64-bit machione

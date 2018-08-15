@@ -36,12 +36,11 @@ from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 import nxswriter.FileWriter as FileWriter
 import nxswriter.PNIWriter as PNIWriter
+from xml.sax import SAXParseException
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
-
-from xml.sax import SAXParseException
 
 
 # test fixture

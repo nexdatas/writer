@@ -29,17 +29,6 @@ import binascii
 import time
 import numpy
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
-# True if pniio installed
-PNIIO = False
-try:
-    from pni.io.nx.h5 import open_file
-    PNIIO = True
-except:
-    from pni.nx.h5 import open_file
-
 from xml.sax import SAXParseException
 
 from nxswriter import Types
@@ -48,10 +37,22 @@ from nxswriter.Errors import ThreadError
 from Checkers import Checker
 
 try:
+    from pni.io.nx.h5 import open_file
+    PNIIO = True
+except:
+    from pni.nx.h5 import open_file
+
+try:
     import MySQLdb
 except:
     import pymysql
     pymysql.install_as_MySQLdb()
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+# True if pniio installed
+PNIIO = False
 
 if sys.version_info > (3,):
     long = int

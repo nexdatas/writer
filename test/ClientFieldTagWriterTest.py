@@ -29,31 +29,29 @@ import binascii
 import time
 import numpy
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
+from xml.sax import SAXParseException
+
+from nxswriter import Types
+from nxswriter.TangoDataWriter import TangoDataWriter
 
 try:
     from pni.io.nx.h5 import open_file
 except:
     from pni.nx.h5 import open_file
 
-from xml.sax import SAXParseException
-
-
-from nxswriter import Types
-from nxswriter.TangoDataWriter import TangoDataWriter
 try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
 
-
-# test fixture
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
 
 if sys.version_info > (3,):
     long = int
 
 
+# test fixture
 class ClientFieldTagWriterTest(unittest.TestCase):
 
     # constructor

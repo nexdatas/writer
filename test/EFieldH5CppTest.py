@@ -29,13 +29,7 @@ import struct
 import numpy
 import time
 
-
-PNIIO = True
-
-try:
-    from TestDataSource import TestDataSource
-except:
-    from .TestDataSource import TestDataSource
+from xml.sax import SAXParseException
 
 from nxswriter.FElement import FElementWithAttr
 from nxswriter.FElement import FElement
@@ -46,21 +40,26 @@ from nxswriter.EGroup import EGroup
 from nxswriter.Types import NTP, Converters
 from nxswriter.DataSources import DataSource
 
+import nxswriter.FileWriter as FileWriter
+import nxswriter.H5CppWriter as H5CppWriter
+
 from nxswriter.Errors import XMLSettingSyntaxError
+
+try:
+    from TestDataSource import TestDataSource
+except:
+    from .TestDataSource import TestDataSource
+
 
 try:
     from Checkers import Checker
 except:
     from .Checkers import Checker
 
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
-
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-
-from xml.sax import SAXParseException
+PNIIO = True
 
 if sys.version_info > (3,):
     long = int

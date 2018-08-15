@@ -39,14 +39,14 @@ from nxswriter.Errors import XMLSettingSyntaxError
 from nxswriter.Types import NTP
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
+from xml.sax import SAXParseException
+
 
 from TestDataSource import TestDataSource
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
-
-from xml.sax import SAXParseException
 
 if sys.version_info > (3,):
     long = int

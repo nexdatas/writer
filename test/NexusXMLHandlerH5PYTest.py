@@ -52,14 +52,13 @@ except ImportError:
     from io import StringIO
 
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
-
 from xml.sax import SAXParseException
 
 
 from nxswriter.NexusXMLHandler import NexusXMLHandler
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
 
 
 class Closeable(object):

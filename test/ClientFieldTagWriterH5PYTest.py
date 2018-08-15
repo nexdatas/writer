@@ -29,26 +29,27 @@ import binascii
 import time
 import numpy
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
-
 from xml.sax import SAXParseException
-
-try:
-    from Checkers import Checker
-except:
-    from .Checkers import Checker
 
 from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+
 # test fixture
 
 if sys.version_info > (3,):
     long = int
+
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
 
 
 class ClientFieldTagWriterH5PYTest(unittest.TestCase):

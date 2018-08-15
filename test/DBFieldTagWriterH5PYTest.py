@@ -29,9 +29,6 @@ import binascii
 import time
 import numpy
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
 from xml.sax import SAXParseException
 
 from nxswriter import Types
@@ -46,6 +43,10 @@ try:
 except:
     import pymysql
     pymysql.install_as_MySQLdb()
+
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
 
 if sys.version_info > (3,):
     long = int

@@ -29,6 +29,7 @@ import numpy
 import binascii
 import time
 
+from xml.sax import SAXParseException
 
 from TestDataSource import TestDataSource
 
@@ -49,8 +50,6 @@ from Checkers import Checker
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
-from xml.sax import SAXParseException
 
 if sys.version_info > (3,):
     long = int

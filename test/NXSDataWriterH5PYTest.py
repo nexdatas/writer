@@ -34,18 +34,17 @@ from ProxyHelper import ProxyHelper
 from xml.sax import SAXParseException
 import struct
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
 
 
 import ServerSetUp
 
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 # test fixture
-
-
 class NXSDataWriterH5PYTest(unittest.TestCase):
     # server counter
     serverCounter = 0
