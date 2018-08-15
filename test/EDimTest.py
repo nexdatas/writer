@@ -133,7 +133,7 @@ class EDimTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs2)
-        el2 = EDim(self._fattrs2,  el)
+        el2 = EDim(self._fattrs2, el)
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2._tagAttrs, self._fattrs2)
@@ -163,8 +163,8 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs3,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
+        fi = EField(self._fattrs3, el)
+        el2 = EDimensions(self._fattrs3, fi)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs3)
@@ -197,9 +197,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs1,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs1, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -235,10 +235,10 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs1,  el2)
-        el4 = EDim(self._attrs2,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs1, el2)
+        el4 = EDim(self._attrs2, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -274,9 +274,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs3,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs3, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -312,9 +312,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs3,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs3, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -350,9 +350,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
@@ -393,13 +393,13 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
-        el4 = EDim(self._attrs4,  el2)
+        el4 = EDim(self._attrs4, el2)
         ds2 = TestDataSource()
         ds2.value0d = self.__rnd.randint(1, 10)
         el4.source = ds2
@@ -443,13 +443,13 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
-        el4 = EDim(self._attrs2,  el2)
+        el4 = EDim(self._attrs2, el2)
         el3.store()
 
         self.assertEqual(fi.tagName, "field")
@@ -489,9 +489,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim({},  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim({}, el2)
 
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
@@ -533,9 +533,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = ""
         el3.source = ds

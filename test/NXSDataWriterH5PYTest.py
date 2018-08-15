@@ -924,7 +924,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
                 self.assertTrue(hasattr(cnt.shape, "__iter__"))
                 self.assertEqual(len(mca.shape), 2)
                 self.assertEqual(mca.shape, (2, 2048))
-                self.assertEqual(mca.dtype,  "float64")
+                self.assertEqual(mca.dtype, "float64")
                 self.assertEqual(mca.size, 4096)
                 value = mca.read()
                 for i in range(len(value[0])):
@@ -2186,7 +2186,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -2568,7 +2568,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
 #            self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
 #            self.assertEqual(mca.size, 4096)
             value = mca.read()
 #            for i in range(len(value[0])):
@@ -2913,7 +2913,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (4, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 8192)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3303,7 +3303,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3589,7 +3589,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3875,7 +3875,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4231,7 +4231,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 100, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4591,7 +4591,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 100, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4950,7 +4950,7 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 200, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 160000)
             value = mca.read()
             for i in range(len(value[0])):

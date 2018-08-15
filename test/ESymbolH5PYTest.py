@@ -108,7 +108,7 @@ class ESymbolH5PYTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs2)
-        el2 = ESymbol(self._fattrs2,  el)
+        el2 = ESymbol(self._fattrs2, el)
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2._tagAttrs, self._fattrs2)
@@ -144,7 +144,7 @@ class ESymbolH5PYTest(unittest.TestCase):
         field = group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        el2 = ESymbol(self._fattrs2,  el)
+        el2 = ESymbol(self._fattrs2, el)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs2)
@@ -163,8 +163,8 @@ class ESymbolH5PYTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
-        el2 = Element(self._tfname, self._fattrs,  el)
-        el3 = ESymbol(self._fattrs,  el2)
+        el2 = Element(self._tfname, self._fattrs, el)
+        el3 = ESymbol(self._fattrs, el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -182,8 +182,8 @@ class ESymbolH5PYTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
-        el2 = Element(self._tfname, self._fattrs,  el)
-        el3 = ESymbol(self._fattrs,  el2)
+        el2 = Element(self._tfname, self._fattrs, el)
+        el3 = ESymbol(self._fattrs, el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)

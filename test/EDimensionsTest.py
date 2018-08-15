@@ -109,7 +109,7 @@ class EDimensionsTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs2)
-        el2 = EDimensions(self._fattrs2,  el)
+        el2 = EDimensions(self._fattrs2, el)
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2._tagAttrs, self._fattrs2)
@@ -139,8 +139,8 @@ class EDimensionsTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs3,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
+        fi = EField(self._fattrs3, el)
+        el2 = EDimensions(self._fattrs3, fi)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs3)
@@ -175,8 +175,8 @@ class EDimensionsTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs2,  fi)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs2, fi)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -195,8 +195,8 @@ class EDimensionsTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
-        el2 = Element(self._tfname, self._fattrs,  el)
-        el3 = EDimensions(self._fattrs,  el2)
+        el2 = Element(self._tfname, self._fattrs, el)
+        el3 = EDimensions(self._fattrs, el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)
@@ -213,8 +213,8 @@ class EDimensionsTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = Element(self._tfname, self._fattrs, None)
-        el2 = Element(self._tfname, self._fattrs,  el)
-        el3 = EDimensions(self._fattrs,  el2)
+        el2 = Element(self._tfname, self._fattrs, el)
+        el3 = EDimensions(self._fattrs, el2)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)

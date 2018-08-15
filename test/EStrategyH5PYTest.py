@@ -150,7 +150,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
-            el.compression,  Converters.toBool(attrs["compression"]))
+            el.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(st.last.rate, int(attrs["rate"]))
         self.assertEqual(el.rate, int(attrs["rate"]))
         self.assertEqual(st.last.shuffle, Converters.toBool(attrs["shuffle"]))
@@ -185,7 +185,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
-            el.compression,  Converters.toBool(attrs["compression"]))
+            el.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(st.last.rate, 5)
         self.assertEqual(el.rate, 5)
         self.assertEqual(st.last.shuffle, True)
@@ -218,7 +218,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
-            el.compression,  Converters.toBool(attrs["compression"]))
+            el.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
             st.last.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
         self.assertEqual(

@@ -274,7 +274,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                         + ', "cnt_u16":' + str(uc)
                         + ', "cnt_u32":' + str(uc)
                         + ((', "cnt_u64_canfail":' + str(uc)) if flip else ' ')
-                        + ',  "cnt_u64":' + str(uc)
+                        + ', "cnt_u64":' + str(uc)
                         + ' } '
                         + str(trigstr if flip else ' ')
                         + '  }')
@@ -472,9 +472,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkScalarAttribute(det, "scalar_float32_canfail", "float32",
                                       numpy.finfo(getattr(numpy, 'float32')).max)
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
 
         f.close()
         os.remove(fname)
@@ -967,7 +967,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         f = open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 18)
         self._sc.checkSpectrumField(
-            det, "mca_int",  "int64", "NX_INT", self._mca1)
+            det, "mca_int", "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(
             det, "mca_int8", "int8", "NX_INT8", self._mca1, grows=2)
         self._sc.checkSpectrumField(
@@ -977,7 +977,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSpectrumField(
             det, "mca_int64", "int64", "NX_INT64", self._mca1)
         self._sc.checkSpectrumField(
-            det, "mca_uint",  "uint64", "NX_UINT", mca2)
+            det, "mca_uint", "uint64", "NX_UINT", mca2)
         self._sc.checkSpectrumField(
             det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows=2)
         self._sc.checkSpectrumField(
@@ -1651,7 +1651,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         logical = ["1", "0", "true", "false", "True", "False", "TrUe", "FaLsE"]
         tdw = self.openWriter(fname, xml, json='{"data": {'
                               + ' "mca_float":' + str(self._fmca1[0])
-                              + ',  "flags":' +
+                              + ', "flags":' +
                               str(logical).replace("'", "\"")
                               + ', "mca_int":' + str(self._mca1[0])
                               + '  } }')
@@ -1660,13 +1660,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         for i in range(steps):
             self.record(tdw, '{"data": {'
                         + ' "mca_float":' + str(self._fmca1[i])
-                        + ',  "flags":' + str(logical).replace("'", "\"")
+                        + ', "flags":' + str(logical).replace("'", "\"")
                         + '  } }')
             flip = not flip
         self.closeWriter(tdw, json='{"data": {'
                          + ' "mca_float":' + str(self._fmca1[0])
                          + ', "mca_int":' + str(self._mca1[0])
-                         + ',  "flags":' + str(logical).replace("'", "\"")
+                         + ', "flags":' + str(logical).replace("'", "\"")
                          + ', "mca_uint":' + str(self._mca2[0])
                          + '  } }')
 
@@ -1704,9 +1704,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                                         [False] * 8)
 
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
         f.close()
         os.remove(fname)
 
@@ -1932,7 +1932,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         f = open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 17)
         self._sc.checkImageField(
-            det, "pco_int",  "int64", "NX_INT", self._pco1)
+            det, "pco_int", "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(
             det, "pco_int8", "int8", "NX_INT8", self._pco1, grows=2)
         self._sc.checkImageField(
@@ -1941,7 +1941,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             det, "pco_int32", "int32", "NX_INT32", self._pco1, grows=2)
         self._sc.checkImageField(
             det, "pco_int64", "int64", "NX_INT64", self._pco1)
-        self._sc.checkImageField(det, "pco_uint",  "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
         self._sc.checkImageField(
             det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows=3)
         self._sc.checkImageField(
@@ -1954,12 +1954,12 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkSingleImageField(
             det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "final_pco_uint",  "uint64", "NX_UINT", pco2[0])
+            det, "final_pco_uint", "uint64", "NX_UINT", pco2[0])
 
 # self._sc.checkSingleImageField(det, "init_pco_int64_canfail", "int64",
 # "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "init_pco_int64_canfail",  "int64", "NX_INT64",
+            det, "init_pco_int64_canfail", "int64", "NX_INT64",
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco]
              for rpco in self._pco1[0]],
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
@@ -1967,7 +1967,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                    "nexdatas_canfail_error": None})
 
         self._sc.checkSingleImageField(
-            det, "final_pco_uint_canfail",  "uint64", "NX_UINT",
+            det, "final_pco_uint_canfail", "uint64", "NX_UINT",
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco]
              for rpco in self._pco1[0]],
             attrs={"type": "NX_UINT", "units": "", "nexdatas_source": None,
@@ -2721,7 +2721,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
                    ["True", "False", "TrUe", "FaLsE"]]
         tdw = self.openWriter(fname, xml, json='{"data": {'
                               + ' "pco_float":' + str(self._fpco1[0])
-                              + ',  "flags":' +
+                              + ', "flags":' +
                               str(logical).replace("'", "\"")
                               + ', "pco_int":' + str(self._pco1[0])
                               + '  } }')
@@ -2730,13 +2730,13 @@ class ClientFieldTagWriterTest(unittest.TestCase):
             self.record(tdw, '{"data": {'
                         + ' "pco_float":' + str(self._fpco1[i])
                         + ', "pco_int":' + str(self._pco1[i])
-                        + ',  "flags":' + str(logical).replace("'", "\"")
+                        + ', "flags":' + str(logical).replace("'", "\"")
                         + '  } }')
 
         self.closeWriter(tdw, json='{"data": {'
                          + ' "pco_float":' + str(self._fpco1[0])
                          + ', "pco_int":' + str(self._pco1[0])
-                         + ',  "flags":' + str(logical).replace("'", "\"")
+                         + ', "flags":' + str(logical).replace("'", "\"")
                          + '  } }')
 
         # check the created file
@@ -2745,7 +2745,7 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         self._sc.checkImageAttribute(
             det, "image_float", "float64", self._fpco1[steps - 1],
                                       error=1.e-14)
-        self._sc.checkImageAttribute(det, "image_int",  "int64", self._pco1[0])
+        self._sc.checkImageAttribute(det, "image_int", "int64", self._pco1[0])
         self._sc.checkImageAttribute(det, "image_bool", "bool", logical)
         self._sc.checkImageAttribute(
             det, "image_int32", "int32", self._pco1[steps - 1])
@@ -2773,9 +2773,9 @@ class ClientFieldTagWriterTest(unittest.TestCase):
         # STRING NOT SUPPORTED BY PNINX
 
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
         f.close()
         os.remove(fname)
 

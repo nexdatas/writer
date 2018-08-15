@@ -57,7 +57,7 @@ class VDEOdecoderTest(unittest.TestCase):
 
         self.__data = self.encodeImage(self.__imageUChar)
         self.__dtype = "uint8"
-        self.__res = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
+        self.__res = numpy.array([1234, 5678, 45, 345], dtype=numpy.uint32)
 
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
@@ -79,7 +79,7 @@ class VDEOdecoderTest(unittest.TestCase):
         endian = ord(str(struct.pack('=H', 1)[-1]))
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
-                             width,  height, endian, hsize, 0, 0)
+                             width, height, endian, hsize, 0, 0)
         fimage = image.flatten()
         #  for uint32 and python2.6 one gets the struct.pack bug:
         #  test/VDEOdecoderTest.py:90:

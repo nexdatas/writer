@@ -57,7 +57,7 @@ class ServerSetUp(object):
         if os.path.isfile("../NXSDataWriter"):
             self._psub = subprocess.call(
                 "cd ..; ./NXSDataWriter %s &" % self.instance, stdout=None,
-                stderr=None,  shell=True)
+                stderr=None, shell=True)
         else:
             self._psub = subprocess.call(
                 "NXSDataWriter %s &" % self.instance, stdout=None,

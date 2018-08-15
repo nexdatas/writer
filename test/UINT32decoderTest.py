@@ -55,7 +55,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.__data = (
             'INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')
         self.__dtype = "uint32"
-        self.__res = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
+        self.__res = numpy.array([1234, 5678, 45, 345], dtype=numpy.uint32)
 
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
@@ -147,7 +147,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
-        self.assertEqual(dc.shape(),  None)
+        self.assertEqual(dc.shape(), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
@@ -157,7 +157,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
-        self.assertEqual(dc.shape(),  None)
+        self.assertEqual(dc.shape(), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)

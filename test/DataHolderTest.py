@@ -104,7 +104,7 @@ class DataHolderTest(unittest.TestCase):
         endian = sys.byteorder == u'big'
         hsize = struct.calcsize('!IHHqiiHHHH')
         header = struct.pack('!IHHqiiHHHH', 0x5644454f, version, mode, -1,
-                             width,  height, endian, hsize, 0, 0)
+                             width, height, endian, hsize, 0, 0)
         fimage = image.flatten()
 #  for uint32 and python2.6 one gets the struct.pack bug:
 # test/VDEOdecoderTest.py:90: DeprecationWarning: struct integer overflow
@@ -282,7 +282,7 @@ class DataHolderTest(unittest.TestCase):
         fun = sys._getframe().f_code.co_name
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dp = DecoderPool()
-        spectrum = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
+        spectrum = numpy.array([1234, 5678, 45, 345], dtype=numpy.uint32)
         image = numpy.array(
             [[2, 5, 4, 6], [3, 4, 3, 4], [3, 6, 7, 8]], dtype='uint8')
 

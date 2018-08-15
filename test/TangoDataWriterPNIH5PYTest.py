@@ -867,7 +867,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for j in range(len(value[0])):

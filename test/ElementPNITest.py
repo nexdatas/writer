@@ -90,7 +90,7 @@ class ElementTest(unittest.TestCase):
         field = group.create_field(fdname, fdtype)
 
         el = Element(self._tfname, self._fattrs, eFile)
-        el2 = Element(self._tfname, self._fattrs,  el)
+        el2 = Element(self._tfname, self._fattrs, el)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el._tagAttrs, self._fattrs)

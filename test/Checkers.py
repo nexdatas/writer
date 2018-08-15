@@ -660,7 +660,7 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
         for i in range(len(values)):
-            # print i,  cnt[i], type(cnt[i]), values[i]
+            # print i, cnt[i], type(cnt[i]), values[i]
             if self._isNumeric(cnt[i]):
                 if nxtype == "NX_BOOLEAN":
                     self._tc.assertEqual(
@@ -789,7 +789,7 @@ class Checker(object):
     def checkSingleStringSpectrumField(self, det, name, dtype, nxtype, values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
-                "nexdatas_source": None,  "nexdatas_strategy": None}
+                "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -998,7 +998,7 @@ class Checker(object):
     def checkStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
-                "nexdatas_source": None,  "nexdatas_strategy": None}
+                "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -1046,7 +1046,7 @@ class Checker(object):
     def checkSingleStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
-                "nexdatas_source": None,  "nexdatas_strategy": None}
+                "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 

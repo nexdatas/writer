@@ -161,7 +161,7 @@ class FElementH5CppTest(unittest.TestCase):
     # \brief It tests run method
     def test_run(self):
         print("Run: %s.test_run() " % self.__class__.__name__)
-        el = FElement(self._tfname, self._fattrs, None,  self._group)
+        el = FElement(self._tfname, self._fattrs, None, self._group)
         self.assertEqual(el.tagName, self._tfname)
         self.assertEqual(el.content, [])
         self.assertEqual(el.doc, "")
@@ -237,7 +237,7 @@ class FElementH5CppTest(unittest.TestCase):
         mlen = self.__rnd.randint(1, 1000)
         lens = {'2': str(mlen)}
         self.myAssertRaise(
-            XMLSettingSyntaxError, el._findShape, "1", lengths=lens,  extraD=True)
+            XMLSettingSyntaxError, el._findShape, "1", lengths=lens, extraD=True)
 
     # run _findShape test
     # \brief It tests _findShape method
@@ -336,7 +336,7 @@ class FElementH5CppTest(unittest.TestCase):
                          [mlen[0], 0, mlen[1], mlen[2]])
         self.assertEqual(
             el._findShape("3", lengths=lens, extraD=True, grows=3),
-                         [mlen[0],  mlen[1], 0, mlen[2]])
+                         [mlen[0], mlen[1], 0, mlen[2]])
         for i in range(4, 5):
             self.assertEqual(
                 el._findShape("3", lengths=lens, extraD=True, grows=i), mlen + [0])

@@ -2211,7 +2211,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(2)] for j in range(2)]
             strimage[...] = vv
             self.myAssertImage(strimage.read(), vv)
-            vv2 = [[vl[j+2][i + 2] for i in range(2)] for j in range(2)]
+            vv2 = [[vl[j + 2][i + 2] for i in range(2)] for j in range(2)]
             strimage.write(vv2)
             self.myAssertImage(list(strimage[...]), vv2)
             strimage[...] = vv
@@ -2229,7 +2229,7 @@ class FileWriterTest(unittest.TestCase):
             strimage.grow(ext=2)
             self.assertEqual(strimage.shape, (5, 2))
             self.assertEqual(strimage.h5object.shape, (5, 2))
-            vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
+            vv4 = [[vl[j + 2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
             strimage[2:5, :] = vv4
             self.myAssertImage(strimage[...], vv5)
@@ -2272,7 +2272,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(10)] for j in range(20)]
             floatimage[...] = vv
             self.myAssertImage(floatimage.read(), vv)
-            vv2 = [[vl[j+20][i + 10] for i in range(10)] for j in range(20)]
+            vv2 = [[vl[j + 20][i + 10] for i in range(10)] for j in range(20)]
             floatimage.write(vv2)
             self.myAssertImage(list(floatimage[...]), vv2)
             floatimage[...] = vv
@@ -2290,7 +2290,7 @@ class FileWriterTest(unittest.TestCase):
             floatimage.grow(ext=2)
             self.assertEqual(floatimage.shape, (23, 10))
             self.assertEqual(floatimage.h5object.shape, (23, 10))
-            vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
+            vv4 = [[vl[j + 2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
             floatimage[2:23, :] = vv4
             self.myAssertImage(floatimage[...], vv5)
@@ -2327,7 +2327,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(30)] for j in range(20)]
             intimage[...] = vv
             self.myAssertImage(intimage.read(), vv)
-            vv2 = [[vl[j+20][i + 10] for i in range(30)] for j in range(20)]
+            vv2 = [[vl[j + 20][i + 10] for i in range(30)] for j in range(20)]
             intimage.write(vv2)
             self.myAssertImage(list(intimage[...]), vv2)
             intimage[...] = vv
@@ -2345,7 +2345,7 @@ class FileWriterTest(unittest.TestCase):
             intimage.grow(ext=2)
             self.assertEqual(intimage.shape, (23, 30))
             self.assertEqual(intimage.h5object.shape, (23, 30))
-            vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
+            vv4 = [[vl[j + 2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
             intimage[2:23, :] = vv4
             self.myAssertImage(intimage[...], vv5)
@@ -2491,7 +2491,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec[...] = vv
             self.myAssertVector(strvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i + 2] for i in range(2)] for j in range(2)] for k in range(3)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec.write(vv2)
             self.myAssertVector(list(strvec[...]), vv2)
             strvec[...] = vv
@@ -2553,7 +2553,7 @@ class FileWriterTest(unittest.TestCase):
             vv = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec[...] = vv
             self.myAssertVector(floatvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i + 2] for i in range(10)] for j in range(20)] for k in range(1)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
             self.myAssertVector([floatvec[...]], vv2)
@@ -2618,7 +2618,7 @@ class FileWriterTest(unittest.TestCase):
 
             intvec[...] = vv
             self.myAssertVector(intvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i + 2] for i in range(30)] for j in range(2)] for k in range(1)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(30)] for j in range(2)] for k in range(1)]
             intvec.write(vv2)
             self.myAssertVector(intvec.read(), vv2)
             self.myAssertVector([intvec[...]], vv2)
@@ -4318,7 +4318,7 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage.h5object[1:, :], vv1)
 
 
-            vv2 = [[flvl[3][j+1][i] for i in range(2)] for j in range(2)]
+            vv2 = [[flvl[3][j + 1][i] for i in range(2)] for j in range(2)]
             atfloatimage[1:, :] = vv2
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
@@ -4381,7 +4381,7 @@ class FileWriterTest(unittest.TestCase):
             self.myAssertImage(atintimage.h5object[1:, :], vv1)
 
 
-            vv2 = [[itvl[3][j+1][i] for i in range(2)] for j in range(2)]
+            vv2 = [[itvl[3][j + 1][i] for i in range(2)] for j in range(2)]
             atintimage[1:, :] = vv2
 
             self.myAssertImage(atintimage.read(), itvl[3])

@@ -354,7 +354,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -407,7 +407,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -478,7 +478,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -549,7 +549,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -623,7 +623,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -697,7 +697,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1003,7 +1003,7 @@ class EAttributeH5CppTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1083,7 +1083,7 @@ class EAttributeH5CppTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1166,7 +1166,7 @@ class EAttributeH5CppTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1246,7 +1246,7 @@ class EAttributeH5CppTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1313,7 +1313,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1329,7 +1329,7 @@ class EAttributeH5CppTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1397,7 +1397,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1410,7 +1410,7 @@ class EAttributeH5CppTest(unittest.TestCase):
         el = {}
         ea = {}
         for k in attrs.keys():
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1475,7 +1475,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1511,7 +1511,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0],)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1571,7 +1571,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1599,7 +1599,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (mlen[0],)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1657,7 +1657,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1692,7 +1692,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (1, 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1752,7 +1752,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1774,7 +1774,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (1, 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1833,7 +1833,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -1871,7 +1871,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (1, len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -1932,7 +1932,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -1954,7 +1954,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (1, len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2013,7 +2013,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2051,7 +2051,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (len(attrs[k][0]), 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2112,7 +2112,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -2135,7 +2135,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (len(attrs[k][0]), 1)
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2200,7 +2200,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -2239,7 +2239,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (len(attrs[k][0]), len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k
@@ -2300,7 +2300,7 @@ class EAttributeH5CppTest(unittest.TestCase):
             "uint64": [numpy.iinfo(getattr(numpy, 'int64')).max, "NX_UINT64", "uint64", (1,)],
             #            "uint64":[numpy.iinfo(getattr(numpy, 'uint64')).max,"NX_UINT64", "uint64", (1,)],
             "float": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [numpy.finfo(getattr(numpy, 'float32')).max, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [numpy.finfo(getattr(numpy, 'float64')).max, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [False, "NX_BOOLEAN", "bool", (1,)],
@@ -2324,7 +2324,7 @@ class EAttributeH5CppTest(unittest.TestCase):
 
             attrs[k][3] = (len(attrs[k][0]), len(attrs[k][0][0]))
 
-            el[k] = EField({"name": k,  "units": "m"}, eFile)
+            el[k] = EField({"name": k, "units": "m"}, eFile)
             el[k].content = ["Test"]
             ea[k] = EAttribute({"name": k, "type": attrs[k][1]}, el[k])
             ea[k].name = k

@@ -281,7 +281,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
                         ', "cnt_u16":' + str(uc) +
                         ', "cnt_u32":' + str(uc) +
                         ((', "cnt_u64_canfail":' + str(uc)) if flip else ' ') +
-                        ',  "cnt_u64":' + str(uc) +
+                        ', "cnt_u64":' + str(uc) +
                         ' } ' +
                         str(trigstr if flip else ' ') +
                         '  }')
@@ -1693,7 +1693,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         tdw = self.openWriter(
             fname, xml, json='{"data": {' +
             ' "mca_float":' + str(self._fmca1[0]) +
-            ',  "flags":' +
+            ', "flags":' +
             str(logical).replace("'", "\"") +
             ', "mca_int":' + str(self._mca1[0]) +
             '  } }')
@@ -1703,14 +1703,14 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             self.record(
                 tdw, '{"data": {' +
                 ' "mca_float":' + str(self._fmca1[i]) +
-                ',  "flags":' + str(logical).replace("'", "\"") +
+                ', "flags":' + str(logical).replace("'", "\"") +
                 '  } }')
             flip = not flip
         self.closeWriter(
             tdw, json='{"data": {' +
             ' "mca_float":' + str(self._fmca1[0]) +
             ', "mca_int":' + str(self._mca1[0]) +
-            ',  "flags":' + str(logical).replace("'", "\"") +
+            ', "flags":' + str(logical).replace("'", "\"") +
             ', "mca_uint":' + str(self._mca2[0]) +
             '  } }')
 
@@ -2787,7 +2787,7 @@ canfail="true"/>
         tdw = self.openWriter(
             fname, xml, json='{"data": {' +
             ' "pco_float":' + str(self._fpco1[0]) +
-            ',  "flags":' +
+            ', "flags":' +
             str(logical).replace("'", "\"") +
             ', "pco_int":' + str(self._pco1[0]) +
             '  } }')
@@ -2796,13 +2796,13 @@ canfail="true"/>
             self.record(tdw, '{"data": {' +
                         ' "pco_float":' + str(self._fpco1[i]) +
                         ', "pco_int":' + str(self._pco1[i]) +
-                        ',  "flags":' + str(logical).replace("'", "\"") +
+                        ', "flags":' + str(logical).replace("'", "\"") +
                         '  } }')
 
         self.closeWriter(tdw, json='{"data": {' +
                          ' "pco_float":' + str(self._fpco1[0]) +
                          ', "pco_int":' + str(self._pco1[0]) +
-                         ',  "flags":' + str(logical).replace("'", "\"") +
+                         ', "flags":' + str(logical).replace("'", "\"") +
                          '  } }')
 
         # check the created file

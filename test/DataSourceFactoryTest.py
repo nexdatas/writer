@@ -346,7 +346,7 @@ ds.result = ds.myclient + 1
         self.assertEqual(
             td.stack[1], '<datasource type=\'CL\'>\n<datasource type="CLIENT" name="myclient">\n  <record name="myRecord"/>\n</datasource>\n<result>\nds.result = ds.myclient + 1\n</result>\n</datasource>')
         self.assertEqual(td.stack[2], 'setJSON')
-        self.assertEqual(td.stack[3],  {u'data': {u'myRecord': 1123}})
+        self.assertEqual(td.stack[3], {u'data': {u'myRecord': 1123}})
         self.assertEqual(td.stack[4], None)
         self.assertEqual(td.stack[5], "setDataSources")
         self.assertEqual(td.stack[6], dsp)
