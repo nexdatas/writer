@@ -36,11 +36,14 @@ from nxswriter.TangoDataWriter import TangoDataWriter
 from nxswriter.Errors import ThreadError
 from Checkers import Checker
 
+
 try:
     from pni.io.nx.h5 import open_file
+    # True if pniio installed
     PNIIO = True
 except:
     from pni.nx.h5 import open_file
+    PNIIO = False
 
 try:
     import MySQLdb
@@ -50,9 +53,6 @@ except:
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
-# True if pniio installed
-PNIIO = False
 
 if sys.version_info > (3,):
     long = int
@@ -2319,8 +2319,8 @@ class DBFieldTagWriterTest(unittest.TestCase):
             [[[numpy.finfo(getattr(numpy, 'float64')).max for it in sub]
               for sub in pid]] * 3,
             attrs={
-                "type": "NX_FLOAT", "units": "",
-                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "type": "NX_FLOAT", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": 'STEP', "nexdatas_canfail": "FAILED",
                 "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pid_image_int32", "int32", "NX_INT32",
