@@ -1272,9 +1272,9 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-# ???????
+            # ???????
             # ! PNI self.assertEqual(mca.name, "mca")
-#????
+            # ????
             self.assertEqual(mca.name, "data")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -1754,9 +1754,9 @@ class NXSDataWriterH5PYTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-# ???????
+            # ???????
             # ! PNI self.assertEqual(mca.name, "mca")
-#????
+            # ????
             self.assertEqual(mca.name, "data")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))

@@ -1302,7 +1302,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -1694,7 +1694,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -2082,7 +2082,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -2512,7 +2512,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -2942,7 +2942,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -3330,7 +3330,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -3675,7 +3675,7 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
@@ -4930,14 +4930,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#             print(cnt.read())
+            # print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])

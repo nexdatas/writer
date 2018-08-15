@@ -1068,8 +1068,8 @@ class ELinkH5PYTest(unittest.TestCase):
             l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype)
         self.assertEqual(
             l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape)
-        #! bug in for  PNI
-        #! self.assertEqual(l5.name, gr.h5Object.name )
+        # bug in for  PNI
+        # self.assertEqual(l5.name, gr.h5Object.name )
         self.assertEqual(l5.name, atts5["name"])
 
         self._nxFile.close()
@@ -1464,8 +1464,8 @@ class ELinkH5PYTest(unittest.TestCase):
             l5.attributes["NX_class"].dtype, gr.h5Object.attributes["NX_class"].dtype)
         self.assertEqual(
             l5.attributes["NX_class"].shape, gr.h5Object.attributes["NX_class"].shape)
-        #! bug in PNI
-        #! self.assertEqual(l5.name, gr.h5Object.name )
+        # bug in PNI
+        # self.assertEqual(l5.name, gr.h5Object.name )
         self.assertEqual(l5.name, atts5["name"])
 
         self._nxFile.close()

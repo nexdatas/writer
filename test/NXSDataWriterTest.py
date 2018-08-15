@@ -135,7 +135,8 @@ class NXSDataWriterTest(unittest.TestCase):
           Link to mca in /NXentry/NXinstrument/NXdetector
         </doc>
       </link>
-      <link target="/NXentry/NXinstrument/NXdetector/counter1" name="counter1">
+      <link target="/NXentry/NXinstrument/NXdetector/counter1"
+ name="counter1">
         <doc>
           Link to counter1 in /NXentry/NXinstrument/NXdetector
         </doc>
@@ -622,13 +623,15 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":'
                       + str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":'
                       + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
@@ -655,13 +658,15 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":'
                       + str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":'
                       + str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
@@ -1227,7 +1232,7 @@ class NXSDataWriterTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#             print(cnt.read())
+            #  print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1271,9 +1276,9 @@ class NXSDataWriterTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-# ???????
+            # ???????
             self.assertEqual(mca.name, "mca")
-#????            self.assertEqual(mca.name,"data")
+            # ???? self.assertEqual(mca.name,"data")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
@@ -1753,9 +1758,9 @@ class NXSDataWriterTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-# ???????
+            # ???????
             self.assertEqual(mca.name, "mca")
-#????            self.assertEqual(mca.name,"data")
+            # ????  self.assertEqual(mca.name,"data")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
