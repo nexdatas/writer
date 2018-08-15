@@ -77,8 +77,12 @@ class ELink(FElement):
 
         :brief: During its thread run it fetches the data from the source
         """
+        if sys.version_info > (3,):
+            aname = self._tagAttrs["name"]
+        else:
+            aname = self._tagAttrs["name"].encode()
         try:
-            if self._tagAttrs["name"].encode() is not None:
+            if aname is not None:
                 if self.source:
                     dt = self.source.getData()
                     dh = None
@@ -114,7 +118,10 @@ class ELink(FElement):
         if "name" in self._tagAttrs.keys():
             self.__setTarget(target)
             if self.__target:
-                name = self._tagAttrs["name"].encode()
+                if sys.version_info > (3,):
+                    name = self._tagAttrs["name"]
+                else:
+                    name = self._tagAttrs["name"].encode()
                 try:
                     self.h5Object = FileWriter.link(
                         self.__target,
@@ -144,14 +151,24 @@ class ELink(FElement):
         :type target: :obj: `str`
         """
         if target is None and "target" in self._tagAttrs.keys():
-            target = self._tagAttrs["target"].encode()
+            if sys.version_info > (3,):
+                target = self._tagAttrs["target"]
+            else:
+                target = self._tagAttrs["target"].encode()
         if target is None and ("".join(self.content)).strip():
-            target = ("".join(self.content)).strip().encode()
+            if sys.version_info > (3,):
+                target = ("".join(self.content)).strip()
+            else:
+                target = ("".join(self.content)).strip().encode()
         if target is not None:
             if '://' not in str(target) \
                and self.__groupTypes is not None:
-                self.__target = (self.__typesToNames(
-                    target, self.__groupTypes)).encode()
+                if sys.version_info > (3,):
+                    self.__target = (self.__typesToNames(
+                        target, self.__groupTypes))
+                else:
+                    self.__target = (self.__typesToNames(
+                        target, self.__groupTypes)).encode()
             else:
                 self.__target = str(target)
 

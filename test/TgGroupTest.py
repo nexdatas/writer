@@ -50,10 +50,17 @@ from nxswriter.DataSourcePool import DataSourcePool
 from nxswriter import DataSources
 
 import threading
-import thread
+
+if sys.version_info > (3,):
+    import _thread as thread
+else:
+    import thread
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test pool
@@ -94,7 +101,6 @@ class TgGroupTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -105,7 +111,7 @@ class TgGroupTest(unittest.TestCase):
         self._simps.setUp()
         self._simps2.setUp()
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -122,7 +128,7 @@ class TgGroupTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -130,7 +136,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         counter = self.__rnd.randint(-2, 100)
 
@@ -148,7 +154,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getDevice(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         counter = self.__rnd.randint(-2, 100)
 
@@ -218,7 +224,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr1 = {
             "ScalarBoolean": ["bool", "DevBoolean", True],
@@ -228,7 +234,7 @@ class TgGroupTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -242,9 +248,9 @@ class TgGroupTest(unittest.TestCase):
             "ScalarLong": ["int64", "DevLong", -255],
             "ScalarULong": ["uint64", "DevULong", 123],
             "ScalarLong64": ["int64", "DevLong64", 214],
-            "ScalarULong64": ["uint64", "DevULong64", 244465L],
+            "ScalarULong64": ["uint64", "DevULong64", 244465],
             "ScalarFloat": ["float32", "DevFloat", 11.123, 1e-5],
-            "ScalarDouble": ["float64", "DevDouble", -1.414532 + 02, 1e-14],
+            "ScalarDouble": ["float64", "DevDouble", -1.414532e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyFalse"],
         }
 
@@ -354,7 +360,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "SpectrumBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -364,7 +370,7 @@ class TgGroupTest(unittest.TestCase):
             "SpectrumLong": ["int64", "DevLong", -124, [1, 0]],
             "SpectrumULong": ["uint64", "DevULong", 234, [1, 0]],
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
-            "SpectrumULong64": ["uint64", "DevULong64", 23L, [1, 0]],
+            "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
             "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
@@ -378,7 +384,7 @@ class TgGroupTest(unittest.TestCase):
             "SpectrumLong": ["int64", "DevLong", -112, [1, 0]],
             "SpectrumULong": ["uint64", "DevULong", 123, [1, 0]],
             "SpectrumLong64": ["int64", "DevLong64", 114, [1, 0]],
-            "SpectrumULong64": ["uint64", "DevULong64", 11L, [1, 0]],
+            "SpectrumULong64": ["uint64", "DevULong64", 11, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 10.124, [1, 0], 1e-5],
             "SpectrumDouble": ["float64", "DevDouble", -1.133173e+02, [1, 0], 1e-14],
             "SpectrumString": ["string", "DevString", "MyFalse", [1, 0]],
@@ -488,7 +494,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "ImageBoolean": ["bool", "DevBoolean", True, [1, 0]],
@@ -616,7 +622,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_command(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "GetBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],
@@ -626,7 +632,7 @@ class TgGroupTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -124],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 234],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 23],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 12.234, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -2.456673e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyTrue"],
@@ -640,7 +646,7 @@ class TgGroupTest(unittest.TestCase):
             "GetLong": ["ScalarLong", "int64", "DevLong", -344],
             "GetULong": ["ScalarULong", "uint64", "DevULong", 124],
             "GetLong64": ["ScalarLong64", "int64", "DevLong64", 234],
-            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 1345L],
+            "GetULong64": ["ScalarULong64", "uint64", "DevULong64", 1345],
             "GetFloat": ["ScalarFloat", "float32", "DevFloat", 2.123, 1e-5],
             "GetDouble": ["ScalarDouble", "float64", "DevDouble", -1.1233213e+02, 1e-14],
             "GetString": ["ScalarString", "string", "DevString", "MyFAADSD"],
@@ -721,7 +727,7 @@ class TgGroupTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_dev_prop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
             "DeviceBoolean": ["ScalarBoolean", "bool", "DevBoolean", True],

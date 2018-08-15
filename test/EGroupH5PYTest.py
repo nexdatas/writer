@@ -47,6 +47,9 @@ from Checkers import Checker
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class EGroupH5PYTest(unittest.TestCase):
@@ -72,7 +75,6 @@ class EGroupH5PYTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -83,14 +85,14 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -101,7 +103,7 @@ class EGroupH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -109,7 +111,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -139,7 +141,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor_reload(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -186,7 +188,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor_thesame_name(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -218,7 +220,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -252,7 +254,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_noobject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         gattrs = {"type": "NXentry", "short_name": "shortname"}
@@ -262,7 +264,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_notype(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -280,7 +282,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_aTn(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -288,7 +290,7 @@ class EGroupH5PYTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            # map of tag attribute types
+        # map of tag attribute types
         maTn = {"signal": 1, "axis": 2, "primary": 3, "offset": 4,
                 "stride": 6, "file_time": "12:34",
                 "file_update_time": "12:45", "restricts": 12,
@@ -324,7 +326,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_aTnv(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -332,7 +334,7 @@ class EGroupH5PYTest(unittest.TestCase):
             self._fname, overwrite=True).root()
         eFile = EFile({}, None, self._nxFile)
         gattrs = {"type": "NXentry", "name": "shortname"}
-            # map of tag attribute types
+        # map of tag attribute types
         maTnv = {"vector": "1 2 3 4 5"}
         raTnv = {"vector": [1, 2, 3, 4, 5]}
         gattrs = dict(gattrs, **(maTnv))
@@ -371,7 +373,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -399,7 +401,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -488,7 +490,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -513,7 +515,7 @@ class EGroupH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -551,7 +553,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_1d_single_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -576,7 +578,7 @@ class EGroupH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -624,11 +626,11 @@ class EGroupH5PYTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -653,7 +655,7 @@ class EGroupH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -705,7 +707,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_store_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -730,7 +732,7 @@ class EGroupH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -785,11 +787,11 @@ class EGroupH5PYTest(unittest.TestCase):
         self._nxFile.close()
         os.remove(self._fname)
 
-            # constructor test
+    # constructor test
     # \brief It tests default settings
     def test_store_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -814,7 +816,7 @@ class EGroupH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -873,7 +875,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -908,7 +910,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_noname(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter
@@ -944,7 +946,7 @@ class EGroupH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_fetchName_notype(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         FileWriter.writer = H5PYWriter

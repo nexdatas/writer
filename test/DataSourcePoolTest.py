@@ -20,24 +20,22 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
 import sys
-import subprocess
-import random
 import struct
 import json
-import numpy
-from xml.dom import minidom
 
 import nxswriter
-import thread
+
 
 from nxswriter.DataSourcePool import DataSourcePool
-from nxswriter.DataSources import DataSource
 from nxswriter.TangoSource import TangoSource
 from nxswriter.DBaseSource import DBaseSource
 from nxswriter.ClientSource import ClientSource
 
+if sys.version_info > (3,):
+    import _thread as thread
+else:
+    import thread
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -131,12 +129,12 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -147,7 +145,7 @@ class DataSourcePoolTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -155,7 +153,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DataSourcePool()
         self.assertTrue(isinstance(el, object))
@@ -170,13 +168,14 @@ class DataSourcePoolTest(unittest.TestCase):
         self.myAssertRaise(ImportError, DataSourcePool, jsn)
 
         el = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
 
     # hasDataSource test
     # \brief It tests default settings
     def test_hasDataSource(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DataSourcePool()
         self.assertEqual(el.common, {})
@@ -190,7 +189,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertTrue(not el.hasDataSource("CL"))
 
         el = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
         self.assertTrue(el.hasDataSource("TANGO"))
         self.assertTrue(el.hasDataSource("CLIENT"))
         self.assertTrue(el.hasDataSource("DB"))
@@ -201,7 +201,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_get(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DataSourcePool()
         ds = el.get("TANGO")()
@@ -214,7 +214,8 @@ class DataSourcePoolTest(unittest.TestCase):
         self.assertEqual(el.get("CL"), None)
 
         el = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'))
         ds = el.get("TANGO")()
         self.assertTrue(isinstance(ds, TangoSource))
         ds = el.get("DB")()
@@ -229,7 +230,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_append(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DataSourcePool()
         el.append(nxswriter.ClientSource.ClientSource, "CL")
@@ -299,7 +300,7 @@ class DataSourcePoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DataSourcePool()
         el.pop("CL")

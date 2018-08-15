@@ -26,6 +26,8 @@ import numpy as np
 from pninexus import h5cpp
 
 from . import FileWriter
+from .Types import nptype
+
 
 if sys.version_info > (3,):
     unicode = str
@@ -55,7 +57,7 @@ def _slice2selection(t, shape):
         else:
             return h5cpp.dataspace.Hyperslab(
                 offset=(t.start,),
-                count=int(math.ceil((t.stop-t.start)/float(t.step))),
+                count=int(math.ceil((t.stop - t.start) / float(t.step))),
                 stride=(t.step - 1,))
     elif isinstance(t, (int, long)):
         return h5cpp.dataspace.Hyperslab(
@@ -92,24 +94,42 @@ def _slice2selection(t, shape):
 
 
 pTh = {
-    "long": h5cpp.datatype.Integer,
-    "str": h5cpp.datatype.kVariableString,
-    "unicode": h5cpp.datatype.kVariableString,
-    "bool": h5cpp.datatype.kEBool,
-    "int": h5cpp.datatype.kInt64,
-    "int64": h5cpp.datatype.kInt64,
-    "int32": h5cpp.datatype.kInt32,
-    "int16": h5cpp.datatype.kInt16,
-    "int8": h5cpp.datatype.kInt8,
-    "uint": h5cpp.datatype.kInt64,
-    "uint64": h5cpp.datatype.kUInt64,
-    "uint32": h5cpp.datatype.kUInt32,
-    "uint16": h5cpp.datatype.kUInt16,
-    "uint8": h5cpp.datatype.kUInt8,
-    "float": h5cpp.datatype.kFloat32,
-    "float64": h5cpp.datatype.kFloat64,
-    "float32": h5cpp.datatype.kFloat32,
-    "string": h5cpp.datatype.kVariableString
+    u"long": h5cpp.datatype.Integer,
+    u"str": h5cpp.datatype.kVariableString,
+    u"unicode": h5cpp.datatype.kVariableString,
+    u"bool": h5cpp.datatype.kEBool,
+    u"int": h5cpp.datatype.kInt64,
+    u"int64": h5cpp.datatype.kInt64,
+    u"int32": h5cpp.datatype.kInt32,
+    u"int16": h5cpp.datatype.kInt16,
+    u"int8": h5cpp.datatype.kInt8,
+    u"uint": h5cpp.datatype.kInt64,
+    u"uint64": h5cpp.datatype.kUInt64,
+    u"uint32": h5cpp.datatype.kUInt32,
+    u"uint16": h5cpp.datatype.kUInt16,
+    u"uint8": h5cpp.datatype.kUInt8,
+    u"float": h5cpp.datatype.kFloat32,
+    u"float64": h5cpp.datatype.kFloat64,
+    u"float32": h5cpp.datatype.kFloat32,
+    u"string": h5cpp.datatype.kVariableString,
+    b"long": h5cpp.datatype.Integer,
+    b"str": h5cpp.datatype.kVariableString,
+    b"unicode": h5cpp.datatype.kVariableString,
+    b"bool": h5cpp.datatype.kEBool,
+    b"int": h5cpp.datatype.kInt64,
+    b"int64": h5cpp.datatype.kInt64,
+    b"int32": h5cpp.datatype.kInt32,
+    b"int16": h5cpp.datatype.kInt16,
+    b"int8": h5cpp.datatype.kInt8,
+    b"uint": h5cpp.datatype.kInt64,
+    b"uint64": h5cpp.datatype.kUInt64,
+    b"uint32": h5cpp.datatype.kUInt32,
+    b"uint16": h5cpp.datatype.kUInt16,
+    b"uint8": h5cpp.datatype.kUInt8,
+    b"float": h5cpp.datatype.kFloat32,
+    b"float64": h5cpp.datatype.kFloat64,
+    b"float32": h5cpp.datatype.kFloat32,
+    b"string": h5cpp.datatype.kVariableString
 }
 
 
@@ -126,7 +146,7 @@ hTp = {
     h5cpp.datatype.kUInt32: "uint32",
     h5cpp.datatype.kUInt16: "uint16",
     h5cpp.datatype.kUInt8: "uint8",
-    h5cpp.datatype.Float:  "float",
+    h5cpp.datatype.Float: "float",
     h5cpp.datatype.kFloat64: "float64",
     h5cpp.datatype.kFloat32: "float32",
 }
@@ -146,7 +166,7 @@ def open_file(filename, readonly=False, libver=None):
     """
 
     fapl = h5cpp.property.FileAccessList()
-    #    fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
+    # fapl.set_close_degree(h5cpp._property.CloseDegree.STRONG)
     flag = h5cpp.file.AccessFlags.READONLY if readonly \
         else h5cpp.file.AccessFlags.READWRITE
     if libver is None or libver == 'lastest':
@@ -457,7 +477,6 @@ class H5CppGroup(FileWriter.FTGroup):
         :returns: file tree field
         :rtype: :class:`H5CppField`
         """
-
         dcpl = h5cpp.property.DatasetCreationList()
         shape = shape or [1]
         dataspace = h5cpp.dataspace.Simple(
@@ -673,11 +692,12 @@ class H5CppField(FileWriter.FTField):
         :returns: pni object
         :rtype: :obj:`any`
         """
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             # workaround for bug: h5cpp #355
             if self.size == 0:
                 if self.shape:
-                    v = np.empty(shape=self.shape, dtype=self.dtype)
+                    v = np.empty(shape=self.shape,
+                                 dtype=nptype(self.dtype))
                 else:
                     v = []
             else:
@@ -723,7 +743,7 @@ class H5CppField(FileWriter.FTField):
         :rtype: :obj:`any`
         """
         if self.shape == (1,) and t == 0:
-            if self.dtype == 'string':
+            if self.dtype in ['string', b'string']:
                 # workaround for bug: h5cpp #355
                 if self.size == 0:
                     if self.shape:
@@ -737,7 +757,7 @@ class H5CppField(FileWriter.FTField):
 
         selection = _slice2selection(t, self.shape)
         if selection is None:
-            if self.dtype == 'string':
+            if self.dtype in ['string', b'string']:
                 # workaround for bug: h5cpp #355
                 if self.size == 0:
                     if self.shape:
@@ -783,7 +803,7 @@ class H5CppField(FileWriter.FTField):
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             try:
                 v = v.decode('UTF-8')
             except:
@@ -1064,7 +1084,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
         shape = shape or []
         if shape:
             at = self._h5object.create(name, pTh[dtype], shape)
-            if dtype == 'string':
+            if dtype in ['string', b'string']:
                 emp = np.empty(shape, dtype="unicode")
                 emp[:] = ''
                 at.write(emp)
@@ -1072,7 +1092,7 @@ class H5CppAttributeManager(FileWriter.FTAttributeManager):
                 at.write(np.zeros(shape, dtype=dtype))
         else:
             at = self._h5object.create(name, pTh[dtype])
-            if dtype == 'string':
+            if dtype in ['string', b'string']:
                 at.write(np.array(u"", dtype="unicode"))
             else:
                 at.write(np.array(0, dtype=dtype))
@@ -1159,7 +1179,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         :rtype: :obj:`any`
         """
         vl = self._h5object.read()
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             try:
                 vl = vl.decode('UTF-8')
             except:
@@ -1185,7 +1205,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
         if t is Ellipsis or t == slice(None, None, None) or \
            t == (slice(None, None, None), slice(None, None, None)) or \
            (hasattr(o, "__len__") and t == slice(0, len(o), None)):
-            if self.dtype == "string":
+            if self.dtype in ['string', b'string']:
                 if isinstance(o, str):
                     self._h5object.write(unicode(o))
                 else:
@@ -1195,8 +1215,8 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 self._h5object.write(np.array(o, dtype=self.dtype))
         elif isinstance(t, slice):
             var = self._h5object.read()
-            if self.dtype is not 'string':
-                var[t] = np.array(o, dtype=self.dtype)
+            if self.dtype not in ['string', b'string']:
+                var[t] = np.array(o, dtype=nptype(self.dtype))
             else:
                 dtype = np.unicode_
                 var[t] = np.array(o, dtype=dtype)
@@ -1210,8 +1230,8 @@ class H5CppAttribute(FileWriter.FTAttribute):
 
         elif isinstance(t, tuple):
             var = self._h5object.read()
-            if self.dtype is not 'string':
-                var[t] = np.array(o, dtype=self.dtype)
+            if self.dtype not in ['string', b'string']:
+                var[t] = np.array(o, dtype=nptype(self.dtype))
             else:
                 dtype = np.unicode_
                 if hasattr(var, "flatten"):
@@ -1271,7 +1291,7 @@ class H5CppAttribute(FileWriter.FTAttribute):
                 shape = v.shape
             if len(shape) == 1 and shape[0] == 1:
                 v = v[0]
-        if self.dtype == 'string':
+        if self.dtype in ['string', b'string']:
             try:
                 v = v.decode('UTF-8')
             except:

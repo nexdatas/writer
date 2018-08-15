@@ -20,7 +20,12 @@
 """ Implementation of element thread for tag evaluation """
 
 from threading import Thread
-import Queue
+import sys
+
+if sys.version_info > (3,):
+    import queue as Queue
+else:
+    import Queue
 
 
 class ElementThread(Thread):

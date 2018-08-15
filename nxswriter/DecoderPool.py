@@ -21,6 +21,7 @@
 
 import struct
 import numpy
+import sys
 
 
 class UTF8decoder(object):
@@ -135,10 +136,15 @@ class UINT32decoder(object):
         if len(self.__data[1]) % 4:
             raise ValueError("Wrong encoded UINT32 data length")
         if not self.__value:
+            if isinstance(self.__data[1], str):
+                data = bytearray()
+                data.extend(map(ord, self.__data[1]))
+            else:
+                data = self.__data[1]
+            # res = struct.unpack('I' * (len(data) // 4), data)
             self.__value = numpy.array(
-                struct.unpack('I' * (len(self.__data[1]) // 4),
-                              self.__data[1]),
-                dtype=self.dtype).reshape(len(self.__data[1]) // 4)
+                struct.unpack('I' * (len(data) // 4), data),
+                dtype=self.dtype).reshape(len(data) // 4)
         return self.__value
 
 
@@ -264,8 +270,13 @@ class DecoderPool(object):
                 and hasattr(configJSON['decoders'], 'keys'):
             for dk in configJSON['decoders'].keys():
                 pkl = configJSON['decoders'][dk].split(".")
-                dec = __import__(".".join(pkl[:-1]), globals(),
-                                 locals(), pkl[-1])
+                pkg = ".".join(pkl[:-1])
+                if pkg in sys.modules.keys():
+                    pdec = sys.modules[pkg]
+                    dec = pdec
+                else:
+                    dec = __import__(pkg, globals(),
+                                     locals(), pkl[-1])
                 self.append(getattr(dec, pkl[-1]), dk)
 
     def __createDecoders(self):

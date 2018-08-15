@@ -9,7 +9,7 @@
 #    (at your option) any later version.
 #
 #    nexdatas is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    but WITHOUT ANY WARRANTY; without even the implied waranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
@@ -23,9 +23,7 @@ import unittest
 import os
 import sys
 import subprocess
-import random
 import struct
-import random
 import numpy
 
 
@@ -37,12 +35,11 @@ from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
+from xml.sax import SAXParseException
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
-
-
-from xml.sax import SAXParseException
 
 
 # test fixture
@@ -80,12 +77,12 @@ class EStrategyH5PYTest(unittest.TestCase):
         # element file objects
         self._group = self._nxroot.create_group(self._gname, self._gtype)
         self._field = self._group.create_field(self._fdname, self._fdtype)
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -98,14 +95,14 @@ class EStrategyH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
     # default constructor test
     # \brief It tests default settings
     def test_default_constructor(self):
-        print "Run: %s.test_default_constructor() " % self.__class__.__name__
+        print("Run: %s.test_default_constructor() " % self.__class__.__name__)
         el = EField(self._fattrs, None)
         st = EStrategy(self._fattrs, el)
         self.assertTrue(isinstance(st, Element))
@@ -129,7 +126,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # first constructor test
     # \brief It tests default settings
     def test_constructor_1(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         attrs = {}
         attrs["mode"] = "STEP"
         attrs["trigger"] = "def_trigger"
@@ -153,7 +150,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
-            el.compression,  Converters.toBool(attrs["compression"]))
+            el.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(st.last.rate, int(attrs["rate"]))
         self.assertEqual(el.rate, int(attrs["rate"]))
         self.assertEqual(st.last.shuffle, Converters.toBool(attrs["shuffle"]))
@@ -162,7 +159,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # first constructor test
     # \brief It tests default settings
     def test_constructor_2(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         attrs = {}
         attrs["mode"] = "INIT"
         attrs["trigger"] = "def_trigger1"
@@ -188,7 +185,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
-            el.compression,  Converters.toBool(attrs["compression"]))
+            el.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(st.last.rate, 5)
         self.assertEqual(el.rate, 5)
         self.assertEqual(st.last.shuffle, True)
@@ -197,7 +194,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # first constructor test
     # \brief It tests default settings
     def test_constructor_3(self):
-        print "Run: %s.test_constructor() " % self.__class__.__name__
+        print("Run: %s.test_constructor() " % self.__class__.__name__)
         attrs = {}
         attrs["mode"] = "STEP"
         attrs["trigger"] = "def_trigger"
@@ -221,7 +218,7 @@ class EStrategyH5PYTest(unittest.TestCase):
         self.assertEqual(
             st.last.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
-            el.compression,  Converters.toBool(attrs["compression"]))
+            el.compression, Converters.toBool(attrs["compression"]))
         self.assertEqual(
             st.last.rate, int(attrs["rate"]) if int(attrs["rate"]) < 10 else 9)
         self.assertEqual(
@@ -232,7 +229,7 @@ class EStrategyH5PYTest(unittest.TestCase):
     # store method test
     # \brief It tests executing store method
     def test_store(self):
-        print "Run: %s.test_store() " % self.__class__.__name__
+        print("Run: %s.test_store() " % self.__class__.__name__)
 
         attrs = {"mode": "STEP"}
         el = EField(self._fattrs, None)

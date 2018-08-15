@@ -31,6 +31,8 @@ import time
 
 from nxswriter.DecoderPool import UINT32decoder
 
+if sys.version_info > (3,):
+    long = int
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
@@ -53,7 +55,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.__data = (
             'INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00\x00')
         self.__dtype = "uint32"
-        self.__res = numpy.array([1234, 5678,   45,  345], dtype=numpy.uint32)
+        self.__res = numpy.array([1234, 5678, 45, 345], dtype=numpy.uint32)
 
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
@@ -65,13 +67,13 @@ class UINT32decoderTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -82,7 +84,7 @@ class UINT32decoderTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -90,7 +92,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
@@ -100,7 +102,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
@@ -116,7 +118,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_shape(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = {}
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
@@ -140,12 +142,12 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_decode_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         dc = UINT32decoder()
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
-        self.assertEqual(dc.shape(),  None)
+        self.assertEqual(dc.shape(), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
@@ -155,7 +157,7 @@ class UINT32decoderTest(unittest.TestCase):
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
-        self.assertEqual(dc.shape(),  None)
+        self.assertEqual(dc.shape(), None)
         self.assertEqual(dc.name, self.__name)
         self.assertEqual(dc.format, None)
         self.assertEqual(dc.dtype, None)
@@ -187,7 +189,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_load_wrong_len(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         data = ('INT32', '\xd2\x04\x00\x00.\x16\x00\x00-\x00\x00\x00Y\x01\x00')
 
         dc = UINT32decoder()
@@ -203,7 +205,7 @@ class UINT32decoderTest(unittest.TestCase):
     # \brief It tests default settings
     def test_decode(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = [[None, None]] * 20
 

@@ -28,6 +28,7 @@ import random
 import binascii
 import string
 import weakref
+import time
 
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
@@ -37,6 +38,10 @@ from pninexus import h5cpp
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
+
 
 class testwriter(object):
     def __init__(self):
@@ -160,6 +165,7 @@ TField = createClass("TField", FileWriter.FTField)
 TAttributeManager = createClass("TAttributeManager", FileWriter.FTAttributeManager)
 TLink = createClass("TLink", FileWriter.FTLink)
 
+
 # test fixture
 class FileWriterH5CppTest(unittest.TestCase):
 
@@ -169,9 +175,9 @@ class FileWriterH5CppTest(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName)
 
         try:
-            self.__seed  = long(binascii.hexlify(os.urandom(16)), 16)
+            self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            self.__seed  = long(time.time() * 256)
+            self.__seed = long(time.time() * 256)
 #        self.__seed =241361343400098333007607831038323262554
 
         self.__rnd = random.Random(self.__seed)
@@ -180,13 +186,13 @@ class FileWriterH5CppTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -195,9 +201,9 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \param kwargs dictionary with method arguments
     def myAssertRaise(self, exception, method, *args, **kwargs):
         try:
-            error =  False
+            error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -206,9 +212,9 @@ class FileWriterH5CppTest(unittest.TestCase):
 
         self.assertEqual(len(list1), len(list2))
         for i, el in enumerate(list1):
-            if abs(el-list2[i]) >= error:
-                print "EL", el, list2[i], error
-            self.assertTrue(abs(el-list2[i]) < error)
+            if abs(el - list2[i]) >= error:
+                print("EL %s %s %s" % (el, list2[i], error))
+            self.assertTrue(abs(el - list2[i]) < error)
 
     # float image tester
     def myAssertImage(self, image1, image2, error=None):
@@ -218,9 +224,9 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(image1[i]), len(image2[i]))
             for j in range(len(image1[i])):
                 if error is not None:
-                    if abs(image1[i][j]-image2[i][j]) >= error:
-                        print "EL", image1[i][j], image2[i][j], error
-                    self.assertTrue(abs(image1[i][j]-image2[i][j]) < error)
+                    if abs(image1[i][j] - image2[i][j]) >= error:
+                        print("EL %s %s %s" % (image1[i][j], image2[i][j], error))
+                    self.assertTrue(abs(image1[i][j] - image2[i][j]) < error)
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
 
@@ -234,9 +240,9 @@ class FileWriterH5CppTest(unittest.TestCase):
                 self.assertEqual(len(image1[i][j]), len(image2[i][j]))
                 for k in range(len(image1[i][j])):
                     if error is not None:
-                        if abs(image1[i][j][k]-image2[i][j][k]) >= error:
-                            print "EL", image1[i][j][k], image2[i][j][k], error
-                        self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
+                        if abs(image1[i][j][k] - image2[i][j][k]) >= error:
+                            print("EL %s %s %s" % (image1[i][j][k], image2[i][j][k], error))
+                        self.assertTrue(abs(image1[i][j][k] - image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
 
@@ -244,7 +250,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         w = "weerew"
         el = FileWriter.FTObject(w)
 
@@ -254,7 +260,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_openfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -271,7 +277,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
+            rb = bool(self.__rnd.randint(0, 1))
             tres = FileWriter.open_file(fn, rb)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "open_file")
@@ -281,7 +287,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -298,7 +304,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            rb =  bool(self.__rnd.randint(0, 1))
+            rb = bool(self.__rnd.randint(0, 1))
             tres = FileWriter.create_file(fn, rb)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "create_file")
@@ -308,7 +314,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_link(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -316,8 +322,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            fn2 = ''.join(self.__rnd.choice(chars) for _ in range(res*2))
-            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res*3))
+            fn2 = ''.join(self.__rnd.choice(chars) for _ in range(res * 2))
+            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res * 3))
             tres = FileWriter.link(fn, fn2, fn3)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "link")
@@ -328,7 +334,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_deflate_filter(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tw = testwriter()
         FileWriter.writer = tw
         for _ in range(10):
@@ -345,8 +351,8 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_createfile_h5cpp(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             FileWriter.writer = H5CppWriter
             fl = FileWriter.create_file(self._fname)
@@ -378,14 +384,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
             self.assertTrue(f.attributes["NX_class"][...], "NXroot")
             self.assertEqual(f.size, 0)
             fl.close()
-
 
             self.myAssertRaise(
                 Exception, FileWriter.create_file, self._fname)
@@ -404,7 +409,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftobject(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FileWriter.FTObject(None)
         self.assertEqual(fto._h5object, None)
@@ -429,7 +434,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_ftcloser(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FTCloser(None)
         self.assertEqual(fto._h5object, None)
@@ -483,11 +488,11 @@ class FileWriterH5CppTest(unittest.TestCase):
         self.assertEqual(fto3.is_valid, True)
         self.assertEqual(fto4.is_valid, True)
 
-   # default createfile test
+    # default createfile test
     # \brief It tests default settings
     def test_ftobjects(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fto = FileWriter.FTObject(None)
         self.assertEqual(fto.is_valid, True)
@@ -764,8 +769,8 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppfile(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
-        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun )
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
+        self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         overwrite = False
 
@@ -783,7 +788,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             rt = fl.root()
             fl.flush()
-            print dir(fl.h5object.root())
+            print(dir(fl.h5object.root()))
             self.assertEqual(
                 fl.h5object.root().link.path,
                 rt.h5object.link.path)
@@ -811,7 +816,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(
                 fl.h5object.intent == h5cpp.file.AccessFlags.READONLY, False)
             fl.close()
-            
+
             fl.reopen(True)
             self.assertEqual(fl.name, self._fname)
             self.assertEqual(fl.path, self._fname)
@@ -836,7 +841,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -851,7 +856,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppgroup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -905,16 +910,16 @@ class FileWriterH5CppTest(unittest.TestCase):
             attr0 = rt.attributes
             attr1 = entry.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
-            print type(attr0.h5object)
+            print(type(attr0.h5object))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
             self.assertTrue(isinstance(attr1, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr1.h5object, h5cpp._attribute.AttributeManager))
 
-            print dir(rt)
+            print(dir(rt))
             self.assertTrue(
                 isinstance(rt, H5CppWriter.H5CppGroup))
             self.assertEqual(rt.name, ".")
@@ -932,7 +937,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(rt.exists("strument"), False)
 
             for rr in rt:
-                print rr.name
+                print(rr.name)
 
             self.assertTrue(
                 isinstance(entry, H5CppWriter.H5CppGroup))
@@ -1052,7 +1057,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             kids = set()
             for en in det:
                 kids.add(en.name)
-            print kids
+            print(kids)
 
             self.assertEqual(
                 kids,
@@ -1385,7 +1390,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1403,7 +1408,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppfield_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1451,7 +1456,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(strscalar.path, '/entry12345:NXentry/strscalar')
             self.assertEqual(strscalar.dtype, 'string')
             self.assertEqual(strscalar.h5object.datatype.type.name, 'STRING')
-            self.assertEqual(strscalar.shape, (1,)) 
+            self.assertEqual(strscalar.shape, (1,))
             self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (1,))
             self.assertEqual(strscalar.is_valid, True)
             self.assertEqual(strscalar.shape, (1,))
@@ -1472,13 +1477,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (2,))
 
             self.assertEqual(strscalar[0], vl[0])
-            strscalar[1] =  vl[3]
+            strscalar[1] = vl[3]
             self.assertEqual(list(strscalar[...]), [vl[0], vl[3]])
 
             strscalar.grow(ext=2)
             self.assertEqual(strscalar.shape, (4,))
             self.assertEqual(strscalar.h5object.dataspace.current_dimensions, (4,))
-            strscalar[1:4] =  vl[1:4]
+            strscalar[1:4] = vl[1:4]
             self.assertEqual(list(strscalar.read()), vl[0:4])
             self.assertEqual(list(strscalar[0:2]), vl[0:2])
 
@@ -1491,7 +1496,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             attrs = strscalar.attributes
             self.assertTrue(isinstance(attrs, H5CppWriter.H5CppAttributeManager))
-            print type(attrs.h5object)
+            print(type(attrs.h5object))
             self.assertTrue(isinstance(attrs.h5object, h5cpp._attribute.AttributeManager))
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
@@ -1502,13 +1507,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatscalar.name, 'floatscalar')
             self.assertEqual(floatscalar.h5object.link.path.name, 'floatscalar')
             self.assertEqual(str(floatscalar.h5object.link.path), '/entry12345/floatscalar')
-            
+
             self.assertEqual(floatscalar.dtype, 'float64')
             self.assertEqual(floatscalar.h5object.datatype.type.name, 'FLOAT')
             self.assertEqual(floatscalar.shape, (1,))
             self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (1,))
 
-            vl  = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
+            vl = [1123.34, 3234.3, 234.33, -4.4, 34, 0.0, 4.3, 434.5, 23.0, 0]
 
             floatscalar[...] = vl[0]
             self.assertEqual(floatscalar.read(), vl[0])
@@ -1523,13 +1528,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (2,))
 
             self.assertEqual(floatscalar[0], vl[0])
-            floatscalar[1] =  vl[3]
+            floatscalar[1] = vl[3]
             self.assertEqual(list(floatscalar[...]), [vl[0], vl[3]])
 
             floatscalar.grow(ext=2)
             self.assertEqual(floatscalar.shape, (4,))
             self.assertEqual(floatscalar.h5object.dataspace.current_dimensions, (4,))
-            floatscalar[1:4] =  vl[1:4]
+            floatscalar[1:4] = vl[1:4]
             self.assertEqual(list(floatscalar.read()), vl[0:4])
             self.assertEqual(list(floatscalar[0:2]), vl[0:2])
 
@@ -1546,8 +1551,6 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intscalar.h5object, h5cpp._node.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
@@ -1559,9 +1562,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intscalar.shape, (1,))
             self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (1,))
 
-
-
-            vl  = [243, 43, 45, 34, 45, 54, 23234]
+            vl = [243, 43, 45, 34, 45, 54, 23234]
 
             intscalar[...] = vl[0]
             self.assertEqual(intscalar.read(), vl[0])
@@ -1576,13 +1577,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (2,))
 
             self.assertEqual(intscalar[0], vl[0])
-            intscalar[1] =  vl[3]
+            intscalar[1] = vl[3]
             self.assertEqual(list(intscalar[...]), [vl[0], vl[3]])
 
             intscalar.grow(ext=2)
             self.assertEqual(intscalar.shape, (4,))
             self.assertEqual(intscalar.h5object.dataspace.current_dimensions, (4,))
-            intscalar[1:4] =  vl[1:4]
+            intscalar[1:4] = vl[1:4]
             self.assertEqual(list(intscalar.read()), vl[0:4])
             self.assertEqual(list(intscalar[0:2]), vl[0:2])
 
@@ -1646,7 +1647,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1663,7 +1664,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppfield_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1730,13 +1731,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(strspec.h5object.dataspace.current_dimensions, (11,))
 
             self.assertEqual(list(strspec[0:10]), vl[0:10])
-            strspec[10] =  vl[10]
+            strspec[10] = vl[10]
             self.assertEqual(list(strspec[...]), vl[0:11])
 
             strspec.grow(ext=2)
             self.assertEqual(strspec.shape, (13,))
             self.assertEqual(strspec.h5object.dataspace.current_dimensions, (13,))
-            strspec[1:13] =  vl[1:13]
+            strspec[1:13] = vl[1:13]
             self.assertEqual(list(strspec.read()), vl[0:13])
             self.assertEqual(list(strspec[0:2]), vl[0:2])
 
@@ -1780,13 +1781,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (21,))
 
             self.myAssertFloatList(list(floatspec[0:20]), vl[0:20], 1e-4)
-            floatspec[20] =  vl[20]
+            floatspec[20] = vl[20]
             self.myAssertFloatList(list(floatspec[...]), vl[0:21], 1e-4)
 
             floatspec.grow(ext=2)
             self.assertEqual(floatspec.shape, (23,))
             self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (23,))
-            floatspec[1:23] =  vl[1:23]
+            floatspec[1:23] = vl[1:23]
             self.myAssertFloatList(list(floatspec.read()), vl[0:23], 1e-4)
             self.myAssertFloatList(list(floatspec[0:2]), vl[0:2], 1e-4)
 
@@ -1816,10 +1817,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intspec.h5object.datatype.type.name, 'INTEGER')
             self.assertEqual(intspec.h5object.dataspace.current_dimensions, (30,))
 
-
-
-            vl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
-
+            vl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
             intspec[...] = vl[0:30]
             self.assertEqual(list(intspec.read()), vl[0:30])
@@ -1832,13 +1830,13 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intspec.h5object.dataspace.current_dimensions, (31,))
 
             self.assertEqual(list(intspec[0:10]), vl[0:10])
-            intspec[30] =  vl[30]
+            intspec[30] = vl[30]
             self.assertEqual(list(intspec[...]), vl[0:31])
 
             intspec.grow(ext=2)
             self.assertEqual(intspec.shape, (33,))
             self.assertEqual(intspec.h5object.dataspace.current_dimensions, (33,))
-            intspec[1:33] =  vl[1:33]
+            intspec[1:33] = vl[1:33]
             self.assertEqual(list(intspec.read()), vl[0:33])
             self.assertEqual(list(intspec[0:2]), vl[0:2])
 
@@ -1899,7 +1897,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -1916,7 +1914,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppfield_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -1964,7 +1962,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(str(strimage.h5object.link.path), '/entry12345/instrument/detector/strimage')
 
             self.assertEqual(strimage.h5object.datatype.type.name, 'STRING')
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (2,2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (2, 2))
 
 
             chars = string.ascii_uppercase + string.digits
@@ -1978,33 +1976,33 @@ class FileWriterH5CppTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(2)] for j in range(2)]
             strimage[...] = vv
             self.myAssertImage(strimage.read(), vv)
-            vv2 = [[vl[j+2][i+2] for i in range(2)] for j in range(2)]
+            vv2 = [[vl[j + 2][i + 2] for i in range(2)] for j in range(2)]
             strimage.write(vv2)
             self.myAssertImage(list(strimage[...]), vv2)
             strimage[...] = vv
 
             strimage.grow()
             self.assertEqual(strimage.shape, (3, 2))
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (3,2))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (3, 2))
 
             iv = [[strimage[j, i] for i in range(2)] for j in range(2)]
             self.myAssertImage(iv, vv)
-            strimage[2,:] = [vl[2][0], vl[2][1]]
+            strimage[2, :] = [vl[2][0], vl[2][1]]
             vv3 = [[vl[j][i] for i in range(2)] for j in range(3)]
             self.myAssertImage(strimage[...], vv3)
 
             strimage.grow(ext=2)
             self.assertEqual(strimage.shape, (5, 2))
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5,2))
-            vv4 = [[vl[j+2][i] for i in range(2)] for j in range(3)]
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 2))
+            vv4 = [[vl[j + 2][i] for i in range(2)] for j in range(3)]
             vv5 = [[vl[j][i] for i in range(2)] for j in range(5)]
-            strimage[2:5,:] =  vv4
+            strimage[2:5, :] = vv4
             self.myAssertImage(strimage[...], vv5)
-            self.myAssertImage(strimage[0:3,:], vv3)
+            self.myAssertImage(strimage[0:3, :], vv3)
 
             strimage.grow(1, 4)
             self.assertEqual(strimage.shape, (5, 6))
-            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5,6))
+            self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 6))
 
             vv6 = [[vl[j][i] for i in range(6)] for j in range(5)]
             strimage.write(vv6)
@@ -2028,7 +2026,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatimage.h5object.link.path.name, 'floatimage')
             self.assertEqual(str(floatimage.h5object.link.path), '/entry12345/instrument/detector/floatimage')
             self.assertEqual(floatimage.h5object.datatype.type.name, 'FLOAT')
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20,10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20, 10))
 
 
             vl = [
@@ -2039,33 +2037,33 @@ class FileWriterH5CppTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(10)] for j in range(20)]
             floatimage[...] = vv
             self.myAssertImage(floatimage.read(), vv)
-            vv2 = [[vl[j+20][i+10] for i in range(10)] for j in range(20)]
+            vv2 = [[vl[j + 20][i + 10] for i in range(10)] for j in range(20)]
             floatimage.write(vv2)
             self.myAssertImage(list(floatimage[...]), vv2)
             floatimage[...] = vv
 
             floatimage.grow()
             self.assertEqual(floatimage.shape, (21, 10))
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (21,10))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (21, 10))
 
             iv = [[floatimage[j, i] for i in range(10)] for j in range(20)]
             self.myAssertImage(iv, vv)
-            floatimage[20,:] = [vl[20][i] for i in range(10)]
+            floatimage[20, :] = [vl[20][i] for i in range(10)]
             vv3 = [[vl[j][i] for i in range(10)] for j in range(21)]
             self.myAssertImage(floatimage[...], vv3)
 
             floatimage.grow(ext=2)
             self.assertEqual(floatimage.shape, (23, 10))
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23,10))
-            vv4 = [[vl[j+2][i] for i in range(10)] for j in range(21)]
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23, 10))
+            vv4 = [[vl[j + 2][i] for i in range(10)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(10)] for j in range(23)]
-            floatimage[2:23,:] =  vv4
+            floatimage[2:23, :] = vv4
             self.myAssertImage(floatimage[...], vv5)
-            self.myAssertImage(floatimage[0:21,:], vv3)
+            self.myAssertImage(floatimage[0:21, :], vv3)
 
             floatimage.grow(1, 4)
             self.assertEqual(floatimage.shape, (23, 14))
-            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23,14))
+            self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (23, 14))
 
             vv6 = [[vl[j][i] for i in range(14)] for j in range(23)]
             floatimage.write(vv6)
@@ -2083,7 +2081,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intimage.dtype, 'uint32')
             self.assertEqual(intimage.shape, (0, 30))
             self.assertEqual(intimage.h5object.datatype.type.name, 'INTEGER')
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (0,30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (0, 30))
 
 
             vl = [
@@ -2094,33 +2092,33 @@ class FileWriterH5CppTest(unittest.TestCase):
             vv = [[vl[j][i] for i in range(30)] for j in range(20)]
             intimage[...] = vv
             self.myAssertImage(intimage.read(), vv)
-            vv2 = [[vl[j+20][i+10] for i in range(30)] for j in range(20)]
+            vv2 = [[vl[j + 20][i + 10] for i in range(30)] for j in range(20)]
             intimage.write(vv2)
             self.myAssertImage(list(intimage[...]), vv2)
             intimage[...] = vv
 
             intimage.grow()
             self.assertEqual(intimage.shape, (21, 30))
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (21,30))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (21, 30))
 
             iv = [[intimage[j, i] for i in range(30)] for j in range(20)]
             self.myAssertImage(iv, vv)
-            intimage[20,:] = [vl[20][i] for i in range(30)]
+            intimage[20, :] = [vl[20][i] for i in range(30)]
             vv3 = [[vl[j][i] for i in range(30)] for j in range(21)]
             self.myAssertImage(intimage[...], vv3)
 
             intimage.grow(ext=2)
             self.assertEqual(intimage.shape, (23, 30))
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23,30))
-            vv4 = [[vl[j+2][i] for i in range(30)] for j in range(21)]
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23, 30))
+            vv4 = [[vl[j + 2][i] for i in range(30)] for j in range(21)]
             vv5 = [[vl[j][i] for i in range(30)] for j in range(23)]
-            intimage[2:23,:] =  vv4
+            intimage[2:23, :] = vv4
             self.myAssertImage(intimage[...], vv5)
-            self.myAssertImage(intimage[0:21,:], vv3)
+            self.myAssertImage(intimage[0:21, :], vv3)
 
             intimage.grow(1, 4)
             self.assertEqual(intimage.shape, (23, 34))
-            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23,34))
+            self.assertEqual(intimage.h5object.dataspace.current_dimensions, (23, 34))
 
             vv6 = [[vl[j][i] for i in range(34)] for j in range(23)]
             intimage.write(vv6)
@@ -2171,7 +2169,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2189,7 +2187,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppfield_vec(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2237,7 +2235,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(strvec.h5object.link.path.name, 'strvec')
             self.assertEqual(str(strvec.h5object.link.path), '/entry12345/instrument/detector/strvec')
             self.assertEqual(strvec.h5object.datatype.type.name, 'STRING')
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (0,2,2))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (0, 2, 2))
 
             chars = string.ascii_uppercase + string.digits
             vl = [[[''.join(self.__rnd.choice(chars)
@@ -2250,34 +2248,34 @@ class FileWriterH5CppTest(unittest.TestCase):
             vv = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec[...] = vv
             self.myAssertVector(strvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i+2] for i in range(2)] for j in range(2)] for k in range(3)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(2)] for j in range(2)] for k in range(3)]
             strvec.write(vv2)
             self.myAssertVector(list(strvec[...]), vv2)
             strvec[...] = vv
 
             strvec.grow()
             self.assertEqual(strvec.shape, (4, 2, 2))
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4,2,2))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 2, 2))
 
             iv = [[[strvec[k, j, i] for i in range(2)] for j in range(2)] for k in range(3)]
             self.myAssertVector(iv, vv)
-            strvec[3,:,:] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
+            strvec[3, :, :] = [[vl[3][j][i] for i in range(2)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(2)] for j in range(2)] for k in range(4)]
             self.myAssertVector(strvec[...], vv3)
 
             strvec.grow(2, 3)
             self.assertEqual(strvec.shape, (4, 2, 5))
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4,2,5))
-            vv4 = [[[vl[k][j][i+2] for i in range(3)] for j in range(2)] for k in range(4)]
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 2, 5))
+            vv4 = [[[vl[k][j][i + 2] for i in range(3)] for j in range(2)] for k in range(4)]
             vv5 = [[[vl[k][j][i] for i in range(5)] for j in range(2)] for k in range(4)]
 
-            strvec[:,:, 2:5] =  vv4
+            strvec[:, :, 2:5] = vv4
             self.myAssertVector(strvec[...], vv5)
-            self.myAssertVector(strvec[:,:, 0:2], vv3)
+            self.myAssertVector(strvec[:, :, 0:2], vv3)
 
             strvec.grow(1, 4)
             self.assertEqual(strvec.shape, (4, 6, 5))
-            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4,6,5))
+            self.assertEqual(strvec.h5object.dataspace.current_dimensions, (4, 6, 5))
 
             vv6 = [[[vl[k][j][i] for i in range(5)] for j in range(6)] for k in range(4)]
             strvec.write(vv6)
@@ -2297,13 +2295,11 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(floatvec.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/floatvec')
             self.assertEqual(floatvec.dtype, 'float64')
             self.assertEqual(floatvec.shape, (1, 20, 10))
-            
+
             self.assertEqual(floatvec.h5object.link.path.name, 'floatvec')
             self.assertEqual(str(floatvec.h5object.link.path), '/entry12345/instrument/detector/floatvec')
             self.assertEqual(floatvec.h5object.datatype.type.name, 'FLOAT')
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1,20,10))
-
-
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1, 20, 10))
 
             vl = [[[self.__rnd.uniform(-20000.0, 20000)
                     for _ in range(70)]
@@ -2313,7 +2309,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             vv = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec[...] = vv
             self.myAssertVector(floatvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i+2] for i in range(10)] for j in range(20)] for k in range(1)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(10)] for j in range(20)] for k in range(1)]
             floatvec.write(vv2)
             self.myAssertVector(floatvec.read(), vv2)
 
@@ -2323,27 +2319,27 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             floatvec.grow()
             self.assertEqual(floatvec.shape, (2, 20, 10))
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2,20,10))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 20, 10))
 
             iv = [[[floatvec[k, j, i] for i in range(10)] for j in range(20)] for k in range(1)]
             self.myAssertVector(iv, vv)
-            floatvec[1,:,:] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
+            floatvec[1, :, :] = [[vl[1][j][i] for i in range(10)] for j in range(20)]
             vv3 = [[[vl[k][j][i] for i in range(10)] for j in range(20)] for k in range(2)]
             self.myAssertVector(floatvec[...], vv3)
 
             floatvec.grow(2, 3)
             self.assertEqual(floatvec.shape, (2, 20, 13))
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2,20,13))
-            vv4 = [[[vl[k][j][i+10] for i in range(3)] for j in range(20)] for k in range(2)]
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 20, 13))
+            vv4 = [[[vl[k][j][i + 10] for i in range(3)] for j in range(20)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(13)] for j in range(20)] for k in range(2)]
 
-            floatvec[:,:, 10:13] =  vv4
+            floatvec[:, :, 10:13] = vv4
             self.myAssertVector(floatvec[...], vv5)
-            self.myAssertVector(floatvec[:,:, 0:10], vv3)
+            self.myAssertVector(floatvec[:, :, 0:10], vv3)
 
             floatvec.grow(1, 4)
             self.assertEqual(floatvec.shape, (2, 24, 13))
-            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2,24,13))
+            self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (2, 24, 13))
 
             vv6 = [[[vl[k][j][i] for i in range(13)] for j in range(24)] for k in range(2)]
             floatvec.write(vv6)
@@ -2367,8 +2363,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(intvec.h5object.link.path.name, 'intvec')
             self.assertEqual(str(intvec.h5object.link.path), '/entry12345/instrument/detector/intvec')
             self.assertEqual(intvec.h5object.datatype.type.name, 'INTEGER')
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (0,2,30))
-
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (0, 2, 30))
 
             vl = [[[self.__rnd.randint(1, 1600)
                     for _ in range(70)]
@@ -2380,7 +2375,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intvec[...] = vv
             self.myAssertVector(intvec.read(), vv)
-            vv2 = [[[vl[k][j+2][i+2] for i in range(30)] for j in range(2)] for k in range(1)]
+            vv2 = [[[vl[k][j + 2][i + 2] for i in range(30)] for j in range(2)] for k in range(1)]
             intvec.write(vv2)
             self.myAssertVector(intvec.read(), vv2)
             # !!! PNI self.myAssertVector([intvec[...]], vv2)
@@ -2389,27 +2384,27 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             intvec.grow()
             self.assertEqual(intvec.shape, (2, 2, 30))
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2,2,30))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 2, 30))
 
             iv = [[[intvec[k, j, i] for i in range(30)] for j in range(2)] for k in range(1)]
             self.myAssertVector(iv, vv)
-            intvec[1,:,:] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
+            intvec[1, :, :] = [[vl[1][j][i] for i in range(30)] for j in range(2)]
             vv3 = [[[vl[k][j][i] for i in range(30)] for j in range(2)] for k in range(2)]
             self.myAssertVector(intvec[...], vv3)
 
             intvec.grow(2, 3)
             self.assertEqual(intvec.shape, (2, 2, 33))
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2,2,33))
-            vv4 = [[[vl[k][j][i+30] for i in range(3)] for j in range(2)] for k in range(2)]
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 2, 33))
+            vv4 = [[[vl[k][j][i + 30] for i in range(3)] for j in range(2)] for k in range(2)]
             vv5 = [[[vl[k][j][i] for i in range(33)] for j in range(2)] for k in range(2)]
 
-            intvec[:,:, 30:33] =  vv4
+            intvec[:, :, 30:33] = vv4
             self.myAssertVector(intvec[...], vv5)
-            self.myAssertVector(intvec[:,:, 0:30], vv3)
+            self.myAssertVector(intvec[:, :, 0:30], vv3)
 
             intvec.grow(1, 4)
             self.assertEqual(intvec.shape, (2, 6, 33))
-            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2,6,33))
+            self.assertEqual(intvec.h5object.dataspace.current_dimensions, (2, 6, 33))
 
             vv6 = [[[vl[k][j][i] for i in range(33)] for j in range(6)] for k in range(2)]
             intvec.write(vv6)
@@ -2466,7 +2461,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -2484,7 +2479,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppdeflate(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2544,7 +2539,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppattributemanager(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -2599,7 +2594,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
@@ -2629,8 +2624,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             self.assertTrue(isinstance(atintscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintscalar.h5object, h5cpp._attribute.Attribute))
@@ -2653,8 +2648,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatspec.dtype, 'float32')
             self.assertEqual(atfloatspec.shape, (12,))
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(list(atfloatspec.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec[...]), [0.] * 12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
             # self.assertEqual(atfloatspec.h5object, (attr0.h5object, 'atfloatspec'))
 
@@ -2666,8 +2661,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrimage.dtype, 'string')
             self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
-            self.myAssertImage(atstrimage.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage[...], [[''] * 3] * 2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             # self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
@@ -2696,8 +2691,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintspec.dtype, 'uint32')
             self.assertEqual(atintspec.shape, (2,))
             self.assertEqual(atintspec.is_valid, True)
-            self.assertEqual(list(atintspec.read()), [0]*2)
-            self.assertEqual(list(atintspec[...]), [0]*2)
+            self.assertEqual(list(atintspec.read()), [0] * 2)
+            self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             # self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
@@ -2711,8 +2706,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
-            self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             # self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
 
@@ -2742,8 +2737,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrspec.dtype, 'string')
             self.assertEqual(atstrspec.shape, (4,))
             self.assertEqual(atstrspec.is_valid, True)
-            self.assertEqual(list(atstrspec.read()), ['']*4)
-            self.assertEqual(list(atstrspec[...]), ['']*4)
+            self.assertEqual(list(atstrspec.read()), [''] * 4)
+            self.assertEqual(list(atstrspec[...]), [''] * 4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             # self.assertEqual(atstrspec.h5object, (attr2.h5object, 'atstrspec'))
 
@@ -2756,19 +2751,19 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             # self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
-            print "WW", attr1["NX_class"].name
+            print("WW %s" % attr1["NX_class"].name)
 
             for at in attr0:
-                print at.name
+                print(at.name)
             for at in attr1:
-                print at.name
+                print(at.name)
             for at in attr2:
-                print at.name
+                print(at.name)
 
             at = None
 
@@ -2803,8 +2798,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatspec.dtype, 'float32')
             self.assertEqual(atfloatspec.shape, (12,))
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(list(atfloatspec.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec[...]), [0.] * 12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
             # self.assertEqual(atfloatspec.h5object, (attr0.h5object, 'atfloatspec'))
 
@@ -2816,8 +2811,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrimage.dtype, 'string')
             self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
-            self.myAssertImage(atstrimage.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage[...], [[''] * 3] * 2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             # self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
@@ -2846,8 +2841,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintspec.dtype, 'uint32')
             self.assertEqual(atintspec.shape, (2,))
             self.assertEqual(atintspec.is_valid, True)
-            self.assertEqual(list(atintspec.read()), [0]*2)
-            self.assertEqual(list(atintspec[...]), [0]*2)
+            self.assertEqual(list(atintspec.read()), [0] * 2)
+            self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             # self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
@@ -2861,8 +2856,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
-            self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             # self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
 
@@ -2892,8 +2887,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrspec.dtype, 'string')
             self.assertEqual(atstrspec.shape, (4,))
             self.assertEqual(atstrspec.is_valid, True)
-            self.assertEqual(list(atstrspec.read()), ['']*4)
-            self.assertEqual(list(atstrspec[...]), ['']*4)
+            self.assertEqual(list(atstrspec.read()), [''] * 4)
+            self.assertEqual(list(atstrspec[...]), [''] * 4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             # self.assertEqual(atstrspec.h5object, (attr2.h5object, 'atstrspec'))
 
@@ -2906,8 +2901,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             # self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
@@ -2924,8 +2919,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'uint64')
             self.assertEqual(atintimage.shape, (4,))
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(list(atintimage.read()), [0]*4)
-            self.assertEqual(list(atintimage[...]), [0]*4)
+            self.assertEqual(list(atintimage.read()), [0] * 4)
+            self.assertEqual(list(atintimage[...]), [0] * 4)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             # self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
@@ -2990,7 +2985,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3010,7 +3005,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppattribute_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3065,7 +3060,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
@@ -3095,15 +3090,15 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
 
             chars = string.ascii_uppercase + string.digits
             stvl = [
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(10)]
-            itvl = [self.__rnd.randint(1, 16000)  for _ in range(100)]
+            itvl = [self.__rnd.randint(1, 16000) for _ in range(100)]
 
             flvl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
 
@@ -3120,8 +3115,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), itvl[0])
             self.assertEqual(atintscalar[...], itvl[0])
             self.assertEqual(atintscalar.parent.h5object, rt.h5object)
-            # self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar')) 
-
+            # self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar'))
 
             atintscalar[...] = itvl[1]
 
@@ -3144,7 +3138,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintscalar.read(), itvl[3])
             self.assertEqual(atintscalar[...], itvl[3])
 
-            print stvl[0], type(stvl[0])
+            print("%s %s" % (stvl[0], type(stvl[0])))
 
             atstrscalar.write(stvl[0])
 
@@ -3183,7 +3177,6 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrscalar.read(), stvl[3])
             self.assertEqual(atstrscalar[...], stvl[3])
 
-
             atfloatscalar.write(flvl[0])
 
             self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
@@ -3198,8 +3191,6 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), flvl[0])
             self.assertEqual(atfloatscalar[...], flvl[0])
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
-
-
 
             atfloatscalar[...] = flvl[1]
 
@@ -3282,7 +3273,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3299,7 +3290,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppattribute_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3354,7 +3345,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
@@ -3384,8 +3375,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[
@@ -3393,7 +3384,7 @@ class FileWriterH5CppTest(unittest.TestCase):
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(4)]
                     for _ in range(10)]
 
-            itvl = [[self.__rnd.randint(1, 16000)  for _ in range(2)] for _ in range(10)]
+            itvl = [[self.__rnd.randint(1, 16000) for _ in range(2)] for _ in range(10)]
 
             flvl = [[self.__rnd.uniform(-200.0, 200) for _ in range(12)] for _ in range(10)]
 
@@ -3609,7 +3600,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)
@@ -3626,7 +3617,7 @@ class FileWriterH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_h5cppattribute_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         try:
@@ -3681,7 +3672,7 @@ class FileWriterH5CppTest(unittest.TestCase):
             attr1 = entry.attributes
             attr2 = intscalar.attributes
 
-            print attr0.h5object
+            print(attr0.h5object)
             self.assertTrue(isinstance(attr0, H5CppWriter.H5CppAttributeManager))
             self.assertTrue(
                 isinstance(attr0.h5object, h5cpp._attribute.AttributeManager))
@@ -3711,8 +3702,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(attr1), 4)
             self.assertEqual(len(attr2), 3)
 
-            print dir(atintscalar)
-            print dir(atintscalar.h5object)
+            print(dir(atintscalar))
+            print(dir(atintscalar.h5object))
 
             chars = string.ascii_uppercase + string.digits
             stvl = [[[
@@ -3720,7 +3711,7 @@ class FileWriterH5CppTest(unittest.TestCase):
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(3)]
                     for _ in range(2)] for _ in range(10)]
 
-            itvl = [[[self.__rnd.randint(1, 16000)  for _ in range(2)]
+            itvl = [[[self.__rnd.randint(1, 16000) for _ in range(2)]
                      for _ in range(3)] for _ in range(10)]
 
             flvl = [[[self.__rnd.uniform(-200.0, 200) for _ in range(2)]
@@ -3745,15 +3736,15 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             self.myAssertImage(atstrimage.h5object.read(), stvl[1])
             self.myAssertImage(atstrimage.read(), stvl[1])
-            self.myAssertImage(atstrimage[:,:], stvl[1])
+            self.myAssertImage(atstrimage[:, :], stvl[1])
 
-            atstrimage[:,:] = stvl[2]
+            atstrimage[:, :] = stvl[2]
 
             self.myAssertImage(atstrimage.read(), stvl[2])
             self.myAssertImage(atstrimage[...], stvl[2])
             self.myAssertImage(atstrimage.h5object.read(), stvl[2])
 
-            atstrimage[0:2,:] = stvl[3]
+            atstrimage[0:2, :] = stvl[3]
 
             self.myAssertImage(atstrimage.read(), stvl[3])
             self.myAssertImage(atstrimage[...], stvl[3])
@@ -3761,21 +3752,21 @@ class FileWriterH5CppTest(unittest.TestCase):
 
             vv1 = [[stvl[4][j][i] for i in range(2)] for j in range(2)]
 
-            print "TR", atstrimage.read()
+            print("TR %s" % str(atstrimage.read()))
 
-            print "TRct", atstrimage[:, 1:]
+            print("TRct", atstrimage[:, 1:])
 
             atstrimage[:, 1:] = vv1
 
-            print "VV1", vv1
-            print "TR1 ", atstrimage[:,:]
-            print "TR2 ", atstrimage[:, 1:]
+            print("VV1 %s" % vv1)
+            print("TR1 ", atstrimage[:, :])
+            print("TR2 ", atstrimage[:, 1:])
             self.myAssertImage(atstrimage.read()[:, 1:], vv1)
             self.myAssertImage(atstrimage[:, 1:], vv1)
             self.myAssertImage(atstrimage.h5object.read()[:, 1:], vv1)
 
 
-            vv2 = [[stvl[3][j][i+1] for i in range(2)] for j in range(2)]
+            vv2 = [[stvl[3][j][i + 1] for i in range(2)] for j in range(2)]
             atstrimage[:, 1:] = vv2
 
             self.myAssertImage(atstrimage.read(), stvl[3])
@@ -3802,31 +3793,31 @@ class FileWriterH5CppTest(unittest.TestCase):
             atfloatimage[...] = flvl[1]
 
             self.myAssertImage(atfloatimage.read(), flvl[1])
-            self.myAssertImage(atfloatimage[:,:], flvl[1])
+            self.myAssertImage(atfloatimage[:, :], flvl[1])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[1])
 
-            atfloatimage[:,:] = flvl[2]
+            atfloatimage[:, :] = flvl[2]
 
             self.myAssertImage(atfloatimage.read(), flvl[2])
             self.myAssertImage(atfloatimage[...], flvl[2])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[2])
 
-            atfloatimage[0:3,:] = flvl[3]
+            atfloatimage[0:3, :] = flvl[3]
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
             self.myAssertImage(atfloatimage.h5object.read(), flvl[3])
 
             vv1 = [[flvl[4][j][i] for i in range(2)] for j in range(2)]
-            atfloatimage[1:,:] = vv1
+            atfloatimage[1:, :] = vv1
 
-            self.myAssertImage(atfloatimage.read()[1:,:], vv1)
-            self.myAssertImage(atfloatimage[1:,:], vv1)
-            self.myAssertImage(atfloatimage.h5object.read()[1:,:], vv1)
+            self.myAssertImage(atfloatimage.read()[1:, :], vv1)
+            self.myAssertImage(atfloatimage[1:, :], vv1)
+            self.myAssertImage(atfloatimage.h5object.read()[1:, :], vv1)
 
 
-            vv2 = [[flvl[3][j+1][i] for i in range(2)] for j in range(2)]
-            atfloatimage[1:,:] = vv2
+            vv2 = [[flvl[3][j + 1][i] for i in range(2)] for j in range(2)]
+            atfloatimage[1:, :] = vv2
 
             self.myAssertImage(atfloatimage.read(), flvl[3])
             self.myAssertImage(atfloatimage[...], flvl[3])
@@ -3852,31 +3843,31 @@ class FileWriterH5CppTest(unittest.TestCase):
             atintimage[...] = itvl[1]
 
             self.myAssertImage(atintimage.read(), itvl[1])
-            self.myAssertImage(atintimage[:,:], itvl[1])
+            self.myAssertImage(atintimage[:, :], itvl[1])
             self.myAssertImage(atintimage.h5object.read(), itvl[1])
 
-            atintimage[:,:] = itvl[2]
+            atintimage[:, :] = itvl[2]
 
             self.myAssertImage(atintimage.read(), itvl[2])
             self.myAssertImage(atintimage[...], itvl[2])
             self.myAssertImage(atintimage.h5object.read(), itvl[2])
 
-            atintimage[0:3,:] = itvl[3]
+            atintimage[0:3, :] = itvl[3]
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
             self.myAssertImage(atintimage.h5object.read(), itvl[3])
 
             vv1 = [[itvl[4][j][i] for i in range(2)] for j in range(2)]
-            atintimage[1:,:] = vv1
+            atintimage[1:, :] = vv1
 
-            self.myAssertImage(atintimage.read()[1:,:], vv1)
-            self.myAssertImage(atintimage[1:,:], vv1)
-            self.myAssertImage(atintimage.h5object.read()[1:,:], vv1)
+            self.myAssertImage(atintimage.read()[1:, :], vv1)
+            self.myAssertImage(atintimage[1:, :], vv1)
+            self.myAssertImage(atintimage.h5object.read()[1:, :], vv1)
 
 
-            vv2 = [[itvl[3][j+1][i] for i in range(2)] for j in range(2)]
-            atintimage[1:,:] = vv2
+            vv2 = [[itvl[3][j + 1][i] for i in range(2)] for j in range(2)]
+            atintimage[1:, :] = vv2
 
             self.myAssertImage(atintimage.read(), itvl[3])
             self.myAssertImage(atintimage[...], itvl[3])
@@ -3943,7 +3934,7 @@ class FileWriterH5CppTest(unittest.TestCase):
 #            self.assertEqual(6, len(f.attributes))
             atts = []
             for at in f.attributes:
-                print at.name, at.read(), at.dtype
+                print("%s %s %s" % (at.name, at.read(), at.dtype))
             self.assertEqual(
                 f.attributes["file_name"][...],
                 self._fname)

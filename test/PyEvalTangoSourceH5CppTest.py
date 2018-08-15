@@ -31,7 +31,11 @@ import json
 import binascii
 import time
 
-import SimpleServerSetUp
+try:
+    import SimpleServerSetUp
+except:
+    from . import SimpleServerSetUp
+
 import PyTango
 
 from nxswriter import DataSources
@@ -47,6 +51,10 @@ import nxswriter.H5CppWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
+    unicode = str
 
 
 # test fix
@@ -67,7 +75,6 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
         self.__rnd = random.Random(self.__seed)
 
@@ -76,7 +83,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
     def setUp(self):
         # file handle
         self._simps.setUp()
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -92,7 +99,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -143,7 +150,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = 'ds.result = 123.2'
         script2 = 'ds.result = ds.inp'
@@ -179,7 +186,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
   </datasource>
   <result>%s</result>
 </datasource>
-""" % script2 ), None)
+""" % script2), None)
         gjson = '{"data":{"inp":21}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -199,7 +206,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21,"rinp2":41}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -207,7 +214,9 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
         self.checkData(dt, "SCALAR", 62, "DevLong64", [])
 
         dp = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -222,7 +231,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -244,7 +253,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -257,7 +266,7 @@ class PyEvalTangoSourceH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_getData_global_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 try:
@@ -273,6 +282,8 @@ except:
             ds.res = ds.inp2
 
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
@@ -284,7 +295,7 @@ except:
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234000206, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -324,7 +335,7 @@ except:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), a2, script) ), None)
+""" % (self._simps.dp.dev_name(), a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -364,7 +375,7 @@ except:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script) ), None)
+""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -401,7 +412,7 @@ except:
     # \brief It tests default settings
     def test_getData_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
@@ -410,12 +421,14 @@ else:
     ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
 """
 
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "SPECTRUM", "DevLong64", []],
+            "long": [-10000000000000000000000003, "SPECTRUM", "DevLong64", []],
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
@@ -480,7 +493,7 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
                         str(carr[k][0]).replace("'", "\""))
@@ -498,7 +511,7 @@ else:
                       for a in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [Converters.toBool(a) for a in arr[k2][2]] if arr[
                     k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0]).__name__] == type(v2[0]).__name__:
+                if NTP.pTt[type(v1[0]).__name__] == str(type(v2[0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -512,7 +525,7 @@ else:
     # \brief It tests default settings with global json string
     def test_zzgetData_global_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
@@ -520,12 +533,14 @@ if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
 else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
         carr = {
             "int": [1243, "IMAGE", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "IMAGE", "DevLong64", []],
+            "long": [-10000000000000000000000003, "IMAGE", "DevLong64", []],
             "float": [-1.223e-01, "IMAGE", "DevDouble", []],
             "str": ['My String', "IMAGE", "DevString", []],
             "unicode": ["Hello", "IMAGE", "DevString", []],
@@ -593,7 +608,7 @@ else:
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
 
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
@@ -612,7 +627,7 @@ else:
                       for row in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
                       for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0][0]).__name__] == type(v2[0][0]).__name__:
+                if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -627,7 +642,7 @@ else:
     # \brief It tests default settings
     def ttest_isValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = PyEvalSource()
         self.assertTrue(isinstance(el, object))
@@ -637,7 +652,7 @@ else:
     # \brief It tests default settings
     def test_getData_common_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = 'ds.result = 123.2'
         script2 = 'ds.result = ds.inp'
@@ -676,7 +691,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result>%s</result>
 </datasource>
-""" % script2 ), None)
+""" % script2), None)
         gjson = '{"data":{"inp":21}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -696,7 +711,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21,"rinp2":41}}'
         self.assertEqual(ds.setJSON(json.loads(gjson)), None)
         self.assertEqual(ds.setDataSources(dp), None)
@@ -704,7 +719,9 @@ ds.res = commonblock["myres"]
         self.checkData(dt, "SCALAR", 62, "DevLong64", [])
 
         dp = DataSourcePool(
-            json.loads('{"datasources":{"CL":"ClientSource.ClientSource"}}'))
+            json.loads(
+                '{"datasources":{"CL":"nxswriter.ClientSource.ClientSource"}}'
+            ))
 
         ds = PyEvalSource()
         self.assertTrue(isinstance(ds, DataSource))
@@ -719,7 +736,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -741,7 +758,7 @@ ds.res = commonblock["myres"]
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % script3 ), None)
+""" % script3), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -757,7 +774,7 @@ ds.res = commonblock["myres"]
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % script4 ), None)
+""" % script4), None)
         gjson = '{"data":{"rinp":21.1}}'
         ljson = '{"data":{"rinp2":41}}'
         self.assertEqual(ds.setDataSources(dp), None)
@@ -770,7 +787,7 @@ ds.res = commonblock["myres"]
     # \brief It tests default settings
     def test_getData_common_h5obj(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         f = nxswriter.H5CppWriter.create_file(fname, False)
@@ -789,7 +806,7 @@ ds.res = commonblock["myres"]
             self.assertEqual(ds.setup("""
 <datasource>
  <result name='res2'>%s</result>
-</datasource>""" % script ), None)
+</datasource>""" % script), None)
             dt = ds.getData()
             self.checkData(dt, "SCALAR", dspid, "DevLong64", [])
         finally:
@@ -800,7 +817,7 @@ ds.res = commonblock["myres"]
     # \brief It tests default settings
     def test_getData_common_h5(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
 
         f = nxswriter.H5CppWriter.create_file(fname, False)
@@ -819,7 +836,7 @@ ds.res = commonblock["myres"]
             self.assertEqual(ds.setup("""
 <datasource>
  <result name='res2'>%s</result>
-</datasource>""" % script ), None)
+</datasource>""" % script), None)
             dt = ds.getData()
             self.checkData(dt, "SCALAR", dspid, "DevLong64", [])
         finally:
@@ -830,7 +847,7 @@ ds.res = commonblock["myres"]
     # \brief It tests default settings
     def test_getData_common_global_scalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 try:
@@ -846,6 +863,8 @@ except:
             ds.res = ds.inp2
 commonblock["myres"] = ds.res
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["myres"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()
@@ -858,7 +877,7 @@ commonblock["myres"] = ds.res
             "ScalarLong": ["int64", "DevLong", -124],
             "ScalarULong": ["uint64", "DevULong", 234],
             "ScalarLong64": ["int64", "DevLong64", 234],
-            "ScalarULong64": ["uint64", "DevULong64", 23L],
+            "ScalarULong64": ["uint64", "DevULong64", 23],
             "ScalarFloat": ["float32", "DevFloat", 12.234000206, 1e-5],
             "ScalarDouble": ["float64", "DevDouble", -2.456673e+02, 1e-14],
             "ScalarString": ["string", "DevString", "MyTrue"],
@@ -898,7 +917,7 @@ commonblock["myres"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), a2, script) ), None)
+""" % (self._simps.dp.dev_name(), a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -930,7 +949,7 @@ commonblock["myres"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
                 self.assertEqual(ds2.setDataSources(dsp), None)
                 dt = ds2.getData()
                 self.checkData(dt, carr[a][1], vv, NTP.pTt[
@@ -951,7 +970,7 @@ commonblock["myres"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script) ), None)
+""" % (self._simps.dp.dev_name(), arr3[a2][2][0], a2, script)), None)
                 if carr[a][2] == "DevString":
                     gjson = '{"data":{"rinp":"%s"}}' % (carr[a][0])
                 else:
@@ -991,7 +1010,7 @@ commonblock["myres"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
                 self.assertEqual(ds2.setDataSources(dsp), None)
                 dt = ds2.getData()
                 if type(vv).__name__ == 'ndarray':
@@ -1005,7 +1024,7 @@ commonblock["myres"] = ds.res
     # \brief It tests default settings
     def test_getData_common_global_spectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
@@ -1015,13 +1034,15 @@ else:
 commonblock["my1res"] = ds.res
 """
 
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["my1res"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
         carr = {
             "int": [1243, "SPECTRUM", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "SPECTRUM", "DevLong64", []],
+            "long": [-10000000000000000000000003, "SPECTRUM", "DevLong64", []],
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
@@ -1086,7 +1107,7 @@ commonblock["my1res"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
                         str(carr[k][0]).replace("'", "\""))
@@ -1104,7 +1125,7 @@ commonblock["my1res"] = ds.res
                       for a in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [Converters.toBool(a) for a in arr[k2][2]] if arr[
                     k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0]).__name__] == type(v2[0]).__name__:
+                if NTP.pTt[type(v1[0]).__name__] == str(type(v2[0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -1121,7 +1142,7 @@ commonblock["my1res"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 dt = ds.getData()
@@ -1132,7 +1153,7 @@ commonblock["my1res"] = ds.res
     # \brief It tests default settings with global json string
     def test_zzgetData_common_global_image(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
@@ -1141,13 +1162,15 @@ else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 commonblock["myre3"] = ds.res
 """
+        if sys.version_info > (3,):
+            script = script.replace("unicode", "str")
         script2 = 'ds.res2 = commonblock["myre3"]'
         dsp = DataSourcePool()
         dcp = DecoderPool()
 
         carr = {
             "int": [1243, "IMAGE", "DevLong64", []],
-            "long": [-10000000000000000000000003L, "IMAGE", "DevLong64", []],
+            "long": [-10000000000000000000000003, "IMAGE", "DevLong64", []],
             "float": [-1.223e-01, "IMAGE", "DevDouble", []],
             "str": ['My String', "IMAGE", "DevString", []],
             "unicode": ["Hello", "IMAGE", "DevString", []],
@@ -1215,7 +1238,7 @@ commonblock["myre3"] = ds.res
   </datasource>
   <result name='res'>%s</result>
 </datasource>
-""" % (self._simps.dp.dev_name(), k2, script) ), None)
+""" % (self._simps.dp.dev_name(), k2, script)), None)
 
                 if carr[k][2] == "DevString":
                     gjson = '{"data":{"rinp":%s}}' % (
@@ -1234,7 +1257,7 @@ commonblock["myre3"] = ds.res
                       for row in carr[k][0]] if carr[k][2] == "DevBoolean" else carr[k][0]
                 v2 = [[Converters.toBool(a) for a in row]
                       for row in arr[k2][2]] if arr[k2][1] == "DevBoolean" else arr[k2][2]
-                if NTP.pTt[type(v1[0][0]).__name__] == type(v2[0][0]).__name__:
+                if NTP.pTt[type(v1[0][0]).__name__] == str(type(v2[0][0]).__name__):
                     vv = v1 + v2
                     error = (arr[k2][4] if len(arr[k2]) > 4 else 0)
                 else:
@@ -1252,7 +1275,7 @@ commonblock["myre3"] = ds.res
 <datasource>
   <result name='res2'>%s</result>
 </datasource>
-""" % (script2) ), None)
+""" % (script2)), None)
 
                 self.assertEqual(ds.setDataSources(dsp), None)
                 dt = ds.getData()

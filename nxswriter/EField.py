@@ -120,7 +120,7 @@ class EField(FElementWithAttr):
             shape = self._findShape(
                 self.rank, self.lengths,
                 self.__extraD, self.grows, True, checkData=True)
-            if self.grows > len(shape):
+            if self.grows and self.grows > len(shape):
                 self.grows = len(shape)
             return shape
         except XMLSettingSyntaxError:
@@ -159,28 +159,32 @@ class EField(FElementWithAttr):
             deflate.rate = self.rate
             deflate.shuffle = self.shuffle
 
+        if sys.version_info < (3,):
+            name = name.encode()
+            dtype = dtype.encode()
+
         try:
             if shape:
                 if not chunk:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape, [],
+                        name, dtype, shape, [],
                         deflate)
                 elif self.canfail:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), shape, chunk,
+                        name, dtype, shape, chunk,
                         deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), minshape or [1], chunk,
+                        name, dtype, minshape or [1], chunk,
                         deflate)
             else:
                 mshape = [1] if self.strategy in ['INIT', 'FINAL'] else [0]
                 if deflate:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), mshape, [1], deflate)
+                        name, dtype, mshape, [1], deflate)
                 else:
                     f = self._lastObject().create_field(
-                        name.encode(), dtype.encode(), mshape, [1])
+                        name, dtype, mshape, [1])
         except:
             info = sys.exc_info()
             import traceback
@@ -190,12 +194,12 @@ class EField(FElementWithAttr):
                 self._streams.error(
                     "EField::__createObject() - "
                     "The field '%s' of '%s' type cannot be created: %s" %
-                    (name.encode(), dtype.encode(), message),
+                    (name, dtype, message),
                     std=False)
 
             raise XMLSettingSyntaxError(
                 "The field '%s' of '%s' type cannot be created: %s" %
-                (name.encode(), dtype.encode(), message))
+                (name, dtype, message))
         return f
 
     def __setAttributes(self):
@@ -207,10 +211,16 @@ class EField(FElementWithAttr):
         self._createAttributes()
 
         if self.strategy == "POSTRUN":
-            self.h5Object.attributes.create(
-                "postrun".encode(),
-                "string".encode(), overwrite=True)[...] \
-                = self.postrun.encode().strip()
+            if sys.version_info > (3,):
+                self.h5Object.attributes.create(
+                    "postrun",
+                    "string", overwrite=True)[...] \
+                    = self.postrun.strip()
+            else:
+                self.h5Object.attributes.create(
+                    "postrun".encode(),
+                    "string".encode(), overwrite=True)[...] \
+                    = self.postrun.encode().strip()
 
     def __setStrategy(self, name):
         """ provides strategy or fill the value in
@@ -222,7 +232,10 @@ class EField(FElementWithAttr):
             if self.source.isValid():
                 return self.strategy, self.trigger
         else:
-            val = ("".join(self.content)).strip().encode()
+            if sys.version_info > (3,):
+                val = ("".join(self.content)).strip()
+            else:
+                val = ("".join(self.content)).strip().encode()
             if val:
                 dh = self._setValue(int(self.rank), val)
                 self.__growshape(dh.shape)
@@ -419,8 +432,8 @@ class EField(FElementWithAttr):
                 if len(holder.shape) > 1 and holder.shape[0] > 1:
                     self.h5Object.grow(self.grows - 1, holder.shape[0] - 1)
                     self.h5Object[
-                        self.h5Object.shape[0]
-                        - holder.shape[0]:self.h5Object.shape[0],
+                        self.h5Object.shape[0] -
+                        holder.shape[0]:self.h5Object.shape[0],
                         :, :] = arr
                 else:
                     self.h5Object[self.h5Object.shape[0] - 1, :, :] = arr[0]
@@ -474,7 +487,7 @@ class EField(FElementWithAttr):
         """
         if self.grows and self.grows > 0 and hasattr(self.h5Object, "grow"):
             shape = self.h5Object.shape
-            if self.grows > len(shape):
+            if self.grows and self.grows > len(shape):
                 self.grows = len(shape)
             if not self.grows and self.__extraD:
                 self.grows = 1
@@ -530,8 +543,8 @@ class EField(FElementWithAttr):
                         self.__writeData(dh)
                     else:
                         if len(self.h5Object.shape) >= self.grows \
-                           and (self.h5Object.shape[self.grows - 1] == 1
-                                or self.canfail):
+                           and (self.h5Object.shape[self.grows - 1] == 1 or
+                                self.canfail):
                             self.__growshape(dh.shape)
                         self.__writeGrowingData(dh)
         except:
@@ -564,7 +577,7 @@ class EField(FElementWithAttr):
         nptype = self.h5Object.dtype
         value = ''
 
-        if self.grows > len(shape):
+        if self.grows and self.grows > len(shape):
             self.grows = len(shape)
         if not self.grows and self.__extraD:
             self.grows = 1

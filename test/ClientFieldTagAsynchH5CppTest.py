@@ -39,7 +39,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class ClientFieldTagAsynchH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest):
+class ClientFieldTagAsynchH5CppTest(
+        ClientFieldTagWriterH5CppTest.ClientFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
@@ -78,8 +79,8 @@ class ClientFieldTagAsynchH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTag
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -144,6 +145,7 @@ class ClientFieldTagAsynchH5CppTest(ClientFieldTagWriterH5CppTest.ClientFieldTag
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+
 
 if __name__ == '__main__':
     unittest.main()

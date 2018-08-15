@@ -37,12 +37,15 @@ from nxswriter.H5Elements import EFile
 from nxswriter.Types import NTP, Converters
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5PYWriter as H5PYWriter
+from xml.sax import SAXParseException
+
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from xml.sax import SAXParseException
+if sys.version_info > (3,):
+    long = int
 
 
 # test fixture
@@ -73,7 +76,6 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -81,13 +83,13 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -111,7 +113,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -119,7 +121,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -139,7 +141,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -161,7 +163,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_0d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -244,7 +246,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -267,7 +269,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -300,9 +302,9 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
 
     # constructor test
     # \brief It tests default settings
-    def test_createAttributes_1d_single(self):
+    def test_createAttributes_1d_single_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -325,7 +327,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -376,7 +378,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_1d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -399,7 +401,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -462,7 +464,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_single(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -485,7 +487,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -539,7 +541,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -562,7 +564,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -618,7 +620,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_1X(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -641,7 +643,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],
@@ -697,7 +699,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
     # \brief It tests default settings
     def test_createAttributes_2d_X1(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         self.createTree()
@@ -720,7 +722,7 @@ class FElementWithAttrH5PYTest(unittest.TestCase):
             "uint32": [12345, "NX_UINT32", "uint32", (1,)],
             "uint64": [12345, "NX_UINT64", "uint64", (1,)],
             "float": [-12.345, "NX_FLOAT", "float64", (1,), 1.e-14],
-            "number": [-12.345e+2, "NX_NUMBER",  "float64", (1,), 1.e-14],
+            "number": [-12.345e+2, "NX_NUMBER", "float64", (1,), 1.e-14],
             "float32": [-12.345e-1, "NX_FLOAT32", "float32", (1,), 1.e-5],
             "float64": [-12.345, "NX_FLOAT64", "float64", (1,), 1.e-14],
             "bool": [True, "NX_BOOLEAN", "bool", (1,)],

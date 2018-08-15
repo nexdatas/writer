@@ -29,20 +29,28 @@ import binascii
 import time
 import numpy
 
+from xml.sax import SAXParseException
+
+try:
+    from Checkers import Checker
+except:
+    from .Checkers import Checker
+
+
+from nxswriter import Types
+from nxswriter.TangoDataWriter import TangoDataWriter
+import nxswriter.FileWriter as FileWriter
+import nxswriter.H5CppWriter as H5CppWriter
+
+
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
 
-from xml.sax import SAXParseException
-
-
-from nxswriter import TangoDataWriter, Types
-from nxswriter.TangoDataWriter import TangoDataWriter
-from Checkers import Checker
-import nxswriter.FileWriter as FileWriter
-import nxswriter.H5CppWriter as H5CppWriter
-
 # test fixture
+
+if sys.version_info > (3,):
+    long = int
 
 
 class ClientFieldTagWriterH5CppTest(unittest.TestCase):
@@ -57,7 +65,6 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             # random seed
             self.seed = long(time.time() * 256)  # use fractional seconds
 #        self.seed = 53867028435352363366241944565880343254
@@ -83,14 +90,14 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     def setProp(self, rc, name, value):
         setattr(rc, name, value)
@@ -129,7 +136,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -252,30 +259,32 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
 
         uc = self._counter[0]
-        datasources = ', "datasources":{"MCLIENT":"nxswriter.ClientSource.ClientSource"}'
-        tdw = self.openWriter(fname, xml, json='{"data": { "cnt_64":' + str(uc) + ' }'
-                              + str(datasources)
-                              + ' }')
+        datasources = ', "datasources":{"MCLIENT":' + \
+                      '"nxswriter.ClientSource.ClientSource"}'
+        tdw = self.openWriter(
+            fname, xml,
+            json='{"data": { "cnt_64":' + str(uc) + ' }' +
+            str(datasources) + ' }')
 
         flip = True
         trigstr = ', "triggers":["trigger1"]'
         for c in self._counter:
             uc = abs(c)
-            self.record(tdw, '{"data": {"cnt":' + str(c)
-                        + ', "cnt_8":' + str(c)
-                        + ', "cnt_16":' + str(c)
-                        + ', "cnt_32":' + str(c)
-                        + ', "cnt_64":' + str(c)
-                        + ', "cnt_u":' + str(uc)
-                        + ', "cnt_p":' + str(uc)
-                        + ', "cnt_u8":' + str(uc)
-                        + ', "cnt_u16":' + str(uc)
-                        + ', "cnt_u32":' + str(uc)
-                        + ((', "cnt_u64_canfail":' + str(uc)) if flip else ' ')
-                        + ',  "cnt_u64":' + str(uc)
-                        + ' } '
-                        + str(trigstr if flip else ' ')
-                        + '  }')
+            self.record(tdw, '{"data": {"cnt":' + str(c) +
+                        ', "cnt_8":' + str(c) +
+                        ', "cnt_16":' + str(c) +
+                        ', "cnt_32":' + str(c) +
+                        ', "cnt_64":' + str(c) +
+                        ', "cnt_u":' + str(uc) +
+                        ', "cnt_p":' + str(uc) +
+                        ', "cnt_u8":' + str(uc) +
+                        ', "cnt_u16":' + str(uc) +
+                        ', "cnt_u32":' + str(uc) +
+                        ((', "cnt_u64_canfail":' + str(uc)) if flip else ' ') +
+                        ', "cnt_u64":' + str(uc) +
+                        ' } ' +
+                        str(trigstr if flip else ' ') +
+                        '  }')
             flip = not flip
 
         uc = abs(self._counter[0])
@@ -292,30 +301,35 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         self._sc.checkScalarField(
             det, "counter8", "int8", "NX_INT8", self._counter)
         self._sc.checkScalarField(
-            det, "triggered_counter16", "int16", "NX_INT16", self._counter[0::2])
+            det, "triggered_counter16", "int16", "NX_INT16",
+            self._counter[0::2])
         self._sc.checkScalarField(
             det, "counter32", "int32", "NX_INT32", self._counter)
         self._sc.checkScalarField(
             det, "counter64", "int64", "NX_INT64", self._counter)
         self._sc.checkScalarField(
-            det, "ucounter", "uint64", "NX_UINT", [abs(c) for c in self._counter])
+            det, "ucounter", "uint64", "NX_UINT",
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(
-            det, "ucounter8", "uint8", "NX_UINT8", [abs(c) for c in self._counter])
+            det, "ucounter8", "uint8", "NX_UINT8",
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ucounter16", "uint16", "NX_UINT16",
                                   [abs(c) for c in self._counter])
         self._sc.checkScalarField(
             det, "mclient_ucounter32", "uint32", "NX_UINT32",
-                                  [abs(c) for c in self._counter])
+            [abs(c) for c in self._counter])
         self._sc.checkScalarField(det, "ucounter64", "uint64", "NX_UINT64",
                                   [abs(c) for c in self._counter])
         self._sc.checkScalarField(
             det, "ucounter64_canfail", "uint64", "NX_UINT64",
-            [self._counter[i] if not i % 2 else numpy.iinfo(getattr(numpy, 'int64')).max
+            [self._counter[i] if not i % 2 else
+             numpy.iinfo(getattr(numpy, 'int64')).max
              for i in range(len(self._counter))],
             attrs={
                 "type": "NX_UINT64", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP",
+                "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "init64", "int64", "NX_INT64", self._counter[0])
         self._sc.checkSingleScalarField(
@@ -324,17 +338,17 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             det, "final32_canfail", "int32", "NX_INT32", numpy.iinfo(
                 getattr(numpy, 'int32')).max,
             attrs={"type": "NX_INT32", "units": "m", "nexdatas_source": None,
-                                       "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                                       "nexdatas_canfail_error": None})
+                   "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "init64_canfail", "int64", "NX_INT64",
             numpy.iinfo(getattr(numpy, 'int64')).max,
             attrs={"type": "NX_INT64", "units": "m", "nexdatas_source": None,
-                                       "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                                       "nexdatas_canfail_error": None})
+                   "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkPostScalarField(
             det, "postrun_counter32", "int32", "NX_INT32",
-                                      "https://haso.desy.de/counters/counter32.dat")
+            "https://haso.desy.de/counters/counter32.dat")
 
         f.close()
         os.remove(fname)
@@ -343,7 +357,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -426,18 +440,18 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         logical = ["1", "0", "true", "false", "True", "False", "TrUe", "FaLsE"]
 
-        tdw = self.openWriter(fname, xml, json='{"data": {'
-                              + ' "cnt":' + str(self._counter[0])
-                              + ', "logical":' + str(logical[0])
-                              + ' } }')
+        tdw = self.openWriter(fname, xml, json='{"data": {' +
+                              ' "cnt":' + str(self._counter[0]) +
+                              ', "logical":' + str(logical[0]) +
+                              ' } }')
         steps = min(len(self._fcounter), len(self._counter))
         for i in range(steps):
-            self.record(tdw, '{"data": {'
-                        + ' "cnt":' + str(self._counter[i])
-                        + ', "fcnt":' + str(self._fcounter[i])
-                        + ', "cnt_32":' + str(self._fcounter[i])
-                        + ', "cnt_64":' + str(self._fcounter[i])
-                        + ' } }')
+            self.record(tdw, '{"data": {' +
+                        ' "cnt":' + str(self._counter[i]) +
+                        ', "fcnt":' + str(self._fcounter[i]) +
+                        ', "cnt_32":' + str(self._fcounter[i]) +
+                        ', "cnt_64":' + str(self._fcounter[i]) +
+                        ' } }')
 
         self.closeWriter(
             tdw, json='{"data": { "cnt":' + str(self._counter[0]) + ' } }')
@@ -448,33 +462,36 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         det, field = self._sc.checkAttributeTree(f, fname, 8, 7)
         self._sc.checkScalarAttribute(
             det, "scalar_float", "float64", self._fcounter[steps - 1],
-                                      error=1.e-14)
-        self._sc.checkScalarAttribute(det, "scalar_string", "string",
-                                      str(self._fcounter[steps - 1]))
+            error=1.e-14)
+        self._sc.checkScalarAttribute(
+            det, "scalar_string", "string",
+            str(self._fcounter[steps - 1]))
         self._sc.checkScalarAttribute(
             det, "init_scalar_int", "int64", self._counter[0])
         self._sc.checkScalarAttribute(det, "flag", "bool", logical[0])
         self._sc.checkScalarAttribute(
             field, "scalar_float32", "float32", self._fcounter[steps - 1],
-                                      error=1.e-6)
+            error=1.e-6)
         self._sc.checkScalarAttribute(
             field, "init_scalar_float64_canfail", "float64",
-                                      numpy.finfo(getattr(numpy, 'float64')).max)
+            numpy.finfo(getattr(numpy, 'float64')).max)
         self._sc.checkScalarAttribute(field, "scalar_string", "string",
                                       str(self._fcounter[steps - 1]))
         self._sc.checkScalarAttribute(
             field, "final_scalar_int8", "int8", self._counter[0])
         self._sc.checkScalarAttribute(
             det, "final_scalar_int64_canfail", "int64",
-                                      numpy.iinfo(getattr(numpy, 'int64')).max)
-        self._sc.checkScalarAttribute(field, "scalar_uint32_canfail", "uint32",
-                                      numpy.iinfo(getattr(numpy, 'uint32')).max)
-        self._sc.checkScalarAttribute(det, "scalar_float32_canfail", "float32",
-                                      numpy.finfo(getattr(numpy, 'float32')).max)
+            numpy.iinfo(getattr(numpy, 'int64')).max)
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            field, "scalar_uint32_canfail", "uint32",
+            numpy.iinfo(getattr(numpy, 'uint32')).max)
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            det, "scalar_float32_canfail", "float32",
+            numpy.finfo(getattr(numpy, 'float32')).max)
+        self._sc.checkScalarAttribute(
+            det, "nexdatas_canfail", "string", "FAILED")
+        self._sc.checkScalarAttribute(
+            field, "nexdatas_canfail", "string", "FAILED")
 
         f.close()
         os.remove(fname)
@@ -483,7 +500,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -550,14 +567,16 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "cnt_32":' + str(self._fcounter[0]) + ' } }')
+            fname, xml,
+            json='{"data": { "cnt_32":' + str(self._fcounter[0]) + ' } }')
         flip = True
         for c in self._fcounter:
-            self.record(tdw, '{"data": {"cnt":' + str(c)
-                        + ', "cnt_32":' + str(c)
-                        + ', "cnt_64":' + str(c)
-                        + ((', "cnt_64_canfail":' + str(c)) if flip else ' ')
-                        + ' } }')
+            self.record(
+                tdw, '{"data": {"cnt":' + str(c) +
+                ', "cnt_32":' + str(c) +
+                ', "cnt_64":' + str(c) +
+                ((', "cnt_64_canfail":' + str(c)) if flip else ' ') +
+                ' } }')
             flip = not flip
 
         self.closeWriter(
@@ -571,41 +590,45 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         self._sc.checkScalarField(
             det, "counter", "float64", "NX_FLOAT", self._fcounter, 1.0e-14)
         self._sc.checkScalarField(
-            det, "counter_64", "float64", "NX_FLOAT64", self._fcounter, 1.0e-14)
+            det, "counter_64", "float64", "NX_FLOAT64",
+            self._fcounter, 1.0e-14)
         self._sc.checkScalarField(
-            det, "counter_32", "float32", "NX_FLOAT32", self._fcounter, 1.0e-06)
+            det, "counter_32", "float32", "NX_FLOAT32",
+            self._fcounter, 1.0e-06)
         self._sc.checkScalarField(
-            det, "counter_nb", "float64", "NX_NUMBER", self._fcounter, 1.0e-14)
+            det, "counter_nb", "float64", "NX_NUMBER",
+            self._fcounter, 1.0e-14)
 
         self._sc.checkSingleScalarField(
             det, "init_32", "float32", "NX_FLOAT32",
-                                        self._fcounter[0], 1.0e-06)
+            self._fcounter[0], 1.0e-06)
         self._sc.checkSingleScalarField(
             det, "final_64", "float64", "NX_FLOAT64",
-                                        self._fcounter[0], 1.0e-14)
+            self._fcounter[0], 1.0e-14)
 
         self._sc.checkScalarField(
             det, "counter_nb_canfail", "float64", "NX_NUMBER",
-            [self._fcounter[i] if not i % 2 else numpy.finfo(getattr(numpy, 'float64')).max
+            [self._fcounter[i] if not i % 2 else
+             numpy.finfo(getattr(numpy, 'float64')).max
              for i in range(len(self._fcounter))],
             attrs={
                 "type": "NX_NUMBER", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "init_64_canfail", "float64", "NX_FLOAT64",
             numpy.finfo(getattr(numpy, 'float64')).max,
             attrs={
                 "type": "NX_FLOAT64", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleScalarField(
             det, "final_32_canfail", "float32", "NX_FLOAT32",
             numpy.finfo(getattr(numpy, 'float32')).max,
             attrs={
                 "type": "NX_FLOAT32", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         f.close()
         os.remove(fname)
 
@@ -613,7 +636,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -700,16 +723,17 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         logical = ["1", "0", "true", "false", "True", "False", "TrUe", "FaLsE"]
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "timestamp":"' + str(dates[0]) + '" } }')
+            fname, xml,
+            json='{"data": { "timestamp":"' + str(dates[0]) + '" } }')
 
         flip = True
         for i in range(min(len(dates), len(logical))):
-            self.record(tdw, '{"data": {"timestamp":"' + str(dates[i])
-                        + '", "logical":"' + str(logical[i])
-                        + '", "bool":true'
-                        + ((', "timestamp_canfail":"' + str(
-                            dates[i]) + '"') if flip else ' ')
-                        + ' } }')
+            self.record(tdw, '{"data": {"timestamp":"' + str(dates[i]) +
+                        '", "logical":"' + str(logical[i]) +
+                        '", "bool":true' +
+                        ((', "timestamp_canfail":"' + str(
+                            dates[i]) + '"') if flip else ' ') +
+                        ' } }')
             flip = not flip
         self.closeWriter(
             tdw, json='{"data": { "logical":"' + str(logical[0]) + '" } }')
@@ -743,8 +767,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             det, "init_flag_canfail", "bool", "NX_BOOLEAN", False,
             attrs={
                 "type": "NX_BOOLEAN", "units": "m", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkSingleScalarField(
             det, "init_string", "string", "NX_CHAR", dates[0])
@@ -758,7 +782,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -807,7 +831,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="256" index="1"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP" compression="true"  grows="2"
+ shuffle="false" />
           <datasource type="CLIENT">
             <record name="mca_int"/>
           </datasource>
@@ -854,7 +879,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="256" index="1"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP" compression="true"  grows="2"
+ shuffle="false" />
           <datasource type="CLIENT">
             <record name="mca_uint"/>
           </datasource>
@@ -864,7 +890,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="256" index="1"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" canfail="true"/>
+          <strategy mode="STEP" compression="true"  grows="2"
+ shuffle="false" canfail="true"/>
           <datasource type="CLIENT">
             <record name="mca_uint_canfail"/>
           </datasource>
@@ -948,17 +975,20 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "mca_int":' + str(self._mca1[0]) + ', "mca_iint":' + str(self._mca1[0]) + '  } }')
+            fname, xml,
+            json='{"data": { "mca_int":' + str(self._mca1[0]) +
+            ', "mca_iint":' + str(self._mca1[0]) + '  } }')
 
-        mca2 = [[(el + 100) / 2 for el in mca] for mca in self._mca1]
+        mca2 = [[(el + 100) // 2 for el in mca] for mca in self._mca1]
         flip = True
         for mca in self._mca1:
-            self.record(tdw, '{"data": { "mca_int":' + str(mca)
-                        + ', "mca_uint":' + str([(el + 100) / 2 for el in mca])
-                        + (', "mca_int_canfail":' + str(mca) if flip else "")
-                        + (', "mca_uint_canfail":' + str(
-                           [(el + 100) / 2 for el in mca]) if flip else "")
-                        + '  } }')
+            self.record(
+                tdw, '{"data": { "mca_int":' + str(mca) +
+                ', "mca_uint":' + str([(el + 100) // 2 for el in mca]) +
+                (', "mca_int_canfail":' + str(mca) if flip else "") +
+                (', "mca_uint_canfail":' + str(
+                    [(el + 100) // 2 for el in mca]) if flip else "") +
+                '  } }')
             flip = not flip
         self.closeWriter(
             tdw, json='{"data": { "mca_uint":' + str(mca2[0]) + '  } }')
@@ -969,7 +999,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         f = FileWriter.open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 18)
         self._sc.checkSpectrumField(
-            det, "mca_int",  "int64", "NX_INT", self._mca1)
+            det, "mca_int", "int64", "NX_INT", self._mca1)
         self._sc.checkSpectrumField(
             det, "mca_int8", "int8", "NX_INT8", self._mca1, grows=2)
         self._sc.checkSpectrumField(
@@ -979,7 +1009,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         self._sc.checkSpectrumField(
             det, "mca_int64", "int64", "NX_INT64", self._mca1)
         self._sc.checkSpectrumField(
-            det, "mca_uint",  "uint64", "NX_UINT", mca2)
+            det, "mca_uint", "uint64", "NX_UINT", mca2)
         self._sc.checkSpectrumField(
             det, "mca_uint8", "uint8", "NX_UINT8", mca2, grows=2)
         self._sc.checkSpectrumField(
@@ -1000,30 +1030,29 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         self._sc.checkSpectrumField(
             det, "mca_int16_canfail", "int16", "NX_INT16",
-                                    [[(self._mca1[j][i] if not j % 2 else
-                                       numpy.iinfo(getattr(numpy, 'int16')).max)
-                                      for i in range(
-                                          len(self._mca1[
-                                              j]))] for j in range(
-                                                  len(self._mca1))],
-                                    grows=1, attrs={
-                                        "type": "NX_INT16", "units": "",
-                                        "nexdatas_strategy": "STEP", "nexdatas_source": None,
-                                        "nexdatas_canfail": "FAILED",
-                                        "nexdatas_canfail_error": None})
+            [[(self._mca1[j][i] if not j % 2 else
+               numpy.iinfo(getattr(numpy, 'int16')).max)
+              for i in range(len(self._mca1[j]))]
+             for j in range(len(self._mca1))],
+            grows=1,
+            attrs={
+                "type": "NX_INT16", "units": "",
+                "nexdatas_strategy": "STEP", "nexdatas_source": None,
+                "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkSpectrumField(
             det, "mca_uint32_canfail", "uint32", "NX_UINT32",
-                                    [[((self._mca1[j][i] + 100) / 2 if not j % 2 else
-                                       numpy.iinfo(getattr(numpy, 'uint32')).max)
-                                      for i in range(
-                                          len(self._mca1[
-                                              j]))] for j in range(
-                                                  len(self._mca1))],
-                                    grows=2, attrs={
-                                        "type": "NX_UINT32", "units": "", "nexdatas_strategy": "STEP",
-                                        "nexdatas_source": None, "nexdatas_canfail": "FAILED",
-                                        "nexdatas_canfail_error": None})
+            [[((self._mca1[j][i] + 100) // 2 if not j % 2 else
+               numpy.iinfo(getattr(numpy, 'uint32')).max)
+              for i in range(len(self._mca1[j]))]
+             for j in range(len(self._mca1))],
+            grows=2, attrs={
+                "type": "NX_UINT32", "units": "",
+                "nexdatas_strategy": "STEP",
+                "nexdatas_source": None,
+                "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkSingleSpectrumField(
             det, "final_mca_uint32_canfail", "uint32", "NX_UINT32",
@@ -1045,7 +1074,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1084,7 +1113,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="1024" index="1"/>
           </dimensions>
-          <strategy mode="STEP" compression="true" grows="2" shuffle="true" canfail="true"/>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"
+ canfail="true"/>
           <datasource type="CLIENT">
             <record name="mca_float_canfail"/>
           </datasource>
@@ -1144,7 +1174,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
           <dimensions rank="1">
             <dim value="1024" index="1"/>
           </dimensions>
-          <strategy mode="INIT" compression="true" shuffle="true" canfail="true"/>
+          <strategy mode="INIT" compression="true" shuffle="true"
+ canfail="true"/>
           <datasource type="CLIENT">
             <record name="mca_float_canfail"/>
           </datasource>
@@ -1176,18 +1207,20 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
+            fname, xml,
+            json='{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
 
         flip = True
         for mca in self._fmca1:
-            self.record(tdw,
-                        '{"data": { "mca_float":' + str(mca)
-                        + (', "mca_float_canfail":' + str(
-                            mca) if flip else "")
-                        + '  } }')
+            self.record(
+                tdw,
+                '{"data": { "mca_float":' + str(mca) +
+                (', "mca_float_canfail":' + str(mca) if flip else "") +
+                '  } }')
             flip = not flip
         self.closeWriter(
-            tdw, json='{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
+            tdw,
+            json='{"data": { "mca_float":' + str(self._fmca1[0]) + '  } }')
 
         # check the created file
 
@@ -1196,44 +1229,44 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 12)
         self._sc.checkSpectrumField(
             det, "mca_float", "float64", "NX_FLOAT", self._fmca1,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkSpectrumField(
             det, "mca_float_dim", "float64", "NX_FLOAT", self._fmca1,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkSpectrumField(
             det, "mca_float32", "float32", "NX_FLOAT32", self._fmca1,
-                                    error=1.0e-6, grows=2)
+            error=1.0e-6, grows=2)
         self._sc.checkSpectrumField(
             det, "mca_float64", "float64", "NX_FLOAT64", self._fmca1,
-                                    error=1.0e-14, grows=2)
+            error=1.0e-14, grows=2)
         self._sc.checkSpectrumField(
             det, "mca_number", "float64", "NX_NUMBER", self._fmca1,
-                                    error=1.0e-14)
+            error=1.0e-14)
 
         self._sc.checkSingleSpectrumField(
             det, "init_mca_float32", "float32", "NX_FLOAT32", self._fmca1[0],
-                                          error=1.0e-6)
+            error=1.0e-6)
         self._sc.checkSingleSpectrumField(
             det, "final_mca_float64", "float64", "NX_FLOAT64", self._fmca1[0],
-                                          error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkSingleSpectrumField(
             det, "final_mca_float", "float64", "NX_FLOAT", self._fmca1[0],
-                                          error=1.0e-14)
+            error=1.0e-14)
 
         self._sc.checkSingleSpectrumField(
             det, "init_mca_float32_canfail", "float32", "NX_FLOAT32",
             [numpy.finfo(getattr(numpy, 'float32')).max] * len(self._fmca1[0]),
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
         self._sc.checkSingleSpectrumField(
             det, "final_mca_float64_canfail", "float64", "NX_FLOAT64",
             [numpy.finfo(getattr(numpy, 'float64')).max] * len(self._fmca1[0]),
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkSpectrumField(
             det, "mca_float32_canfail", "float32", "NX_FLOAT32",
@@ -1244,8 +1277,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             grows=2,
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-6)
 
         self._sc.checkSpectrumField(
@@ -1257,8 +1290,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             grows=1,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-6)
 
         f.close()
@@ -1268,7 +1301,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1388,7 +1421,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
 
         <field units="" type="NX_CHAR" name="init_string_time_canfail">
-          <strategy mode="INIT" compression="true" shuffle="true" canfail="true"/>
+          <strategy mode="INIT" compression="true" shuffle="true"
+ canfail="true"/>
           <datasource type="CLIENT">
            <record name="timestamps_canfail"/>
           </datasource>
@@ -1432,39 +1466,42 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         dates = [
             ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
-                "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
-                 ["1956-05-23T12:12:32.123+0400", "2212-12-12T12:25:43.1267-0700",
-                  "1914-11-04T04:13:13.44-0000", "2002-04-03T14:15:03.0012-0300"]]
+             "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+            ["1956-05-23T12:12:32.123+0400", "2212-12-12T12:25:43.1267-0700",
+             "1914-11-04T04:13:13.44-0000", "2002-04-03T14:15:03.0012-0300"]]
         logical = [["1", "0", "true", "false"],
                    ["True", "False", "TrUe", "FaLsE"]]
 # print "CHECK:", '{"data": { "timestamps":' +
 # str(dates[0]).replace("'","\"") + '  } }'
         bools = ["[true, false, true, false]", "[true, false, true, false]"]
-        tdw = self.openWriter(fname, xml, json='{"data": {'
-                              + ' "timestamps":' +
-                              str(dates[0]).replace("'", "\"")
-                              + ', "logicals":' +
-                              str(logical[0]).replace("'", "\"")
-                              + '  } }')
+        tdw = self.openWriter(
+            fname, xml, json='{"data": {' +
+            ' "timestamps":' +
+            str(dates[0]).replace("'", "\"") +
+            ', "logicals":' +
+            str(logical[0]).replace("'", "\"") +
+            '  } }')
 
         flip = True
         for i in range(min(len(dates), len(logical))):
-            self.record(tdw, '{"data": {"timestamps":' + str(dates[i]).replace("'", "\"")
-                        + ', "logicals":' + str(logical[i]).replace("'", "\"")
-                        + (', "logicals_canfail":' + str(logical[i]).replace("'", "\"")
-                           if flip else '')
-                        + (', "timestamps_canfail":' + str(dates[i]).replace("'", "\"")
-                           if flip else '')
-                        + ', "bool":' + bools[i]
-                        + ' } }')
+            self.record(
+                tdw, '{"data": {"timestamps":' +
+                str(dates[i]).replace("'", "\"") +
+                ', "logicals":' + str(logical[i]).replace("'", "\"") +
+                (', "logicals_canfail":' + str(logical[i]).replace("'", "\"")
+                 if flip else '') +
+                (', "timestamps_canfail":' + str(dates[i]).replace("'", "\"")
+                 if flip else '') +
+                ', "bool":' + bools[i] +
+                ' } }')
             flip = not flip
 
-        self.closeWriter(tdw, json='{"data": {'
-                         + ' "timestamps":' +
-                         str(dates[0]).replace("'", "\"")
-                         + ', "logicals":' +
-                         str(logical[0]).replace("'", "\"")
-                         + '  } }')
+        self.closeWriter(tdw, json='{"data": {' +
+                         ' "timestamps":' +
+                         str(dates[0]).replace("'", "\"") +
+                         ', "logicals":' +
+                         str(logical[0]).replace("'", "\"") +
+                         '  } }')
 
         # check the created file
 
@@ -1500,8 +1537,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             "NX_BOOLEAN", [False] * len(logical[0]),
             attrs={
                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkSingleSpectrumField(
             det, "final_string_time", "string", "NX_CHAR", dates[0])
@@ -1513,10 +1550,10 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             [[(logical[j][i] if not j % 2 else False)
               for i in range(len(logical[j]))] for j in range(len(logical))],
             grows=1,
-             attrs={
-                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
-                      "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+            attrs={
+                "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkSpectrumField(
             det, "string_time_canfail", "string", "NX_CHAR",
@@ -1525,7 +1562,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             attrs={
                 "type": "NX_CHAR", "units": "", "nexdatas_source": None,
                 "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None, "nexdatas_strategy": "STEP"},
+                "nexdatas_canfail_error": None, "nexdatas_strategy": "STEP"},
             grows=2
         )
 
@@ -1536,7 +1573,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1653,26 +1690,29 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 #        </attribute>
 
         logical = ["1", "0", "true", "false", "True", "False", "TrUe", "FaLsE"]
-        tdw = self.openWriter(fname, xml, json='{"data": {'
-                              + ' "mca_float":' + str(self._fmca1[0])
-                              + ',  "flags":' +
-                              str(logical).replace("'", "\"")
-                              + ', "mca_int":' + str(self._mca1[0])
-                              + '  } }')
+        tdw = self.openWriter(
+            fname, xml, json='{"data": {' +
+            ' "mca_float":' + str(self._fmca1[0]) +
+            ', "flags":' +
+            str(logical).replace("'", "\"") +
+            ', "mca_int":' + str(self._mca1[0]) +
+            '  } }')
         steps = min(len(self._fmca1), len(self._fmca1))
         flip = True
         for i in range(steps):
-            self.record(tdw, '{"data": {'
-                        + ' "mca_float":' + str(self._fmca1[i])
-                        + ',  "flags":' + str(logical).replace("'", "\"")
-                        + '  } }')
+            self.record(
+                tdw, '{"data": {' +
+                ' "mca_float":' + str(self._fmca1[i]) +
+                ', "flags":' + str(logical).replace("'", "\"") +
+                '  } }')
             flip = not flip
-        self.closeWriter(tdw, json='{"data": {'
-                         + ' "mca_float":' + str(self._fmca1[0])
-                         + ', "mca_int":' + str(self._mca1[0])
-                         + ',  "flags":' + str(logical).replace("'", "\"")
-                         + ', "mca_uint":' + str(self._mca2[0])
-                         + '  } }')
+        self.closeWriter(
+            tdw, json='{"data": {' +
+            ' "mca_float":' + str(self._fmca1[0]) +
+            ', "mca_int":' + str(self._mca1[0]) +
+            ', "flags":' + str(logical).replace("'", "\"") +
+            ', "mca_uint":' + str(self._mca2[0]) +
+            '  } }')
 
         # check the created file
         FileWriter.writer = H5CppWriter
@@ -1680,13 +1720,13 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         det, field = self._sc.checkAttributeTree(f, fname, 7, 7)
         self._sc.checkSpectrumAttribute(
             det, "spectrum_float", "float64", self._fmca1[steps - 1],
-                                      error=1.e-14)
+            error=1.e-14)
         self._sc.checkSpectrumAttribute(
             det, "init_spectrum_int32", "int32", self._mca1[0])
         self._sc.checkSpectrumAttribute(det, "spectrum_bool", "bool", logical)
         self._sc.checkSpectrumAttribute(
             field, "spectrum_float32", "float32", self._fmca1[steps - 1],
-                                      error=1.e-6)
+            error=1.e-6)
         self._sc.checkSpectrumAttribute(
             field, "final_spectrum_uint64", "uint64", self._mca2[0])
         self._sc.checkSpectrumAttribute(
@@ -1697,21 +1737,22 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         self._sc.checkSpectrumAttribute(
             det, "spectrum_uint64_canfail", "uint64",
-                                        [numpy.iinfo(getattr(numpy, 'int64')).max] * 1024)
-        self._sc.checkSpectrumAttribute(det, "spectrum_bool_canfail", "bool",
-                                        [False] * 8)
+            [numpy.iinfo(getattr(numpy, 'int64')).max] * 1024)
+        self._sc.checkSpectrumAttribute(
+            det, "spectrum_bool_canfail", "bool",
+            [False] * 8)
 
         self._sc.checkSpectrumAttribute(
             field, "final_spectrum_uint64_canfail", "uint64",
-                                        [numpy.iinfo(getattr(numpy, 'int64')).max] * 256)
+            [numpy.iinfo(getattr(numpy, 'int64')).max] * 256)
         self._sc.checkSpectrumAttribute(
             field, "init_spectrum_bool_canfail", "bool",
-                                        [False] * 8)
+            [False] * 8)
 
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
         f.close()
         os.remove(fname)
 
@@ -1719,7 +1760,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientIntImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1757,7 +1798,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="10" index="1"/>
             <dim value="8" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP" compression="true"
+  grows="2" shuffle="false" />
           <datasource type="CLIENT">
             <record name="pco_int"/>
           </datasource>
@@ -1822,7 +1864,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="10" index="1"/>
             <dim value="8" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false" />
+          <strategy mode="STEP" compression="true"
+  grows="2" shuffle="false" />
           <datasource type="CLIENT">
             <record name="pco_uint"/>
           </datasource>
@@ -1855,7 +1898,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="10" index="1"/>
             <dim value="8" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true"  grows="2" shuffle="false"  canfail="true"/>
+          <strategy mode="STEP" compression="true"  grows="2"
+ shuffle="false"  canfail="true"/>
           <datasource type="CLIENT">
             <record name="pco_uint_canfail"/>
           </datasource>
@@ -1915,19 +1959,22 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "pco_int":' + str(self._pco1[0]) + '  } }')
+            fname, xml,
+            json='{"data": { "pco_int":' + str(self._pco1[0]) + '  } }')
 
-        pco2 = [[[(el + 100) / 2 for el in rpco] for rpco in pco]
+        pco2 = [[[(el + 100) // 2 for el in rpco] for rpco in pco]
                 for pco in self._pco1]
         flip = True
         for pco in self._pco1:
-            self.record(tdw, '{"data": { "pco_int":' + str(pco)
-                        + ', "pco_uint":' +
-                        str([[(el + 100) / 2 for el in rpco]
-                             for rpco in pco])
-                        + (', "pco_uint_canfail":' + str(
-                           [[(el + 100) / 2 for el in rpco] for rpco in pco]) if flip else "")
-                        + '  } }')
+            self.record(
+                tdw, '{"data": { "pco_int":' + str(pco) +
+                ', "pco_uint":' +
+                str([[(el + 100) // 2 for el in rpco]
+                     for rpco in pco]) +
+                (', "pco_uint_canfail":' + str(
+                    [[(el + 100) // 2 for el in rpco]
+                     for rpco in pco]) if flip else "") +
+                '  } }')
             flip = not flip
         self.closeWriter(
             tdw, json='{"data": { "pco_uint":' + str(pco2[0]) + '  } }')
@@ -1938,7 +1985,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         f = FileWriter.open_file(fname, readonly=True)
         det = self._sc.checkFieldTree(f, fname, 17)
         self._sc.checkImageField(
-            det, "pco_int",  "int64", "NX_INT", self._pco1)
+            det, "pco_int", "int64", "NX_INT", self._pco1)
         self._sc.checkImageField(
             det, "pco_int8", "int8", "NX_INT8", self._pco1, grows=2)
         self._sc.checkImageField(
@@ -1947,7 +1994,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             det, "pco_int32", "int32", "NX_INT32", self._pco1, grows=2)
         self._sc.checkImageField(
             det, "pco_int64", "int64", "NX_INT64", self._pco1)
-        self._sc.checkImageField(det, "pco_uint",  "uint64", "NX_UINT", pco2)
+        self._sc.checkImageField(det, "pco_uint", "uint64", "NX_UINT", pco2)
         self._sc.checkImageField(
             det, "pco_uint8", "uint8", "NX_UINT8", pco2, grows=3)
         self._sc.checkImageField(
@@ -1960,12 +2007,12 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         self._sc.checkSingleImageField(
             det, "init_pco_int64", "int64", "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "final_pco_uint",  "uint64", "NX_UINT", pco2[0])
+            det, "final_pco_uint", "uint64", "NX_UINT", pco2[0])
 
 # self._sc.checkSingleImageField(det, "init_pco_int64_canfail", "int64",
 # "NX_INT64", self._pco1[0])
         self._sc.checkSingleImageField(
-            det, "init_pco_int64_canfail",  "int64", "NX_INT64",
+            det, "init_pco_int64_canfail", "int64", "NX_INT64",
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco]
              for rpco in self._pco1[0]],
             attrs={"type": "NX_INT64", "units": "", "nexdatas_source": None,
@@ -1973,19 +2020,19 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
                    "nexdatas_canfail_error": None})
 
         self._sc.checkSingleImageField(
-            det, "final_pco_uint_canfail",  "uint64", "NX_UINT",
+            det, "final_pco_uint_canfail", "uint64", "NX_UINT",
             [[numpy.iinfo(getattr(numpy, 'int64')).max for el in rpco]
              for rpco in self._pco1[0]],
             attrs={"type": "NX_UINT", "units": "", "nexdatas_source": None,
-                                      "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                                      "nexdatas_canfail_error": None})
+                   "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(
             det, "pco_uint8_canfail", "uint8", "NX_UINT8",
-            [[[((el + 100) / 2 if not j % 2 else
-               numpy.iinfo(getattr(numpy, 'uint8')).max)
-               for el in rpco] for rpco in self._pco1[j]] for j in range(
-                   len(self._pco1))],
+            [[[((el + 100) // 2 if not j % 2 else
+                numpy.iinfo(getattr(numpy, 'uint8')).max)
+               for el in rpco] for rpco in self._pco1[j]]
+             for j in range(len(self._pco1))],
             grows=3,
             attrs={"type": "NX_UINT8", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
@@ -1993,17 +2040,17 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         self._sc.checkImageField(
             det, "pco_uint16_canfail", "uint16", "NX_UINT16",
-            [[[((el + 100) / 2 if not j % 2 else
-               numpy.iinfo(getattr(numpy, 'uint16')).max)
-               for el in rpco] for rpco in self._pco1[j]] for j in range(
-                   len(self._pco1))],
+            [[[((el + 100) // 2 if not j % 2 else
+                numpy.iinfo(getattr(numpy, 'uint16')).max)
+               for el in rpco] for rpco in self._pco1[j]]
+             for j in range(len(self._pco1))],
             grows=1,
             attrs={"type": "NX_UINT16", "units": "", "nexdatas_source": None,
                    "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
                    "nexdatas_canfail_error": None})
         self._sc.checkImageField(
             det, "pco_uint32_canfail", "uint32", "NX_UINT32",
-            [[[((el + 100) / 2 if not j % 2 else
+            [[[((el + 100) // 2 if not j % 2 else
                numpy.iinfo(getattr(numpy, 'uint32')).max)
                for el in rpco] for rpco in self._pco1[j]] for j in range(
                    len(self._pco1))],
@@ -2019,7 +2066,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientFloatImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2071,7 +2118,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="20" index="1"/>
             <dim value="30" index="2"/>
           </dimensions>
-          <strategy mode="STEP" compression="true" grows="2" shuffle="true"  canfail="true"/>
+          <strategy mode="STEP" compression="true" grows="2" shuffle="true"
+  canfail="true"/>
           <datasource type="CLIENT">
             <record name="pco_float_canfail"/>
           </datasource>
@@ -2126,7 +2174,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             <dim value="20" index="1"/>
             <dim value="30" index="2"/>
           </dimensions>
-         <strategy mode="INIT" compression="true" shuffle="true" canfail="true"/>
+         <strategy mode="INIT" compression="true" shuffle="true"
+canfail="true"/>
           <datasource type="CLIENT">
             <record name="pco_float_canfail"/>
           </datasource>
@@ -2150,17 +2199,20 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
 
         tdw = self.openWriter(
-            fname, xml, json='{"data": { "pco_float":' + str(self._fpco1[0]) + '  } }')
+            fname, xml,
+            json='{"data": { "pco_float":' + str(self._fpco1[0]) + '  } }')
 
         flip = True
         for pco in self._fpco1:
-            self.record(tdw,
-                        '{"data": { "pco_float":' + str(pco)
-                        + (', "pco_float_canfail":' + str(pco) if flip else "")
-                        + '  } }')
+            self.record(
+                tdw,
+                '{"data": { "pco_float":' + str(pco) +
+                (', "pco_float_canfail":' + str(pco) if flip else "") +
+                '  } }')
             flip = not flip
         self.closeWriter(
-            tdw, json='{"data": { "pco_float":' + str(self._fpco1[0]) + '  } }')
+            tdw,
+            json='{"data": { "pco_float":' + str(self._fpco1[0]) + '  } }')
 
         # check the created file
 
@@ -2169,23 +2221,23 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         det = self._sc.checkFieldTree(f, fname, 11)
         self._sc.checkImageField(
             det, "pco_float", "float64", "NX_FLOAT", self._fpco1,
-                                    error=1.0e-14)
+            error=1.0e-14)
         self._sc.checkImageField(
             det, "pco_float32", "float32", "NX_FLOAT32", self._fpco1,
-                                    error=1.0e-6, grows=2)
+            error=1.0e-6, grows=2)
         self._sc.checkImageField(
             det, "pco_float64", "float64", "NX_FLOAT64", self._fpco1,
-                                    error=1.0e-14, grows=3)
+            error=1.0e-14, grows=3)
         self._sc.checkImageField(
             det, "pco_number", "float64", "NX_NUMBER", self._fpco1,
-                                    error=1.0e-14, grows=1)
+            error=1.0e-14, grows=1)
 
         self._sc.checkSingleImageField(
             det, "init_pco_float32", "float32", "NX_FLOAT32", self._fpco1[0],
-                                    error=1.0e-6)
+            error=1.0e-6)
         self._sc.checkSingleImageField(
             det, "final_pco_float64", "float64", "NX_FLOAT64", self._fpco1[0],
-                                    error=1.0e-14)
+            error=1.0e-14)
 
         self._sc.checkSingleImageField(
             det, "init_pco_float32_canfail", "float32", "NX_FLOAT32",
@@ -2193,8 +2245,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
              for rpco in self._fpco1[0]],
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-6)
         self._sc.checkSingleImageField(
             det, "final_pco_float64_canfail", "float64", "NX_FLOAT64",
@@ -2202,8 +2254,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
              for rpco in self._fpco1[0]],
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-14)
 
         self._sc.checkImageField(
@@ -2215,8 +2267,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             grows=2,
             attrs={
                 "type": "NX_FLOAT32", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-6)
         self._sc.checkImageField(
             det, "pco_float64_canfail", "float64", "NX_FLOAT64",
@@ -2227,8 +2279,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             grows=3,
             attrs={
                 "type": "NX_FLOAT64", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None},
             error=1.0e-14)
         self._sc.checkImageField(
             det, "pco_number_canfail", "float64", "NX_NUMBER",
@@ -2249,7 +2301,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2432,52 +2484,57 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 """
         dates = [
             [["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
-                "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
-                ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
-                 "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
-                ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
-                 "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"]],
-                 [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                  "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
-                  ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                  "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
-                  ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
-                  "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+             ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"],
+             ["1996-07-31T21:15:22.123+0600", "2012-11-14T14:05:23.2344-0200",
+              "2014-02-04T04:16:12.43-0100", "2012-11-14T14:05:23.2344-0200"]],
+            [["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+             ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"],
+             ["956-05-23T12:12:32.123+0400", "1212-12-12T12:25:43.1267-0700",
+              "914-11-04T04:13:13.44-0000", "1002-04-03T14:15:03.0012-0300"]]]
 
         logical = [
             [["1", "0", "true", "false"],
-                ["True", "False", "TrUe", "FaLsE"], ["1", "0", "0", "1"]],
-                   [["0", "1", "true", "false"], ["TrUe", "1", "0", "FaLsE"], ["0", "0", "1", "0"]]]
+             ["True", "False", "TrUe", "FaLsE"], ["1", "0", "0", "1"]],
+            [["0", "1", "true", "false"],
+             ["TrUe", "1", "0", "FaLsE"], ["0", "0", "1", "0"]]]
 
         bools = [
-            "[ [true,false,true,false], [true,false,true,false], [true,false,false,true]]",
-                 "[ [false,true,true,false], [true,true,false,false], [false,false,true,false]]"]
+            "[ [true,false,true,false], [true,false,true,false], "
+            "[true,false,false,true]]",
+            "[ [false,true,true,false], [true,true,false,false], "
+            "[false,false,true,false]]"]
 
-        tdw = self.openWriter(fname, xml, json='{"data": {'
-                              + '"timestamps":' +
-                              str(dates[0]).replace("'", "\"")
-                              + ', "logicals":' +
-                              str(logical[0]).replace("'", "\"")
-                              + '  } }')
+        tdw = self.openWriter(fname, xml, json='{"data": {' +
+                              '"timestamps":' +
+                              str(dates[0]).replace("'", "\"") +
+                              ', "logicals":' +
+                              str(logical[0]).replace("'", "\"") +
+                              '  } }')
 
         flip = True
         for i in range(min(len(dates), len(logical))):
-            self.record(tdw, '{"data": {"timestamps":' + str(dates[i]).replace("'", "\"")
-                        + (', "timestamps_canfail":' + str(
-                           dates[i]).replace("'", "\"") if flip else "")
-                        + (', "logicals_canfail":' + str(
-                           logical[i]).replace("'", "\"") if flip else "")
-                        + ', "logicals":' + str(logical[i]).replace("'", "\"")
-                        + ', "bool":' + bools[i]
-                        + ' } }')
+            self.record(
+                tdw,
+                '{"data": {"timestamps":' + str(dates[i]).replace("'", "\"") +
+                (', "timestamps_canfail":' + str(
+                    dates[i]).replace("'", "\"") if flip else "") +
+                (', "logicals_canfail":' + str(
+                    logical[i]).replace("'", "\"") if flip else "") +
+                ', "logicals":' + str(logical[i]).replace("'", "\"") +
+                ', "bool":' + bools[i] +
+                ' } }')
             flip = not flip
 
-        self.closeWriter(tdw, json='{"data": {'
-                         + '"timestamps":' +
-                         str(dates[0]).replace("'", "\"")
-                         + ', "logicals":' +
-                         str(logical[0]).replace("'", "\"")
-                         + '  } }')
+        self.closeWriter(tdw, json='{"data": {' +
+                         '"timestamps":' +
+                         str(dates[0]).replace("'", "\"") +
+                         ', "logicals":' +
+                         str(logical[0]).replace("'", "\"") +
+                         '  } }')
 
         # check the created file
 
@@ -2504,15 +2561,15 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             det, "final_string_time_canfail", "string", "NX_CHAR",
             [['' for el in rpco] for rpco in dates[0]],
             attrs={"type": "NX_CHAR", "units": "", "nexdatas_source": None,
-                                      "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
-                                      "nexdatas_canfail_error": None})
+                   "nexdatas_strategy": "FINAL", "nexdatas_canfail": "FAILED",
+                   "nexdatas_canfail_error": None})
         self._sc.checkSingleImageField(
             det, "init_flags_canfail", "bool", "NX_BOOLEAN",
             [[False for el in rpco] for rpco in logical[0]],
             attrs={
                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "INIT", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(
             det, "flags_canfail", "bool", "NX_BOOLEAN",
@@ -2522,8 +2579,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             grows=3,
             attrs={
                 "type": "NX_BOOLEAN", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         self._sc.checkImageField(
             det, "string_time_canfail", "string", "NX_CHAR",
@@ -2533,7 +2590,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             attrs={
                 "type": "NX_CHAR", "units": "", "nexdatas_source": None,
                 "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None},
+                "nexdatas_canfail_error": None},
             grows=2)
         self._sc.checkImageField(
             det, "time_canfail", "string", "NX_DATE_TIME",
@@ -2542,8 +2599,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
                    len(dates))],
             attrs={
                 "type": "NX_DATE_TIME", "units": "", "nexdatas_source": None,
-                     "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
-                     "nexdatas_canfail_error": None})
+                "nexdatas_strategy": "STEP", "nexdatas_canfail": "FAILED",
+                "nexdatas_canfail_error": None})
 
         f.close()
         os.remove(fname)
@@ -2556,7 +2613,7 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_clientAttrImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -2727,25 +2784,26 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         logical = [["1", "0", "true", "false"],
                    ["True", "False", "TrUe", "FaLsE"]]
-        tdw = self.openWriter(fname, xml, json='{"data": {'
-                              + ' "pco_float":' + str(self._fpco1[0])
-                              + ',  "flags":' +
-                              str(logical).replace("'", "\"")
-                              + ', "pco_int":' + str(self._pco1[0])
-                              + '  } }')
+        tdw = self.openWriter(
+            fname, xml, json='{"data": {' +
+            ' "pco_float":' + str(self._fpco1[0]) +
+            ', "flags":' +
+            str(logical).replace("'", "\"") +
+            ', "pco_int":' + str(self._pco1[0]) +
+            '  } }')
         steps = min(len(self._pco1), len(self._fpco1))
         for i in range(steps):
-            self.record(tdw, '{"data": {'
-                        + ' "pco_float":' + str(self._fpco1[i])
-                        + ', "pco_int":' + str(self._pco1[i])
-                        + ',  "flags":' + str(logical).replace("'", "\"")
-                        + '  } }')
+            self.record(tdw, '{"data": {' +
+                        ' "pco_float":' + str(self._fpco1[i]) +
+                        ', "pco_int":' + str(self._pco1[i]) +
+                        ', "flags":' + str(logical).replace("'", "\"") +
+                        '  } }')
 
-        self.closeWriter(tdw, json='{"data": {'
-                         + ' "pco_float":' + str(self._fpco1[0])
-                         + ', "pco_int":' + str(self._pco1[0])
-                         + ',  "flags":' + str(logical).replace("'", "\"")
-                         + '  } }')
+        self.closeWriter(tdw, json='{"data": {' +
+                         ' "pco_float":' + str(self._fpco1[0]) +
+                         ', "pco_int":' + str(self._pco1[0]) +
+                         ', "flags":' + str(logical).replace("'", "\"") +
+                         '  } }')
 
         # check the created file
         FileWriter.writer = H5CppWriter
@@ -2753,14 +2811,14 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
         det, field = self._sc.checkAttributeTree(f, fname, 8, 8)
         self._sc.checkImageAttribute(
             det, "image_float", "float64", self._fpco1[steps - 1],
-                                      error=1.e-14)
-        self._sc.checkImageAttribute(det, "image_int",  "int64", self._pco1[0])
+            error=1.e-14)
+        self._sc.checkImageAttribute(det, "image_int", "int64", self._pco1[0])
         self._sc.checkImageAttribute(det, "image_bool", "bool", logical)
         self._sc.checkImageAttribute(
             det, "image_int32", "int32", self._pco1[steps - 1])
         self._sc.checkImageAttribute(
             field, "image_float32", "float32", self._fpco1[steps - 1],
-                                      error=1.e-6)
+            error=1.e-6)
         self._sc.checkImageAttribute(
             field, "image_uint32", "uint32", self._pco1[steps - 1])
         self._sc.checkImageAttribute(
@@ -2769,7 +2827,8 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
 
         self._sc.checkImageAttribute(
             field, "image_uint64_canfail", "uint64",
-            [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[0][0])] * len(self._pco1[0]))
+            [[numpy.iinfo(getattr(numpy, 'int64')).max] *
+             len(self._pco1[0][0])] * len(self._pco1[0]))
         self._sc.checkImageAttribute(
             field, "image_bool_canfail", "bool",
             [[False] * len(logical[0])] * len(logical))
@@ -2778,13 +2837,14 @@ class ClientFieldTagWriterH5CppTest(unittest.TestCase):
             [[numpy.finfo(getattr(numpy, 'float64')).max] * 30] * 20)
         self._sc.checkImageAttribute(
             det, "image_int_canfail", "int64",
-            [[numpy.iinfo(getattr(numpy, 'int64')).max] * len(self._pco1[0][0])] * len(self._pco1[0]))
+            [[numpy.iinfo(getattr(numpy, 'int64')).max] *
+             len(self._pco1[0][0])] * len(self._pco1[0]))
         # STRING NOT SUPPORTED BY PNINX
 
         self._sc.checkScalarAttribute(
-            det, "nexdatas_canfail", "string",  "FAILED")
+            det, "nexdatas_canfail", "string", "FAILED")
         self._sc.checkScalarAttribute(
-            field, "nexdatas_canfail", "string",  "FAILED")
+            field, "nexdatas_canfail", "string", "FAILED")
         f.close()
         os.remove(fname)
 

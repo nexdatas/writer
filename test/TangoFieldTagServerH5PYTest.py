@@ -20,18 +20,9 @@
 # unittests for field Tags running Tango Server
 #
 import unittest
-import os
-import sys
-import subprocess
-import random
 import PyTango
-import binascii
-import time
-
-from xml.sax import SAXParseException
 
 
-from Checkers import Checker
 import ServerSetUp
 import TangoFieldTagWriterH5PYTest
 from ProxyHelper import ProxyHelper
@@ -39,7 +30,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest):
+class TangoFieldTagServerH5PYTest(
+        TangoFieldTagWriterH5PYTest.TangoFieldTagWriterH5PYTest):
     # server counter
     serverCounter = 0
 
@@ -74,8 +66,8 @@ class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
         self._simps.setUp()
         self._dbhost = self._simps.dp.get_db_host()
         self._dbport = self._simps.dp.get_db_port()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
@@ -138,6 +130,7 @@ class TangoFieldTagServerH5PYTest(TangoFieldTagWriterH5PYTest.TangoFieldTagWrite
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

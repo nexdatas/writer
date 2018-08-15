@@ -32,9 +32,6 @@ import PyTango
 
 from ProxyHelper import ProxyHelper
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
 
 try:
     from pni.io.nx.h5 import open_file
@@ -44,15 +41,21 @@ except:
 from xml.sax import SAXParseException
 
 
-from nxswriter import TangoDataWriter, Types
+from nxswriter import Types
 from nxswriter.TangoDataWriter import TangoDataWriter
 from Checkers import Checker
 
 import SimpleServerSetUp
 
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
+
+
 # test fixture
-
-
 class TangoFieldTagWriterTest(unittest.TestCase):
 
     # constructor
@@ -67,7 +70,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.seed)
@@ -133,8 +135,8 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         self._simps.setUp()
         self._dbhost = self._simps.dp.get_db_host()
         self._dbport = self._simps.dp.get_db_port()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
@@ -174,7 +176,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoScalar(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -394,7 +396,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoScalar_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -710,7 +712,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -893,7 +895,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
@@ -1064,7 +1065,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoSpectrum(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1245,7 +1246,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         decoder = '"decoders":{"MUINT32":"nxswriter.DecoderPool.UINT32decoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
@@ -1331,7 +1331,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoImage(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1512,7 +1512,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 
@@ -1588,7 +1587,7 @@ class TangoFieldTagWriterTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_tangoImage_canfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition>
   <group type="NXentry" name="entry1">
@@ -1772,7 +1771,6 @@ class TangoFieldTagWriterTest(unittest.TestCase):
         decoder = '"decoders":{"MLIMA":"nxswriter.DecoderPool.VDEOdecoder"}'
         tdw = self.openWriter(fname, xml, json='{ ' + decoder + ' }')
 
-        import PyTango
         dp = PyTango.DeviceProxy("stestp09/testss/s1r228")
         self.assertTrue(ProxyHelper.wait(dp, 10000))
 

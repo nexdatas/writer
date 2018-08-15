@@ -45,6 +45,9 @@ from TestDataSource import TestDataSource
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
+if sys.version_info > (3,):
+    long = int
+
 
 # test fixture
 class EDimTest(unittest.TestCase):
@@ -87,14 +90,14 @@ class EDimTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
-        print "SEED =", self.__seed
+        print("\nsetting up...")
+        print("SEED = %s" % self.__seed)
         FileWriter.writer = H5PYWriter
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -105,7 +108,7 @@ class EDimTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -113,7 +116,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests default settings
     def test_default_constructor(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         el = EDim({}, None)
@@ -127,9 +130,9 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing store method
     def test_store(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         el = Element(self._tfname, self._fattrs2)
-        el2 = EDim(self._fattrs2,  el)
+        el2 = EDim(self._fattrs2, el)
         self.assertEqual(el2.tagName, self._tfname)
         self.assertEqual(el2.content, [])
         self.assertEqual(el2._tagAttrs, self._fattrs2)
@@ -142,7 +145,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_last(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -159,8 +162,8 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs3,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
+        fi = EField(self._fattrs3, el)
+        el2 = EDimensions(self._fattrs3, fi)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs3)
@@ -176,7 +179,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_last_index(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -193,9 +196,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs1,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs1, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -214,7 +217,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_last_index2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -231,10 +234,10 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs1,  el2)
-        el4 = EDim(self._attrs2,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs1, el2)
+        el4 = EDim(self._attrs2, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -253,7 +256,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_last_noindex(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -270,9 +273,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs3,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs3, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -291,7 +294,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_last_novalue(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -308,9 +311,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs3,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs3, el2)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -329,7 +332,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_store_last_index(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -346,14 +349,14 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
         el3.store()
-        print el3._beforeLast().lengths
+        print(el3._beforeLast().lengths)
         self.assertEqual(fi.tagName, "field")
         self.assertEqual(fi.content, [])
         self.assertEqual(fi._tagAttrs, self._fattrs2)
@@ -372,7 +375,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_store_last_index2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -389,13 +392,13 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
-        el4 = EDim(self._attrs4,  el2)
+        el4 = EDim(self._attrs4, el2)
         ds2 = TestDataSource()
         ds2.value0d = self.__rnd.randint(1, 10)
         el4.source = ds2
@@ -422,7 +425,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_store_last_index2_mixed(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -439,13 +442,13 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
         el3.source = ds
-        el4 = EDim(self._attrs2,  el2)
+        el4 = EDim(self._attrs2, el2)
         el3.store()
 
         self.assertEqual(fi.tagName, "field")
@@ -468,7 +471,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_store_last_noindex(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -485,9 +488,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs3,  fi)
-        el3 = EDim({},  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs3, fi)
+        el3 = EDim({}, el2)
 
         ds = TestDataSource()
         ds.value0d = self.__rnd.randint(1, 10)
@@ -512,7 +515,7 @@ class EDimTest(unittest.TestCase):
     # \brief It tests executing _lastObject method
     def test_store_last_novalue(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         fname = "test.h5"
         nxFile = None
@@ -529,9 +532,9 @@ class EDimTest(unittest.TestCase):
         eFile = EFile([], None, nxFile)
 
         el = Element(self._tfname, self._fattrs2, eFile)
-        fi = EField(self._fattrs2,  el)
-        el2 = EDimensions(self._fattrs4,  fi)
-        el3 = EDim(self._attrs5,  el2)
+        fi = EField(self._fattrs2, el)
+        el2 = EDimensions(self._fattrs4, fi)
+        el3 = EDim(self._attrs5, el2)
         ds = TestDataSource()
         ds.value0d = ""
         el3.source = ds

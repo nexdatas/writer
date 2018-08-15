@@ -48,7 +48,7 @@ class ServerSetUp(object):
     # test starter
     # \brief Common set up of Tango Server
     def setUp(self):
-        print "tearing down ..."
+        print("tearing down ...")
         db = PyTango.Database()
         db.add_device(self.new_device_info_writer)
         db.add_server(
@@ -57,18 +57,18 @@ class ServerSetUp(object):
         if os.path.isfile("../NXSDataWriter"):
             self._psub = subprocess.call(
                 "cd ..; ./NXSDataWriter %s &" % self.instance, stdout=None,
-                stderr=None,  shell=True)
+                stderr=None, shell=True)
         else:
             self._psub = subprocess.call(
                 "NXSDataWriter %s &" % self.instance, stdout=None,
                 stderr=None, shell=True)
-        print "waiting for server",
+        sys.stdout.write("waiting for server ")
 
         found = False
         cnt = 0
         while not found and cnt < 1000:
             try:
-                print "\b.",
+                sys.stdout.write("\b.")
                 dp = PyTango.DeviceProxy(self.new_device_info_writer.name)
                 time.sleep(0.01)
                 if dp.state() == PyTango.DevState.ON:
@@ -76,22 +76,24 @@ class ServerSetUp(object):
             except:
                 found = False
             cnt += 1
-        print ""
+        print("")
 
     # test closer
     # \brief Common tear down oif Tango Server
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
         db = PyTango.Database()
         db.delete_server(self.new_device_info_writer.server)
 
         output = ""
         pipe = subprocess.Popen(
-            "ps -ef | grep 'NXSDataWriter %s'" % self.instance, stdout=subprocess.PIPE, shell=True).stdout
+            "ps -ef | grep 'NXSDataWriter %s'" % self.instance,
+            stdout=subprocess.PIPE, shell=True).stdout
 
-        res = pipe.read().split("\n")
+        res = str(pipe.read()).split("\n")
         for r in res:
             sr = r.split()
             if len(sr) > 2:
                 subprocess.call("kill -9 %s" %
                                 sr[1], stderr=subprocess.PIPE, shell=True)
+        pipe.close()

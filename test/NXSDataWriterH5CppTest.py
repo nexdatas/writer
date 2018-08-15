@@ -22,30 +22,24 @@
 import unittest
 import os
 import sys
-import subprocess
 import json
 import numpy
 
 import PyTango
-import time
 from ProxyHelper import ProxyHelper
 
-
-from xml.sax import SAXParseException
 import struct
 
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
-
-import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
 
 import ServerSetUp
 
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
+
+
 # test fixture
-
-
 class NXSDataWriterH5CppTest(unittest.TestCase):
     # server counter
     serverCounter = 0
@@ -264,14 +258,15 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
-        print "Run: NXSDataWriterTest.test_openFile()"
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         try:
             fname = '%s/test.h5' % os.getcwd()
             dp = PyTango.DeviceProxy(self._sv.device)
@@ -296,11 +291,11 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             f = f.root()
 #            self.assertEqual(f.path, fname)
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -325,7 +320,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # \brief It tests validation of opening and closing H5 files.
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         directory = '#nexdatas_test_directory#'
         dirCreated = False
@@ -377,11 +372,11 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             #            self.assertEqual(f.name, fname)
 #            self.assertEqual(f.path, fname)
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -408,9 +403,10 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # openEntry test
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
-        print "Run: NXSDataWriterTest.test_openEntry() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/test2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
+        xml = '<definition> <group type="NXentry" name="entry"/></definition>'
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -480,8 +476,10 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                         if c.name == "nexus__entry__1_xml":
                             self.assertEqual(
                                 c.read(),
-                                '<definition> <group type="NXentry" name="entry"/></definition>')
-                            print c.read()
+                                '<definition> '
+                                '<group type="NXentry" name="entry"/>'
+                                '</definition>')
+                            print(c.read())
                         else:
                             self.assertEqual(c.name, "python_version")
                             self.assertEqual(c.read(), sys.version)
@@ -506,9 +504,11 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                 os.remove(fname)
 
     # openEntryWithSAXParseException test
-    # \brief It tests validation of opening and closing entry with SAXParseException
+    # \brief It tests validation of opening and closing entry
+    # with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: NXSDataWriterTest.test_openEntryWithSAXParseException() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/test2.h5' % os.getcwd()
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -526,9 +526,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             try:
                 error = None
                 dp.XMLSettings = wrongXml
-            except PyTango.DevFailed, e:
+            except PyTango.DevFailed:
                 error = True
-            except Exception, e:
+            except Exception:
                 error = False
             self.assertEqual(error, True)
             self.assertTrue(error is not None)
@@ -589,9 +589,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord_twoentries(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -623,14 +623,16 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -656,14 +658,16 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -685,7 +689,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -878,7 +882,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                 self.assertEqual(cnt.shape, (2,))
                 self.assertEqual(cnt.dtype, "float64")
                 self.assertEqual(cnt.size, 2)
-    #            print cnt.read()
+    #             print(cnt.read())
                 value = cnt[:]
                 for i in range(len(value)):
                     self.assertEqual(self._counter[i], value[i])
@@ -926,7 +930,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
                 self.assertTrue(hasattr(cnt.shape, "__iter__"))
                 self.assertEqual(len(mca.shape), 2)
                 self.assertEqual(mca.shape, (2, 2048))
-                self.assertEqual(mca.dtype,  "float64")
+                self.assertEqual(mca.dtype, "float64")
                 self.assertEqual(mca.size, 4096)
                 value = mca.read()
                 for i in range(len(value[0])):
@@ -978,9 +982,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -1012,14 +1016,16 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1113,7 +1119,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1230,7 +1236,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1274,9 +1280,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-# ???????
+            # ???????
             # ! PNI self.assertEqual(mca.name, "mca")
-#????
+            # ????
             self.assertEqual(mca.name, "data")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -1337,9 +1343,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord_skipacq(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -1375,8 +1381,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1437,8 +1444,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.currentfileid, 0)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1497,8 +1505,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
             dp.skipacquisition = True
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 0)
             self.assertEqual(dp.currentfileid, 0)
@@ -1524,7 +1533,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             f = H5CppWriter.open_file(fname, readonly=True)
             f = f.root()
-#            self.assertEqual(f.path, fname)
+            # self.assertEqual(f.path, fname)
             self.assertEqual(6, len(f.attributes))
             self.assertEqual(f.attributes["file_name"][...], fname)
             self.assertTrue(f.attributes["NX_class"][...], "NXroot")
@@ -1595,7 +1604,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1712,7 +1721,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1756,9 +1765,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             mca = dt.open("data")
             self.assertTrue(mca.is_valid)
-# ???????
+            # ???????
             # ! PNI self.assertEqual(mca.name, "mca")
-#????
+            # ????
             self.assertEqual(mca.name, "data")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
@@ -1819,9 +1828,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord_canfail(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -1992,7 +2001,13 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "(u'Data for /entry1:NXentry/instrument:NXinstrument"
+                "/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT"
+                " record exp_c01', 'Data without value')\n(u'Data for "
+                "/entry1:NXentry/instrument:NXinstrument/detector:NXdetector"
+                "/counter1 not found. DATASOURCE: CLIENT record exp_c01',"
+                " 'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2065,7 +2080,12 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/mca not found. DATASOURCE: CLIENT "
+                "record p09/mca/exp.02', 'Data without value')\n(u'Data for "
+                "/entry1:NXentry/instrument:NXinstrument/detector:NXdetector"
+                "/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', "
+                "'Data without value')")
 
             at = mca.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2119,7 +2139,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -2153,7 +2173,13 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(at.dtype, "string")
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
-                at[...], "(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')\n(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/counter1 not found. DATASOURCE: CLIENT record exp_c01', 'Data without value')")
+                at[...],
+                "(u'Data for /entry1:NXentry/instrument:NXinstrument/"
+                "detector:NXdetector/counter1 not found. DATASOURCE: CLIENT "
+                "record exp_c01', 'Data without value')\n(u'Data for "
+                "/entry1:NXentry/instrument:NXinstrument/detector:NXdetector"
+                "/counter1 not found. DATASOURCE: CLIENT record exp_c01', "
+                "'Data without value')")
 
             at = cnt.attributes["type"]
             self.assertTrue(at.is_valid)
@@ -2188,7 +2214,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -2247,7 +2273,12 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(at.name, "nexdatas_canfail_error")
             self.assertEqual(
                 at[...],
-                "(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')\n(u'Data for /entry1:NXentry/instrument:NXinstrument/detector:NXdetector/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', 'Data without value')")
+                "(u'Data for /entry1:NXentry/instrument:NXinstrument/detector"
+                ":NXdetector/mca not found. DATASOURCE: CLIENT record "
+                "p09/mca/exp.02', 'Data without value')\n(u'Data for "
+                "/entry1:NXentry/instrument:NXinstrument/detector:NXdetector"
+                "/mca not found. DATASOURCE: CLIENT record p09/mca/exp.02', "
+                "'Data without value')")
 
             at = mca.attributes["nexdatas_source"]
             self.assertTrue(at.is_valid)
@@ -2264,9 +2295,9 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecord_canfail_false(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -2401,11 +2432,11 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(cnt.shape), 1)
 #            self.assertEqual(cnt.shape, (1,))
             self.assertEqual(cnt.dtype, "float64")
-#            self.assertEqual(cnt.size, 1)
-            value = cnt.read()
-#            value = cnt[:]
-#            for i in range(len(value)):
-#                self.assertEqual(self._counter[i], value[i])
+            # self.assertEqual(cnt.size, 1)
+            cnt.read()
+            # value = cnt[:]
+            # for i in range(len(value)):
+            #    self.assertEqual(self._counter[i], value[i])
 
             self.assertEqual(len(cnt.attributes), 4)
 
@@ -2449,14 +2480,14 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
-#            self.assertEqual(mca.shape, (2,2048))
+            # self.assertEqual(mca.shape, (2,2048))
             self.assertEqual(mca.dtype, "float64")
-#            self.assertEqual(mca.size, 4096)
-#            value = mca.read()
-#            for i in range(len(value[0])):
-#                self.assertEqual(self._mca1[i], value[0][i])
-#            for i in range(len(value[0])):
-#                self.assertEqual(self._mca2[i], value[1][i])
+            # self.assertEqual(mca.size, 4096)
+            mca.read()
+            # for i in range(len(value[0])):
+            #     self.assertEqual(self._mca1[i], value[0][i])
+            # for i in range(len(value[0])):
+            #     self.assertEqual(self._mca2[i], value[1][i])
 
             self.assertEqual(len(mca.attributes), 4)
 
@@ -2509,22 +2540,22 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(at.name, "NX_class")
             self.assertEqual(at[...], "NXdata")
 
- #           cnt = dt.open("cnt1")
+            #  cnt = dt.open("cnt1")
             cnt = dt.open("counter1")
             self.assertTrue(cnt.is_valid)
-            #            ???
-            #            self.assertEqual(cnt.name,"cnt1")
+            # ???
+            #  self.assertEqual(cnt.name,"cnt1")
             self.assertEqual(cnt.name, "counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
-#            self.assertEqual(cnt.shape, (2,))
+            # self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
-#            self.assertEqual(cnt.size, 2)
-#            print cnt.read()
-            value = cnt[:]
-#            for i in range(len(value)):
-#                self.assertEqual(self._counter[i], value[i])
+            # self.assertEqual(cnt.size, 2)
+            #  print(cnt.read())
+            cnt[:]
+            # for i in range(len(value)):
+            #     self.assertEqual(self._counter[i], value[i])
 
             self.assertEqual(len(cnt.attributes), 4)
 
@@ -2569,14 +2600,14 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
-#            self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype,  "float64")
-#            self.assertEqual(mca.size, 4096)
-            value = mca.read()
-#            for i in range(len(value[0])):
-#                self.assertEqual(self._mca1[i], value[0][i])
-#            for i in range(len(value[0])):
-#                self.assertEqual(self._mca2[i], value[1][i])
+            # self.assertEqual(mca.shape, (2,2048))
+            self.assertEqual(mca.dtype, "float64")
+            # self.assertEqual(mca.size, 4096)
+            mca.read()
+            # for i in range(len(value[0])):
+            #     self.assertEqual(self._mca1[i], value[0][i])
+            # for i in range(len(value[0])):
+            #     self.assertEqual(self._mca2[i], value[1][i])
 
             self.assertEqual(len(mca.attributes), 4)
 
@@ -2619,13 +2650,12 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             if os.path.isfile(fname):
                 os.remove(fname)
 
-    #            pass
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow2(self):
-        print "Run: NXSDataWriterTest.test_scanRecord() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/scantest2.h5' % os.getcwd()
-        xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
             dp = PyTango.DeviceProxy(self._sv.device)
             self.assertTrue(ProxyHelper.wait(dp, 10000))
@@ -2694,8 +2724,8 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(at.name, "NX_class")
             self.assertEqual(at[...], "NXentry")
 
-# ins = f.open("entry1/instrument:NXinstrument")    #bad exception
-#            ins = f.open("entry1/instrument")
+            # ins = f.open("entry1/instrument:NXinstrument")  # bad exception
+            # ins = f.open("entry1/instrument")
             ins = en.open("instrument")
             self.assertTrue(ins.is_valid)
             self.assertEqual(ins.name, "instrument")
@@ -2866,7 +2896,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -2915,7 +2945,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (4, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 8192)
             value = mca.read()
             for i in range(len(value[0])):
@@ -2974,7 +3004,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # \brief It tests recording of simple h5 file
     def test_scanRecord_split(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tfname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         fname = None
         try:
@@ -3010,42 +3040,48 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 1)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 2)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 2)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 3)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
 
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) + ', "p09/mca/exp.02":'
-                      + str(self._mca2) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[1]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca2) + '  } }')
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 3)
             self.assertEqual(dp.state(), PyTango.DevState.EXTRACT)
             self.assertEqual(dp.status(), self.__status[dp.state()])
-            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) + ', "p09/mca/exp.02":'
-                      + str(self._mca1) + '  } }')
+            dp.Record('{"data": {"exp_c01":' + str(self._counter[0]) +
+                      ', "p09/mca/exp.02":' +
+                      str(self._mca1) + '  } }')
 
             self.assertEqual(dp.stepsperfile, 2)
             self.assertEqual(dp.currentfileid, 4)
@@ -3257,7 +3293,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -3305,7 +3341,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3543,7 +3579,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1], value[i])
@@ -3591,7 +3627,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3829,7 +3865,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1 - i], value[i])
@@ -3877,7 +3913,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3935,7 +3971,8 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow3(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "scantestgrow.h5"
         try:
 
@@ -4184,7 +4221,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -4233,7 +4270,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 100, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4295,7 +4332,8 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow3_false(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "scantestgrow.h5"
         try:
 
@@ -4544,7 +4582,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -4593,7 +4631,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 100, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4655,7 +4693,8 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow4(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        fun = sys._getframe().f_code.co_name
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = "scantestgrow.h5"
         try:
 
@@ -4903,7 +4942,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -4952,7 +4991,7 @@ class NXSDataWriterH5CppTest(unittest.TestCase):
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 200, 200))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 160000)
             value = mca.read()
             for i in range(len(value[0])):

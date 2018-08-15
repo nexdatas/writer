@@ -146,12 +146,12 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief Common set up
     def setUp(self):
         # file handle
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -162,7 +162,7 @@ class DecoderPoolTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -170,7 +170,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         self.assertTrue(isinstance(el, object))
@@ -178,20 +178,22 @@ class DecoderPoolTest(unittest.TestCase):
         el = DecoderPool(json.loads("{}"))
         self.assertTrue(isinstance(el, object))
 
-        jsn = json.loads('{"decoders":{"UTF":"DecoderPool.Decode"}}')
+        jsn = json.loads(
+            '{"decoders":{"UTF":"nxswriter.DecoderPool.Decode"}}')
         self.myAssertRaise(AttributeError, DecoderPool, jsn)
 
         jsn = json.loads('{"decoders":{"UTF":"DDecoderPool.UTF8decoder"}}')
         self.myAssertRaise(ImportError, DecoderPool, jsn)
 
         el = DecoderPool(
-            json.loads('{"decoders":{"UTF":"DecoderPool.UTF8decoder"}}'))
+            json.loads(
+                '{"decoders":{"UTF":"nxswriter.DecoderPool.UTF8decoder"}}'))
 
     # hasDecoder test
     # \brief It tests default settings
     def test_hasDecoder(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         self.assertTrue(el.hasDecoder("UTF8"))
@@ -201,7 +203,8 @@ class DecoderPoolTest(unittest.TestCase):
         self.assertTrue(not el.hasDecoder("CL"))
 
         el = DecoderPool(
-            json.loads('{"decoders":{"UTF":"DecoderPool.UTF8decoder"}}'))
+            json.loads(
+                '{"decoders":{"UTF":"nxswriter.DecoderPool.UTF8decoder"}}'))
         self.assertTrue(el.hasDecoder("UTF8"))
         self.assertTrue(el.hasDecoder("UINT32"))
         self.assertTrue(el.hasDecoder("LIMA_VIDEO_IMAGE"))
@@ -212,7 +215,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_get(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         ds = el.get("UTF8")
@@ -225,7 +228,8 @@ class DecoderPoolTest(unittest.TestCase):
         self.assertEqual(el.get("CL"), None)
 
         el = DecoderPool(
-            json.loads('{"decoders":{"UTF":"DecoderPool.UTF8decoder"}}'))
+            json.loads(
+                '{"decoders":{"UTF":"nxswriter.DecoderPool.UTF8decoder"}}'))
         ds = el.get("UTF8")
         self.assertTrue(isinstance(ds, UTF8decoder))
         ds = el.get("UINT32")
@@ -240,7 +244,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_append(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         el.append(nxswriter.DecoderPool.UTF8decoder, "UTF")
@@ -309,7 +313,7 @@ class DecoderPoolTest(unittest.TestCase):
     # \brief It tests default settings
     def test_pop(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         el = DecoderPool()
         el.pop("CL")

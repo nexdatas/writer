@@ -26,7 +26,6 @@ import subprocess
 import random
 import struct
 import json
-from nxswriter.H5Elements import EFile
 from nxswriter.ThreadPool import ThreadPool
 from nxswriter.Element import Element
 from nxswriter.EGroup import EGroup
@@ -50,17 +49,17 @@ from xml import sax
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
-
-
-# if 64-bit machione
-IS64BIT = (struct.calcsize("P") == 8)
+    from io import StringIO
 
 
 from xml.sax import SAXParseException
 
 
 from nxswriter.NexusXMLHandler import NexusXMLHandler
+
+
+# if 64-bit machione
+IS64BIT = (struct.calcsize("P") == 8)
 
 
 class Closeable(object):
@@ -144,7 +143,7 @@ class TElement(FElement):
             return TElement.strategy, TElement.trigger
         if TElement.strategy:
             self.strategy = TElement.strategy
-            return TElement.strategy
+            return TElement.strategy, None
 
     # run method
     def run(self):
@@ -253,7 +252,7 @@ class InnerTagDSDC(object):
     # stores names
     def store(self, xml, myjson):
         self.xml = xml
-        print "JSON", self.json
+        print("JSON %s" % self.json)
         self.json = myjson
         self.stored = True
         if InnerTagDC.trigger:
@@ -315,7 +314,7 @@ class InnerTagDS(object):
     # stores names
     def store(self, xml, myjson):
         self.xml = xml
-        print "JSON", self.json
+        print("JSON %s" % self.json)
         self.json = myjson
         self.stored = True
         if InnerTagDS.trigger:
@@ -372,7 +371,7 @@ class InnerTagDC(object):
     # stores names
     def store(self, xml, myjson):
         self.xml = xml
-        print "JSON", self.json
+        print("JSON %s" % self.json)
         self.json = myjson
         self.stored = True
         if InnerTagDC.trigger:
@@ -517,13 +516,13 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
         FileWriter.writer = H5CppWriter
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -534,7 +533,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -542,7 +541,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_constructor_default(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -578,7 +577,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -625,7 +624,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -647,7 +646,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml = '<group%s/>' % (st)
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -685,7 +687,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -754,7 +756,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group_group(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -786,7 +788,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -841,7 +846,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -867,7 +872,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -909,7 +917,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -961,7 +969,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_field_empty(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1014,7 +1022,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_field_empty(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1040,7 +1048,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1074,7 +1085,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_field_value_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1105,7 +1116,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_field_value_error(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1138,7 +1149,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1211,7 +1222,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1246,7 +1257,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1294,7 +1308,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_group_attribute(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1329,7 +1343,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1367,7 +1384,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_attribute(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1430,7 +1447,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_XML_field_attribute(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1467,7 +1484,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</field>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1509,7 +1529,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_field_attribute(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1577,7 +1597,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1609,7 +1629,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1635,7 +1658,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TEOS_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1665,7 +1688,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1687,7 +1713,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TEOL_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1717,7 +1743,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1739,7 +1768,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TEOF_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1769,7 +1798,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1792,7 +1824,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_group_field(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1833,7 +1865,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1881,7 +1916,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_group_field_reload(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -1922,7 +1957,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -1971,7 +2009,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_group_field_groupTypes(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2015,7 +2053,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2062,7 +2103,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field_INIT(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2095,7 +2136,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2132,7 +2176,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field_INIT_canfail_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2170,7 +2214,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += strtag
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2210,7 +2257,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field_INIT_canfail_true(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2248,7 +2295,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += strtag
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2289,7 +2339,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field_STEP(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2320,7 +2370,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2357,7 +2410,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field_FINAL(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2391,7 +2444,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
         self.assertTrue(isinstance(el.initPool, ThreadPool))
@@ -2428,7 +2484,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_TE_field_STEP_trigger(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2460,7 +2516,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += value
         xml += '</field>'
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(len(el.triggerPools), 1)
         self.assertTrue(isinstance(el.triggerPools["mytrigger"], ThreadPool))
@@ -2500,7 +2559,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_transparent(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2543,7 +2602,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2590,7 +2652,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_transparent_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2633,7 +2695,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2680,7 +2745,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_transparent_3(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2724,7 +2789,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</group>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2771,7 +2839,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_transparent_4(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2815,7 +2883,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         xml += '</mydefinition>'
 
         parser = sax.make_parser()
-        sax.parseString(xml, el)
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
 
         self.assertEqual(el.triggerPools, {})
 
@@ -2847,7 +2918,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
             TElement.groupTypes.child(nxtype="NXmmyentry") is not None)
         self.assertTrue(
             TElement.groupTypes.child(name="mmyentry1") is not None)
- #       self.assertTrue(gr.fetched)
+        #       self.assertTrue(gr.fetched)
         self.assertTrue(gr.linked)
         self.assertTrue(not gr.h5Object.closed)
 
@@ -2863,7 +2934,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_unsupported(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2916,7 +2987,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_unsupported_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -2961,8 +3032,10 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
         parser = sax.make_parser()
         el.raiseUnsupportedTag = False
         self.assertTrue(not el.raiseUnsupportedTag)
-        sax.parseString(xml, el)
-
+        if sys.version_info > (3,):
+            sax.parseString(bytes(xml, "UTF-8"), el)
+        else:
+            sax.parseString(xml, el)
         self._nxFile.close()
         os.remove(self._fname)
 
@@ -2970,7 +3043,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_inner(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -3086,7 +3159,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_inner_DSDC(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -3204,7 +3277,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_inner_DSDC_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -3325,7 +3398,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_inner_DS(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle
@@ -3446,7 +3519,7 @@ class NexusXMLHandlerH5CppTest(unittest.TestCase):
     # \brief It tests default settings
     def test_group_field_inner_DC(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         self._fname = '%s/%s%s.h5' % (
             os.getcwd(), self.__class__.__name__, fun)
         # file handle

@@ -74,8 +74,8 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         self._simps.setUp()
         self._dbhost = self._simps.dp.get_db_host()
         self._dbport = self._simps.dp.get_db_port()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down
@@ -141,6 +141,7 @@ class TangoFieldTagAsynchTest(TangoFieldTagWriterTest.TangoFieldTagWriterTest):
         self.assertTrue(ProxyHelper.wait(tdw, 10000))
         self.assertEqual(tdw.state(), PyTango.DevState.EXTRACT)
         self.assertEqual(tdw.status(), self.__status[tdw.state()])
+
 
 if __name__ == '__main__':
     unittest.main()

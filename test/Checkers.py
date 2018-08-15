@@ -33,6 +33,7 @@ from math import exp
 
 if sys.version_info > (3,):
     unicode = str
+    long = int
 else:
     bytes = str
 
@@ -51,9 +52,8 @@ class Checker(object):
             # random seed
             self.seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.seed = long(time.time() * 256)  # use fractional seconds
-#        self.seed = 113927724434234094860192629108901591122
+            #  self.seed = 113927724434234094860192629108901591122
         self.__rnd = random.Random(self.seed)
 
     # checks field tree
@@ -62,11 +62,11 @@ class Checker(object):
     # \param children number of detector children
     # \returns detector group object
     def checkFieldTree(self, f, fname, children):
-#        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+        # self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
         f = f.root()
         self._tc.assertEqual(6, len(f.attributes))
         self._tc.assertEqual(f.attributes["file_name"][...], fname)
-#        f = f.root()
+        #        f = f.root()
         self._tc.assertTrue(f.attributes["NX_class"][...], "NXroot")
         self._tc.assertEqual(f.size, 2)
 
@@ -134,7 +134,7 @@ class Checker(object):
     # \param fattributes number of field attributes
     # \returns detector group object
     def checkAttributeTree(self, f, fname, gattributes, fattributes):
-#        self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
+        #  self._tc.assertEqual("%s/%s" % ( os.getcwd(), f.name), fname)
         f = f.root()
         self._tc.assertEqual(6, len(f.attributes))
         self._tc.assertEqual(f.attributes["file_name"][...], fname)
@@ -231,7 +231,7 @@ class Checker(object):
         if not isinstance(values, str) and not isinstance(values, unicode):
             value = cnt[...]
             if self._isNumeric(value):
-#                print "Val", name , values ,value
+                #  print "Val", name , values ,value
                 self._tc.assertTrue(abs(values - value) <= error)
             else:
                 self._tc.assertEqual(values, value)
@@ -280,7 +280,7 @@ class Checker(object):
                     self._tc.assertEqual(
                         Types.Converters.toBool(values[i]), cnt[i])
                 else:
-# print "CMP",name, cnt[i] , values[i] ,cnt[i] - values[i] , error
+                    # print "CMP",name, cnt[i] , values[i] ,cnt[i] - values[i] , error
                     self._tc.assertTrue(abs(cnt[i] - values[i]) <= error)
             else:
                 self._tc.assertEqual(values[i], cnt[i])
@@ -310,7 +310,7 @@ class Checker(object):
 
             for i in range(len(values)):
                 for j in range(len(values[i])):
-    #                print i, j, cnt[i,j], values[i][j]
+                    # print i, j, cnt[i,j], values[i][j]
                     if dtype != "string" and self._isNumeric(cnt[i, 0]):
                         if dtype == "bool":
                             self._tc.assertEqual(
@@ -325,7 +325,11 @@ class Checker(object):
     # \param checking instance
     # \returns is instance is numeric
     def _isNumeric(self, instance):
-        attrs = ['__pow__', '__mul__', '__div__', '__add__', '__sub__']
+        if sys.version_info > (3,):
+            attrs = ['__pow__', '__mul__', '__floordiv__',
+                     '__truediv__', '__add__', '__sub__']
+        else:
+            attrs = ['__pow__', '__mul__', '__div__', '__add__', '__sub__']
         return all(hasattr(instance, attr) for attr in attrs)
 
     # creates spectrum plot with random Gaussians
@@ -374,7 +378,7 @@ class Checker(object):
         self._tc.assertEqual(cnt.size, len(values))
         # pninx is not supporting reading string areas
         # print("ONE")
-        # print(cnt.name)        
+        # print(cnt.name)
         # print(values[0])
         # print(type(values[0]))
         # print("FILE")
@@ -383,19 +387,16 @@ class Checker(object):
         if not isinstance(values[0], str) and not isinstance(values[0], unicode):
             value = cnt.read()
             for i in range(len(value)):
-#                print values[i].__repr__(),  value[i].__repr__()
-# print values[i].__repr__(),  value[i].__repr__(), value[i] - values[i]
-# ,error
                 if self._isNumeric(value[i]):
                     self._tc.assertTrue(abs(value[i] - values[i]) <= error)
                 else:
                     self._tc.assertEqual(values[i], value[i])
         for i in range(len(values)):
-            cv= cnt[i]
-#            if self._isNumeric(cnt[i]):
+            cv = cnt[i]
+            #            if self._isNumeric(cnt[i]):
             if self._isNumeric(cv):
                 if nxtype == "NX_BOOLEAN":
-#                    print "BOOL: ", values[i] ,cnt[i]
+                    #    print "BOOL: ", values[i] ,cnt[i]
                     self._tc.assertEqual(
                         Types.Converters.toBool(values[i]), cnt[i])
                 else:
@@ -456,9 +457,10 @@ class Checker(object):
             else:
                 self._tc.assertEqual(values, value)
         if self._isNumeric(cnt.read()) and not (
-                isinstance(cnt[...], numpy.ndarray) and str(cnt[...].dtype) == 'object'):
+            isinstance(cnt[...], numpy.ndarray) and
+                str(cnt[...].dtype) == 'object'):
             if not self._isNumeric(values):
-#                    print "BOOL: ", values[i] ,cnt[i]
+                #  print "BOOL: ", values[i] ,cnt[i]
                 self._tc.assertEqual(
                     Types.Converters.toBool(values), cnt.read())
             else:
@@ -590,9 +592,9 @@ class Checker(object):
         self._tc.assertTrue(cnt.is_valid)
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
-        if grows > 1:
-#            lvalues = zip(*values)
-            lvalues = map(lambda *row: list(row), *values)
+        if grows and grows > 1:
+            #            lvalues = zip(*values)
+            lvalues = list(map(lambda *row: list(row), *values))
         else:
             lvalues = values
         self._tc.assertEqual(len(cnt.shape), 2)
@@ -602,12 +604,10 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
 
-#        print "VAL", lvalues
-#        print "VAL2", cnt.read()
 
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
-#                print i, j, cnt[i,j], lvalues[i][j]
+                #  print i, j, cnt[i,j], lvalues[i][j]
                 if self._isNumeric(cnt[i, 0]):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(
@@ -660,7 +660,7 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
         for i in range(len(values)):
-            # print i,  cnt[i], type(cnt[i]), values[i]
+            # print i, cnt[i], type(cnt[i]), values[i]
             if self._isNumeric(cnt[i]):
                 if nxtype == "NX_BOOLEAN":
                     self._tc.assertEqual(
@@ -711,7 +711,7 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
         for i in range(len(values)):
-#                print i, j, cnt[i,j], lvalues[i][j]
+
             if self._isNumeric(cnt[i]):
                 if nxtype == "NX_BOOLEAN":
                     self._tc.assertEqual(
@@ -772,14 +772,12 @@ class Checker(object):
                 if atts[a] is not None:
                     self._tc.assertEqual(at[...], atts[a])
 
-
-#        print "VAL", values
         for i in range(len(values)):
             for j in range(len(values[i])):
-#                print "CNT", cnt[j]
-#                print i, j, cnts[j][i],"   "  , values[i][j]
+                #     print "CNT", cnt[j]
+                #  print i, j, cnts[j][i],"   "  , values[i][j]
                 self._tc.assertEqual(values[i][j], cnts[j][i])
-#                self._tc.assertEqual(values[i][j], cnts[j][i])
+                # self._tc.assertEqual(values[i][j], cnts[j][i])
 
     # checks  single string spectrum field
     # \param det detector group
@@ -791,7 +789,7 @@ class Checker(object):
     def checkSingleStringSpectrumField(self, det, name, dtype, nxtype, values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
-                "nexdatas_source": None,  "nexdatas_strategy": None}
+                "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -819,7 +817,6 @@ class Checker(object):
                 self._tc.assertEqual(at[...], atts[a])
 
         for i in range(len(values)):
-#            print "i",i ,values[i], cnt[i]
             self._tc.assertEqual(values[i], cnt[i])
 
     # checks  image field
@@ -831,7 +828,8 @@ class Checker(object):
     # \param error data precision
     # \param grows growing dimension
     # \param attrs dictionary with string attributes
-    def checkImageField(self, det, name, dtype, nxtype, values, error=0, grows=0, attrs=None):
+    def checkImageField(self, det, name, dtype, nxtype, values,
+                        error=0, grows=0, attrs=None):
 
         atts = {"type": nxtype, "units": "",
                 "nexdatas_source": None, "nexdatas_strategy": None}
@@ -843,10 +841,11 @@ class Checker(object):
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         if grows == 3:
-            lvalues = map(
-                lambda *image: map(lambda *row: list(row), *image), *values)
+            lvalues = list(map(
+                lambda *image: list(map(
+                    lambda *row: list(row), *image)), *values))
         elif grows == 2:
-            lvalues = map(lambda *row: list(row), *values)
+            lvalues = list(map(lambda *row: list(row), *values))
         else:
             lvalues = values
         self._tc.assertEqual(len(cnt.shape), 3)
@@ -858,13 +857,11 @@ class Checker(object):
         # pninx is not supporting reading string areas
 
 
-#        print "LV", lvalues
-#        print "CNT",cnt.read()
 
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
                 for k in range(len(lvalues[i][j])):
-#                print i, j, cnt[i,j], lvalues[i][j]
+                    #   print i, j, cnt[i,j], lvalues[i][j]
                     if self._isNumeric(cnt[i, 0, 0]):
                         if nxtype == "NX_BOOLEAN":
                             self._tc.assertEqual(
@@ -918,13 +915,11 @@ class Checker(object):
 
         for i in range(len(values)):
             for j in range(len(values[i])):
-#                print i, j, cnt[i,j], values[i][j]
                 if self._isNumeric(cnt[i, 0]):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(
                             Types.Converters.toBool(values[i][j]), cnt[i, j])
                     else:
-# print "CK", name, cnt[i,j],  values[i][j],cnt[i,j] - values[i][j]
                         self._tc.assertTrue(
                             abs(cnt[i, j] - values[i][j]) <= error)
                 else:
@@ -972,7 +967,6 @@ class Checker(object):
 
         for i in range(len(values)):
             for j in range(len(values[i])):
-#                print i, j, cnt[i,j], values[i][j]
                 if self._isNumeric(cnt[i, 0]):
                     if nxtype == "NX_BOOLEAN":
                         self._tc.assertEqual(
@@ -1004,7 +998,7 @@ class Checker(object):
     def checkStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
-                "nexdatas_source": None,  "nexdatas_strategy": None}
+                "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -1040,7 +1034,6 @@ class Checker(object):
         for i in range(len(values)):
             for j in range(len(values[i])):
                 for k in range(len(values[i][j])):
-#                print i, j, cnt[i,j], lvalues[i][j]
                     self._tc.assertEqual(values[i][j][k], cnts[j][k][i])
 
     # checks single string image field
@@ -1053,7 +1046,7 @@ class Checker(object):
     def checkSingleStringImageField(self, det, name, dtype, nxtype, values, attrs=None):
 
         atts = {"type": nxtype, "units": "",
-                "nexdatas_source": None,  "nexdatas_strategy": None}
+                "nexdatas_source": None, "nexdatas_strategy": None}
         if attrs is not None:
             atts = attrs
 
@@ -1085,7 +1078,6 @@ class Checker(object):
 
         for i in range(len(values)):
             for j in range(len(values[i])):
-#                print i, j, cnt[i,j], lvalues[i][j]
                 self._tc.assertEqual(values[i][j], cnts[j][i])
 
     # checks XML string image field
@@ -1129,5 +1121,4 @@ class Checker(object):
 
         for i in range(len(values)):
             for j in range(len(values[i])):
-#                print i, j, cnt[i,j], lvalues[i][j]
                 self._tc.assertEqual(values[i][j], cnts[j][i])

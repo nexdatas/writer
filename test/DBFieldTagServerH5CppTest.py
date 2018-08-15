@@ -31,7 +31,8 @@ from ProxyHelper import ProxyHelper
 # test fixture
 
 
-class DBFieldTagServerH5CppTest(DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
+class DBFieldTagServerH5CppTest(
+        DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest):
     # server counter
     serverCounter = 0
 
@@ -62,8 +63,8 @@ class DBFieldTagServerH5CppTest(DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppT
     def setUp(self):
         DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppTest.setUp(self)
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -127,6 +128,7 @@ class DBFieldTagServerH5CppTest(DBFieldTagWriterH5CppTest.DBFieldTagWriterH5CppT
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

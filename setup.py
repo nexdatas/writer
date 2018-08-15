@@ -22,13 +22,12 @@
 
 import os
 from distutils.core import setup, Command
+from sphinx.setup_command import BuildDoc
 
 #: package name
 NDTS = "nxswriter"
 #: nxswriter imported package
 INDTS = __import__(NDTS)
-
-from sphinx.setup_command import BuildDoc
 
 
 def read(fname):
@@ -78,8 +77,8 @@ SETUPDATA = dict(
     name=NDTS,
     version=release,
     author="Jan Kotanski, Eugen Wintersberger , Halil Pasic",
-    author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, "
-    + "halil.pasic@gmail.com",
+    author_email="jankotan@gmail.com, eugen.wintersberger@gmail.com, " +
+    "halil.pasic@gmail.com",
     description=("Nexus Data writer implemented as a Tango Server"),
     license="GNU GENERAL PUBLIC LICENSE v3",
     keywords="writer Tango server nexus data",

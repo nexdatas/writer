@@ -27,7 +27,6 @@ import numpy
 from xml.sax import SAXParseException
 
 import nxswriter
-from nxswriter import TangoDataWriter
 from nxswriter.TangoDataWriter import TangoDataWriter
 import struct
 
@@ -36,6 +35,9 @@ from nxswriter import H5CppWriter
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3, ):
+    long = int
 
 # test fixture
 
@@ -245,12 +247,12 @@ ds.res2 = str(True)
     # test starter
     # \brief Common set up
     def setUp(self):
-        print "\nsetting up..."
+        print("\nsetting up...")
 
     # test closer
     # \brief Common tear down
     def tearDown(self):
-        print "tearing down ..."
+        print("tearing down ...")
 
     # Exception tester
     # \param exception expected exception
@@ -261,14 +263,14 @@ ds.res2 = str(True)
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -298,15 +300,15 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -329,7 +331,7 @@ ds.res2 = str(True)
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_valueerror(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -349,7 +351,7 @@ ds.res2 = str(True)
             try:
                 error = False
                 tdw.jsonrecord = "}"
-            except ValueError, e:
+            except ValueError:
                 error = True
             self.assertEqual(error, True)
 
@@ -365,15 +367,15 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -397,7 +399,7 @@ ds.res2 = str(True)
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFile_typeerror(self):
-        print "Run: %s.test_openFile() " % self.__class__.__name__
+        print("Run: %s.test_openFile() " % self.__class__.__name__)
         fname = "test.h5"
         try:
             tdw = TangoDataWriter()
@@ -417,7 +419,7 @@ ds.res2 = str(True)
             try:
                 error = False
                 tdw.jsonrecord = 1223
-            except TypeError, e:
+            except TypeError:
                 error = True
             self.assertEqual(error, True)
 
@@ -433,15 +435,15 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -465,15 +467,16 @@ ds.res2 = str(True)
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_writer(self):
-        print "Run: %s.test_writer() " % self.__class__.__name__
+        print("Run: %s.test_writer() " % self.__class__.__name__)
         self.assertTrue("h5cpp" in nxswriter.TangoDataWriter.WRITERS.keys())
-        self.assertEqual(nxswriter.TangoDataWriter.WRITERS["h5cpp"], H5CppWriter)
+        self.assertEqual(
+            nxswriter.TangoDataWriter.WRITERS["h5cpp"], H5CppWriter)
 
     # openFile test
     # \brief It tests validation of opening and closing H5 files.
     def test_openFileDir(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         directory = '#nexdatas_test_directoryS#'
         dirCreated = False
@@ -522,14 +525,14 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
-#            print "\nFile attributes:"
+#            print("\nFile attributes:")
             cnt = 0
             for at in f.attributes:
                 cnt += 1
-#                print at.name,"=",at[...]
+#                print(at.name),"=",at[...]
             self.assertEqual(cnt, len(f.attributes))
             self.assertEqual(6, len(f.attributes))
 #            print ""
@@ -556,7 +559,7 @@ ds.res2 = str(True)
     # \brief It tests validation of opening and closing entry in H5 files.
     def test_openEntry(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: TangoDataWriterTest.test_openEntry() "
+        print("Run: TangoDataWriterTest.test_openEntry() ")
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         xml = """<definition> <group type="NXentry" name="entry"/></definition>"""
         try:
@@ -585,7 +588,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -623,7 +626,7 @@ ds.res2 = str(True)
                     self.assertEqual(
                         c.read(),
                         '<definition> <group type="NXentry" name="entry"/></definition>')
-                    print c.read()
+                    print(c.read())
                     c = ch2.open("python_version")
                     self.assertEqual(c.name, "python_version")
                     self.assertEqual(c.read(), sys.version)
@@ -650,7 +653,7 @@ ds.res2 = str(True)
     # openEntryWithSAXParseException test
     # \brief It tests validation of opening and closing entry with SAXParseException
     def test_openEntryWithSAXParseException(self):
-        print "Run: TangoDataWriterTest.test_openEntryWithSAXParseException() "
+        print("Run: TangoDataWriterTest.test_openEntryWithSAXParseException()")
         fname = "test.h5"
         wrongXml = """Ala ma kota."""
         xml = """<definition/>"""
@@ -664,9 +667,9 @@ ds.res2 = str(True)
             try:
                 error = None
                 tdw.xmlsettings = wrongXml
-            except SAXParseException, e:
+            except SAXParseException:
                 error = True
-            except Exception, e:
+            except Exception:
                 error = False
             self.assertTrue(error is not None)
             self.assertEqual(error, True)
@@ -675,9 +678,9 @@ ds.res2 = str(True)
                 tdw.xmlsettings = xml
                 error = None
                 tdw.openEntry()
-            except SAXParseException, e:
+            except SAXParseException:
                 error = True
-            except Exception, e:
+            except Exception:
                 error = False
             self.assertTrue(error is None)
 
@@ -688,7 +691,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
 
@@ -718,7 +721,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_twoentries(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -781,7 +784,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -974,7 +977,7 @@ ds.res2 = str(True)
                 self.assertEqual(cnt.shape, (2,))
                 self.assertEqual(cnt.dtype, "float64")
                 self.assertEqual(cnt.size, 2)
-    #            print cnt.read()
+    #             print(cnt.read())
                 value = cnt[:]
                 for i in range(len(value)):
                     self.assertEqual(self._counter[i], value[i])
@@ -1022,7 +1025,7 @@ ds.res2 = str(True)
                 self.assertTrue(hasattr(cnt.shape, "__iter__"))
                 self.assertEqual(len(mca.shape), 2)
                 self.assertEqual(mca.shape, (2, 2048))
-                self.assertEqual(mca.dtype,  "float64")
+                self.assertEqual(mca.dtype, "float64")
                 self.assertEqual(mca.size, 4096)
                 value = mca.read()
                 for i in range(len(value[0])):
@@ -1075,7 +1078,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -1115,7 +1118,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -1299,14 +1302,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1354,7 +1357,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -1410,7 +1413,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_skipacq(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -1507,7 +1510,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -1691,14 +1694,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -1746,7 +1749,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -1802,7 +1805,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_canfail_setfalse(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -1851,7 +1854,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -2079,14 +2082,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -2154,7 +2157,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -2233,7 +2236,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_canfail_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -2246,7 +2249,7 @@ ds.res2 = str(True)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.openFile()
             self.assertEqual(tdw.canfail, True)
-            self.assertEqual(tdw.defaultCanFail, False)
+            self.assertEqual(tdw.defaultCanFail, True)
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -2267,13 +2270,13 @@ ds.res2 = str(True)
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.closeEntry()
-            self.assertEqual(tdw.canfail, False)
+            self.assertEqual(tdw.canfail, True)
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
             tdw.closeFile()
-            self.assertEqual(tdw.canfail, False)
-            self.assertEqual(tdw.defaultCanFail, False)
+            self.assertEqual(tdw.canfail, True)
+            self.assertEqual(tdw.defaultCanFail, True)
 
             self.assertEqual(tdw.stepsperfile, 0)
             self.assertEqual(tdw.currentfileid, 0)
@@ -2281,7 +2284,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -2509,14 +2512,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -2584,7 +2587,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -2663,7 +2666,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_defaultcanfail(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -2711,7 +2714,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -2939,14 +2942,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(numpy.finfo(getattr(numpy, 'float64')).max,
@@ -3014,7 +3017,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -3091,9 +3094,9 @@ ds.res2 = str(True)
 
     # scanRecord test
     # \brief It tests recording of simple h5 file
-    def test_scanRecord_canfail_false(self):
+    def test_scanRecord_canfail_false_2(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -3143,7 +3146,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -3327,14 +3330,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
 #            for i in range(len(value)):
 #                self.assertEqual(self._counter[i], value[i])
@@ -3382,7 +3385,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
 #            self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
 #            self.assertEqual(mca.size, 4096)
             value = mca.read()
 #            for i in range(len(value[0])):
@@ -3438,7 +3441,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_defaultcanfail_false(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -3488,7 +3491,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -3672,14 +3675,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
 #            for i in range(len(value)):
 #                self.assertEqual(self._counter[i], value[i])
@@ -3727,7 +3730,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
 #            self.assertEqual(mca.shape, (2,2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
 #            self.assertEqual(mca.size, 4096)
             value = mca.read()
 #            for i in range(len(value[0])):
@@ -3783,7 +3786,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_scanRecord_split(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         tfname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         fname = None
         try:
@@ -3850,7 +3853,7 @@ ds.res2 = str(True)
             fname = '%s/%s%s_00001.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4040,7 +4043,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -4088,7 +4091,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4137,7 +4140,7 @@ ds.res2 = str(True)
 
             fname = '%s/%s%s_00002.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4327,7 +4330,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1], value[i])
@@ -4375,7 +4378,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4424,7 +4427,7 @@ ds.res2 = str(True)
 
             fname = '%s/%s%s_00003.h5' % (
                 os.getcwd(), self.__class__.__name__, fun)
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4614,7 +4617,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[1 - i], value[i])
@@ -4662,7 +4665,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -4719,7 +4722,7 @@ ds.res2 = str(True)
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        print("Run: TangoDataWriterTest.test_scanRecordGrow() ")
         fname = "scantest.h5"
         try:
             tdw = TangoDataWriter()
@@ -4743,7 +4746,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -4927,14 +4930,14 @@ ds.res2 = str(True)
             self.assertTrue(cnt.is_valid)
             #            ???
             self.assertEqual(cnt.name, "cnt1")
-            #! PNI self.assertEqual(cnt.name,"counter1")
+            # PNI self.assertEqual(cnt.name,"counter1")
 
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(cnt.shape), 1)
             self.assertEqual(cnt.shape, (2,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 2)
-#            print cnt.read()
+            # print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(self._counter[i], value[i])
@@ -4982,7 +4985,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (2, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 4096)
             value = mca.read()
             for i in range(len(value[0])):
@@ -5037,7 +5040,7 @@ ds.res2 = str(True)
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow2(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        print("Run: TangoDataWriterTest.test_scanRecordGrow() ")
         fname = "scantestgrow.h5"
         try:
             tdw = TangoDataWriter()
@@ -5065,7 +5068,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -5259,7 +5262,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -5308,7 +5311,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 2)
             self.assertEqual(mca.shape, (4, 2048))
-            self.assertEqual(mca.dtype,  "float64")
+            self.assertEqual(mca.dtype, "float64")
             self.assertEqual(mca.size, 8192)
             value = mca.read()
             for i in range(len(value[0])):
@@ -5366,7 +5369,7 @@ ds.res2 = str(True)
     # scanRecord test
     # \brief It tests recording of simple h5 file
     def test_scanRecordGrow3(self):
-        print "Run: TangoDataWriterTest.test_scanRecordGrow() "
+        print("Run: TangoDataWriterTest.test_scanRecordGrow() ")
         fname = "scantestgrow.h5"
         try:
             tdw = TangoDataWriter()
@@ -5394,7 +5397,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -5592,7 +5595,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.shape, (4,))
             self.assertEqual(cnt.dtype, "float64")
             self.assertEqual(cnt.size, 4)
-#            print cnt.read()
+#             print(cnt.read())
             value = cnt[:]
             for i in range(len(value)):
                 self.assertEqual(
@@ -5641,7 +5644,7 @@ ds.res2 = str(True)
             self.assertTrue(hasattr(cnt.shape, "__iter__"))
             self.assertEqual(len(mca.shape), 3)
             self.assertEqual(mca.shape, (4, 200, 100))
-            self.assertEqual(mca.dtype,  "int64")
+            self.assertEqual(mca.dtype, "int64")
             self.assertEqual(mca.size, 80000)
             value = mca.read()
             for i in range(len(value[0])):
@@ -5704,7 +5707,7 @@ ds.res2 = str(True)
     # \brief It tests recording of simple h5 file
     def test_nxrootlink(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
         fname = '%s/%s%s.h5' % (os.getcwd(), self.__class__.__name__, fun)
         try:
             tdw = TangoDataWriter()
@@ -5728,7 +5731,7 @@ ds.res2 = str(True)
             # check the created file
 
             from nxswriter import FileWriter
-            FileWriter = H5CppWriter
+            FileWriter.writer = H5CppWriter
             f = FileWriter.open_file(fname, readonly=True)
             f = f.root()
             self.assertEqual(6, len(f.attributes))
@@ -5760,7 +5763,7 @@ ds.res2 = str(True)
             self.assertEqual(cnt.dtype, "string")
             self.assertEqual(cnt.size, 1)
             value = cnt[:]
-            #self.assertEqual(fname, value)
+            # self.assertEqual(fname, value)
             self.assertEqual("/", value)
 
             cnt = en.open("nxrootpath")

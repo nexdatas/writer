@@ -31,6 +31,7 @@ import PyTango
 import binascii
 import time
 import json
+import threading
 
 
 import SimpleServerSetUp
@@ -40,6 +41,9 @@ from nxswriter.TangoSource import ProxyTools
 
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
+
+if sys.version_info > (3,):
+    long = int
 
 
 # test pool
@@ -80,7 +84,6 @@ class TangoSourceTest(unittest.TestCase):
         try:
             self.__seed = long(binascii.hexlify(os.urandom(16)), 16)
         except NotImplementedError:
-            import time
             self.__seed = long(time.time() * 256)  # use fractional seconds
 
         self.__rnd = random.Random(self.__seed)
@@ -91,7 +94,7 @@ class TangoSourceTest(unittest.TestCase):
         self._simps.setUp()
         self._simps2.setUp()
         # file handle
-        print "SEED =", self.__seed
+        print("SEED = %s" % self.__seed)
 
     # test closer
     # \brief Common tear down
@@ -108,7 +111,7 @@ class TangoSourceTest(unittest.TestCase):
         try:
             error = False
             method(*args, **kwargs)
-        except exception, e:
+        except Exception:
             error = True
         self.assertEqual(error, True)
 
@@ -116,7 +119,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_proxySetup(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         self.myAssertRaise(RuntimeError, ProxyTools.proxySetup, None)
 
@@ -137,7 +140,7 @@ class TangoSourceTest(unittest.TestCase):
     # \brief It tests default settings
     def test_isProxyValid(self):
         fun = sys._getframe().f_code.co_name
-        print "Run: %s.%s() " % (self.__class__.__name__, fun)
+        print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         self.assertEqual(ProxyTools.isProxyValid(None), False)
         self.assertEqual(ProxyTools.isProxyValid(proxy(False)), False)
@@ -164,6 +167,7 @@ class proxy(object):
         if not self.valid:
             raise Exception("Not valid proxy")
         return "something"
+
 
 if __name__ == '__main__':
     unittest.main()

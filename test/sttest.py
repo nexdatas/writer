@@ -2,6 +2,7 @@ import PyTango
 import subprocess
 import time
 import os
+import sys
 
 new_device_info_writer = PyTango.DbDevInfo()
 new_device_info_writer._class = "SimpleServer"
@@ -21,28 +22,29 @@ psub = subprocess.Popen(
 
 # time.sleep(10)
 
+
 try:
-#    dp = PyTango.DeviceProxy(new_device_info_writer.name)
+    #  dp = PyTango.DeviceProxy(new_device_info_writer.name)
 
     found = False
     cnt = 0
     while not found and cnt < 100000:
         try:
-            print "\b.",
+            sys.stdout.write("\b.")
             dp = PyTango.DeviceProxy(new_device_info_writer.name)
             time.sleep(0.0001)
         #       print "STATE:",dp.state()
             if dp.state() == PyTango.DevState.ON:
                 found = True
-        except Exception, e:
-            print "WHAT:", e
+        except Exception as e:
+            print("WHAT: %s" % e)
             found = False
             cnt += 1
-    print "STATE:", dp.state()
+    print("STATE: %s" % dp.state())
 
 
 finally:
-    print "tearing down ..."
+    print("tearing down ...")
     db = PyTango.Database()
     db.delete_server(new_device_info_writer.server)
     output = ""

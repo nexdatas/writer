@@ -34,12 +34,11 @@ from ProxyHelper import ProxyHelper
 
 import ServerSetUp
 import ClientFieldTagWriterTest
-from ProxyHelper import ProxyHelper
+
 
 # test fixture
-
-
-class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest):
+class ClientFieldTagServerTest(
+        ClientFieldTagWriterTest.ClientFieldTagWriterTest):
     # server counter
     serverCounter = 0
 
@@ -69,8 +68,8 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     # \brief Common set up of Tango Server
     def setUp(self):
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -124,6 +123,7 @@ class ClientFieldTagServerTest(ClientFieldTagWriterTest.ClientFieldTagWriterTest
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -62,8 +62,8 @@ class DBFieldTagServerH5PYTest(DBFieldTagWriterH5PYTest.DBFieldTagWriterH5PYTest
     def setUp(self):
         DBFieldTagWriterH5PYTest.DBFieldTagWriterH5PYTest.setUp(self)
         self._sv.setUp()
-        print "SEED =", self.seed
-        print "CHECKER SEED =", self._sc.seed
+        print("SEED = %s" % self.seed)
+        print("CHECKER SEED = %s" % self._sc.seed)
 
     # test closer
     # \brief Common tear down oif Tango Server
@@ -127,6 +127,7 @@ class DBFieldTagServerH5PYTest(DBFieldTagWriterH5PYTest.DBFieldTagWriterH5PYTest
     # performs one record step
     def record(self, tdw, string):
         tdw.Record(string)
+
 
 if __name__ == '__main__':
     unittest.main()
