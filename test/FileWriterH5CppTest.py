@@ -212,9 +212,9 @@ class FileWriterH5CppTest(unittest.TestCase):
 
         self.assertEqual(len(list1), len(list2))
         for i, el in enumerate(list1):
-            if abs(el-list2[i]) >= error:
+            if abs(el - list2[i]) >= error:
                 print("EL %s %s %s" % (el, list2[i], error))
-            self.assertTrue(abs(el-list2[i]) < error)
+            self.assertTrue(abs(el - list2[i]) < error)
 
     # float image tester
     def myAssertImage(self, image1, image2, error=None):
@@ -224,9 +224,9 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(len(image1[i]), len(image2[i]))
             for j in range(len(image1[i])):
                 if error is not None:
-                    if abs(image1[i][j]-image2[i][j]) >= error:
+                    if abs(image1[i][j] - image2[i][j]) >= error:
                         print("EL %s %s %s" % (image1[i][j], image2[i][j], error))
-                    self.assertTrue(abs(image1[i][j]-image2[i][j]) < error)
+                    self.assertTrue(abs(image1[i][j] - image2[i][j]) < error)
                 else:
                     self.assertEqual(image1[i][j], image2[i][j])
 
@@ -240,9 +240,9 @@ class FileWriterH5CppTest(unittest.TestCase):
                 self.assertEqual(len(image1[i][j]), len(image2[i][j]))
                 for k in range(len(image1[i][j])):
                     if error is not None:
-                        if abs(image1[i][j][k]-image2[i][j][k]) >= error:
+                        if abs(image1[i][j][k] - image2[i][j][k]) >= error:
                             print("EL %s %s %s" % (image1[i][j][k], image2[i][j][k], error))
-                        self.assertTrue(abs(image1[i][j][k]-image2[i][j][k]) < error)
+                        self.assertTrue(abs(image1[i][j][k] - image2[i][j][k]) < error)
                     else:
                         self.assertEqual(image1[i][j][k], image2[i][j][k])
 
@@ -322,8 +322,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             tw.result = res
             chars = string.ascii_uppercase + string.digits
             fn = ''.join(self.__rnd.choice(chars) for _ in range(res))
-            fn2 = ''.join(self.__rnd.choice(chars) for _ in range(res*2))
-            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res*3))
+            fn2 = ''.join(self.__rnd.choice(chars) for _ in range(res * 2))
+            fn3 = ''.join(self.__rnd.choice(chars) for _ in range(res * 3))
             tres = FileWriter.link(fn, fn2, fn3)
             self.assertEqual(tres, res)
             self.assertEqual(tw.commands[-1], "link")
@@ -2648,8 +2648,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatspec.dtype, 'float32')
             self.assertEqual(atfloatspec.shape, (12,))
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(list(atfloatspec.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec[...]), [0.] * 12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
             # self.assertEqual(atfloatspec.h5object, (attr0.h5object, 'atfloatspec'))
 
@@ -2661,8 +2661,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrimage.dtype, 'string')
             self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
-            self.myAssertImage(atstrimage.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage[...], [[''] * 3] * 2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             # self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
@@ -2691,8 +2691,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintspec.dtype, 'uint32')
             self.assertEqual(atintspec.shape, (2,))
             self.assertEqual(atintspec.is_valid, True)
-            self.assertEqual(list(atintspec.read()), [0]*2)
-            self.assertEqual(list(atintspec[...]), [0]*2)
+            self.assertEqual(list(atintspec.read()), [0] * 2)
+            self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             # self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
@@ -2706,8 +2706,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
-            self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             # self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
 
@@ -2737,8 +2737,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrspec.dtype, 'string')
             self.assertEqual(atstrspec.shape, (4,))
             self.assertEqual(atstrspec.is_valid, True)
-            self.assertEqual(list(atstrspec.read()), ['']*4)
-            self.assertEqual(list(atstrspec[...]), ['']*4)
+            self.assertEqual(list(atstrspec.read()), [''] * 4)
+            self.assertEqual(list(atstrspec[...]), [''] * 4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             # self.assertEqual(atstrspec.h5object, (attr2.h5object, 'atstrspec'))
 
@@ -2751,8 +2751,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             # self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
@@ -2798,8 +2798,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatspec.dtype, 'float32')
             self.assertEqual(atfloatspec.shape, (12,))
             self.assertEqual(atfloatspec.is_valid, True)
-            self.assertEqual(list(atfloatspec.read()), [0.]*12)
-            self.assertEqual(list(atfloatspec[...]), [0.]*12)
+            self.assertEqual(list(atfloatspec.read()), [0.] * 12)
+            self.assertEqual(list(atfloatspec[...]), [0.] * 12)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
             # self.assertEqual(atfloatspec.h5object, (attr0.h5object, 'atfloatspec'))
 
@@ -2811,8 +2811,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrimage.dtype, 'string')
             self.assertEqual(atstrimage.shape, (2, 3))
             self.assertEqual(atstrimage.is_valid, True)
-            self.myAssertImage(atstrimage.read(), [['']*3]*2)
-            self.myAssertImage(atstrimage[...], [['']*3]*2)
+            self.myAssertImage(atstrimage.read(), [[''] * 3] * 2)
+            self.myAssertImage(atstrimage[...], [[''] * 3] * 2)
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             # self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
@@ -2841,8 +2841,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintspec.dtype, 'uint32')
             self.assertEqual(atintspec.shape, (2,))
             self.assertEqual(atintspec.is_valid, True)
-            self.assertEqual(list(atintspec.read()), [0]*2)
-            self.assertEqual(list(atintspec[...]), [0]*2)
+            self.assertEqual(list(atintspec.read()), [0] * 2)
+            self.assertEqual(list(atintspec[...]), [0] * 2)
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             # self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
@@ -2856,8 +2856,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atfloatimage.dtype, 'float64')
             self.assertEqual(atfloatimage.shape, (3, 2))
             self.assertEqual(atfloatimage.is_valid, True)
-            self.myAssertImage(atfloatimage.read(), [[0.]*2]*3)
-            self.myAssertImage(atfloatimage[...], [[0.]*2]*3)
+            self.myAssertImage(atfloatimage.read(), [[0.] * 2] * 3)
+            self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             # self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
 
@@ -2887,8 +2887,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atstrspec.dtype, 'string')
             self.assertEqual(atstrspec.shape, (4,))
             self.assertEqual(atstrspec.is_valid, True)
-            self.assertEqual(list(atstrspec.read()), ['']*4)
-            self.assertEqual(list(atstrspec[...]), ['']*4)
+            self.assertEqual(list(atstrspec.read()), [''] * 4)
+            self.assertEqual(list(atstrspec[...]), [''] * 4)
             self.assertEqual(atstrspec.parent.h5object, intscalar.h5object)
             # self.assertEqual(atstrspec.h5object, (attr2.h5object, 'atstrspec'))
 
@@ -2901,8 +2901,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'int32')
             self.assertEqual(atintimage.shape, (3, 2))
             self.assertEqual(atintimage.is_valid, True)
-            self.myAssertImage(atintimage.read(), [[0]*2]*3)
-            self.myAssertImage(atintimage[...], [[0]*2]*3)
+            self.myAssertImage(atintimage.read(), [[0] * 2] * 3)
+            self.myAssertImage(atintimage[...], [[0] * 2] * 3)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             # self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
@@ -2919,8 +2919,8 @@ class FileWriterH5CppTest(unittest.TestCase):
             self.assertEqual(atintimage.dtype, 'uint64')
             self.assertEqual(atintimage.shape, (4,))
             self.assertEqual(atintimage.is_valid, True)
-            self.assertEqual(list(atintimage.read()), [0]*4)
-            self.assertEqual(list(atintimage[...]), [0]*4)
+            self.assertEqual(list(atintimage.read()), [0] * 4)
+            self.assertEqual(list(atintimage[...]), [0] * 4)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             # self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
