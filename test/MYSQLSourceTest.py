@@ -93,7 +93,8 @@ class MYSQLSourceTest(unittest.TestCase):
             from os.path import expanduser
             home = expanduser("~")
             args2 = {'host': u'localhost', 'db': u'tango',
-                     'read_default_file': u'%s/.my.cnf' % home, 'use_unicode': True}
+                     'read_default_file': u'%s/.my.cnf' % home,
+                     'use_unicode': True}
             self._mydb = MySQLdb.connect(**args2)
             self._largs = args2
             print("ARGS: %s" % str(args2))
@@ -199,14 +200,22 @@ class MYSQLSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT pid FROM device limit 1", "SCALAR", "DevLong64", [1, 0]],
-            "long": ["SELECT pid FROM device limit 1", "SCALAR", "DevLong64", [1, 0]],
-            "float": ["SELECT pid FROM device limit 1", "SCALAR", "DevLong64", [1, 0]],
-            #            "float":["SELECT pid FROM device limit 1","SCALAR","DevDouble",[1,0]],
-            "str": ["SELECT name FROM device limit 1", "SCALAR", "DevString", [1, 0]],
-            "unicode": ["SELECT name FROM device limit 1", "SCALAR", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM device limit 1","SCALAR","DevBoolean",[1,0]],
-            "bool": ["SELECT exported FROM device limit 1", "SCALAR", "DevLong64", [1, 0]],
+            "int": ["SELECT pid FROM device limit 1", "SCALAR",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT pid FROM device limit 1", "SCALAR",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT pid FROM device limit 1", "SCALAR",
+                      "DevLong64", [1, 0]],
+            #            "float":["SELECT pid FROM device limit 1",
+            # "SCALAR","DevDouble",[1,0]],
+            "str": ["SELECT name FROM device limit 1", "SCALAR",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT name FROM device limit 1", "SCALAR",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM device limit 1",
+            # "SCALAR","DevBoolean",[1,0]],
+            "bool": ["SELECT exported FROM device limit 1", "SCALAR",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -234,14 +243,22 @@ class MYSQLSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT pid FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "long": ["SELECT pid FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "float": ["SELECT pid FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            #            "float":["SELECT pid FROM device limit 1","SPECTRUM","DevDouble",[1,0]],
-            "str": ["SELECT name FROM device limit 1", "SPECTRUM", "DevString", [1, 0]],
-            "unicode": ["SELECT name FROM device limit 1", "SPECTRUM", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM device limit 1","SPECTRUM","DevBoolean",[1,0]],
-            "bool": ["SELECT exported FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
+            "int": ["SELECT pid FROM device limit 1", "SPECTRUM",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT pid FROM device limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT pid FROM device limit 1", "SPECTRUM",
+                      "DevLong64", [1, 0]],
+            #            "float":["SELECT pid FROM device limit 1",
+            # "SPECTRUM","DevDouble",[1,0]],
+            "str": ["SELECT name FROM device limit 1", "SPECTRUM",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT name FROM device limit 1", "SPECTRUM",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM device limit 1",
+            # "SPECTRUM","DevBoolean",[1,0]],
+            "bool": ["SELECT exported FROM device limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -271,14 +288,22 @@ class MYSQLSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT pid,exported FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "long": ["SELECT pid,exported FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            "float": ["SELECT pid,name FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
-            #            "float":["SELECT pid,exported FROM device limit 1","SPECTRUM","DevDouble",[1,0]],
-            "str": ["SELECT name,name FROM device limit 1", "SPECTRUM", "DevString", [1, 0]],
-            "unicode": ["SELECT name,pid FROM device limit 1", "SPECTRUM", "DevString", [1, 0]],
-            #            "bool":["SELECT exported,pid FROM device limit 1","SPECTRUM","DevBoolean",[1,0]],
-            "bool": ["SELECT exported,pid FROM device limit 1", "SPECTRUM", "DevLong64", [1, 0]],
+            "int": ["SELECT pid,exported FROM device limit 1", "SPECTRUM",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT pid,exported FROM device limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT pid,name FROM device limit 1", "SPECTRUM",
+                      "DevLong64", [1, 0]],
+            #            "float":["SELECT pid,exported FROM device limit 1",
+            # "SPECTRUM","DevDouble",[1,0]],
+            "str": ["SELECT name,name FROM device limit 1", "SPECTRUM",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT name,pid FROM device limit 1", "SPECTRUM",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported,pid FROM device limit 1",
+            # "SPECTRUM","DevBoolean",[1,0]],
+            "bool": ["SELECT exported,pid FROM device limit 1", "SPECTRUM",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -298,7 +323,8 @@ class MYSQLSourceTest(unittest.TestCase):
             dt = ds.getData()
 
             self.checkData(
-                dt, arr[a][1], list(el for el in value[0]), arr[a][2], arr[a][3])
+                dt, arr[a][1], list(el for el in value[0]), arr[a][2],
+                arr[a][3])
 
     # setup test
     # \brief It tests default settings
@@ -307,14 +333,22 @@ class MYSQLSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT pid FROM device limit 4", "SPECTRUM", "DevLong64", [1, 0]],
-            "long": ["SELECT pid FROM device limit 4", "SPECTRUM", "DevLong64", [1, 0]],
-            "float": ["SELECT pid FROM device limit 4", "SPECTRUM", "DevLong64", [1, 0]],
-            #            "float":["SELECT pid FROM device limit 4","SPECTRUM","DevDouble",[1,0]],
-            "str": ["SELECT name FROM device limit 4", "SPECTRUM", "DevString", [1, 0]],
-            "unicode": ["SELECT name FROM device limit 4", "SPECTRUM", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM device limit 4","SPECTRUM","DevBoolean",[1,0]],
-            "bool": ["SELECT exported FROM device limit 4", "SPECTRUM", "DevLong64", [1, 0]],
+            "int": ["SELECT pid FROM device limit 4", "SPECTRUM",
+                    "DevLong64", [1, 0]],
+            "long": ["SELECT pid FROM device limit 4", "SPECTRUM",
+                     "DevLong64", [1, 0]],
+            "float": ["SELECT pid FROM device limit 4", "SPECTRUM",
+                      "DevLong64", [1, 0]],
+            #            "float":["SELECT pid FROM device limit 4",
+            # "SPECTRUM","DevDouble",[1,0]],
+            "str": ["SELECT name FROM device limit 4", "SPECTRUM",
+                    "DevString", [1, 0]],
+            "unicode": ["SELECT name FROM device limit 4", "SPECTRUM",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM device limit 4",
+            # "SPECTRUM","DevBoolean",[1,0]],
+            "bool": ["SELECT exported FROM device limit 4", "SPECTRUM",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:
@@ -343,14 +377,22 @@ class MYSQLSourceTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         arr = {
-            "int": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64", [1, 0]],
-            "long": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64", [1, 0]],
-            "float": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64", [1, 0]],
-            #            "float":["SELECT pid FROM device limit 4","IMAGE","DevDouble",[1,0]],
-            "str": ["SELECT name FROM device limit 4", "IMAGE", "DevString", [1, 0]],
-            "unicode": ["SELECT name FROM device limit 4", "IMAGE", "DevString", [1, 0]],
-            #            "bool":["SELECT exported FROM device limit 4","IMAGE","DevBoolean",[1,0]],
-            "bool": ["SELECT exported FROM device limit 4", "IMAGE", "DevLong64", [1, 0]],
+            "int": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64",
+                    [1, 0]],
+            "long": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64",
+                     [1, 0]],
+            "float": ["SELECT pid FROM device limit 4", "IMAGE", "DevLong64",
+                      [1, 0]],
+            #            "float":["SELECT pid FROM device limit 4","IMAGE",
+            # "DevDouble",[1,0]],
+            "str": ["SELECT name FROM device limit 4", "IMAGE", "DevString",
+                    [1, 0]],
+            "unicode": ["SELECT name FROM device limit 4", "IMAGE",
+                        "DevString", [1, 0]],
+            #            "bool":["SELECT exported FROM device limit 4",
+            # "IMAGE","DevBoolean",[1,0]],
+            "bool": ["SELECT exported FROM device limit 4", "IMAGE",
+                     "DevLong64", [1, 0]],
         }
 
         for a in arr:

@@ -127,10 +127,10 @@ class EDimensionsH5CppTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         FileWriter.writer = H5CppWriter
@@ -162,10 +162,10 @@ class EDimensionsH5CppTest(unittest.TestCase):
         nxFile = None
         eFile = None
 
-        gname = "testGroup"
-        gtype = "NXentry"
-        fdname = "testField"
-        fdtype = "int64"
+        # gname = "testGroup"
+        # gtype = "NXentry"
+        # fdname = "testField"
+        # fdtype = "int64"
 
         # file handle
         FileWriter.writer = H5CppWriter
