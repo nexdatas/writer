@@ -225,15 +225,17 @@ class NexusXMLHandler(sax.ContentHandler):
                         self._streams.error(
                             "NexusXMLHandler::startElement() - "
                             "Unsupported tag: %s, %s "
-                            % (name, attrs.keys()),
+                            % (name, list(attrs.keys())),
                             std=False)
 
-                    raise UnsupportedTagError("Unsupported tag: %s, %s "
-                                              % (name, attrs.keys()))
+                    raise UnsupportedTagError(
+                        "Unsupported tag: %s, %s " %
+                        (name, list(attrs.keys())))
                 if self._streams:
                     self._streams.warn(
                         "NexusXMLHandler::startElement() - "
-                        "Unsupported tag: %s, %s " % (name, attrs.keys()))
+                        "Unsupported tag: %s, %s " %
+                        (name, list(attrs.keys())))
 
                 self.__unsupportedTag = name
 

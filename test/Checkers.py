@@ -593,7 +593,6 @@ class Checker(object):
         self._tc.assertEqual(cnt.name, name)
         self._tc.assertTrue(hasattr(cnt.shape, "__iter__"))
         if grows and grows > 1:
-            #            lvalues = zip(*values)
             lvalues = list(map(lambda *row: list(row), *values))
         else:
             lvalues = values
