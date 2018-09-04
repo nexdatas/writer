@@ -22,6 +22,7 @@
 import sys
 import time
 import threading
+import socket
 from xml.dom import minidom
 
 from .Types import NTP
@@ -139,6 +140,8 @@ class TangoSource(DataSource):
         self.__decoders = None
         #: (:obj:`str`) client datasource for mixed CLIENT/TANGO mode
         self.client = None
+        #: (:obj:`str`) client datasource for mixed CLIENT/TANGO mode with fqdn
+        self.fullclient = None
 
     def __str__(self):
         """ self-description
@@ -258,6 +261,10 @@ class TangoSource(DataSource):
                 host, eport,
                 edevice, name.lower()
             )
+            self.fullclient = "%s:%s/%s/%s" % (
+                socket.getfqdn(host), eport,
+                edevice, name.lower()
+            )
 
     def setDecoders(self, decoders):
         """ sets the used decoders
@@ -279,10 +286,40 @@ class TangoSource(DataSource):
             res = None
             try:
                 res = self._getJSONData(
-                    "tango://%s" % self.client,
+                    "tango://%s" % self.fullclient,
                     self.__globalJSON, self.__localJSON)
             except:
                 res = None
+            if not res:
+                try:
+                    res = self._getJSONData(
+                        self.fullclient,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
+            if not res:
+                try:
+                    sclient = "/".join(self.fullclient.split('/')[:-1])
+                    res = self._getJSONData(
+                        sclient,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
+            if not res:
+                try:
+                    sclient = "/".join(self.fullclient.split('/')[:-1])
+                    res = self._getJSONData(
+                        "tango://%s" % sclient,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
+            if not res:
+                try:
+                    res = self._getJSONData(
+                        "tango://%s" % self.client,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
             if not res:
                 try:
                     res = self._getJSONData(
@@ -295,6 +332,14 @@ class TangoSource(DataSource):
                     sclient = "/".join(self.client.split('/')[:-1])
                     res = self._getJSONData(
                         sclient,
+                        self.__globalJSON, self.__localJSON)
+                except:
+                    res = None
+            if not res:
+                try:
+                    sclient = "/".join(self.client.split('/')[:-1])
+                    res = self._getJSONData(
+                        "tango://%s" % sclient,
                         self.__globalJSON, self.__localJSON)
                 except:
                     res = None
