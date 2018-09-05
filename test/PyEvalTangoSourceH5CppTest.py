@@ -416,7 +416,7 @@ except:
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
 """
@@ -529,7 +529,7 @@ else:
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 """
@@ -1028,7 +1028,7 @@ commonblock["myres"] = ds.res
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
 commonblock["my1res"] = ds.res
@@ -1046,7 +1046,7 @@ commonblock["my1res"] = ds.res
             "float": [-1.223e-01, "SPECTRUM", "DevDouble", []],
             "str": ['My String', "SPECTRUM", "DevString", []],
             "unicode": ["Hello", "SPECTRUM", "DevString", []],
-            #            "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
+            #  "unicode":[u'\x12\xf8\xff\xf4',"SPECTRUM","DevString",[]],
             "bool": ['true', "SPECTRUM", "DevBoolean", []],
         }
 
@@ -1060,7 +1060,8 @@ commonblock["my1res"] = ds.res
             "SpectrumLong64": ["int64", "DevLong64", 234, [1, 0]],
             "SpectrumULong64": ["uint64", "DevULong64", 23, [1, 0]],
             "SpectrumFloat": ["float32", "DevFloat", 12.234, [1, 0], 1e-5],
-            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0], 1e-14],
+            "SpectrumDouble": ["float64", "DevDouble", -2.456673e+02, [1, 0],
+                               1e-14],
             "SpectrumString": ["string", "DevString", "MyTrue", [1, 0]],
         }
 
@@ -1157,7 +1158,7 @@ commonblock["my1res"] = ds.res
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
 commonblock["myre3"] = ds.res

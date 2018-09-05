@@ -91,8 +91,7 @@ class SimpleServerSetUp(object):
         db.put_class_property(
             self.new_device_info_writer._class, self.class_prop)
 
-        path = os.path.dirname(SimpleServer.__file__)
-
+        path = os.path.dirname(os.path.abspath(SimpleServer.__file__))
         if os.path.isfile("%s/SimpleServer.py" % path):
             if sys.version_info > (3,):
                 self._psub = subprocess.call(

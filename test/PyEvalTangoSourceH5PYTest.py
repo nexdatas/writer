@@ -416,7 +416,7 @@ except:
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
 """
@@ -529,7 +529,7 @@ else:
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + \
         [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
@@ -1029,7 +1029,7 @@ commonblock["myres"] = ds.res
 
         script = """
 if type(ds.inp[0]) == type(ds.inp2[0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [unicode(i) for i in ds.inp] + [unicode(i2) for i2 in ds.inp2]
 commonblock["my1res"] = ds.res
@@ -1158,7 +1158,7 @@ commonblock["my1res"] = ds.res
 
         script = """
 if type(ds.inp[0][0]) == type(ds.inp2[0][0]):
-    ds.res = ds.inp + ds.inp2
+    ds.res = list(ds.inp) + list(ds.inp2)
 else:
     ds.res = [[unicode(j) for j in i] for i in ds.inp] + \
         [[unicode(j2) for j2 in i2] for i2 in ds.inp2]
