@@ -33,7 +33,6 @@ import time
 import nxswriter.FileWriter as FileWriter
 import nxswriter.H5CppWriter as H5CppWriter
 
-
 from pninexus import h5cpp
 # from pninexus import nexus
 
@@ -58,7 +57,6 @@ class testwriter(object):
         self.params.append([filename, readonly])
         return self.result
 
-
     def create_file(self, filename, overwrite=False):
         """ create a new file
         """
@@ -66,14 +64,12 @@ class testwriter(object):
         self.params.append([filename, overwrite])
         return self.result
 
-
     def link(self, target, parent, name):
         """ create link
         """
         self.commands.append("link")
         self.params.append([target, parent, name])
         return self.result
-
 
     def deflate_filter(self):
         self.commands.append("deflate_filter")
@@ -96,7 +92,6 @@ class H5CppWriterTest(unittest.TestCase):
         # self.__seed =241361343400098333007607831038323262554
 
         self.__rnd = random.Random(self.__seed)
-
 
     # test starter
     # \brief Common set up
@@ -338,7 +333,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -397,7 +391,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = H5CppWriter.link(
@@ -408,7 +401,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -467,7 +459,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(entry.exists("strscalar"), True)
             self.assertEqual(entry.exists("strument"), False)
 
-
             self.assertTrue(
                 isinstance(nt, H5CppWriter.H5CppGroup))
             self.assertEqual(nt.name, "notype")
@@ -482,7 +473,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(nt.parent, rt)
             self.assertEqual(nt.size, 0)
             self.assertEqual(nt.exists("strument"), False)
-
 
             self.assertTrue(
                 isinstance(ins, H5CppWriter.H5CppGroup))
@@ -618,7 +608,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intspec.dtype, 'int64')
             self.assertEqual(intspec.shape, (30,))
 
-
             self.assertTrue(isinstance(strimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(strimage.name, 'strimage')
@@ -639,10 +628,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.dtype, 'uint32')
             self.assertEqual(intimage.shape, (0, 30))
-
-
-
-
 
             self.assertTrue(isinstance(strvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strvec.h5object, h5cpp._node.Dataset))
@@ -665,7 +650,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intvec.dtype, 'uint32')
             self.assertEqual(intvec.shape, (0, 2, 30))
 
-
             strscalar_op = entry.open("strscalar")
             floatscalar_op = entry.open("floatscalar")
             intscalar_op = entry.open("intscalar")
@@ -678,7 +662,6 @@ class H5CppWriterTest(unittest.TestCase):
             strvec_op = det.open("strvec")
             floatvec_op = det.open("floatvec")
             intvec_op = det.open("intvec")
-
 
             self.assertTrue(isinstance(strscalar_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strscalar_op.h5object, h5cpp._node.Dataset))
@@ -722,7 +705,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intspec_op.dtype, 'int64')
             self.assertEqual(intspec_op.shape, (30,))
 
-
             self.assertTrue(isinstance(strimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strimage_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(strimage_op.name, 'strimage')
@@ -743,8 +725,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage_op.dtype, 'uint32')
             self.assertEqual(intimage_op.shape, (0, 30))
-
-
 
             self.assertTrue(isinstance(strvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strvec_op.h5object, h5cpp._node.Dataset))
@@ -767,8 +747,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intvec_op.dtype, 'uint32')
             self.assertEqual(intvec_op.shape, (0, 2, 30))
             self.assertEqual(intvec_op.parent, det)
-
-
 
             self.assertTrue(isinstance(lkintimage, H5CppWriter.H5CppLink))
             self.assertTrue(isinstance(lkintimage.h5object, h5cpp._node.Link))
@@ -810,15 +788,11 @@ class H5CppWriterTest(unittest.TestCase):
                 lkno.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
-
             lkintimage_op = dt.open("lkintimage")
             lkfloatvec_op = dt.open("lkfloatvec")
             lkintspec_op = dt.open("lkintspec")
             lkdet_op = dt.open("lkdet")
             lkno_op = dt.open("lkno")
-
-
 
             self.assertTrue(isinstance(lkintimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
@@ -829,7 +803,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.dtype, 'uint32')
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
-
             self.assertTrue(isinstance(lkfloatvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
@@ -837,7 +810,6 @@ class H5CppWriterTest(unittest.TestCase):
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
             self.assertEqual(lkfloatvec_op.dtype, 'float64')
             self.assertEqual(lkfloatvec_op.shape, (1, 20, 10))
-
 
             self.assertTrue(
                 isinstance(lkintspec_op, H5CppWriter.H5CppField))
@@ -857,7 +829,6 @@ class H5CppWriterTest(unittest.TestCase):
                 lkno_op.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -865,7 +836,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -908,7 +878,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #    Exception, fl.reopen, False, True)
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -925,7 +894,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -967,8 +935,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
-
-
 
             self.assertTrue(isinstance(strscalar, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strscalar.h5object, h5cpp._node.Dataset))
@@ -1132,7 +1098,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(intscalar.h5object.is_valid, False)
             self.assertEqual(attrs.is_valid, False)
 
-
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -1179,7 +1144,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -1196,7 +1160,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -1239,7 +1202,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertTrue(isinstance(strspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(strspec.name, 'strspec')
@@ -1255,7 +1217,6 @@ class H5CppWriterTest(unittest.TestCase):
             vl = [
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(40)]
-
 
             strspec[...] = vl[0:10]
             self.assertEqual(list(strspec.read()), vl[0:10])
@@ -1291,8 +1252,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strspec)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatspec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatspec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
@@ -1303,7 +1262,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(floatspec.h5object.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
             self.assertEqual(floatspec.h5object.dataspace.current_dimensions, (20,))
-
 
             vl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
 
@@ -1396,7 +1354,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
 
-
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -1445,7 +1402,6 @@ class H5CppWriterTest(unittest.TestCase):
                     Exception, fl.reopen, False, True)
             fl.close()
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -1462,7 +1418,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -1541,7 +1496,6 @@ class H5CppWriterTest(unittest.TestCase):
             vv3 = [[vl[j][i] for i in range(2)] for j in range(3)]
             self.myAssertImage(strimage[...], vv3)
 
-
             strimage.grow(ext=2)
             self.assertEqual(strimage.shape, (5, 2))
             self.assertEqual(strimage.h5object.dataspace.current_dimensions, (5, 2))
@@ -1577,11 +1531,9 @@ class H5CppWriterTest(unittest.TestCase):
             # self.assertEqual(floatimage.h5object.dtype, 'float64')
             self.assertEqual(floatimage.h5object.dataspace.current_dimensions, (20, 10))
 
-
             vl = [
                 [self.__rnd.uniform(-20000.0, 20000) for _ in range(50)]
                 for _ in range(50)]
-
 
             vv = [[vl[j][i] for i in range(10)] for j in range(20)]
             floatimage[...] = vv
@@ -1619,8 +1571,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(floatimage[...], vv6)
             self.myAssertImage(floatimage.read(), vv6)
 
-
-
             self.assertTrue(isinstance(intimage, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intimage.h5object, h5cpp._node.Dataset))
             self.assertEqual(intimage.name, 'intimage')
@@ -1631,7 +1581,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(str(intimage.h5object.link.path), '/entry12345/instrument/detector/intimage')
             # self.assertEqual(intimage.h5object.dtype, 'uint32')
             self.assertEqual(intimage.h5object.dataspace.current_dimensions, (0, 30))
-
 
             vl = [
                 [self.__rnd.randint(1, 1600) for _ in range(80)]
@@ -1674,8 +1623,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(intimage[...], vv6)
             self.myAssertImage(intimage.read(), vv6)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -1683,7 +1630,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(entry.h5object.is_valid, False)
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1725,7 +1671,6 @@ class H5CppWriterTest(unittest.TestCase):
             #     Exception, fl.reopen, True, True)
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
-
 
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
@@ -1784,7 +1729,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
-
 
             self.assertTrue(isinstance(strvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(strvec.h5object, h5cpp._node.Dataset))
@@ -1848,7 +1792,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strvec)
             self.assertEqual(len(attrs), 0)
 
-
             self.assertTrue(isinstance(floatvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(floatvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
@@ -1859,8 +1802,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(str(floatvec.h5object.link.path), '/entry12345/instrument/detector/floatvec')
             # self.assertEqual(floatvec.h5object.dtype, 'float64')
             self.assertEqual(floatvec.h5object.dataspace.current_dimensions, (1, 20, 10))
-
-
 
             vl = [[[self.__rnd.uniform(-20000.0, 20000)
                     for _ in range(70)]
@@ -1911,8 +1852,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatvec)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intvec, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(intvec.h5object, h5cpp._node.Dataset))
             self.assertEqual(intvec.name, 'intvec')
@@ -1923,7 +1862,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(str(intvec.h5object.link.path), '/entry12345/instrument/detector/intvec')
             # self.assertEqual(intvec.h5object.dtype, 'uint32')
             self.assertEqual(intvec.h5object.dataspace.current_dimensions, (0, 2, 30))
-
 
             vl = [[[self.__rnd.randint(1, 1600)
                     for _ in range(70)]
@@ -1984,7 +1922,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(dt.is_valid, False)
             self.assertEqual(dt.h5object.is_valid, False)
 
-
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -2025,7 +1962,6 @@ class H5CppWriterTest(unittest.TestCase):
             #     Exception, fl.reopen, True, True)
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
-
 
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
@@ -2085,7 +2021,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
@@ -2143,7 +2078,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
@@ -2158,7 +2092,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertTrue(isinstance(df2.h5object, h5cpp.filter.Deflate))
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -2200,7 +2133,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
-
 
             h5cpp.node.link(h5cpp.Path("/entry12345/instrument/detector/intimage"),
                             dt.h5object, h5cpp.Path("lkintimage"))
@@ -2264,14 +2196,11 @@ class H5CppWriterTest(unittest.TestCase):
                 lkno.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
-
             lkintimage_op = dt.open("lkintimage")
             lkfloatvec_op = dt.open("lkfloatvec")
             lkintspec_op = dt.open("lkintspec")
             lkdet_op = dt.open("lkdet")
             lkno_op = dt.open("lkno")
-
 
             self.assertTrue(isinstance(lkintimage_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkintimage_op.h5object, h5cpp._node.Dataset))
@@ -2282,7 +2211,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.dtype, 'uint32')
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
-
             self.assertTrue(isinstance(lkfloatvec_op, H5CppWriter.H5CppField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, h5cpp._node.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
@@ -2290,7 +2218,6 @@ class H5CppWriterTest(unittest.TestCase):
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
             self.assertEqual(lkfloatvec_op.dtype, 'float64')
             self.assertEqual(lkfloatvec_op.shape, (1, 20, 10))
-
 
             self.assertTrue(
                 isinstance(lkintspec_op, H5CppWriter.H5CppField))
@@ -2310,7 +2237,6 @@ class H5CppWriterTest(unittest.TestCase):
                 lkno_op.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
             lkintspec.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -2319,7 +2245,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(dt.is_valid, True)
             self.assertEqual(dt.h5object.is_valid, True)
             self.assertEqual(lkintspec.is_valid, False)
-
 
             lkintspec.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -2362,7 +2287,6 @@ class H5CppWriterTest(unittest.TestCase):
             #     Exception, fl.reopen, True, True)
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
-
 
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
@@ -2422,7 +2346,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = H5CppWriter.link(
@@ -2433,7 +2356,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -2452,7 +2374,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -2529,7 +2450,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.h5object.read(), [[''] * 3] * 2)
             self.myAssertImage(atstrimage.h5object[...], [[''] * 3] * 2)
 
-
             self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
@@ -2550,7 +2470,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object.read(), '')
             self.assertEqual(atstrscalar.h5object[...], '')
 
-
             self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
@@ -2569,8 +2488,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), [0] * 2)
             self.assertEqual(list(atintspec.h5object[...]), [0] * 2)
-
-
 
             self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
@@ -2591,8 +2508,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), [[0.] * 2] * 3)
             self.myAssertImage(atfloatimage.h5object[...], [[0.] * 2] * 3)
-
-
 
             self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
@@ -2615,7 +2530,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object.read(), 0)
             self.assertEqual(atfloatscalar.h5object[...], 0)
 
-
             self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
@@ -2636,7 +2550,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), [''] * 4)
             self.assertEqual(list(atstrspec.h5object[...]), [''] * 4)
-
 
             self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
@@ -2660,7 +2573,6 @@ class H5CppWriterTest(unittest.TestCase):
                 print(at.name)
 
             at = None
-
 
             atintscalar = attr0["atintscalar"]
             atfloatspec = attr0["atfloatspec"]
@@ -2729,8 +2641,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.h5object.read(), [[''] * 3] * 2)
             self.myAssertImage(atstrimage.h5object[...], [[''] * 3] * 2)
 
-
-
             self.assertTrue(isinstance(atstrscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrscalar.parent, entry)
@@ -2751,8 +2661,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object.read(), '')
             self.assertEqual(atstrscalar.h5object[...], '')
 
-
-
             self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atintspec.parent, entry)
@@ -2771,8 +2679,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), [0] * 2)
             self.assertEqual(list(atintspec.h5object[...]), [0] * 2)
-
-
 
             self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
@@ -2793,7 +2699,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), [[0.] * 2] * 3)
             self.myAssertImage(atfloatimage.h5object[...], [[0.] * 2] * 3)
-
 
             self.assertTrue(isinstance(atfloatscalar, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, h5cpp._attribute.Attribute))
@@ -2816,7 +2721,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object.read(), 0)
             self.assertEqual(atfloatscalar.h5object[...], 0)
 
-
             self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atstrspec.parent, intscalar)
@@ -2837,7 +2741,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), [''] * 4)
             self.assertEqual(list(atstrspec.h5object[...]), [''] * 4)
-
 
             self.assertTrue(isinstance(atintimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintimage.h5object, h5cpp._attribute.Attribute))
@@ -2884,7 +2787,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atintimage.h5object.read()), [0] * 4)
             self.assertEqual(list(atintimage.h5object[...]), [0] * 4)
 
-
             attr2.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(rt.h5object.is_valid, True)
@@ -2917,7 +2819,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
             self.assertEqual(atintimage.h5object.is_valid, False)
-
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -2963,7 +2864,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
@@ -2980,8 +2880,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3024,7 +2922,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = H5CppWriter.link(
@@ -3035,7 +2932,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -3055,7 +2951,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -3103,7 +2998,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object.read(), itvl[0])
             self.assertEqual(atintscalar.h5object[...], itvl[0])
 
-
             atintscalar[...] = itvl[1]
 
             self.assertEqual(atintscalar.h5object.read(), itvl[1])
@@ -3124,7 +3018,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintscalar.h5object[...], itvl[3])
             self.assertEqual(atintscalar.read(), itvl[3])
             self.assertEqual(atintscalar[...], itvl[3])
-
 
             atstrscalar.write(stvl[0])
 
@@ -3148,8 +3041,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object.read(), stvl[0])
             self.assertEqual(atstrscalar.h5object[...], stvl[0])
 
-
-
             atstrscalar[...] = stvl[1]
 
             self.assertEqual(atstrscalar.h5object.read(), stvl[1])
@@ -3170,7 +3061,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrscalar.h5object[...], stvl[3])
             self.assertEqual(atstrscalar.read(), stvl[3])
             self.assertEqual(atstrscalar[...], stvl[3])
-
 
             atfloatscalar.write(flvl[0])
 
@@ -3195,8 +3085,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object.read(), flvl[0])
             self.assertEqual(atfloatscalar.h5object[...], flvl[0])
 
-
-
             atfloatscalar[...] = flvl[1]
 
             self.assertEqual(atfloatscalar.h5object.read(), flvl[1])
@@ -3217,7 +3105,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object[...], flvl[3])
             self.assertEqual(atfloatscalar.read(), flvl[3])
             self.assertEqual(atfloatscalar[...], flvl[3])
-
 
             atfloatscalar.close()
             self.assertEqual(rt.is_valid, True)
@@ -3254,7 +3141,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.is_valid, False)
             self.assertEqual(atfloatscalar.is_valid, False)
             self.assertEqual(atfloatscalar.h5object.is_valid, False)
-
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -3302,7 +3188,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
@@ -3319,7 +3204,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3344,7 +3228,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3387,7 +3270,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = H5CppWriter.link(
@@ -3398,7 +3280,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -3418,7 +3299,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -3449,7 +3329,6 @@ class H5CppWriterTest(unittest.TestCase):
 
             atfloatspec.write(flvl[0])
 
-
             self.assertTrue(isinstance(atfloatspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, h5cpp._attribute.Attribute))
             self.assertEqual(atfloatspec.parent, rt)
@@ -3468,8 +3347,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatspec.h5object.is_valid, True)
             self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[0], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[0], 1e-3)
-
-
 
             atfloatspec[...] = flvl[1]
 
@@ -3506,9 +3383,7 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertFloatList(list(atfloatspec.h5object.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec.h5object[...]), flvl[3], 1e-3)
 
-
             atintspec.write(itvl[0])
-
 
             self.assertTrue(isinstance(atintspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atintspec.h5object, h5cpp._attribute.Attribute))
@@ -3528,7 +3403,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintspec.h5object.is_valid, True)
             self.assertEqual(list(atintspec.h5object.read()), itvl[0])
             self.assertEqual(list(atintspec.h5object[...]), itvl[0])
-
 
             atintspec[...] = itvl[1]
 
@@ -3565,9 +3439,7 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atintspec.h5object.read()), itvl[3])
             self.assertEqual(list(atintspec.h5object[...]), itvl[3])
 
-
             atstrspec.write(stvl[0])
-
 
             self.assertTrue(isinstance(atstrspec, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, h5cpp._attribute.Attribute))
@@ -3589,7 +3461,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atstrspec.h5object.is_valid, True)
             self.assertEqual(list(atstrspec.h5object.read()), stvl[0])
             self.assertEqual(list(atstrspec.h5object[...]), stvl[0])
-
 
             atstrspec[...] = stvl[1]
 
@@ -3625,10 +3496,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(list(atstrspec[...]), stvl[3])
             self.assertEqual(list(atstrspec.h5object.read()), stvl[3])
             self.assertEqual(list(atstrspec.h5object[...]), stvl[3])
-
-
-
-
 
             atfloatspec.close()
             self.assertEqual(rt.is_valid, True)
@@ -3668,7 +3535,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atintimage.h5object.is_valid, False)
             self.assertEqual(atfloatspec.is_valid, True)
             self.assertEqual(atfloatspec.h5object.is_valid, True)
-
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -3716,7 +3582,6 @@ class H5CppWriterTest(unittest.TestCase):
             # self.myAssertRaise(
             #     Exception, fl.reopen, False, True)
 
-
             fl = H5CppWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
@@ -3733,7 +3598,6 @@ class H5CppWriterTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3776,7 +3640,6 @@ class H5CppWriterTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = H5CppWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = H5CppWriter.link(
@@ -3787,7 +3650,6 @@ class H5CppWriterTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = H5CppWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -3807,7 +3669,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -3890,7 +3751,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.h5object.read()[:, 1:], vv1)
             self.myAssertImage(atstrimage.h5object[:, 1:], vv1)
 
-
             vv2 = [[stvl[3][j][i + 1] for i in range(2)] for j in range(2)]
             atstrimage[:, 1:] = vv2
 
@@ -3899,10 +3759,7 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(atstrimage.h5object.read(), stvl[3])
             self.myAssertImage(atstrimage.h5object[...], stvl[3])
 
-
             atfloatimage.write(flvl[0])
-
-
 
             self.assertTrue(isinstance(atfloatimage, H5CppWriter.H5CppAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, h5cpp._attribute.Attribute))
@@ -3923,8 +3780,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.assertEqual(atfloatimage.h5object.is_valid, True)
             self.myAssertImage(atfloatimage.h5object.read(), flvl[0])
             self.myAssertImage(atfloatimage.h5object[...], flvl[0])
-
-
 
             atfloatimage[...] = flvl[1]
 
@@ -3954,7 +3809,6 @@ class H5CppWriterTest(unittest.TestCase):
             self.myAssertImage(atfloatimage[1:, :], vv1)
             self.myAssertImage(atfloatimage.h5object.read()[1:, :], vv1)
             self.myAssertImage(atfloatimage.h5object[1:, :], vv1)
-
 
             vv2 = [[flvl[3][j + 1][i] for i in range(2)] for j in range(2)]
             atfloatimage[1:, :] = vv2

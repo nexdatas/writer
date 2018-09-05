@@ -602,8 +602,6 @@ class Checker(object):
         self._tc.assertEqual(cnt.size, len(lvalues) * len(lvalues[0]))
         # pninx is not supporting reading string areas
 
-
-
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):
                 #  print i, j, cnt[i,j], lvalues[i][j]
@@ -854,8 +852,6 @@ class Checker(object):
         self._tc.assertEqual(
             cnt.size, len(lvalues) * len(lvalues[0]) * len(lvalues[0][0]))
         # pninx is not supporting reading string areas
-
-
 
         for i in range(len(lvalues)):
             for j in range(len(lvalues[i])):

@@ -38,7 +38,6 @@ if sys.version_info > (3,):
     long = int
 
 
-
 # if 64-bit machione
 IS64BIT = (struct.calcsize("P") == 8)
 
@@ -56,14 +55,12 @@ class testwriter(object):
         self.params.append([filename, readonly, libver])
         return self.result
 
-
     def create_file(self, filename, overwrite=False, libver=None):
         """ create a new file
         """
         self.commands.append("create_file")
         self.params.append([filename, overwrite, libver])
         return self.result
-
 
     def link(self, target, parent, name):
         """ create link
@@ -72,7 +69,6 @@ class testwriter(object):
         self.params.append([target, parent, name])
         return self.result
 
-
     def deflate_filter(self):
         self.commands.append("deflate_filter")
         self.params.append([])
@@ -80,7 +76,6 @@ class testwriter(object):
 
 
 class FTCloser(FileWriter.FTObject):
-
 
     def __init__(self, h5object, tparent=None):
         FileWriter.FTObject.__init__(self, h5object, tparent)
@@ -344,7 +339,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(tw.params[-1], [])
             self.assertEqual(tres, res)
 
-
     # default createfile test
     # \brief It tests default settings
     def test_default_createfile_h5py(self):
@@ -537,7 +531,6 @@ class FileWriterH5PYTest(unittest.TestCase):
         self.assertTrue(hasattr(tg, "attributes"))
         self.assertTrue(hasattr(tg.exists, "__call__"))
         self.assertTrue(hasattr(tg.reopen, "__call__"))
-
 
         td = tf.create(TField)
         self.assertEqual(td._h5object, tf.commands)
@@ -822,7 +815,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -838,7 +830,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             fl.close()
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -882,7 +873,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = FileWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = FileWriter.link(
@@ -893,7 +883,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = FileWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -946,7 +935,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(entry.exists("strscalar"), True)
             self.assertEqual(entry.exists("strument"), False)
 
-
             self.assertTrue(
                 isinstance(nt, H5PYWriter.H5PYGroup))
             self.assertEqual(nt.name, "notype")
@@ -961,7 +949,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(nt.parent, rt)
             self.assertEqual(nt.size, 0)
             self.assertEqual(nt.exists("strument"), False)
-
 
             self.assertTrue(
                 isinstance(ins, H5PYWriter.H5PYGroup))
@@ -1052,8 +1039,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 set(['strimage', 'intvec', 'floatimage',
                      'floatvec', 'intimage', 'strvec']))
 
-
-
             self.assertTrue(isinstance(strscalar, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strscalar.h5object, h5py.Dataset))
             self.assertEqual(strscalar.name, 'strscalar')
@@ -1096,7 +1081,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intspec.dtype, 'int64')
             self.assertEqual(intspec.shape, (30,))
 
-
             self.assertTrue(isinstance(strimage, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strimage.h5object, h5py.Dataset))
             self.assertEqual(strimage.name, 'strimage')
@@ -1117,10 +1101,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intimage.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage.dtype, 'uint32')
             self.assertEqual(intimage.shape, (0, 30))
-
-
-
-
 
             self.assertTrue(isinstance(strvec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strvec.h5object, h5py.Dataset))
@@ -1143,7 +1123,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intvec.dtype, 'uint32')
             self.assertEqual(intvec.shape, (0, 2, 30))
 
-
             strscalar_op = entry.open("strscalar")
             floatscalar_op = entry.open("floatscalar")
             intscalar_op = entry.open("intscalar")
@@ -1156,7 +1135,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             strvec_op = det.open("strvec")
             floatvec_op = det.open("floatvec")
             intvec_op = det.open("intvec")
-
 
             self.assertTrue(isinstance(strscalar_op, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strscalar_op.h5object, h5py.Dataset))
@@ -1200,7 +1178,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intspec_op.dtype, 'int64')
             self.assertEqual(intspec_op.shape, (30,))
 
-
             self.assertTrue(isinstance(strimage_op, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strimage_op.h5object, h5py.Dataset))
             self.assertEqual(strimage_op.name, 'strimage')
@@ -1221,8 +1198,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intimage_op.path, '/entry12345:NXentry/instrument:NXinstrument/detector:NXdetector/intimage')
             self.assertEqual(intimage_op.dtype, 'uint32')
             self.assertEqual(intimage_op.shape, (0, 30))
-
-
 
             self.assertTrue(isinstance(strvec_op, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strvec_op.h5object, h5py.Dataset))
@@ -1245,8 +1220,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intvec_op.dtype, 'uint32')
             self.assertEqual(intvec_op.shape, (0, 2, 30))
             self.assertEqual(intvec_op.parent, det)
-
-
 
             self.assertTrue(isinstance(lkintimage, H5PYWriter.H5PYLink))
             self.assertTrue(isinstance(lkintimage.h5object, h5py.SoftLink))
@@ -1288,15 +1261,11 @@ class FileWriterH5PYTest(unittest.TestCase):
                 lkno.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
-
             lkintimage_op = dt.open("lkintimage")
             lkfloatvec_op = dt.open("lkfloatvec")
             lkintspec_op = dt.open("lkintspec")
             lkdet_op = dt.open("lkdet")
             lkno_op = dt.open("lkno")
-
-
 
             self.assertTrue(isinstance(lkintimage_op, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(lkintimage_op.h5object, h5py.Dataset))
@@ -1307,7 +1276,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(lkintimage_op.dtype, 'uint32')
             self.assertEqual(lkintimage_op.shape, (0, 30))
 
-
             self.assertTrue(isinstance(lkfloatvec_op, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(lkfloatvec_op.h5object, h5py.Dataset))
             self.assertEqual(lkfloatvec_op.name, 'lkfloatvec')
@@ -1315,7 +1283,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                              '/entry12345:NXentry/data:NXdata/lkfloatvec')
             self.assertEqual(lkfloatvec_op.dtype, 'float64')
             self.assertEqual(lkfloatvec_op.shape, (1, 20, 10))
-
 
             self.assertTrue(
                 isinstance(lkintspec_op, H5PYWriter.H5PYField))
@@ -1335,12 +1302,10 @@ class FileWriterH5PYTest(unittest.TestCase):
                 lkno_op.path,
                 "/entry12345:NXentry/data:NXdata/lkno")
 
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1372,7 +1337,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -1389,8 +1353,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -1433,8 +1395,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
-
-
 
             self.assertTrue(isinstance(strscalar, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strscalar.h5object, h5py.Dataset))
@@ -1488,8 +1448,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatscalar, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatscalar.h5object, h5py.Dataset))
             self.assertEqual(floatscalar.name, 'floatscalar')
@@ -1538,8 +1496,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatscalar)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intscalar, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intscalar.h5object, h5py.Dataset))
             self.assertEqual(intscalar.name, 'intscalar')
@@ -1549,8 +1505,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intscalar.h5object.dtype, 'uint64')
             self.assertEqual(intscalar.shape, (1,))
             self.assertEqual(intscalar.h5object.shape, (1,))
-
-
 
             vl = [243, 43, 45, 34, 45, 54, 23234]
 
@@ -1597,7 +1551,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intscalar.is_valid, False)
             self.assertEqual(attrs.is_valid, False)
 
-
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, True)
@@ -1631,7 +1584,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -1648,7 +1600,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -1692,7 +1643,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertTrue(isinstance(strspec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strspec.h5object, h5py.Dataset))
             self.assertEqual(strspec.name, 'strspec')
@@ -1707,7 +1657,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             vl = [
                 ''.join(self.__rnd.choice(chars)
                         for _ in range(self.__rnd.randint(1, 10))) for _ in range(40)]
-
 
             strspec[...] = vl[0:10]
             self.assertEqual(list(strspec.read()), vl[0:10])
@@ -1743,8 +1692,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strspec)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatspec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatspec.h5object, h5py.Dataset))
             self.assertEqual(floatspec.name, 'floatspec')
@@ -1754,7 +1701,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(floatspec.h5object.dtype, 'float32')
             self.assertEqual(floatspec.shape, (20,))
             self.assertEqual(floatspec.h5object.shape, (20,))
-
 
             vl = [self.__rnd.uniform(-200.0, 200) for _ in range(80)]
 
@@ -1791,8 +1737,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertTrue(isinstance(attrs.h5object, h5py._hl.attrs.AttributeManager))
             self.assertEqual(attrs.parent, floatspec)
             self.assertEqual(len(attrs), 0)
-
-
 
             self.assertTrue(isinstance(intspec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intspec.h5object, h5py.Dataset))
@@ -1840,13 +1784,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, intspec)
             self.assertEqual(len(attrs), 0)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -1878,7 +1819,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -1895,7 +1835,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -1949,14 +1888,12 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(strimage.h5object.dtype.name, 'object')
             self.assertEqual(strimage.h5object.shape, (2, 2))
 
-
             chars = string.ascii_uppercase + string.digits
             vl = [
                 [''.join(self.__rnd.choice(chars)
                          for _ in range(self.__rnd.randint(1, 10)))
                  for _ in range(10)]
                 for _ in range(30)]
-
 
             vv = [[vl[j][i] for i in range(2)] for j in range(2)]
             strimage[...] = vv
@@ -2000,8 +1937,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strimage)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(floatimage, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatimage.h5object, h5py.Dataset))
             self.assertEqual(floatimage.name, 'floatimage')
@@ -2012,11 +1947,9 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(floatimage.h5object.dtype, 'float64')
             self.assertEqual(floatimage.h5object.shape, (20, 10))
 
-
             vl = [
                 [self.__rnd.uniform(-20000.0, 20000) for _ in range(50)]
                 for _ in range(50)]
-
 
             vv = [[vl[j][i] for i in range(10)] for j in range(20)]
             floatimage[...] = vv
@@ -2054,8 +1987,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(floatimage[...], vv6)
             self.myAssertImage(floatimage.read(), vv6)
 
-
-
             self.assertTrue(isinstance(intimage, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intimage.h5object, h5py.Dataset))
             self.assertEqual(intimage.name, 'intimage')
@@ -2065,7 +1996,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intimage.h5object.name, '/entry12345/instrument/detector/intimage')
             self.assertEqual(intimage.h5object.dtype, 'uint32')
             self.assertEqual(intimage.h5object.shape, (0, 30))
-
 
             vl = [
                 [self.__rnd.randint(1, 1600) for _ in range(80)]
@@ -2108,13 +2038,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(intimage[...], vv6)
             self.myAssertImage(intimage.read(), vv6)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -2146,7 +2073,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = H5PYWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -2163,8 +2089,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -2207,7 +2131,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "floatvec", "float64", [1, 20, 10], [1, 10, 10], dfilter=df1)
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
-
 
             self.assertTrue(isinstance(strvec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(strvec.h5object, h5py.Dataset))
@@ -2270,7 +2193,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, strvec)
             self.assertEqual(len(attrs), 0)
 
-
             self.assertTrue(isinstance(floatvec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(floatvec.h5object, h5py.Dataset))
             self.assertEqual(floatvec.name, 'floatvec')
@@ -2280,8 +2202,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(floatvec.h5object.name, '/entry12345/instrument/detector/floatvec')
             self.assertEqual(floatvec.h5object.dtype, 'float64')
             self.assertEqual(floatvec.h5object.shape, (1, 20, 10))
-
-
 
             vl = [[[self.__rnd.uniform(-20000.0, 20000)
                     for _ in range(70)]
@@ -2334,8 +2254,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, floatvec)
             self.assertEqual(len(attrs), 0)
 
-
-
             self.assertTrue(isinstance(intvec, H5PYWriter.H5PYField))
             self.assertTrue(isinstance(intvec.h5object, h5py.Dataset))
             self.assertEqual(intvec.name, 'intvec')
@@ -2345,7 +2263,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(intvec.h5object.name, '/entry12345/instrument/detector/intvec')
             self.assertEqual(intvec.h5object.dtype, 'uint32')
             self.assertEqual(intvec.h5object.shape, (0, 2, 30))
-
 
             vl = [[[self.__rnd.randint(1, 1600)
                     for _ in range(70)]
@@ -2399,13 +2316,10 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attrs.parent, intvec)
             self.assertEqual(len(attrs), 0)
 
-
-
             entry.close()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, False)
             self.assertEqual(dt.is_valid, False)
-
 
             entry.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -2437,7 +2351,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
             self.assertEqual(6, len(f.attributes))
@@ -2454,8 +2367,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -2499,7 +2410,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             self.assertEqual(df0.rate, 0)
             self.assertEqual(df0.shuffle, False)
             self.assertEqual(df0.parent, None)
@@ -2514,8 +2424,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(df2.h5object, None)
         finally:
             os.remove(self._fname)
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -2559,7 +2467,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = FileWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = FileWriter.link(
@@ -2570,7 +2477,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = FileWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -2590,7 +2496,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -2648,8 +2553,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
-
-
             self.assertTrue(isinstance(atstrscalar, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, tuple))
             self.assertEqual(atstrscalar.parent, entry)
@@ -2662,8 +2565,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atstrscalar[...], '')
             self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
             self.assertEqual(atstrscalar.h5object, (attr1.h5object, 'atstrscalar'))
-
-
 
             self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atintspec.h5object, tuple))
@@ -2678,8 +2579,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
-
-
             self.assertTrue(isinstance(atfloatimage, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, tuple))
             self.assertEqual(atfloatimage.parent, entry)
@@ -2692,8 +2591,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
-
-
 
             self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, tuple))
@@ -2708,7 +2605,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atfloatscalar[...], 0)
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
             self.assertEqual(atfloatscalar.h5object, (attr2.h5object, 'atfloatscalar'))
-
 
             self.assertTrue(isinstance(atstrspec, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, tuple))
@@ -2798,8 +2694,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atstrimage.parent.h5object, rt.h5object)
             self.assertEqual(atstrimage.h5object, (attr0.h5object, 'atstrimage'))
 
-
-
             self.assertTrue(isinstance(atstrscalar, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atstrscalar.h5object, tuple))
             self.assertEqual(atstrscalar.parent, entry)
@@ -2812,8 +2706,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atstrscalar[...], '')
             self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
             self.assertEqual(atstrscalar.h5object, (attr1.h5object, 'atstrscalar'))
-
-
 
             self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atintspec.h5object, tuple))
@@ -2828,8 +2720,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
             self.assertEqual(atintspec.h5object, (attr1.h5object, 'atintspec'))
 
-
-
             self.assertTrue(isinstance(atfloatimage, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atfloatimage.h5object, tuple))
             self.assertEqual(atfloatimage.parent, entry)
@@ -2842,8 +2732,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(atfloatimage[...], [[0.] * 2] * 3)
             self.assertEqual(atfloatimage.parent.h5object, entry.h5object)
             self.assertEqual(atfloatimage.h5object, (attr1.h5object, 'atfloatimage'))
-
-
 
             self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atfloatscalar.h5object, tuple))
@@ -2858,7 +2746,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atfloatscalar[...], 0)
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
             self.assertEqual(atfloatscalar.h5object, (attr2.h5object, 'atfloatscalar'))
-
 
             self.assertTrue(isinstance(atstrspec, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atstrspec.h5object, tuple))
@@ -2888,7 +2775,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
 
-
             self.myAssertRaise(Exception, attr2.create, "atintimage", "uint64", [4])
             atintimage = attr2.create("atintimage", "uint64", [4], True)
 
@@ -2905,7 +2791,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(list(atintimage[...]), [0] * 4)
             self.assertEqual(atintimage.parent.h5object, intscalar.h5object)
             self.assertEqual(atintimage.h5object, (attr2.h5object, 'atintimage'))
-
 
             attr2.close()
             self.assertEqual(rt.is_valid, True)
@@ -2927,7 +2812,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dt.is_valid, True)
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
-
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -2961,7 +2845,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
@@ -2978,10 +2861,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
-
-
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3025,7 +2904,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = FileWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = FileWriter.link(
@@ -3036,7 +2914,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = FileWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -3056,7 +2933,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -3098,7 +2974,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atintscalar.parent.h5object, rt.h5object)
             self.assertEqual(atintscalar.h5object, (attr0.h5object, 'atintscalar'))
 
-
             atintscalar[...] = itvl[1]
 
             self.assertEqual(atintscalar.h5object[0]['atintscalar'], itvl[1])
@@ -3133,8 +3008,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atstrscalar[...], stvl[0])
             self.assertEqual(atstrscalar.parent.h5object, entry.h5object)
 
-
-
             atstrscalar[...] = stvl[1]
 
             self.assertEqual(atstrscalar.h5object[0]['atstrscalar'], stvl[1])
@@ -3153,7 +3026,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atstrscalar.read(), stvl[3])
             self.assertEqual(atstrscalar[...], stvl[3])
 
-
             atfloatscalar.write(flvl[0])
 
             self.assertTrue(isinstance(atfloatscalar, H5PYWriter.H5PYAttribute))
@@ -3168,8 +3040,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.read(), flvl[0])
             self.assertEqual(atfloatscalar[...], flvl[0])
             self.assertEqual(atfloatscalar.parent.h5object, intscalar.h5object)
-
-
 
             atfloatscalar[...] = flvl[1]
 
@@ -3188,7 +3058,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atfloatscalar.h5object[0]['atfloatscalar'], flvl[3])
             self.assertEqual(atfloatscalar.read(), flvl[3])
             self.assertEqual(atfloatscalar[...], flvl[3])
-
 
             atfloatscalar.close()
             self.assertEqual(rt.is_valid, True)
@@ -3211,7 +3080,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
             self.assertEqual(atfloatscalar.is_valid, False)
-
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -3246,7 +3114,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
@@ -3263,7 +3130,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3307,7 +3173,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = FileWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = FileWriter.link(
@@ -3318,7 +3183,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = FileWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -3338,7 +3202,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -3369,7 +3232,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
             atfloatspec.write(flvl[0])
 
-
             self.assertTrue(isinstance(atfloatspec, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atfloatspec.h5object, tuple))
             self.assertEqual(atfloatspec.parent, rt)
@@ -3381,8 +3243,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertFloatList(list(atfloatspec.read()), flvl[0], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[0], 1e-3)
             self.assertEqual(atfloatspec.parent.h5object, rt.h5object)
-
-
 
             atfloatspec[...] = flvl[1]
 
@@ -3415,9 +3275,7 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertFloatList(list(atfloatspec.read()), flvl[3], 1e-3)
             self.myAssertFloatList(list(atfloatspec[...]), flvl[3], 1e-3)
 
-
             atintspec.write(itvl[0])
-
 
             self.assertTrue(isinstance(atintspec, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atintspec.h5object, tuple))
@@ -3430,7 +3288,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(list(atintspec.read()), itvl[0])
             self.assertEqual(list(atintspec[...]), itvl[0])
             self.assertEqual(atintspec.parent.h5object, entry.h5object)
-
 
             atintspec[...] = itvl[1]
 
@@ -3497,7 +3354,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
             atstrspec[:3] = stvl[4][:3]
 
-
             self.assertEqual(list(atstrspec.h5object[0]['atstrspec'][:3]), stvl[4][:3])
             self.assertEqual(list(atstrspec.read())[:3], stvl[4][:3])
             self.assertEqual(list(atstrspec[:3]), stvl[4][:3])
@@ -3532,7 +3388,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(atintimage.is_valid, False)
             self.assertEqual(atfloatspec.is_valid, True)
 
-
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
             self.assertEqual(entry.is_valid, True)
@@ -3566,7 +3421,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
 
-
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
 #            self.assertEqual(6, len(f.attributes))
@@ -3583,7 +3437,6 @@ class FileWriterH5PYTest(unittest.TestCase):
 
         finally:
             os.remove(self._fname)
-
 
     # default createfile test
     # \brief It tests default settings
@@ -3627,7 +3480,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             intvec = det.create_field(
                 "intvec", "uint32", [0, 2, 30], dfilter=df2)
 
-
             lkintimage = FileWriter.link(
                 "/entry12345/instrument/detector/intimage", dt, "lkintimage")
             lkfloatvec = FileWriter.link(
@@ -3638,7 +3490,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 "/entry12345/instrument/detector", dt, "lkdet")
             lkno = FileWriter.link(
                 "/notype/unknown", dt, "lkno")
-
 
             attr0 = rt.attributes
             attr1 = entry.attributes
@@ -3658,7 +3509,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(len(attr0), 6)
             self.assertEqual(len(attr1), 1)
             self.assertEqual(len(attr2), 0)
-
 
             atintscalar = attr0.create("atintscalar", "int64")
             atfloatspec = attr0.create("atfloatspec", "float32", [12])
@@ -3783,7 +3633,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(atfloatimage[1:, :], vv1)
             self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'][1:, :], vv1)
 
-
             vv2 = [[flvl[3][j + 1][i] for i in range(2)] for j in range(2)]
             atfloatimage[1:, :] = vv2
 
@@ -3791,9 +3640,7 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(atfloatimage[...], flvl[3])
             self.myAssertImage(atfloatimage.h5object[0]['atfloatimage'], flvl[3])
 
-
             atintimage.write(itvl[0])
-
 
             self.assertTrue(isinstance(atintimage, H5PYWriter.H5PYAttribute))
             self.assertTrue(isinstance(atintimage.h5object, tuple))
@@ -3833,7 +3680,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.myAssertImage(atintimage[1:, :], vv1)
             self.myAssertImage(atintimage.h5object[0]['atintimage'][1:, :], vv1)
 
-
             vv2 = [[itvl[3][j + 1][i] for i in range(2)] for j in range(2)]
             atintimage[1:, :] = vv2
 
@@ -3861,7 +3707,6 @@ class FileWriterH5PYTest(unittest.TestCase):
             self.assertEqual(dt.is_valid, True)
             self.assertEqual(attr2.is_valid, False)
             self.assertEqual(atintimage.is_valid, False)
-
 
             intscalar.reopen()
             self.assertEqual(rt.is_valid, True)
@@ -3894,7 +3739,6 @@ class FileWriterH5PYTest(unittest.TestCase):
                 Exception, fl.reopen, True, True)
             self.myAssertRaise(
                 Exception, fl.reopen, False, True)
-
 
             fl = FileWriter.open_file(self._fname, readonly=True)
             f = fl.root()
