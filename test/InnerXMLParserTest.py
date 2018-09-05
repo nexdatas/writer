@@ -120,7 +120,7 @@ class InnerXMLParserTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name": "entry", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -134,14 +134,17 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.endElement("group"), None)
         self.assertEqual(el.endElement("datasource"), None)
         self.assertTrue(
-            (el.xml ==
-             ('<datasource>',
-              '<group type="NXentry" name="entry"></group>', '</datasource>')
-            )
-            or
-            (el.xml ==
-             ('<datasource>',
-              '<group name="entry" type="NXentry"></group>', '</datasource>')
+            (
+                el.xml ==
+                ('<datasource>',
+                 '<group type="NXentry" name="entry"></group>',
+                 '</datasource>')
+            ) or
+            (
+                el.xml ==
+                ('<datasource>',
+                 '<group name="entry" type="NXentry"></group>',
+                 '</datasource>')
             )
         )
 
@@ -152,10 +155,10 @@ class InnerXMLParserTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "instrument", "type": "NXinstrument"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -176,22 +179,23 @@ class InnerXMLParserTest(unittest.TestCase):
             (
                 el.xml[1] ==
                 '<group type="NXentry" name="entry1"></group>'
-                '<field type="NXinstrument" name="instrument"></field>')
-            or
+                '<field type="NXinstrument" name="instrument"></field>'
+            ) or
             (
                 el.xml[1] ==
                 '<group type="NXentry" name="entry1"></group>'
-                '<field name="instrument" type="NXinstrument"></field>')
-            or
+                '<field name="instrument" type="NXinstrument"></field>'
+            ) or
             (
                 el.xml[1] ==
                 '<group name="entry1" type="NXentry"></group>'
-                '<field type="NXinstrument" name="instrument"></field>')
-            or
+                '<field type="NXinstrument" name="instrument"></field>'
+            ) or
             (
                 el.xml[1] ==
                 '<group name="entry1" type="NXentry"></group>'
-                '<field name="instrument" type="NXinstrument"></field>')
+                '<field name="instrument" type="NXinstrument"></field>'
+            )
         )
         self.assertEqual(el.xml[2], '</group>')
 
@@ -202,10 +206,10 @@ class InnerXMLParserTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "instrument", "type": "NXinstrument"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -223,22 +227,27 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(len(el.xml), 3)
         self.assertEqual(el.xml[0], '<group type="NXentry">')
         self.assertTrue(
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1">'
-             '<group type="NXinstrument" name="instrument"></group></group>')
-            or
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1">'
-             '<group name="instrument" type="NXinstrument"></group></group>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry">'
-             '<group type="NXinstrument" name="instrument"></group></group>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry">'
-             '<group name="instrument" type="NXinstrument"></group></group>')
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1">'
+                '<group type="NXinstrument" name="instrument"></group></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1">'
+                '<group name="instrument" type="NXinstrument"></group></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry">'
+                '<group type="NXinstrument" name="instrument"></group></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry">'
+                '<group name="instrument" type="NXinstrument"></group></group>'
             )
+        )
         self.assertEqual(el.xml[2], '</group>')
 
     # constructor test
@@ -248,10 +257,10 @@ class InnerXMLParserTest(unittest.TestCase):
         print("Run: %s.%s() " % (self.__class__.__name__, fun))
 
         attr1 = {"name": "entry1", "type": "NXentry"}
-        sattr1 = {attr1["type"]: attr1["name"]}
+        # sattr1 = {attr1["type"]: attr1["name"]}
 
         attr2 = {"name": "instrument", "type": "NXinstrument"}
-        sattr2 = {attr2["type"]: attr2["name"]}
+        # sattr2 = {attr2["type"]: attr2["name"]}
 
         parser = sax.make_parser()
         handler = sax.ContentHandler()
@@ -269,21 +278,26 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(len(el.xml), 3)
         self.assertEqual(el.xml[0], '<group>')
         self.assertTrue(
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1"></group>'
-             '<attribute type="NXinstrument" name="instrument"></attribute>')
-            or 
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1"></group>'
-             '<attribute name="instrument" type="NXinstrument"></attribute>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry"></group>'
-             '<attribute type="NXinstrument" name="instrument"></attribute>')
-            or 
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry"></group>'
-             '<attribute name="instrument" type="NXinstrument"></attribute>')
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1"></group>'
+                '<attribute type="NXinstrument" name="instrument"></attribute>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1"></group>'
+                '<attribute name="instrument" type="NXinstrument"></attribute>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry"></group>'
+                '<attribute type="NXinstrument" name="instrument"></attribute>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry"></group>'
+                '<attribute name="instrument" type="NXinstrument"></attribute>'
+            )
         )
         self.assertEqual(el.xml[2], '</group>')
 
@@ -311,14 +325,17 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(el.endElement("datasource"), None)
 
         self.assertTrue(
-            (el.xml ==
-             ('<datasource>',
-              '<group type="NXentry" name="entry"></group>', '</datasource>')
-            )
-            or
-            (el.xml ==
-             ('<datasource>',
-              '<group name="entry" type="NXentry"></group>', '</datasource>')
+            (
+                el.xml ==
+                ('<datasource>',
+                 '<group type="NXentry" name="entry"></group>',
+                 '</datasource>')
+            ) or
+            (
+                el.xml ==
+                ('<datasource>',
+                 '<group name="entry" type="NXentry"></group>',
+                 '</datasource>')
             )
         )
 
@@ -333,7 +350,8 @@ class InnerXMLParserTest(unittest.TestCase):
         parser = sax.make_parser()
         handler = sax.ContentHandler()
         name = "group"
-        xml = '<group type="NXentry" name="entry1"><field type="NXinstrument" name="instrument"></field></group>'
+        xml = '<group type="NXentry" name="entry1">' + \
+              '<field type="NXinstrument" name="instrument"></field></group>'
 #        xml = '<group type="NXentry" name="entry1"></group>'
 
         el = InnerXMLHandler(parser, handler, name, {})
@@ -350,21 +368,26 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(len(el.xml), 3)
         self.assertEqual(el.xml[0], '<group>')
         self.assertTrue(
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1">'
-             '<field type="NXinstrument" name="instrument"></field></group>')
-            or
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1">'
-             '<field name="instrument" type="NXinstrument"></field></group>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry">'
-             '<field type="NXinstrument" name="instrument"></field></group>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry">'
-             '<field name="instrument" type="NXinstrument"></field></group>')
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1">'
+                '<field type="NXinstrument" name="instrument"></field></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1">'
+                '<field name="instrument" type="NXinstrument"></field></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry">'
+                '<field type="NXinstrument" name="instrument"></field></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry">'
+                '<field name="instrument" type="NXinstrument"></field></group>'
+            )
         )
         self.assertEqual(el.xml[2], '</group>')
 
@@ -381,7 +404,8 @@ class InnerXMLParserTest(unittest.TestCase):
         attrs = {"type": "NXentry"}
 
         name = "group"
-        xml = '<group type="NXentry" name="entry1"><group type="NXinstrument" name="instrument"></group></group>'
+        xml = '<group type="NXentry" name="entry1">' + \
+              '<group type="NXinstrument" name="instrument"></group></group>'
 
         el = InnerXMLHandler(parser, handler, name, attrs)
         parser.setContentHandler(el)
@@ -397,21 +421,26 @@ class InnerXMLParserTest(unittest.TestCase):
         self.assertEqual(len(el.xml), 3)
         self.assertEqual(el.xml[0], '<group type="NXentry">')
         self.assertTrue(
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1">'
-             '<group type="NXinstrument" name="instrument"></group></group>')
-            or
-            (el.xml[1] ==
-             '<group type="NXentry" name="entry1">'
-             '<group name="instrument" type="NXinstrument"></group></group>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry">'
-             '<group type="NXinstrument" name="instrument"></group></group>')
-            or
-            (el.xml[1] ==
-             '<group name="entry1" type="NXentry">'
-             '<group name="instrument" type="NXinstrument"></group></group>')
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1">'
+                '<group type="NXinstrument" name="instrument"></group></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group type="NXentry" name="entry1">'
+                '<group name="instrument" type="NXinstrument"></group></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry">'
+                '<group type="NXinstrument" name="instrument"></group></group>'
+            ) or
+            (
+                el.xml[1] ==
+                '<group name="entry1" type="NXentry">'
+                '<group name="instrument" type="NXinstrument"></group></group>'
+            )
         )
         self.assertEqual(el.xml[2], '</group>')
 
